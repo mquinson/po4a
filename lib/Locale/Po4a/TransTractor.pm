@@ -970,6 +970,11 @@ all language, using a map-like syntax:
 
 Will see if it's enough ;)
 
+=head1 AUTHORS
+
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
 =cut
 
 1;
