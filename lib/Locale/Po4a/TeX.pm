@@ -98,8 +98,6 @@ our $RE_ESCAPE = "\\\\";
 our $ESCAPE    = "\\";
 
 # Space separated list of environments that should not be re-wrapped.
-# FIXME: check what should be done if a verbatim block ends by a \label (or
-# other command).
 our $no_wrap_environments = "verbatim";
 # Space separated list of commands that can be handled separately from
 # when they appear at the beginning or end of a paragraph
@@ -562,23 +560,58 @@ sub translate_buffer {
     if ($buffer =~ /^\s*$/s) {
         return ($buffer, @env);
     }
-    if ($buffer =~ /^(.+?)(\\begin\{.*)$/s) {
-        my ($begin, $end) = ($1, $2);
-        my ($t1, $t2) = ("", "");
-        if (is_closed($begin)) {
-            ($t1, @env) = translate_buffer($self, $begin, @env);
-            ($t2, @env) = translate_buffer($self, $end,   @env);
-
+    # verbatim blocks.
+    # Buffers starting by \end{verbatim} are handled after.
+    if (@env and $env[-1] eq "verbatim" and $buffer !~ m/^\n?\\end\{verbatim\*?\}/) {
+        if($buffer =~ m/^(.*?)(\n?\\end\{verbatim\*?\}.*)$/s) {
+            # end of a verbatim block
+            my ($begin, $end) = ($1?$1:"", $2);
+            my ($t1, $t2) = ("", "");
+            if (defined $begin) {
+                $t1 = $self->translate($begin,$self->{ref},
+                                       $env[-1],
+                                       "wrap" => 0);
+            }
+            ($t2, @env) = translate_buffer($self, $end, @env);
+            print STDERR "($t1.$t2,@env)\n"
+                if ($debug{'translate_buffer'});
             return ($t1.$t2, @env);
+        } else {
+            $translated_buffer = $self->translate($buffer,$self->{ref},
+                                                  $env[-1],
+                                                  "wrap" => 0);
+            print STDERR "($translated_buffer,@env)\n"
+                if ($debug{'translate_buffer'});
+            return ($translated_buffer, @env);
         }
     }
-    if ($buffer =~ /^(.+?)(\\end\{.*)$/s) {
+    # early detection of verbatim environment
+    if ($buffer =~ /^(\\begin\{verbatim\*?\}\n?)(.*)$/s and length $2) {
+        my ($begin, $end) = ($1, $2);
+        my ($t1, $t2) = ("", "");
+        ($t1, @env) = translate_buffer($self, $begin, @env);
+        ($t2, @env) = translate_buffer($self, $end,   @env);
+
+        print STDERR "($t1.$t2,@env)\n"
+            if ($debug{'translate_buffer'});
+        return ($t1.$t2, @env);
+    }
+    # detect \begin and \end (if they are not commented)
+    if ($buffer =~ /^((?:.*?\n)?                # $1 is
+                      (?:[^%]                   # either not a %
+                        |                       # or
+                         (?<!\\)(?:\\\\)*\\%)*? # a % preceded by an odd nb of \
+                     )                          # $2 is a \begin{ with the end of the line
+                      (\\(?:begin|end)\{.*)$/sx
+        and length $1) {
         my ($begin, $end) = ($1, $2);
         my ($t1, $t2) = ("", "");
         if (is_closed($begin)) {
             ($t1, @env) = translate_buffer($self, $begin, @env);
             ($t2, @env) = translate_buffer($self, $end,   @env);
 
+            print STDERR "($t1.$t2,@env)\n"
+                if ($debug{'translate_buffer'});
             return ($t1.$t2, @env);
         }
     }
@@ -953,6 +986,7 @@ sub parse {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t);
                 $paragraph="";
+                @comments = ();
             }
         } else {
             # continue the same paragraph
