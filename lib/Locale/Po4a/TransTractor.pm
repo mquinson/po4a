@@ -335,7 +335,7 @@ sub read() {
     my $self=shift;
     my $filename=shift
 	or croak(dgettext("po4a","Can't read from file without having a filename")."\n");
-    my $linenum=1;
+    my $linenum=0;
 
     open INPUT,"<$filename" 
 	or croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
