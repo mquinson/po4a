@@ -586,6 +586,14 @@ sub addendum {
 	addendum_parse($filename);
     return 0 if ($errcode);
 
+    # We only recode the addendum if an origin charset is specified, else we
+    # suppose it's already in the output document's character set
+    if (defined($self->{TT}{'addendum_charset'}) &&
+        length($self->{TT}{'addendum_charset'})) {
+	Encode::from_to($content,$self->{TT}{'addendum_charset'},
+	    $self->get_out_charset);
+    }
+
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
 	warn sprintf(dgettext("po4a",
@@ -976,6 +984,7 @@ Will see if it's enough ;)
 
  Denis Barbier <barbier@linuxfr.org>
  Martin Quinson <martin.quinson@tuxfamily.org>
+ Jordi Vilalta <jvprat@wanadoo.es>
 
 =cut
 

@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.25 2004-07-19 10:21:12 jvprat-guest Exp $
+# $Id: po4a-translate,v 1.26 2004-08-14 14:32:19 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -177,6 +177,7 @@ Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
 my ($help,$help_fmt,$verbose,$debug,@addfiles,$format,@options);
 my ($master_filename,$po_filename);
+my ($mastchar,$addchar);
 GetOptions(
         'help|h'        => \$help,
         'help-format'   => \$help_fmt,
@@ -186,6 +187,9 @@ GetOptions(
 	'po|p=s'        => \$po_filename,
 	'addendum|a=s'  => \@addfiles,
 	'format|f=s'    => \$format,
+
+	'master-charset|M=s'    => \$mastchar,
+	'addendum-charset|A=s' => \$addchar,
 
         'option|o=s'    => \@options,
     
@@ -224,8 +228,10 @@ foreach (@options) {
 my $doc=Locale::Po4a::Chooser::new($format,%options);
 
 # Prepare the document to be used as translator, but not parser
-$doc->process('po_in_name'   => \@pos,
-	      'file_in_name' => \@masters);
+$doc->process('po_in_name'       => \@pos,
+	      'file_in_name'     => \@masters,
+	      'file_in_charset'  => $mastchar,
+	      'addendum_charset' => $addchar);
 
 
 my ($percent,$hit,$queries) = $doc->stats();
