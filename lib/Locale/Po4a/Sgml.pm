@@ -383,7 +383,7 @@ sub parse_file {
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
-			     "verbatim"  => "address programlisting literallayout refentry screen",
+			     "verbatim"  => "address programlisting literallayout refentrytitle screen",
 			     "ignore"    => "action affiliation anchor application author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database ".
@@ -607,7 +607,7 @@ sub parse_file {
 
 
 	    # debug
-	    print STDERR "Seen $tag, open level=".(scalar @open)."\n"
+	    print STDERR "Seen $tag, open level=".(scalar @open).", verb=$verb\n"
 		if ($debug{'tag'});
 
 	    if ($event->data->name() eq 'FOOTNOTE') {
@@ -643,13 +643,15 @@ sub parse_file {
 		    if (scalar @open);
 	    }
 
+	    $verb++ if $verbatim{$event->data->name()};
 	    if ($indent{$event->data->name()}) {
-		$self->pushline((" " x $indent).$tag."\n");
+		# push the indenting space only if not in verb before that tag
+		# push tailing "\n" only if not in verbose afterward
+		$self->pushline( ($verb>1?"": (" " x $indent)).$tag.($verb?"":"\n"));
 		$indent ++ unless $empty{$event->data->name()} ;
 	    }  else {
 		$buffer .= $tag;
 	    }
-	    $verb++ if $verbatim{$event->data->name()};
 	} # end of type eq 'start_element'
 	
 	elsif ($event->type eq 'end_element') {
@@ -659,7 +661,7 @@ sub parse_file {
 		           : 
 		       '</'.lc($event->data->name()).'>');
 
-	    print STDERR "Seen $tag, level=".(scalar @open)."\n"
+	    print STDERR "Seen $tag, level=".(scalar @open).", verb=$verb\n"
 		if ($debug{'tag'});
 
 	    $lastchar = ">";
@@ -692,7 +694,9 @@ sub parse_file {
 
 	    if ($indent{$event->data->name()}) {
 		$indent -- ;
-		$self->pushline((" " x $indent).$tag."\n");
+		# add indenting space only when not in verbatim
+		# add the tailing \n only if out of verbatim after that tag
+		$self->pushline(($verb?"":(" " x $indent)).$tag.($verb>1?"":"\n"));
 	    }  else {
 		$buffer .= $tag;
 	    }	    
