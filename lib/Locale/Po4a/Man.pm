@@ -1033,7 +1033,23 @@ $macro{'TH'}= sub {
 };
 
 # .SS t    Subheading t (like .SH, but used for a subsection inside a section).
-$macro{'SS'}=$macro{'SH'}=\&translate_joined;
+$macro{'SS'}=$macro{'SH'}=sub {
+    if (!defined $_[2]) {
+        # The argument is on the next line.
+        my ($self,$macroname) = (shift,shift);
+        my ($l2,$ref2) = $self->shiftline();
+        if ($l2 =~/^\./) {
+            $self->SUPER::unshiftline($l2,$ref2);
+        } else {
+            chomp($l2);
+            $self->pushmacro($macroname,
+                             $self->t($l2));
+        }
+        return;
+    } else {
+        return translate_joined(@_);
+    }
+};
 
 $macro{'SM'}=\&translate_joined;
 
