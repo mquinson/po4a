@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.38 2005-03-22 12:37:40 jvprat-guest Exp $
+# $Id: Po.pm,v 1.39 2005-04-02 22:19:29 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -254,8 +254,8 @@ sub write{
 	
 	$output .= format_comment($self->{po}{$msgid}{'comment'},"") 
 	    if $self->{po}{$msgid}{'comment'};
-	$output .= format_comment($self->{po}{$msgid}{'automatic'},". ") 
-	    if $self->{po}{$msgid}{'automatic'};
+	$output .= format_comment($self->{po}{$msgid}{'automatic'},". ")
+	   if $self->{po}{$msgid}{'automatic'};
 	$output .= format_comment($self->{po}{$msgid}{'type'}," type: ") 
 	    if $self->{po}{$msgid}{'type'};
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
@@ -1063,9 +1063,9 @@ sub canonize {
     my $text=shift;
     print STDERR "\ncanonize [$text]====" if $debug{'canonize'};
     $text =~ s/^ *//s;
+    $text =~ s/^[ \t]+/  /gm;
     # if ($text eq "\n"), it messed up the first string (header)
     $text =~ s/\n/  /gm if ($text ne "\n");
-    $text =~ s/\t/  /gm;
     $text =~ s/([.)])  +/$1  /gm;
     $text =~ s/([^.)])  */$1 /gm;
     $text =~ s/ *$//s;
