@@ -684,7 +684,7 @@ sub docheader {
 # They should return a list, which will be join'ed(' ',..)
 #   or undef when they don't want to add anything
 
-# Some well known macro handeling
+# Some well known macro handling
 
 # For macro taking only one argument, but people may forget the quotes.
 # Example: >>.SH Another Section<< which should be >>.SH "Another Section"<<
