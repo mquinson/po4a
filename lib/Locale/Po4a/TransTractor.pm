@@ -31,7 +31,7 @@ interestingly, the maintenance of translation) using gettext tools on areas
 where they were not expected like documentation.  
 
 This class is the ancestor of all po4a parsers used to parse a document to
-search translatable strings, extract them to a po file and remplace them by
+search translatable strings, extract them to a po file and replace them by
 their translation in the output document. 
 
 More formally, it takes the following arguments as input:
@@ -60,7 +60,7 @@ the input document ;
 =item -
 
 a translated document, with the same structure than the one in input, but
-with all translatable strings remplaced with the translations found in the
+with all translatable strings replaced with the translations found in the
 po file provided in input.
 
 =back
