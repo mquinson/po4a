@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.16 2004-08-14 17:31:05 mquinson Exp $
+# $Id: po4a,v 1.17 2004-08-16 23:41:08 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -91,6 +91,16 @@ at at least 80% to get written.
 =item -h, --help
 
 Show a short help message.
+
+=item -M, --master-charset
+
+Charset of the files containing the documents to translate. Note that all
+master documents must use the same charset for now. This is a known
+limitation, and we are working on solving this.
+
+=item -A, --addendum-charset
+
+Charset of the addenda. Note that all addenda should be in the same charset.
 
 =item -V, --version
 
@@ -181,9 +191,14 @@ my ($help,$type,$debug,@verbose,$quiet,@options,$split);
 $debug = 0;
 $split = 0;
 my ($threshold)=(80);
+my ($mastchar,$addchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
+    
+	'master-charset|M=s'    => \$mastchar,
+	'addendum-charset|A=s' => \$addchar,
+
         'verbose|v'     => \@verbose,
         'debug|d'       => \$debug,
         'quiet|q'       => \$quiet,
@@ -307,7 +322,9 @@ foreach my $master (keys %document) {
     $doc->setpoout($potfile);
     my @file_in_name;
     push @file_in_name, $master;
-    $doc->process('file_in_name' => \@file_in_name);
+    $doc->process('file_in_name'     => \@file_in_name,
+                  'file_in_charset'  => $mastchar,
+                  'addendum_charset' => $addchar);
     $potfile = $doc->getpoout();
 }
 $potfile->write($pot_filename);
@@ -385,7 +402,9 @@ foreach $lang (sort keys %po_filename) {
 	
 	$doc->process('file_in_name'  => \@file_in_name,
 	              'file_out_name' => $document{$master}{$lang},
-	              'po_in_name'    => \@po_in_name);
+	              'po_in_name'    => \@po_in_name,
+                      'file_in_charset'  => $mastchar,
+                      'addendum_charset' => $addchar);
 	
 	my ($percent,$hit,$queries) = $doc->stats();
 	
