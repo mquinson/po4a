@@ -6,7 +6,7 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.13.3";
+$VERSION="0.13.4";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
@@ -685,16 +685,16 @@ sub translate {
     my ($string,$ref,$type)=(shift,shift,shift);
     my (%options)=@_;
 
-    my $validoption="wrap wrapcol";
-    my %validoption;
+    # my $validoption="wrap wrapcol";
+    # my %validoption;
 
     return "" unless defined($string) && length($string);
 
-    map { $validoption{$_}=1 } (split(/ /,$validoption));
-    foreach (keys %options) {
-	Carp::confess "internal error: translate() called with unknown arg $_. Valid options: $validoption"
-	    unless $validoption{$_};
-    }
+    # map { $validoption{$_}=1 } (split(/ /,$validoption));
+    # foreach (keys %options) {
+    #	Carp::confess "internal error: translate() called with unknown arg $_. Valid options: $validoption"
+    #	    unless $validoption{$_};
+    # }
 
     $self->{TT}{po_out}->push('msgid'     => $string,
 			      'reference' => $ref,
