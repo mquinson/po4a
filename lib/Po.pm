@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.2 2002-12-12 15:28:44 mquinson Exp $
+# $Id: Po.pm,v 1.3 2002-12-12 15:32:02 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -341,7 +341,7 @@ sub gettext {
     } else {
 	$res= $text;
     }
-    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
+#    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
     return $res;
 }
 
@@ -562,8 +562,7 @@ sub push_raw {
             }
         }
     }
-    print STDERR "stored ((($msgid)))=>(((".$self->{po}{$msgid}{'msgstr'}.")))\n\n";
-#	if ($msgid && $msgstr);
+#    print STDERR "stored ((($msgid)))=>(((".$self->{po}{$msgid}{'msgstr'}.")))\n\n";
 
 }
 
