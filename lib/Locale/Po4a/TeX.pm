@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (c) 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright (c) 2004 by Nicolas FRANÃ‡OIS <nicolas.francois@centraliens.net>
 #
 # This file is part of po4a.
 #
@@ -1015,11 +1015,11 @@ L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
 
 =head1 AUTHORS
 
- Nicolas François <nicolas.francois@centraliens.net>
+ Nicolas FranÃ§ois <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+Copyright 2004 by Nicolas FRANÃ‡OIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).

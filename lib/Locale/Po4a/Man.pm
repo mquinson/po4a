@@ -209,7 +209,7 @@ L<Locale::Po4a::Pod(3pm)>.
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Nicolas François <nicolas.francois@centraliens.net>
+ Nicolas FranÃ§ois <nicolas.francois@centraliens.net>
  Martin Quinson <martin.quinson@tuxfamily.org>
 
 =head1 COPYRIGHT AND LICENSE

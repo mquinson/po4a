@@ -90,7 +90,7 @@ my $builder = Module::Build->subclass
 	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
 		my $podfiles = join ("", map {" -m ../../".$_ } @files);
 		print "XX Update documentation pot files: ";
-		system("cd po/pod; PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $podfiles -M iso8859-1 -p po4a-pod.pot") 
+		system("cd po/pod; PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $podfiles -M utf-8 -p po4a-pod.pot") 
 		  && die;
 		my ($atime, $mtime) = (time,time);
 		utime $atime, $mtime, "po/pod/po4a-pod.pot";
@@ -133,7 +133,7 @@ my $builder = Module::Build->subclass
 	    $self->depends_on('manpo');
 	    use Pod::Man;
 
-	    my $options = "-v -f pod -M iso8859-1 -L iso8859-1";
+	    my $options = "-v -f pod -M utf-8 -L iso8859-1";
 	    
 	    #get the languages
 	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
