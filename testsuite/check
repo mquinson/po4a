@@ -47,19 +47,19 @@ for fich in `cat LISTE.TOTAL` ; do
 	fi
 	
 	echo "####### $fich"; 
-	rm -f po4a-identity.*
-	if po4a-identity -t $module $tmp/$newfich 2>&1 ; then
-		if [ -e po4a-identity.output ] ; then
-		        mv po4a-identity.output $tmp/po4a-identity.output
-			$cmdtotxt $tmp/po4a-identity.output $tmp/$newfich; 
+	rm -f po4a-normalize.*
+	if po4a-normalize -t $module $tmp/$newfich 2>&1 ; then
+		if [ -e po4a-normalize.output ] ; then
+		        mv po4a-normalize.output $tmp/po4a-normalize.output
+			$cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
 			$cmdtotxt $tmp/$newfich $tmp/$newfich;
 			echo ">diff"
-			if diff -uBb $tmp/$newfich.txt $tmp/po4a-identity.output.txt ; then
+			if diff -uBb $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
 				echo "Ok"
 				echo $fich >> LISTE.OK
 			else 
 			        echo ">wdiff"
-			        if mywdiff $tmp/$newfich.txt $tmp/po4a-identity.output.txt ; then
+			        if mywdiff $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
 				       echo $fich >> LISTE.DIFF
 				else
 				       echo $fich >> LISTE.WDIFF
