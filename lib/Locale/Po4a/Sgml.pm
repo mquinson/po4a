@@ -610,26 +610,26 @@ sub parse_file {
     # What to do before parsing
 
     # push the XML prolog if existing
-    $self->pushline($xmlprolog."\n") if ($xmlprolog);
+    $self->pushline($xmlprolog."\n") if (defined($xmlprolog) && length($xmlprolog));
 
     # Put the prolog into the file, allowing for entity definition translation
     #  <!ENTITY myentity "definition_of_my_entity">
     # and push("<!ENTITY myentity \"".$self->translate("definition_of_my_entity")
     if ($prolog =~ m/(.*?\[)(.*)(\]>)/s) {
 	warn "Pre=~~$1~~;Post=~~$3~~\n" if ($debug{'entities'});
-        $self->pushline($1);
+        $self->pushline($1."\n") if (length($1));
         $prolog=$2;					       
         my ($post) = $3;			
         while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)">(.*)$/is) { #" ){ 
-	   $self->pushline($1);
+	   $self->pushline($1) if length($1);
 	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
 	   warn "Seen text entity $2" if ($debug{'entities'});
 	   $prolog = $4;
 	}
-        $self->pushline($post);
+        $self->pushline($post."\n") if (length($post));
     } else {
 	warn "No entity declaration detected in ~~$prolog~~...\n" if ($debug{'entities'});
-	$self->pushline($prolog);
+	$self->pushline($prolog) if length($prolog);
     } 
 
     # The parse object.
@@ -712,7 +712,7 @@ sub parse_file {
 		    $self->end_paragraph($buffer,$ref,$type,$verb,$indent,
 					 @open);
 		} else {
-		    $self->pushline($buffer);
+		    $self->pushline($buffer) if $buffer;
 		}
 		$buffer="";
 		push @open,$tag;
