@@ -18,6 +18,7 @@ $VERSION="0.20";
 
 use Carp qw(croak);
 use Locale::Po4a::Po;
+use Locale::Po4a::Common;
 
 use Locale::gettext qw(dgettext);
 use File::Path; # mkdir before write
@@ -374,11 +375,11 @@ function when you're done with packing input files into the document.
 sub read() {
     my $self=shift;
     my $filename=shift
-	or croak(dgettext("po4a","Can't read from file without having a filename")."\n");
+	or croak wrap_msg(dgettext("po4a", "Can't read from file without having a filename"));
     my $linenum=0;
 
     open INPUT,"<$filename" 
-	or croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
+	or croak wrap_msg(dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
     while (defined (my $textline = <INPUT>)) {
 	$linenum++;
 	my $ref="$filename:$linenum";
@@ -397,7 +398,7 @@ sub read() {
 	}
     }
     close INPUT 
-	or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
+	or croak wrap_msg(dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
 
 }
 
@@ -410,7 +411,7 @@ Write the translated document to the given filename.
 sub write {
     my $self=shift;
     my $filename=shift
-	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
+	or croak wrap_msg(dgettext("po4a", "Can't write to a file without filename"));
 
     my $fh;
     if ($filename eq '-') {
@@ -425,14 +426,14 @@ sub write {
 	      if (length ($dir) && ! -e $dir);
 	}
 	open $fh,">$filename"
-	    || croak (sprintf((dgettext("po4a","can't write to %s: %s"),$filename,$!))."\n");
+	    || croak wrap_msg(dgettext("po4a", "Can't write to %s: %s"), $filename, $!);
     }
     
     map { print $fh $_ } $self->docheader();
     map { print $fh $_ } @{$self->{TT}{doc_out}};
 
     if ($filename ne '-') {
-	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s"),$filename,$!)."\n");
+	close $fh || croak wrap_msg(dgettext("po4a", "Can't close %s after writing: %s"), $filename, $!);
     }
 
 }
@@ -510,25 +511,22 @@ sub addendum_parse {
 	(1,"","","","","");
 
     unless (open (INS, "<$filename")) {
-	warn sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n";
+	warn wrap_msg(dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
 	goto END_PARSE_ADDFILE;
     } 
 
     unless (defined ($header=<INS>) && $header)  {
-	warn sprintf(dgettext("po4a","Can't read Po4a header from %s."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a", "Can't read Po4a header from %s."), $filename);
 	goto END_PARSE_ADDFILE;
     }
 
     unless ($header =~ s/PO4A-HEADER://i) {
-	warn sprintf(dgettext("po4a","First line of %s does not look like a Po4a header."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a", "First line of %s does not look like a Po4a header."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     foreach my $part (split(/;/,$header)) {
 	unless ($part =~ m/^\s*([^=]*)=(.*)$/) {
-	    warn sprintf(dgettext("po4a","Syntax error in Po4a header of %s, near \"%s\""),
-			 $filename,$part)."\n";
+	    warn wrap_msg(dgettext("po4a", "Syntax error in Po4a header of %s, near \"%s\""), $filename, $part);
 	    goto END_PARSE_ADDFILE;
 	}
 	my ($key,$value)=($1,$2);
@@ -542,30 +540,26 @@ sub addendum_parse {
 	    $boundary=$value;
 	    $bmode='before';
 	} else { 
-	    warn sprintf(dgettext("po4a","Invalid argument in the Po4a header of %s: %s"),
-			 $filename,$key)."\n";
+	    warn wrap_msg(dgettext("po4a", "Invalid argument in the Po4a header of %s: %s"), $filename, $key);
 	    goto END_PARSE_ADDFILE;
 	}
     }
 
     unless (length($mode)) {
-	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the mode."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a", "The Po4a header of %s does not define the mode."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || $mode eq "after") {
-	warn sprintf(dgettext("po4a","Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s."),
-		     $filename,$mode)."\n";
+	warn wrap_msg(dgettext("po4a", "Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s."), $filename, $mode);
 	goto END_PARSE_ADDFILE;
     }
 
     unless (length($position)) {
-	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the position."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a", "The Po4a header of %s does not define the position."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || length($boundary)) {
-    	warn dgettext("po4a","No ending boundary given in the Po4a header, but mode=after.")."\n";
+    	warn wrap_msg(dgettext("po4a", "No ending boundary given in the Po4a header, but mode=after."));
 	goto END_PARSE_ADDFILE;
     }
 
@@ -590,11 +584,11 @@ sub addendum {
 
     print STDERR "Apply addendum $filename..." if $self->debug();
     unless ($filename) {
-	warn(dgettext("po4a",
-	    "Can't apply addendum when not given the filename")."\n");
+	warn wrap_msg(dgettext("po4a",
+	    "Can't apply addendum when not given the filename"));
 	return 0;
     }
-    die sprintf(dgettext("po4a","Addendum %s does not exist.")."\n",$filename)
+    die wrap_msg(dgettext("po4a", "Addendum %s does not exist."), $filename)
       unless -e $filename;
   
     my ($errcode,$mode,$position,$boundary,$bmode,$content)=
@@ -614,22 +608,19 @@ sub addendum {
 
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
-	warn sprintf(dgettext("po4a",
-			      "No candidate position for the addendum %s."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a",
+	    "No candidate position for the addendum %s."), $filename);
 	return 0;
     }
     if ($found > 1) {
-	warn sprintf(dgettext("po4a",
-			      "More than one cadidate position found for the addendum %s."),
-		     $filename)."\n";
+	warn wrap_msg(dgettext("po4a",
+	    "More than one cadidate position found for the addendum %s."), $filename);
 	return 0;
     }
 
     if ($mode eq "before") {
 	if ($self->verbose() > 1 || $self->debug() ) {
-	    map { print STDERR sprintf(dgettext("po4a","Addendum '%s' applied before this line: %s"),
-			 $filename,$_)."\n" if (/$position/);
+	    map { print STDERR wrap_msg(dgettext("po4a", "Addendum '%s' applied before this line: %s"), $filename, $_) if (/$position/);
  	        } @{$self->{TT}{doc_out}};
 	}
 	@{$self->{TT}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
@@ -651,23 +642,22 @@ sub addendum {
 		}
 		if (defined $line) {
 		    if ($bmode eq 'before') {
-			print sprintf (dgettext("po4a",
-			    "Addendum '%s' applied before this line: %s")."\n",
-			    $filename,$outline)
+			print wrap_msg(dgettext("po4a",
+			    "Addendum '%s' applied before this line: %s"),
+			    $filename, $outline)
 			  if ($self->verbose() > 1 || $self->debug());
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
-			print sprintf (dgettext("po4a",
-			    "Addendum '%s' applied after the line: %s.")."\n",
-			    $filename,$outline)
+			print wrap_msg(dgettext("po4a",
+			    "Addendum '%s' applied after the line: %s."),
+			    $filename, $outline)
 			  if ($self->verbose() > 1 || $self->debug());
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
-		    print sprintf (dgettext("po4a","Addendum '%s' applied at the end of the file.")."\n",
-		        $filename)
+		    print wrap_msg(dgettext("po4a", "Addendum '%s' applied at the end of the file."), $filename)
 		      if ($self->verbose() > 1 || $self->debug());
 		    push @newres,$content;
 		}
@@ -828,7 +818,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
+	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"), $self->{TT}{non_ascii_ref})
 	}
     }
 
@@ -977,7 +967,7 @@ sub recode_skipped_text {
 	    Encode::from_to($text,$self->{TT}{'file_in_charset'},
 		$self->get_out_charset);
 	} else {
-	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
+	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"), $self->{TT}{non_ascii_ref})
 	}
     }
     return $text;

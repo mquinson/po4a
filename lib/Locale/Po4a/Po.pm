@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.33 2005-01-09 18:13:22 nekral-guest Exp $
+# $Id: Po.pm,v 1.34 2005-02-12 14:02:21 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -59,6 +59,7 @@ require Exporter;
 package Locale::Po4a::Po;
 
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 
 use 5.006;
 use strict;
@@ -145,14 +146,14 @@ catalog.
 sub read{
     my $self=shift;
     my $filename=shift 
-	|| croak ("po4a::po: ".dgettext("po4a","Please provide a non-null filename")."\n");
+	|| croak wrap_mod("po4a::po", dgettext("po4a", "Please provide a non-null filename"));
 
     my $fh;
     if ($filename eq '-') {
 	$fh=*STDIN;
     } else {
 	open $fh,"<$filename" 
-	  || croak ("po4a::po: ".sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
+	  || croak wrap_mod("po4a::po", dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
     }
 
     ## Read paragraphs line-by-line
@@ -191,8 +192,7 @@ sub read{
 	    } elsif ($line =~ /^(".*")/) { # continuation of a line
 	        $buffer .= "\n$1";
 	    } else {
-	        warn sprintf(dgettext("po4a","Strange line at line %s: -->%s<--"),
-			     $linenum,$line)."\n";
+	        warn wrap_ref_mod("$filename:$linenum", "po4a::po", dgettext("po4a", "Strange line: -->%s<--"), $line);
 	    }
 	}
 	$linenum++;
@@ -232,7 +232,7 @@ sub write{
 	      if (length ($dir) && ! -e $dir);
 	}
 	open $fh,">$filename" 
-	    || croak (sprintf((dgettext("po4a","Can't write to %s: %s"),$filename,$!))."\n");
+	    || croak wrap_mod("po4a::po", dgettext("po4a", "Can't write to %s: %s"), $filename, $!);
     }
 
     print $fh "".format_comment(unescape_text($self->{header_comment}),"") 
@@ -291,17 +291,17 @@ sub gettextize {
     my $pores=Locale::Po4a::Po->new();
 
     if ($poorig->count_entries() > $potrans->count_entries()) {
-	warn sprintf(dgettext("po4a",
-		"po4a gettextize: Original have more strings that the translation (%d>%d).\n".
-		"po4a gettextize: Please fix it by editing the translated version to add some dummy entry."),
-		    $poorig->count_entries() , $potrans->count_entries())."\n";
+	warn wrap_mod("po4a gettextize", dgettext("po4a",
+	    "Original have more strings that the translation (%d>%d). ".
+	    "Please fix it by editing the translated version to add some dummy entry."),
+		$poorig->count_entries() , $potrans->count_entries());
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
-	warn sprintf(dgettext("po4a",
-		"po4a gettextize: Original have less strings that the translation (%d<%d).\n".
-		"po4a gettextize: Please fix it by removing the extra entry from the translated file.\n".
-		"po4a gettextize: You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization.\n".
-	        "po4a gettextize: A possible cause is that a text dupplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
-		    $poorig->count_entries() , $potrans->count_entries())."\n";
+	warn wrap_mod("po4a gettextize", dgettext("po4a",
+	    "Original have less strings that the translation (%d<%d). ".
+	    "Please fix it by removing the extra entry from the translated file. ".
+	    "You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization. ".
+	    "A possible cause is that a text dupplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
+		$poorig->count_entries(), $potrans->count_entries());
     }
 
     if ( $poorig->get_charset =~ /^utf-8$/i ) {
@@ -337,10 +337,10 @@ sub gettextize {
 	#
 	# Make sure the type of both string exist
 	#
-	die sprintf("Internal error in gettextization: type of original string number %s isn't provided\n",$o)."\n"
+	die wrap_mod("po4a gettextize", "Internal error: type of original string number %s isn't provided", $o)
 	    if ($typeorig eq '');
 	
-	die sprintf("Internal error in gettextization: type of translated string number %s isn't provided\n",$o)."\n"
+	die wrap_mod("po4a gettextize", "Internal error: type of translated string number %s isn't provided", $o)
 	    if ($typetrans eq '');
 
 	#
@@ -348,16 +348,16 @@ sub gettextize {
 	#
 	if ($typeorig ne $typetrans){
 	    $pores->write("/tmp/gettextization.failed.po");
-	    die sprintf(dgettext("po4a",
+	    die wrap_msg(dgettext("po4a",
 	    	"po4a gettextization: Structure disparity between original and translated files:\n".
 		"msgid (at %s) is of type '%s' while\n".
 		"msgstr (at %s) is of type '%s'.\n".
 		"Original text: %s\n".
 		"Translated text: %s\n".
 	        "(result so far dumped to /tmp/gettextization.failed.po)"),
-			$reforig,$typeorig,$reftrans,$typetrans,$orig,$trans)."\n";
+		    $reforig, $typeorig, $reftrans, $typetrans, $orig, $trans);
 	}
-	
+
 	# 
 	# Push the entry
 	#
@@ -401,7 +401,7 @@ sub filter {
 	for (1..$pos){
 	    $space .= ' ';
 	}
-	die (sprintf(dgettext("po4a",$fmt)."\n",@_)."$filter\n$space^ HERE\n");;
+	die wrap_msg("$fmt\n$filter\n$space^ HERE");
     }
     sub showmethecode {
 	return unless $debug{'filter'};
@@ -546,13 +546,13 @@ sub filter {
     $code .= "; }";
     print STDERR "CODE = $code\n";
     eval $code;
-    die (sprintf(dgettext("po4a","Eval failure: %s")."\n",$@)) 
+    die wrap_mod("po4a::po", dgettext("po4a", "Eval failure: %s"), $@)
       if $@;
-    
+
     for (my $cpt=(0) ;
 	 $cpt<$self->count_entries();
 	 $cpt++) {
-	
+
 	my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
 
 	$msgid = $self->msgid($cpt);
@@ -847,7 +847,7 @@ sub push_raw {
     }
     
     if (defined($self->{po}{$msgid})) {
-        warn sprintf(dgettext("po4a","msgid defined twice: %s"),$msgid) if (0); # FIXME: put a verbose stuff
+        warn wrap_mod("po4a::po", dgettext("po4a","msgid defined twice: %s"), $msgid) if (0); # FIXME: put a verbose stuff
 	if ($msgstr && $self->{po}{$msgid}{'msgstr'} 
 	    && $self->{po}{$msgid}{'msgstr'} ne "$msgstr") {
 	    my $txt=quote_text($msgid);
@@ -858,14 +858,14 @@ sub push_raw {
 		 format_comment(". ",$reference).
 		 quote_text($msgstr));
 
-	    warn sprintf(dgettext("po4a",
+	    warn wrap_msg(dgettext("po4a",
 	    	"Translations don't match for:\n".
 		"%s\n".
 		"-->First translation:\n".
 		"%s\n".
 		" Second translation:\n".
 		"%s\n".
-		" Old translation discarded."),$txt,$first,$second)."\n";
+		" Old translation discarded."),$txt,$first,$second);
 	}
     }
     $self->{po}{$msgid}{'reference'} = (defined($self->{po}{$msgid}{'reference'}) ? 

@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.20 2005-01-23 00:37:27 mquinson Exp $
+# $Id: Chooser.pm,v 1.21 2005-02-12 14:02:20 jvprat-guest Exp $
 #
 # Copyright 2002,2003,2004,2005 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -21,12 +21,13 @@ use 5.006;
 use strict;
 use warnings;
 use Locale::gettext;
+use Locale::Po4a::Common;
 
 sub new {
     my ($module)=shift;
     my (%options)=@_;
 
-    die gettext("Need to provide a module name to the Chooser")."\n"
+    die wrap_mod("po4a::chooser", gettext("Need to provide a module name"))
       unless defined $module;
 
     my $modname;
@@ -40,8 +41,9 @@ sub new {
     if (! UNIVERSAL::can("Locale::Po4a::$modname", 'new')) {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
-            warn sprintf(gettext("Unknown format type: %s."), $module)."\n";
-	    warn sprintf(gettext("Module loading error: %s"), $@)."\n" 
+            warn wrap_msg(gettext("Unknown format type: %s."), $module);
+	    warn wrap_mod("po4a::chooser",
+		gettext("Module loading error: %s"), $@)
 	      if defined $options{'verbose'} && $options{'verbose'} > 0;
             list(1);
         }
@@ -50,14 +52,14 @@ sub new {
 }
 
 sub list {
-    warn gettext("List of valid formats:\n".
-		 "  - kernelhelp: Help messages of each kernel compilation option.\n".
-#		 "  - html: HTML documents (EXPERIMENTAL).\n".
-		 "  - man: Good old manual page format.\n".
-		 "  - pod: Perl Online Documentation format.\n".
-		 "  - sgml: either debiandoc or docbook DTD.\n".
-		 "  - dia: uncompressed Dia diagrams.\n".
-		 "  - guide: Gentoo Linux's xml documentation format.")."\n";
+    warn wrap_msg(gettext("List of valid formats:\n".
+		"  - kernelhelp: Help messages of each kernel compilation option.\n".
+#		"  - html: HTML documents (EXPERIMENTAL).\n".
+		"  - man: Good old manual page format.\n".
+		"  - pod: Perl Online Documentation format.\n".
+		"  - sgml: either debiandoc or docbook DTD.\n".
+		"  - dia: uncompressed Dia diagrams.\n".
+		"  - guide: Gentoo Linux's xml documentation format."));
     exit shift;
 }
 ##############################################################################

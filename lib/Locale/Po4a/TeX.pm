@@ -79,6 +79,7 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
              &untranslated &translate_joined &push_environment);
 
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 use Locale::gettext qw(dgettext);
 use File::Basename qw(dirname);
 use Carp qw(croak);
@@ -601,13 +602,14 @@ sub read {
 sub read_file {
     my $self=shift;
     my $filename=shift
-        or croak(dgettext("po4a","Can't read from file without having a filename")."\n");
+        or croak wrap_mod("po4a::tex",
+	    dgettext("po4a", "Can't read from file without having a filename"));
     my $linenum=0;
     my @entries=();
 
     open (my $in, $filename)
-        or croak (sprintf(dgettext("po4a","Can't read from %s: %s"),
-                          $filename,$!)."\n");
+        or croak wrap_mod("po4a::tex",
+	    dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
     while (defined (my $textline = <$in>)) {
         $linenum++;
         my $ref="$filename:$linenum";
@@ -648,8 +650,8 @@ sub read_file {
         }
     }
     close $in
-        or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),
-                          $filename,$!)."\n");
+        or croak wrap_mod("po4a::tex",
+	    dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
 
     return @entries;
 }
@@ -704,7 +706,8 @@ sub parse_definition_file {
     my ($self,$filename)=@_;
 
     open (IN,"<$my_dirname/$filename")
-        || die sprintf(dgettext("po4a","Can't open %s: %s"),$filename,$!)."\n";
+        || die wrap_mod("po4a::tex",
+	    dgettext("po4a", "Can't open %s: %s"), $filename, $!);
     while (<IN>) {
         if (/^%\s+po4a:/) {
             parse_definition_line($self, $_);
@@ -886,7 +889,7 @@ $commands{'begin'}= sub {
         ($t, @e) = &{$environments{$args->[0]}}($self,$command,$variant,
                                                 $opts,$args,$env);
     } else {
-        die sprintf("po4a::TeX: unknown environment: '%s'", $args->[0])."\n";
+        die wrap_mod("po4a::tex", "unknown environment: '%s'", $args->[0]);
     }
 
     print "($t, @e)\n"
@@ -903,8 +906,8 @@ $commands{'end'}= sub {
     if (!@$env || @$env[-1] ne $args->[0]) {
         # a begin may have been hidden in the middle of a translated
         # buffer. FIXME: Just warn for now.
-        warn sprintf("po4a::TeX: unmatched end of environment '%s'",
-                     $args->[0])."\n";
+        warn wrap_mod("po4a::tex", "unmatched end of environment '%s'",
+                     $args->[0]);
     } else {
         pop @$env;
     }
@@ -956,9 +959,8 @@ sub initialize {
 
     foreach my $opt (keys %options) {
         if ($options{$opt}) {
-            die sprintf("po4a::sgml: ".
-                        dgettext ("po4a","Unknown option: %s"), $opt).
-                        "\n"
+            die wrap_mod("po4a::tex",
+                         dgettext("po4a", "Unknown option: %s"), $opt)
                 unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options{$opt};
         }

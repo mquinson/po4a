@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.9 2005-01-07 22:50:52 nekral-guest Exp $
+# $Id: KernelHelp.pm,v 1.10 2005-02-12 14:02:20 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -16,6 +16,7 @@
 
 use Pod::Parser;
 use Locale::Po4a::TransTractor qw(process new);
+use Locale::Po4a::Common;
 
 package Locale::Po4a::KernelHelp;
 
@@ -103,7 +104,7 @@ sub parse {
 		$status=0;
 	    }
 	} else {
-	    die sprintf(gettext("%s: Syntax error",$ref))."\n";
+	    die wrap_ref_mod($ref, "po4a::kernelhelp", gettext("Syntax error"));
 	}
 
     	# Reinit the loop

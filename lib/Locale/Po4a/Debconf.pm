@@ -69,6 +69,7 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 use Locale::gettext qw(dgettext);
 
 
@@ -170,7 +171,7 @@ sub parse {
 	    
 	    $type = $value if $field eq 'Type';
 	    
-	    die sprintf("po4a::Debconf: ".dgettext("po4a","Translated field in master document: %s"),$field)
+	    die wrap_mod("po4a::debconf", dgettext("po4a", "Translated field in master document: %s"), $field)
 	      if $field =~ m/-/;
 	    
 	# paragraph separator within extended value    

@@ -62,6 +62,7 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 use Locale::gettext qw(dgettext);
 
 
@@ -69,24 +70,24 @@ sub initialize {}
 
 sub parse {
     my $self = shift;
-    
+
     my ($blanklines)=(""); # We want to preserve the blank lines inside the entry, and strip the extrem ones
-	
+
     my ($body)=""; # the accumulated paragraph
     my ($bodyref)="";
     my ($bodytype)="";
-    
+
     my ($line,$lref);
-    
+
     # main loop
     ($line,$lref)=$self->shiftline();
     print "seen >>$line<<\n" if $self->debug();
     while (defined($line)) {
-	    
+
 	# Begining of an entry
 	if ($line =~ m/^(\w[-+0-9a-z.]*) \(([^\(\) \t]+)\)((\s+[-0-9a-z]+)+)\;/i) {
-	    
-	    die sprintf("po4a::NewsDebian: ".dgettext("po4a","Begin of a new entry before the end of previous one at line %d"),$line)."\n"
+
+	    die wrap_ref_mod($lref, "po4a::newsdebian", dgettext("po4a", "Begin of a new entry before the end of previous one"))
 	      if (length ($body));
 
 	    $self->pushline($line."\n");
@@ -94,7 +95,7 @@ sub parse {
 	    # Signature of this entry
 	    $bodyref = $lref;
 	    $bodytype = $line;
-	    
+
 	    # eat all leading empty lines
 	    ($line,$lref)=$self->shiftline();
 	    while (defined($line) && $line =~ m/^\s*$/) {
@@ -103,21 +104,21 @@ sub parse {
 	    }
 	    # ups, ate one line too much. Put it back.
 	    $self->unshiftline($line,$lref);
-		    
-	    
+
+
 	    # get ready to read the entry (cleanups)
 	    $blanklines = "";
-	    
+
 	# End of current entry
 	} elsif ($line =~ m/^ \-\- (.*) <(.*)>  .*$/) { #((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?) *$/) {
 
 	    $self->translate($body, $bodyref, $bodytype,
 		             wrap=>0);
 	    $body="";
-	    
+
 	# non-specific line
 	} else {
-	    
+
 	    if ($line =~ /^\s*$/) {
 		$blanklines .= "$line";
 	    } else {
@@ -125,7 +126,7 @@ sub parse {
 		$blanklines = "";
 	    }
 	}
-	
+
 	($line,$lref)=$self->shiftline();
 	print "seen >>".($line || '')."<<\n" if $self->debug();
     }
