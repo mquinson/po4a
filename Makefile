@@ -19,4 +19,4 @@ stats: Build
 check:
 	script -c 'perl -V;perl Build.PL;./Build clean;./Build test verbose=1' po4a.log
 
-.PHONY: all install clean dist stats bugreport
+.PHONY: all install clean dist stats check
