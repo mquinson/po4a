@@ -524,7 +524,7 @@ sub parse{
 	    # the ones which won't get translated are not changed anymore. Let's play safe.
 	    $line =~ s/\\ /\xA0/g;
 	    $arguments =~ s/\\ /\xA0/g;
-#	    $arguments =~ s/^ +//;
+	    $arguments =~ s/^ +//;
 	    push @args,$arg1;
 	    
 	    foreach my $elem (split (/ +/,$arguments)) {
