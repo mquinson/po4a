@@ -54,12 +54,12 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(new initialize);
 
 use Locale::Po4a::TransTractor;
-use Locale::gettext qw(gettext);
+use Locale::gettext qw(dgettext);
 #is there any better (or more standard) package than this to recode strings?
 #use Locale::Recode;
 
 #It will mantain the path from the root tag to the current one
-my @structure;
+my @path;
 
 sub read {
 	my ($self,$filename)=@_;
@@ -173,7 +173,7 @@ sub initialize {
 
 	foreach my $opt (keys %options) {
 		if ($options{$opt}) {
-			die sprintf(gettext ("po4a::xml: Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
+			die sprintf(dgettext ("po4a","po4a::xml: Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
 			$self->{options}{$opt} = $options{$opt};
 		}
 	}
@@ -351,7 +351,7 @@ sub tag_trans_doctype {
 	if (defined $self->{options}{'doctype'} ) {
 		my $doctype = $self->{options}{'doctype'};
 		if ( $tag[0] !~ /\Q$doctype\E/i ) {
-			die sprintf(gettext("po4a::xml: Bad document type. '%s' expected."),$doctype)."\n";
+			die sprintf(dgettext("po4a","po4a::xml: Bad document type. '%s' expected."),$doctype)."\n";
 		}
 	}
 	my $i = 0;
@@ -387,7 +387,7 @@ sub tag_trans_doctype {
 
 sub tag_break_close {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_structure."<".
+	if ($self->tag_in_list($self->get_path."<".
 		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
 		return 0;
 	} else {
@@ -400,16 +400,16 @@ sub tag_trans_close {
 	my ($self,@tag)=@_;
 	my $name = $self->get_tag_name(@tag);
 
-	my $test = pop @structure;
+	my $test = pop @path;
 	if ( $test ne $name ) {
-		die gettext("po4a::xml: Unexpected closing tag. The main document may be wrong.")."\n";
+		die dgettext("po4a","po4a::xml: Unexpected closing tag. The main document may be wrong.")."\n";
 	}
 	return $self->join_lines(@tag);
 }
 
 sub tag_break_alone {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_structure."<".
+	if ($self->tag_in_list($self->get_path."<".
 		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
 		return 0;
 	} else {
@@ -422,7 +422,7 @@ sub tag_trans_alone {
 	my ($self,@tag)=@_;
 	my $name = $self->get_tag_name(@tag);
 	my ($spaces,$attr);
-	push @structure, $name;
+	push @path, $name;
 
 my $tag = $self->join_lines(@tag);
 	$tag =~ /^(\S*)(\s*)(.*)/s;
@@ -430,13 +430,13 @@ my $tag = $self->join_lines(@tag);
 
 	#$attr = $self->treat_attributes(@tag); #should be only the attributes
 
-	pop @structure;
+	pop @path;
 	return $name.$spaces.$attr;
 }
 
 sub tag_break_open {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_structure."<".
+	if ($self->tag_in_list($self->get_path."<".
 		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
 		return 0;
 	} else {
@@ -449,7 +449,7 @@ sub tag_trans_open {
 	my ($self,@tag)=@_;
 	my ($spaces,$attr);
 	my $name = $self->get_tag_name(@tag);
-	push @structure, $name;
+	push @path, $name;
 
 my $tag = $self->join_lines(@tag);
 	$tag =~ /^(\S*)(\s*)(.*)/s;
@@ -464,17 +464,17 @@ my $tag = $self->join_lines(@tag);
 
 =head2 WORKING WITH TAGS
 
-=item get_structure
+=item get_path
 
 This function returns the path to the current tag from the document's root,
 in the form <html><body><p>.
 
 =cut
 
-sub get_structure {
+sub get_path {
 	my $self = shift;
-	if ( @structure > 0 ) {
-		return "<".join("><",@structure).">";
+	if ( @path > 0 ) {
+		return "<".join("><",@path).">";
 	} else {
 		return "outside any tag (error?)";
 	}
@@ -766,7 +766,7 @@ sub treat_content {
 	}
 
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
-		my $struc = $self->get_structure;
+		my $struc = $self->get_path;
 		my $inlist = $self->tag_in_list($struc,@{$self->{tags}});
 #print $self->{options}{'tagsonly'}."==".$inlist."\n";
 		if ( $self->{options}{'tagsonly'} eq $inlist ) {
@@ -933,3 +933,10 @@ under the terms of GPL (see COPYING file).
 #XML HEADER (ENCODING)
 #
 #breaking tag inside non-breaking tag (possible?) causes ugly comments
+
+#               <abbrev>
+#               W<acronym>
+#               W<arg>
+#               <artheader>
+#    with 'w' meaning wrap (by default) and 'W' meaning don't wrap.
+# there should be the module option to select the default behavior
