@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.2 2005-02-05 11:54:57 jvprat-guest Exp $
+# $Id: Common.pm,v 1.3 2005-02-13 12:38:28 jvprat-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -78,7 +78,7 @@ sub wrap_msg {
 
 =item wrap_mod($$@)
 
-This function works like msg_wrap(), but it takes a module name as the first
+This function works like wrap_msg(), but it takes a module name as the first
 argument, and leaves a space at the left of the message.
 
 =cut
@@ -94,7 +94,7 @@ sub wrap_mod {
 
 =item wrap_ref_mod($$$@)
 
-This function works like msg_wrap(), but it takes a file:line reference as the
+This function works like wrap_msg(), but it takes a file:line reference as the
 first argument, a module name as the second one, and leaves a space at the left
 of the message.
 
