@@ -80,7 +80,7 @@ for fich in `cat LISTE.TOTAL` ; do
 	
   echo "####### $fich"; 
   rm -f po4a-normalize.*
-  if PERLLIB=../lib ../po4a-normalize -f $module $tmp/$newfich 2>&1 ; then
+  if PERLLIB=../lib ../po4a-normalize -f $module -M iso-8859-1 $tmp/$newfich 2>&1 ; then
     if [ -e po4a-normalize.output ] ; then
       mv po4a-normalize.output $tmp/po4a-normalize.output
       $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 

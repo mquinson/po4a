@@ -166,14 +166,14 @@ results are the following:
  # of pages         : 5060
 
  Ignored pages      : 1742 (34%)
- parser fails       :  605 (12% of all; 18% of unignored)
+ parser fails       :  530 (12% of all; 18% of unignored)
 
- works perfectly    : 1888 (37% of all; 57% of unignored; 70% of processed)
- change wrapping    :  400 ( 8% of all; 12% of unignored; 15% of processed)
+ works perfectly    : 1947 (39% of all; 59% of unignored; 70% of processed)
+ change wrapping    :  409 ( 8% of all; 12% of unignored; 15% of processed)
  change wrapping
- and/or font        :  358 ( 7% of all; 11% of unignored; 13% of processed)
+ and/or font        :  364 ( 7% of all; 11% of unignored; 13% of processed)
 
- undetected problems:   67 ( 1% of all;  2% of unignored;  3% of processed)
+ undetected problems:   68 ( 1% of all;  2% of unignored;  2% of processed)
 
 Ignored pages are so, because they are generated from Pod, and should be
 translated with po4a::pod.
