@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.29 2004-11-05 20:33:51 barbier Exp $
+# $Id: Po.pm,v 1.30 2004-11-27 01:08:56 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -1057,7 +1057,7 @@ sub wrap {
     my @lines=split(/\n/,"$text");
     my $res="";
     my $first=1;
-    while (my $line=shift @lines) {
+    while (defined(my $line=shift @lines)) {
 	if ($first && length($line) > $col - 10) {
 	    unshift @lines,$line;
 	    $first=0;

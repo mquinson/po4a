@@ -413,6 +413,15 @@ sub pre_trans {
         set_regular("R");
     }
 
+    # After the simplification, the first char can be a \n.
+    # Simply push these newlines before the translation, but make sure the
+    # resulting string is not empty (or an additionnal line will be
+    # added).
+    if ($str =~ /^(\n+)(.+)$/s) {
+        $self->pushline($1);
+        $str = $2;
+    }
+
     # Kill minus sign/hyphen difference.
     # Aestetic of printed man pages may suffer, but:
     #  * they are translator-unfriendly
