@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.16 2004-08-08 23:08:27 jvprat-guest Exp $
+# $Id: Chooser.pm,v 1.17 2004-08-14 16:51:45 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -53,7 +53,8 @@ sub list {
 		 "  - man: Good old manual page format.\n".
 		 "  - pod: Perl Online Documentation format.\n".
 		 "  - sgml: either debiandoc or docbook DTD.\n".
-		 "  - dia: uncompressed Dia diagrams.")."\n";
+		 "  - dia: uncompressed Dia diagrams.\n".
+		 "  - guide: Gentoo Linux's xml documentation format.")."\n";
     exit shift;
 }
 ##############################################################################
