@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.7 2004-07-18 06:42:40 mquinson-guest Exp $
+# $Id: po4a,v 1.8 2004-07-18 07:15:16 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -261,14 +261,14 @@ while (<CONFIG>) {
 	$document{$main}{'format'} = $1;	
 	foreach my $arg (split(/ /,$args)) {
 	    die sprintf("%s:%d: ".
-		        gettext("The translated and master file are the same."),
-		        $config_file,$nb)
-	      if ($main eq $2);
-	    die sprintf("%s:%d: ".
 		        gettext("Unparsable argument '%s'").
 		        "\n",
 	                $config_file,$nb,$arg)
 	      unless ($arg =~ /^([^:]*):(.*)/);
+	    die sprintf("%s:%d: ".
+		        gettext("The translated and master file are the same."),
+		        $config_file,$nb)
+	      if ($main eq $2);
 	    $document{$main}{$1} = $2;
 	}
 
@@ -357,9 +357,15 @@ foreach my $master (keys %document) {
 		}
 	    }
 	}
-	print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
-	    $document{$master}{$lang},$percent,$hit,$queries)."\n" 
-	  if $verbose;
+	if ($verbose) {
+	    if ($percent == 100) {
+		print STDERR sprintf(gettext("%s is %s%% translated (%s strings)."),
+		    $document{$master}{$lang},$percent,$queries)."\n";
+	    } else {
+		print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
+		    $document{$master}{$lang},$percent,$hit,$queries)."\n";
+	    }
+	}
 
 	$doc->write($document{$master}{$lang});
     }
