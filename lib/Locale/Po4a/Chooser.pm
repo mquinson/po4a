@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.9 2004-04-30 22:47:58 barbier Exp $
+# $Id: Chooser.pm,v 1.10 2004-05-25 16:51:22 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -49,7 +49,8 @@ sub list {
 #		 "  - html: HTML documents (EXPERIMENTAL).\n".
 		 "  - man: Good old manual page format.\n".
 		 "  - pod: Perl Online Documentation format.\n".
-		 "  - sgml: either debiandoc or docbook DTD.")."\n";
+		 "  - sgml: either debiandoc or docbook DTD.\n".
+		 "  - dia: uncompressed Dia diagrams.")."\n";
     exit shift;
 }
 ##############################################################################
@@ -91,8 +92,9 @@ L<Locale::Po4a::Po(3pm)>
 L<Locale::Po4a::KernelHelp(3pm)>,
 L<Locale::Po4a::Man(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
-L<Locale::Po4a::Sgml(3pm)>.
-L<Locale::Po4a::Html(3pm)>.
+L<Locale::Po4a::Sgml(3pm)>,
+L<Locale::Po4a::Html(3pm)>,
+L<Locale::Po4a::Dia(3pm)>.
 
 =head1 AUTHORS
 
