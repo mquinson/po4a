@@ -11,7 +11,6 @@ clean: Build
 	@./Build realclean
 
 dist: Build
-	./Build distmeta # regenerates META.yml
 	@./Build dist
 
 stats: Build
