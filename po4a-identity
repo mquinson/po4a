@@ -1,0 +1,120 @@
+#!/usr/bin/perl -w
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+# $Id: po4a-identity,v 1.1 2002-12-13 07:40:01 mquinson Exp $
+#
+# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION="0.10.2";
+
+=head1 NAME
+
+po4a-identity - Parse an original file, and write back the result of parsing
+
+=head1 SYNOPSIS
+
+po4a-identity -t module I<original>
+
+=head1 DESCRIPTION
+
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.
+
+The C<po4a-identity> script is a debugging tool used to make sure that po4a don't
+change the document when it's not supposed to. Only use it if you're developping 
+a new module, or if you doubt the sanity of the tools.
+
+The generated document will be written to po4a-identity.output while the generated
+po file will be written to po4a-identity.po. No way to change that ;)
+
+=head1 OPTIONS
+
+=over 4
+
+=item -t
+
+format type of the documentation you want to handle. This can be one of:
+
+=over 4
+
+=item pod:
+
+Perl documentation format
+
+=item man:
+
+Good old manual page format
+
+=back 
+
+=item -V, --version
+
+Displays the version of the script and exits.
+
+=back
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-gettextize>.
+
+=head1 AUTHORS
+
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
+=cut
+
+
+use strict;
+use Locale::Po4a::Man;
+use Locale::Po4a::Pod;
+use Getopt::Long qw(GetOptions);
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_MESSAGES, "");
+textdomain('po4a');
+
+sub show_version {
+    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+}
+
+my ($help,$type,$debug,$verbose);
+GetOptions(
+        'help|h'       => \$help,
+        'type|t=s'     => \$type,
+
+        'verbose|v'   => \$verbose,
+        'debug|d'     => \$debug,
+        'version|V'    => \&show_version
+) or pod2usage(1);
+
+pod2usage (0) if $help;
+pod2usage (1) unless scalar @ARGV == 1;
+
+my $parser;
+if (lc($type) eq 'pod') {
+   $parser=Locale::Po4a::Pod->new();
+} elsif (lc($type) eq 'man') {
+   $parser=Locale::Po4a::Man->new();
+} else {
+  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  pod2usage(1);
+}
+
+my $filename = shift || pod2usage(1);
+-e $filename || die sprintf(gettext("File %s does not exists.\n"),$filename);
+
+$parser->read($filename);
+$parser->parse();
+$parser->write('po4a-identity.output');
+$parser->writepo('po4a-identity.po');
+
+__END__
+
