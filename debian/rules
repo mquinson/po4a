@@ -137,6 +137,6 @@ tar: clean
   tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
 
 deb:
-	dpkg-buildpackage -i'.*CVS.*' -rfakeroot
+	dpkg-buildpackage -i -rfakeroot
 
 .PHONY: build clean binary-indep binary-arch binary install
