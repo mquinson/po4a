@@ -63,6 +63,15 @@ po file provided in input.
 
 =back
 
+Here is a graphical representation of this:
+
+   Input document --\                             /---> Output document
+                     \                           /       (translated)
+                      +-> parse() function -----+
+                     /                           \
+   Input po --------/                             \---> Output po
+                                                         (extracted)
+
 =head1 FUNCTIONS YOUR PARSER SHOULD OVERRIDE
 
 =over 4
@@ -662,6 +671,8 @@ sub translate {
     my $self=shift;
     my ($string,$ref,$type)=(shift,shift,shift);
 
+    return "" unless defined($string) && length($string);
+
     $self->{DOC}{po_out}->push('msgid'     => "$string",
 			       'reference' => $ref,
 			       'type'      => $type)
@@ -673,6 +684,8 @@ sub translate {
 sub translate_wrapped {
     my $self=shift;
     my ($string,$ref,$type,$wrapcol)=(shift,shift,shift,shift|| 76);
+
+    return "" unless defined($string) && length($string);
 
     $self->{DOC}{po_out}->push_wrapped('msgid'     => $string,
 				      'reference' => $ref,
