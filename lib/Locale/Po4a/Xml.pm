@@ -148,7 +148,7 @@ You can also specify some tag options putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to override the default behavior specified by the global "wrap" option.
 
-Example: W<chapter><title>
+Example: WE<lt>chapterE<gt><title>
 
 =item attributes (TODO)
 
@@ -331,7 +331,7 @@ my @tag_types = (
 #		breaking	=> 1,
 #		f_translate	=> \&tag_trans_procins},
 	{	beginning	=> "!DOCTYPE",
-		end		=> "]",
+		end		=> "",
 		breaking	=> 1,
 		f_extract	=> \&tag_extract_doctype,
 		f_translate	=> \&tag_trans_doctype},
@@ -1025,7 +1025,7 @@ breaking tag inside non-breaking tag (possible?) causes ugly comments
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<Locale::Po4a::TransTranctor(3pm)>.
+L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>.
 
 =head1 AUTHORS
 

@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.5 2004-04-30 22:47:58 barbier Exp $
+# $Id: KernelHelp.pm,v 1.6 2004-07-30 00:17:41 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -156,7 +156,7 @@ file.
 
 =head1 SEE ALSO
 
-L<Pod::Parser>, L<po4a(7)>, L<Locale::Po4a::TransTranctor(3pm)>,
+L<Pod::Parser>, L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Man(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
 

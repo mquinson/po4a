@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.14 2004-07-29 01:27:51 mquinson-guest Exp $
+# $Id: Chooser.pm,v 1.15 2004-07-30 00:17:41 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -87,7 +87,7 @@ available format and exits on the value passed as argument.
 =item About po4a:
 
 L<po4a(7)>, 
-L<Locale::Po4a::TransTranctor(3pm)>,
+L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Po(3pm)>
 
 =item About modules:

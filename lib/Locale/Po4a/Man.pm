@@ -219,7 +219,7 @@ above. Isn't that coooool?
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<Locale::Po4a::TransTranctor(3pm)>,
+L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Pod(3pm)>.
 
 =head1 AUTHORS
