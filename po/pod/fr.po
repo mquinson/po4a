@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
-"POT-Creation-Date: 2005-03-05 12:22+0100\n"
+"POT-Creation-Date: 2005-03-05 19:32+0100\n"
 "PO-Revision-Date: 2004-11-10 14:11-0700\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
@@ -5590,9 +5590,11 @@ msgstr "post_trans"
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:296
 msgid ""
-"Wrapper arround Transtractor's translate, with pre- and post-processing "
+"Wrapper around Transtractor's translate, with pre- and post-processing "
 "filters."
 msgstr ""
+"Encapsulation de l'appel à la fonction translate du module Transtractor, en "
+"ajoutant des filtres avant et après la traduction."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:299
@@ -5625,6 +5627,10 @@ msgid ""
 "$separated_commands variable contains the space separated list of these "
 "commands."
 msgstr ""
+"Si aucune commande n'est trouvée au début du buffer, cette chaîne sera vide. "
+"Seules les commandes qui peuvent être séparées sont prises en compte. La "
+"variable $separated_commands contient la liste de ces commandes (séparées "
+"par des espaces)."
 
 # type: =item
 #: ../../lib/Locale/Po4a/TeX.pm:366 ../../lib/Locale/Po4a/TeX.pm:1050
@@ -5639,6 +5645,10 @@ msgid ""
 "numbered.  In this case, this field will contain \"*\".  If there is not "
 "variant, the field is an empty string."
 msgstr ""
+"Indique si une variante est utilisée. Par exemple, un astérisque (*) peut "
+"être ajouté à la fin des commandes de section pour indiquer qu'elles ne "
+"doivent pas être numérotées. Dans ce cas, ce champ contiendra S<« * »>. S'il "
+"n'y a pas de variante, ce champ est une chaîne vide."
 
 # type: =item
 #: ../../lib/Locale/Po4a/TeX.pm:373 ../../lib/Locale/Po4a/TeX.pm:1052
@@ -5662,6 +5672,9 @@ msgid ""
 "arguments.  If no command is found, the original buffer is not touched and "
 "returned in this field."
 msgstr ""
+"Le reste du buffer après le retrait de la commande de tête et de ses "
+"arguments. Si aucune commande n'est trouvée, le buffer original n'est pas "
+"modifié et est retourné dans ce champ."
 
 # type: =item
 #: ../../lib/Locale/Po4a/TeX.pm:461
@@ -5682,10 +5695,10 @@ msgstr "translate_buffer"
 #: ../../lib/Locale/Po4a/TeX.pm:556
 msgid ""
 "Recursively translate a buffer by separating leading and trailing commands "
-"(those which should be translatted separately) from the buffer."
+"(those which should be translated separately) from the buffer."
 msgstr ""
 "Traduit récursivement un buffer en séparant du buffer les commandes de tête "
-"et de queue (pour celles qui peuvent être séparées)."
+"et de queue (pour celles qui peuvent être traduites séparément)."
 
 #: ../../lib/Locale/Po4a/TeX.pm:751
 msgid "read"
@@ -5854,6 +5867,13 @@ msgid ""
 "to the last environment of this stack or to the name of the command (if the "
 "string is part of a command argument)."
 msgstr ""
+"Cette fonction ajoute le nom de l'environnement dans une pile, et ajoute la "
+"commande \\begin, sans la traduire, au document de sortie. Cette pile "
+"d'environnements est utilisée pour changer le comportement de l'analyseur "
+"(par exemple, les blocs ne sont pas remis en forme pour les environnements "
+"verbatim). Le type des chaînes qui se trouve dans le fichier PO est soit le "
+"dernier environnement de la pile, soit le nom de la commande (si la chaîne "
+"fait partie de l'argument d'une commande)."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:1390
@@ -5879,6 +5899,8 @@ msgstr "environnement tabular"
 #: ../../lib/Locale/Po4a/TeX.pm:1400
 msgid "A tabular environment would have to translate every cell separately."
 msgstr ""
+"L'environnement tabular devrait proposer de traduire chaque cellule "
+"séparément."
 
 # type: =head3
 #: ../../lib/Locale/Po4a/TeX.pm:1402 ../../lib/Locale/Po4a/TeX.pm:1423
@@ -5907,6 +5929,9 @@ msgid ""
 "only one environment function.  More functions should come in future "
 "releases."
 msgstr ""
+"Les arguments de la commande begin ne sont jamais traduits. Il n'y a "
+"actuellement qu'une seule fonction pour les environnement. D'autres "
+"devraient être développées pour les prochaines versions."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1418
 msgid "commands"
@@ -6084,7 +6109,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "   PARAGRAPH: while (1) {\n"
-"       my ($paragraph,$pararef,$line,$lref)=(\"\",\"\",\"\",\"\");\n"
+"       my ($paragraph,$pararef)=(\"\",\"\");\n"
 "       my $first=1;\n"
 "       my ($line,$lref)=$self->shiftline();\n"
 "       while (defined($line)) {\n"
@@ -6096,7 +6121,7 @@ msgid ""
 "\t      \n"
 msgstr ""
 "   PARAGRAPHE: while (1) {\n"
-"       my ($paragraphe,$pararef,$ligne,$lref)=(\"\",\"\",\"\",\"\");\n"
+"       my ($paragraphe,$pararef)=(\"\",\"\");\n"
 "       my $premier=1;\n"
 "       ($ligne,$lref)=$self->shiftline();\n"
 "       while (defined($ligne)) {\n"
@@ -8370,126 +8395,3 @@ msgid ""
 msgstr ""
 "L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)"
 ">."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "By default, msgids containing only one entity (like '&version;') are "
-#~ "skipped for the translator comfort. Activating this option prevents this "
-#~ "optimisation. It can be useful if the document contains a construction "
-#~ "like \"<title>&Acute;</title>\", even if I doubt such things to ever "
-#~ "happen..."
-#~ msgstr ""
-#~ "Par défaut, les msgid qui ne contiennnet qu'une entité (comme S<« "
-#~ "&version; »>) sont sauté pour le confort du traducteur. Activert cette "
-#~ "option arrête cette optimisation. Ceci peut être utile si le document "
-#~ "contient une construction telle que S<« <title>&Aacute;</title> »>, même "
-#~ "si je doute que ça puisse arriver..."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "the error output of nsgmls is redirected to /dev/null, which is clearly "
-#~ "bad. I dunno how to avoid that."
-#~ msgstr ""
-#~ "Les messages d'erreur de nsgmls sont redirigés vers /dev/null, ce qui "
-#~ "n'est pas bien, mais je ne sais pas comment éviter cela."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "The problem is that I have to \"protect\" the conditionnal inclusion (ie, "
-#~ "the C<E<lt>! [ %blah [> and C<]]E<gt>> stuff) from nsgml, because in the "
-#~ "other case, nsgmls eat them, and I dunno how to restore them in the final "
-#~ "document. To prevent that, I rewrite them to C<{PO4A-beg-blah}> and C<"
-#~ "{PO4A-end}>."
-#~ msgstr ""
-#~ "Le problème est que j'ai à S<« protéger »> les inclusions conditionnées "
-#~ "(utilisant S<« C<E<lt>! [ %blah [>> et S<« C<]]E<gt>> »>) de nsgml, parce "
-#~ "que dans ceratins cas, nsgmls les élimine, et je ne sais pas les rétablir "
-#~ "dans le document final. Pour empêcher cela, je les ré-écrit dans C<{PO4A-"
-#~ "beg-blah}> et C<{PO4A-end}>."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "Everything works well with nsgmls's output redirected that way, but it "
-#~ "will prevent us to detect that the document is badly formated."
-#~ msgstr ""
-#~ "Tout marche bien avec cette redirection des messages de nsgmls, mais ceci "
-#~ "empêchera de détecter que le document est mal formaté."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "It does work only with the debiandoc and docbook dtd. Adding support for "
-#~ "a new dtd should be very easy. The mecanism is the same for all dtd, you "
-#~ "just have to give a list of the existing tags and some of their "
-#~ "characteristics."
-#~ msgstr ""
-#~ "Ceci ne marche qu'avec les dtd debiandoc et docbook. L'ajout d'un support "
-#~ "pour un nouveau dtd doit être très facile. Le mécanisme est le même pour "
-#~ "chaque dtd, vous n'avez qu'à donner la liste des balises existantes et "
-#~ "certaines de leurs caractéristiques."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "Warning, support for dtds is quite experimental. I did not read any "
-#~ "reference manual to find the definition of all tags. I did add tag "
-#~ "definition to the module 'till it works for some documents I found on the "
-#~ "net. If your document use more tags than mine, it won't work. But as I "
-#~ "said above, fixing that should be quite easy."
-#~ msgstr ""
-#~ "Attention, le support des dtd est plutôt expérimental. Je n'ai lu aucun "
-#~ "manuel de référence pour trouver la définition de toutes ces balises. "
-#~ "J'ai ajouté des définitions de balises au module jusqu'à ce que ça marche "
-#~ "pour certains documents trouvé sur internet. Si votre document utilise "
-#~ "plus de balises que les miens, ça ne marchera pas. Mais, comme je l'ai "
-#~ "dit plus haut, corriger cela doit être assez facile."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "For debiandoc, I tested some of the manual of the DDP, but not all yet."
-#~ msgstr ""
-#~ "Pour le format debiandoc, je l'ai testé avec des manuels du DDP, mais "
-#~ "toujours pas tous."
-
-# type: textblock
-#, fuzzy
-#~ msgid ""
-#~ "This is because I preprocess the file to protect the conditional "
-#~ "inclusion (ie, the C<E<lt>! [ %blah [> and C<]]E<gt>> stuff) and some "
-#~ "entities (like &version;) from nsgmls because I want them verbatim to the "
-#~ "generated document. For that, I make a temp copy of the input file and do "
-#~ "all the changes I want to this before passing it to nsgmls for parsing."
-#~ msgstr ""
-#~ "Ceci est dû au fait que j'applique un prétraitement au fichier pour "
-#~ "protéger les inclusions conditionnelles (utilisant S<« C<E<lt>! [ %blah "
-#~ "[>> et S<« C<]]E<gt>> »>) et quelques entités (comme &version;) de sngmls "
-#~ "parce que je les veux tel quel dans le document généré. Pour cela, je "
-#~ "fait une copie temporaire du fichier d'entrée et effectue toutes les "
-#~ "modifications que je veux lui appliquer avant de le passer à nsgmls pour "
-#~ "son analyse."
-
-#, fuzzy
-#~ msgid ""
-#~ " Denis Barbier <barbier@linuxfr.org>\n"
-#~ " Martin Quinson <martin.quinson@tuxfamily.org>\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Denis Barbier <barbier@linuxfr.org>\n"
-#~ " Martin Quinson (mquinson#debian.org)\n"
-#~ "\n"
-
-# type: verbatim
-#, fuzzy
-#~ msgid ""
-#~ " Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
-#~ " Copyright 2002 by SPI, inc.\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Copyright (c) 1995 par David Megginson <dmeggins@aix1.uottawa.ca>\n"
-#~ " Copyright 2002, 2003, 2004, 2005 par SPI, inc.\n"
-#~ "\n"
