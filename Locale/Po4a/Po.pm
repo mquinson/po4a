@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.2 2002-12-27 20:36:20 mquinson Exp $
+# $Id: Po.pm,v 1.3 2003-01-09 08:59:52 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -667,6 +667,7 @@ sub unquote_text {
 # Warning, it changes the string and should only be called if the string is plain text
 sub canonize {
     my $text=shift;
+    $text =~ s/^ *//s;
     $text =~ s/([.])\n/$1  /gm;
     $text =~ s/ \n/ /gm;
     $text =~ s/\n/ /gm;
