@@ -687,8 +687,13 @@ sub parse{
 		}
 		$self->pushline($line."\n");
 		goto LINE;
-	    }		
-
+	    }
+	    
+	    # SH resets the wrapping (in addition to starting a section)
+	    if ($macro eq 'SH') {
+		$wrapped_mode='YES';
+	    }
+	    
 	    # Special case:
 	    #  .Dd => Indicates that this is a mdoc page
 	    if ($macro eq 'Dd') {
