@@ -397,15 +397,6 @@ sub pre_trans {
     if (defined $self->{type} && $self->{type} =~ m/^(SH|HP|SS)$/) {
         set_regular("R");
     }
-    if ($str =~ /\\f[RSBI]/) {
-	die sprintf(dgettext("po4a",
-		"po4a::man: %s: Nested font modifiers, ie, something like:\n".
-		"po4a::man:  \\fB bold text \\fI italic text \\fR back to roman\n".
-		"po4a::man: This is not supported, modify the original page to something like:\n".
-		"po4a::man:  \\fB bold text \\fR back to roman \\fI italic text \\fR back to roman\n".
-		"po4a::man: Here is the faulty line:\n".
-		" %s"),$ref,$origstr)."\n";
-    }
 
     # Kill minus sign/hyphen difference.
     # Aestetic of printed man pages may suffer, but:
@@ -882,7 +873,7 @@ sub splitargs {
                 $elem =~ s/^1/R/;
                 $elem =~ s/^2/I/;
                 $elem =~ s/^3/B/;
-                $elem =~ s/^4/BI/;
+                $elem =~ s/^4/(BI/;
 
             if ($elem =~ /^([1-4]|B|I|R|\(CW|\[\]|\[P\])(.*)$/s) {
                 # Each element should now start by a recognized font modifier
@@ -920,14 +911,31 @@ sub splitargs {
             $str =~ s/($FONT_RE)($FONT_RE)/$2/s;
         }
 
+        # when there are two concecutive switches to the regular font,
+        # remove the last one.
+        while ($str =~ /^(.*)\\f$regular_font # anything followed by a
+                                              # regular font
+                        ((?:\\(?!f)|[^\\])*)  # the text concerned by
+                                              # this font (i.e. without any
+                                              # font modifier, i.e. it
+                                              # contains no '\' followed by
+                                              # an 'f')
+                        \\f$regular_font      # another regular font
+                        (.*)$/sx) {
+            $str = "$1\\f$regular_font$2$3";
+        }
+
         # the regular font modifier at the beginning of the string is not
         # needed (the do_fonts subroutine ensure that every paragraph ends with
         # the regular font.
-        $str =~ s/^\\f$regular_font//;
+        if ($str =~ /^(.*?)\\f$regular_font(.*)$/s && $1 !~ /$FONT_RE/) {
+            $str = "$1$2";
+        }
 
         # Use special markup for common fonts, so that translators don't see
         # groff's font modifiers
         my $PO_FONTS = "B|I|R|\\(CW";
+        # remove the regular font from this list
         $PO_FONTS =~ s/^$regular_font\|//;
         $PO_FONTS =~ s/\|$regular_font\|/|/;
         $PO_FONTS =~ s/\|$regular_font$//;
