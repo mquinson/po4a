@@ -233,7 +233,7 @@ document. Here's a basic example of this function:
 
   sub found_string {
     my ($self,$text,$ref,$options)=@_;
-    $text = $self->translate($text,$ref,"type".$options->{'type'},
+    $text = $self->translate($text,$ref,"type ".$options->{'type'},
       'wrap'=>$self->{options}{'wrap'});
     return $text;
   }
@@ -1020,7 +1020,9 @@ MODIFY TAG TYPES FROM INHERITED MODULES
 (move the tag_types structure inside the $self hash?)
 
 XML HEADER (ENCODING)
+
 DOCTYPE (ENTITIES)
+
 INCLUDED FILES
 
 breaking tag inside non-breaking tag (possible?) causes ugly comments
