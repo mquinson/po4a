@@ -12,6 +12,9 @@ Usage: $0
             Check all man pages found in /usr/share/man/man[1-8]
        $0 <space separated list of man pages>
             Check the specified man pages.
+       $0 -f <file>
+            Check the man pages specified in <file> (one page per line).
+Man pages can be gzipped.
 $0 erases all LISTE.* files in the current directory and creates
 the following files:
 LISTE.TOTAL List of all the checked man pages
@@ -36,17 +39,24 @@ fi
 rm -f LISTE.*
 touch LISTE.{TOTAL,OK,OK2,WDIFF,PBS,IGN,WOK1,WOK2,WOK3}
 
-if [ $# != 0 ] ; then
-  echo $@ > LISTE.TOTAL
+if [ $# = 2 ] && [ $1 = "-f" ] ; then
+   cat $2 > LISTE.TOTAL
+elif [ $# != 0 ] ; then
+   echo $@ > LISTE.TOTAL
+else
+   if [ "$module" = "man" ] ; then
+      find /usr/share/man/man[1-8] -type f | sort > LISTE.TOTAL
+   elif [ "$module" = "pod" ] ; then
+      locate pod|egrep '\.pod$' | sort > LISTE.TOTAL
+   fi
 fi
+
 tmp=/tmp/po4a-check-$module-$$
 mkdir -p $tmp
 if [ "$module" = "man" ] ; then
-   [ $# = 0 ] && find /usr/share/man/man[1-8] -type f | sort > LISTE.TOTAL
    cmdtotxt="mantotxt"
 elif [ "$module" = "pod" ] ; then
-   [ $# = 0 ] && locate pod|egrep '\.pod$' | sort > LISTE.TOTAL
-   cmdtotxt="podtotxt" 
+   cmdtotxt="podtotxt"
 fi
 
 
@@ -81,7 +91,6 @@ for fich in `cat LISTE.TOTAL` ; do
   echo "####### $fich"; 
   rm -f po4a-normalize.*
   if PERLLIB=../lib ../po4a-normalize -f $module -M iso-8859-1 $tmp/$newfich 2>&1 ; then
-    if [ -e po4a-normalize.output ] ; then
       mv po4a-normalize.output $tmp/po4a-normalize.output
       $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
       $cmdtotxt $tmp/$newfich $tmp/$newfich;
@@ -173,13 +182,14 @@ for fich in `cat LISTE.TOTAL` ; do
           fi
         fi
       fi
-    else
+  else
+    if [ $? = 254 ]; then
       echo ">ign"
       echo $fich >> LISTE.IGN
+    else
+      echo ">pbs"
+      echo $fich >> LISTE.PBS
     fi
-  else
-    echo ">pbs"
-    echo $fich >> LISTE.PBS
   fi
   rm -f $tmp/$newfich* $tmp/po4a-normalize.*
   echo '-------------------'
