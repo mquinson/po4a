@@ -811,7 +811,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. First non-ascii character appears in %s"),$self->{TT}{non_ascii_ref})."\n"
+	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
 
