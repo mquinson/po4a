@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-# DIA module tester.
+# Character sets tester.
 
 #########################
 
