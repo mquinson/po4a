@@ -13,35 +13,39 @@ po4a (0.18-1) unstable; urgency=low
   - [Guide.pm] Added Guide XML support module
   
   [Martin Quinson]
-  - [man/test] Fix tests so that they stop make sure that the nf/fi bug of
-    man is still there. Test that it does not come back instead.
-  - Do not try (and fail miserably) to create path to output file when it's
-    in the current directory.
+  (generic)
   - Fix several typo in messages.
     - po4a: inverting the meaning. Closes #264535 in Debian
     - po4a-updatepo: was rather poor. Closes #264537 in Debian
     - Sgml.pm: induced a perl error (not enough args for format).
-      Thanks Olivier Trichet.
-  - [po4a] Kill the code checking that the first argument contains no colon,
-    since the filename can contain colons in which case we get false
-    positive on this one. Thanks to Julien Louis for reporting. 
-    (Closes: #265684) in Debian.
-  - [man] Convert on the fly the groff horror \*(lqlibc5\*(rq, which stands
-    for "libc5", with the quotes. Thanks to Phillipe Batailler for bringing
-    my attention to this.
-  - [man] add support for the groff builtin registers and for the ms
-    "Displays and keeps" macros. Allows to deal with the shadow package.
-  - [TransTractor/addendum] change a 'while (shift @toto) {}' to a 
+      Thanks Olivier Trichet for the last one, and Danilo for the others.
+  (TransTractor)
+  - Do not try (and fail miserably) to create path to output file when it's
+    in the current directory (also in Po.pm).
+  - [addendum] change a 'while (shift @toto) {}' to a 
     'do {shift; bla} while (scalar @toto)' so that we proceed even if @toto
-    contains empty strings.
-  - [Sgml] stop pushline()ing empty strings since it breaks TransTractor
-  Each of the two previous ones (Closes: #265383) of Debian. Yup, this bug
-  is fixed twice. Slam!
-  - [Man] No groff nbsp (ie '\ ') on the last pos of the line, or groff adds
-     an extra space. Thanks to Nicolas Francois for the info.
-  - [Man] Convert \- to - on the fly. The asteatic of the printed man page
-     may suffer (a hyphen is different of a minus sign in ps/pdf), but makes 
-     translator's life easier. Thanks to Nicolas Francois for the expertise.
+    contains empty strings. (Clauses: #265383) of Debian
+  (Sgml)
+  - stop pushline()ing empty strings since it breaks TransTractor. Also
+    closes Debian's #265383. Yup, this bug is fixed twice. Slam!
+  (Man)
+  - Fix tests so that they stop make sure that the nf/fi bug of man is still
+    there. Test that it does not come back instead.
+  - Convert on the fly the groff horror \*(lqlibc5\*(rq, which stands for
+    "libc5", with the quotes. Thanks to Phillipe Batailler for bringing my
+    attention to this.
+  - Add support for the groff builtin registers and for the ms
+    "Displays and keeps" macros. This was needed to deal with the man pages
+    of shadow and dpkg.
+  - No groff nbsp (ie '\ ') on the last pos of the line, or groff adds an
+    extra space. Thanks to Nicolas Francois for the info. 
+  - Convert \- to - on the fly. The asteatic of the printed man page may
+    suffer (a hyphen is different of a minus sign in ps/pdf), but makes
+    translator's life easier. Thanks to Nicolas Francois for the expertise.
+  (po4a)
+  - Kill the code checking that the first argument contains no colon, since
+    the filename can contain colons. This triggers false positives here.
+    Thanks to Julien Louis for reporting. (Closes: #265684).
 
   [Danilo Piazzalunga]
   - [po/bin/it.po & po/pod/it.po] Add Italian translation
