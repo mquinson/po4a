@@ -1,7 +1,7 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.19 2005-01-07 22:50:52 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.20 2005-01-23 00:37:27 mquinson Exp $
 #
-# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002,2003,2004,2005 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -32,6 +32,8 @@ sub new {
     my $modname;
     if ($module eq 'kernelhelp') {
         $modname = 'KernelHelp';
+    } elsif ($module eq 'newsdebian') {
+        $modname = 'NewsDebian';
     } else {
         $modname = ucfirst($module);
     }
@@ -39,7 +41,8 @@ sub new {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
             warn sprintf(gettext("Unknown format type: %s."), $module)."\n";
-	    warn sprintf(gettext("Module loading error: %s"), $@)."\n" if $options{'verbose'} > 0;
+	    warn sprintf(gettext("Module loading error: %s"), $@)."\n" 
+	      if defined $options{'verbose'} && $options{'verbose'} > 0;
             list(1);
         }
     }
@@ -109,7 +112,7 @@ L<Locale::Po4a::Dia(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002 by SPI, inc.
+Copyright 2002,2003,2004,2005 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
