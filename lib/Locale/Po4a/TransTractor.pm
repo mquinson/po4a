@@ -290,14 +290,8 @@ sub new {
     my %options=@_;
     ## Bless ourselves into the desired class and perform any initialization
     bless $self, $class;
-    $self->initialize(%options);
-    return $self;
-}
-
-sub initialize {
-    my $self=shift;
-    my %options=@_;
-
+    
+    ## Create our private data
     # private data
     $self->{TT}=(); 
     $self->{TT}{po_in}=Locale::Po4a::Po->new();
@@ -307,13 +301,17 @@ sub initialize {
     #  [0] is the line content, [1] is the reference [2] the type
     $self->{TT}{doc_in}=();
     $self->{TT}{doc_out}=();
-
     if (defined $options{'verbose'}) {
 	$self->{TT}{verbose}  =  $options{'verbose'};
     }
     if (defined $options{'debug'}) {
 	$self->{TT}{debug}  =  $options{'debug'};
     }
+
+    ## initialize the plugin
+    $self->initialize(%options);
+    
+    return $self;
 }
 
 =back
