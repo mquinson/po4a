@@ -53,7 +53,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
     $val=system($tests[$i]{'run'});
     $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
-    print STDERR $tests[$i]{'run'} unless ($val == 0);
+    diag($tests[$i]{'run'}) unless ($val == 0);
 
     SKIP: {
     	skip ("Command don't run, can't test the validity of its return",1)
@@ -61,9 +61,12 @@ for (my $i=0; $i<scalar @tests; $i++) {
         $val=system($tests[$i]{'test'});	
     	$name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
-	print STDERR "Failed (retval=$val) on:\n".
-	    $tests[$i]{'test'}."\nWas created with:\n".
-	    $tests[$i]{'run'}."\n" unless ($val == 0);
+	unless ($val == 0) {
+	    diag ("Failed (retval=$val) on:");
+	    diag ($tests[$i]{'test'});
+	    diag ("Was created with:");
+	    diag ($tests[$i]{'run'});
+	}
     }
 
 #    system("rm -f tmp/* 2>&1");
