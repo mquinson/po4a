@@ -20,11 +20,9 @@ use Locale::Po4a::Po;
 
 use Locale::gettext qw(dgettext);
 
-eval q{use Locale::Po4a::Pod.pm};
-
 =head1 NAME
 
-Po4a TransTractor - Generic trans(later ex)tracor.
+Po4a TransTractor - Generic trans(lator ex)tractor.
 
 =head1 DESCRIPTION
 
