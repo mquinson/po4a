@@ -223,15 +223,15 @@ sub pre_trans {
 
     # Accentuated characters
     # FIXME: only do this if the encoding is UTF-8?
-    $str =~ s/${RE_ESCAPE}`a/à/g;
-#    $str =~ s/${RE_ESCAPE}c{c}/ç/g; # not in texinfo: @,{c}
-    $str =~ s/${RE_ESCAPE}^e/ê/g;
-    $str =~ s/${RE_ESCAPE}'e/é/g;
-    $str =~ s/${RE_ESCAPE}`e/è/g;
-    $str =~ s/${RE_ESCAPE}`u/ù/g;
-    $str =~ s/${RE_ESCAPE}"i/ï/g;
-    # Non breaking space. FIXME: should we change $\sim$ to ~
-    $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
+#    $str =~ s/${RE_ESCAPE}`a/Ã /g;
+##    $str =~ s/${RE_ESCAPE}c{c}/Ã§/g; # not in texinfo: @,{c}
+#    $str =~ s/${RE_ESCAPE}^e/Ãª/g;
+#    $str =~ s/${RE_ESCAPE}'e/Ã©/g;
+#    $str =~ s/${RE_ESCAPE}`e/Ã¨/g;
+#    $str =~ s/${RE_ESCAPE}`u/Ã¹/g;
+#    $str =~ s/${RE_ESCAPE}"i/Ã¯/g;
+#    # Non breaking space. FIXME: should we change $\sim$ to ~
+#    $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -245,15 +245,15 @@ sub post_trans {
         if ($debug{'postrans'});
 
     # Accentuated characters
-    $str =~ s/à/${ESCAPE}`a/g;
-#    $str =~ s/ç/$ESCAPEc{c}/g; # FIXME: not in texinfo
-    $str =~ s/ê/${ESCAPE}^e/g;
-    $str =~ s/é/${ESCAPE}'e/g;
-    $str =~ s/è/${ESCAPE}`e/g;
-    $str =~ s/ù/${ESCAPE}`u/g;
-    $str =~ s/ï/${ESCAPE}"i/g;
-    # Non breaking space. FIXME: should we change ~ to $\sim$
-    $str =~ s/\xA0/~/g; # FIXME: not in texinfo
+#    $str =~ s/Ã /${ESCAPE}`a/g;
+##    $str =~ s/Ã§/$ESCAPEc{c}/g; # FIXME: not in texinfo
+#    $str =~ s/Ãª/${ESCAPE}^e/g;
+#    $str =~ s/Ã©/${ESCAPE}'e/g;
+#    $str =~ s/Ã¨/${ESCAPE}`e/g;
+#    $str =~ s/Ã¹/${ESCAPE}`u/g;
+#    $str =~ s/Ã¯/${ESCAPE}"i/g;
+#    # Non breaking space. FIXME: should we change ~ to $\sim$
+#    $str =~ s/\xA0/~/g; # FIXME: not in texinfo
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
@@ -654,13 +654,13 @@ sub read_file {
     my $self=shift;
     my $filename=shift
         or croak wrap_mod("po4a::tex",
-	    dgettext("po4a", "Can't read from file without having a filename"));
+            dgettext("po4a", "Can't read from file without having a filename"));
     my $linenum=0;
     my @entries=();
 
     open (my $in, $filename)
         or croak wrap_mod("po4a::tex",
-	    dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
+            dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
     while (defined (my $textline = <$in>)) {
         $linenum++;
         my $ref="$filename:$linenum";
@@ -711,7 +711,7 @@ sub read_file {
     }
     close $in
         or croak wrap_mod("po4a::tex",
-	    dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
+            dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
 
     return @entries;
 }
@@ -772,7 +772,7 @@ sub parse_definition_file {
 
     open (IN,"<$my_dirname/$filename")
         || die wrap_mod("po4a::tex",
-	    dgettext("po4a", "Can't open %s: %s"), $filename, $!);
+            dgettext("po4a", "Can't open %s: %s"), $filename, $!);
     while (<IN>) {
         if (/^%\s+po4a:/) {
             parse_definition_line($self, $_);
@@ -823,7 +823,7 @@ sub parse_definition_line {
 
 sub is_closed {
     my $paragraph = shift;
-# FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument 
+# FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument
     my $tmp = $paragraph;
     my $closing = 0;
     my $opening = 0;
