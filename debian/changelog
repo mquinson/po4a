@@ -10,8 +10,17 @@ po4a (0.15.5-1) NOT RELEASED; urgency=low
     - Detect non-master files and repport them properly. This was alioth's
       #300591 and savannah's #6438.
     - Make a gentle error message when SGMLS.pm was not found.
+    - Issue warnings ("hello, user. This is a feature") when msgid is
+      skipped because it contains an entity alone, or because it contains
+      only tags. The translation of those is always the msgid itself.
+    - Detect msgid containing one entity and spaces, and skip them also.
+    - Permit the translation of entity definition (not for file including
+      ones, but for the rewrite ones)
   * Fix a bunch of typos repported by Francois Gouget (thanks). 
     This was savannah's #7152.
+  * [t/data-02/man.po] back to 100% success on tests
+    Reformating to match what we get. This does not impact the semantic of
+    the file, and I belive the change is due to gettext. 
 
  --
 
