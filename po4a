@@ -1,0 +1,350 @@
+#! /usr/bin/perl
+eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+    if $running_under_some_shell;
+
+# po4a -- Update both the po files and translated documents in one shoot
+# $Id: po4a,v 1.1 2004-07-16 04:08:03 mquinson-guest Exp $
+#
+# Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION=$Locale::Po4a::TransTractor::VERSION;
+
+=head1 NAME
+
+po4a - Update both the po files and translated documents in one shoot
+
+=head1 SYNOPSIS
+
+po4a [-dhvV] E<lt>config_fileE<gt>
+
+=head1 DESCRIPTION
+
+The po4a (po for anything) project goal is to ease translations (and more
+interstingly, the maintenance of translation) using gettext tools on areas
+where they were not expected like documentation.
+
+The C<po4a> program is in charge of updating both the po files (to sync
+them to the original documents) and the translated documents (to sync 
+them to the po files). The main point is to make the use of po4a easier
+without having to remember of the command line options.
+
+It also allows you to mix document having different formats into the same
+pot files so that you can have only one such file per project.
+
+This behaviour can be mimicked by the other tools of the po4a suite (for
+example with makefiles), but it is rather difficult to do, and exausting to 
+redo the same complicated makefiles for each project using po4a.
+
+=head1 CONFIGURATION FILE SYNTAX
+
+The (mandatory) argument is the path to the configuration file to use. 
+Its syntax aims at being simple and close to the configuration files used 
+by the intl-tools projects.
+
+Comments in this files are noted by the char '#'. It comments everthing 
+until the end of the line. Lines can be continued by escaping the end of line.
+All non blank lines must begin with a [] command, followed by its arguments. 
+(sound difficult said that way, but it is rather easy, I hope ;)
+
+=head2 Specifying the paths to translator inputs
+
+First, you have to specify where the translator input files (ie, the files 
+used by translators to do their job) are located. It can be done by such a line:
+
+ [po4a_paths] doc/l10n/project.doc.pot fr:doc/l10n/fr.po de:doc/l10n/de.po
+
+The command is thus 'po4a_paths'. The first argument is the path to the pot 
+file to use. All subsequent arguments are of the self-explanationary form: 
+
+    <lang>:<path to the po file for this lang>
+
+=head2 Specifying the documents to translates
+
+You now naturally have to to specify which documents are translated, their 
+format, and where to put the translations. It can be made by such lines:
+
+ [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml de:doc/de/mein_cram.sgml
+ [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \
+             add_fr:doc/l10n/script.fr.add
+
+This should be rather self-explanationary also. Note that in the second case, 
+doc/l10n/script.fr.add is an addendum to add to the french version of this document.
+Please refer to po4a(7) for more information about the addendums.
+
+More formally, the format is: 
+
+ [type: <format>] <master_doc> <lang>:<localized_doc>* add_<lang>:<addendum>*
+
+=head1 OPTIONS
+
+=over 4
+
+=item -h, --help
+
+Show a short help message.
+
+=item -V, --version
+
+Displays the version of the script and exits.
+
+=item -v, --verbose
+
+Increase the verbosity of the program.
+
+=item -q, --quiet
+
+Decrease the verbosity of the program.
+
+=item -d, --debug
+
+Outputs some debugging informations.
+
+=back
+
+=head1 SHORTCOMMING
+
+=over 4
+
+=item
+
+Does not allow to pass any options to the modules.
+
+=item
+
+Does not allow to specify the threshold under which the translations are discarded.
+
+=item
+
+Dupplicates some code with the po4a-* programs.
+
+=back
+
+Patch welcome ;)
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>.
+
+=head1 AUTHORS
+
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2002, 2003, 2004 by SPI, inc.
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see COPYING file).
+
+=cut
+
+use 5.006;
+use strict;
+use warnings;
+
+use Getopt::Long qw(GetOptions);
+
+use Locale::Po4a::Chooser;
+use Locale::Po4a::TransTractor;
+
+use Pod::Usage qw(pod2usage);
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_MESSAGES, "");
+textdomain('po4a');
+
+
+sub show_version {
+    print sprintf(gettext(
+          "%s version %s.\n".
+          "written by Martin Quinson and Denis Barbier.\n\n".
+          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
+          "This is free software; see source code for copying\n".
+          "conditions. There is NO warranty; not even for\n".
+          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+          ), "po4a", $VERSION)."\n";
+    exit 0;
+}
+
+my ($help,$type,$debug,$verbose,$quiet,@options);
+$verbose = 0;
+$debug = 0;
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+GetOptions(
+        'help|h'        => \$help,
+        'verbose|v'     => \$verbose,
+        'debug|d'       => \$debug,
+        'quiet|q'       => \$quiet,
+        'version|V'     => \&show_version
+) or pod2usage(1);
+
+# Argument check
+$help && pod2usage (0);
+
+$verbose = 1 if $debug;
+$verbose = -1 if $quiet;
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+
+foreach (@options) {
+    if (m/^([^=]*)=(.*)$/) {
+	$options{$1}="$2";
+    } else {
+	$options{$_}=1;
+    }
+}
+
+my $config_file= shift(@ARGV) || pod2usage(1);
+# Check file existence
+-e $config_file || die sprintf(gettext("File %s does not exist."),$config_file)."\n";
+
+# Parse the config file
+my ($pot_filename) = "";
+my (%po_filename); # po_files: '$lang'=>'$path'
+my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
+open CONFIG,"$config_file" || die sprintf(gettext("Can't open %s: %s"),$config_file,$!)."\n";
+my ($line,$nb) = ("",0);
+while (<CONFIG>) {
+    $nb++;
+    s/#.*//; 
+    $line.=$_;
+    next if ($line =~ s/\\$//);
+    next unless ($line =~ /\S/);
+    $line =~ s/ +/ /g;
+    $line =~ s/^ //;
+    $line =~ s/ $//;
+    
+    die sprintf("%s:%d: ".gettext("Syntax error.")."\n",$config_file,$nb)
+      unless ($line =~ m/^\[([^\]]*)\] (\S+) (.*)?$/);
+    my ($cmd,$main,$args)=($1,$2,$3);
+    
+    print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $debug;
+    
+    die sprintf("%s:%d: ".
+	        gettext("The first argument (%s) must not contain any colon (':')")."\n",
+ 	        $config_file,$nb,$main)
+      if ($main =~ /:/);
+    
+    if ($cmd eq "po4a_paths") {
+	die sprintf("%s:%d: ".
+	            gettext("'po4a_path' redeclared").
+	            "\n",
+	            $config_file,$nb)
+	  if (length $pot_filename);
+	$pot_filename = $main;
+	foreach my $arg (split(/ /,$args)) {
+	    die sprintf("%s:%d: ".
+		        gettext("Unparsable argument '%s'").
+		        "\n",
+	                $config_file,$nb,$arg)
+	      unless ($arg =~ /^([^:]*):(.*)/);
+	    $po_filename{$1}=$2;
+	}
+	
+    } elsif ($cmd =~ m/type: *(.*)/) {
+	$document{$main}{'format'} = $1;	
+	foreach my $arg (split(/ /,$args)) {
+	    die sprintf("%s:%d: ".
+		        gettext("Unparsable argument '%s'").
+		        "\n",
+	                $config_file,$nb,$arg)
+	      unless ($arg =~ /^([^:]*):(.*)/);
+	    push @{$document{$main}{$1}},$2;
+	}
+
+    } else {
+	die sprintf("%s:%d: ".
+	            gettext("Unparsable command '%s'")."\n",
+	            $config_file,$nb,$cmd);
+    }
+  
+    $line = "";
+}
+close CONFIG; # don't care about error here
+die gettext("po4a_paths not declared. Dunno where to find the pot and po files")."\n"
+  unless (length $pot_filename);
+
+# make a big pot
+if (-e $pot_filename) {
+    print sprintf(gettext("Updating %s:")."\n",$pot_filename)
+      if $verbose;
+} else {
+    print sprintf(gettext("Creating %s:")."\n",$pot_filename)
+      if $verbose;
+}
+
+my $potfile=Locale::Po4a::Po->new();
+foreach my $master (keys %document) {
+    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},%options);
+    
+    $doc->setpoout($potfile);
+    my @file_in_name;
+    push @file_in_name, $master;
+    $doc->process('file_in_name' => \@file_in_name);
+    $potfile = $doc->getpoout();
+}
+$potfile->write($pot_filename);
+
+# update all po files
+my $lang;
+foreach $lang (sort keys %po_filename) {
+    if (-e $po_filename{$lang}) {
+	print STDERR sprintf(gettext("Updating %s:")."\n",$po_filename{$lang})
+	    if $verbose;    
+	system ("msgmerge","-U",$po_filename{$lang},$pot_filename) == 0 ||
+	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+	system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
+	  if $verbose;
+    } else {
+	print STDERR sprintf(gettext("Creating %s:")."\n",$po_filename{$lang}) 
+	    if $verbose;    
+	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
+	    die sprintf(gettext("Error while copying the po file: %s"),$!)."\n";
+    }
+}
+
+# update all translations
+foreach my $master (keys %document) {
+    LANG: foreach $lang (keys %{$document{$master}}) {
+	next if $lang eq "format" || $lang =~ /^add_/;
+	
+	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'} ,%options);
+	
+	my (@file_in_name,@file_out_name,@po_in_name);
+	push @file_in_name, $master;
+	push @file_out_name, $document{$master}{$lang};
+	push @po_in_name, $po_filename{$lang};
+	
+	$doc->process('file_in_name'  => \@file_in_name,
+	              'file_out_name' => \@file_out_name,
+	              'po_in_name'    => \@po_in_name);
+	
+	my ($percent,$hit,$queries) = $doc->stats();
+	
+	if ($percent<80)  {
+	    print STDERR sprintf(gettext("Translation of %s discarded: only %s%% are translated."),
+		                 $master,$percent)."\n";
+	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+	    next LANG;
+	}
+    
+	foreach my $add ($document{$master}{add_$lang}) {
+	    if ( !$doc->addendum($_) ) {
+		die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
+		    $add,$master)."\n";
+		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+		next LANG;
+	    }
+	}
+	$doc->write($document{$master}{$lang});
+    }
+}
+  
+__END__
