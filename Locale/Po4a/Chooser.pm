@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.2 2003-01-13 08:53:21 mquinson Exp $
+# $Id: Chooser.pm,v 1.3 2003-01-23 09:45:32 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -28,15 +28,16 @@ use Locale::gettext;
 
 sub new {
     my ($module)=shift;
+    my (%options)=@_;
 
     if (lc($module) eq 'kernelhelp') {
-	return Locale::Po4a::KernelHelp->new();
+	return Locale::Po4a::KernelHelp->new(%options);
     } elsif (lc($module) eq 'man') {
-	return Locale::Po4a::Man->new();
+	return Locale::Po4a::Man->new(%options);
     } elsif (lc($module) eq 'pod') {
-	return Locale::Po4a::Pod->new();
+	return Locale::Po4a::Pod->new(%options);
     } elsif (lc($module) eq 'sgml') {
-	return Locale::Po4a::Sgml->new();
+	return Locale::Po4a::Sgml->new(%options);
     } else {
 	warn sprintf(gettext("Unknown format type: %s.\n"),$module);
 	list(1);
