@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.1 2005-02-04 23:35:11 jvprat-guest Exp $
+# $Id: Common.pm,v 1.2 2005-02-05 11:54:57 jvprat-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -104,10 +104,15 @@ sub wrap_ref_mod {
     my ($ref, $mod, $msg) = (shift, shift, shift);
     my @args = @_;
 
-    $ref .= ": ";
-    my $spaces = " " x min(length($ref), 15);
-    $msg = "$ref($mod)\n$msg";
-    return wrap("", $spaces, sprintf($msg, @args))."\n";
+    if (!$mod) {
+	# If we don't get a module name, show the message like wrap_mod does
+	return wrap_mod($ref, $msg, @args);
+    } else {
+	$ref .= ": ";
+	my $spaces = " " x min(length($ref), 15);
+	$msg = "$ref($mod)\n$msg";
+	return wrap("", $spaces, sprintf($msg, @args))."\n";
+    }
 }
 
 1;
