@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.22 2005-02-27 22:56:00 mquinson Exp $
+# $Id: po4a-normalize,v 1.23 2005-03-03 20:08:54 danilo-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -124,9 +124,9 @@ GetOptions(
 	'version|V'    => \&show_version
 ) or pod2usage(1);
 
-$help && pod2usage (0);
+$help && pod2usage (1);
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage (1) unless scalar @ARGV == 1;
+pod2usage (0) unless scalar @ARGV == 1;
 
 my %options = (
     "verbose" => $verbose,

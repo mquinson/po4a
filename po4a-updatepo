@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.31 2005-02-27 22:56:00 mquinson Exp $
+# $Id: po4a-updatepo,v 1.32 2005-03-03 20:08:54 danilo-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -159,9 +159,9 @@ GetOptions('help|h'      => \$help,
 	   'version|V'   => \&show_version)
     or pod2usage(1);
 
-$help && pod2usage (0);
+$help && pod2usage (1);
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage (1) if scalar @masterfiles < 1 || scalar @pofiles < 1;
+pod2usage (0) if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 my %options = (
     "verbose" => $verbose,

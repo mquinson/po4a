@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.34 2005-02-27 22:56:00 mquinson Exp $
+# $Id: po4a-translate,v 1.35 2005-03-03 20:08:54 danilo-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -201,10 +201,10 @@ GetOptions(
 	'version|V'     => \&show_version
 ) or pod2usage(1);
 
-$help && pod2usage(0);
+$help && pod2usage(1);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 
-(defined($master_filename) && length($master_filename))||pod2usage(1);
+(defined($master_filename) && length($master_filename))||pod2usage(0);
 (defined($po_filename)     && length($po_filename))    ||pod2usage(1);
 -e $master_filename || die wrap_msg(gettext("File %s does not exist."), $master_filename);
 -e $po_filename || die wrap_msg(gettext("File %s does not exist."), $po_filename);

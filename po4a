@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.24 2005-02-27 22:56:00 mquinson Exp $
+# $Id: po4a,v 1.25 2005-03-03 20:08:54 danilo-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -236,7 +236,7 @@ GetOptions(
 ) or pod2usage(1);
 
 # Argument check
-$help && pod2usage (0);
+$help && pod2usage (1);
 
 my ($verbose) = (scalar @verbose);
 $verbose = 1 if $debug;
@@ -253,7 +253,7 @@ foreach (@options) {
     }
 }
 
-my $config_file= shift(@ARGV) || pod2usage(1);
+my $config_file= shift(@ARGV) || pod2usage(0);
 # Check file existence
 -e $config_file || die wrap_msg(gettext("File %s does not exist."), $config_file);
 
