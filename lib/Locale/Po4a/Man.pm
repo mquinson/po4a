@@ -513,95 +513,12 @@ sub parse{
 	    $arg1 .= $2;
 	    my $macro=$2;
 	    my $arguments=$3;
-	    
+
 	    # Split on spaces for arguments, but not spaces within double quotes
 	    my @args=();
-	    my $buffer="";
-	    my $escaped=0;
-	    # change non-breaking space before to ensure that split does what we want
-	    # We change them back before pushing into the arguments. The one which will be
-	    # translated will have the same change again (in pre_trans and post_trans), but
-	    # the ones which won't get translated are not changed anymore. Let's play safe.
-	    $line =~ s/\\ /\xA0/g;
-	    $arguments =~ s/\\ /\xA0/g;
-	    $arguments =~ s/^ +//;
+	    $line =~ s/\\ /\xA0/g; # This is probably not needed
 	    push @args,$arg1;
-	    
-	    foreach my $elem (split (/ +/,$arguments)) {
-		print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
-		    if ($debug{'splitargs'});
-
-		if (length $buffer && !($elem=~ /\\$/) ) {
-		    $buffer .= " ".$elem;
-		    print STDERR "Continuation of a quote\n"
-			if ($debug{'splitargs'});
-		    # print "buffer=$buffer.\n";
-		    if ($buffer =~ m/^"(.*)"(.+)$/) {
-			print STDERR "End of quote, with stuff after it\n"
-			    if ($debug{'splitargs'});
-			my ($a,$b)=($1,$2);
-			$a =~ s/\xA0/\\ /g;
-			$b =~ s/\xA0/\\ /g;
-			push @args,$a;
-			push @args,$b;
-			$buffer = "";
-		    } elsif ($buffer =~ m/^"(.*)"$/) {
-			print STDERR "End of a quote\n"
-			    if ($debug{'splitargs'});
-			my $a = $1;
-			$a =~ s/\xA0/\\ /g;
-			push @args,$a;
-			$buffer = "";
-		    } elsif ($escaped) {
-			print STDERR "End of an escaped sequence\n"
-			    if ($debug{'splitargs'});
-			unless(length($elem)){
-				die sprintf(dgettext("po4a",
-					"po4a::man: %s: Escaped space at the end of macro arg. With high\n".
-					"po4a::man: probability, it won't do the trick with po4a (because of\n".
-					"po4a::man: wrapping). You may want to remove it and use the .nf/.fi groff\n".
-					"po4a::man: macro to control the wrapping."),
-					 $ref)."\n";
-			}
-			$buffer =~ s/\xA0/\\ /g;
-			push @args,$buffer;
-			$buffer = "";
-			$escaped = 0;
-		    }
-		} elsif ($elem =~ m/^"(.*)"$/) {
-		    print STDERR "Quoted, no space\n"
-			if ($debug{'splitargs'});
-		    my $a = $1;
-		    $a =~ s/\xA0/\\ /g;
-		    push @args,$a;
-		} elsif ($elem =~ m/^"/) { #") {
-		    print STDERR "Begin of a quoting arg\n"
-			if ($debug{'splitargs'});
-		    $buffer=$elem;
-		} elsif ($elem =~ m/^(.*)\\$/) {
-		    print STDERR "escaped space after $1\n"
-			if ($debug{'splitargs'});
-		    # escaped space
-		    $buffer = ($buffer?$buffer:'').$1." ";
-		    $escaped = 1; 
-		} else {
-		    print STDERR "Unquoted arg, nothing to declare\n"
-			if ($debug{'splitargs'});
-		    push @args,$elem;
-		    $buffer=""
-		}
-	    }
-	    if ($buffer) {
-		$buffer=~ s/"//g; #"
-		$buffer =~ s/\xA0/\\ /g;
-		push @args,$buffer;
-	    }
-	    if ($debug{'splitargs'}) {
-		print STDERR "ARGS=";
-		map { print STDERR "$_^"} @args;
-		print STDERR "\n";
-	    }
-	    # Done with spliting the args. Do the job.
+	    push @args, splitargs($ref,$arguments);
 
 	    if ($macro eq 'B' || $macro eq 'I' || $macro eq 'R') {
 		# pass macro name
@@ -772,6 +689,98 @@ sub docheader {
            ".\\\" \n";
 }
 
+# Split request's arguments.
+# see:
+#     info groff --index-search "Request Arguments"
+sub splitargs {
+    my ($ref,$arguments) = ($_[0],$_[1]);
+    my @args=();
+    my $buffer="";
+    my $escaped=0;
+    # change non-breaking space before to ensure that split does what we want
+    # We change them back before pushing into the arguments. The one which
+    # will be translated will have the same change again (in pre_trans and
+    # post_trans), but the ones which won't get translated are not changed
+    # anymore. Let's play safe.
+    $arguments =~ s/\\ /\xA0/g;
+    $arguments =~ s/^ +//;
+    foreach my $elem (split (/ +/,$arguments)) {
+        print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
+            if ($debug{'splitargs'});
+
+        if (length $buffer && !($elem=~ /\\$/) ) {
+            $buffer .= " ".$elem;
+            print STDERR "Continuation of a quote\n"
+                if ($debug{'splitargs'});
+            # print "buffer=$buffer.\n";
+            if ($buffer =~ m/^"(.*)"(.+)$/) {
+                print STDERR "End of quote, with stuff after it\n"
+                    if ($debug{'splitargs'});
+                my ($a,$b)=($1,$2);
+                $a =~ s/\xA0/\\ /g;
+                $b =~ s/\xA0/\\ /g;
+                push @args,$a;
+                push @args,$b;
+                $buffer = "";
+            } elsif ($buffer =~ m/^"(.*)"$/) {
+                print STDERR "End of a quote\n"
+                    if ($debug{'splitargs'});
+                my $a = $1;
+                $a =~ s/\xA0/\\ /g;
+                push @args,$a;
+                $buffer = "";
+            } elsif ($escaped) {
+                print STDERR "End of an escaped sequence\n"
+                    if ($debug{'splitargs'});
+                unless(length($elem)){
+                    die sprintf(dgettext("po4a",
+                                "po4a::man: %s: Escaped space at the end of macro arg. With high\n".
+                                "po4a::man: probability, it won't do the trick with po4a (because of\n".
+                                "po4a::man: wrapping). You may want to remove it and use the .nf/.fi groff\n".
+                                "po4a::man: macro to control the wrapping."),
+                                 $ref)."\n";
+                }
+                $buffer =~ s/\xA0/\\ /g;
+                push @args,$buffer;
+                $buffer = "";
+                $escaped = 0;
+            }
+        } elsif ($elem =~ m/^"(.*)"$/) {
+            print STDERR "Quoted, no space\n"
+                if ($debug{'splitargs'});
+            my $a = $1;
+            $a =~ s/\xA0/\\ /g;
+            push @args,$a;
+        } elsif ($elem =~ m/^"/) { #") {
+            print STDERR "Begin of a quoting arg\n"
+                if ($debug{'splitargs'});
+            $buffer=$elem;
+        } elsif ($elem =~ m/^(.*)\\$/) {
+            print STDERR "escaped space after $1\n"
+                if ($debug{'splitargs'});
+            # escaped space
+            $buffer = ($buffer?$buffer:'').$1." ";
+            $escaped = 1;
+        } else {
+            print STDERR "Unquoted arg, nothing to declare\n"
+                if ($debug{'splitargs'});
+            push @args,$elem;
+            $buffer="";
+        }
+    }
+    if ($buffer) {
+        $buffer=~ s/"//g;
+        $buffer =~ s/\xA0/\\ /g;
+        push @args,$buffer;
+    }
+    if ($debug{'splitargs'}) {
+        print STDERR "ARGS=";
+        map { print STDERR "$_^"} @args;
+        print STDERR "\n";
+    }
+
+    return @args;
+}
 
 ##########################################
 #### DEFINITION OF THE MACROS WE KNOW ####
