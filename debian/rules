@@ -21,7 +21,7 @@ build: build-stamp
 build-stamp:
 	dh_testdir
 
-	@# Make sure the VERSION string were updated in binaries
+# Make sure the VERSION string were updated in binaries
 	@ pkgver=`dpkg-parsechangelog|\
 	          grep Version|\
 		  sed -e 's/Version: //' -e 's/-.*//' -e 's/[[:blank:]]*//g'`;\
@@ -39,12 +39,17 @@ build-stamp:
 	$(MAKE) -C po 
 
 	@echo Compile the localized man pages
+	-rm -rf mantmp
 	mkdir mantmp
+#  Woody version of pod2man does not accept the --name option,
+#  so input file is temporarily copied.
 	for bin in $(bins) ; do \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
+	      cp po/pod/po4a-$$bin.$$lang.pod mantmp/po4a-$$bin.pod && \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1p; \
+	       mantmp/po4a-$$bin.pod > mantmp/po4a-$$bin.$$lang.1p; \
+	      rm -f mantmp/po4a-$$bin.pod; \
 	    fi; \
 	  done; \
 	done
@@ -52,8 +57,10 @@ build-stamp:
 	  l=`echo $$lib|sed -e 's/\.pm//' -e 's/.*\///'`; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$l.$$lang.pod ] ; then \
+	      cp po/pod/$$l.$$lang.pod mantmp/$$l.pod && \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$l.$$lang.pod > mantmp/Locale::Po4a::$$l.$$lang.3pm; \
+	       mantmp/$$l.pod > mantmp/Locale::Po4a::$$l.$$lang.3pm; \
+	      rm -f mantmp/$$l.pod; \
 	    fi; \
 	  done; \
 	done
@@ -62,8 +69,10 @@ build-stamp:
 	    doc/$$doc.7.pod > mantmp/$$doc.7; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$doc.$$lang.pod ] ; then \
+	      cp po/pod/$$doc.$$lang.pod mantmp/$$doc.pod && \
 	      pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$doc.$$lang.pod > mantmp/$$doc.$$lang.7; \
+	       mantmp/$$doc.pod > mantmp/$$doc.$$lang.7; \
+	      rm -f mantmp/$$doc.pod; \
 	    fi; \
 	  done; \
 	done
