@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.18 2004-04-30 23:05:43 barbier Exp $
+# $Id: po4a-translate,v 1.19 2004-04-30 23:12:47 barbier Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -227,21 +227,21 @@ $doc->process('po_in_name'   => \@pos,
 my ($percent,$hit,$queries) = $doc->stats();
 my $error=0;
 
-print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)\n"),
-		     $master_filename,$percent,$hit,$queries) 
+printf STDERR (gettext("%s is %s%% translated (%s of %s strings)"),
+		     $master_filename,$percent,$hit,$queries),"\n" 
     if $verbose;
 
 
 if ($percent<$threshold)  {
-    print STDERR sprintf(gettext("ERROR: translation of %s discarded: only %s%% are translated ; %s%% is needed to keep translations.\n"),
-			 $master_filename,$percent,$threshold);
+    printf STDERR (gettext("ERROR: translation of %s discarded: only %s%% are translated ; %s%% is needed to keep translations."),
+			 $master_filename,$percent,$threshold),"\n";
     unlink($outfile) if (-e $outfile);
 } else {
     foreach (@addfiles) {
 	unless ($error) {
 	    $error ||= !$doc->addendum($_);
-	    die sprintf(gettext("ERROR: file %s couldn't be added to %s.\n  This translation is therefore discarded\n"),
-				 $_,$master_filename)
+	    die sprintf(gettext("ERROR: file %s couldn't be added to %s.\n  This translation is therefore discarded."),
+				 $_,$master_filename)."\n"
 		if $error;
 	}
     }
