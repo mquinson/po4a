@@ -1,12 +1,15 @@
 # List here all source files with translatable strings.
 SCRIPTS=po4a-gettextize po4a-updatepo po4a-translate po4a-identity
 LIBS=Po.pm TransTractor.pm Pod.pm Man.pm
+DOCS=po4a.7
 
-FILES=$(SCRIPTS) $(foreach lib,$(LIBS),LocalePo4a$(lib))
+FILES=$(SCRIPTS) $(foreach lib,$(LIBS),LocalePo4a$(lib)) $(DOCS)
 
 PATHSCRIPTS=$(foreach file,$(SCRIPTS),../../$(file))
 PATHLIBS=$(foreach file,$(LIBS),../../Locale/Po4a/$(file))
-PATHFILES=$(PATHLIBS) $(PATHSCRIPTS)
+PATHDOCS=$(foreach file,$(DOCS),../../doc/$(file).pod)
+
+PATHFILES=$(PATHLIBS) $(PATHSCRIPTS) $(PATHDOCS)
 
 POFILES=$(wildcard *.po)
 
@@ -20,7 +23,7 @@ install:
 
 po4a-pod.pot: $(PATHFILES)
 	@echo TRANSLATION=$(TRANSLATIONS)
-	PERL5LIB=../.. ../../po4a-updatepo -t pod $(foreach file,$(PATHFILES),-i $(file)) -o $@
+	@PERL5LIB=../.. ../../po4a-updatepo -t pod $(foreach file,$(PATHFILES),-i $(file)) -o $@
 
 %.po: po4a-pod.pot
 	@echo -n "Merging po4a-pod.pot and $@"
@@ -37,15 +40,18 @@ po4a-pod.pot: $(PATHFILES)
 	@msgfmt --statistics $@
 
 LocalePo4a%.fr.pod: ../../Locale/Po4a/% fr.po
-	PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
-	if [ -e $@ ] ; then \
+	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	@if [ -e $@ ] ; then \
 	  mv -f $@ `echo $@| \
 	            sed 's/LocalePo4a/Locale::Po4a::/' | \
 	            sed 's/\.pm//'` ; \
 	fi
 
 %.fr.pod: ../../% fr.po
-	PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+
+%.fr.pod: ../../doc/%.pod fr.po
+	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
 
 clean:
 	rm -f messages messages.mo *.pod *~

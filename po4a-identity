@@ -1,12 +1,12 @@
-#!/usr/bin/perl -w
-# $Id: po4a-identity,v 1.2 2002-12-18 07:24:48 mquinson Exp $
+#!/usr/bin/perl
+# $Id: po4a-identity,v 1.3 2002-12-27 20:36:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.10.3";
+my $VERSION="0.11";
 
 =head1 NAME
 
@@ -39,13 +39,15 @@ format type of the documentation you want to handle. This can be one of:
 
 =over 4
 
-=item pod:
+=item kernelhelp
 
-Perl documentation format
-
-=item man:
+=item man
 
 Good old manual page format
+
+=item pod
+
+Perl documentation format
 
 =back 
 
@@ -75,8 +77,10 @@ under the terms of GPL (see COPYING file).
 
 
 use strict;
-use Locale::Po4a::Man;
+use Locale::Po4a::KernelHelp;
 use Locale::Po4a::Pod;
+use Locale::Po4a::Man;
+
 use Getopt::Long qw(GetOptions);
 
 use Locale::gettext;
@@ -86,10 +90,11 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("po4a-identity version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
 }
 
 my ($help,$type,$debug,$verbose);
+Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
         'type|t=s'     => \$type,
@@ -103,12 +108,16 @@ pod2usage (0) if $help;
 pod2usage (1) unless scalar @ARGV == 1;
 
 my $parser;
-if (lc($type) eq 'pod') {
-   $parser=Locale::Po4a::Pod->new();
+
+if (lc($type) eq 'kernelhelp') {
+    $parser=Locale::Po4a::KernelHelp->new('verbose'=>$verbose);
 } elsif (lc($type) eq 'man') {
-   $parser=Locale::Po4a::Man->new();
+    $parser=Locale::Po4a::Man->new('verbose'=>$verbose);
+} elsif (lc($type) eq 'pod') {
+    $parser=Locale::Po4a::Pod->new('verbose'=>$verbose);
 } else {
-  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+    warn sprintf(gettext("Unknown format type: %s.\n".
+"Allowed values are: kernelhelp,man,pod.\n"),$type);
   pod2usage(1);
 }
 

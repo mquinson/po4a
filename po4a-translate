@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.4 2002-12-18 07:23:44 mquinson Exp $
+# $Id: po4a-translate,v 1.5 2002-12-27 20:36:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.10.3";
+my $VERSION="0.11";
 
 =head1 NAME
 
@@ -44,11 +44,8 @@ should be a PO4A header indicating where it should be added (see section
 
 =item -o, --outfile
 
-were should written the newly created documentation file (default: standard output).
-
-=item -w, --width
-
-Column to which we should wrap the resulting file.
+were should written the newly created documentation file (default: standard
+output).
 
 =item -k, --keep
 
@@ -56,9 +53,33 @@ Minimal threshold for translation percentage to keep (ie, write) the
 resulting file (default: 80). Ie, by default, files have to be translated
 at at least 80% to get written.
 
+=item -t
+
+format type of the documentation you want to handle. This can be one of:
+
+=over 4
+
+=item kernelhelp
+
+The help messages associated with each kernel compilation option
+
+=item man
+
+Good old manual page format
+
+=item pod
+
+Perl documentation format
+
+=back 
+
 =item -v, --verbose
 
 Be verbose about what's going on.
+
+=item -w, --width
+
+Column to which we should wrap the resulting file.
 
 =back
 
@@ -80,7 +101,7 @@ the translation).
 
 The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
 give then several fields (separated by ';') in the form
-    "key=value". Whitespaces ARE important. The allowed keys are:
+"key=value". Whitespaces ARE important. The allowed keys are:
 
 
 =head1 SEE ALSO
@@ -105,6 +126,7 @@ under the terms of GPL (see COPYING file).
 
 use Locale::Po4a::Pod;
 use Locale::Po4a::Man;
+use Locale::Po4a::KernelHelp;
 
 use Pod::Usage qw(pod2usage);
 use Getopt::Long qw(GetOptions);
@@ -116,6 +138,7 @@ use POSIX;     # Needed for setlocale()
 setlocale(LC_ALL, "");
 textdomain("po4a");
 
+Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
 my ($help,$verbose,@addfiles,$type);
 GetOptions(
@@ -131,20 +154,23 @@ $help && pod2usage(0);
 
 my $master_filename=shift||pod2usage(1);
 my $po_filename=shift ||pod2usage(1);
--e $master_filename || die sprintf(gettext("File %s does not exist\n",$master_filename));
--e $po_filename || die sprintf(gettext("File %s does not exist\n",$po_filename));
+-e $master_filename || die sprintf(gettext("File %s does not exist\n"),$master_filename);
+-e $po_filename || die sprintf(gettext("File %s does not exist\n"),$po_filename);
 
 my (@pos,@masters);
 push @pos,$po_filename;
 push @masters,$master_filename;
 
 my ($doc); # parser
-if (lc($type) eq 'pod') {
-    $doc=Locale::Po4a::Pod->new();
+if (lc($type) eq 'kernelhelp') {
+    $doc=Locale::Po4a::KernelHelp->new();
 } elsif (lc($type) eq 'man') {
     $doc=Locale::Po4a::Man->new();
+} elsif (lc($type) eq 'pod') {
+    $doc=Locale::Po4a::Pod->new();
 } else {
-  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  warn sprintf(gettext("Unknown format type: %s.\n".
+"Allowed values are: kernelhelp, man, pod.\n"),$type);
   pod2usage(1);
 }
 

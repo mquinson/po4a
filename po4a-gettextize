@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # pod2man -- Convert POD data to PO file.
-# $Id: po4a-gettextize,v 1.5 2002-12-18 07:23:44 mquinson Exp $
+# $Id: po4a-gettextize,v 1.6 2002-12-27 20:36:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.10.3";
+my $VERSION="0.11";
 
 =head1 NAME
 
@@ -28,9 +28,10 @@ where they were not expected like documentation.  The C<po4a-gettextize>
 script is in charge of converting documentation files to po files.
 
 If you start a new translation, C<po4a-gettextize> will extract the
-translatable strings from the pod file and write a pot file from it.
+translatable strings from the documentation file and write a pot file from
+it.
 
-If you already have a translated pod file, C<po4a-gettextize> will try to
+If you already have a translated file, C<po4a-gettextize> will try to
 extract the translations it contains and put them in place in the written
 po file. Be warned that very few intelligence is used in this process: the
 Nth string of the translated file is supposed to be the translation of the
@@ -58,13 +59,17 @@ format type of the documentation you want to handle. This can be one of:
 
 =over 4
 
-=item pod:
+=item kernelhelp
 
-Perl documentation format
+The help messages associated with each kernel compilation option
 
-=item man:
+=item man
 
 Good old manual page format
+
+=item pod
+
+Perl documentation format
 
 =back 
 
@@ -107,8 +112,11 @@ under the terms of GPL (see COPYING file).
 require 5.004;
 
 use Getopt::Long qw(GetOptions);
+
 use Locale::Po4a::Pod qw(writepo process);
 use Locale::Po4a::Man qw(writepo process);
+use Locale::Po4a::KernelHelp qw(writepo process);
+
 use Pod::Usage qw(pod2usage);
 
 use Locale::gettext;
@@ -140,12 +148,18 @@ pod2usage (1) if (scalar @ARGV < 1 || scalar @ARGV > 2);
 
 my ($origpod,$transpod);         # parsers
 
-if (lc($type) eq 'pod') {
-   ($origpod,$transpod)=(Locale::Po4a::Pod->new(),Locale::Po4a::Pod->new());
+if (lc($type) eq 'kernelhelp') {
+    ($origpod,$transpod)=(Locale::Po4a::KernelHelp->new(),
+			  Locale::Po4a::KernelHelp->new());
 } elsif (lc($type) eq 'man') {
-   ($origpod,$transpod)=(Locale::Po4a::Man->new(),Locale::Po4a::Man->new());
+   ($origpod,$transpod)=(Locale::Po4a::Man->new(),
+			 Locale::Po4a::Man->new());
+} elsif (lc($type) eq 'pod') {
+   ($origpod,$transpod)=(Locale::Po4a::Pod->new(),
+			 Locale::Po4a::Pod->new());
 } else {
-  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  warn sprintf(gettext("Unknown format type: %s.\n".
+"Allowed values are: kernelhelp, man, pod.\n"),$type);
   pod2usage(1);
 }
 

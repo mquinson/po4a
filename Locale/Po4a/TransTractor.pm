@@ -6,7 +6,7 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION = 0.1;
+$VERSION="0.11";
 @ISA = ();
 @EXPORT = qw(process translate_wrapped translate 
 	     read write readpo writepo);

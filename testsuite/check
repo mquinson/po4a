@@ -1,0 +1,77 @@
+#! /bin/sh
+module=man
+
+rm -f  LISTE*
+touch LISTE.{TOTAL,OK,DIFF,WDIFF,PBS,IGNORED}
+
+if [ "$module" = "man" ] ; then
+   find /usr/share/man/man[1-8] -type f > LISTE.TOTAL
+   cmdtotxt="mantotxt"
+else if [ "$module" = "pod" ] ; then
+   locate pod|egrep '\.pod$' > LISTE.TOTAL
+   cmdtotxt="podtotxt" 
+fi fi
+
+if [ $# != 0 ] ; then
+  echo $@ > LISTE.TOTAL
+fi
+
+mantotxt() {
+   man -Pcat -l $1 > $1.txt
+}
+
+podtotxt() { # $1 file to convert ; $2 name to pretend to have
+   if [ $1 != $2 ] ; then
+     mv $2 $2.old
+     mv $1 $2
+   fi
+   pod2man $2 > $2.man
+   man -Pcat -l $2.man > $2.txt
+   if [ $1 != $2 ] ; then
+     mv $2.txt $1.txt
+     mv $2 $1
+     mv $2.old $2
+   fi
+}
+
+tmp=/tmp/po4a-check-$module-$$
+mkdir -p $tmp
+
+for fich in `cat LISTE.TOTAL` ; do
+        if echo $fich | egrep '\.gz$' ; then
+	      newfich=`basename $fich .gz`; 
+ 	      zcat $fich > $tmp/$newfich;
+	else
+	      newfich=`basename $fich`
+	      cat $fich > $tmp/$newfich;
+	fi
+	
+	echo "####### $fich"; 
+	rm -f po4a-identity.*
+	if po4a-identity -t $module $tmp/$newfich 2>&1 ; then
+		if [ -e po4a-identity.output ] ; then
+		        mv po4a-identity.output $tmp/po4a-identity.output
+			$cmdtotxt $tmp/po4a-identity.output $tmp/$newfich; 
+			$cmdtotxt $tmp/$newfich $tmp/$newfich;
+			echo ">diff"
+			if diff -uBb $tmp/$newfich.txt $tmp/po4a-identity.output.txt ; then
+				echo "Ok"
+				echo $fich >> LISTE.OK
+			else 
+			        echo ">wdiff"
+			        if mywdiff $tmp/$newfich.txt $tmp/po4a-identity.output.txt ; then
+				       echo $fich >> LISTE.DIFF
+				else
+				       echo $fich >> LISTE.WDIFF
+				fi
+			fi	
+		else
+			echo $fich >> LISTE.IGNORED
+		fi
+	else 
+		echo $fich >> LISTE.PBS
+	fi
+	rm $tmp/*
+	echo '-------------------'
+done
+rm -r $tmp

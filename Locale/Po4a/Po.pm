@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.1 2002-12-13 09:42:34 mquinson Exp $
+# $Id: Po.pm,v 1.2 2002-12-27 20:36:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -61,7 +61,7 @@ package Locale::Po4a::Po;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION = 0.1;
+$VERSION="0.11";
 @ISA = ();
 @EXPORT = qw(load write gettext);
 
@@ -230,6 +230,8 @@ sub write{
 	    if $self->{po}{$msgid}{'comment'};
 	$output .= format_comment($self->{po}{$msgid}{'automatic'},". ") 
 	    if $self->{po}{$msgid}{'automatic'};
+	$output .= format_comment($self->{po}{$msgid}{'type'}," type: ") 
+	    if $self->{po}{$msgid}{'type'};
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
 	    if $self->{po}{$msgid}{'reference'};
 	$output .= format_comment($self->{po}{$msgid}{'flags'},", ") 
@@ -362,6 +364,7 @@ sub gettext_wrapped {
     my $wrapcol = shift || 76;
 
     $text=wrap ( $self->gettext( canonize($text) ) , $wrapcol );
+    return $text;
 }
 
 =item B<stats_get()>
@@ -519,7 +522,7 @@ sub push_raw {
     }
     
     #no msgid => header definition
-    unless ($entry{'msgid'}) { 
+    unless (length($entry{'msgid'})) { 
 #	if (defined($self->{header}) && $self->{header} =~ /\S/) {
 #	    warn dgettext("po4a","Redefinition of the header. The old one will be discarded\n");
 #	} FIXME: do that iff the header isn't the default one.
@@ -664,19 +667,22 @@ sub unquote_text {
 # Warning, it changes the string and should only be called if the string is plain text
 sub canonize {
     my $text=shift;
+    $text =~ s/([.])\n/$1  /gm;
+    $text =~ s/ \n/ /gm;
     $text =~ s/\n/ /gm;
-    $text =~ s/\.  +/\.  /gm;
-    $text =~ s/([^.])  */$1 /gm;
+    $text =~ s/([.)])  +/$1  /gm;
+    $text =~ s/([^.)])  */$1 /gm;
     $text =~ s/ *$//s;
     return $text;
 }
 
-# wraps the string. We don't use Text::Wrap since it mangle withspace at the end of broken
-# line
+# wraps the string. We don't use Text::Wrap since it mangles whitespace at
+# the end of splited line
 sub wrap {
     my $text=shift;
+    return "0" if ($text eq '0');
     my $col=shift || 76;
-    my @lines=split(/\n/,$text);
+    my @lines=split(/\n/,"$text");
     my $res="";
     my $first=1;
     while (my $line=shift @lines) {
@@ -688,11 +694,17 @@ sub wrap {
 	}
 	if (length($line) > $col) {
 	    my $pos=rindex($line," ",$col);
-	    my $pos2=0;#rindex($line,"-",$col);
-	    $pos = $pos > $pos2 ? $pos : $pos2;
-	    my $end=substr($line,$pos+1);
-	    $line=substr($line,0,$pos+1);
-	    unshift @lines,$end;
+	    while (substr($line,$pos-1,1) eq '.' && $pos != -1) {
+		$pos=rindex($line," ",$pos-1);
+	    }
+	    if ($pos != -1) {
+		my $end=substr($line,$pos+1);
+		$line=substr($line,0,$pos+1);
+		if ($end=~s/^( +)//) {
+		    $line .= $1;
+		}
+		unshift @lines,$end;
+	    }
 	}
 	$first=0;
 	$res.="$line\n";

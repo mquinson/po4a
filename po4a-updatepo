@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.4 2002-12-18 07:23:02 mquinson Exp $
+# $Id: po4a-updatepo,v 1.5 2002-12-27 20:36:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.10.3";
+my $VERSION="0.11";
 
 =head1 NAME
 
@@ -18,9 +18,9 @@ po4a-updatepo - Update the translation (in po format) of documentation.
 
 =head1 SYNOPSIS
 
-po4a-updatepo -t <type> (--master|m B<doc_file>)+ (--trans|-t B<trans.po>)+
+    po4a-updatepo -t <type> (--master|m B<doc_file>)+ (--trans B<trans.po>)+
 
-po4a-updatepo -t <type> (--input|-i B<POD_file>)+ (--output|-o B<trans.po>)+
+po4a-updatepo -t <type> (--input|-i B<doc_file>)+ (--output|-o B<trans.po>)+
 
 =head1 DESCRIPTION
 
@@ -28,7 +28,7 @@ The goal po4a [po for anything] project is to ease translations (and more
 interstingly, the maintainance of translation) using gettext tools on areas
 where they were not expected like documentation.  
 
-The C<po4a-gettextize> script is in charge of updating po files to make
+The C<po4a-updatepo> script is in charge of updating po files to make
 them reflect the changes made to the original documentation file. For that,
 it converts the documentation file to a pot file, and call L<msgmerge(1)>
 on this new pot and on the provided po files.
@@ -47,13 +47,17 @@ format type of the documentation you want to handle. This can be one of:
 
 =over 4
 
-=item pod:
+=item kernelhelp
 
-Perl documentation format
+The help messages associated with each kernel compilation option
 
-=item man:
+=item man
 
 Good old manual page format
+
+=item pod
+
+Perl documentation format
 
 =back 
 
@@ -148,12 +152,15 @@ pod2usage (0) if $help;
 pod2usage (1) if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 my ($doc); # parser
-if (lc($type) eq 'pod') {
-    $doc=Locale::Po4a::Pod->new();
+if (lc($type) eq 'kernelhelp') {
+    $doc=Locale::Po4a::KernelHelp->new();
 } elsif (lc($type) eq 'man') {
     $doc=Locale::Po4a::Man->new();
+} elsif (lc($type) eq 'pod') {
+    $doc=Locale::Po4a::Pod->new();
 } else {
-  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  warn sprintf(gettext("Unknown format type: %s.\n".
+"Allowed values are: kernelhelp,man,pod.\n"),$type);
   pod2usage(1);
 }
 map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;

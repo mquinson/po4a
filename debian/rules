@@ -6,9 +6,11 @@
 
 bins = gettextize updatepo translate identity
 
-libs=Po.pm TransTractor.pm    Pod.pm Man.pm
+libs=Po.pm TransTractor.pm    Man.pm Pod.pm KernelHelp.pm
 rootlib = Locale::Po4a::
 pathlib = /usr/share/perl5/Locale/Po4a
+
+docs = po4a
 
 langs= fr
 
@@ -35,6 +37,14 @@ build-stamp:
 	   echo "VERSION in po4a-$$bin is wrong ($$pkgver!=$$binver)";\
 	   exit 1; \
 	 fi; \
+	done ; \
+	for lib in $(libs) ; do \
+	 libver=`grep '$$VERSION=' Locale/Po4a/$$lib| \
+                 sed 's/^.*"\([^"]*\)".*/\1/'`; \
+	 if [ "x$$pkgver" != "x$$libver" ] ; then \
+	   echo "VERSION in $$lib is wrong ($$pkgver!=$$libver)";\
+	   exit 1; \
+	 fi; \
 	done
 
 	@echo Update the translations
@@ -46,19 +56,30 @@ build-stamp:
 	  pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
 	    po4a-$$bin > mantmp/po4a-$$bin.1; \
 	  for lang in $(langs) ; do \
-	    if [ -e doc/$(module)-$$bin.$$lang.pod ] ; then \
+	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	       doc/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1; \
+	       po/pod/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1; \
 	    fi; \
 	  done; \
 	done
 	for lib in $(libs) ; do \
+	  l=`echo $$lib|sed 's/\.pm//'`; \
 	  pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
-	    Locale/Po4a/$$lib > mantmp/$(rootlib)$$lib.3perl; \
+	    Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3perl; \
 	  for lang in $(langs) ; do \
-	    if [ -e doc/$$lib.$$lang.pod ] ; then \
+	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
 	      pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
-	       doc/$$lib.$$lang.pod > mantmp/$(rootlib)$$lib.$$lang.1; \
+	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.1; \
+	    fi; \
+	  done; \
+	done
+	for doc in $(docs) ; do \
+	  pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
+	    doc/$$doc.7.pod > mantmp/$$doc.7; \
+	  for lang in $(langs) ; do \
+	    if [ -e po/pod/$$doc.$$lang.pod ] ; then \
+	      pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
+	       po/pod/$$doc.$$lang.pod > mantmp/$$doc.$$lang.7; \
 	    fi; \
 	  done; \
 	done
@@ -85,7 +106,8 @@ install: build
 	for lib in $(libs) ; do \
 	  install -c -m 644 Locale/Po4a/$$lib          $(prefix)$(pathlib); \
 	done
-	prefix=../$(prefix) $(MAKE) -C po install
+	prefix=../../$(prefix) $(MAKE) -C po/bin install
+	prefix=../../$(prefix) $(MAKE) -C po/pod install
 
 # Build architecture-independent files here.
 binary-indep: build install
