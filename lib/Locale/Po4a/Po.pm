@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.8 2003-02-03 07:26:40 mquinson Exp $
+# $Id: Po.pm,v 1.1 2003-02-03 12:19:53 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -515,9 +515,7 @@ sub push {
 	    unless $validoption{$_};
     }
 
-    if ($entry{'wrap'}) {
-	$entry{'flags'} .= " wrap";
-    } else {
+    unless ($entry{'wrap'}) {
 	$entry{'flags'} .= " no-wrap";
     }
     if (defined ($entry{'msgid'})) {
