@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: po4a-normalize,v 1.4 2003-02-12 07:58:33 mquinson Exp $
+# $Id: po4a-normalize,v 1.5 2003-11-07 10:28:45 mquinson Exp $
 #
 # Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -14,7 +14,7 @@ po4a-normalize - Normalize a documentation file by parsing it in po4a, and writi
 
 =head1 SYNOPSIS
 
-po4a-normalize -t module I<original>
+po4a-normalize -f E<lt>formatE<gt> E<lt>original.docE<gt>
 
 =head1 DESCRIPTION
 
@@ -42,7 +42,7 @@ Show a short help message.
 
 List the documentation format understood by po4a.
 
-=item -t
+=item -f, --format
 
 format type of the documentation you want to handle. Use the --help-fmt
 option to see the list of available formats.
@@ -100,7 +100,7 @@ Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
 	'help-fmt'     => \$help_fmt,
-        'type|t=s'     => \$type,
+        'format|f=s'   => \$type,
 
         'verbose|v'   => \$verbose,
         'debug|d'     => \$debug,
