@@ -41,6 +41,40 @@ where they were not expected like documentation.
 Locale::Po4a::Sgml is a module to help the translation of documentation in
 the SGML format into other [human] languages.
 
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+=over 4
+
+=item debug
+
+Space separated list of keywords indicating which part you want to debug. Possible values are: tag, generic, entities and refs.
+
+=item verbose
+
+Give more information about what's going on.
+
+=item translate
+
+Space separated list of extra tags (beside the dtd provided ones) whose
+content should form an extra msgid.
+
+=item section
+
+Space separated list of extra tags (beside the dtd provided ones)
+containing other tags, some of them being of category 'translate'.
+
+=item indent
+
+=item verbatim
+
+=item empty
+
+
+
+=item force
+
+
+
 =head1 STATUS OF THIS MODULE
 
 The result is perfect. Ie, the generated documents are exactly the
@@ -118,15 +152,14 @@ use warnings;
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw(); # new initialize);
+@EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(gettext);
 
 eval qq{use SGMLS};
 if ($@) {
-  die gettext("po4a::sgml: The needed module SGMLS.pm was not found and needs to be installed.\n".
-      "po4a::sgml: It can be found on the CPAN, in package libsgmls-perl on debian, etc.\n");
+  die gettext("po4a::sgml: The needed module SGMLS.pm was not found and needs to be\npo4a::sgml: installed. It can be found on the CPAN, in package\npo4a::sgml: libsgmls-perl on debian, etc.\n");
 }
 
 use File::Temp;
@@ -137,6 +170,35 @@ my %debug=('tag' => 0,
            'refs'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
+
+sub initialize {
+    my $self = shift;
+    my %options = @_;
+    
+    $self->{options}{'translate'}='';
+    $self->{options}{'section'}='';
+    $self->{options}{'indent'}='';
+    $self->{options}{'empty'}='';
+    $self->{options}{'verbatim'}='';
+    $self->{options}{'ignore'}='';
+
+    $self->{options}{'force'}='';
+
+    $self->{options}{'verbose'}='';
+    $self->{options}{'debug'}='';
+    
+    foreach my $opt (keys %options) {
+	if ($options{$opt}) {
+	    die sprintf(gettext ("po4a::sgml: Unknown option: %s\n"), $opt) unless exists $self->{options}{$opt};
+	    $self->{options}{$opt} = $options{$opt};
+	}
+    }
+    if ($options{'debug'}) {
+	foreach ($options{'debug'}) {
+	    $debug{$_} = 1;
+	}
+    }
+}
 
 sub read {
     my ($self,$filename)=@_;
@@ -160,12 +222,12 @@ sub translate {
  
     # don't translate entries composed of one entity
     if (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/)){
-	warn sprintf gettext ("po4a::sgml: msgid '%s' skipped since it contains only an entity (translator friendly feature ;)\n"), $string;
+	warn sprintf gettext ("po4a::sgml: msgid skipped to help translators (contains only an entity)\n"), $string;
 	return $string;
     }
     # don't translate entries composed of tags only
     if ($string =~ /^(((<[^>]*>)|\s)*)$/) {
-	warn sprintf gettext ("po4a::sgml: msgid '%s' skipped since it contains only tags (translator friendly feature ;)\n"), $string;
+	warn sprintf gettext ("po4a::sgml: msgid skipped to help translators (contains only tags)\n"), $string;
 	return $string;
     }
 
@@ -186,18 +248,16 @@ sub set_tags_kind {
     my (%kinds)=@_;
 
     foreach (qw(translate empty section verbatim ignore)) {
-	$self->{SGML}->{k}{$_} = "";
+	$self->{SGML}->{k}{$_} = $self->{options}{$_} ? $self->{options}{$_}.' ' : '';
     }
     
     foreach (keys %kinds) {
-	die "Internal error: set_tags_kind called with unrecognized arg $_"
-	    if ($_ ne 'translate' && $_ ne 'empty' && $_ ne 'section' &&
-		$_ ne 'verbatim'  && $_ ne 'ignore' && $_ ne 'indent');
+	die "po4a::sgml: internal error: set_tags_kind called with unrecognized arg $_"
+	    if ($_ ne 'translate' && $_ ne 'empty' && $_ ne 'verbatim'  && $_ ne 'ignore' && $_ ne 'indent');
 	
-	$self->{SGML}->{k}{$_}=$kinds{$_};
+	$self->{SGML}->{k}{$_} .= $kinds{$_};
     }    
 }
-
 
 #
 # Do the actual work, using the SGMLS package and settings done elsewhere.
@@ -218,9 +278,7 @@ sub parse_file {
     close IN || die sprintf(gettext("po4a::sgml: can't close %s: %s\n"),$filename,$!);
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
-	warn sprintf(gettext("po4a::sgml: %s seems to be a XML document.\n".
-	    "po4a::sgml: It will be attempted to handle it as a SGML document.\n".
-	    "po4a::sgml: Feel lucky if it works, help us implementing a proper XML backend if it does not.\n"),$filename);
+	warn sprintf(gettext("po4a::sgml: Trying to handle a XML document as a SGML one.\npo4a::sgml: Feel lucky if it works, help us implementing a proper XML\npo4a::sgml: backend if it does not.\n"),$filename);
 	$xmlprolog=$1;
     }
     # Get the prolog
@@ -230,9 +288,7 @@ sub parse_file {
 	my $pos = 0;  # where in the document (in chars) while detecting prolog boundaries
 	
 	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
-	    die sprintf(gettext("po4a:sgml: %s does not seem to be a master SGML document (no DOCTYPE found).\n".
-		"po4a::sgml: It may be a file to be included by another one, in which case it should not be passed to po4a directly.\n".
-		"po4a::sgml: Text from included files is extracted/translated when handling the master file including them.\n"), $filename);
+	    die sprintf(gettext("po4a::sgml: This file is not a master SGML document (no DOCTYPE).\npo4a::sgml: It may be a file to be included by another one, in which case\npo4a::sgml: it should not be passed to po4a directly. Text from included\npo4a::sgml: files is extracted/translated when handling the master file\npo4a::sgml: including them.\n"), $filename);
 	}
 	$pos += length($prolog);
 	$lvl=1;
@@ -252,14 +308,19 @@ sub parse_file {
 			                    "date copyrightsummary heading p ".
  			                    "example tag title ",
 			     "empty"     => "date ref manref url toc",
-			     "section"   => "chapt appendix sect sect1 sect2 ".
-			                    "sect3 sect4 debiandoc book",
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
 					    "name email footnote ".
 			                    "strong ftpsite ftppath",
-			     "indent"    => "titlepag toc copyright ".
- 			                    "enumlist taglist list item tag ");
+			     "indent"    => "appendix ".
+	                                    "book ".
+	                                    "chapt copyright ".
+			                    "debiandoc ".
+			                    "enumlist ".
+			                    "item ".
+			                    "list ".
+	                                    "sect sect1 sect2 sect3 sect4 ".
+			                    "tag taglist titlepag toc");
 
     } elsif ($prolog =~ /docbook/i) {
 	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution ".
@@ -274,8 +335,7 @@ sub parse_file {
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber ".
 	                                    "screeninfo seg segtitle subtitle synopfragmentref ".
 	                                    "term title titleabbrev",
-			     "empty"     => "audiodata colspec graphic imagedata sbr textdata videodata xref",
-			     "section"   => "",
+			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
@@ -321,10 +381,13 @@ sub parse_file {
                                             "year");
 
     } else {
-	die sprintf(gettext("File %s have an unknown DTD. (supported for now: debiandoc, docbook)\n".
-	                    "The prolog follows:\n".
-			    "%s\n"),
-		    $filename,$prolog);
+	if ($self->{options}{'force'}) {
+	    warn gettext("po4a::sgml: DTD of this file is unknown, but proceeding as requested.\n");
+	    $self->set_tags_kind();
+	} else {
+	    die sprintf(gettext("po4a::sgml: DTD of this file is unknown. (supported: debiandoc, docbook).\nThe prolog follows:\n%s\n"),
+	  	                $filename,$prolog);
+	}
     }
     
     # Prepare the reference indirection stuff
@@ -403,18 +466,13 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh || die sprintf(gettext("Can't close tempfile: %s\n"),$!);
 
-    my $cmd;
-    if ($xmlprolog) {
-	$cmd="cat $tmpfile|";
-    } else {
-	$cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
-    }
+    my $cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
     print STDERR "CMD=$cmd\n" if ($debug{'generic'});
 
     open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s\n"),$!);
 
     # The kind of tags
-    my (%translate,%empty,%section,%verbatim,%indent,%exist);
+    my (%translate,%empty,%verbatim,%indent,%exist);
     foreach (split(/ /, ($self->{SGML}->{k}{'translate'}||'') )) {
 	$translate{uc $_} = 1;
 	$indent{uc $_} = 1;
@@ -422,11 +480,6 @@ sub parse_file {
     }
     foreach (split(/ /, ($self->{SGML}->{k}{'empty'}||'') )) {
 	$empty{uc $_} = 1;
-	$exist{uc $_} = 1;
-    }
-    foreach (split(/ /, ($self->{SGML}->{k}{'section'}||'') )) {
-	$section{uc $_} = 1;
-	$indent{uc $_} = 1;
 	$exist{uc $_} = 1;
     }
     foreach (split(/ /, ($self->{SGML}->{k}{'verbatim'}||'') )) {
@@ -552,9 +605,9 @@ sub parse_file {
 		}
 		$buffer="";
 		push @open,$tag;
-	    } elsif ($section{$event->data->name()}) {
+	    } elsif ($indent{$event->data->name()}) {
 		die sprintf(gettext(
-           "Closing tag for a translation container missing before %s, at %s\n"
+		    "Closing tag for a translation container missing before %s, at %s\n"
 				    ),$tag,$ref)
 		    if (scalar @open);
 	    }
@@ -599,7 +652,7 @@ sub parse_file {
 		    pop @open;
 		    push @open,$tag;
 		}
-	    } elsif ($section{$event->data->name()}) {
+	    } elsif ($indent{$event->data->name()}) {
 		die sprintf(gettext(
            "Closing tag for a translation container missing before %s, at %s\n"
 				    ),$tag,$ref)
