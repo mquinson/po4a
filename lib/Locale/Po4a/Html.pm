@@ -38,8 +38,6 @@ where they were not expected like documentation.
 Locale::Po4a::Html is a module to help the translation of documentation in
 the HTML format into other [human] languages.
 
-=back
-
 =cut
 
 package Locale::Po4a::Html;
