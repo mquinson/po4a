@@ -255,7 +255,7 @@ my $b = $builder->new
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a'],
       add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html',
-	  'po/pod/po4a-pod.pot~'],
+	  'po/pod/po4a-pod.pot~', 'po4a.log'],
       install_path => {po => '/usr/share/locale',
 	  man => '/usr/share/man'},
       dist_abstract => 'Tools for helping translation of documentation',
