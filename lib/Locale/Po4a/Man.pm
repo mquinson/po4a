@@ -664,9 +664,9 @@ sub parse{
 	    } else {
 		$self->pushline($line."\n");
 		die sprintf(gettext(
-		    "po4a::man: Unknown macro '%s'. Remove it from the document,\n".
-				"po4a::man: or provide a patch to <po4a-devel\@lists.alioth.debian.org>."
-				),$line)."\n";
+		    "po4a::man: Unknown macro '%s' (at %s).\n".
+		    "po4a::man: Remove it from the document, or provide a patch to the po4a team."
+				),$line,$ref)."\n";
 	    }
 
 	} elsif ($line =~ /^( +)([^.].*)/) {
