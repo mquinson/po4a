@@ -175,8 +175,10 @@ results are the following:
 
  undetected problems:   68 ( 1% of all;  2% of unignored;  2% of processed)
 
-Ignored pages are so, because they are generated from Pod, and should be
-translated with po4a::pod.
+Ignored pages are so, because they are not the source files. They are for
+example generated from POD or SGML. In that case, you should translate the
+[real] source file with the relevant po4a module instead of the generated
+man page.
 
 Parser fails on pages based on mdoc(7), pages using conditionals with .if,
 defining new macros with .de, using non standard fonts, and more generally,
