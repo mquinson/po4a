@@ -468,11 +468,16 @@ sub parse{
     while (defined($line)) {
 #	print STDERR "line=$line;ref=$ref";
 	chomp($line);
-	while ($line =~ /^\..*\\$/) {
+	while ($line =~ /^\..*\\$/ || $line =~ /^(\.[BI])\s*$/) {
 	    my ($l2,$r2)=$self->shiftline();
 	    chomp($l2);
-	    $line =~ s/\\$//;
-	    $line .= $l2;
+	    if ($line =~ /^(\.[BI])\s*$/) {
+		$l2 =~ s/"/\\"/g;
+		$line .= ' "'.$l2.'"';
+	    } else {
+		$line =~ s/\\$//;
+		$line .= $l2;
+	    }
 	}
 	$self->{ref}="$ref";
 #	print STDERR "LINE=$line<<\n";
@@ -981,9 +986,11 @@ $macro{'nr'}=\&untranslated;
 # .ps N    Point size; same as \s[N]
 $macro{'ps'}=\&untranslated;
 # .so filename Include source file.
-$macro{'so'}= sub {
-    die "po4a::man: ".
-      dgettext("po4a","This page includes another file with '.so'. This is not supported yet, but will soon.")."\n";
+# .mso groff variant of .so (other search path)
+$macro{'so'}= $macro{'mso'} = sub {
+    die "po4a::man: ".sprintf(
+      dgettext("po4a","This page includes another file with '%s'. This is not supported yet, but will soon."),
+	$_[1])."\n",;
 };
 # .sp     Skip one line vertically.
 # .sp N   Space  vertical distance N
@@ -1052,6 +1059,21 @@ $macro{'DS'}=$macro{'LD'}=$macro{'DE'}=\&untranslated;
 $macro{'ID'}=$macro{'BD'}=$macro{'CD'}=\&untranslated;
 $macro{'RD'}=$macro{'KS'}=$macro{'KE'}=\&untranslated;
 $macro{'KF'}=$macro{'B1'}=$macro{'B2'}=\&untranslated;
+
+# .pc c  Change page number character
+$macro{'pc'}=\&translate_joined;
+
+# .ns    Disable .sp and such
+# .rs    Enable them again
+$macro{'ns'}=$macro{'rs'}=\&untranslated;
+
+# All of these are not handled yet because the number of line may change
+# during the translation
+
+# .ce     Center one line horizontaly
+# .ce N   Center N lines
+# .ul N   Underline N lines (but not the spaces)
+# .cu N   Underline N lines (even the spaces)
 
 ###
 ### BSD compatibility macros: .AT and .UC
