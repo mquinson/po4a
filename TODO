@@ -1,0 +1,97 @@
+********
+* TODO *
+********
+
+                   pod-gettextize   pod-updatepo   pod-translate
+ TransTractor           Ok               Ok
+ --version                               Ok
+ --debug                                 Ok
+ --verbose                               Ok
+ --width
+ --output=file                           Ok
+ --output=-                        Ok(forbidden)
+ output not given                  Ok(forbidden)
+
+
+                   Po.pm   Pod.pm    Man.pm   DebianDoc.pm TexInfo.pm
+ TransTractor       ---            
+ parsing            ---
+ dgettext 
+
+
+Better error handeling (errno, errstr)
+
+** TransTractor.pm
+ - Implement:  ;)
+ - process(): $self->addendum($file) || die "An addendum failed\n";
+ - poheader()
+
+** po-debconf:
+ - change the pot header as documented in po4a(7) 
+
+** Po.pm
+ - close filehandle in write (and same in TransTractor.pm).
+ - put fusion() here from gettextize (it's the matching of 2 po files
+   to produce a translated one using first for msgid and second for
+   msgstr). Be carful, it's already referenced from 
+   TransTractor.pm ;)
+ - put addendum from translate to here. (done ?)
+ - verbose => type in automatic comments
+
+** Documentation
+ - write po-pod.7
+ - write po4a.7
+ - redo Pod.pm documentation
+
+***********************************************
+* Proposal of common options for all programs *
+***********************************************
+
+  -v: verbose
+  -V: version
+  -h: help
+
+**********************************************
+* Proposal of common options for all modules *
+**********************************************
+
+  gettextize orig [trans] -o output
+
+  updatepo (-i masterfile)+ (-o pofile)+
+  
+  translate [-o translation] [-w width] [-a addendum]* masterfile pofile
+  
+
+*****************
+* meta-module ? *
+*****************
+Why not doing a meta-module, which binaries can call the right modules.
+
+We could have something like:
+ po4a-gettextize [-t module] blabla
+ po4a-updatepo ([-t module] -i masterfile)* (-o pofile)*
+
+Or even:
+ po4a-updatepo  -c configfile
+ po4a-translate -c configfile
+ 
+Le config file pourrait avoir la gueule suivante:
+[module]
+master{extra args}(,master{extra args})* = pofile(,pofile)*
+
+
+For example
+[debconf]
+debian/templates = debian/po/fr.po,debian/po/de.po
+
+[pod]
+bin/aze,bin/eza = doc/po/pod.fr.po, doc/po/pod.de.po
+
+This syntax does not allow us to share po files across modules, but I'm not
+sure it's a problem (when sharing po files how to detect that a string is
+obsolete?). Well, it's not very clear here, but it's a good goal, I guess.
+
+Of course, it leads easily to dh_installl10n, which would make a
+po4a-updatepo, plus a po4a-translate.
+
+		

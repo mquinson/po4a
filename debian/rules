@@ -1,0 +1,140 @@
+#!/usr/bin/make -f
+# Sample debian/rules that uses debhelper. 
+# This file is public domain software, originally written by Joey Hess.
+#
+# This version is for packages that are architecture independent.
+
+bins = gettextize updatepo translate
+
+libs=Po.pm TransTractor.pm    Pod.pm Man.pm
+rootlib = Locale::Po4a::
+pathlib = /usr/share/perl5/Locale/Po4a
+
+langs= fr
+
+package = po4a
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatibility version to use.
+export DH_COMPAT=2
+
+prefix = debian/$(package)
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	@# Make sure the VERSION string were updated in binaries
+	@pkgver=`dpkg-parsechangelog|grep Version|sed 's/Version: //'`;\
+	for bin in $(bins) ; do \
+	 binver=`grep '$$VERSION=' po4a-$$bin| \
+                 sed 's/^.*"\([^"]*\)".*/\1/'`; \
+	 if [ "x$$pkgver" != "x$$binver" ] ; then \
+	   echo "VERSION in po4a-$$bin is wrong ($$pkgver!=$$binver)";\
+	   exit 1; \
+	 fi; \
+	done
+
+	@# Compile the man pages
+	mkdir mantmp
+	for bin in $(bins) ; do \
+	  pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
+	    po4a-$$bin > mantmp/po4a-$$bin.1; \
+	  for lang in $(langs) ; do \
+	    if [ -e doc/$(module)-$$bin.$$lang.pod ] ; then \
+	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
+	       doc/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1; \
+	    fi; \
+	  done; \
+	done
+	for lib in $(libs) ; do \
+	  pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
+	    lib/$$lib > mantmp/$(rootlib)$$lib.3perl; \
+	  for lang in $(langs) ; do \
+	    if [ -e doc/$$lib.$$lang.pod ] ; then \
+	      pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
+	       doc/$$lib.$$lang.pod > mantmp/$(rootlib)$$lib.$$lang.1; \
+	    fi; \
+	  done; \
+	done
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	rm -rf mantmp
+
+	rm -f build-stamp
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	for bin in $(bins) ; do \
+	  install -c -m 755 po4a-$$bin          $(prefix)/usr/bin/; \
+	done
+	for lib in $(libs) ; do \
+	  install -c -m 644 lib/$$lib          $(prefix)$(pathlib); \
+	done
+	prefix=../$(prefix) $(MAKE) -C po install
+
+# Build architecture-independent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+#	dh_installexamples
+#	dh_installmenu
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+	dh_installman mantmp/*
+#	dh_installinfo
+#	dh_undocumented
+	dh_installchangelogs
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_perl
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture-dependent files here.
+binary-arch: build install
+# We have nothing to do by default.
+
+binary: binary-indep binary-arch 
+
+#     Shortcuts
+tar: clean
+	version=`sed -e 's/.* (//' -e 's/-.*//' -e 1q debian/changelog`; \
+	echo Creating ../$(package)_$$version.orig.tar.gz; \
+  tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
+
+deb:
+	dpkg-buildpackage -i'.*CVS.*' -rfakeroot
+
+# This can't be called by the build mecanism, or we build-dep on ourselves.	
+pods:
+	for lang in $(langs) ; do \
+	po4a-updatepo -t pod -i po4a-updatepo -i po4a-gettextize -i po4a-translate -o po/pod/pod.$$lang.po; \
+	for bin in gettextize updatepo translate ; do \
+	po4a-translate -t pod \
+                       -v \
+                       -a po/pod/po4a-$$bin.addendum.$$lang \
+	               po4a-$$bin \
+                       po/pod/pod.fr.po \
+                       -o po/pod/po4a-bin.$$lang.pod; \
+	done ;\
+	done
+.PHONY: build clean binary-indep binary-arch binary install

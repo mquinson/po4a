@@ -1,0 +1,254 @@
+=head1 What is po4a?
+
+FIXME
+
+=head1 How to use po4a features?
+
+FIXME
+
+=head2 How to convert a previously existing translation to this system?
+
+Often, you used to translate manually the document happily until a major
+reorganization of the original document happened. When it happens, you want
+to convert to po4a, but you don't want to redo your translation from
+scratch. Don't worry, this case is also handled by po4a tools and is
+called gettextization. Be warned that this operation is a bit more error
+prone than the rest, and you should check carefully the result.
+
+FIXME: add what should be added here.
+
+For more information about this convertion and how it works, check the
+section I<Gettextization: how does it work?> below.
+
+=head2 Handleling addendum
+
+Addendum can be seen as post-processing patches to the produced
+document. They allow the translator to add original content to the document
+which is not translated from the original document. This way, they can add
+a section giving the name of the contributors to this translation, or
+explain how to repport bug against the translation.
+
+Addendums must be provided to the system as a file, with the first line
+indicating where in the produced document they should be placed in a so
+called Po4a header. The rest of the addendum file with be added verbatim in
+the resulting document.
+
+The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
+followed by a colon (;) separated list of fields, each of them having the
+"key=value" syntax. Whitespaces ARE important. Note that you cannot use the
+colon char (;) in the value, and that quoting it doesn't help. The
+recognized keys are:
+
+=over 4
+
+=item position (mandatory)
+
+a regexp. The addendum will be placed near the line matching this
+regexp. Note that we're speaking about the translated document here, not
+the original. If more than an insertion point is possible (or if no line of
+the translated document match this expression), the addition will fail.
+
+=item mode (mandatory)
+
+can be "before" or "after", specifying the position of the addendum,
+relative to the insertion point.
+
+=item beginboundary (mandatory when mode=after)
+
+=item endboundary 
+
+a regexp matching the end of the insertion point. 
+
+In order to allow insertion of addendum after a section, we must be able to
+determine the end of this section. The boundary argument is a regex
+matching then end of the section, and the begining of the next one.
+
+There is two form of boundaries. Endboundary match the end of this section,
+and the addendum should be inserted before the matching line. Beginboundary
+should match the beginning of next section, and addendum should be inserted
+before the matching line.
+
+When mode=after, you must give one (and only one) of the beginboundary and
+endboundary argument.
+
+In that case, the content of the file is added just before the next line
+matching this (see example 2 below).
+
+=item lang
+
+language code for which we have to use this insert (NOT USED SO FAR).
+
+=back
+
+Here are some example of headers. The first one present the mode=before,
+which is pretty simple to use, while the others present the infamous
+mode=after, and the two type of boundaries. In sgml, endboundary are useful
+(since they will work even in case of document reorganization), but in pod
+or man, beginboundary are easier to use (since there is no ending tag
+here):
+
+ PO4A-HEADER:mode=before;position=AUTHORS
+
+ PO4A-HEADER:mode=after;endboundary=</sect1>;position=AUTHORS
+
+ PO4A-HEADER:mode=after;endboundary=^=head1;position=AUTHORS
+ PO4A-HEADER:mode=after;endboundary=\.SH;position=AUTHORS
+
+=head3 Example 1
+
+If you have the following original pod file:
+
+ |=head1 NAME
+ |
+ |dummy - a dummy program
+ |
+ |=head1 AUTHOR
+ |
+ |me
+
+and a file named C<extra-content> contains this:
+
+ |PO4A-HEADER:mode=after;section=AUTEUR;lang=fr;boundary=^head
+ |
+ |=head1 TRADUCTEUR
+ |
+ |moi
+
+passing the C<--add-file extra-content> argument to pod-translate will add
+a section (in french) about the translator at the end of the file. (This
+example is in french ; "TRADUCTEUR" means "TRANSLATOR", and "moi" means
+"me)
+
+=head3 Example 2
+
+To put the addendum before the AUTHORS, you could use the following header:
+
+ PO4A-HEADER:mode=after;section=NOM;lang=fr;boundary=^head1
+
+because after the section "NAME" (translated to NOM in french), the next
+line matching the boundary /^head1/ is the one declaring the authors. So,
+the addendum will be put between both sections.
+
+=head1 How does it work?
+
+This section gives you a brief overview of the po4a internals, so that you
+may feel more confident to help us maintaining and improving it, and also
+to help you understanding why it does not do what you expected, and how to
+solve your problems.
+
+=head1 Gettextization: how does it work?
+
+The idea here is to take the original document and its translation, and to
+say that the Nth extracted string from the translation is the translation
+of the Nth extracted string from the original. In order to work, both files
+must share exactly the same structure. For example, if the files have the
+following structure, it is very unlikely that the 4th string in translation
+(of type 'chapter') is the translation of the 4th string in original (of
+type 'paragraph').
+
+    Original         Translation
+     
+  chapter            chapter
+    paragraph          paragraph
+    paragraph          paragraph
+    paragraph        chapter
+  chapter              paragraph
+    paragraph          paragraph
+
+For that, po4a parsers are used on both the original and the translation
+files to extract po files, and then another po file is builded from them
+taking strings from the latter as translation of strings from the
+former. In order to check that the strings we put together are actually the
+translations of each other, all document parsers in po4a put informations
+about the syntaxical type of extracted strings in the document. Then, this
+information is used to make sure that both document have the same
+syntax. In the previous example, it would allow use to detect that string 4
+is a paragraph in one case, and a chapter title in another case and to
+repport the problem.
+
+In theory, it would be possible to detect the problem, and resyncronize the
+files after them (just like diff does), but what we should do of the few
+strings before desyncronizations is not clear, and it would produce bad
+results some times. That's why the current implementation don't try to
+resyncronize anything and verbosely fail when something goes wrong,
+requiering manual modification of files to fix the problem.
+
+Even with these precautions, things can go wrong very easily here. That's
+why all translations guessed this way are marked fuzzy to make sure that
+the translator review and check them.
+
+=head2 Addendum: How does it work?
+
+Well, that's pretty easy here. The translated document is not written
+directly to disk, but kept in memory until all addendum are applied. The
+algorithms involved here are very easy. We look for a line matching the
+position regexp, and insert the addendum before it if we're in
+mode=before. If not, we search for the next line matching the boundary and
+insert the addendum before or after this line, depending if it's a
+beginboundary or an endboundary.
+
+=head1 FAQ (actually, FEP)
+
+This is the Frequently Explained Point list. I would be happy if it could
+be a FAQ, but most often, people don't even ask questions and do the same
+error than someone else a few days before...
+
+=head2 Educating developers about translation
+
+When you try to translate documentation or programs, you face three kind of
+problems; linguistics (not everybody speaks two languages), technics
+(that's why po4a exists) and relational/human. Not all developpers
+understand the necessity of translating stuff, and even when good willed,
+they ignore most of the time what they should do to help the work of
+translators. To counter that, po4a comes with lot of documentation which
+can be refered to.
+
+Another important point is that each file should begin with a short header
+as comment indicating what it is and what it is good for so that
+developpers know what to do with them when a translator send them for
+inclusion in the project.
+
+In the po4a project, translated document are not source files
+anymore. Since sgml files are habitually source files, this fact is easy to
+forget. Here is the text added by pod-translate:
+
+
+ |       *****************************************************
+ |       *           GENERATED FILE, DO NOT EDIT             * 
+ |       * THIS IS NO SOURCE FILE, BUT RESULT OF COMPILATION *
+ |       *****************************************************
+ |
+ | This file was generated by pod-translate(1) version $VERSION. Do not 
+ | store it (in cvs, for example), but store the po file used as source
+ | file by pod-translate. 
+ |
+ | In fact, consider this as a binary, and the po file as a regular .c file:
+ | If the po get lost, keeping this translation up-to-date will be harder ;)
+
+Likewise, gettext's regular po files only need to be copied to the po/
+directory. But B<this is not the case of the ones manipulated by po4a>. The
+major risk here is that a developper erase the existing translation of his
+program with the translation of his documentation. (Both of them can't be
+stored in the same po file, because the program needs to install its
+translation as mo file while the documentation only use its translation at
+compile time). That's why the po files produced by the po-debiandoc module
+contain the following header:
+
+ #
+ #  ADVICES TO DEVELOPERS:
+ #    - you do not need to manually edit POT or PO files.
+ #    - this file contains the translation of your debconf templates.
+ #      Do not remplace the translation of your program with this !!
+ #        (or your translators will get very upset)
+ #
+ #  ADVICES TO TRANSLATORS:
+ #    If you are not familiar with the PO format, gettext documentation 
+ #     is worth reading, especially sections dedicated to this format.
+ #    For example, run:
+ #         info -n '(gettext)PO Files'
+ #         info -n '(gettext)Header Entry'
+ #
+ #    Some information specific to po-debconf are available at
+ #            /usr/share/doc/po-debconf/README-trans
+ #         or http://www.debian.org/intl/l10n/po-debconf/README-trans
+ #

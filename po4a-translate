@@ -1,0 +1,177 @@
+#!/usr/bin/perl
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+# po4a-translate -- translate doc files using a message catalog(ie, po file)
+# $Id: po4a-translate,v 1.1 2002-12-12 15:04:42 mquinson Exp $
+#
+# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION="0.10";
+
+=head1 NAME
+
+po4a-translate - convert back po file to documentation format.
+
+=head1 SYNOPSIS
+
+po4a-translate -t B<type> [B<options>] B<original-document> B<translation.po>
+
+=head1 DESCRIPTION
+
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.  
+
+The C<po4a-translate> script is in charge of converting the translation
+(which were done in a po file) under the documentation format back. The
+provided C<po> file should be the translation of the C<pot> file which were
+produced by po4a-gettextize(1).
+
+=head1 OPTIONS
+
+=over 4
+
+=item -a, --add-file I<file>
+
+Add I<file> to the resulting file (to put translator's name or a section
+"About this translation, for example). The first line of the file to insert
+should be a PO4A header indicating where it should be added (see section
+"Adding content" below).
+
+=item -o, --outfile
+
+were should written the newly created documentation file (default: standard output).
+
+=item -w, --width
+
+Column to which we should wrap the resulting file.
+
+=item -k, --keep
+
+Minimal threshold for translation percentage to keep (ie, write) the
+resulting file (default: 80). Ie, by default, files have to be translated
+at at least 80% to get written.
+
+=item -v, --verbose
+
+Be verbose about what's going on.
+
+=back
+
+=head1 Adding content (beside translations) to generated files
+
+To add some extra content to the generated document beside what you
+translated (like the name of the translator, or a "about this translation"
+section), you should use the C<--add-file> option. 
+
+The first line of the addendum must be a header indicating where to put
+it in the document (it can be before or after a given part of the
+document).  The rest of the file will be added verbatim to the resulting
+file without further processing.
+
+Note that if po4a-translate fail to add one of the given file, it discards
+the whole translation (because the missing file could be the one indicating
+the author, what would prevent the users to contact him to report bugs in
+the translation).
+
+The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
+give then several fields (separated by ';') in the form
+    "key=value". Whitespaces ARE important. The allowed keys are:
+
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>.
+
+
+=head1 AUTHORS
+
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
+=cut
+
+
+use Locale::Po4a::Pod;
+use Locale::Po4a::Man;
+
+use Pod::Usage qw(pod2usage);
+use Getopt::Long qw(GetOptions);
+use strict;
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_ALL, "");
+textdomain("po4a");
+
+my ($outfile,$width,$threshold)=('-',80,80);
+my ($help,$verbose,@addfiles,$type);
+GetOptions(
+        'help|h'       => \$help,
+        'output|o=s'   => \$outfile,
+	'width|w=s'    => \$width,
+	'verbose|v'    => \$verbose,
+	'keep|k=s'     => \$threshold,
+	'add-file|a=s' => \@addfiles,
+        'type|t=s'     => \$type
+) or pod2usage(1);
+$help && pod2usage(0);
+
+my $master_filename=shift||pod2usage(1);
+my $po_filename=shift ||pod2usage(1);
+-e $master_filename || die sprintf(gettext("File %s does not exist\n",$master_filename));
+-e $po_filename || die sprintf(gettext("File %s does not exist\n",$po_filename));
+
+my (@pos,@masters);
+push @pos,$po_filename;
+push @masters,$master_filename;
+
+my ($doc); # parser
+if (lc($type) eq 'pod') {
+    $doc=Locale::Po4a::Pod->new();
+} elsif (lc($type) eq 'man') {
+    $doc=Locale::Po4a::Man->new();
+} else {
+  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  pod2usage(1);
+}
+
+# Prepare the document to be used as translator, but not parser
+$doc->process('po_in_name'   => \@pos,
+	      'file_in_name' => \@masters);
+
+# Verbose ?
+my ($percent,$hit,$queries) = $doc->stats();
+print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)\n"),
+		     $master_filename,$percent,$hit,$queries) 
+    if $verbose;
+
+
+if ($percent<$threshold)  {
+    print STDERR sprintf(gettext("ERROR: translation of %s discarded: only %s%% are translated ; %s%% is needed to keep translations.\n"),
+			 $master_filename,$percent,$threshold);
+    unlink($outfile) if (-e $outfile);
+} else {
+    my $error=0;
+    foreach (@addfiles) {
+	unless ($error) {
+	    $error ||= !$doc->addendum($_);
+	    print STDERR sprintf(gettext("ERROR: file %s couldn't be added to %s.\n  This translation is therefore discarded\n"),
+				 $_,$master_filename)
+		if $error;
+	}
+    }
+    if ($error) {
+	unlink($outfile) if (-e $outfile);
+    } else {
+	$doc->write($outfile);
+    }
+}
+
+1;
+

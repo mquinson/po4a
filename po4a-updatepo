@@ -1,0 +1,182 @@
+#! /usr/bin/perl
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+# pod-updatepo -- Update the po translation of POD data.
+# $Id: po4a-updatepo,v 1.1 2002-12-12 15:04:42 mquinson Exp $
+#
+# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION="0.10";
+
+=head1 NAME
+
+po4a-updatepo - Update the translation (in po format) of documentation.
+
+=head1 SYNOPSIS
+
+po4a-updatepo -t <type> (--master|m B<doc_file>)+ (--trans|-t B<trans.po>)+
+
+po4a-updatepo -t <type> (--input|-i B<POD_file>)+ (--output|-o B<trans.po>)+
+
+=head1 DESCRIPTION
+
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.  
+
+The C<po4a-gettextize> script is in charge of updating po files to make
+them reflect the changes made to the original documentation file. For that,
+it converts the documentation file to a pot file, and call L<msgmerge(1)>
+on this new pot and on the provided po files.
+
+It is possible to give more than one po file (if you want to update several
+languages at once), and several documentation file (if you want to store
+the translations of several documents in the same po files).
+
+=head1 OPTIONS
+
+=over 4
+
+=item -t
+
+format type of the documentation you want to handle. This can be one of:
+
+=over 4
+
+=item pod:
+
+Perl documentation format
+
+=item man:
+
+Good old manual page format
+
+=back 
+
+=item -o, --output
+
+=item --trans
+
+File(s) where the po files should be written.
+
+=item -i, --input
+
+=item -m, --master
+
+File(s) containing the master document to translate.
+
+=item -V, --version
+
+Displays the version of the script and exits.
+
+=item -v, --verbose
+
+Increase the verbosity of the program.
+
+=item -d, --debug
+
+Outputs some debugging informations.
+
+=back
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>.
+
+=head1 AUTHORS
+
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
+=cut
+
+use strict;
+use Getopt::Long qw(GetOptions);
+use Locale::Po4a::Po;
+
+use Locale::Po4a::Pod;
+use Locale::Po4a::Man;
+
+use Pod::Usage qw(pod2usage);
+
+use File::Temp;
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_MESSAGES, "");
+textdomain('po4a');
+
+sub show_version {
+    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+}
+
+
+# init commandline parser
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+
+# Parse our options
+my (@masterfiles,@pofiles);
+my ($help,$verbose,$debug,$type);
+GetOptions('help|h'      => \$help,
+
+	   'output|o=s'  => \@pofiles,
+	   'trans=s'   => \@pofiles,
+
+	   'input|i=s'   => \@masterfiles,
+	   'master|m=s'  => \@masterfiles,
+
+	   'type|t=s'    => \$type,
+
+	   'verbose|v'   => \$verbose,
+	   'debug|d'     => \$debug,
+	   'version|V'   => \&show_version)
+    or pod2usage(1);
+	  
+pod2usage (0) if $help;
+pod2usage (1) if scalar @masterfiles < 1 || scalar @pofiles < 1;
+
+my ($doc); # parser
+if (lc($type) eq 'pod') {
+    $doc=Locale::Po4a::Pod->new();
+} elsif (lc($type) eq 'man') {
+    $doc=Locale::Po4a::Man->new();
+} else {
+  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  pod2usage(1);
+}
+map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;
+map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @pofiles;
+
+my ($pot_filename);
+(undef,$pot_filename)=File::Temp->tempfile("po4a-updatepoXXXX",
+					   DIR    => "/tmp",
+					   SUFFIX => ".pot",
+					   OPEN   => 0,
+					   UNLINK => 0)
+    or die sprintf(gettext("Can't create a temporary pot file: %s\n"),$!);
+
+
+map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 
+	  if $_ eq '-'  && !-e '-'} @pofiles;
+print STDERR gettext("Parse input files... ") if $verbose;    
+
+$doc->process('file_in_name' => \@masterfiles,
+	      'po_out_name'  => $pot_filename,
+	      'debug'        => $debug,
+	      'verbose'      => $verbose);
+
+print STDERR gettext("done.")."\n" if $verbose;    
+
+
+while (my $po_filename=shift @pofiles) {
+    print STDERR sprintf(gettext("Updating %s:"),$po_filename) if $verbose;    
+system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
+	die sprintf(gettext("Error while running msgmerge: %s\n"),$!);
+}
+
+unlink($pot_filename);

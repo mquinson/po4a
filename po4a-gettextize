@@ -1,0 +1,169 @@
+#!/usr/bin/perl
+    eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+        if $running_under_some_shell;
+
+# pod2man -- Convert POD data to PO file.
+# $Id: po4a-gettextize,v 1.1 2002-12-12 15:04:42 mquinson Exp $
+#
+# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION="0.10";
+
+=head1 NAME
+
+po4a-gettextize - Convert an original file (and its translation) to a po file
+
+=head1 SYNOPSIS
+
+po4a-gettextize -t module I<original.pod> [I<translated.pod>] E<gt> file.po
+
+=head1 DESCRIPTION
+
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.  The C<po4a-gettextize>
+script is in charge of converting documentation files to po files.
+
+If you start a new translation, C<po4a-gettextize> will extract the
+translatable strings from the pod file and write a pot file from it.
+
+If you already have a translated pod file, C<po4a-gettextize> will try to
+extract the translations it contains and put them in place in the written
+po file. Be warned that very few intelligence is used in this process: the
+Nth string of the translated file is supposed to be the translation of the
+Nth string in the original. If it's not the case, you're dead.
+
+That's why it is very important that both file share exactly the same
+structure. However, C<po4a-gettextize> is likely to detect any
+desyncronisation between files, and will repport about them. In that case,
+you should edit manually the files to solve the repported disparity. Even
+if no error were repported, you check carefully that the generated po file
+is correct (ie, that each msgstr is the translation of the associated
+msgid, and not the one before or after).
+
+Even if the script manage to do its job without apparent problems, it still
+mark all extracted translation as fuzzy, to make sure that the translator
+will have a look at them, and detect any remaining problem.
+
+=head1 OPTIONS
+
+=over 4
+
+=item -t
+
+format type of the documentation you want to handle. This can be one of:
+
+=over 4
+
+=item pod:
+
+Perl documentation format
+
+=item man:
+
+Good old manual page format
+
+=back 
+
+=item -o
+
+File where the output should be redirected.
+
+=item -V, --version
+
+Displays the version of the script and exits.
+
+=item -v, --verbose
+
+Increase the verbosity of the program.
+
+=item -d, --debug
+
+Outputs some debugging informations.
+
+=back
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>.
+
+=head1 AUTHORS
+
+Denis Barbier <barbier@linuxfr.org>
+Martin Quinson <martin.quinson@tuxfamily.org>
+
+=cut
+
+require 5.004;
+
+use Getopt::Long qw(GetOptions);
+use Locale::Po4a::Pod qw(writepo process);
+use Pod::Usage qw(pod2usage);
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_MESSAGES, "");
+textdomain('po4a');
+
+use strict;
+
+sub show_version {
+    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+}
+
+my ($outfile)=('-');
+my ($help,$type,$debug,$verbose);
+GetOptions(
+        'help|h'       => \$help,
+        'output|o=s'   => \$outfile,
+        'type|t=s'     => \$type,
+
+        'verbose|v'   => \$verbose,
+        'debug|d'     => \$debug,
+        'version|V'    => \&show_version
+) or pod2usage(1);
+
+pod2usage (0) if $help;
+pod2usage (1) if (scalar @ARGV < 1 || scalar @ARGV > 2);
+
+my ($origpod,$transpod);         # parsers
+
+if (lc($type) eq 'pod') {
+   ($origpod,$transpod)=(Locale::Po4a::Pod->new(),Locale::Po4a::Pod->new());
+} elsif (lc($type) eq 'man') {
+   ($origpod,$transpod)=(Locale::Po4a::Man->new(),Locale::Po4a::Man->new());
+} else {
+  warn sprintf(gettext("Unknown format type: %s.\nAllowed values are: pod,man.\n"),$type);
+  pod2usage(1);
+}
+
+# Initialize and run the formatter, pulling a pair of input and output off
+# at a time.
+
+my ($origname,$transname)=@ARGV; # filenames
+-e $origname || die sprintf(gettext("File %s does not exists.\n"),$origname);
+-e $transname || !length $transname || die sprintf(gettext("File %s does not exists.\n"),$transname);
+
+$origpod->read($origname);
+$origpod->parse;
+
+unless (defined ($transname)) {
+  # Ok, outputing the pot extracted from original is enough
+  $origpod->writepo($outfile);
+} else {
+  # We have to merge two pod files
+
+  $transpod->read($transname);
+  $transpod->parse;
+
+  my $mergedpo = Locale::Po4a::Po->gettextize($origpod->getpoout(),
+                                              $transpod->getpoout());
+
+  $mergedpo->write($outfile);
+}
+  
+__END__

@@ -1,0 +1,93 @@
+po4a (0.10) unstable; urgency=low
+
+  * New name, one more code reorganization. Having more than one package
+    implies to dupplicate code in the binaries. Ie, the difference between
+    pod-gettextize and man-gettextize is only the module to load.
+    I don't want to maintain the same code N times.
+  * Po.pm, TransTractor.pm:
+    - bug fixes
+  * Man.pm:
+    - first release.
+    - seems ok to me (it fails on unknown macro, and shouldn't change the
+      cat result.
+  * 
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Wed, 11 Dec 2002 16:55:20 +0100
+
+po-pod (0.9) unstable; urgency=low
+
+  * Use the new Locale::Po4a::TransTractor as base of the parser/extractor.
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Fri, 29 Nov 2002 14:23:04 +0100
+
+po-pod (0.8.4) unstable; urgency=low
+
+  * Depend on the newly created liblocale-po4a-perl, and do not provide
+    Po.pm anymore.
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Tue, 19 Nov 2002 17:53:37 +0100
+
+po-pod (0.8.3) unstable; urgency=low
+
+  * pod-gettextize:
+    - output file defaults to standard output.
+    - document the fact that all translations found during the merge are
+      marked fuzzy, and why. 
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Tue, 19 Nov 2002 17:22:58 +0100
+
+po-pod (0.8.2) unstable; urgency=low
+
+  * Remove {read,write} to filehandle to avoid problems when running under
+    UTF8 locales.
+  * Po.pm: when calling the regular gettext, prefix it with
+    Locale::gettext::, so that we get the function we are looking for, and
+    not the one defined in this package.
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Mon, 18 Nov 2002 15:08:43 +0100
+
+po-pod (0.8.1) unstable; urgency=low
+
+  * pod-translate:
+    - when a translation is discarded, remove the old generated file.
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Mon, 18 Nov 2002 09:22:55 +0100
+
+po-pod (0.8) unstable; urgency=low
+  
+  * Po.pm:
+    - New functions: gettext_stats, and gettext_stats_clear. Be carefull
+      (and read the doc ;), it's not the status of the file, it's the
+      summary of its recent use through the gettext method.
+    - New function: wrapped_gettext(), wrapped_push(), which do like 
+      gettext() and push(), but assumes that whitespaces in msgid and 
+      msgstr are not significant (and modify them).
+  * pod-updatepo: INCOMPATIBLE INTERFACE CHANGE!
+    - now accepts several pod files (to put their translation in only one
+      file per language).  
+  * pod-translate:
+    - reports how much is each file translated when running verbose.
+    - New option: -k set the threshold under what the translation is
+      discarded. Defaults to 80. 
+    - New option: -w set the width to which the resulting file should be
+      wrapped. Defaults to 76.
+    - New option: -a|--add-file is implemented (see man page). It's not
+      specific to pod files, and should work for all modules, provided
+      that they keep the file to output in a @ of lines.
+  * Packaging:
+    - Perl modules are now stored under /usr/share, and not /usr/lib
+      because they are not arch-dependant.
+    - Manpages are now installed only with dh_installman, so that we don't  
+      get them twice.
+    - The comments in source also says that code is GPL'ed
+  * All binaries and modules:
+    use (regular) gettext.pm to localize the messages ;)
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Sun, 17 Nov 2002 02:09:06 +0100
+
+po-pod (0.7) unstable; urgency=low
+
+  * Initial release.
+
+ -- Denis Barbier <barbier@debian.org>  Fri, 22 Mar 2002 23:47:06 +0100
+
