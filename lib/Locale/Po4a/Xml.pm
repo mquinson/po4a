@@ -919,6 +919,8 @@ This removes the returned stream from the input
 
 This ensures that the searched text is outside any quotes
 
+=back
+
 =cut
 
 sub get_string_until {
