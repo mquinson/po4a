@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.9 2003-11-28 00:21:27 barbier Exp $
+# $Id: Po.pm,v 1.10 2004-04-28 09:47:25 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -140,7 +140,7 @@ catalog.
 sub read{
     my $self=shift;
     my $filename=shift 
-	|| croak (dgettext("po4a","Please provide a non-nul filename to Locale::Po4a::Po::read()\n"));
+	|| croak (dgettext("po4a","po4a::po: Please provide a non-nul filename\n"));
 
     open INPUT,"<$filename" 
 	|| croak (sprintf(dgettext("po4a","Can't read from %s: %s\n"),$filename,$!));
@@ -272,10 +272,10 @@ sub gettextize {
     my $pores=Locale::Po4a::Po->new();
  
     if ($poorig->count_entries() > $potrans->count_entries()) {
-	warn sprintf(dgettext("po4a","po4a gettextize: Original have more strings that the translation (%d>%d). Please fix it by editing the translated version to add a dummy entry.\n"),
+	warn sprintf(dgettext("po4a","po4a gettextize: Original have more strings that the translation (%d>%d).\npo4a gettextize: Please fix it by editing the translated version to add a dummy entry.\n"),
 		    $poorig->count_entries() , $potrans->count_entries());
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
-	warn sprintf(dgettext("po4a","po4a gettextize: Original have less strings that the translation (%d<%d). Please fix it by editing the translated file to remove the extra entry (you may want to create an adendum).\n"),
+	warn sprintf(dgettext("po4a","po4a gettextize: Original have less strings that the translation (%d<%d).\npo4a gettextize: Please fix it by removing the extra entry from the\npo4a gettextize: translated file. You may need an addendum, cf po4a(7).\n"),
 		    $poorig->count_entries() , $potrans->count_entries());
     }
     
@@ -296,10 +296,10 @@ sub gettextize {
 	#
 	# Make sure the type of both string exist
 	#
-	die sprintf(dgettext("po4a","Internal error in gettextization: type of original string number %s isn't provided\n"),$o)
+	die sprintf("Internal error in gettextization: type of original string number %s isn't provided\n",$o)
 	    if ($typeorig eq '');
 	
-	die sprintf(dgettext("po4a","Internal error in gettextization: type of translated string number %s isn't provided\n"),$o)
+	die sprintf("Internal error in gettextization: type of translated string number %s isn't provided\n",$o)
 	    if ($typetrans eq '');
 
 	#
@@ -445,11 +445,11 @@ form an hash table. The valid keys are :
 
 =item msgid
 
-the string in original language which is translated.
+the string in original language.
 
 =item msgstr
 
-the translation
+the translation.
 
 =item reference
 
@@ -459,7 +459,7 @@ multiple occurences.
 
 =item comment
 
-a comment added here manually. The format here is free.
+a comment added here manually (by the translators). The format here is free.
 
 =item automatic
 
@@ -488,14 +488,15 @@ objects are given a type, based on their structure (like "chapt", "sect1",
 mean that both files do not share the same structure, and the process
 repports an error.
 
-This information is not written to the po file.
+This information is written as automatic comment in the po file since this
+to translators some context about the strings to translate.
 
 =item wrap
 
-boolean indicating wheather we can consider that whitespaces in string are
-not important. If yes, the function canonize the string before use.
+boolean indicating wheather whitespaces can be mangeled in cosmetic
+reformatings. If true, the string is canonized before use.
 
-This information is not written to the po file.
+This information written to the po file using the 'wrap' or 'no-wrap' flag.
 
 =item wrapcol 
 
