@@ -488,7 +488,7 @@ sub addendum_parse {
 	goto END_PARSE_ADDFILE;
     }
     foreach my $part (split(/;/,$header)) {
-	unless ($part =~ m/^([^=]*)=(.*)$/) {
+	unless ($part =~ m/^\s*([^=]*)=(.*)$/) {
 	    warn sprintf(dgettext("po4a","Syntax error in Po4a header of %s, near \"%s\""),
 			 $filename,$part)."\n";
 	    goto END_PARSE_ADDFILE;
