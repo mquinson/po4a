@@ -39,7 +39,7 @@ in wrapped paragraph, and I think it's worth.
 The first change is about font change specifications.  In nroff, there is
 several way to specify if a given word should be written in small, bold or
 italics. In the text to translate, there is only one way, borrowed from the
-pod format (used for perl documentation):
+pod (perl online documentation) format:
 
 =over
 
@@ -55,18 +55,12 @@ equivalent to \fBtext\fP or ".B text"
 
 equivalent to \fStext\fP
 
-=item RE<lt>textE<gt> -- roman text
-
-equivalent to \fRtext\fP
-
 =back
 
-Remark 1: SE<lt>textE<gt> and RE<lt>textE<gt> don't exist in the pod
-format, don't try it in a pod page. But this notation is usefull here.
+Remark 1: SE<lt>textE<gt> don't exist in the pod format, don't try it in a
+pod page. But this notation is usefull here.
 
-Remark 2: RE<lt>textE<gt> is useless in a generic context, since normal
-text is already displayed in roman. It is usefull only to nest font
-modificator, like in BE<lt>bold text RE<lt>roman textE<gt> bold textE<gt>.
+Remark 2: Don't nest font specificator, since it does not work well in po4a for now.
 
 =head2 Putting 'E<lt>' and 'E<gt>' in translations
 
@@ -139,7 +133,7 @@ Some authors escape spaces to make sure that the wrapping tool won't mangle
 them. po4a::man I<will> eat them. Use the .nf/.fi groff macro to control
 wheather the text should be wrapped or not.
 
-=head2 Don't mess too much with font specifier.
+=head2 Don't mess nest font specifier.
 
 In order to make translator's life easier, po4a::man will change all font
 specifiers in the way explained above. This process is sometimes fragile,
@@ -152,7 +146,8 @@ Instead, always close all font modifier like that:
   \fB bold text \fR\fI italic text \fR back to roman
 
 Note that what is forbidden is to close several modifiers with only one
-\fR. Nesting modifiers is allowed, like for example:
+\fR. Nesting modifiers is not allowed either (for now), so the following
+won't work:
 
   \fB bold \fI italic\fP bold again \fR
 
@@ -308,19 +303,16 @@ sub pre_trans {
     $str =~ s/</E<lt>/g;
     $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
 
-    $str =~ s/\\f([SBI])(.*?)\\f([PR])/$1<$2>/sg;
-    $str =~ s/\\fR(.*?)\\fP/R<$1>/sg;
+    $str =~ s/\\f([SBI])(([^\\]*\\[^f])?.*?)\\f([PR])/$1<$2>/sg;
+    $str =~ s/\\fR(.*?)\\f[RP]/$1/sg;
     if ($str =~ /\\f[RSBI]/) {
 	die sprintf(gettext(
-"%s: Badly nested font modifiers, ie, something like:\n".
+"%s: Nested font modifiers, ie, something like:\n".
 "  \\fB bold text \\fI italic text \\fR back to roman\n".
 "This is not supported, modify the original page to something like:\n".
 "  \\fB bold text \\fR back to roman \\fI italic text \\fR back to roman\n".
-"Note that the following line is ok:\n".
-"  \\fB bold \\fI italic\\fP bold again \\fR\n".
-"(because each \\f is closed by a \\fP or a \\fR).\n".
-"Here is the faulty line:\n %s"
-			    ),$ref,$origstr);
+"Here is the faulty line:\n %s\nI changed this to: %s"
+			    ),$ref,$origstr,$str);
     }
     
 # The next commented loop should take care of badly nested font modifiers,
