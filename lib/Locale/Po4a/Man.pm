@@ -266,9 +266,18 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 sub pushmacro {
     my $self=shift;
     if (scalar @_) { 
+	# Do quote the arguments containing spaces, as it should.
+	
+	#  but do not do so if they already contain quotes and escaped spaces
+	# For example, cdrdao(1) uses:
+	# .IP CATALOG\ "ddddddddddddd" (Here, the quote have to be displayed)
+	# Adding extra quotes as in:
+	# .IP "CATALOG\ "ddddddddddddd""
+	# results in two args: 'CATALOG\ ' and 'ddddddddddddd""'
+  
 	$self->pushline(join(" ",map { defined $_ ? 
 					 ($_ eq '0' ? "0" 
-					            : ( length($_) && m/ / ? "\"$_\"" 
+					            : ( length($_) && m/([^\\] |^ )/ ? "\"$_\"" 
 							                   : "$_"||'""'
 						      )
 				         ) : ''
