@@ -61,7 +61,7 @@ foreach my $format (@formats) {
 		diag ("Failed (retval=$val) on:");
 		diag ($testcmd);
 		diag ("Was created with:");
-		diag ("perl -I../lib $cmd");
+		diag ("'$cmd', with -I../lib");
 	    }
 	}
 	
