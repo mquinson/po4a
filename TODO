@@ -4,6 +4,14 @@
  Check xml2rfc
 
 Better error handling (errno, errstr)
+> >What we really need is a function embeeding the call to warn and sprintf,
+> >and reputting the module in front of it and the "\n" afterward (but not the
+> >dgettext since it has to be there to be able to extract the strings). It
+> >would help making the code more readable. We could also implement a sort of
+> >wrapping function setting the module name in front of every line. There is
+> >a module for that in Perl.
+>
+> I thought about it some time ago. It would be nice :)
 
 ** TransTractor.pm
  - process(): $self->addendum($file) || die "An addendum failed\n";
@@ -19,3 +27,4 @@ Better error handling (errno, errstr)
 ** Sgml.pm
  - get ride of nsgml
  - move the tag lists to an external file
+
