@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.23 2004-08-08 21:51:06 jvprat-guest Exp $
+# $Id: Po.pm,v 1.24 2004-08-08 23:00:55 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -42,7 +42,7 @@ of a string.
 For a more complete description of message catalogs in the po format and
 their use, please refer to the documentation of the gettext program.
 
-This module is part of the PO4A project, which objectif is to use po files
+This module is part of the PO4A project, which objective is to use po files
 (designed at origin to ease the translation of program messages) to
 translate everything, including documentation (man page, info manual),
 package description, debconf templates, and everything which may benefit
@@ -134,10 +134,10 @@ sub initialize {
     $self->stats_clear();
 }
 
-=item read()
+=item read($)
 
 Reads a po file (which name is given as argument).  Previously existing
-entries in self are not removed, the new one are added to the end of the
+entries in self are not removed, the new ones are added to the end of the
 catalog.
 
 =cut
@@ -207,7 +207,7 @@ sub read{
     }
 }
 
-=item write()
+=item write($)
 
 Writes the current catalog to the given file.
 
@@ -274,11 +274,11 @@ sub write{
 #    }
 }
 
-=item gettextize()
+=item gettextize($$)
 
-This function produce one translated message catalog from two catalogs, an
-original and a translation. This process is described in po4a(7), section
-I<Gettextization: how does it work?>. 
+This function produces one translated message catalog from two catalogs, an
+original and a translation. This process is described in L<po4a(7)|po4a.7>,
+section I<Gettextization: how does it work?>.
 
 =cut
 
@@ -286,9 +286,9 @@ sub gettextize {
     my $this = shift;
     my $class = ref($this) || $this;
     my ($poorig,$potrans)=(shift,shift);
-   
+
     my $pores=Locale::Po4a::Po->new();
- 
+
     if ($poorig->count_entries() > $potrans->count_entries()) {
 	warn sprintf(dgettext("po4a",
 		"po4a gettextize: Original have more strings that the translation (%d>%d).\n".
@@ -368,13 +368,15 @@ sub gettextize {
     return $pores;
 }
 
-=item filter()
+=item filter($)
 
-This function extract a catalog from an existing one. Only the entries having a
-reference in the given file will be placed in the resulting catalog.
+This function extracts a catalog from an existing one. Only the entries having
+a reference in the given file will be placed in the resulting catalog.
 
-This function parses its argument, convert it to a perl function definition, 
-eval this definition and filter the fields for which this function returns true. 
+This function parses its argument, converts it to a perl function definition, 
+eval this definition and filter the fields for which this function returns
+true.
+
 I love perl sometimes ;)
 
 =cut
@@ -597,14 +599,15 @@ sub to_utf {
 
 =back
 
-=head1 Functions to use a message catalogs for translations
+=head1 Functions to use a message catalog for translations
 
 =over 4
 
 =item gettext($%)
 
 Request the translation of the string given as argument in the current catalog.
-The function returns the empty string if the string was not found.
+The function returns the original (untranslated) string if the string was not
+found.
 
 After the string to translate, you can pass an hash of extra
 arguments. Here are the valid entries:
@@ -613,8 +616,8 @@ arguments. Here are the valid entries:
 
 =item wrap
 
-boolean indicating wheather we can consider that whitespaces in string are
-not important. If yes, the function canonize the string before looking for
+boolean indicating whether we can consider that whitespaces in string are
+not important. If yes, the function canonizes the string before looking for
 a translation, and wraps the result.
 
 =item wrapcol
@@ -670,7 +673,7 @@ sub gettext {
 =item stats_get()
 
 Returns stats about the hit ratio of gettext since the last time that
-stats_clear() were called. Please note that it's not the same
+stats_clear() was called. Please note that it's not the same
 statistics than the one printed by msgfmt --statistic. Here, it's stats
 about recent usage of the po file, while msgfmt reports the status of the
 file.  Example of use:
@@ -707,11 +710,11 @@ sub stats_clear {
 
 =back
 
-=head1 Functions to build a message catalogs
+=head1 Functions to build a message catalog
 
 =over 4
 
-=item push()
+=item push(%)
 
 Push a new entry at the end of the current catalog. The arguments should
 form an hash table. The valid keys are :
@@ -738,7 +741,7 @@ a comment added here manually (by the translators). The format here is free.
 
 =item automatic
 
-a comment which where automatically added by the string extraction
+a comment which was automatically added by the string extraction
 program. See the I<--add-comments> option of the B<xgettext> program for
 more information.
 
@@ -760,20 +763,20 @@ into a po object, and merge them, using one's msgid as msgid and the
 other's msgid as msgstr. To make sure that things get ok, each msgid in po
 objects are given a type, based on their structure (like "chapt", "sect1",
 "p" and so on in docbook). If the types of strings are not the same, that
-mean that both files do not share the same structure, and the process
+means that both files do not share the same structure, and the process
 reports an error.
 
 This information is written as automatic comment in the po file since this
-to translators some context about the strings to translate.
+gives to translators some context about the strings to translate.
 
 =item wrap
 
-boolean indicating wheather whitespaces can be mangeled in cosmetic
+boolean indicating whether whitespaces can be mangled in cosmetic
 reformatings. If true, the string is canonized before use.
 
-This information written to the po file using the 'wrap' or 'no-wrap' flag.
+This information is written to the po file using the 'wrap' or 'no-wrap' flag.
 
-=item wrapcol 
+=item wrapcol
 
 The column at which we should wrap (default: 76).
 
@@ -938,10 +941,10 @@ sub get_charset() {
     return $1;
 }
 
-=item set_charset()
+=item set_charset($)
 
 This sets the character set of the po header to the value specified in its
-first argument. If you never call this function (and no file with an specified
+first argument. If you never call this function (and no file with a specified
 character set is read), the default value is left to "CHARSET". This value
 doesn't change the behavior of this module, it's just used to fill that field
 in the header, and to return it in get_charset().
