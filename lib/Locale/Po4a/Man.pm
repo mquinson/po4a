@@ -317,6 +317,9 @@ sub pre_trans {
 		"po4a::man: Here is the faulty line:\n".
 		" %s"),$ref,$origstr)."\n";
     }
+
+    $str =~ s/\\\*\(lq/"/; #"
+    $str =~ s/\\\*\(rq/"/; #"
     
 # The next commented loop should take care of badly nested font modifiers,
 #  if only it worked ;)
@@ -385,6 +388,9 @@ sub post_trans {
     $str =~ s/E<lt>/</mg;
     # Don't do that, because we'll go into trouble if previous line was .TP
     $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
+    
+    $str =~ s/"([^"]*)"/\\\*\(lq$1\\\*\(rq/mg; #" 
+
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
 }

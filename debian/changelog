@@ -13,19 +13,22 @@ po4a (0.18-1) unstable; urgency=low
   - [Guide.pm] Added Guide XML support module
   
   [Martin Quinson]
-  - Fix test so that they stop make sure that the nf/fi bug of man is still
-    there. Test that it does not come back instead.
+  - [man/test] Fix tests so that they stop make sure that the nf/fi bug of
+    man is still there. Test that it does not come back instead.
   - Do not try (and fail miserably) to create path to output file when it's
     in the current directory.
-  - Fix typo in messages.
-    po4a: inverting the meaning. Closes #264535 in Debian
-    po4a-updatepo: was rather poor. Closes #264537 in Debian
-    Sgml.pm: induced a perl error (not enough args for format).
-             Thanks Olivier Trichet.
-  - po4a: Kill the code checking that the first argument contains no colon,
+  - Fix several typo in messages.
+    - po4a: inverting the meaning. Closes #264535 in Debian
+    - po4a-updatepo: was rather poor. Closes #264537 in Debian
+    - Sgml.pm: induced a perl error (not enough args for format).
+      Thanks Olivier Trichet.
+  - [po4a] Kill the code checking that the first argument contains no colon,
     since the filename can contain colons in which case we get false
     positive on this one. Thanks to Julien Louis for reporting. 
     (Closes: #265684) in Debian.
+  - [man] Convert on the fly the groff horror  \*(lqlibc5\*(rq, which stands
+    for "libc5", with the quotes. Thanks to Phillipe Batailler for bringing
+    my attention to this.
 
   [Danilo Piazzalunga]
   - [po/bin/it.po & po/pod/it.po] Add Italian translation
