@@ -90,7 +90,7 @@ my $builder = Module::Build->subclass
 	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
 		my $podfiles = join ("", map {" -m ../../".$_ } @files);
 		print "XX Update documentation pot files: ";
-		system("cd po/pod; PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $podfiles -p po4a-pod.pot") 
+		system("cd po/pod; PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $podfiles -M iso8859-1 -p po4a-pod.pot") 
 		  && die;
 		my ($atime, $mtime) = (time,time);
 		utime $atime, $mtime, "po/pod/po4a-pod.pot";
@@ -132,6 +132,8 @@ my $builder = Module::Build->subclass
 	    
 	    $self->depends_on('manpo');
 	    use Pod::Man;
+
+	    my $options = "-v -f pod -M iso8859-1";
 	    
 	    #get the languages
 	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
@@ -152,7 +154,7 @@ my $builder = Module::Build->subclass
 	    foreach $lang (@langs) {
 		print ("X Translate binary manpages to $lang\n");
 		foreach $file (keys(%{$self->script_files()})) {
-		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
+		    system("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$file") {
 			system("mkdir -p blib/man/$lang/man1") && die;
@@ -172,7 +174,7 @@ my $builder = Module::Build->subclass
 		foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
 		    $file =~ /.*\/(.*)\.pm$/;
 		    my $filename = $1;
-		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
+		    system("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			system ("mkdir -p blib/man/$lang/man3") && die;
@@ -198,7 +200,7 @@ my $builder = Module::Build->subclass
 		system ("gzip -9 -f blib/man/man7/$filename") && die;
 		foreach $lang (@langs) {
 		    print "X Translate $file to $lang\n";
-		    system ("PERL5LIB=lib perl po4a-translate -f pod -v -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
+		    system ("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			`mkdir -p blib/man/$lang/man7`;
