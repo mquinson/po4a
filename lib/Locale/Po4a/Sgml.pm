@@ -810,7 +810,7 @@ sub parse_file {
 	}
 
 	else {
-	    die sprintf(dgettext("po4a","%s:%d: Unknown SGML event type: %s"),
+	    die sprintf("po4a::sgml: ".dgettext("po4a","%s: Unknown SGML event type: %s"),
 			$refs[$parse->line],$event->type)."\n";
 	    
 	}
