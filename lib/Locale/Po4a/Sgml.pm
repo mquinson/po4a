@@ -35,7 +35,7 @@ Locale::Po4a::Sgml - Convert sgml documents from/to PO files
 =head1 DESCRIPTION
 
 The goal po4a [po for anything] project is to ease translations (and more
-interstingly, the maintainance of translation) using gettext tools on areas
+interstingly, the maintenance of translation) using gettext tools on areas
 where they were not expected like documentation.  
 
 Locale::Po4a::Sgml is a module to help the translation of documentation in

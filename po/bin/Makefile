@@ -32,7 +32,7 @@ $(MODULE).pot: $(POTFILES)
 	fi
 	
 clean:
-	rm -f (MOFILES) messages messages.mo *~
+	rm -f (MOFILES) messages *.mo *~
 
 %.mo: %.po
 	msgfmt -o $@ $<

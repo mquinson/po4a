@@ -13,7 +13,7 @@ package = po4a
 #export DH_VERBOSE=1
 
 # This is the debhelper compatibility version to use.
-export DH_COMPAT=2
+#export DH_COMPAT=2
 
 DESTDIR = $(CURDIR)/debian/$(package)
 
@@ -134,7 +134,7 @@ binary: binary-indep binary-arch
 tar: clean
 	version=`sed -e 's/.* (//' -e 's/-.*//' -e 1q debian/changelog`; \
 	echo Creating ../$(package)_$$version.orig.tar.gz; \
-  tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
+  tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x '.*.cvsignore' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
 
 deb:
 	dpkg-buildpackage -i -rfakeroot
