@@ -66,7 +66,7 @@ To begin a new translation using po4a, you have to do the following steps:
 Make a new pot file, representing the text which have to be translated under
 the gettext format. For that, use the I<po4a-gettextize> program like that:
 
-  $ po4a-gettextize -t <module> original.file > original.pot
+  $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>
 
 Please refer to L<po4a-translate(1)> for more details, like the list of
 existing modules (which is also documented elsewhere in this document)
@@ -96,7 +96,7 @@ so that you can distribute it to users.
 For that, use the I<po4a-translate> program like that (where XX is the
 language code):
 
-  $ po4a-translate -t <module> original.file XX.po -o XX.sgml
+  $ po4a-translate -f <format> -m <master.sgml> -p <XX.po> -l <XX.sgml>
 
 Please refer to L<po4a-translate(1)> for more details.
 
@@ -106,7 +106,7 @@ Documentation often evolves, and things become complicated when the
 original author changes the English document. To update your translation
 when the original file has changed, use the I<po4a-updatepo> program like that:
 
-  $ po4a-updatepo -t <module> -i new_original.file -o existing.XX.po
+  $ po4a-updatepo -f <format> -m new_original.file -p existing.XX.po
 
 (Please refer to L<po4a-updatepo(1)> for more details)
 
@@ -140,7 +140,7 @@ section I<Gettextization: how does it work?> below.
 
 To ease the writing (and the comprehension) of this section, we consider
 converting a translation of SGML document, but this is exactly the same for
-all modules. Only file names and the C<-t> option change.
+all modules. Only file names and the C<-f> option change.
 
 =over 2	
 
@@ -169,7 +169,7 @@ Generate a completely translated, B<but not up-to-date> C<po> file from
 your XX.sgml translation and the original.old.sgml files using the
 following command:
 
- $ po4a-gettextize -t sgml original.old.sgml XX.sgml > XX.po
+ $ po4a-gettextize -f sgml -m original.old.sgml -l XX.sgml -p XX.po
 
 If the translated and the original files don't have the exact same
 structure, this command will fail. In that case, you need to edit them to
