@@ -253,7 +253,7 @@ sub parse_file {
 	                                    "term title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata sbr textdata videodata xref",
 			     "section"   => "",
-			     "indent"    => "abstract answer appendix article audioobject author ".
+			     "indent"    => "abstract answer appendix article articleinfo audioobject author ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
 	                                    "dedication ".
