@@ -10,7 +10,7 @@
 # Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
 # 
 # The adaptation for po4a was done by Denis Barbier <barbier@linuxfr.org>,
-# Martin Quinson <martin.quinson@tuxfamily.org> and others.
+# Martin Quinson (mquinson#debian.org) and others.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -880,12 +880,12 @@ SGMLS and NSGMLS parsers) which was:
 The adaptation for po4a was done by:
 
  Denis Barbier <barbier@linuxfr.org>
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 
  Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
- Copyright 2002 by SPI, inc.
+ Copyright 2002, 2003, 2004, 2005 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

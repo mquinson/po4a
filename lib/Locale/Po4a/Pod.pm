@@ -1,7 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.15 2005-02-14 23:19:24 danilo-guest Exp $
-#
-# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# $Id: Pod.pm,v 1.16 2005-02-27 22:53:53 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -257,7 +255,7 @@ L<Locale::Po4a::Man(3pm)>,
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -3,8 +3,6 @@
 # Po4a::Debconf.pm
 # 
 # extract and translate translatable strings from debconf templates
-# 
-# Martin Quinson <martin.quinson@tuxfamily.org>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -212,7 +210,7 @@ sub parse {
 This module is loosely inspired from both po-debconf and debconf code. The
 adaptation for po4a was done by:
 
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1012,7 +1012,7 @@ Will see if it's enough ;)
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
  Jordi Vilalta <jvprat@wanadoo.es>
 
 =cut

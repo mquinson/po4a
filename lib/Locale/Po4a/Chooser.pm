@@ -1,7 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.23 2005-02-15 00:12:08 jvprat-guest Exp $
-#
-# Copyright 2002,2003,2004,2005 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# $Id: Chooser.pm,v 1.24 2005-02-27 22:53:52 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -112,7 +110,7 @@ L<Locale::Po4a::Dia(3pm)>.
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 

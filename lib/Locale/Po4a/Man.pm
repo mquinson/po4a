@@ -243,11 +243,11 @@ L<Locale::Po4a::Pod(3pm)>.
 
  Denis Barbier <barbier@linuxfr.org>
  Nicolas François <nicolas.francois@centraliens.net>
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003, 2004 by SPI, inc.
+Copyright 2002, 2003, 2004, 2005 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

@@ -3,8 +3,6 @@
 # Po4a::NewsDebian.pm
 # 
 # extract and translate translatable strings from a NEWS.Debian documents
-# 
-# Martin Quinson <martin.quinson@tuxfamily.org>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -144,7 +142,7 @@ This module is loosely inspired from /usr/lib/dpkg/parsechangelog/debian, which 
 
 The adaptation for po4a was done by:
 
- Martin Quinson <martin.quinson@tuxfamily.org>
+ Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
 

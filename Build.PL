@@ -261,6 +261,6 @@ my $b = $builder->new
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
       install_path => {po => $base.'/locale', man => $base.'/man'},
       dist_abstract => 'Tools for helping translation of documentation',
-      dist_author => ['Martin Quinson <martin.quinson@tuxfamily.org>',
+      dist_author => ['Martin Quinson (mquinson#debian.org)',
 	  'Denis Barbier <barbier@linuxfr.org>']
   )->create_build_script;
