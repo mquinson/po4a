@@ -497,10 +497,13 @@ sub parse{
 
 	if ($line =~ /^\./) {
 	    die sprintf("po4a::man: ".dgettext("po4a","Unparsable line: %s"),$line)."\n"
-		unless ($line =~ /^\.+\\*?(\\\")(.*)/ ||
-			$line =~ /^\.([BI])(\W.*)/ ||
-			$line =~ /^\.(\S*)(.*)/);
-	    my $macro=$1;
+		unless ($line =~ /^(\.+\\*?)(\\\")(.*)/ ||
+			$line =~ /^(\.)([BI])(\W.*)/ ||
+			$line =~ /^(\.)(\S*)(.*)/);
+	    my $arg1=$1;
+	    $arg1 .= $2;
+	    my $macro=$2;
+	    my $arguments=$3;
 	    
 	    # Split on spaces for arguments, but not spaces within double quotes
 	    my @args=();
@@ -510,9 +513,12 @@ sub parse{
 	    # We change them back before pushing into the arguments. The one which will be
 	    # translated will have the same change again (in pre_trans and post_trans), but
 	    # the ones which won't get translated are not changed anymore. Let's play safe.
-	    $line =~ s/\\ /\xA0/g; 
+	    $line =~ s/\\ /\xA0/g;
+	    $arguments =~ s/\\ /\xA0/g;
+#	    $arguments =~ s/^ +//;
+	    push @args,$arg1;
 	    
-	    foreach my $elem (split (/ +/,$line)) {
+	    foreach my $elem (split (/ +/,$arguments)) {
 		print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
 		    if ($debug{'splitargs'});
 
