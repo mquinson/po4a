@@ -533,7 +533,7 @@ sub addendum {
     
     unless ($filename) {
 	warn(dgettext("po4a",
-	    "Can't insert addendum when not given the filename")."\n")
+	    "Can't insert addendum when not given the filename")."\n");
 	return 0;
     }
   
