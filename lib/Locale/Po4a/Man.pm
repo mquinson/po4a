@@ -424,8 +424,8 @@ sub post_trans {
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
     #   the beginning of the line
-    unless (defined $self->{type} && $self->{type} =~ m/^(TS|TP)$/) {
-        # This doesn't work after a TP or TS (all those macros shift
+    unless (defined $self->{type} && $self->{type} =~ m/^(TS)$/) {
+        # This doesn't work after a TS (this macros shift
         # lines, which may contain macros)
         $str =~ s/^((?:
                        (?:CW|[RBI])<
@@ -1077,7 +1077,17 @@ $macro{'TP'}=sub {
 	($l2,$ref2) = $self->shiftline();
 	chomp($l2);
     }
-    $self->pushline($self->t($l2)."\n");
+    if ($l2 =~/^[.']/) {
+	# If the line after a .TP is a macro,
+	# let the parser do it's job.
+	# Note: use Transtractor unshiftline for now. This may require an
+	#       implementation of the man module's own implementation.
+	#       This may be a problem if, for example, the line resulted
+	#       of a line continuation.
+	$self->SUPER::unshiftline($l2,$ref2);
+    } else {
+	$self->pushline($self->t($l2)."\n");
+    }
 
     # From info groff:
     # Note that neither font shape nor font size of the label [i.e. argument
