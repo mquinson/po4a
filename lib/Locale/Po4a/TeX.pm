@@ -1061,7 +1061,7 @@ addition to the $self object):
 
 =back
 
-The first 4 arguments are extracted from get_leading_command or
+The first 4 arguments are extracted by get_leading_command or
 get_trailing_command.
 
 Command and environment functions return the translation of the command
