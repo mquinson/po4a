@@ -118,15 +118,18 @@ tags are the only tags present, and that this tag is at the very beginning
 of each paragraph.
 
  sub parse {
+   my $self = shift;
+
    PARAGRAPH: while (1) {
        my ($paragraph,$pararef,$line,$lref)=("","","","");
        my $first=1;
-       while (($line,$lref)=$document->shiftline() && defined($line)) {
+       my ($line,$lref)=$self->shiftline();
+       while (defined($line)) {
 	   if ($line =~ m/<p>/ && !$first--; ) {
 	       # Not the first time we see <p>. 
 	       # Reput the current line in input,
 	       #  and put the built paragraph to output
-	       $document->unshiftline($line,$lref);
+	       $self->unshiftline($line,$lref);
 	      
 	       # Now that the document is formed, translate it:
 	       #   - Remove the leading tag
@@ -134,9 +137,9 @@ of each paragraph.
 
 	       #   - push to output the leading tag (untranslated) and the
 	       #     rest of the paragraph (translated)
-	       $document->pushline(  "<p>"
-                                   . $document->translate($paragraph,$pararef)
-                                   );
+	       $self->pushline(  "<p>"
+                               . $document->translate($paragraph,$pararef)
+                               );
 
  	       next PARAGRAPH;
 	   } else {
@@ -144,6 +147,9 @@ of each paragraph.
 	       $paragraph .= $line;
 	       $pararef = $lref unless(length($pararef));
 	   }
+
+           # Reinit the loop
+           ($line,$lref)=$self->shiftline();
        }
        # Did not got a defined line? End of input file.
        return;
