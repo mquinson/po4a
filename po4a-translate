@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.7 2003-01-09 09:12:31 mquinson Exp $
+# $Id: po4a-translate,v 1.8 2003-01-13 08:53:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.12";
+my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -42,10 +42,13 @@ Add I<file> to the resulting file (to put translator's name or a section
 should be a PO4A header indicating where it should be added (see section
 "Adding content" below).
 
-=item -o, --outfile
+=item -h, --help
 
-were should written the newly created documentation file (default: standard
-output).
+Show a short help message.
+
+=item --help-fmt
+
+List the documentation format understood by po4a.
 
 =item -k, --keep
 
@@ -53,25 +56,15 @@ Minimal threshold for translation percentage to keep (ie, write) the
 resulting file (default: 80). Ie, by default, files have to be translated
 at at least 80% to get written.
 
+=item -o, --outfile
+
+were should written the newly created documentation file (default: standard
+output).
+
 =item -t
 
-format type of the documentation you want to handle. This can be one of:
-
-=over 4
-
-=item kernelhelp
-
-The help messages associated with each kernel compilation option
-
-=item man
-
-Good old manual page format
-
-=item pod
-
-Perl documentation format
-
-=back 
+format type of the documentation you want to handle. Use the --help-fmt
+option to see the list of available formats.
 
 =item -v, --verbose
 
@@ -127,6 +120,7 @@ under the terms of GPL (see COPYING file).
 use Locale::Po4a::Pod;
 use Locale::Po4a::Man;
 use Locale::Po4a::KernelHelp;
+use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
 use Getopt::Long qw(GetOptions);
@@ -140,9 +134,10 @@ textdomain("po4a");
 
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
-my ($help,$verbose,@addfiles,$type);
+my ($help,$help_fmt,$verbose,@addfiles,$type);
 GetOptions(
         'help|h'       => \$help,
+        'help-fmt'     => \$help_fmt,
         'output|o=s'   => \$outfile,
 	'width|w=s'    => \$width,
 	'verbose|v'    => \$verbose,
@@ -150,7 +145,9 @@ GetOptions(
 	'add-file|a=s' => \@addfiles,
         'type|t=s'     => \$type
 ) or pod2usage(1);
+
 $help && pod2usage(0);
+$help_fmt && Locale::Po4a::Chooser::list(0);
 
 my $master_filename=shift||pod2usage(1);
 my $po_filename=shift ||pod2usage(1);
@@ -161,20 +158,8 @@ my (@pos,@masters);
 push @pos,$po_filename;
 push @masters,$master_filename;
 
-my ($doc); # parser
-if (lc($type) eq 'kernelhelp') {
-    $doc=Locale::Po4a::KernelHelp->new();
-} elsif (lc($type) eq 'man') {
-    $doc=Locale::Po4a::Man->new();
-} elsif (lc($type) eq 'pod') {
-    $doc=Locale::Po4a::Pod->new();
-} elsif (lc($type) eq 'sgml') {
-    $doc=Locale::Po4a::Sgml->new();
-} else {
-  warn sprintf(gettext("Unknown format type: %s.\n".
-"Allowed values are: kernelhelp, man, pod, sgml.\n"),$type);
-  pod2usage(1);
-}
+# parser
+my $doc=Locale::Po4a::Chooser::new($type);
 
 # Prepare the document to be used as translator, but not parser
 $doc->process('po_in_name'   => \@pos,

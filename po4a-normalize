@@ -1,12 +1,12 @@
 #!/usr/bin/perl -w
-# $Id: po4a-normalize,v 1.1 2003-01-09 08:35:06 mquinson Exp $
+# $Id: po4a-normalize,v 1.2 2003-01-13 08:53:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.12";
+my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -22,40 +22,30 @@ The goal po4a [po for anything] project is to ease translations (and more
 interstingly, the maintainance of translation) using gettext tools on areas
 where they were not expected like documentation.
 
-The C<po4a-normalize> script is a debugging tool used to make sure that po4a don't
-change the document when it's not supposed to. Only use it if you're developping 
-a new module, or if you doubt the sanity of the tools.
+The C<po4a-normalize> script is a debugging tool used to make sure that
+po4a don't change the document when it's not supposed to. Only use it if
+you're developping a new module, or if you doubt the sanity of the tools.
 
-The generated document will be written to po4a-normalize.output while the generated
-po file will be written to po4a-normalize.po. No way to change that ;)
+The generated document will be written to po4a-normalize.output while the
+generated po file will be written to po4a-normalize.po. No way to change
+that ;)
 
 =head1 OPTIONS
 
 =over 4
 
+=item -h, --help
+
+Show a short help message.
+
+=item --help-fmt
+
+List the documentation format understood by po4a.
+
 =item -t
 
-format type of the documentation you want to handle. This can be one of:
-
-=over 4
-
-=item kernelhelp
-
-The help messages associated with each kernel compilation option.
-
-=item man
-
-Good old manual page format.
-
-=item pod
-
-Perl documentation format.
-
-=item sgml
-
-For now, only DebianDoc is understood.
-
-=back 
+format type of the documentation you want to handle. Use the --help-fmt
+option to see the list of available formats.
 
 =item -V, --version
 
@@ -87,6 +77,7 @@ use Locale::Po4a::KernelHelp;
 use Locale::Po4a::Man;
 use Locale::Po4a::Pod;
 use Locale::Po4a::Sgml;
+use Locale::Po4a::Chooser;
 
 use Getopt::Long qw(GetOptions);
 
@@ -102,10 +93,11 @@ sub show_version {
     print sprintf(gettext("po4a-normalize version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
 }
 
-my ($help,$type,$debug,$verbose);
+my ($help_fmt,$help,$type,$debug,$verbose);
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
+	'help-fmt'     => \$help_fmt,
         'type|t=s'     => \$type,
 
         'verbose|v'   => \$verbose,
@@ -113,24 +105,11 @@ GetOptions(
         'version|V'    => \&show_version
 ) or pod2usage(1);
 
-pod2usage (0) if $help;
+$help && pod2usage (0);
+$help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) unless scalar @ARGV == 1;
 
-my $parser;
-
-if (lc($type) eq 'kernelhelp') {
-    $parser=Locale::Po4a::KernelHelp->new('verbose'=>$verbose);
-} elsif (lc($type) eq 'man') {
-    $parser=Locale::Po4a::Man->new('verbose'=>$verbose);
-} elsif (lc($type) eq 'pod') {
-    $parser=Locale::Po4a::Pod->new('verbose'=>$verbose);
-} elsif (lc($type) eq 'sgml') {
-    $parser=Locale::Po4a::Sgml->new('verbose'=>$verbose);
-} else {
-    warn sprintf(gettext("Unknown format type: %s.\n".
-"Allowed values are: kernelhelp, man, sgml, pod.\n"),$type);
-  pod2usage(1);
-}
+my $parser=Locale::Po4a::Chooser::new($type);
 
 my $filename = shift || pod2usage(1);
 -e $filename || die sprintf(gettext("File %s does not exists.\n"),$filename);

@@ -1,3 +1,37 @@
+po4a (0.13) unstable; urgency=low
+
+  * The "housekeeping is good when you want to invite people home" version.
+  
+  * TransTractor: Internals cleanup: 
+    - translate_wrapped() don't exist anymore, and translate() take extra
+      arguments to specify if we want to wrap.
+    - For internals data in the object, transtractor now use TT (it used to 
+      use DOC).
+    - Set the package version only in this file, and not in all.
+  * Po.pm:  Internals cleanup: 
+    - push_wrapped() and gettext_wrapped() disapeared also.
+  * All modules: Adapt to last changes in TransTractor.pm
+  * New module: Chooser.pm  
+    This is not a new format, but functions to manage all formats in the
+    same place. 
+    Before, when I added a module, I had to change all binaries to take it
+    into account.
+    Now, all binaries use this module to access format modules.
+  * Man.pm: cosmetic changes, to make it readable by others.
+  * Sgml.pm: 
+    - New dtd: docbook. 
+    - Should work even in case of conditional inclusion (string references in
+      po files will be wrong in that case).
+
+    - Generated source is better looking
+
+    - ups, added "use strict;" ;)
+    - Don't use SGMLS::Output anymore. This is an old piece of crap producing
+      tons of warnings when used under perl -w.
+    - remove debuging output
+  
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Sun, 12 Jan 2003 16:49:52 +0100
+
 po4a (0.12) unstable; urgency=low
 
   * Rename po4a-identity to po4a-normalize, since it do normalize the

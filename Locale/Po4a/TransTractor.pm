@@ -6,9 +6,9 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.12";
+$VERSION="0.13";
 @ISA = ();
-@EXPORT = qw(process translate_wrapped translate 
+@EXPORT = qw(process translate 
 	     read write readpo writepo);
 
 use Carp qw(croak);
@@ -297,20 +297,20 @@ sub initialize {
     my %options=@_;
 
     # private data
-    $self->{DOC}=(); 
-    $self->{DOC}{po_in}=Locale::Po4a::Po->new();
-    $self->{DOC}{po_out}=Locale::Po4a::Po->new();
+    $self->{TT}=(); 
+    $self->{TT}{po_in}=Locale::Po4a::Po->new();
+    $self->{TT}{po_out}=Locale::Po4a::Po->new();
     # Warning, this is an array of array:
     #  The document is splited on lines, and for each
     #  [0] is the line content, [1] is the reference [2] the type
-    $self->{DOC}{doc_in}=();
-    $self->{DOC}{doc_out}=();
+    $self->{TT}{doc_in}=();
+    $self->{TT}{doc_out}=();
 
     if (defined $options{'verbose'}) {
-	$self->{DOC}{verbose}  =  $options{'verbose'};
+	$self->{TT}{verbose}  =  $options{'verbose'};
     }
     if (defined $options{'debug'}) {
-	$self->{DOC}{debug}  =  $options{'debug'};
+	$self->{TT}{debug}  =  $options{'debug'};
     }
 }
 
@@ -343,7 +343,7 @@ sub read() {
 	$linenum++;
 	my $ref="$filename:$linenum";
 	my @entry=($textline,$ref);
-	push @{$self->{DOC}{doc_in}}, @entry;
+	push @{$self->{TT}{doc_in}}, @entry;
     }
     close INPUT 
 	or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s\n"),$filename,$!));
@@ -370,7 +370,7 @@ sub write {
     }
     
     map { print $fh $_ } $self->docheader();
-    map { print $fh $_ } @{$self->{DOC}{doc_out}};
+    map { print $fh $_ } @{$self->{TT}{doc_out}};
 
     if ($filename ne '-') {
 	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s\n"),$filename,$!));
@@ -412,16 +412,16 @@ of use:
 =cut
 
 sub getpoout {
-    return $_[0]->{DOC}{po_out};
+    return $_[0]->{TT}{po_out};
 }
 sub readpo  { 
-    $_[0]->{DOC}{po_in}->read($_[1]);        
+    $_[0]->{TT}{po_in}->read($_[1]);        
 }
 sub writepo { 
-    $_[0]->{DOC}{po_out}->write( $_[1] );    
+    $_[0]->{TT}{po_out}->write( $_[1] );    
 }
 sub stats   { 
-    return $_[0]->{DOC}{po_in}->stats_get(); 
+    return $_[0]->{TT}{po_in}->stats_get(); 
 }
 
 =cut
@@ -529,7 +529,7 @@ sub addendum {
 	addendum_parse($filename);
     return 0 if ($errcode);
 
-    my $found = scalar grep { /$position/ } @{$self->{DOC}{doc_out}};
+    my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
 	warn sprintf(dgettext("po4a",
 			      "No candidate position for the addendum %s.\n"),
@@ -544,14 +544,14 @@ sub addendum {
     }
 
     if ($mode eq "before") {
-	@{$self->{DOC}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
-                                        }  @{$self->{DOC}{doc_out}};
+	@{$self->{TT}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
+                                        }  @{$self->{TT}{doc_out}};
     } else {
 	my @newres=();
-	while (my $line=shift @{$self->{DOC}{doc_out}}) {
+	while (my $line=shift @{$self->{TT}{doc_out}}) {
 	    push @newres,$line;
 	    if ($line =~ m/$position/) {
-		while ($line=shift @{$self->{DOC}{doc_out}}) {
+		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
 		}
@@ -564,7 +564,7 @@ sub addendum {
 		}
 	    }
 	}
-	@{$self->{DOC}{doc_out}} = @newres;
+	@{$self->{TT}{doc_out}} = @newres;
     }
     return 1;
 }
@@ -604,14 +604,14 @@ Pop the last pushed line from the doc_out.
 =cut
 
 sub shiftline   {  
-    my ($line,$ref)=(shift @{$_[0]->{DOC}{doc_in}},
-		     shift @{$_[0]->{DOC}{doc_in}}); 
+    my ($line,$ref)=(shift @{$_[0]->{TT}{doc_in}},
+		     shift @{$_[0]->{TT}{doc_in}}); 
     return ($line,$ref);
 }
-sub unshiftline {  unshift @{$_[0]->{DOC}{doc_in}},($_[1],$_[2]);  }
+sub unshiftline {  unshift @{$_[0]->{TT}{doc_in}},($_[1],$_[2]);  }
 		
-sub pushline    {  push @{$_[0]->{DOC}{doc_out}}, $_[1] if defined $_[1]; }
-sub popline     {  return pop @{$_[0]->{DOC}{doc_out}};            }
+sub pushline    {  push @{$_[0]->{TT}{doc_out}}, $_[1] if defined $_[1]; }
+sub popline     {  return pop @{$_[0]->{TT}{doc_out}};            }
 
 =head2 Marking strings as translatable
 
@@ -621,7 +621,7 @@ Two functions are provided to handle the text which should be translated.
 
 =item translate($$$)
 
-Arguments:
+Mandatory arguments:
 
 =over 2
 
@@ -636,7 +636,28 @@ The reference of this string (ie, position in inputfile)
 =item -
 
 The type of this string (ie, the textual description of its structural role
-; used in Locale::Po4a::Po::fusion())
+; used in Locale::Po4a::Po::gettextization() ; see also po4a(7), section
+I<Gettextization: how does it work?>)
+
+=back
+
+This function can also take some extra arguments. They must be organized as
+a hash. For example:
+
+  $self->translate("string","ref","type",
+		   'wrap' => 1);
+
+=over
+
+=item wrap
+
+boolean indicating wheather we can consider that whitespaces in string are
+not important. If yes, the function canonize the string before looking for
+a translation or extracting it, and wraps the translation.
+
+=item wrapcol
+
+The column at which we should wrap (default: 76).
 
 =back
 
@@ -655,14 +676,6 @@ parser can build the doc_out.
 
 =back
 
-=item translate_wrapped($$$$?)
-
-Does the same thing than translate, but consider that whitespaces in string
-are not important. Consequently, it canonize the string before looking for
-a translation or extracting it, and wraps the translation.
-
-If a fourth parameter is passed, it is the wrap column (default: 76).
-
 =back
 
 =cut
@@ -670,26 +683,28 @@ If a fourth parameter is passed, it is the wrap column (default: 76).
 sub translate {
     my $self=shift;
     my ($string,$ref,$type)=(shift,shift,shift);
+    my (%options)=@_;
+
+    my $validoption="wrap wrapcol";
+    my %validoption;
 
     return "" unless defined($string) && length($string);
 
-    $self->{DOC}{po_out}->push('msgid'     => "$string",
-			       'reference' => $ref,
-			       'type'      => $type);
+    map { $validoption{$_}=1 } (split(/ /,$validoption));
+    foreach (keys %options) {
+	Carp::confess "internal error: translate() called with unknown arg $_. Valid options: $validoption"
+	    unless $validoption{$_};
+    }
 
-    return ($self->{DOC}{po_in}->gettext("$string"));
-}
+    $self->{TT}{po_out}->push('msgid'     => $string,
+			      'reference' => $ref,
+			      'type'      => $type,
+			      'wrap'      => $options{'wrap'}||0,
+			      'wrapcol'   => $options{'wrapcol'});
 
-sub translate_wrapped {
-    my $self=shift;
-    my ($string,$ref,$type,$wrapcol)=(shift,shift,shift,shift|| 76);
-
-    return "" unless defined($string) && length($string);
-
-    $self->{DOC}{po_out}->push_wrapped('msgid'     => $string,
-				       'reference' => $ref,
-				       'type'      => $type);
-    return $self->{DOC}{po_in}->gettext_wrapped($string);
+    return $self->{TT}{po_in}->gettext($string,
+				       'wrap'      => $options{'wrap'}||0,
+				       'wrapcol'   => $options{'wrapcol'});
 }
 
 =head2 Misc functions
@@ -706,7 +721,7 @@ TransTractor.
 =cut
 
 sub verbose {
-    return $_[0]->{DOC}{verbose};
+    return $_[0]->{TT}{verbose};
 }
 
 =item debug()
@@ -719,7 +734,7 @@ TransTractor.
 =cut
 
 sub debug {
-    return $_[0]->{DOC}{debug};
+    return $_[0]->{TT}{debug};
 }
 
 =head1 FUTURE DIRECTIONS
@@ -738,7 +753,7 @@ take an hash as po_in_name (a list per language)
 
 =item -
 
-add an argument to translate{,_wrapped} to indicate the target language
+add an argument to translate to indicate the target language
 
 =item -
 

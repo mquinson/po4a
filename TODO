@@ -1,22 +1,8 @@
 ********
 * TODO *
 ********
+ Check xml2rfc
 
-                   pod-gettextize   pod-updatepo   pod-translate
- TransTractor           Ok               Ok
- --version                               Ok
- --debug                                 Ok
- --verbose                               Ok
- --width
- --output=file                           Ok
- --output=-                        Ok(forbidden)
- output not given                  Ok(forbidden)
-
-
-                   Po.pm   Pod.pm    Man.pm   DebianDoc.pm TexInfo.pm
- TransTractor       ---            
- parsing            ---
- dgettext 
 
 
 Better error handeling (errno, errstr)
@@ -33,40 +19,9 @@ Better error handeling (errno, errstr)
  - verbose => type in automatic comments
 
 ** Documentation
- - write po4a.7
+ - improve po4a-normalize
 
-***********************************************
-* Proposal of common options for all programs *
-***********************************************
-
-  -v: verbose
-  -V: version
-  -h: help
-
-**********************************************
-* Proposal of common options for all modules *
-**********************************************
-
-  gettextize orig [trans] -o output
-
-  updatepo (-i masterfile)+ (-o pofile)+
-  
-  translate [-o translation] [-w width] [-a addendum]* masterfile pofile
-  
-
-*****************
-* meta-module ? *
-*****************
-Why not doing a meta-module, which binaries can call the right modules.
-
-We could have something like:
- po4a-gettextize [-t module] blabla
- po4a-updatepo ([-t module] -i masterfile)* (-o pofile)*
-
-Or even:
- po4a-updatepo  -c configfile
- po4a-translate -c configfile
- 
+** Config file
 Le config file pourrait avoir la gueule suivante:
 [module]
 master{extra args}(,master{extra args})* = pofile(,pofile)*

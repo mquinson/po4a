@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # pod2man -- Convert POD data to PO file.
-# $Id: po4a-gettextize,v 1.7 2003-01-09 08:43:23 mquinson Exp $
+# $Id: po4a-gettextize,v 1.8 2003-01-13 08:53:20 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.12";
+my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -53,25 +53,19 @@ will have a look at them, and detect any remaining problem.
 
 =over 4
 
+
+=item -h, --help
+
+Show a short help message.
+
+=item --help-fmt
+
+List the documentation format understood by po4a.
+
 =item -t
 
-format type of the documentation you want to handle. This can be one of:
-
-=over 4
-
-=item kernelhelp
-
-The help messages associated with each kernel compilation option
-
-=item man
-
-Good old manual page format
-
-=item pod
-
-Perl documentation format
-
-=back 
+format type of the documentation you want to handle. Use the --help-fmt
+option to see the list of available formats.
 
 =item -o
 
@@ -117,6 +111,7 @@ use Locale::Po4a::Pod qw(writepo process);
 use Locale::Po4a::Man qw(writepo process);
 use Locale::Po4a::KernelHelp qw(writepo process);
 use Locale::Po4a::Sgml qw(writepo process);
+use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
 
@@ -133,9 +128,10 @@ sub show_version {
 }
 
 my ($outfile)=('-');
-my ($help,$type,$debug,$verbose);
+my ($help_fmt,$help,$type,$debug,$verbose);
 GetOptions(
         'help|h'       => \$help,
+	'help-fmt'     => \$help_fmt,
         'output|o=s'   => \$outfile,
         'type|t=s'     => \$type,
 
@@ -144,28 +140,14 @@ GetOptions(
         'version|V'    => \&show_version
 ) or pod2usage(1);
 
-pod2usage (0) if $help;
+$help && pod2usage (0);
+$help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) if (scalar @ARGV < 1 || scalar @ARGV > 2);
 
 my ($origpod,$transpod);         # parsers
 
-if (lc($type) eq 'kernelhelp') {
-    ($origpod,$transpod)=(Locale::Po4a::KernelHelp->new(),
-			  Locale::Po4a::KernelHelp->new());
-} elsif (lc($type) eq 'man') {
-   ($origpod,$transpod)=(Locale::Po4a::Man->new(),
-			 Locale::Po4a::Man->new());
-} elsif (lc($type) eq 'pod') {
-   ($origpod,$transpod)=(Locale::Po4a::Pod->new(),
-			 Locale::Po4a::Pod->new());
-} elsif (lc($type) eq 'sgml') {
-   ($origpod,$transpod)=(Locale::Po4a::Sgml->new(),
-			 Locale::Po4a::Sgml->new());
-} else {
-  warn sprintf(gettext("Unknown format type: %s.\n".
-"Allowed values are: kernelhelp, man, sgml, pod.\n"),$type);
-  pod2usage(1);
-}
+($origpod,$transpod)=(Locale::Po4a::Chooser::new($type),
+		      Locale::Po4a::Chooser::new($type));
 
 # Initialize and run the formatter, pulling a pair of input and output off
 # at a time.

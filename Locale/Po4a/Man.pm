@@ -244,7 +244,7 @@ under the terms of GPL (see COPYING file).
 package Locale::Po4a::Man;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.12";
+$VERSION=$Locale::Po4a::TransTractor::VERSION;
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(new initialize);
 use Locale::Po4a::TransTractor;
@@ -254,6 +254,8 @@ use Locale::gettext qw(gettext);
 use strict;
 use File::Spec;
 use Getopt::Std;
+
+my %macro; # hash of known macro, with parsing sub. See end of this file
 
 ########################
 #### DEBUGING STUFF ####
@@ -269,7 +271,7 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 sub pushmacro {
     my $self=shift;
     if (scalar @_) { 
-	$self->pushline(join(" ",map { $_ eq '0' ? "0" : 
+	$self->pushline(join(" ",map { defined $_ && $_ eq '0' ? "0" : 
 				        ( length($_) && m/ / ? "\"$_\"" : 
 					                        "$_"||'""'
 				        )
@@ -387,15 +389,25 @@ sub post_trans {
 }
 sub translate {
     my ($self,$str,$ref,$type) = @_;
+    my (%options)=@_;
     my $origstr=$str;
     
-    return $str unless (defined $str) && $str;
+    return $str unless (defined $str) && length($str);
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
     # Translate this
     $str = $self->SUPER::translate($str,
 				   $ref||$self->{ref},
-				   $type || $self->{type});
+				   $type || $self->{type},
+				   %options);
+    if ($options{'wrap'}) {
+	my (@paragraph);
+	@paragraph=split (/\n/,$str);
+	if (defined ($paragraph[0]) && $paragraph[0] eq '') {
+	    shift @paragraph;
+	}
+	$str = join("\n",@paragraph)."\n";
+    }
     $str=post_trans($self,$str,$ref||$self->{ref},$type);
     return $str;
 }
@@ -406,10 +418,263 @@ sub t {
     return $self->translate($str);
 }
 
+
+sub do_paragraph {
+    my ($self,$paragraph,$wrapped_mode) = (shift,shift,shift);
+
+    # Following needed because of 'ft' (at least, see ft macro below)
+    unless ($paragraph =~ m/\n$/s) {
+	my @paragraph = split(/\n/,$paragraph);
+
+	$paragraph .= "\n"
+	    unless scalar (@paragraph) == 1;
+    }
+
+    $self->pushline( $self->translate($paragraph,$self->{ref},"Plain text",
+				      "wrap" => $wrapped_mode) );
+}
+
+#############################
+#### MAIN PARSE FUNCTION ####
+#############################
+sub parse{
+    my $self = shift;
+    my ($line,$ref);
+    my ($paragraph)=""; # Buffer where we put the paragraph while building
+    my $wrapped_mode=1;   # Wheater we saw .nf or not
+
+  LINE:
+    ($line,$ref)=$self->shiftline();
+    
+    while (defined($line)) {
+#	print STDERR "line=$line;ref=$ref";
+	chomp($line);
+	while ($line =~ /\\$/) {
+	    my ($l2,$r2)=$self->shiftline();
+	    chomp($l2);
+	    $line =~ s/\\$//;
+	    $line .= $l2;
+	}
+	$self->{ref}="$ref";
+#	print STDERR "LINE=$line<<\n";
+	die sprintf(gettext("%s: Escape sequence \\c encountered. This is not handled yet.\n")
+			    ,$ref)
+	    if ($line =~ /\\c/);
+
+
+	if ($line =~ /^\./) {
+	    die sprintf(gettext("Unparsable line %s\n"),$line)
+		unless ($line =~ /^\.+\\*?(\\\")(.*)/ ||
+			$line =~ /^\.([BI])(\W.*)/ ||
+			$line =~ /^\.(\S*)(.*)/);
+	    my $macro=$1;
+	    
+	    # Split on spaces for arguments, but not spaces within double quotes
+	    my @args=();
+	    my $buffer="";
+	    my $escaped=0;
+	    foreach my $elem (split (/ +/,$line)) {
+		print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
+		    if ($debug{'splitargs'});
+
+		if (length $buffer && !($elem=~ /\\$/) ) {
+		    $buffer .= " ".$elem;
+		    print STDERR "Continuation of a quote\n"
+			if ($debug{'splitargs'});
+		    #print "buffer=$buffer.\n";
+		    if ($buffer =~ m/^"(.*)"(.+)$/) {
+			print STDERR "End of quote, with stuff after it\n"
+			    if ($debug{'splitargs'});
+			push @args,$1;
+			push @args,$2;
+			$buffer = "";
+		    } elsif ($buffer =~ m/^"(.*)"$/) {
+			print STDERR "End of a quote\n"
+			    if ($debug{'splitargs'});
+			push @args,$1;
+			$buffer = "";
+		    } elsif ($escaped) {
+			print STDERR "End of an escaped sequence\n"
+			    if ($debug{'splitargs'});
+			unless(length($elem)){
+			    die sprintf(gettext(
+"%s: Escaped space at the end of macro arg. With high probability,\n".
+" it won't do the trick with po4a (because of wrapping). You may want\n".
+" to remove it and use the .nf/.fi groff macro to control the wrapping.\n"),
+					 $ref);
+			}
+			push @args,$buffer;
+			$buffer = "";
+			$escaped = 0;
+		    }
+		} elsif ($elem =~ m/^"(.*)"$/) {
+		    print STDERR "Quoted, no space\n"
+			if ($debug{'splitargs'});
+		    push @args,$1;
+		} elsif ($elem =~ m/^"/) { #") {
+		    print STDERR "Begin of a quoting arg\n"
+			if ($debug{'splitargs'});
+		    $buffer=$elem;
+		} elsif ($elem =~ m/^(.*)\\$/) {
+		    print STDERR "escaped space after $1\n"
+			if ($debug{'splitargs'});
+		    # escaped space
+		    $buffer = ($buffer?$buffer:'').$1." ";
+		    $escaped = 1; 
+		} else {
+		    print STDERR "Unquoted arg, nothing to declare\n"
+			if ($debug{'splitargs'});
+		    push @args,$elem;
+		    $buffer=""
+		}
+	    }
+	    if ($buffer) {
+		$buffer=~ s/"//g; #"
+		push @args,$buffer;
+	    }
+	    if ($debug{'splitargs'}) {
+		print STDERR "ARGS=";
+		map { print STDERR "$_°"} @args;
+		print STDERR "\n";
+	    }
+			  
+
+	    if ($macro eq 'B' || $macro eq 'I') {
+		# pass macro name
+		shift @args;
+		my $arg=join(" ",@args);
+		$arg =~ s/^ //;
+		this_macro_needs_args($macro,$ref,$arg);
+		$paragraph .= "\\f$macro".$arg."\\fP\n";
+		goto LINE;
+	    }
+	    # .BI bold alternating with italic
+	    # .BR bold/roman
+	    # .IB italic/bold
+	    # .IR italic/roman
+	    # .RB roman/bold
+	    # .RI roman/italic
+	    # .SB small/bold
+	    if ($macro eq 'BI' || $macro eq 'BR' || $macro eq 'IB' || 
+		$macro eq 'IR' || $macro eq 'RB' || $macro eq 'RI' ||
+		$macro eq 'SB') {
+		# pass macro name
+		shift @args;
+		# num of seen args, first letter of macro name, second one
+		my ($i,$a,$b)=(0,substr($macro,0,1),substr($macro,1));
+		# Do the job
+#		$self->pushline(".br\n") unless (length($paragraph));
+		$paragraph.= #($paragraph?"":" ").
+		             join("",
+				  map { $i++ % 2 ? 
+					    "\\f$b$_\\fP" :
+					    "\\f$a$_\\fP"
+				      } @args)."\n";
+		goto LINE;
+	    }
+
+	    if ($paragraph) {
+		do_paragraph($self,$paragraph,$wrapped_mode);
+		$paragraph="";
+	    }
+
+	    # Special case: Don't change these lines
+	    # Check for comments indicating that the file was generated.
+	    if ($macro eq '\"' ||
+		$macro eq '"') {
+		if ($line =~ /Pod::Man/) {
+		    warn gettext("This file was generated with Pod::Man. Translate the pod file.\n");
+		    exit 0;
+		} elsif ($line =~ /generated by help2man/)    {
+		    warn gettext("This file was generated with help2man. Translate the source file.\n");
+		} elsif ($line =~ /with docbook-to-man/)      { 
+		    warn gettext("This file was generated with docbook-to-man. Translate the source file.\n");
+		    exit 0;
+		} elsif ($line =~ /generated by docbook2man/) { 
+		    warn gettext("This file was generated with docbook2man. Translate the source file.\n");
+		    exit 0;
+		} elsif ($line =~ /created with latex2man/)   { 
+		    warn gettext("This file was generated with latex2man. Translate the source file.\n");
+		} elsif ($line =~ /Generated by db2man.xsl/)  { 
+		    warn gettext("This file was generated with db2man.xsl. Translate the source file.\n");
+		    exit 0;
+		} elsif ($line =~ /generated automatically by mtex2man/)  {
+		    warn gettext("This file was generated with mtex2man. Translate the source file.\n");
+		} elsif ($line =~ /THIS FILE HAS BEEN AUTOMATICALLY GENERATED.  DO NOT EDIT./) {
+		    warn gettext("This file contains the line '$line'. Translate the source file.\n");
+		} elsif ($line =~ /DO NOT EDIT/i || $line =~ /generated/i) {
+		    warn ("This file contains the line '$line'. Translate the source file.\n");
+		}
+	    }
+
+	    # Special case: Don't change these lines
+	    #  .\"  => comments
+	    #  .    => empty point on the line
+	    #  .tr abcd...
+	    #       => Translate a to b, c to d, etc. on output.
+	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr') {
+		$self->pushline($line."\n");
+		goto LINE;
+	    }
+	    # Special case:
+	    #  .nf => stop wrapped mode
+	    #  .fi => wrap again
+	    if ($macro eq 'nf' || $macro eq 'fi') {
+		$wrapped_mode=$macro eq 'fi';
+		$self->pushline($line."\n");
+		goto LINE;
+	    }		
+
+	    # Special case:
+	    #  .Dd => Indicates that this is a mdoc page
+	    if ($macro eq 'Dd') {
+		die gettext("This page seems to be a mdoc(7) formated one.\nThis is not supported (yet).\n");
+	    }
+		
+	    unshift @args,$self;
+	    # Apply macro
+	    $self->{type}=$macro;
+
+	    if (defined ($macro{$macro})) {
+		&{$macro{$macro}}(@args);
+	    } else {
+		$self->pushline($line."\n");
+		die sprintf(gettext(
+		    "Sorry, I don't know the macro >>%s<<.\n".
+		    "Edit the man page to remove it, or provide a patch".
+		    " to my maintainer to handle it.\n"),$line);
+	    }
+
+	} elsif ($line =~ /^( +)([^.].*)/) {
+	    # Not a macro, but not a wrapped paragraph either
+	    if ($paragraph) {
+		do_paragraph($self,$paragraph,$wrapped_mode);
+		$paragraph="";
+	    }
+	    $self->pushline($1.$self->translate($2)."\n");
+	} elsif ($line =~ /^([^.].*)/) {
+	    # Not a macro
+	    $paragraph .= $line."\n";
+	} else { #empty line
+	    do_paragraph($self,$paragraph,$wrapped_mode);
+	    $paragraph="";
+	    $self->pushline($line."\n");
+	} 
+	# Reinit the loop
+	($line,$ref)=$self->shiftline();
+    }
+
+    if ($paragraph) {
+	do_paragraph($self,$paragraph,$wrapped_mode);
+	$paragraph="";
+    }
+} # end of main
+
+
+
 ##########################################
 #### DEFINITION OF THE MACROS WE KNOW ####
 ##########################################
-my %macro; # hash of known macro, with parsing sub
 # Each sub is passed self as first arg,
 #   plus the args present on the roff line
 #   ie, <<.TH LS "1" "October 2002" "ls (coreutils) 4.5.2" "User Commands">>
@@ -692,318 +957,3 @@ $macro{'TS'}=sub {
 	($line,$ref)=$self->shiftline();
     }
 };
-
-sub do_paragraph {
-    my ($self,$paragraph,$wrapped_mode) = (shift,shift,shift);
-
-    # Following needed because of 'ft' (at least)
-    unless ($paragraph =~ m/\n$/s || scalar (split(/\n/,$paragraph)) == 1) {
-	$paragraph .= "\n";
-    }
-
-    if ($wrapped_mode) {
-	$paragraph = pre_trans($self,$paragraph,$self->{ref},"Plain text");
-	$paragraph = $self->translate_wrapped($paragraph,$self->{ref},"Plain text");
-	my @paragraph=split (/\n/,$paragraph);
-	if (defined ($paragraph[0]) && $paragraph[0] eq '') {
-	    shift @paragraph;
-	}
-	$paragraph = join("\n",@paragraph)."\n";
-	$paragraph = post_trans($self,$paragraph,$self->{ref},"Plain text");
-    } else {
-	$paragraph = $self->translate($paragraph,$self->{ref},"Plain text");
-    }
-    $self->pushline( $paragraph );
-}
-
-#############################
-#### MAIN PARSE FUNCTION ####
-#############################
-sub parse{
-    my $self = shift;
-    my ($line,$ref);
-    my ($paragraph)=""; # Buffer where we put the paragraph while building
-    my $wrapped_mode=1;   # Wheater we saw .nf or not
-
-  LINE:
-    ($line,$ref)=$self->shiftline();
-    
-    while (defined($line)) {
-#	print STDERR "line=$line;ref=$ref";
-	chomp($line);
-	while ($line =~ /\\$/) {
-	    my ($l2,$r2)=$self->shiftline();
-	    chomp($l2);
-	    $line =~ s/\\$//;
-	    $line .= $l2;
-	}
-	$self->{ref}="$ref";
-#	print STDERR "LINE=$line<<\n";
-	die sprintf(gettext("%s: Escape sequence \\c encountered. This is not handled yet.\n")
-			    ,$ref)
-	    if ($line =~ /\\c/);
-
-
-	if ($line =~ /^\./) {
-	    die sprintf(gettext("Unparsable line %s\n"),$line)
-		unless ($line =~ /^\.+\\*?(\\\")(.*)/ ||
-			$line =~ /^\.([BI])(\W.*)/ ||
-			$line =~ /^\.(\S*)(.*)/);
-	    my $macro=$1;
-	    
-	    # Split on spaces for arguments, but not spaces within double quotes
-	    my @args=();
-	    my $buffer="";
-	    my $escaped=0;
-	    foreach my $elem (split (/ +/,$line)) {
-		print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
-		    if ($debug{'splitargs'});
-
-		if (length $buffer && !($elem=~ /\\$/) ) {
-		    $buffer .= " ".$elem;
-		    print STDERR "Continuation of a quote\n"
-			if ($debug{'splitargs'});
-		    #print "buffer=$buffer.\n";
-		    if ($buffer =~ m/^"(.*)"(.+)$/) {
-			print STDERR "End of quote, with stuff after it\n"
-			    if ($debug{'splitargs'});
-			push @args,$1;
-			push @args,$2;
-			$buffer = "";
-		    } elsif ($buffer =~ m/^"(.*)"$/) {
-			print STDERR "End of a quote\n"
-			    if ($debug{'splitargs'});
-			push @args,$1;
-			$buffer = "";
-		    } elsif ($escaped) {
-			print STDERR "End of an escaped sequence\n"
-			    if ($debug{'splitargs'});
-			unless(length($elem)){
-			    die sprintf(gettext(
-"%s: Escaped space at the end of macro arg. With high probability,\n".
-" it won't do the trick with po4a (because of wrapping). You may want\n".
-" to remove it and use the .nf/.fi groff macro to control the wrapping.\n"),
-					 $ref);
-			}
-			push @args,$buffer;
-			$buffer = "";
-			$escaped = 0;
-		    }
-		} elsif ($elem =~ m/^"(.*)"$/) {
-		    print STDERR "Quoted, no space\n"
-			if ($debug{'splitargs'});
-		    push @args,$1;
-		} elsif ($elem =~ m/^"/) { #") {
-		    print STDERR "Begin of a quoting arg\n"
-			if ($debug{'splitargs'});
-		    $buffer=$elem;
-		} elsif ($elem =~ m/^(.*)\\$/) {
-		    print STDERR "escaped space after $1\n"
-			if ($debug{'splitargs'});
-		    # escaped space
-		    $buffer = ($buffer?$buffer:'').$1." ";
-		    $escaped = 1; 
-		} else {
-		    print STDERR "Unquoted arg, nothing to declare\n"
-			if ($debug{'splitargs'});
-		    push @args,$elem;
-		    $buffer=""
-		}
-	    }
-	    if ($buffer) {
-		$buffer=~ s/"//g; #"
-		push @args,$buffer;
-	    }
-	    if ($debug{'splitargs'}) {
-		print STDERR "ARGS=";
-		map { print STDERR "$_°"} @args;
-		print STDERR "\n";
-	    }
-			  
-
-	    if ($macro eq 'B' || $macro eq 'I') {
-		# pass macro name
-		shift @args;
-		my $arg=join(" ",@args);
-		$arg =~ s/^ //;
-		this_macro_needs_args($macro,$ref,$arg);
-		$paragraph .= "\\f$macro".$arg."\\fP\n";
-		goto LINE;
-	    }
-	    # .BI bold alternating with italic
-	    # .BR bold/roman
-	    # .IB italic/bold
-	    # .IR italic/roman
-	    # .RB roman/bold
-	    # .RI roman/italic
-	    # .SB small/bold
-	    if ($macro eq 'BI' || $macro eq 'BR' || $macro eq 'IB' || 
-		$macro eq 'IR' || $macro eq 'RB' || $macro eq 'RI' ||
-		$macro eq 'SB') {
-		# pass macro name
-		shift @args;
-		# num of seen args, first letter of macro name, second one
-		my ($i,$a,$b)=(0,substr($macro,0,1),substr($macro,1));
-		# Do the job
-#		$self->pushline(".br\n") unless (length($paragraph));
-		$paragraph.= #($paragraph?"":" ").
-		             join("",
-				  map { $i++ % 2 ? 
-					    "\\f$b$_\\fP" :
-					    "\\f$a$_\\fP"
-				      } @args)."\n";
-		goto LINE;
-	    }
-
-	    if ($paragraph) {
-		do_paragraph($self,$paragraph,$wrapped_mode);
-		$paragraph="";
-	    }
-
-	    # Special case: Don't change these lines
-	    # Check for comments indicating that the file was generated.
-	    if ($macro eq '\"' ||
-		$macro eq '"') {
-		if ($line =~ /Pod::Man/) {
-		    warn gettext("This file was generated with Pod::Man. Translate the pod file.\n");
-		    exit 0;
-		} elsif ($line =~ /generated by help2man/)    {
-		    warn gettext("This file was generated with help2man. Translate the source file.\n");
-		} elsif ($line =~ /with docbook-to-man/)      { 
-		    warn gettext("This file was generated with docbook-to-man. Translate the source file.\n");
-		    exit 0;
-		} elsif ($line =~ /generated by docbook2man/) { 
-		    warn gettext("This file was generated with docbook2man. Translate the source file.\n");
-		    exit 0;
-		} elsif ($line =~ /created with latex2man/)   { 
-		    warn gettext("This file was generated with latex2man. Translate the source file.\n");
-		} elsif ($line =~ /Generated by db2man.xsl/)  { 
-		    warn gettext("This file was generated with db2man.xsl. Translate the source file.\n");
-		    exit 0;
-		} elsif ($line =~ /generated automatically by mtex2man/)  {
-		    warn gettext("This file was generated with mtex2man. Translate the source file.\n");
-		} elsif ($line =~ /THIS FILE HAS BEEN AUTOMATICALLY GENERATED.  DO NOT EDIT./) {
-		    warn gettext("This file contains the line '$line'. Translate the source file.\n");
-		} elsif ($line =~ /DO NOT EDIT/i || $line =~ /generated/i) {
-		    warn ("This file contains the line '$line'. Translate the source file.\n");
-		}
-	    }
-
-	    # Special case: Don't change these lines
-	    #  .\"  => comments
-	    #  .    => empty point on the line
-	    #  .tr abcd...
-	    #       => Translate a to b, c to d, etc. on output.
-	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr') {
-		$self->pushline($line."\n");
-		goto LINE;
-	    }
-	    # Special case:
-	    #  .nf => stop wrapped mode
-	    #  .fi => wrap again
-	    if ($macro eq 'nf' || $macro eq 'fi') {
-		$wrapped_mode=$macro eq 'fi';
-		$self->pushline($line."\n");
-		goto LINE;
-	    }		
-
-	    # Special case:
-	    #  .Dd => Indicates that this is a mdoc page
-	    if ($macro eq 'Dd') {
-		die gettext("This page seems to be a mdoc(7) formated one.\nThis is not supported (yet).\n");
-	    }
-		
-	    unshift @args,$self;
-	    # Apply macro
-	    $self->{type}=$macro;
-
-	    if (defined ($macro{$macro})) {
-		&{$macro{$macro}}(@args);
-	    } else {
-		$self->pushline($line."\n");
-		die sprintf(gettext(
-		    "Sorry, I don't know the macro >>%s<<.\n".
-		    "Edit the man page to remove it, or provide a patch".
-		    " to my maintainer to handle it.\n"),$line);
-	    }
-
-	} elsif ($line =~ /^( +)([^.].*)/) {
-	    # Not a macro, but not a wrapped paragraph either
-	    if ($paragraph) {
-		do_paragraph($self,$paragraph,$wrapped_mode);
-		$paragraph="";
-	    }
-	    $self->pushline($1.$self->translate($2)."\n");
-	} elsif ($line =~ /^([^.].*)/) {
-	    # Not a macro
-	    $paragraph .= $line."\n";
-	} else { #empty line
-	    do_paragraph($self,$paragraph,$wrapped_mode);
-	    $paragraph="";
-	    $self->pushline($line."\n");
-	} 
-	# Reinit the loop
-	($line,$ref)=$self->shiftline();
-    }
-
-
-#MISSING:
-#
-#   Miscellaneous Macros
-#       .DT      Reset tabs to default tab values (every 0.5 inches); does  not  cause  a
-#                break.
-#
-#       .PD d    Set  inter-paragraph  vertical  distance to d (if omitted, d=0.4v); does
-#                not cause a break.
-#
-#       .SS t    Subheading t (like .SH, but used for a subsection inside a section).
-#
-#   Predefined Strings
-#       The man package has the following predefined strings:
-#
-#       \*R    Registration Symbol: (R)
-#       \*S    Change to default font size
-#       \*(Tm  Trademark Symbol: tm
-#       \*(lq  Left angled doublequote: "
-#       \*(rq  Right angled doublequote: "
-#
-#SAFE SUBSET
-#       Although technically man is a troff macro package, in reality a large  number  of
-#       other tools process man page files that don't implement all of troff's abilities.
-#       Thus, it's best to avoid some of troff's more exotic abilities where possible  to
-#       permit  these  other tools to work correctly.  Avoid using the various troff pre-
-#       processors (if you must, go ahead and use tbl(1), but try to use the  IP  and  TP
-#       commands  instead  for  two-column tables).  Avoid using computations; most other
-#      tools can''t process them.  Use simple commands that  are  easy  to  translate  to
-#       other  formats.   The  following  troff macros are believed to be safe (though in
-#       many cases they will be ignored by translators): \", ., ad, bp, br, ce,  de,  ds,
-#       el, ie, if, fi, ft, hy, ig, in, na, ne, nf, nh, ps, so, sp, ti, tr.
-#
-#       You  may also use many troff escape sequences (those sequences beginning with \).
-#       When you need to include the backslash character as normal text, use  \e.   Other
-#       sequences  you  may  use,  where  x  or xx are any characters and N is any digit,
-#       include: \', \`, \-, \., \", \%, \*x, \*(xx, \(xx,  \$N,  \nx,  \n(xx,  \fx,  and
-#       \f(xx.  Avoid using the escape sequences for drawing graphics.
-#
-#       Do  not use the optional parameter for bp (break page).  Use only positive values
-#       for sp (vertical space).  Don''t define a macro (de) with the same name as a macro
-#       in this or the mdoc macro package with a different meaning; it's likely that such
-#       redefinitions will be ignored.  Every positive indent (in) should be paired  with
-#       a  matching  negative  indent  (although you should be using the RS and RE macros
-#       instead).  The condition test (if,ie) should only have 't' or 'n' as  the  condi-
-#       tion.   Only  translations (tr) that can be ignored should be used.  Font changes
-#       (ft and the \f escape sequence) should only have the values 1, 2, 3, 4, R, I,  B,
-#       P, or CW (the ft command may also have no parameters).
-#
-#       If  you  use  capabilities  beyond  these, check the results carefully on several
-#       tools.  Once you''ve confirmed that the additional capability  is  safe,  let  the
-#       maintainer  of  this document know about the safe command or sequence that should
-#       be added to this list.
-
-    if ($paragraph) {
-	do_paragraph($self,$paragraph,$wrapped_mode);
-	$paragraph="";
-    }
-}
-
-

@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.7 2003-01-09 20:22:03 mquinson Exp $
+# $Id: Pod.pm,v 1.8 2003-01-13 08:53:21 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -22,7 +22,7 @@ use strict;
 require Exporter;
 
 use vars qw($VERSION @ISA @EXPORT $AUTOLOAD);
-$VERSION="0.12";
+$VERSION=$Locale::Po4a::TransTractor::VERSION;
 @ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
 @EXPORT = qw(new process write read writepo readpo);
 
@@ -58,9 +58,10 @@ sub command {
     } elsif ($command eq 'over') {
 	$self->pushline("=$command $paragraph".(length($paragraph)?"":"\n\n"));
     } else {
-	$paragraph=$self->translate_wrapped($paragraph,
-					    $self->input_file().":$line_num",
-					    "=$command");
+	$paragraph=$self->translate($paragraph,
+				    $self->input_file().":$line_num",
+				    "=$command",
+				    "wrap"=>1);
 	$paragraph =~ s/\n*$//m;
 	$self->pushline("=$command $paragraph\n\n");
     }
@@ -94,9 +95,10 @@ sub textblock {
 	return;
     }
 
-    $paragraph=$self->translate_wrapped($paragraph,
-					$self->input_file().":$line_num",
-					'textblock');
+    $paragraph=$self->translate($paragraph,
+				$self->input_file().":$line_num",
+				'textblock',
+				"wrap"=>1);
     $paragraph=~ s/ +\n/\n/gm;
     $self->pushline("$paragraph\n");
 }

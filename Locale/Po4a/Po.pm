@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.4 2003-01-09 20:22:03 mquinson Exp $
+# $Id: Po.pm,v 1.5 2003-01-13 08:53:21 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -58,10 +58,12 @@ require Exporter;
 
 package Locale::Po4a::Po;
 
+use Locale::Po4a::TransTractor;
+
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.12";
+$VERSION=$Locale::Po4a::TransTractor::VERSION;
 @ISA = ();
 @EXPORT = qw(load write gettext);
 
@@ -316,19 +318,49 @@ sub gettextize {
 
 =over 4
 
-=item B<gettext()>
+=item B<gettext($%)>
 
 Request the translation of the string given as argument in the current catalog.
 The function returns the empty string if the string was not found.
+
+After the string to translate, you can pass an hash of extra
+arguments. Here are the valid entries:
+
+=over
+
+=item wrap
+
+boolean indicating wheather we can consider that whitespaces in string are
+not important. If yes, the function canonize the string before looking for
+a translation, and wraps the result.
+
+=item wrapcol
+
+The column at which we should wrap (default: 76).
+
+=back
 
 =cut
 
 sub gettext {
     my $self=shift;
     my $text=shift;
+    my (%opt)=@_;
     my $res;
 
     return "" unless defined($text) && length($text); # Avoid returning the header.
+    my $validoption="wrap wrapcol";
+    my %validoption;
+
+    map { $validoption{$_}=1 } (split(/ /,$validoption));
+    foreach (keys %opt) {
+	Carp::confess "internal error:  unknown arg $_.\n".
+	              "Here are the valid options: $validoption.\n"
+	    unless $validoption{$_};
+    }
+    
+    $text=canonize($text)     
+	if ($opt{'wrap'});
 
     my $esc_text=escape_text($text);
 
@@ -343,28 +375,12 @@ sub gettext {
     } else {
 	$res= $text;
     }
+
+    if ($opt{'wrap'}) {
+	$res=wrap ($res, $opt{'wrapcol'} || 76);
+    }
 #    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
     return $res;
-}
-
-=item B<gettext_wrapped()>
-
-Does the same job than gettext, but assume that the text indentation isn't
-significative. All white chars may be changed, and the returned value is
-wrapped.
-
-If you give a second argument beside the text to translate, it's the column
-on which you want to wrap you result (defaults to 76).
-
-=cut
-
-sub gettext_wrapped {
-    my $self=shift;
-    my $text=shift;
-    my $wrapcol = shift || 76;
-
-    $text=wrap ( $self->gettext( canonize($text) ) , $wrapcol );
-    return $text;
 }
 
 =item B<stats_get()>
@@ -465,6 +481,19 @@ repports an error.
 
 This information is not written to the po file.
 
+=item wrap
+
+boolean indicating wheather we can consider that whitespaces in string are
+not important. If yes, the function canonize the string before use.
+
+This information is not written to the po file.
+
+=item wrapcol 
+
+The column at which we should wrap (default: 76).
+
+This information is not written to the po file.
+
 =back
 
 =cut
@@ -472,33 +501,31 @@ This information is not written to the po file.
 sub push {
     my $self=shift;
     my %entry=@_;
+
+    my $validoption="wrap wrapcol type msgid msgstr automatic flags reference";
+    my %validoption;
+
+    map { $validoption{$_}=1 } (split(/ /,$validoption));
+    foreach (keys %entry) {
+	Carp::confess "internal error:  unknown arg $_.\n".
+	              "Here are the valid options: $validoption.\n"
+	    unless $validoption{$_};
+    }
+
     if (defined ($entry{'msgid'})) {
+	$entry{'msgid'} = canonize($entry{'msgid'})
+	    if ($entry{'wrap'});
+
 	$entry{'msgid'} = escape_text($entry{'msgid'});
     }
     if (defined ($entry{'msgstr'})) {
+	$entry{'msgstr'} = canonize($entry{'msgstr'})
+	    if ($entry{'wrap'});
+
 	$entry{'msgstr'} = escape_text($entry{'msgstr'});
     }
     $self->push_raw(%entry);
 }
-
-=item B<push_wrapped()>
-
-Does the same thing than push, but assume that white space are not
-significants in the msgid ans msgstr (see also gettext_wrapped()).
-
-=cut
-
-sub push_wrapped {
-    my $self=shift;
-    my %entry=@_;
-    if (defined ($entry{'msgid'})) {
-	$entry{'msgid'} = canonize($entry{'msgid'});
-    }
-    if (defined ($entry{'msgstr'})) {
-	$entry{'msgstr'} = canonize($entry{'msgstr'});
-    }
-    $self->push(%entry);
-} 
 
 # The same as push(), but assuming that msgid and msgstr are already escaped
 sub push_raw {
@@ -512,14 +539,6 @@ sub push_raw {
 #    print STDERR "Push_raw\n";
 #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
 #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
-
-    # Parameter check
-    foreach (keys %entry) {
-	next if ($_ eq 'msgid' || $_ eq 'msgstr' || $_ eq 'reference' ||
-		 $_ eq 'comment' || $_ eq 'automatic' || $_ eq 'flags' ||
-		 $_ eq 'type');
-	croak (sprintf(dgettext("po4a","Internal error: Locale::Po4a::Po::push() was called with an unknown argument: %s\n"),$_));
-    }
     
     #no msgid => header definition
     unless (length($entry{'msgid'})) { 
@@ -645,7 +664,7 @@ sub quote_text {
   my @string = split(/\n/,$string);
   $string = join ("\"\n\"",@string);
   $string = "\"$string\"";
-  if (scalar @string > 1 && !$string[0] eq "") {
+  if (scalar @string > 1 && $string[0] ne '') {
       $string = "\"\"\n".$string;
   }
 
