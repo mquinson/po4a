@@ -354,12 +354,12 @@ sub parse_file {
 	                                    "member msgaud msglevel msgorig ".
 	                                    "option orgname ".
 	                                    "para phrase pubdate publishername primary ". 
-	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber ".
-	                                    "screeninfo seg segtitle simpara subtitle synopfragmentref ".
-	                                    "term title titleabbrev",
+	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
+	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref ".
+	                                    "term tertiary title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
-	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo ".
+	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
 	                                    "dedication ".
 	                                    "entry ".
