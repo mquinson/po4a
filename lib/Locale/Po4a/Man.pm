@@ -119,7 +119,7 @@ my box are inaccessible to po4a::man.
  .BE              ..br            .Bu             .BUGS           .BY
  .ce              .dbmmanage      .do                             .En
  .EP              .EX             .Fi             .hw             .i
- .Id              .l              .LO             .mf             .mso
+ .Id              .l              .LO             .mf             
  .N               .na             .NF             .nh             .nl
  .Nm              .ns             .NXR            .OPTIONS        .PB
  .pp              .PR             .PRE            .PU             .REq
@@ -364,7 +364,8 @@ sub post_trans {
     $str =~ s|\\-|-|sg; # in case the translator added some of them manually
     # change hyphens to minus signs
     # (this shouldn't be done for \s-<number> font size modifiers)
-    if (! (defined $self->{type} && $self->{type} eq "so")) {
+    # nor on .so/.mso args
+    unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
         $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
     }
 
