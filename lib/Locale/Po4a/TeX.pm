@@ -799,6 +799,7 @@ sub read_file {
                     $include = 0;
                     $begin .= "\\$tag"."{$newfilename}";
                     $textline = $end;
+                    last;
                 }
             }
             if ($include and ($tag eq "include")) {
