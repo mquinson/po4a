@@ -250,6 +250,12 @@ use Getopt::Std;
 
 my %macro; # hash of known macro, with parsing sub. See end of this file
 
+# A font start by \f and is followed either by
+# [.*] - a font name within brackets (e.g. [P], [A_USER_FONT])
+# (..  - a parenthesis followed by two char (e.g. "(CW")
+# .    - a single char (e.g. B, I, R, P, 1, 2, 3, 4, etc.)
+my $FONT_RE = "\\\\f(?:\\[[^\\]]*\\]|\\(..|[^\\(\\[])";
+
 sub initialize {}
 
 #########################
@@ -258,6 +264,7 @@ sub initialize {}
 my %debug=('splitargs' => 0, # see how macro args are separated
 	   'pretrans' => 0,  # see pre-conditioning of translation
 	   'postrans' => 0,  # see post-conditioning of translation
+	   'fonts'    => 0,  # see font modifier handling
 	   );
 
 ###############################################
@@ -309,8 +316,14 @@ sub pre_trans {
     $str =~ s/</E<lt>/sg;
     $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
 
-    $str =~ s/\\f([SBI])(([^\\]*\\[^f])?.*?)\\f([PR])/$1<$2>/sg;
-    $str =~ s/\\fR(.*?)\\f[RP]/$1/sg;
+    # simplify the fonts for the translators
+    if (defined $self->{type} && $self->{type} =~ m/^(SH|SS)$/) {
+        set_regular("B");
+    }
+    $str = do_fonts($str);
+    if (defined $self->{type} && $self->{type} =~ m/^(SH|HP|SS)$/) {
+        set_regular("R");
+    }
     if ($str =~ /\\f[RSBI]/) {
 	die sprintf(dgettext("po4a",
 		"po4a::man: %s: Nested font modifiers, ie, something like:\n".
@@ -333,30 +346,6 @@ sub pre_trans {
     $str =~ s/\\\*\(rq/''/sg;
     # Change groff non-breaking space to ascii one
     $str =~ s|\\ |\xA0|sg;
-    
-# The next commented loop should take care of badly nested font modifiers,
-#  if only it worked ;)
-#
-#    while ($str =~ /^(.*)\\f([BI])(.*?)\\f([PR])(.*)$/) {
-#	my ($before,$kind,$txt,$end,$after)=($1,$2,$3,$4,$5);
-#	if ($txt =~ /(.*)\\f([BI])(.*)/) {
-#	    my ($inbefore,$kind2,$inafter)=($1,$2,$3);
-#	    #damned, we have something like:
-#	    # \fB bla\fI bli\fR
-#	    if ($end eq 'R') {
-#		# close the to modifier
-#		$str = "$before$kind<$inbefore$kind2<$inafter>>$after";
-#	    } else {
-#		# move back to the first modifier. 
-#		#Use another pass in the loop to handle external modifier
-#		$str = "$before\\f$kind$inbefore$kind2<$inafter>$after";
-#	    }
-#	} else {
-#	    # man authors are not always vicious (only often)
-#	    $str = "$before$kind<$txt>$after";
-#	}
-#    }
-
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -389,8 +378,9 @@ sub post_trans {
 	
     # Make sure we compute internal sequences right.
     # think about: B<AZE E<lt> EZA E<gt>>
-    while ($str =~ m/^(.*)([RSBI])<(.*)$/s) {
+    while ($str =~ m/^(.*)(CW|[RBI])<(.*)$/s) {
 	my ($done,$rest)=($1."\\f$2",$3);
+	$done =~ s/CW$/\(CW/;
 	my $lvl=1;
 	while (length $rest && $lvl > 0) {
 	    my $first=substr($rest,0,1);
@@ -404,7 +394,8 @@ sub post_trans {
 	}
 	die sprintf("po4a::man: %s: ".dgettext("po4a","Unbalanced '<' and '>' in '%s'"),$ref||$self->{ref},$transstr)."\n"
 	    if ($lvl > 0);
-	$done .= "\\fR$rest";
+	# Return to the regular font
+	$done .= "\\fP$rest";
 	$str=$done;
     }
 
@@ -481,6 +472,7 @@ sub parse{
                             #          until the next fi macro.
 
   LINE:
+    undef $self->{type};
     ($line,$ref)=$self->shiftline();
     
     while (defined($line)) {
@@ -526,7 +518,7 @@ sub parse{
 		my $arg=join(" ",@args);
 		$arg =~ s/^ +//;
 		this_macro_needs_args($macro,$ref,$arg);
-		$paragraph .= "\\f$macro".$arg."\\fP\n";
+		$paragraph .= "\\f$macro".$arg."\\fR\n";
 		goto LINE;
 	    }
 	    # .BI bold alternating with italic
@@ -548,9 +540,9 @@ sub parse{
 		$paragraph.= #($paragraph?"":" ").
 		             join("",
 				  map { $i++ % 2 ? 
-					    "\\f$b$_\\fP" :
-					    "\\f$a$_\\fP"
-				      } @args)."\n";
+					    "\\f$b$_" :
+					    "\\f$a$_"
+				      } @args)."\\fR\n";
 		goto LINE;
 	    }
 
@@ -674,6 +666,7 @@ sub parse{
 
 	# Reinit the loop
 	($line,$ref)=$self->shiftline();
+	undef $self->{type};
     }
 
     if ($paragraph) {
@@ -782,6 +775,160 @@ sub splitargs {
     return @args;
 }
 
+{
+    #static variables
+    # font stack.
+    #     Keep track of the current font (because a font modifier can
+    #     stay open at the end of a paragraph), and the previous font (to
+    #     handle \fP)
+    my $current_font  = "R";
+    my $previous_font = "R";
+    # $regular_font describe the "Regular" font, which is the font used
+    # when there is no font modifier.
+    # For example, .SS use a Bold font, and thus in
+    # .SS This is a \fRsubsection\fB header
+    # the \fR and \fB font modifiers have to be kept.
+    my $regular_font  = "R";
+
+    # Set the regular font
+    # It takes the regular font in argument (when no argument is provided,
+    # it uses "R").
+    sub set_regular {
+        print STDERR "set_regular('@_')\n"
+            if ($debug{'fonts'});
+        set_font(@_);
+        $regular_font = $current_font;
+    }
+
+    sub set_font {
+        print STDERR "set_font('@_')\n"
+            if ($debug{'fonts'});
+        my $saved_previous = $previous_font;
+        $previous_font = $current_font;
+
+        if (! defined $_[0]) {
+            $current_font = "R";
+        } elsif ($_[0] =~ /^(P|\[\]|\[P\])/) {
+            $current_font = $saved_previous;
+        } elsif (length($_[0]) == 1) {
+            $current_font = $_[0];
+        } elsif (length($_[0]) == 2) {
+            $current_font = "($_[0]";
+        } else {
+            $current_font = "[$_[0]]";
+        }
+        print STDERR "r:'$regular_font', p:'$previous_font', c:'$current_font'\n"
+            if ($debug{'fonts'});
+    }
+
+    sub do_fonts {
+        # one argument: a string
+        my $str = $_[0];
+        print STDERR "do_fonts('$str')="
+            if ($debug{'fonts'});
+
+        # restore the font stack
+        $str = "\\f$previous_font\\f$current_font".$str;
+        # In order to be able to split on /\\f/, without problem with
+        # \\foo, groff backslash (\\) are changed to the (equivalent)
+        # form: \e (this should be done in shiftline).
+        my @array1=split(/\\f/, $str);
+
+        $str = shift @array1;  # The first element is always empty because
+                               # the $current_font was put at the beginning
+        # $last_font indicates the last font that was appended to the buffer.
+        # It differ from $current_font because concecutive identical fonts
+        # are not written in the buffer.
+        my $last_font=$regular_font;
+
+        foreach my $elem (@array1) {
+            # Replace \fP by the exact font (because some font modifiers will
+            # be removed or added, which will break groff's font stack)
+            $elem =~ s/^(P|\[\]|\[P\])/$previous_font/s;
+                # change \f1 to \fR, etc.
+                # Those fonts are defined in the DESC file, which
+                # may depend on the groff device.
+                # fonts 1 to 4 are usually mapped to R, I, B, BI
+                # TODO: use an array for the font positions. This
+                # array should be updated by .fp requests.
+                $elem =~ s/^1/R/;
+                $elem =~ s/^2/I/;
+                $elem =~ s/^3/B/;
+                $elem =~ s/^4/BI/;
+
+            if ($elem =~ /^([1-4]|B|I|R|\(CW|\[\]|\[P\])(.*)$/s) {
+                # Each element should now start by a recognized font modifier
+                my $new_font = $1;
+                my $arg = $2;
+                # Update the font stack
+                $previous_font = $current_font;
+                $current_font = $new_font;
+
+                if ($new_font eq $last_font) {
+                    # continue with the same font.
+                    $str.=$arg;
+                } else {
+                    # A new font is used, update $last_font
+                    $last_font = $new_font;
+                    $str .= "\\f".$elem;
+                }
+            } else {
+                die sprintf("po4a::man: ".dgettext("po4a","Unsupported font in: '%s'."),$elem)."\n";
+            }
+        }
+        # Do some simplification (they don't change the font stack)
+        # Remove empty font modifiers at the end
+        $str =~ s/($FONT_RE)*$//s;
+
+        # close any font modifier
+        if ($str =~ /.*($FONT_RE)(.*?)$/s && $1 ne "\\f$regular_font") {
+            $str =~ s/(\n?)$/\\f$regular_font$1/;
+        }
+
+        # remove fonts with empty argument
+        while ($str =~ /($FONT_RE){2}/) {
+            # while $str has two consecutive font modifiers
+            # only keep the second one.
+            $str =~ s/($FONT_RE)($FONT_RE)/$2/s;
+        }
+
+        # the regular font modifier at the beginning of the string is not
+        # needed (the do_fonts subroutine ensure that every paragraph ends with
+        # the regular font.
+        $str =~ s/^\\f$regular_font//;
+
+        # Use special markup for common fonts, so that translators don't see
+        # groff's font modifiers
+        my $PO_FONTS = "B|I|R|\\(CW";
+        $PO_FONTS =~ s/^$regular_font\|//;
+        $PO_FONTS =~ s/\|$regular_font\|/|/;
+        $PO_FONTS =~ s/\|$regular_font$//;
+        while ($str =~ /^(.*?)                  # $1: anything (non greedy: as
+                                                # few as possible)
+                         \\f($PO_FONTS)         # followed by a common font
+                                                # modifier ($2)
+                         ((?:\\[^f]|[^\\])*)    # $3: the text concerned by
+                                                # this font (i.e. without any
+                                                # font modifier, i.e. it
+                                                # contains no '\' followed by
+                                                # an 'f')
+                         \\f                    # the next font modifier
+                         (.*)$/sx) {            # $4: anything up to the end
+            my ($begin, $font, $arg, $end) = ($1,$2,$3,$4);
+            if ($end =~ /^$regular_font(.*)$/s) {
+                # no need to add a switch to $regular_font
+                $str = $begin."$font<$arg>$1";
+            } else {
+                $str = $begin."$font<$arg>\\f$end";
+            }
+        }
+        $str =~ s/\(CW</CW</sg;
+
+        print STDERR "'$str'\n" if ($debug{'fonts'});
+        return $str;
+    }
+}
+
 ##########################################
 #### DEFINITION OF THE MACROS WE KNOW ####
 ##########################################
@@ -859,7 +1006,15 @@ $macro{'SP'}=\&untranslated;
 #           As a result,  all  following  paragraph(s) will be indented until
 #           the corresponding .RE.
 #  .RE      End  relative  margin indent.
-$macro{'LP'}=$macro{'P'}=$macro{'PP'}=$macro{'RE'}=\&noarg;
+$macro{'LP'}=$macro{'P'}=$macro{'PP'}=sub {
+    noarg(@_);
+
+    # From info groff:
+    # The font size and shape are reset to the default value (10pt roman if no
+    # `-rS' option is given on the command line).
+    set_font("R");
+};
+$macro{'RE'}=\&noarg;
 $macro{'RS'}=\&untranslated;
 
 #Indented Paragraph Macros
@@ -880,6 +1035,12 @@ $macro{'TP'}=sub {
 	chomp($l2);
     }
     $self->pushline($self->t($l2)."\n");
+
+    # From info groff:
+    # Note that neither font shape nor font size of the label [i.e. argument
+    # or first line] is set to a default value; on the other hand, the rest of
+    # the text has default font settings.
+    set_font("R");
 };
 
 #   Indented Paragraph Macros
@@ -922,6 +1083,11 @@ $macro{'IP'}=sub {
     } else {
 	$self->pushmacro(@_);
     }
+
+    # From info groff:
+    # Font size and face of the paragraph (but not the designator) are reset
+    # to their default values.
+    set_font("R");
 };
 
 # Hypertext Link Macros
@@ -984,7 +1150,13 @@ $macro{'fam'}=\&untranslated;
 # .fc a b   Set field delimiter to a and pad character to b.
 $macro{'fc'}=\&untranslated;
 # .ft font  Change to font name or number font;
-$macro{'ft'}=\&untranslated;
+$macro{'ft'}=sub {
+    if (defined $_[2]) {
+        set_font($_[2]);
+    } else {
+        set_font("P");
+    }
+};
 # .hc c     Set up additional hyphenation indicator character c.
 $macro{'hc'}=\&untranslated;
 # .hy       Enable hyphenation (see nh)
