@@ -109,6 +109,12 @@ and line number) afterward. I'm not sure what the best thing to do is.
 =cut
 
 package Locale::Po4a::Sgml;
+
+use 5.006;
+use strict;
+use warnings;
+
+
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
@@ -117,7 +123,6 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(gettext);
 
-use strict;
 use SGMLS;
 
 use File::Temp;

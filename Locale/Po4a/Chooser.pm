@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.3 2003-01-23 09:45:32 mquinson Exp $
+# $Id: Chooser.pm,v 1.4 2003-02-03 07:26:40 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -16,7 +16,11 @@
 
 
 package Locale::Po4a::Chooser;
+
+use 5.006;
 use strict;
+use warnings;
+
 require Exporter;
 
 use vars qw($VERSION @ISA @EXPORT $AUTOLOAD);

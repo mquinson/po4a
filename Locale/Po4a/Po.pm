@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.7 2003-01-22 08:06:01 mquinson Exp $
+# $Id: Po.pm,v 1.8 2003-02-03 07:26:40 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -60,7 +60,10 @@ package Locale::Po4a::Po;
 
 use Locale::Po4a::TransTractor;
 
+use 5.006;
 use strict;
+use warnings;
+
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
 $VERSION=$Locale::Po4a::TransTractor::VERSION;
@@ -70,7 +73,7 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 use Carp qw(croak);
 use Locale::gettext qw(dgettext);
 
-my @known_flags=qw(no-wrap c-format fuzzy);
+my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
 =head1 Functions about whole message catalogs
 
@@ -401,10 +404,10 @@ file.  Example of use:
 sub stats_get() {
     my $self=shift;
     my ($h,$q)=($self->{gettexthits},$self->{gettextqueries});
-    my $p = ($q == 0 ? 0 : sprintf "%.2f",$h/$q*100);
-    
-    $p =~ s/\.00//;
-    $p =~ s/(\..)0/$1/;
+    my $p = ($q == 0 ? 0 : int($h/$q*10000)/100);
+
+#    $p =~ s/\.00//;
+#    $p =~ s/(\..)0/$1/;
 
     return ( $p,$h,$q );
 }
@@ -512,6 +515,11 @@ sub push {
 	    unless $validoption{$_};
     }
 
+    if ($entry{'wrap'}) {
+	$entry{'flags'} .= " wrap";
+    } else {
+	$entry{'flags'} .= " no-wrap";
+    }
     if (defined ($entry{'msgid'})) {
 	$entry{'msgid'} = canonize($entry{'msgid'})
 	    if ($entry{'wrap'});
@@ -524,6 +532,7 @@ sub push {
 
 	$entry{'msgstr'} = escape_text($entry{'msgstr'});
     }
+
     $self->push_raw(%entry);
 }
 
@@ -541,7 +550,7 @@ sub push_raw {
 #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
     
     return unless defined($entry{'msgid'});
-    
+
     #no msgid => header definition
     unless (length($entry{'msgid'})) { 
 #	if (defined($self->{header}) && $self->{header} =~ /\S/) {
@@ -579,8 +588,10 @@ sub push_raw {
     $self->{po}{$msgid}{'type'} = $type;
       
     if (defined($flags)) {
+        $flags = " $flags ";
+        $flags =~ s/,/ /g;
 	foreach my $flag (@known_flags) {
-	    if ($flags =~ /$flag/) {
+	    if ($flags =~ /\s$flag\s/) {
 	       $self->{po}{$msgid}{'flags'} .= (defined($self->{po}{$msgid}{'flags'}) ? 
                                                   "," : "")
                                                  .$flag;
@@ -658,7 +669,7 @@ sub escape_text {
 sub quote_text {
   my $string = shift;
 
-  return '""' unless $string;
+  return '""' unless defined($string) && length($string);
 
   $string =~ s/\\n/!!DUMMYPOPM!!/gm;
   $string =~ s|!!DUMMYPOPM!!|\\n\n|gm;

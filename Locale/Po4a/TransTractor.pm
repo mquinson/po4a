@@ -3,10 +3,14 @@
 require Exporter;
 
 package Locale::Po4a::TransTractor;
+
+use 5.006;
 use strict;
+use warnings;
+
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.13.6";
+$VERSION="0.14";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
@@ -583,6 +587,7 @@ sub addendum {
 		} else {
 		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file.\n"))
 			   if ($self->verbose());
+		    push @newres,$content;
 		}
 	    }
 	}

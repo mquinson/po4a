@@ -242,6 +242,11 @@ under the terms of GPL (see COPYING file).
 =cut
 
 package Locale::Po4a::Man;
+
+use 5.006;
+use strict;
+use warnings;
+
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 $VERSION=$Locale::Po4a::TransTractor::VERSION;
@@ -250,8 +255,6 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(gettext);
 
-
-use strict;
 use File::Spec;
 use Getopt::Std;
 
@@ -271,10 +274,13 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 sub pushmacro {
     my $self=shift;
     if (scalar @_) { 
-	$self->pushline(join(" ",map { defined $_ && $_ eq '0' ? "0" : 
-				        ( length($_) && m/ / ? "\"$_\"" : 
-					                        "$_"||'""'
-				        )
+	$self->pushline(join(" ",map { defined $_ ? 
+					 (
+					   $_ eq '0' ? "0" 
+					             : ( length($_) && m/ / ? "\"$_\"" 
+							                    : "$_"||'""'
+						       )
+				         ) : ''
 				     } @_)."\n");
     } else {
 	$self->pushline("\n");
@@ -431,7 +437,7 @@ sub do_paragraph {
     }
 
     $self->pushline( $self->translate($paragraph,$self->{ref},"Plain text",
-				      "wrap" => $wrapped_mode) );
+				      "wrap" => ($wrapped_mode eq 'YES') ) );
 }
 
 #############################
@@ -441,7 +447,12 @@ sub parse{
     my $self = shift;
     my ($line,$ref);
     my ($paragraph)=""; # Buffer where we put the paragraph while building
-    my $wrapped_mode=1;   # Wheater we saw .nf or not
+    my $wrapped_mode='YES'; # Should we wrap the paragraph? Three possible values: 
+                            # YES: do wrap
+                            # NO: don't wrap because this paragraph contains indented lines
+                            #     this status disapear after the end of the paragraph
+                            # MACRONO: don't wrap because we saw the nf macro. It stays so 
+                            #          until the next fi macro.
 
   LINE:
     ($line,$ref)=$self->shiftline();
@@ -576,6 +587,7 @@ sub parse{
 	    if ($paragraph) {
 		do_paragraph($self,$paragraph,$wrapped_mode);
 		$paragraph="";
+		$wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
 	    }
 
 	    # Special case: Don't change these lines
@@ -619,7 +631,11 @@ sub parse{
 	    #  .nf => stop wrapped mode
 	    #  .fi => wrap again
 	    if ($macro eq 'nf' || $macro eq 'fi') {
-		$wrapped_mode=$macro eq 'fi';
+		if ($macro eq 'fi') {
+		    $wrapped_mode='MACRONO';
+		} else {
+		    $wrapped_mode='YES';
+		}
 		$self->pushline($line."\n");
 		goto LINE;
 	    }		
@@ -646,25 +662,25 @@ sub parse{
 
 	} elsif ($line =~ /^( +)([^.].*)/) {
 	    # Not a macro, but not a wrapped paragraph either
-	    if ($paragraph) {
-		do_paragraph($self,$paragraph,$wrapped_mode);
-		$paragraph="";
-	    }
-	    $self->pushline($1.$self->translate($2)."\n");
+	    $wrapped_mode='NO';
+	    $paragraph .= $line."\n";
 	} elsif ($line =~ /^([^.].*)/) {
 	    # Not a macro
 	    $paragraph .= $line."\n";
 	} else { #empty line
 	    do_paragraph($self,$paragraph,$wrapped_mode);
 	    $paragraph="";
+	    $wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
 	    $self->pushline($line."\n");
-	} 
+	}
+
 	# Reinit the loop
 	($line,$ref)=$self->shiftline();
     }
 
     if ($paragraph) {
 	do_paragraph($self,$paragraph,$wrapped_mode);
+	$wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
 	$paragraph="";
     }
 } # end of main

@@ -3,7 +3,7 @@
         if $running_under_some_shell;
 
 # pod2man -- Convert POD data to PO file.
-# $Id: po4a-gettextize,v 1.8 2003-01-13 08:53:20 mquinson Exp $
+# $Id: po4a-gettextize,v 1.9 2003-02-03 07:26:40 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -103,7 +103,9 @@ under the terms of GPL (see COPYING file).
 
 =cut
 
-require 5.004;
+use 5.006;
+use strict;
+use warnings;
 
 use Getopt::Long qw(GetOptions);
 
@@ -121,7 +123,6 @@ use POSIX;     # Needed for setlocale()
 setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
-use strict;
 
 sub show_version {
     print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
@@ -154,7 +155,9 @@ my ($origpod,$transpod);         # parsers
 
 my ($origname,$transname)=@ARGV; # filenames
 -e $origname || die sprintf(gettext("File %s does not exists.\n"),$origname);
--e $transname || !length $transname || die sprintf(gettext("File %s does not exists.\n"),$transname);
+if (defined $transname && length($transname)) {
+    -e $transname || die sprintf(gettext("File %s does not exists.\n"),$transname);
+}
 
 $origpod->read($origname);
 $origpod->parse;

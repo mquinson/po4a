@@ -3,7 +3,7 @@
         if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.9 2003-01-23 09:44:12 mquinson Exp $
+# $Id: po4a-translate,v 1.10 2003-02-03 07:26:40 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -115,6 +115,9 @@ under the terms of GPL (see COPYING file).
 
 =cut
 
+use 5.006;
+use strict;
+use warnings;
 
 use Locale::Po4a::Pod;
 use Locale::Po4a::Man;
@@ -123,7 +126,6 @@ use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
 use Getopt::Long qw(GetOptions);
-use strict;
 
 use Locale::gettext;
 use POSIX;     # Needed for setlocale()
@@ -166,6 +168,8 @@ $doc->process('po_in_name'   => \@pos,
 
 
 my ($percent,$hit,$queries) = $doc->stats();
+my $error=0;
+
 print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)\n"),
 		     $master_filename,$percent,$hit,$queries) 
     if $verbose;
@@ -176,11 +180,10 @@ if ($percent<$threshold)  {
 			 $master_filename,$percent,$threshold);
     unlink($outfile) if (-e $outfile);
 } else {
-    my $error=0;
     foreach (@addfiles) {
 	unless ($error) {
 	    $error ||= !$doc->addendum($_);
-	    print STDERR sprintf(gettext("ERROR: file %s couldn't be added to %s.\n  This translation is therefore discarded\n"),
+	    die sprintf(gettext("ERROR: file %s couldn't be added to %s.\n  This translation is therefore discarded\n"),
 				 $_,$master_filename)
 		if $error;
 	}

@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.8 2003-01-13 08:53:21 mquinson Exp $
+# $Id: Pod.pm,v 1.9 2003-02-03 07:26:40 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -18,7 +18,11 @@ use Pod::Parser;
 use Locale::Po4a::TransTractor qw(process new);
 
 package Locale::Po4a::Pod;
+
+use 5.006;
 use strict;
+use warnings;
+
 require Exporter;
 
 use vars qw($VERSION @ISA @EXPORT $AUTOLOAD);
