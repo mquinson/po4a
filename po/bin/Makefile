@@ -19,7 +19,7 @@ $(MODULE).pot: $(POTFILES)
 # confused about single quotes in comments, and the gettext() calls have to
 # use double-quoted strings or it will ignore them.
 	@echo "Rebuilding the pot file"
-	xgettext $(POTFILES) -o $@.new -Lc 2>/dev/null
+	xgettext -L Perl $(POTFILES) -o $@.new 2>/dev/null
 	@if [ -e $@ ] ; then \
 	   if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new>/dev/null ; then \
 		rm -f $@.new; \
