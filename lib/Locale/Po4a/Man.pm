@@ -6,7 +6,7 @@ Locale::Po4a::Man - Convert manual pages from/to PO files
 
 =head1 DESCRIPTION
 
-The goal po4a [po for anything] project is to ease translations (and more
+The po4a (po for anything) project goal is to ease translations (and more
 interstingly, the maintainance of translation) using gettext tools on areas
 where they were not expected like documentation.  
 
