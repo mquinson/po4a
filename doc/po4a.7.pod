@@ -30,8 +30,8 @@ po4a for your own translations.
 =item 2 How to use po4a?
 
 This chapter is a sort of reference manual, trying to answer the users'
-questions and to give you a better understanding of the whole process. It
-introduce how to do things with po4a and serve as an introduction to the
+questions and to give you a better understanding of the whole process. This
+introduces how to do things with po4a and serve as an introduction to the
 documentation of specific tools.
 
 =over
@@ -75,8 +75,8 @@ and original author point of view. Read this to learn the syntax you will
 encounter when translating stuff in this module, or the rules you should
 follow in your original document to make translators' life easier.
 
-Actually, this section in not really part of this document. Instead, it is
-placed in each documentations' modules. This help ensuring that the
+Actually, this section is not really part of this document. Instead, it is
+placed in each module's documentation. This helps ensuring that the
 informations are up to date by keeping the documentation and the code
 together.
 
@@ -185,7 +185,7 @@ Po4a can also handle some more rare or specialized formats, such as the
 documentation of compilation options for the 2.4.x kernels or the diagrams
 produced by the dia tool. Adding a new one is often very easy and the main
 task is to come up with a parser of your target format. See
-L<Locale::Po4a::Transtractor(3pm)> for more information about this.
+L<Locale::Po4a::TransTractor(3pm)> for more information about this.
 
 =head2 Unsupported formats
 
@@ -219,8 +219,8 @@ wine resource files.
 =head1 How to use po4a?
 
 This chapter is a sort of reference manual, trying to answer the users'
-questions and giving a better understanding of the whole process. It
-introduce how to do things with po4a and serve as an introduction to the
+questions and to give you a better understanding of the whole process. This
+introduces how to do things with po4a and serve as an introduction to the
 documentation of specific tools.
 
 =head2 Graphical overview
@@ -233,28 +233,28 @@ relevant. Note that sgml is taken as example here, but the same remains true
 for all modules. Each part of the picture will be detailed in the next
 sections.
 
-  fr.sgml  original.sgml ---->--------+------>----------->-------+	   
-     |         |                      |                          |	   
-     V         V           { update of original }                |	   
-     |         |                      |                          | 
+  fr.sgml  original.sgml ---->--------+------>----------->-------+
+     |         |                      |                          |
+     V         V           { update of original }                |
+     |         |                      |                          |
      +--<---<--+                      V                          |
-     |         |              original.new.sgml----->------->----+	   
-     V         V                      |                          |	   
-  [po4a-gettextize]      +--->---->---+                          |	   
-     |         |         |            V                          |	   
-     |         |         |     [po4a-updatepo]                   |	   
-     |         V         ^            |                          V	   
-     V    original.pot   |            V                          |	   
-     |         |         |          fr.po                        |	   
-     |         |         |         (fuzzy)                       |	   
-     |  { translation }  |            |                          |	   
-     |         |         ^            V                          V	   
-     |         |         |     {manual editing}                  |	   
-     V         V         |            |                          |	   
-     |         |         |            V                          V	   
+     |         |              original.new.sgml----->------->----+
+     V         V                      |                          |
+  [po4a-gettextize]      +--->---->---+                          |
+     |         |         |            V                          |
+     |         |         |     [po4a-updatepo]                   |
+     |         V         ^            |                          V
+     V    original.pot   |            V                          |
+     |         |         |          fr.po                        |
+     |         |         |         (fuzzy)                       |
+     |  { translation }  |            |                          |
+     |         |         ^            V                          V
+     |         |         |     {manual editing}                  |
+     V         V         |            |                          |
+     |         |         |            V                          V
      |         |         +--<---    fr.po       addendum   original.sgml
      +---->----+---->------->---> (up-to-date) (optional)  (up-to-date) 
-                                      |            |             |	   
+                                      |            |             |
                                       v            v             v
                                       +------>-----+------<------+
                                                    |
@@ -274,7 +274,7 @@ are extracted, and compared against the exiting translation. Parts which
 didn't change are found, and previous translation are used. Parts which
 where partially modified are also connected to the previous translation, but
 with a specific marker indicating that the translation must be updated. The
-bottom of the figure shows how a formatted document is builded.
+bottom of the figure shows how a formatted document is built.
 
 Actually, as a translator, the only manual operation you have to do is the
 part marked {manual editing}. Yeah, I'm sorry, but po4a helps you translate.
@@ -738,7 +738,7 @@ command line.
 This chapter gives you a brief overview of the po4a internals, so that you
 may feel more confident to help us maintaining and improving it. It may also
 help you understanding why it does not do what you expected, and how to
-solve your problem.
+solve your problems.
 
 =head2 What's the big picture here?
 
@@ -755,7 +755,7 @@ the input one, but with all translatable strings replaced with content of
 the input po). Here is a graphical representation of this:
 
    Input document --\                             /---> Output document
-                     \      Transtractor::       /       (translated)
+                     \      TransTractor::       /       (translated)
                       +-->--   parse()  --------+
                      /                           \
    Input po --------/                             \---> Output po
@@ -767,7 +767,7 @@ input po and the output document, you get po4a-gettextize. If you provide
 both input and disregard the output po, you get po4a-translate.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
-is a little example to show you how it works. It parses a list of paragraph,
+is a little example to show you how it works. It parses a list of paragraphs,
 each of them beginning with <p>
 
   1 sub parse {
@@ -828,7 +828,7 @@ type 'paragraph').
     paragraph          paragraph
 
 For that, po4a parsers are used on both the original and the translation
-files to extract po files, and then a third po file is builded from them
+files to extract po files, and then a third po file is built from them
 taking strings from the second as translation of strings from the first. In
 order to check that the strings we put together are actually the
 translations of each other, document parsers in po4a should put informations
