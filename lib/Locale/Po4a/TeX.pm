@@ -136,6 +136,18 @@ Coma-separated list of commands whose arguments shoud not be translated.
 This list is appended to the default list containing
 vspace, hspace and label.
 
+=item no_wrap
+
+Coma-separated list of environments whose arguments shouldnot be re-wrapped.
+
+Note that there is a difference between verbatim and no_wrap environments.
+There is no command and comments analysis in verbatim blocks.
+
+=item exclude_include
+
+Colon-separated list of files that should not be included by \input and
+\include.
+
 =back
 
 Using these options permits to override the behaviour of the commands defined
@@ -281,6 +293,7 @@ sub post_trans {
 my @comments = ();
 
 =item translate
+
 Wrapper arround Transtractor's translate, with pre- and post-processing
 filters.
 
@@ -1305,6 +1318,7 @@ sub initialize {
     $self->{options}{'translate'}='';
     $self->{options}{'untranslated'}='';
     $self->{options}{'exclude_include'}='';
+    $self->{options}{'no_wrap'}='';
     $self->{options}{'debug'}='';
 
     foreach my $opt (keys %options) {
@@ -1325,6 +1339,12 @@ sub initialize {
     if ($options{'exclude_include'}) {
         foreach (split(/:/, $options{'exclude_include'})) {
             push  @exclude_include, $_;
+        }
+    }
+
+    if ($options{'no_wrap'}) {
+        foreach (split(/,/, $options{'no_wrap'})) {
+            $no_wrap_environments .= " $_";
         }
     }
 
@@ -1393,10 +1413,6 @@ Various other points are tagged TODO in the source.
 
 The parser assumes every command is followed by optional arguments (enclosed in
 []) and then by mandatory arguments (enclosed in {}).
-
-=item verbatim environments
-
-A % in a verbatim environments cause the end of the line to be ignored.
 
 =item Others
 
