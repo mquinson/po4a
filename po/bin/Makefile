@@ -1,6 +1,6 @@
 # List here all source files with translatable strings.
-MODULE?=po4a
-POTFILES?=../../lib/*.pm
+MODULE=po4a
+POTFILES=$(wildcard ../../lib/*.pm) $(wildcard ../../po4a-*)
 
 POFILES=$(wildcard *.po)
 MOFILES=$(POFILES:.po=.mo)
@@ -19,23 +19,32 @@ $(MODULE).pot: $(POTFILES)
 # confused about single quotes in comments, and the gettext() calls have to
 # use double-quoted strings or it will ignore them.
 	@echo "Rebuilding the pot file"
-	xgettext $(POTFILES) -o $(MODULE).pot -Lc 2>/dev/null
+	xgettext $(POTFILES) -o $@.new -Lc 2>/dev/null
+	@if [ -e $@ ] ; then \
+	   if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new>/dev/null ; then \
+		rm -f $@.new; \
+	   else \
+	   	mv -f $@.new $@; \
+	   fi; \
+	else \
+	   mv -f $@.new $@; \
+	fi
 	
 clean:
-	rm -f po-pod-bin.pot $(MOFILES) messages messages.mo
+	rm -f $(MODULE).pot $(MOFILES) messages messages.mo
 
 %.mo: %.po
 	msgfmt -o $@ $<
 
 %.po: $(MODULE).pot
-	@echo -n "Merging po-pod-bin.pot and $@"
+	@echo -n "Merging $(MODULE).pot and $@"
 	@msgmerge $@ $(MODULE).pot -o $@.new
 # Typically all that changes was a date. I'd prefer not to cvs commit such
 # changes, so detect and ignore them.
-	@if [ "`diff $@ $@.new | grep '[<>]' | wc -l`" -ne 2 ]; then \
-		mv -f $@.new $@; \
+	@if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new >/dev/null; then \
+		rm -v $@.new; \
 	else \
-		rm -f $@.new; \
+		mv -v $@.new $@; \
 	fi
 	@msgfmt --statistics $@
 
