@@ -302,10 +302,11 @@ sub initialize {
     $self->{options}{'with-non_breaking_spaces'}='';
     $self->{options}{'with-hyphen_to_minus'}='';
     $self->{options}{'debug'}='';
+    $self->{options}{'verbose'}='';
 
     foreach my $opt (keys %options) {
         if ($options{$opt}) {
-            die wrap_mod("po4a::tex",
+            die wrap_mod("po4a::man",
                          dgettext("po4a", "Unknown option: %s"), $opt)
                 unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options{$opt};
