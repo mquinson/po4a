@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.7 2003-11-28 00:08:58 barbier Exp $
+# $Id: Chooser.pm,v 1.8 2004-04-28 08:48:31 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -36,6 +36,7 @@ sub new {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
             warn sprintf(gettext("Unknown format type: %s.\n"), $module);
+	    warn "Module loading error: $@\n" if $options{'verbose'};
             list(1);
         }
     }
@@ -43,11 +44,11 @@ sub new {
 }
 
 sub list {
-    warn gettext("This version of po4a knows the following formats:\n".
+    warn gettext("List of valid formats:\n".
 		 "  - kernelhelp: The help messages associated with each kernel compilation option.\n".
 #		 "  - html: HTML documents (EXPERIMENTAL).\n".
 		 "  - man: Good old manual page format.\n".
-		 "  - pod: Perl documentation format.\n".
+		 "  - pod: Perl Online Documentation format.\n".
 		 "  - sgml: either debiandoc or docbook DTD.\n");
     exit shift;
 }
