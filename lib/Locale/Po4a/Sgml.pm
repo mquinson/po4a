@@ -430,8 +430,10 @@ sub parse_file {
     # Prepare the reference indirection stuff
     my @refs;
     my @lines = split(/\n/, $origfile);
-    for (my $i=0; $i<scalar @lines; $i++) {
+    print "XX Prepare reference indirection stuff\n" if $debug{'refs'};
+    for (my $i=1; $i<=scalar @lines; $i++) {
 	push @refs,"$filename:$i";
+	print "$filename:$i\n" if $debug{'refs'};
     }
 
     # protect the conditional inclusions in the file
@@ -532,13 +534,23 @@ sub parse_file {
 		$refcpy[$i]=$refs[$i];
 	    }
 	    my @begin = split(/\n/,$begin);
-	    my @end = split(/\n/,$end);	    
-	    for ($i=1; $i<=$entincl{$key}{'length'}; $i++) {
-		$refs[$i+scalar @begin+1]="$entincl{$key}{'filename'}:$i";
+	    my @end = split(/\n/,$end);
+	    my ($pre,$len,$post) = (scalar @begin,$entincl{$key}{'length'},scalar @end);
+	    # make sure pre and content have a line in common. It will be the case if the entity is
+	    # indented ($begin contains the indenting spaces), but not if the entity is on the first
+	    # column
+	    $pre++ if ($begin =~ /\n$/s);
+	    # same for post
+	    $len++ if ($end =~ /^\n/s);
+	    
+	    print "XX Add a ref. pre=$pre; len=$len; post=$post\n" if $debug{'refs'};
+	    my $main = $refs[$pre-1]; # Keep a reference of inclusion position in main file
+	    for ($i=-1; $i<$len-1; $i++) {
+		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+2);
 	    }
-	    for ($i=1; $i<=scalar @end; $i++) {
-		$refs[$i+scalar @begin+1+$entincl{$key}{'length'}]=
-		    $refcpy[$i+scalar @begin+2];
+	    for ($i=0; $i<$post; $i++) {
+		    $refs[$pre+$i+$len-1] = # -1 since pre and len have a line in common
+		  $refcpy[$pre+$i];
 	    }
 
 	    # Do the substitution
@@ -552,8 +564,9 @@ sub parse_file {
     #   Reput the entities of inclusion in place
     $origfile =~ s/{PO4A-keep-amp}/&/g;
     if ($debug{'refs'}) {
+	print "XX Resulting shifts\n";
 	for (my $i=0; $i<scalar @refs; $i++) {
-	    print STDERR "$filename:$i -> $refs[$i]\n";
+	    print "$filename:".($i+1)." -> $refs[$i]\n";
 	}
     }
     
@@ -819,7 +832,7 @@ sub parse_file {
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
-    unlink ($tmpfile);
+    unlink ($tmpfile) unless $debug{'refs'};
 }
 
 sub end_paragraph {
