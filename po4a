@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.17 2004-08-16 23:41:08 mquinson Exp $
+# $Id: po4a,v 1.18 2004-08-17 22:20:52 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -318,13 +318,15 @@ if (-e $pot_filename) {
 my $potfile=Locale::Po4a::Po->new();
 foreach my $master (keys %document) {
     my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},%options);
+    # We ensure that the generated po will be in utf-8 if the input document
+    # isn't entirely in ascii
+    $doc->{TT}{utf_mode} = 1;
     
     $doc->setpoout($potfile);
     my @file_in_name;
     push @file_in_name, $master;
     $doc->process('file_in_name'     => \@file_in_name,
-                  'file_in_charset'  => $mastchar,
-                  'addendum_charset' => $addchar);
+                  'file_in_charset'  => $mastchar);
     $potfile = $doc->getpoout();
 }
 $potfile->write($pot_filename);
