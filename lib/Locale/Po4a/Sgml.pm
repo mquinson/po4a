@@ -347,12 +347,12 @@ sub parse_file {
     } elsif ($prolog =~ /docbook/i) {
 	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution ".
 	                                    "date ".
-	                                    "entry ".
+	                                    "editor entry ".
 	                                    "figure ".
 	                                    "glosssee glossseealso glossterm ".
 	                                    "holder ".
 	                                    "member msgaud msglevel msgorig ".
-	                                    "option orgname ".
+	                                    "option orgname othername ".
 	                                    "para phrase pubdate publishername primary ". 
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
 	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref ".
@@ -366,6 +366,7 @@ sub parse_file {
 	                                    "formalpara ".
 	                                    "glossary glossdef glossdiv glossentry glosslist group ".
 	                                    "imageobject important index indexterm informaltable itemizedlist ".
+			                    "kerword keywordset ".
 	                                    "legalnotice listitem lot ".
 	                                    "mediaobject msg msgentry msginfo msgexplan msgmain msgrel msgsub msgtext ".
 	                                    "note ".
