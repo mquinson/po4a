@@ -594,7 +594,7 @@ sub parse{
 	    }
 	    # Done with spliting the args. Do the job.
 
-	    if ($macro eq 'B' || $macro eq 'I') {
+	    if ($macro eq 'B' || $macro eq 'I' || $macro eq 'R') {
 		# pass macro name
 		shift @args;
 		my $arg=join(" ",@args);
@@ -685,8 +685,9 @@ sub parse{
 	    # Special case:
 	    #  .nf => stop wrapped mode
 	    #  .fi => wrap again
-	    if ($macro eq 'nf' || $macro eq 'fi') {
-		if ($macro eq 'fi') {
+	    if ($macro eq 'nf' || $macro eq 'fi' ||
+                $macro eq 'EX' || $macro eq 'EE') {
+		if ($macro eq 'fi' || $macro eq 'EE') {
 		    $wrapped_mode='YES';
 		} else {
 		    $wrapped_mode='MACRONO';
@@ -1097,13 +1098,53 @@ $macro{'pc'}=\&translate_joined;
 # .rs    Enable them again
 $macro{'ns'}=$macro{'rs'}=\&untranslated;
 
-# All of these are not handled yet because the number of line may change
-# during the translation
+# .cs font [width [em-size]]
+# Switch to and from "constant glyph space mode".
+$macro{'cs'}=\&untranslated;
+
+# .ss word_space_size [sentence_space_size]
+# Change the minimum size of a space between filled words.
+$macro{'ss'}=\&untranslated;
 
 # .ce     Center one line horizontaly
 # .ce N   Center N lines
 # .ul N   Underline N lines (but not the spaces)
 # .cu N   Underline N lines (even the spaces)
+$macro{'ce'}=$macro{'ul'}=$macro{'cu'}=sub {
+    my $self=shift;
+    if (defined $_[1]) {
+        if ($_[1] <= 0) {
+            # disable centering, underlining, ...
+            $self->pushmacro($_[0]);
+        } else {
+# All of these are not handled yet because the number of line may change
+# during the translation
+            die sprintf("po4a::man: ".
+               dgettext("po4a","This page uses the '%s' request with the ".
+                               "number of lines in argument. This is not ".
+                               "supported yet.\n"),$_[0])."\n";
+        }
+    } else {
+	$self->pushmacro($_[0]);
+    }
+};
+
+# .ec [c]
+# Set the escape character to C.  With no argument the default
+# escape character `\' is restored.  It can be also used to
+# re-enable the escape mechanism after an `eo' request.
+$macro{'ec'}=sub {
+    my $self=shift;
+    if (defined $_[1]) {
+        die sprintf("po4a::man: ".
+           dgettext("po4a","This page uses the '%s' request.  This request ".
+                           "is only supported when no argument is ".
+                           "provided.\n"),$_[0])."\n";
+    } else {
+        $self->pushmacro($_[0]);
+    }
+};
+
 
 ###
 ### BSD compatibility macros: .AT and .UC
