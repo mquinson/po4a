@@ -219,6 +219,11 @@ my $builder = Module::Build->subclass
 
 	    my $dist_dir = $self->dist_dir;
 
+	    if ( -e "$dist_dir.tar.gz") {
+		# Delete the distfile if it already exists
+		system ("rm $dist_dir.tar.gz") && die;
+	    }
+
 	    $self->make_tarball($dist_dir);
 	    $self->delete_filetree($dist_dir);
 	} 
