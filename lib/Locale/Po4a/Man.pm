@@ -267,6 +267,79 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 	   'fonts'    => 0,  # see font modifier handling
 	   );
 
+# This function returns the next line of the document being parsed
+# (and its reference).
+# It overload the Transtractor shiftline to handle:
+#   - font requests (.B, .I, .BR, .BI, ...)
+#     because these requests can be present in a paragraph (handled
+#     in the parse subroutine), or in argument (on the next line)
+#     of some other request (for example .TP)
+#   - font size requests (.SM,.SB) (not done yet)
+#   - input escape (\ at the end of a line)
+sub shiftline {
+    my $self = shift;
+    # call Transtractor's shiftline
+    my ($line,$ref) = $self->SUPER::shiftline();
+
+    if (!defined $line) {
+        # end of file
+        return ($line,$ref);
+    }
+
+    chomp $line;
+    while ($line =~ /^\..*\\$/ || $line =~ /^(\.[BI])\s*$/) {
+        my ($l2,$r2)=$self->SUPER::shiftline();
+        chomp($l2);
+        if ($line =~ /^(\.[BI])\s*$/) {
+            $l2 =~ s/"/\\"/g;
+            $line .= ' "'.$l2.'"';
+        } else {
+            $line =~ s/\\$//;
+            $line .= $l2;
+        }
+    }
+    $line .= "\n";
+
+    # Handle font requests here
+    if ($line =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI)(?:(?: +|\t)(.*)|)$/) {
+        my $macro = $1;
+        my $arguments = $2;
+        my @args = splitargs($ref,$arguments);
+        if ($macro eq 'B' || $macro eq 'I' || $macro eq 'R') {
+            my $arg=join(" ",@args);
+            $arg =~ s/^ +//;
+            this_macro_needs_args($macro,$ref,$arg);
+            $line = "\\f$macro".$arg."\\fR\n";
+        }
+        # .BI bold alternating with italic
+        # .BR bold/roman
+        # .IB italic/bold
+        # .IR italic/roman
+        # .RB roman/bold
+        # .RI roman/italic
+        if ($macro eq 'BI' || $macro eq 'BR' || $macro eq 'IB' || 
+            $macro eq 'IR' || $macro eq 'RB' || $macro eq 'RI'   ) {
+            # num of seen args, first letter of macro name, second one
+            my ($i,$a,$b)=(0,substr($macro,0,1),substr($macro,1));
+            $line = join("", map { $i++ % 2 ? 
+                                    "\\f$b$_" :
+                                    "\\f$a$_"
+                                 } @args)."\\fR\n";
+        }
+    }
+
+    return ($line,$ref);
+}
+
+# The default unshiftline from Transtractor may fail because shiftline
+# is overloaded
+sub unshiftline {
+    die sprintf(dgettext("po4a",
+        "po4a::man: The unshiftline is not supported for the man module.\n".
+        "po4a::man: Please send a bug report with the groff page that ".
+        "po4a::man: generated this error."))."\n";
+}
+
 ###############################################
 #### FUNCTION TO TRANSLATE OR NOT THE TEXT ####
 ###############################################
@@ -478,17 +551,6 @@ sub parse{
     while (defined($line)) {
 #	print STDERR "line=$line;ref=$ref";
 	chomp($line);
-	while ($line =~ /^\..*\\$/ || $line =~ /^(\.[BI])\s*$/) {
-	    my ($l2,$r2)=$self->shiftline();
-	    chomp($l2);
-	    if ($line =~ /^(\.[BI])\s*$/) {
-		$l2 =~ s/"/\\"/g;
-		$line .= ' "'.$l2.'"';
-	    } else {
-		$line =~ s/\\$//;
-		$line .= $l2;
-	    }
-	}
 	$self->{ref}="$ref";
 #	print STDERR "LINE=$line<<\n";
 	die sprintf("po4a::man: %s: ".dgettext("po4a","Escape sequence \\c encountered. This is not handled yet.")
@@ -499,7 +561,6 @@ sub parse{
 	if ($line =~ /^\./) {
 	    die sprintf("po4a::man: ".dgettext("po4a","Unparsable line: %s"),$line)."\n"
 		unless ($line =~ /^(\.+\\*?)(\\\")(.*)/ ||
-			$line =~ /^(\.)([BI])(\W.*)/ ||
 			$line =~ /^(\.)(\S*)(.*)/);
 	    my $arg1=$1;
 	    $arg1 .= $2;
@@ -512,39 +573,6 @@ sub parse{
 	    push @args,$arg1;
 	    push @args, splitargs($ref,$arguments);
 
-	    if ($macro eq 'B' || $macro eq 'I' || $macro eq 'R') {
-		# pass macro name
-		shift @args;
-		my $arg=join(" ",@args);
-		$arg =~ s/^ +//;
-		this_macro_needs_args($macro,$ref,$arg);
-		$paragraph .= "\\f$macro".$arg."\\fR\n";
-		goto LINE;
-	    }
-	    # .BI bold alternating with italic
-	    # .BR bold/roman
-	    # .IB italic/bold
-	    # .IR italic/roman
-	    # .RB roman/bold
-	    # .RI roman/italic
-	    # .SB small/bold
-	    if ($macro eq 'BI' || $macro eq 'BR' || $macro eq 'IB' || 
-		$macro eq 'IR' || $macro eq 'RB' || $macro eq 'RI' ||
-		$macro eq 'SB') {
-		# pass macro name
-		shift @args;
-		# num of seen args, first letter of macro name, second one
-		my ($i,$a,$b)=(0,substr($macro,0,1),substr($macro,1));
-		# Do the job
-#		$self->pushline(".br\n") unless (length($paragraph));
-		$paragraph.= #($paragraph?"":" ").
-		             join("",
-				  map { $i++ % 2 ? 
-					    "\\f$b$_" :
-					    "\\f$a$_"
-				      } @args)."\\fR\n";
-		goto LINE;
-	    }
 
 	    if ($paragraph) {
 		do_paragraph($self,$paragraph,$wrapped_mode);
