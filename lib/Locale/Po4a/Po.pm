@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.35 2005-02-14 23:19:24 danilo-guest Exp $
+# $Id: Po.pm,v 1.36 2005-02-15 01:11:00 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -292,7 +292,7 @@ sub gettextize {
 
     if ($poorig->count_entries() > $potrans->count_entries()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
-	    "Original has more strings that the translation (%d>%d). ".
+	    "Original has more strings than the translation (%d>%d). ".
 	    "Please fix it by editing the translated version to add some dummy entry."),
 		$poorig->count_entries() , $potrans->count_entries());
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
