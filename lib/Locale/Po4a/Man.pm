@@ -384,7 +384,7 @@ sub pre_trans {
         set_regular("B");
     }
     $str = do_fonts($str);
-    if (defined $self->{type} && $self->{type} =~ m/^(SH|HP|SS)$/) {
+    if (defined $self->{type} && $self->{type} =~ m/^(SH|SS)$/) {
         set_regular("R");
     }
 
@@ -424,8 +424,8 @@ sub post_trans {
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
     #   the beginning of the line
-    unless (defined $self->{type} && $self->{type} =~ m/^(TS|TP|HP)$/) {
-        # This doesn't work after a TP, HP or TS (all those macros shift
+    unless (defined $self->{type} && $self->{type} =~ m/^(TS|TP)$/) {
+        # This doesn't work after a TP or TS (all those macros shift
         # lines, which may contain macros)
         $str =~ s/^((?:
                        (?:CW|[RBI])<
@@ -1088,14 +1088,11 @@ $macro{'TP'}=sub {
 #                graph's lines are indented).
 #
 $macro{'HP'}=sub {
-    my $self=shift;
-    my ($line,$l2,$ref2);
-    $line .= $_[0] if defined($_[0]);
-    $line .= ' '.$_[1] if defined($_[1]);
-    $line .= "\n";
-    ($l2,$ref2) = $self->shiftline();
-    chomp($l2);
-    $self->pushline($line.$self->t($l2)."\n");
+    untranslated(@_);
+
+    # From info groff:
+    # Font size and face are reset to their default values.
+    set_font("R");
 };
 
 # Indented Paragraph Macros
