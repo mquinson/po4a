@@ -683,7 +683,7 @@ Four functions are provided to get input and return output. They are very
 similar to shift/unshift and push/pop. The first pair is about input, while
 the second is about output. Mnemonic: in input, you are interested in the
 first line, what shift gives, and in output you want to add your result at
-the end, like pop does.
+the end, like push does.
 
 =over 4
 
