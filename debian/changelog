@@ -1,16 +1,24 @@
 po4a (0.14) unstable; urgency=low
 
+  * The "One step outside Debian" version.
+  
   * A proper Perl package is now build, thanks to Makefile.PL
     Next step: inclusion on CPAN ;)
-  * Preliminary testsuite
-  
+  * Preliminary testsuite:
+    - Every class is compilable
+    - Man.pm works (test number 4 is known to fail, because diff don't work well on po files).
+    - addendums work
+    Still to do: other modules.
+  * Updated documentation, thanks to Philippe for its review. One day,
+    addendums will be usable...
   * Use warnings in all file
-  * Add a 'wrap' flag to all msgid which will be wrapped by po4a, and
-    'no-wrap' for others msgids. Those tags are valid for gettext and will
-    be preserved by tools. They mean something else for gettext, but this
-    other meaning seem useless to me, and both use can coexist.
+  * Add a 'no-wrap' flag to all msgid which will wont wrapped by
+    po4a. This tag is valid for gettext and will be preserved by
+    tools. It mean something else for gettext, but this other meaning seem
+    useless to me, and both use can coexist. 
   * Man.pm:
     - don't split indented paragraphs on several msgids.
+    - don't pretend we handle nested font modifier when we don't
 
  -- Martin Quinson <mquinson@blaise.ens-lyon.fr>  Sat,  1 Feb 2003 21:46:19 +0100
 
