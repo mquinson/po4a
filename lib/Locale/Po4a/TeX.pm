@@ -757,6 +757,23 @@ sub parse_definition_line {
     }
 }
 
+sub is_closed {
+    my $paragraph = shift;
+# FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument 
+    my $tmp = $paragraph;
+    my $closing = 0;
+    my $opening = 0;
+    while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\{(.*)$/s) {
+        $opening += 1;
+        $tmp = $1;
+    }
+    $tmp = $paragraph;
+    while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\}(.*)$/s) {
+        $closing += 1;
+        $tmp = $1;
+    }
+    return $opening eq $closing;
+}
 #############################
 #### MAIN PARSE FUNCTION ####
 #############################
@@ -787,7 +804,9 @@ sub parse{
             $line = "$1%";
         }
 
-        if ($line =~ /^ *$/) {#FIXME: \s*?
+        my $closed = is_closed($paragraph);
+
+        if ($closed and $line =~ /^ *$/) {#FIXME: \s*?
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
@@ -800,7 +819,8 @@ sub parse{
         } elsif ($line =~ /^\\begin\{/) {
             # break the paragraph at the beginning of a new environment.
             $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
-            if (length($paragraph)) {
+            $closed = is_closed($paragraph);
+            if ($closed and length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t);
             }
