@@ -114,9 +114,10 @@ Makes it strip the spaces around the extracted strings. (Typical)
 =item wrap
 
 Canonizes the string to translate, considering that whitespaces are not
-important, and wraps the translated document.
+important, and wraps the translated document. This option can be overriden
+by custom tag options. See the "tags" option below.
 
-=item caseinsensitive (TODO)
+=item caseinsensitive
 
 It makes the tags and attributes searching to work in a case insensitive
 way.  If it's defined, it will treat <BooK>laNG and <BOOK>Lang as <book>lang.
@@ -138,6 +139,12 @@ the specified tags will be excluded, but if you use the "tagsonly" option,
 the specified tags will be the only ones included.  The tags must be in the
 form <aaa>, but you can join some (<bbb><aaa>) to say that the contents of
 the tag <aaa> will only be translated when it's into a <bbb> tag.
+
+You can also specify some tag options putting some characters in front of
+the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
+to override the default behavior specified by the global "wrap" option.
+
+Example: W<chapter><title>
 
 =item attributes (TODO)
 
@@ -211,14 +218,16 @@ receives the extracted strings from the parser, in order to translate them.
 There you can control which strings you want to translate, and perform
 transformations to them before or after the translation itself.
 
-It receives the extracted text, the reference on where it was, and a
-comment that tells if it's an attribute value, a tag content... It must
-return the text that will replace the original in the translated document.
-Here's a basic example of this function:
+It receives the extracted text, the reference on where it was, and a hash
+that contains extra information to control what strings to translate, how
+to translate them and to generate the comment.
+
+It must return the text that will replace the original in the translated
+document. Here's a basic example of this function:
 
   sub found_string {
-    my ($self,$text,$ref,$comment)=@_;
-    $text = $self->translate($text,$ref,$comment,
+    my ($self,$text,$ref,$options)=@_;
+    $text = $self->translate($text,$ref,"type".$options->{'type'},
       'wrap'=>$self->{options}{'wrap'});
     return $text;
   }
@@ -229,9 +238,25 @@ some strings.
 =cut
 
 sub found_string {
-	my ($self,$text,$ref,$comment)=@_;
-	$text = $self->translate($text,$ref,$comment,
-		'wrap'=>$self->{options}{'wrap'});
+	my ($self,$text,$ref,$options)=@_;
+
+	my $comment;
+	my $wrap = $self->{options}{'wrap'};
+
+	if ($options->{'type'} eq "tag") {
+		$comment = "Contents of: ".$self->get_path;
+
+		if($options->{'tag_options'} =~ /w/) {
+			$wrap = 1;
+		}
+		if($options->{'tag_options'} =~ /W/) {
+			$wrap = 0;
+		}
+	} else {
+		die dgettext("po4a","po4a::xml: Internal error: unknown string type.")."\n";
+	}
+
+	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
 	return $text;
 }
 
@@ -296,7 +321,7 @@ my @tag_types = (
 #	{	beginning	=> "?",
 #		end		=> "?",
 #		breaking	=> 1,
-#		f_translate	=> \&tag_trans_...},
+#		f_translate	=> \&tag_trans_procins},
 	{	beginning	=> "!DOCTYPE",
 		end		=> "]",
 		breaking	=> 1,
@@ -318,7 +343,7 @@ my @tag_types = (
 
 sub tag_extract_comment {
 	my ($self,$remove)=(shift,shift);
-	my ($eof,@tag)=$self->get_string_until('-->',1,$remove);
+	my ($eof,@tag)=$self->get_string_until('-->',{include=>1,remove=>$remove,unquoted=>1});
 	return ($eof,@tag);
 }
 
@@ -342,7 +367,12 @@ my $tag = $self->join_lines(@tag);
 
 sub tag_extract_doctype {
 	my ($self,$remove)=(shift,shift);
-	my ($eof,@tag)=$self->get_string_until(']>',1,$remove);
+	my ($eof,@tag)=$self->get_string_until(']>',{include=>1,unquoted=>1});
+	if ($eof) {
+		($eof,@tag)=$self->get_string_until('>',{include=>1,remove=>$remove,unquoted=>1});
+	} else {
+		($eof,@tag)=$self->get_string_until(']>',{include=>1,remove=>$remove,unquoted=>1});
+	}
 	return ($eof,@tag);
 }
 
@@ -501,7 +531,7 @@ sub tag_type {
 		($match1,$match2) = ($tag_types[$i]->{beginning},$tag_types[$i]->{end});
 		if ($line =~ /^<\Q$match1\E/) {
 			if (!defined($tag_types[$i]->{f_extract})) {
-				my ($eof,@lines) = $self->get_string_until(">",1,0);
+				my ($eof,@lines) = $self->get_string_until(">",{include=>1,unquoted=>1});
 				my $line2 = $self->join_lines(@lines);
 #print substr($line2,length($line2)-1-length($match2),1+length($match2))."\n";
 				if (defined($line2) and $line2 =~ /\Q$match2\E>$/) {
@@ -544,7 +574,7 @@ sub extract_tag {
 	if (defined($tag_types[$type]->{f_extract})) {
 		($eof,@tag) = &{$tag_types[$type]->{f_extract}}($self,$remove);
 	} else {
-		($eof,@tag) = $self->get_string_until($match2.">",1,$remove);
+		($eof,@tag) = $self->get_string_until($match2.">",{include=>1,remove=>$remove,unquoted=>1});
 	}
 	$tag[0] =~ /^<\Q$match1\E(.*)$/s;
 	$tag[0] = $1;
@@ -621,9 +651,11 @@ sub treat_tag {
 
 =item tag_in_list
 
-This function returns a boolean value that says if the first argument (a tag
+This function returns a string value that says if the first argument (a tag
 hierarchy) matches any of the tags from the second argument (a list of tags
-or tag hierarchies).
+or tag hierarchies). If it doesn't match, it returns 0. Else, it returns the
+matched tag options (the characters in front of the tag) or 1 (if that tag
+doesn't have options).
 
 =cut
 
@@ -633,12 +665,25 @@ sub tag_in_list {
 	my $i = 0;
 	
 	while (!$found && $i < @list) {
-		my $element = $list[$i];
-		if ( $tag =~ /\Q$element\E$/ ) {
-#print $tag."==".$element."\n";
-			$found = 1;
+		$list[$i] =~ /(.*?)(<.*)/;
+		my $options = $1;
+		my $element = $2;
+		if ($self->{options}{'caseinsensitive'}) {
+			if ( $tag =~ /\Q$element\E$/i ) {
+				$found = 1;
+			}
+		} else {
+			if ( $tag =~ /\Q$element\E$/ ) {
+				$found = 1;
+			}
 		}
-		$i++;
+		if ($found) {
+			if ($options) {
+				$found = $options;
+			}
+		} else {
+			$i++;
+		}
 	}
 	return $found;
 }
@@ -708,15 +753,15 @@ my $attribs = $self->join_lines(@attribs);
 sub treat_content {
 	my $self = shift;
 	my $blank="";
-	my ($eof,@paragraph)=$self->get_string_until('<',0,1);
+	my ($eof,@paragraph)=$self->get_string_until('<',{remove=>1});
 
 	while (!$eof and !$self->breaking_tag) {
 		my @text;
 		# Append the found inline tag
-		($eof,@text)=$self->get_string_until('>',1,1);
+		($eof,@text)=$self->get_string_until('>',{include=>1,remove=>1,unquoted=>1});
 		push @paragraph, @text;
 
-		($eof,@text)=$self->get_string_until('<',0,1);
+		($eof,@text)=$self->get_string_until('<',{remove=>1});
 		if ($#text > 0) {
 			push @paragraph, @text;
 		}
@@ -767,14 +812,29 @@ sub treat_content {
 
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
-		my $inlist = $self->tag_in_list($struc,@{$self->{tags}});
+		my $options = $self->tag_in_list($struc,@{$self->{tags}});
+		my $inlist;
+		if ($options eq 0) {
+			$inlist = 0;
+			$options = "";
+		} elsif ($options eq 1) {
+			$inlist = 1;
+			$options = "";
+		} else {
+			$inlist = 1;
+		}
 #print $self->{options}{'tagsonly'}."==".$inlist."\n";
 		if ( $self->{options}{'tagsonly'} eq $inlist ) {
 #print "YES\n";
-			$self->pushline($self->found_string($self->join_lines(@paragraph),
-				$paragraph[1],"Content of tag ".$struc));
+			$self->pushline($self->found_string(
+				$self->join_lines(@paragraph),
+				$paragraph[1], {
+					type=>"tag",
+					tag_options=>$options
+				}));
 		} else {
 #print "NO\n";
+#TODO: should print that this tag isn't translated in verbose mode
 			$self->pushline($self->join_lines(@paragraph));
 		}
 	}
@@ -818,20 +878,35 @@ sub treat_options {
 =item get_string_until
 
 This function returns an array with the lines (and references) from the input
-stream until it finds the first argument.  The second argument is a boolean
-that says if the returned array should contain the searched text or not.  The
-third argument is another boolean that says if the returned stream should be
-removed from the input or not.
+stream until it finds the first argument.  The second argument is an options
+hash. Value 0 means disabled (the default) and 1, enabled.
+
+The valid options are:
+
+=over 4
+
+=item include
+
+This makes the returned array to contain the searched text
+
+=item remove
+
+This removes the returned stream from the input
+
+=item unquoted
+
+This ensures that the searched text is outside any quotes
 
 =cut
 
 sub get_string_until {
-	# search = the text we want to find (at the moment it can't have \n's)
-	# include = include the searched text in the returned paragraph
-	# remove = remove the returned text from input or leave it intact
-	my ($self,$search,$include,$remove) = (shift,shift,shift,shift);
-	if (!defined($include)) { $include = 0; }
-	if (!defined($remove)) { $remove = 0; }
+	my ($self,$search) = (shift,shift);
+	my $options = shift;
+	my ($include,$remove,$unquoted) = (0,0,0);
+
+	if (defined($options->{include})) { $include = $options->{include}; }
+	if (defined($options->{remove})) { $remove = $options->{remove}; }
+	if (defined($options->{unquoted})) { $unquoted = $options->{unquoted}; }
 
 	my ($line,$ref) = $self->shiftline();
 	my (@text,$paragraph);
@@ -840,9 +915,16 @@ sub get_string_until {
 	while (defined($line) and !$found) {
 		push @text, ($line,$ref);
 		$paragraph .= $line;
-		if ( $paragraph =~ /.*\Q$search\E.*/s ) {
-			$found = 1;
+		if ($unquoted) {
+			if ( $paragraph =~ /^((\".*?\")|(\'.*?\')|[^\"\'])*\Q$search\E.*/s ) {
+				$found = 1;
+			}
 		} else {
+			if ( $paragraph =~ /.*\Q$search\E.*/s ) {
+				$found = 1;
+			}
+		}
+		if (!$found) {
 			($line,$ref)=$self->shiftline();
 		}
 	}
@@ -850,14 +932,20 @@ sub get_string_until {
 	if (!defined($line)) { $eof = 1; }
 
 	if ( $found ) {
-		if(!$include) {
-			$text[$#text-1] =~ /(.*?)(\Q$search\E.*)/s;
+		$line = "";
+		if($unquoted) {
+			$text[$#text-1] =~ /^(((\".*?\")|(\'.*?\')|[^\"\'])*?\Q$search\E)(.*)/s;
 			$text[$#text-1] = $1;
-			$line = $2;
+			$line = $5;
 		} else {
 			$text[$#text-1] =~ /(.*?\Q$search\E)(.*)/s;
 			$text[$#text-1] = $1;
 			$line = $2;
+		}
+		if(!$include) {
+			$text[$#text-1] =~ /(.*)(\Q$search\E.*)/s;
+			$text[$#text-1] = $1;
+			$line = $2.$line;
 		}
 		if (defined($line) and ($line ne "")) {
 			$self->unshiftline ($line,$text[$#text]);
@@ -898,6 +986,19 @@ sub join_lines {
 Well... hmm... If this works for you now, you're using a very simple
 document format ;)
 
+=head1 TODO LIST
+
+ATTRIBUTES
+
+MODIFY TAG TYPES FROM INHERITED MODULES
+(move the tag_types structure inside the $self hash?)
+
+XML HEADER (ENCODING)
+DOCTYPE (ENTITIES)
+INCLUDED FILES
+
+breaking tag inside non-breaking tag (possible?) causes ugly comments
+
 =head1 SEE ALSO
 
 L<po4a(7)>, L<Locale::Po4a::TransTranctor(3pm)>.
@@ -916,27 +1017,3 @@ under the terms of GPL (see COPYING file).
 =cut
 
 1;
-
-
-##### TODO LIST #####
-#
-#OPTIONS
-#caseinsensitive
-#attributes
-#
-#MODIFY TAG TYPES FROM INHERITED MODULES
-#(move the tag_types structure inside the $self hash?)
-#
-#DOCTYPE (ENTITIES)
-#INCLUDED FILES
-#
-#XML HEADER (ENCODING)
-#
-#breaking tag inside non-breaking tag (possible?) causes ugly comments
-
-#               <abbrev>
-#               W<acronym>
-#               W<arg>
-#               <artheader>
-#    with 'w' meaning wrap (by default) and 'W' meaning don't wrap.
-# there should be the module option to select the default behavior
