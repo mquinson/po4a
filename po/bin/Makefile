@@ -31,7 +31,7 @@ $(MODULE).pot: $(POTFILES)
 	fi
 	
 clean:
-	rm -f $(MODULE).pot $(MOFILES) messages messages.mo
+	rm -f (MOFILES) messages messages.mo *~
 
 %.mo: %.po
 	msgfmt -o $@ $<
@@ -42,9 +42,9 @@ clean:
 # Typically all that changes was a date. I'd prefer not to cvs commit such
 # changes, so detect and ignore them.
 	@if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new >/dev/null; then \
-		rm -v $@.new; \
+		rm -f $@.new; \
 	else \
-		mv -v $@.new $@; \
+		mv -f $@.new $@; \
 	fi
 	@msgfmt --statistics $@
 
