@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.24 2004-08-08 23:00:55 jvprat-guest Exp $
+# $Id: Po.pm,v 1.25 2004-08-09 13:24:30 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -307,7 +307,7 @@ sub gettextize {
 	$potrans->to_utf;
 	$pores->set_charset("utf-8");
     } else {
-	if ($potrans->get_text eq "CHARSET") {
+	if ($potrans->get_charset eq "CHARSET") {
 	    $pores->set_charset("ascii");
 	} else {
 	    $pores->set_charset($potrans->get_charset);
