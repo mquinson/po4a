@@ -51,16 +51,18 @@ equivalent to \fItext\fP or ".I text"
 
 equivalent to \fBtext\fP or ".B text"
 
-=item SE<lt>textE<gt> -- small text
+=item RE<lt>textE<gt> -- roman text
 
-equivalent to \fStext\fP
+equivalent to \fRtext\fP
+
+=item CWE<lt>textE<gt> -- constant width text
+
+equivalent to \f(CWtext\fP or ".CW text"
 
 =back
 
-Remark 1: SE<lt>textE<gt> don't exist in the pod format, don't try it in a
-pod page. But this notation is usefull here.
-
-Remark 2: Don't nest font specificator, since it does not work well in po4a for now.
+Remark: The CW face is not available for all groff devices. It is not
+recommanded to use it. It is provided for your convenience.
 
 =head2 Putting 'E<lt>' and 'E<gt>' in translations
 
@@ -127,27 +129,6 @@ my box are inaccessible to po4a::man.
  .splitfont       .Sx             .T              .TF             .The
  .TT              .UC             .ul             .Vb             .zZ
 
-=head2 Don't mess nest font specifier.
-
-In order to make translator's life easier, po4a::man will change all font
-specifiers in the way explained above. This process is sometimes fragile,
-and needs some love from you. For example, don't write the following:
-
-  \fB bold text \fI italic text \fR back to roman
-
-Instead, always close all font modifier like that:
-
-  \fB bold text \fR\fI italic text \fR back to roman
-
-Note that what is forbidden is to close several modifiers with only one
-\fR. Nesting modifiers is not allowed either (for now), so the following
-won't work:
-
-  \fB bold \fI italic\fP bold again \fR
-
-Likewise, using the '.ft' macro to change the font for several paragraphs
-and commands is badly supported for now.
-
 =head2 Conclusion
 
 To summarise this section, keep simple, and don't try to be clever while
@@ -182,32 +163,39 @@ existing man pages. I ran some test, processing all pages of my box and
 diff'ing between the original and the version processed trough po4a. The
 results are the following:
 
- # of pages         : 4323
+ # of pages         : 5060
 
- Ignored pages      : 1432 (33%)
- parser fails       :  850 (20% of all; 29% of unignored)
+ Ignored pages      : 1742 (34%)
+ parser fails       :  605 (12% of all; 18% of unignored)
 
- works perfectly    : 1660 (38% of all; 57% of unignored; 81% of processed)
- change wrapping    :  239 ( 5% of all;  8% of unignored; 12% of processed)
+ works perfectly    : 1888 (37% of all; 57% of unignored; 70% of processed)
+ change wrapping    :  400 ( 8% of all; 12% of unignored; 15% of processed)
+ change wrapping
+ and/or font        :  358 ( 7% of all; 11% of unignored; 13% of processed)
 
- undetected problems:  142 ( 3% of all;  5% of unignored;  7% of processed)
+ undetected problems:   67 ( 1% of all;  2% of unignored;  3% of processed)
 
 Ignored pages are so, because they are generated from Pod, and should be
 translated with po4a::pod.
 
 Parser fails on pages based on mdoc(7), pages using conditionals with .if,
-defining new macros with .de, and more generally, not following the advices
-of previous section.
+defining new macros with .de, using non standard fonts, and more generally,
+not following the advices of previous section.
 
 Pages with undetected problems are processed without complain by po4a::man,
-but the generated output is different from the original one. In most cases,
-only the formating did change (ie, which chars are italics, which ones are
-bold, but it may be more serious). All of them are bugs, but I failed to
-eradicated all of them so far.
+but the generated output is different from the original one (some strings
+are present in the original page and not in the one normalized by po4a, or
+the contrary). All of them are bugs, but most of the time this exhibit
+issues in the original page.
+
+Most of the pages in the "change wrapping and/or font" category will only
+have their wrapping changed (but it was too difficult to figure this out
+automatically), or have other more serious formatting change (ie, which
+chars are italics, which ones are bold, etc.).
 
 So, it seems like since ignored pages are translatable with po4a::pod and
 since wrapping changes are acceptables in most cases, the current version
-of po4a can translate 76% of the man pages on my machine. Moreover, most of
+of po4a can translate 80% of the man pages on my machine. Moreover, most of
 the untranslatable pages could be fixed with some simple tricks given
 above. Isn't that coooool?
 
