@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.16 2004-08-02 09:35:39 mquinson-guest Exp $
+# $Id: Po.pm,v 1.17 2004-08-06 22:48:51 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -265,7 +265,7 @@ sub write{
 =item gettextize()
 
 This function produce one translated message catalog from two catalogs, an
-original an a translation. This process is described in po4a(7), section
+original and a translation. This process is described in po4a(7), section
 I<Gettextization: how does it work?>. 
 
 =cut
@@ -873,6 +873,39 @@ sub msgid($$) {
 	return $msgid if ($self->{po}{$msgid}{'pos'} eq $num);
     }
     return undef;
+}
+
+=item get_charset()
+
+This returns the character set specified in the po header. If it hasn't been
+set, it will return "CHARSET".
+
+=cut
+
+sub get_charset() {
+    my $self=shift;
+    $self->{header} =~ /charset=(.*?)[\s\\]/;
+    return $1;
+}
+
+=item set_charset()
+
+This sets the character set of the po header to the value specified in its
+first argument. If you never call this function (and no file with an specified
+character set is read), the default value is left to "CHARSET". This value
+doesn't change the behavior of this module, it's just used to fill that field
+in the header, and to return it in get_charset().
+
+=cut
+
+sub set_charset() {
+    my $self=shift;
+
+    my ($newchar,$oldchar);
+    $newchar = shift;
+    $oldchar = $self->get_charset();
+
+    $self->{header} =~ s/$oldchar/$newchar/;
 }
 
 #----[ helper functions ]---------------------------------------------------
