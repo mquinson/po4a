@@ -1064,9 +1064,14 @@ $commands{'begin'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
     my ($t,@e) = ("",());
 
-    if (defined($args->[0]) && defined($environments{$args->[0]})) {
-        ($t, @e) = &{$environments{$args->[0]}}($self,$command,$variant,
-                                                $opts,$args,$env);
+    my $envir = $args->[0];
+    if (defined($envir) and $envir =~ /^(.*)\*$/) {
+        $envir = $1;
+    }
+
+    if (defined($env) && defined($environments{$envir})) {
+        ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
+                                            $opts,$args,$env);
     } else {
         die wrap_mod("po4a::tex", "unknown environment: '%s'", $args->[0]);
     }
