@@ -51,7 +51,7 @@ build-stamp:
 	done
 	for lib in $(libs) ; do \
 	  pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
-	    lib/$$lib > mantmp/$(rootlib)$$lib.3perl; \
+	    Locale/Po4a/$$lib > mantmp/$(rootlib)$$lib.3perl; \
 	  for lang in $(langs) ; do \
 	    if [ -e doc/$$lib.$$lang.pod ] ; then \
 	      pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
@@ -80,7 +80,7 @@ install: build
 	  install -c -m 755 po4a-$$bin          $(prefix)/usr/bin/; \
 	done
 	for lib in $(libs) ; do \
-	  install -c -m 644 lib/$$lib          $(prefix)$(pathlib); \
+	  install -c -m 644 Locale/Po4a/$$lib          $(prefix)$(pathlib); \
 	done
 	prefix=../$(prefix) $(MAKE) -C po install
 

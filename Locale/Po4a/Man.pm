@@ -412,6 +412,13 @@ sub parse{
 		    " to my maintainer to handle it.\n";
 	    }
 
+	} elsif ($line =~ /^( +)([^.].*)/) {
+	    # Not a macro, but not a wrapped paragraph either
+	    if ($paragraph) {
+		do_paragraph($self,$paragraph,$wrapped_mode);
+		$paragraph="";
+	    }
+	    $self->pushline($1.$self->translate($2)."\n");
 	} elsif ($line =~ /^([^.].*)/) {
 	    # Not a macro
 	    $paragraph .= $line."\n";

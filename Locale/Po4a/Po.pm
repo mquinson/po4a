@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.3 2002-12-12 15:32:02 mquinson Exp $
+# $Id: Po.pm,v 1.1 2002-12-13 09:42:34 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #

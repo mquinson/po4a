@@ -1,6 +1,6 @@
 # List here all source files with translatable strings.
 MODULE=po4a
-POTFILES=$(wildcard ../../lib/*.pm) $(wildcard ../../po4a-*)
+POTFILES=$(wildcard ../../Locale/Po4a/*.pm) $(wildcard ../../po4a-*)
 
 POFILES=$(wildcard *.po)
 MOFILES=$(POFILES:.po=.mo)

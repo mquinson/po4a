@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.1 2002-12-12 15:04:42 mquinson Exp $
+# $Id: Pod.pm,v 1.1 2002-12-13 09:42:34 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
