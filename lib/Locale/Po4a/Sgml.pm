@@ -654,7 +654,7 @@ SGMLS and NSGMLS parsers) which was:
  
 The adaptation for po4a was done by:
 
- Denis Barbier <denis.barbier@linuxfr.org>
+ Denis Barbier <barbier@linuxfr.org>
  Martin Quinson <martin.quinson@tuxfamily.org>
 
 =head1 COPYRIGHT AND LICENSE

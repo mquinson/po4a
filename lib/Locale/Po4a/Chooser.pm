@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.4 2003-11-07 12:57:56 mquinson Exp $
+# $Id: Chooser.pm,v 1.5 2003-11-26 22:31:17 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -96,20 +96,20 @@ available format and exits on the value passed as argument.
 =item About po4a:
 
 L<po4a(7)>, 
-L<Locale::Po4a::TransTranctor(3perl)>,
-L<Locale::Po4a::Po(3perl)>
+L<Locale::Po4a::TransTranctor(3pm)>,
+L<Locale::Po4a::Po(3pm)>
 
 =item About modules:
 
-L<Locale::Po4a::KernelHelp(3perl)>,
-L<Locale::Po4a::Man(3perl)>,
-L<Locale::Po4a::Pod(3perl)>,
-L<Locale::Po4a::Sgml(3perl)>.
-L<Locale::Po4a::Html(3perl)>.
+L<Locale::Po4a::KernelHelp(3pm)>,
+L<Locale::Po4a::Man(3pm)>,
+L<Locale::Po4a::Pod(3pm)>,
+L<Locale::Po4a::Sgml(3pm)>.
+L<Locale::Po4a::Html(3pm)>.
 
 =head1 AUTHORS
 
- Denis Barbier <denis.barbier@linuxfr.org>
+ Denis Barbier <barbier@linuxfr.org>
  Martin Quinson <martin.quinson@tuxfamily.org>
 
 =head1 COPYRIGHT AND LICENSE
