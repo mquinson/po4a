@@ -122,7 +122,7 @@ of each paragraph.
    my $self = shift;
 
    PARAGRAPH: while (1) {
-       my ($paragraph,$pararef,$line,$lref)=("","","","");
+       my ($paragraph,$pararef)=("","");
        my $first=1;
        my ($line,$lref)=$self->shiftline();
        while (defined($line)) {
