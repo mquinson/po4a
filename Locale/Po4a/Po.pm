@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.3 2003-01-09 08:59:52 mquinson Exp $
+# $Id: Po.pm,v 1.4 2003-01-09 20:22:03 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -61,7 +61,7 @@ package Locale::Po4a::Po;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.11";
+$VERSION="0.12";
 @ISA = ();
 @EXPORT = qw(load write gettext);
 
@@ -547,7 +547,8 @@ sub push_raw {
     }
     $self->{po}{$msgid}{'reference'} = (defined($self->{po}{$msgid}{'reference'}) ? 
                                           $self->{po}{$msgid}{'reference'}." " : "")
-                                         . $reference;
+                                         . $reference
+       if (defined($reference));
     $self->{po}{$msgid}{'msgstr'} = $msgstr;
     $self->{po}{$msgid}{'comment'} = $comment;
     $self->{po}{$msgid}{'automatic'} = $automatic;

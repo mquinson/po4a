@@ -6,7 +6,7 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.11";
+$VERSION="0.12";
 @ISA = ();
 @EXPORT = qw(process translate_wrapped translate 
 	     read write readpo writepo);
@@ -610,7 +610,7 @@ sub shiftline   {
 }
 sub unshiftline {  unshift @{$_[0]->{DOC}{doc_in}},($_[1],$_[2]);  }
 		
-sub pushline    {  push @{$_[0]->{DOC}{doc_out}}, $_[1];           }
+sub pushline    {  push @{$_[0]->{DOC}{doc_out}}, $_[1] if defined $_[1]; }
 sub popline     {  return pop @{$_[0]->{DOC}{doc_out}};            }
 
 =head2 Marking strings as translatable
@@ -675,8 +675,7 @@ sub translate {
 
     $self->{DOC}{po_out}->push('msgid'     => "$string",
 			       'reference' => $ref,
-			       'type'      => $type)
-	if ($string);
+			       'type'      => $type);
 
     return ($self->{DOC}{po_in}->gettext("$string"));
 }
@@ -688,10 +687,8 @@ sub translate_wrapped {
     return "" unless defined($string) && length($string);
 
     $self->{DOC}{po_out}->push_wrapped('msgid'     => $string,
-				      'reference' => $ref,
-				      'type'      => $type)
-	if ($string);
-
+				       'reference' => $ref,
+				       'type'      => $type);
     return $self->{DOC}{po_in}->gettext_wrapped($string);
 }
 

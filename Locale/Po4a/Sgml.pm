@@ -43,7 +43,39 @@ the SGML format into other [human] languages.
 
 =head1 STATUS OF THIS MODULE
 
-It is not written yet ;)
+The result is perfect. Ie, the generated documents are exactly the
+same. But there is still some problems:
+
+=over 2
+
+=item * 
+
+the source is awfull. No effort is done to keep it clean. I just wanted
+this damned module to work.
+
+=item * 
+
+the error output of nsgmls is redirected to /dev/null, which is clearly
+bad. I dunno how to avoid that.
+
+The problem is that I have to "protect" the conditionnal inclusion (ie, the
+C<E<lt>! [ %blah [> and C<]]E<gt>> stuff) from nsgml, because in the other
+case, nsgmls eat them, and I dunno how to restore them in the final
+document. To prevent that, I rewrite them to C<{PO4A-beg-blah}> and
+C<{PO4A-end}>. 
+
+The problem with this is that the C<{PO4A-end}> and such I add are valid in
+the document (not in a E<lt>pE<gt> tag or so).
+
+Everything works well with nsgmls's output redirected that way, but it will
+prevent us to detect that the document is badly formated.
+
+=item *
+
+It does work only with the debiandoc dtd. Adding support for a new dtd
+should be easy.
+
+=back
 
 =head1 INTERNALS
 
@@ -62,7 +94,11 @@ use Locale::gettext qw(gettext);
 use SGMLS;
 use SGMLS::Output qw(push_output pop_output output);
 
-$version = '$Id: Sgml.pm,v 1.1 2003-01-09 08:39:08 mquinson Exp $';
+use File::Temp;
+
+my %debug=('tag' => 0);
+
+$version = '$Id: Sgml.pm,v 1.2 2003-01-09 20:22:03 mquinson Exp $';
 
 sub read {
     my ($self,$filename)=@_;
@@ -76,39 +112,57 @@ sub parse {
     map {$self->parse_file($_)} @{$self->{DOCPOD}{infile}};
 }
 
-sub initialize {
-    my $self=shift;
-    my %options=@_;
-
-    $self->SUPER::initialize(%options);
-
-
-    # FIXME: This is for debiandoc, put this in sysid handler, and 
-    #  put the right one, depending on the sysid 
-    #  (and handle the change of sysid, like debiandoc -> linuxdoc, when 
-    #   several document are parsed)
-    $self->set_tags_kind("translate" => "author version abstract title".
-			                "date copyrightsummary heading p ".
-			                "example tag email name title",
-			 "empty"     => "date ref manref url toc",
-			 "section"   => "chapt appendix sect sect1 sect2".
-			                "sect3 sect4",
-			 "verbatim"  => "example",
-			 "list"      => "enumlist taglist list",
-			 "listitem"  => "item tag",
-			 "ignore"    => "debiandoc book titlepag ".
-			                "package prgn file tt em var");
+sub pushline {
+    my ($self,$line)=(shift,shift);
+    # remove the protection on conditional inclusion before 
+    # pushing line
+    $line =~ s/{PO4A-end}/\]\]>/g;             # cond. incl. end
+    $line =~ s/{PO4A-beg-([^\}]+)}/<!\[$1\[/g; # cond. incl. starts
+    $self->SUPER::pushline($line);
 }
+
+#
+# Filter out some unintersting strings for translation
+#
+sub want_translate {
+    my $string=shift;
+
+    # don't translate entries composed of entity only
+    return 0 if ($string =~ /^&[^;]*;$/);
+    return 0 if ($string =~ /^(((<[^>]*>)|\s)*)$/);
+    return 1;
+}
+sub translate {
+    my ($self)=(shift);
+    my ($string,$ref,$type)=(shift,shift,shift);
+    
+    return (want_translate($string) ?
+	    $self->SUPER::translate($string,$ref,$type) :
+	    $string);
+}
+sub translate_wrapped {
+    my ($self)=(shift);
+    my ($string,$ref,$type,$wrapcol)=(shift,shift,shift,shift);
+    
+    return (want_translate($string) ?
+	    $self->SUPER::translate_wrapped($string,$ref,$type,$wrapcol) :
+	    $string);
+}
+
+
 
 sub set_tags_kind {
     my $self=shift;
     my (%kinds)=@_;
 
+    foreach (qw(translate empty section verbatim ignore)) {
+	$self->{SGML}->{k}{$_} = "";
+    }
+    
     foreach (keys %kinds) {
 	die "Internal error: set_tags_kind called with unrecognized arg $_"
 	    if ($_ ne 'translate' && $_ ne 'empty' && $_ ne 'section' &&
-		$_ ne 'verbatim'  && $_ ne 'list'  && $_ ne 'listitem' &&
-		$_ ne 'ignore');
+		$_ ne 'verbatim'  && $_ ne 'ignore');
 	
 	$self->{SGML}->{k}{$_}=$kinds{$_};
     }    
@@ -120,58 +174,81 @@ sub set_tags_kind {
 #
 sub parse_file {
     my ($self,$filename)=@_;
-    # Reads the document a first time, searching for:
-    #  - optional inclusions
-    #  - prolog
-    my @opt_sect;
-    my ($opt_sect,$prolog,$inprolog)=("","",1);
+    my $dtd;
+    # Reads the document a first time, searching for prolog
+
+    # Rewrite the file to:
+    #   - protect optionnal inclusion marker (ie, "<![ %str [" and "]]>")
+    #   - protect entities from expension (ie "&release;")
     open (IN,"<$filename") 
 	|| die sprintf(gettext("Can't open %s: %s\n"),$filename,$!);
+    my $origfile="";
     while (<IN>) {
-	if ($inprolog) {
-	    if (/<debiandoc/i) {
-		$inprolog = 0;
-	    } else {
-		$prolog .= $_;
-	    }
-	}
-	if ( s/<!\[([^\[]*)\[/$1/ ) {
-	    chomp;
-	    s/%//g;
-	    s/;//g;
-	    map { push @opt_sect,$_ } split(/ /,$_);		
+	$origfile .= $_;
+    }
+    close IN || die sprintf(gettext("Can't close %s: %s\n"),$filename,$!);
+    # Get the prolog
+    {
+	my $lvl;    # number of '<' seen without matching '>'
+	my $pos;    # where in the document (in chars)
+	
+	$prolog=$origfile;
+	$prolog=~ s/^(.*<!DOCTYPE).*$/$1/is;
+	$pos=length($prolog);
+	$lvl=1;
+	while ($lvl != 0) {
+	    my ($c)=substr($origfile,$pos,1);
+	    $lvl++ if ($c eq '<');
+	    $lvl-- if ($c eq '>');
+	    $prolog = "$prolog$c";
+	    $pos++;
 	}
     }
-    close IN
-	|| die sprintf(gettext("Can't close %s: %s\n"),$filename,$!);
+    print STDERR "PROLOG=$prolog\n------------\n";
+    # Get dtd
+    die sprintf(gettext("Can't guess the DTD of %s. Is this a valid document?")
+		,$filename)
+	unless ($origfile =~ m/<!DOCTYPE +([^ ]*) /i);
+    $dtd=$1;
+    print STDERR "DTD=$dtd\n";
+
+    # Configure the tags for this dtd
+    if (lc($dtd) eq 'debiandoc') {
+	$self->set_tags_kind("translate" => "author version abstract title".
+			                    "date copyrightsummary heading p ".
+ 			                    "example tag email name title",
+			     "empty"     => "date ref manref url toc",
+			     "section"   => "chapt appendix sect sect1 sect2".
+			                    "sect3 sect4",
+			     "verbatim"  => "example",
+			     "ignore"    => "debiandoc book titlepag ".
+                                            "enumlist taglist list item tag ".
+			                    "package prgn file tt em var");
+    } else {
+	die sprintf(gettext("File %s have an unknown DTD: %s\n".
+			    "Supported for now: debiandoc.\n"),
+		    $filename,$dtd);
+    }
     
-    # kill duplicates in -i
-    my $last='';
-    map { if ($_ ne $last) { 
-             $opt_sect .= "-i $_ "; 
-          }
-          $last=$_ 
-        } sort @opt_sect;
-     
-    my $cmd="cat $filename|nsgmls -l $opt_sect|";
+    # protect what should be protected in the file
+    $origfile =~ s/&/{PO4A-amp}/g;                    # &entities;
+    $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
+    $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
+    
+    my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4a-sgml-XXXX",
+					      DIR    => "/tmp",
+					      UNLINK => 0);
+    print $tmpfh $origfile;
+    close $tmpfh || die sprintf(gettext("Can't close tempfile: %s\n"),$!);
+
+    my $cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
     print STDERR "CMD=$cmd\n";
 
     # FIXME: use po-debiandoc-fix
     open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s\n"),$!);
-    
-    # The parse object and the line number
-    my ($parse,$line)= (new SGMLS(IN),0);
-
-    # Some values for the parsing
-    my $level = 0;     # level of sectionning
-    my $listdepth = 0; # level in nested lists
-    my $current = 0;   # current line  
-    my $verbatim = 0;  # can we wrap or not
-    my $lastchar = ''; # 
-
 
     # The kind of tags
-    my (%translate,%empty,%section,%verbatim,%list,%listitem,%exist);
+    my (%translate,%empty,%section,%verbatim,%exist);
     foreach (split(/ /, ($self->{SGML}->{k}{'translate'}||'') )) {
 	$translate{uc $_} = 1;
 	$exist{uc $_} = 1;
@@ -188,14 +265,6 @@ sub parse_file {
 	$verbatim{uc $_} = 1;
 	$exist{uc $_} = 1;
     }
-    foreach (split(/ /, ($self->{SGML}->{k}{'list'}||'') )) {
-	$list{uc $_} = 1;
-	$exist{uc $_} = 1;
-    }
-    foreach (split(/ /, ($self->{SGML}->{k}{'listitem'}||'') )) {
-	$listitem{uc $_} = 1;
-	$exist{uc $_} = 1;
-    }
     foreach (split(/ /, ($self->{SGML}->{k}{'ignore'}) || '')) {
 	$ignore{uc $_} = 1;
 	$exist{uc $_} = 1;
@@ -207,82 +276,109 @@ sub parse_file {
     $self->pushline($prolog);
     push_output('string');
     
+    # The parse object and the line number
+    my $parse= new SGMLS(IN);
+
+    # Some values for the parsing
+    $self->{SGML}->{level}=0; # howmany translation container tags are open
+    $self->{SGML}->{verb}=0;  # can we wrap or not
+    my $lastchar = ''; # 
+
     # run the appropriate handler for each event
     EVENT: while ($event = $parse->next_event) {
-	$line = max($parse->line,$line);
-	my $type = $event->type;
+	# to build po entries
+	$self->{SGML}->{ref}="$filename:".$parse->line;
+	$self->{SGML}->{type}=$event->type;
 	
-	if ($type eq 'start_element') {
+	if ($event->type eq 'start_element') {
 	    die sprintf(gettext("po4a::Sgml: %s:%d: Unknown tag %s\n"),
 			$filename,$line,$event->data->name) 
 		unless $exist{$event->data->name};
 	    
 	    $lastchar = ">";
-	    $verbatim++ if $verbatim{$event->data->name()};
-	    $listdepth++ if ($level && $list{$event->data->name()});
+	    ($self->{SGML}->{verb})++ if $verbatim{$event->data->name()};
 
 	    my $tag='';
 	    $tag .= '<'.lc($event->data->name());
 	    while (my ($attr, $val) = each %{$event->data->attributes()}) {
-		if ($val->type() eq 'IMPLIED') {
-		    $tag .= ' '.lc($attr).'="'.lc($attr).'"';
-		} elsif ($val->type() eq 'CDATA') {
-		    my $val = $val->value();
-		    if ($val =~ m/"/) { #"
-			$val = "'".$val."'";
+		my $value = $val->value();
+#		if ($val->type() eq 'IMPLIED') {
+#		    $tag .= ' '.lc($attr).'="'.lc($attr).'"';
+#		} els
+                if ($val->type() eq 'CDATA') {
+		    if ($value =~ m/"/) { #"
+			$value = "'".$value."'";
 		    } else {
-			$val = '"'.$val.'"';
+			$value = '"'.$value.'"';
 		    }
-		    $tag .= ' '.lc($attr).'='.$val;
+		    $tag .= ' '.lc($attr).'='.$value
+			if (defined $value && length($value));
 		} else {
-		    $tag .= ' '.lc($attr).'="'.lc($val->value()).'"';
+		    $tag .= ' '.lc($attr).'="'.lc($value).'"'
+			if (defined $value && length($value));
 		}
 	    }
 	    $tag .= '>';
-	    if ($level == 0) {		
+	    $self->{SGML}->{type}=$tag;
+
+	    print STDERR "                           Seen $tag, level=".$self->{SGML}->{level}."\n"
+		if ($debug{'tag'});
+		
+
+	    if ($translate{$event->data->name()}) {
+		if ($self->{SGML}->{level} > 0) {
+		    $self->end_paragraph();
+		} else {
+		    $self->pushline(pop_output());
+		}
 		$self->pushline($tag);
-		next EVENT unless $translate{$event->data->name()};
 		push_output('string');
-		$level ++;
+		$self->{SGML}->{level}++;
+	    } elsif ($section{$event->data->name()}) {
+		die sprintf(gettext(
+           "Closing tag for a translation container missing before %s, at %s\n"
+				    ),$tag,$self->{SGML}->{ref})
+		    if ($self->{SGML}->{level});
+		output($tag);
 	    } else {
 		output($tag);
 	    }
 	} # end of type eq 'start_element'
 	
-	elsif ($type eq 'end_element') {
-	    $lastchar = ">";
-	    if ($translate{$event->data->name()}) {
-		my ($string,$ref,$type)=(pop_output(),
-				 	"$filename:".$parse->line(),
-					 $event->data->name());
+	elsif ($event->type eq 'end_element') {
+	    my $tag = ($empty{$event->data->name()} 
+		           ? 
+		       '' 
+		           : 
+		       '</'.lc($event->data->name()).'>');
 
-		$self->pushline(
-                 ($verbatim ? 
-		  $self->translate($string,$ref,$type)
-		   :
-		  $self->translate_wrapped($string,$ref,$type)
-		  ).
-				($empty{$event->data->name()} ? 
-				 '' : '</'.lc($event->data->name()).'>').
-				"\n");
-		$level--;
-		push_output('string') if ($level);
-	    } else {		
-		unless ($empty{$event->data->name()}) {
-		    my $tag='</'.lc($event->data->name()).'>';
-		    if ($level) {
-			output($tag);
-		    } else {
-			$self->pushline($tag);
-		    }
-		}
+	    print STDERR "                           Seen $tag, level=".$self->{SGML}->{level}."\n"
+		if ($debug{'tag'});
+
+	    $lastchar = ">";
+	    $self->{SGML}->{type}='<'.lc($event->data->name()).'>';
+
+	    if ($translate{$event->data->name()}) {
+		$self->end_paragraph();
+		push_output('string');
+		output($tag);
+		$self->{SGML}->{level}--;
+	    } elsif ($section{$event->data->name()}) {
+		die sprintf(gettext(
+           "Closing tag for a translation container missing before %s, at %s\n"
+				    ),$tag,$self->{SGML}->{ref})
+		    if ($self->{SGML}->{level});
+		output($tag);
+	    } else {
+		output($tag);
 	    }
-	    $verbatim-- if $verbatim{$event->data->name()};
+	    
+	    ($self->{SGML}->{verb})-- if $verbatim{$event->data->name()};
 	} # end of type eq 'end_element'
 	
-	elsif ($type eq 'cdata') {
+	elsif ($event->type eq 'cdata') {
 	    my $cdata = $event->data;
-	    if (!$verbatim) {
+	    if (!($self->{SGML}->{verb})) {
 		$cdata =~ s/\\t/ /g;
 		$cdata =~ s/\s+/ /g;
 		$cdata =~ s/^\s//s if $lastchar eq ' ';
@@ -292,7 +388,7 @@ sub parse_file {
 
 	} # end of type eq 'cdata'
 
-	elsif ($type eq 'sdata') {
+	elsif ($event->type eq 'sdata') {
 	    my $sdata = $event->data;
 	    $sdata =~ s/^\[//;
 	    $sdata =~ s/\s*\]$//;
@@ -300,9 +396,9 @@ sub parse_file {
 	    output('&'.$sdata.';');
 	} # end of type eq 'sdata'
 
-	elsif ($type eq 're') {
+	elsif ($event->type eq 're') {
 	    $line ++;
-	    if ($verbatim) {
+	    if ($self->{SGML}->{verb}) {
 		output("\n");
 	    } elsif ($lastchar ne ' ') {
 		output(" ");
@@ -310,7 +406,7 @@ sub parse_file {
 	    $lastchar = ' ';
 	} #end of type eq 're'
 
-	elsif ($type eq 'conforming') {
+	elsif ($event->type eq 'conforming') {
 	    
 	}
 
@@ -324,6 +420,30 @@ sub parse_file {
     # What to do after parsing
     $self->pushline(pop_output());
     close(IN);
+    unlink ($tmpfile);
+}
+
+sub end_paragraph {
+    my $self=shift;
+    die "Internal error: level of opened paragraphs above 0!!" 
+	unless $self->{SGML}->{level};
+		
+    $string=pop_output();
+    return unless defined($string) && length($string);
+    # unprotect stuff 
+    $string =~ s/{PO4A-amp}/&/g;                 # &entities;
+    $string =~ s/ name=\"\\\|\\\|\"//g;
+
+
+    $self->pushline(($self->{SGML}->{verb} ? 
+		     $self->translate($string,
+				      $self->{SGML}->{ref},
+				      $self->{SGML}->{type})
+		     :
+		     $self->translate_wrapped($string,
+					      $self->{SGML}->{ref},
+					      $self->{SGML}->{type})
+		     ));
 }
 
 sub max {

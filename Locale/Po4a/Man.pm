@@ -244,7 +244,7 @@ under the terms of GPL (see COPYING file).
 package Locale::Po4a::Man;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.11";
+$VERSION="0.12";
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(new initialize);
 use Locale::Po4a::TransTractor;

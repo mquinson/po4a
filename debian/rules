@@ -6,7 +6,7 @@
 
 bins = gettextize updatepo translate normalize
 
-libs=Po.pm TransTractor.pm    Man.pm Pod.pm KernelHelp.pm
+libs=Po.pm TransTractor.pm    Man.pm Pod.pm KernelHelp.pm Sgml.pm
 rootlib = Locale::Po4a::
 pathlib = /usr/share/perl5/Locale/Po4a
 
@@ -29,13 +29,14 @@ build-stamp:
 	dh_testdir
 
 	@# Make sure the VERSION string were updated in binaries
-	@pkgver=`dpkg-parsechangelog|grep Version|sed 's/Version: //'`;\
+	@fail="";\
+	pkgver=`dpkg-parsechangelog|grep Version|sed 's/Version: //'`;\
 	for bin in $(bins) ; do \
 	 binver=`grep '$$VERSION=' po4a-$$bin| \
                  sed 's/^.*"\([^"]*\)".*/\1/'`; \
 	 if [ "x$$pkgver" != "x$$binver" ] ; then \
 	   echo "VERSION in po4a-$$bin is wrong ($$pkgver!=$$binver)";\
-	   exit 1; \
+	   fail="yes"; \
 	 fi; \
 	done ; \
 	for lib in $(libs) ; do \
@@ -43,9 +44,10 @@ build-stamp:
                  sed 's/^.*"\([^"]*\)".*/\1/'`; \
 	 if [ "x$$pkgver" != "x$$libver" ] ; then \
 	   echo "VERSION in $$lib is wrong ($$pkgver!=$$libver)";\
-	   exit 1; \
+	   fail="yes"; \
 	 fi; \
-	done
+	done; \
+	[ -z $$fail ] || exit 1
 
 	@echo Update the translations
 	$(MAKE) -C po 
