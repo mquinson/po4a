@@ -152,7 +152,7 @@ my $builder = Module::Build->subclass
 	    foreach $lang (@langs) {
 		print ("X Translate binary manpages to $lang\n");
 		foreach $file (keys(%{$self->script_files()})) {
-		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$file")
+		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$file") {
 			system("mkdir -p blib/man/$lang/man1") && die;
@@ -172,7 +172,7 @@ my $builder = Module::Build->subclass
 		foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
 		    $file =~ /.*\/(.*)\.pm$/;
 		    my $filename = $1;
-		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$filename")
+		    system("PERL5LIB=lib perl po4a-translate -v -f pod -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			system ("mkdir -p blib/man/$lang/man3") && die;
@@ -198,7 +198,7 @@ my $builder = Module::Build->subclass
 		system ("gzip -9 -f blib/man/man7/$filename") && die;
 		foreach $lang (@langs) {
 		    print "X Translate $file to $lang\n";
-		    system ("PERL5LIB=lib perl po4a-translate -f pod -v -m $file -p po/pod/$lang.po -l blib/man/$filename")
+		    system ("PERL5LIB=lib perl po4a-translate -f pod -v -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			`mkdir -p blib/man/$lang/man7`;
