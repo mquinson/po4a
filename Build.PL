@@ -27,7 +27,7 @@ my $builder = Module::Build->subclass
 	sub ACTION_binpo {
 	    my $self = shift;
 	    
-	    my @files = (keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})});
+	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}));
 	    
 	    unless ($self->up_to_date(\@files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a.pot\n";
@@ -85,7 +85,7 @@ my $builder = Module::Build->subclass
 	    my $self = shift;
 	    
 	    # update pot
-	    my @files = (keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})});
+	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})}));
 	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
 		my $podfiles = join ("", map {" -m ../../".$_ } @files);
 		print "XX Update documentation pot files: ";
