@@ -77,7 +77,7 @@ sub parse {
 =head1 TRANSLATING WITH PO4A::XML
 
 This module can be used directly to handle generic XML documents.  This will
-extract all tag's contents, and no attributes, since it's where the text is
+extract all tag's content, and no attributes, since it's where the text is
 written in most XML based documents.
 
 There are some options (described in the next section) that can customize
@@ -127,7 +127,7 @@ by custom tag options. See the "tags" option below.
 =item caseinsensitive
 
 It makes the tags and attributes searching to work in a case insensitive
-way.  If it's defined, it will treat <BooK>laNG and <BOOK>Lang as <book>lang.
+way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang as E<lt>bookE<gt>lang.
 
 =item tagsonly
 
@@ -144,23 +144,23 @@ String that will try to match with the first line of the document's doctype
 Space-separated list of the tags you want to translate or skip.  By default,
 the specified tags will be excluded, but if you use the "tagsonly" option,
 the specified tags will be the only ones included.  The tags must be in the
-form <aaa>, but you can join some (<bbb><aaa>) to say that the contents of
-the tag <aaa> will only be translated when it's into a <bbb> tag.
+form E<lt>aaaE<gt>, but you can join some (E<lt>bbbE<gt>E<lt>aaaE<gt>) to say that the content of
+the tag E<lt>aaaE<gt> will only be translated when it's into a E<lt>bbbE<gt> tag.
 
 You can also specify some tag options putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to override the default behavior specified by the global "wrap" option.
 
-Example: WE<lt>chapterE<gt><title>
+Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
 =item attributes
 
 Space-separated list of the tag's attributes you want to translate.  You can
 specify the attributes by their name (for example, "lang"), but you can
 prefix it with a tag hierarchy, to specify that this attribute will only be
-translated when it's into the specified tag. For example: <bbb><aaa>lang
+translated when it's into the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE<gt>lang
 specifies that the lang attribute will only be translated if it's into an
-<aaa> tag, and it's into a <bbb> tag.
+E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
 
 =item inline
 
@@ -233,14 +233,14 @@ It receives the extracted text, the reference on where it was, and a hash
 that contains extra information to control what strings to translate, how
 to translate them and to generate the comment.
 
-This options hash has different contents depending on what kind of string
+This options hash has different content depending on what kind of string
 it is (specified in an entry of this hash):
 
 =over
 
 =item type="tag"
 
-The found string is the contents of a translatable tag. The entry "tag_options"
+The found string is the content of a translatable tag. The entry "tag_options"
 contains the option characters in front of the tag hierarchy in the module
 "tags" option.
 
@@ -273,7 +273,7 @@ sub found_string {
 	my $wrap = $self->{options}{'wrap'};
 
 	if ($options->{'type'} eq "tag") {
-		$comment = "Contents of: ".$self->get_path;
+		$comment = "Content of: ".$self->get_path;
 
 		if($options->{'tag_options'} =~ /w/) {
 			$wrap = 1;
@@ -284,7 +284,7 @@ sub found_string {
 	} elsif ($options->{'type'} eq "attribute") {
 		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
 	} else {
-		die "po4a::xml: ".sprintf(dgettext("po4a","Internal error: unknown type identifier '%s' in %s."),$options->{'type'},$ref)."\n";
+		die "po4a::xml: ".sprintf(dgettext("po4a","Internal error: unknown type identifier '%s' at %s."),$options->{'type'},$ref)."\n";
 	}
 
 	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
@@ -303,11 +303,11 @@ define a tag type you'll have to make a hash with the following keys:
 
 =item beginning
 
-Specifies the beginning of the tag, after the "<".
+Specifies the beginning of the tag, after the "E<lt>".
 
 =item end
 
-Specifies the end of the tag, before the ">".
+Specifies the end of the tag, before the "E<gt>".
 
 =item breaking
 
@@ -526,7 +526,7 @@ sub tag_trans_open {
 =item get_path()
 
 This function returns the path to the current tag from the document's root,
-in the form <html><body><p>.
+in the form E<lt>htmlE<gt>E<lt>bodyE<gt>E<lt>pE<gt>.
 
 =cut
 
@@ -790,7 +790,7 @@ sub treat_attributes {
 						if ($self->tag_in_list($self->get_path.$name,@{$self->{attributes}})) {
 							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
 						} else {
-							print sprintf("po4a::xml: ".dgettext ("po4a","Contents of attribute %s in %s excluded: %s"),$self->get_path.$name,$ref,$value)."\n"
+							print sprintf("po4a::xml: ".dgettext ("po4a","Content of attribute %s at %s excluded: %s"),$self->get_path.$name,$ref,$value)."\n"
 							       if $self->debug();
 							$text .= $self->recode_skipped_text($value);
 						}
@@ -892,7 +892,7 @@ sub treat_content {
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
-			print sprintf("po4a::xml: ".dgettext ("po4a","Contents of tag %s in %s excluded: %s"), $self->get_path,$paragraph[1],$self->join_lines(@paragraph))."\n"
+			print sprintf("po4a::xml: ".dgettext ("po4a","Content of tag %s  %s excluded: %s"), $self->get_path,$paragraph[1],$self->join_lines(@paragraph))."\n"
 			       if $self->debug();
 			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
 		}
@@ -1100,15 +1100,15 @@ breaking tag inside non-breaking tag (possible?) causes ugly comments
 
 =head1 SEE ALSO
 
-L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>.
+L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
 
 =head1 AUTHORS
 
-Jordi Vilalta <jvprat@wanadoo.es>
+ Jordi Vilalta <jvprat@wanadoo.es>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
+Copyright (c) 2004 by Jordi Vilalta  E<lt>jvprat@wanadoo.esE<gt>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
