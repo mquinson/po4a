@@ -383,7 +383,7 @@ sub parse_file {
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
-			     "verbatim"  => "address programlisting literallayout screen",
+			     "verbatim"  => "address programlisting literallayout refentry screen",
 			     "ignore"    => "action affiliation anchor application author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database ".
