@@ -42,7 +42,7 @@ man-stamp: po-pod-stamp
 	      cp po/pod/po4a-$$bin.$$lang.pod mantmp/po4a-$$bin.pod && \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
 	       mantmp/po4a-$$bin.pod > mantmp/$$lang/man1/po4a-$$bin.1; \
-	      gzip mantmp/$$lang/man1/po4a-$$bin.1; \
+	      gzip -9 mantmp/$$lang/man1/po4a-$$bin.1; \
 	      rm -f mantmp/po4a-$$bin.pod; \
 	    fi; \
 	  done; \
@@ -54,7 +54,7 @@ man-stamp: po-pod-stamp
 	      cp po/pod/Locale::Po4a::$$lib.$$lang.pod mantmp/$$lib.pod && \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
 	       mantmp/$$lib.pod > mantmp/$$lang/man3/Locale::Po4a::$$lib.3pm; \
-	      gzip mantmp/$$lang/man3/Locale::Po4a::$$lib.3pm; \
+	      gzip -9 mantmp/$$lang/man3/Locale::Po4a::$$lib.3pm; \
 	      rm -f mantmp/$$lib.pod; \
 	    fi; \
 	  done; \
@@ -62,14 +62,14 @@ man-stamp: po-pod-stamp
 	for doc in $(docs) ; do \
 	  pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
 	    doc/$$doc.7.pod > mantmp/$$doc.7; \
-	  gzip mantmp/$$doc.7; \
+	  gzip -9 mantmp/$$doc.7; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$doc.$$lang.pod ] ; then \
 	      mkdir -p mantmp/$$lang/man7; \
 	      cp po/pod/$$doc.$$lang.pod mantmp/$$doc.pod && \
 	      pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
 	       mantmp/$$doc.pod > mantmp/$$lang/man7/$$doc.7; \
-	      gzip mantmp/$$lang/man7/$$doc.7; \
+	      gzip -9 mantmp/$$lang/man7/$$doc.7; \
 	      rm -f mantmp/$$doc.pod; \
 	    fi; \
 	  done; \
