@@ -276,6 +276,19 @@ sub shiftline {
         return ($line,$ref);
     }
 
+    # Handle some escapes
+    #   * reduce the number of \ in macros
+    if ($line =~ /^\\?[.']/) {
+        # The first backslash is consumed while the macro is read.
+        $line =~ s/\\\\/\\/g;
+    }
+    #   * \\ is equivalent to \e, which is less error prone for the rest
+    #     of the module (e.g. when searching for a font : \f, whe don't
+    #     want to match \\f)
+    $line =~ s/\\\\/\\e/g;
+    #   * \. is just a dot (this can even be use to introduce a macro)
+    $line =~ s/\\\././g;
+
     chomp $line;
     while ($line =~ /^\..*\\$/ || $line =~ /^(\.[BI])\s*$/) {
         my ($l2,$r2)=$self->SUPER::shiftline();
