@@ -293,7 +293,7 @@ my @comments = ();
 
 =item translate
 
-Wrapper arround Transtractor's translate, with pre- and post-processing
+Wrapper around Transtractor's translate, with pre- and post-processing
 filters.
 
 Comments of a paragraph are inserted as a PO comment for the first
@@ -554,7 +554,7 @@ sub get_trailing_command {
 =item translate_buffer
 
 Recursively translate a buffer by separating leading and trailing
-commands (those which should be translatted separately) from the
+commands (those which should be translated separately) from the
 buffer.
 
 =cut
