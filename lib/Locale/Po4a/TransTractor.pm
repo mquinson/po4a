@@ -491,7 +491,7 @@ This function returns a non-nul integer on error.
 sub addendum_parse {
     my ($filename,$header)=shift;
 
-    my ($errcode,$mode,$position,$boundary,$bmode,$lang,$content)=
+    my ($errcode,$mode,$position,$boundary,$bmode,$content)=
 	(1,"","","","","");
 
     unless (open (INS, "<$filename")) {
@@ -519,7 +519,6 @@ sub addendum_parse {
 	my ($key,$value)=($1,$2);
 	$key=lc($key);
   	     if ($key eq 'mode')     {  $mode=lc($value);
-	} elsif ($key eq 'lang')     {  $lang=$value;
 	} elsif ($key eq 'position') {  $position=$value;
 	} elsif ($key eq 'endboundary') {  
 	    $boundary=$value;
@@ -562,7 +561,7 @@ sub addendum_parse {
 
     $errcode=0;
   END_PARSE_ADDFILE: 
-      return ($errcode,$mode,$position,$boundary,$bmode,$lang,$content);
+      return ($errcode,$mode,$position,$boundary,$bmode,$content);
 }
 
 sub mychomp {
@@ -573,7 +572,8 @@ sub mychomp {
 
 sub addendum {
     my ($self,$filename) = @_;
-    
+
+    print STDERR "Apply addendum $filename..." if $self->debug();
     unless ($filename) {
 	warn(dgettext("po4a",
 	    "Can't apply addendum when not given the filename")."\n");
@@ -582,10 +582,13 @@ sub addendum {
     die sprintf(dgettext("po4a","Addendum %s does not exist.")."\n",$filename)
       unless -e $filename;
   
-    my ($errcode,$mode,$position,$boundary,$bmode,$lang,$content)=
+    my ($errcode,$mode,$position,$boundary,$bmode,$content)=
 	addendum_parse($filename);
     return 0 if ($errcode);
 
+    print STDERR "mode=$mode;pos=$position;bound=$boundary;bmode=$bmode;ctn=$content\n"
+      if $self->debug();
+    
     # We only recode the addendum if an origin charset is specified, else we
     # suppose it's already in the output document's character set
     if (defined($self->{TT}{'addendum_charset'}) &&
@@ -609,7 +612,7 @@ sub addendum {
     }
 
     if ($mode eq "before") {
-	if ($self->verbose() > 1) {
+	if ($self->verbose() > 1 || $self->debug() ) {
 	    map { print STDERR sprintf(dgettext("po4a","Addendum '%s' applied before this line: %s"),
 			 $filename,$_)."\n" if (/$position/);
  	        } @{$self->{TT}{doc_out}};
@@ -618,8 +621,10 @@ sub addendum {
                                         }  @{$self->{TT}{doc_out}};
     } else {
 	my @newres=();
-	while (my $line=shift @{$self->{TT}{doc_out}}) {
+	map {
+	    my $line = $_;
 	    push @newres,$line;
+	    print STDERR "Consider $line" if $self->debug();
 	    my $outline=mychomp($line);
 	    $outline =~ s/^[ \t]*//;
 	      
@@ -633,27 +638,28 @@ sub addendum {
 			print sprintf (dgettext("po4a",
 			    "Addendum '%s' applied before this line: %s")."\n",
 			    $filename,$outline)
-			  if ($self->verbose() > 1);
+			  if ($self->verbose() > 1 || $self->debug());
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
 			print sprintf (dgettext("po4a",
 			    "Addendum '%s' applied after the line: %s.")."\n",
 			    $filename,$outline)
-			  if ($self->verbose() > 1);
+			  if ($self->verbose() > 1 || $self->debug());
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
 		    print sprintf (dgettext("po4a","Addendum '%s' applied at the end of the file.")."\n",
 		        $filename)
-		      if ($self->verbose() > 1);
+		      if ($self->verbose() > 1 || $self->debug());
 		    push @newres,$content;
 		}
 	    }
-	}
+	} @{$self->{TT}{doc_out}};
 	@{$self->{TT}{doc_out}} = @newres;
     }
+    print STDERR "done.\n" if $self->debug();
     return 1;
 }
 
