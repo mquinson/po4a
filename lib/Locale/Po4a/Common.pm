@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.3 2005-02-13 12:38:28 jvprat-guest Exp $
+# $Id: Common.pm,v 1.4 2005-03-03 09:49:20 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -33,10 +33,7 @@ use Locale::gettext;
 use Text::WrapI18N qw(wrap $columns);
 
 sub min {
-	my ($a, $b) = (shift, shift);
-
-	if ($a < $b) { return $a; }
-	else { return $b; }
+    return $_[0] < $_[1] ? $_[0] : $_[1];
 }
 
 =head1 FUNCTIONS
