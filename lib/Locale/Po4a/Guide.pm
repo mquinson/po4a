@@ -83,7 +83,6 @@ sub initialize {
 
 #TODO: <include href="..."> includes a file
 	$self->SUPER::initialize(%options);
-	$self->{options}{'strip'}=1;
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'tags'}.='
 		w<abstract>

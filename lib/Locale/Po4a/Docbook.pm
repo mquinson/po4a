@@ -85,7 +85,6 @@ sub initialize {
 	my %options = @_;
 
 	$self->SUPER::initialize(%options);
-	$self->{options}{'strip'}=1;
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
 	$self->{options}{'tags'}.='

@@ -91,6 +91,7 @@ sub initialize {
 
 	$self->SUPER::initialize(%options);
 	$self->{options}{'tagsonly'}=1;
+	$self->{options}{'nostrip'}=1;
 	$self->{options}{'tags'}.=' <dia:string>';
 	$self->treat_options;
 	# Force the output po to be in utf-8
