@@ -638,7 +638,7 @@ sub parse{
 	    } else {
 		$self->pushline($line."\n");
 		die sprintf(gettext(
-		    "po4a::man: Unknown macro '%s'. Remove it from the document,\npo4a::man: or provide a patch to <po4a-devel@lists.alioth.debian.org>.\n"),$line);
+		    "po4a::man: Unknown macro '%s'. Remove it from the document,\npo4a::man: or provide a patch to <po4a-devel\@lists.alioth.debian.org>.\n"),$line);
 	    }
 
 	} elsif ($line =~ /^( +)([^.].*)/) {
@@ -878,7 +878,7 @@ $macro{'hy'}=$macro{'hym'}=$macro{'hys'}=\&untranslated;
 # .ie cond anything  If cond then anything else goto .el.
 # .if cond anything  If cond then anything; otherwise do nothing.
 $macro{'ie'}=$macro{'if'}=sub {
-    die sprintf(gettext("po4a::man: This page uses conditionals with '%s'. Since po4a is not a real\npo4a::man: groff parser, this is not supported.\n",$_[1]);
+    die sprintf(gettext("po4a::man: This page uses conditionals with '%s'. Since po4a is not a real\npo4a::man: groff parser, this is not supported.\n",$_[1]));
 };
 # .in  N    Change indent according to N (default scaling indicator m).
 $macro{'in'}=\&untranslated;
