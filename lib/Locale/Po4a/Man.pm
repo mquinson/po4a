@@ -591,7 +591,7 @@ sub parse{
 	    push @args, splitargs($ref,$arguments);
 
 
-	    if ($paragraph) {
+	    if (length($paragraph)) {
 		do_paragraph($self,$paragraph,$wrapped_mode);
 		$paragraph="";
 		$wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
@@ -709,7 +709,7 @@ sub parse{
 		$paragraph .= $line."\n";
 	    }
 	} else { #empty line, or line containing only spaces
-	    if ($paragraph) {
+	    if (length($paragraph)) {
 	        do_paragraph($self,$paragraph,$wrapped_mode);
 	        $paragraph="";
 	    }
@@ -722,7 +722,7 @@ sub parse{
 	undef $self->{type};
     }
 
-    if ($paragraph) {
+    if (length($paragraph)) {
 	do_paragraph($self,$paragraph,$wrapped_mode);
 	$wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
 	$paragraph="";
@@ -805,7 +805,7 @@ sub splitargs {
             print STDERR "escaped space after $1\n"
                 if ($debug{'splitargs'});
             # escaped space
-            $buffer = ($buffer?$buffer:'').$1." ";
+            $buffer = (length($buffer)?$buffer:'').$1." ";
             $escaped = 1;
         } else {
             print STDERR "Unquoted arg, nothing to declare\n"
@@ -814,7 +814,7 @@ sub splitargs {
             $buffer="";
         }
     }
-    if ($buffer) {
+    if (length($buffer)) {
         $buffer=~ s/"//g;
         $buffer =~ s/\xA0/\\ /g;
         push @args,$buffer;
