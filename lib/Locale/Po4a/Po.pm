@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.1 2003-02-03 12:19:53 mquinson Exp $
+# $Id: Po.pm,v 1.2 2003-02-06 12:57:02 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -309,7 +309,7 @@ sub gettextize {
 	# Push the entry
 	#
 	$pores->push_raw('msgid' => $orig, 'msgstr' => $trans, 
-			 'flags' => $poorig->{po}{$orig}{'flags'}.
+			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"").
                                     " fuzzy",
 			 'reference' => $reforig);
     }
