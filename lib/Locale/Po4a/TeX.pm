@@ -207,8 +207,6 @@ my $my_dirname;
 # See read_file.
 our @exclude_include;
 
-# TODO: define the directory were files have to be searched for (TEXINPUTS?).
-
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -679,7 +677,9 @@ sub read {
 
 =item read_file
 
-Recursively read a file, appending included files.
+Recursively read a file, appending included files which are not listed in the
+@exclude_include array.  Included files are searched in the directory of the
+input document or in a directory listed in the TEXINPUTS environment variable.
 
 Except from the file inclusion part, it is a cut and paste from
 Transtractor's read.
@@ -719,8 +719,15 @@ sub read_file {
                 push @entries, ($begin,$ref);
             }
             if ($include) {
+                # search the file
+                foreach (($my_dirname, split(/:/, $ENV{"TEXINPUTS"}))) {
+                    if (-r "$_/$newfilename.tex") {
+                        $newfilename = "$_/$newfilename.tex";
+                        last;
+                    }
+                }
                 push @entries, read_file($self,
-                                         "$my_dirname/$newfilename.tex");
+                                         $newfilename);
                 if ($tag eq "include") {
                     $textline = "\\clearpage".$end;
                 } else {
@@ -767,7 +774,14 @@ newcommands).
 sub parse_definition_file {
     my ($self,$filename)=@_;
 
-    open (IN,"<$my_dirname/$filename")
+    foreach (($my_dirname, split(/:/, $ENV{"TEXINPUTS"}))) {
+        if (-r $_."/".$filename) {
+            $filename = $_."/".$filename;
+            last;
+        }
+    }
+
+    open (IN,"<$filename")
         || die wrap_mod("po4a::tex",
             dgettext("po4a", "Can't open %s: %s"), $filename, $!);
     while (<IN>) {
