@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.23 2004-07-18 05:13:24 mquinson-guest Exp $
+# $Id: po4a-translate,v 1.24 2004-07-18 08:47:22 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -231,7 +231,7 @@ $doc->process('po_in_name'   => \@pos,
 my ($percent,$hit,$queries) = $doc->stats();
 my $error=0;
 
-print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)"),
+print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
 		     $master_filename,$percent,$hit,$queries)."\n" 
     if $verbose && ($percent>=$threshold);
 
