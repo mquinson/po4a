@@ -10,7 +10,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.16";
+$VERSION="0.16.1";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
