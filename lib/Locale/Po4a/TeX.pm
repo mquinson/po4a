@@ -90,6 +90,8 @@ use Encode::Guess;
 # hash of known commands and environments, with parsing sub.
 # See end of this file
 use vars qw(%commands %environments);
+# hash to describe the number of parameters and which one have to be
+# translated. Used by generic commands
 our %command_parameters = ();
 
 # The escape character used to introduce commands.
@@ -631,19 +633,21 @@ sub translate_buffer {
 
     # remove comments from the buffer.
     # Comments are stored in an array and shown as comments in the PO.
-    while ($buffer =~ m/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)(.*)$/s) { # removed |$ at the end
+    while ($buffer =~ m/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)(.*)$/s) {
+        my $comment = $2;
         my $end = "";
         if ($4 =~ m/^\n/s and $buffer !~ m/^%/s) {
             # a line with comments, followed by an empty line.
             # Keep the empty line, but remove the comment.
-            # This is an empiracal euristic, but seems to work;)
+            # This is an empirical heuristic, but seems to work;)
             $end = "\n";
         }
-        if (defined $2 and $2 !~ /^\s*$/) {
-            push @comments, $2;
+        if (defined $comment and $comment !~ /^\s*$/s) {
+            push @comments, $comment;
         }
-        $buffer    =~ s/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)/$1$end/s;
+        $buffer =~ s/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)/$1$end/s;
     }
+    
 
     # translate leading commands.
     do {
