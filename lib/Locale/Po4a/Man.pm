@@ -408,6 +408,7 @@ sub translate {
     my $origstr=$str;
     
     return $str unless (defined $str) && length($str);
+    return $str if ($str eq "\n");
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
     # Translate this
