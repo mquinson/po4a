@@ -3,9 +3,9 @@
         if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.10 2003-02-03 07:26:40 mquinson Exp $
+# $Id: po4a-translate,v 1.11 2003-02-12 07:58:33 mquinson Exp $
 #
-# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -18,7 +18,7 @@ po4a-translate - convert back po file to documentation format.
 
 =head1 SYNOPSIS
 
-po4a-translate -t B<type> [B<options>] B<original-document> B<translation.po>
+po4a-translate -f I<type> [I<other options>] -m I<original-document> -p I<translation.po>
 
 =head1 DESCRIPTION
 
@@ -35,20 +35,37 @@ produced by po4a-gettextize(1).
 
 =over 4
 
-=item -a, --add-file I<file>
+=item -f, --format
 
-Add I<file> to the resulting file (to put translator's name or a section
+Format type of the documentation you want to handle. Use the --help-format
+option to see the list of available formats.
+
+=item -a, --addendum
+
+Add a file to the resulting file (to put translator's name or a section
 "About this translation, for example). The first line of the file to insert
 should be a PO4A header indicating where it should be added (see section
-"Adding content" below).
+I<How to add stuff which is not a translation> in po4a(7)).
 
-=item -h, --help
+=item -A, --addendum-charset
 
-Show a short help message.
+Charset of the addenda. Note that all addenda should be in the same charset.
 
-=item --help-fmt
+=item -m, --master
 
-List the documentation format understood by po4a.
+File containing the master document to translate.
+
+=item -M, --master-charset
+
+Charset of the file containing the document to translate.
+
+=item -l, --localized
+
+File where the localized (translated) document should be written.
+
+=item -p, --po
+
+File from which the message catalog should be read.
 
 =item -k, --keep
 
@@ -56,23 +73,29 @@ Minimal threshold for translation percentage to keep (ie, write) the
 resulting file (default: 80). Ie, by default, files have to be translated
 at at least 80% to get written.
 
-=item -o, --outfile
-
-were should written the newly created documentation file (default: standard
-output).
-
-=item -t
-
-format type of the documentation you want to handle. Use the --help-fmt
-option to see the list of available formats.
-
-=item -v, --verbose
-
-Be verbose about what's going on.
-
 =item -w, --width
 
 Column to which we should wrap the resulting file.
+
+=item -h, --help
+
+Show a short help message.
+
+=item --help-format
+
+List the documentation format understood by po4a.
+
+=item -V, --version
+
+Displays the version of the script and exits.
+
+=item -v, --verbose
+
+Increase the verbosity of the program.
+
+=item -d, --debug
+
+Outputs some debugging informations.
 
 =back
 
@@ -80,7 +103,7 @@ Column to which we should wrap the resulting file.
 
 To add some extra content to the generated document beside what you
 translated (like the name of the translator, or a "about this translation"
-section), you should use the C<--add-file> option. 
+section), you should use the C<--addendum> option. 
 
 The first line of the addendum must be a header indicating where to put
 it in the document (it can be before or after a given part of the
@@ -95,7 +118,6 @@ the translation).
 The header have a pretty rigid syntax. For more information on how to use
 this feature and how it works, please refer to the po4a(7) man page.
 
-
 =head1 SEE ALSO
 
 L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-normalize>.
@@ -108,7 +130,7 @@ L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-normalize>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002 by SPI, inc.
+Copyright 2002, 2003 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -119,9 +141,6 @@ use 5.006;
 use strict;
 use warnings;
 
-use Locale::Po4a::Pod;
-use Locale::Po4a::Man;
-use Locale::Po4a::KernelHelp;
 use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
@@ -135,23 +154,29 @@ textdomain("po4a");
 
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
-my ($help,$help_fmt,$verbose,@addfiles,$type);
+my ($help,$help_fmt,$verbose,$debug,@addfiles,$format);
+my ($master_filename,$po_filename);
 GetOptions(
-        'help|h'       => \$help,
-        'help-fmt'     => \$help_fmt,
-        'output|o=s'   => \$outfile,
-	'width|w=s'    => \$width,
-	'verbose|v'    => \$verbose,
-	'keep|k=s'     => \$threshold,
-	'add-file|a=s' => \@addfiles,
-        'type|t=s'     => \$type
+        'help|h'        => \$help,
+        'help-format'   => \$help_fmt,
+
+	'master|m=s'    => \$master_filename,
+        'localized|l=s' => \$outfile,
+	'po|p=s'        => \$po_filename,
+	'addendum|a=s'  => \@addfiles,
+	'format|f=s'    => \$format,
+
+	'width|w=s'     => \$width,
+	'verbose|v'     => \$verbose,
+	'debug|d'       => \$debug,
+	'keep|k=s'      => \$threshold
 ) or pod2usage(1);
 
 $help && pod2usage(0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 
-my $master_filename=shift||pod2usage(1);
-my $po_filename=shift ||pod2usage(1);
+(defined($master_filename) && length($master_filename))||pod2usage(1);
+(defined($po_filename)     && length($po_filename))    ||pod2usage(1);
 -e $master_filename || die sprintf(gettext("File %s does not exist\n"),$master_filename);
 -e $po_filename || die sprintf(gettext("File %s does not exist\n"),$po_filename);
 
@@ -160,7 +185,7 @@ push @pos,$po_filename;
 push @masters,$master_filename;
 
 # parser
-my $doc=Locale::Po4a::Chooser::new($type,"verbose"=>$verbose);
+my $doc=Locale::Po4a::Chooser::new($format,"verbose"=>$verbose, "debug" => $debug);
 
 # Prepare the document to be used as translator, but not parser
 $doc->process('po_in_name'   => \@pos,

@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.2 2003-02-06 12:57:02 mquinson Exp $
+# $Id: Po.pm,v 1.3 2003-02-12 07:58:33 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -301,8 +301,8 @@ sub gettextize {
 	# Make sure both type are the same
 	#
 	if ($typeorig ne $potrans->{po}{$trans}{'type'}){
-	    die sprintf(dgettext("po4a","po4a gettextization: Structure disparity between original and translated files:\n msgid (at %s) is of type '%s' while\n msgstr (at %s) is of type '%s'.\n"),
-			$reforig,$typeorig,$reftrans,$typetrans);
+	    die sprintf(dgettext("po4a","po4a gettextization: Structure disparity between original and translated files:\n msgid (at %s) is of type '%s' while\n msgstr (at %s) is of type '%s'.\nOriginal text: %s\nTranslated text:%s\n"),
+			$reforig,$typeorig,$reftrans,$typetrans,$orig,$trans);
 	}
 	
 	# 

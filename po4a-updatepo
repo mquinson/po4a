@@ -3,9 +3,9 @@
         if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.11 2003-02-03 07:26:40 mquinson Exp $
+# $Id: po4a-updatepo,v 1.12 2003-02-12 07:58:33 mquinson Exp $
 #
-# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -20,7 +20,7 @@ po4a-updatepo - Update the translation (in po format) of documentation.
 
     po4a-updatepo -t <type> (--master|m B<doc_file>)+ (--trans B<trans.po>)+
 
-po4a-updatepo -t <type> (--input|-i B<doc_file>)+ (--output|-o B<trans.po>)+
+po4a-updatepo -f <format> (--master|-m B<doc_file>)+ (--po|-p B<trans.po>)+
 
 =head1 DESCRIPTION
 
@@ -41,30 +41,32 @@ the translations of several documents in the same po files).
 
 =over 4
 
-=item -h, --help
+=item -f, --format
 
-Show a short help message.
-
-=item --help-fmt
-
-List the documentation format understood by po4a.
-
-=item -t
-
-format type of the documentation you want to handle.  Use the --help-fmt
+Format type of the documentation you want to handle. Use the --help-format
 option to see the list of available formats.
-
-=item -o, --output
-
-=item --trans
-
-File(s) where the po files should be written.
-
-=item -i, --input
 
 =item -m, --master
 
 File(s) containing the master document to translate.
+
+=item -M, --master-charset
+
+Charset of the files containing the document to translate. Note that all
+files must have the same charset.
+
+=item -p, --po
+
+Po file(s) to update. If these files do not exist, they are created by
+C<po4a-updatepo>.
+
+=item -h, --help
+
+Show a short help message.
+
+=item --help-format
+
+List the documentation format understood by po4a.
 
 =item -V, --version
 
@@ -91,7 +93,7 @@ L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-normalize>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002 by SPI, inc.
+Copyright 2002, 2003 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -105,10 +107,6 @@ use warnings;
 use Getopt::Long qw(GetOptions);
 use Locale::Po4a::Po;
 
-use Locale::Po4a::KernelHelp;
-use Locale::Po4a::Man;
-use Locale::Po4a::Pod;
-use Locale::Po4a::Sgml;
 use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
@@ -122,7 +120,7 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
 }
 
 
@@ -131,17 +129,13 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 # Parse our options
 my (@masterfiles,@pofiles);
-my ($help,$help_fmt,$verbose,$debug,$type);
+my ($help,$help_fmt,$verbose,$debug,$format);
 GetOptions('help|h'      => \$help,
-  	   'help-fmt'     => \$help_fmt,
+  	   'help-format' => \$help_fmt,
 	   
-	   'output|o=s'  => \@pofiles,
-	   'trans=s'   => \@pofiles,
-
-	   'input|i=s'   => \@masterfiles,
 	   'master|m=s'  => \@masterfiles,
-
-	   'type|t=s'    => \$type,
+	   'po|p=s'      => \@pofiles,
+	   'format|f=s'  => \$format,
 
 	   'verbose|v'   => \$verbose,
 	   'debug|d'     => \$debug,
@@ -153,7 +147,7 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 my ($doc); # parser
-$doc=Locale::Po4a::Chooser::new($type);
+$doc=Locale::Po4a::Chooser::new($format,"verbose" => $verbose, "debug" => $debug);
 
 map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;
 map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 

@@ -3,9 +3,9 @@
         if $running_under_some_shell;
 
 # pod2man -- Convert POD data to PO file.
-# $Id: po4a-gettextize,v 1.9 2003-02-03 07:26:40 mquinson Exp $
+# $Id: po4a-gettextize,v 1.10 2003-02-12 07:58:33 mquinson Exp $
 #
-# Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -18,7 +18,7 @@ po4a-gettextize - Convert an original file (and its translation) to a po file
 
 =head1 SYNOPSIS
 
-po4a-gettextize -t module I<original.doc> [I<translated.doc>] E<gt> file.po
+po4a-gettextize -f I<format> -m I<original.doc> [-l I<localized.doc>] -p file.po
 
 =head1 DESCRIPTION
 
@@ -35,15 +35,15 @@ If you already have a translated file, C<po4a-gettextize> will try to
 extract the translations it contains and put them in place in the written
 po file. Be warned that very few intelligence is used in this process: the
 Nth string of the translated file is supposed to be the translation of the
-Nth string in the original. If it's not the case, you're dead.
+Nth string in the original. If it's not the case, you're dead. That's why
+it is very important that both file share exactly the same structure.
 
-That's why it is very important that both file share exactly the same
-structure. However, C<po4a-gettextize> is likely to detect any
-desyncronisation between files, and will repport about them. In that case,
-you should edit manually the files to solve the repported disparity. Even
-if no error were repported, you check carefully that the generated po file
-is correct (ie, that each msgstr is the translation of the associated
-msgid, and not the one before or after).
+However, C<po4a-gettextize> will diagnose your death by detecting any
+desyncronisation between files, and repporting where they occur. In that
+case, you should edit manually the files to solve the repported
+disparity. Even if no error were repported, you check carefully that the
+generated po file is correct (ie, that each msgstr is the translation of
+the associated msgid, and not the one before or after).
 
 Even if the script manage to do its job without apparent problems, it still
 mark all extracted translation as fuzzy, to make sure that the translator
@@ -53,23 +53,39 @@ will have a look at them, and detect any remaining problem.
 
 =over 4
 
+=item -f, --format
+
+Format type of the documentation you want to handle. Use the --help-format
+option to see the list of available formats.
+
+=item -m, --master
+
+File containing the master document to translate.
+
+=item -M, --master-charset
+
+Charset of the file containing the document to translate.
+
+=item -l, --localized
+
+File containing the localized (translated) document.
+
+=item -L, --localized-charset
+
+Charset of the file containing the localized document.
+
+=item -p, --po
+
+File where the message catalog should be written. If not given, the message
+catalog will be written to the standard output.
 
 =item -h, --help
 
 Show a short help message.
 
-=item --help-fmt
+=item --help-format
 
 List the documentation format understood by po4a.
-
-=item -t
-
-format type of the documentation you want to handle. Use the --help-fmt
-option to see the list of available formats.
-
-=item -o
-
-File where the output should be redirected.
 
 =item -V, --version
 
@@ -96,7 +112,7 @@ L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002 by SPI, inc.
+Copyright 2002, 2003 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -109,10 +125,6 @@ use warnings;
 
 use Getopt::Long qw(GetOptions);
 
-use Locale::Po4a::Pod qw(writepo process);
-use Locale::Po4a::Man qw(writepo process);
-use Locale::Po4a::KernelHelp qw(writepo process);
-use Locale::Po4a::Sgml qw(writepo process);
 use Locale::Po4a::Chooser;
 
 use Pod::Usage qw(pod2usage);
@@ -125,56 +137,64 @@ textdomain('po4a');
 
 
 sub show_version {
-    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("po4a-gettextize version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
 }
 
-my ($outfile)=('-');
-my ($help_fmt,$help,$type,$debug,$verbose);
+my ($pofile)=('-');
+my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose);
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
-        'help|h'       => \$help,
-	'help-fmt'     => \$help_fmt,
-        'output|o=s'   => \$outfile,
-        'type|t=s'     => \$type,
+        'help|h'        => \$help,
+	'help-format'   => \$help_fmt,
+        
+        'master|m=s'    => \$masterfile,
+	'localized|l=s' => \$locfile,
+        'po|p=s'        => \$pofile,
+        'format|f=s'    => \$type,
 
-        'verbose|v'   => \$verbose,
-        'debug|d'     => \$debug,
-        'version|V'    => \&show_version
+        'verbose|v'     => \$verbose,
+        'debug|d'       => \$debug,
+        'version|V'     => \&show_version
 ) or pod2usage(1);
 
+# Argument check
 $help && pod2usage (0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage (1) if (scalar @ARGV < 1 || scalar @ARGV > 2);
+pod2usage (1) if (scalar @ARGV > 1) || 
+    (!defined($masterfile)) || (!length($masterfile));
 
-my ($origpod,$transpod);         # parsers
-
-($origpod,$transpod)=(Locale::Po4a::Chooser::new($type),
-		      Locale::Po4a::Chooser::new($type));
-
-# Initialize and run the formatter, pulling a pair of input and output off
-# at a time.
-
-my ($origname,$transname)=@ARGV; # filenames
--e $origname || die sprintf(gettext("File %s does not exists.\n"),$origname);
-if (defined $transname && length($transname)) {
-    -e $transname || die sprintf(gettext("File %s does not exists.\n"),$transname);
+# Check file existence
+-e $masterfile || die sprintf(gettext("File %s does not exists.\n"),$masterfile);
+if (defined $locfile && length($locfile)) {
+    -e $locfile || die sprintf(gettext("File %s does not exists.\n"),$locfile);
 }
 
-$origpod->read($origname);
-$origpod->parse;
+# Declare the TransTractor parsers
+my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,
+						    "verbose" => $verbose, 
+						    "debug" => $debug),
+			 Locale::Po4a::Chooser::new($type,
+						    "verbose" => $verbose, 
+						    "debug" => $debug));
 
-unless (defined ($transname)) {
+# Parse master file
+$mastertt->read($masterfile);
+$mastertt->parse;
+
+
+unless (defined ($locfile) && length($locfile)) {
   # Ok, outputing the pot extracted from original is enough
-  $origpod->writepo($outfile);
+  $mastertt->writepo($pofile);
 } else {
-  # We have to merge two pod files
+  # We have to merge two transtractor files
 
-  $transpod->read($transname);
-  $transpod->parse;
+  $transtt->read($locfile);
+  $transtt->parse;
 
-  my $mergedpo = Locale::Po4a::Po->gettextize($origpod->getpoout(),
-                                              $transpod->getpoout());
+  my $mergedpo = Locale::Po4a::Po->gettextize($mastertt->getpoout(),
+                                              $transtt->getpoout());
 
-  $mergedpo->write($outfile);
+  $mergedpo->write($pofile);
 }
   
 __END__

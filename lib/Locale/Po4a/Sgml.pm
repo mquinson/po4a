@@ -118,7 +118,7 @@ use warnings;
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw(new initialize);
+@EXPORT = qw(); # new initialize);
 
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(gettext);

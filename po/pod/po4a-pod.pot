@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-06 14:10+0100\n"
+"POT-Creation-Date: 2003-02-12  0:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,9 +102,9 @@ msgid ""
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Po.pm:51 ../../lib/Locale/Po4a/Pod.pm:202
-#: ../../lib/Locale/Po4a/Pod.pm:203 ../../po4a-gettextize:56
-#: ../../po4a-translate:98 ../../po4a-translate:103 ../../doc/po4a.7.pod:128
-#: ../../doc/po4a.7.pod:235 ../../doc/po4a.7.pod:295 ../../doc/po4a.7.pod:706
+#: ../../lib/Locale/Po4a/Pod.pm:203 ../../po4a-translate:125
+#: ../../doc/po4a.7.pod:128 ../../doc/po4a.7.pod:235 ../../doc/po4a.7.pod:295
+#: ../../doc/po4a.7.pod:706
 #, no-wrap
 msgid "\n"
 msgstr ""
@@ -365,8 +365,8 @@ msgid "Returns the msgid of the given number."
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Po.pm:764 ../../lib/Locale/Po4a/Pod.pm:291
-#: ../../lib/Locale/Po4a/Man.pm:225 ../../po4a-gettextize:92
-#: ../../po4a-updatepo:87 ../../po4a-translate:104 ../../po4a-normalize:60
+#: ../../lib/Locale/Po4a/Man.pm:225 ../../po4a-gettextize:108
+#: ../../po4a-updatepo:89 ../../po4a-translate:126 ../../po4a-normalize:60
 #: ../../doc/po4a.7.pod:847
 msgid "AUTHORS"
 msgstr ""
@@ -1223,7 +1223,7 @@ msgid ""
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Pod.pm:286 ../../lib/Locale/Po4a/Man.pm:220
-#: ../../po4a-gettextize:88 ../../po4a-updatepo:83 ../../po4a-translate:99
+#: ../../po4a-gettextize:104 ../../po4a-updatepo:85 ../../po4a-translate:121
 #: ../../po4a-normalize:56
 msgid "SEE ALSO"
 msgstr ""
@@ -1244,19 +1244,17 @@ msgid ""
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Pod.pm:296 ../../lib/Locale/Po4a/Man.pm:230
-#: ../../po4a-gettextize:97 ../../po4a-updatepo:92 ../../po4a-translate:109
+#: ../../po4a-gettextize:113 ../../po4a-updatepo:94 ../../po4a-translate:131
 #: ../../po4a-normalize:65
 msgid "COPYRIGHT AND LICENSE"
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Pod.pm:298 ../../lib/Locale/Po4a/Man.pm:232
-#: ../../po4a-gettextize:99 ../../po4a-updatepo:94 ../../po4a-translate:111
-#: ../../po4a-normalize:67
 msgid "Copyright 2002 by SPI, inc."
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Pod.pm:300 ../../lib/Locale/Po4a/Man.pm:234
-#: ../../po4a-gettextize:101 ../../po4a-updatepo:96 ../../po4a-translate:113
+#: ../../po4a-gettextize:117 ../../po4a-updatepo:98 ../../po4a-translate:135
 #: ../../po4a-normalize:69
 msgid ""
 "This program is free software; you may redistribute it and/or modify it "
@@ -1685,9 +1683,11 @@ msgid ""
 "po4a-gettextize - Convert an original file (and its translation) to a po file"
 msgstr ""
 
+# type: textblock
 #: ../../po4a-gettextize:21
 msgid ""
-"po4a-gettextize -t module I<original.doc> [I<translated.doc>] E<gt> file.po"
+"po4a-gettextize -f I<format> -m I<original.doc> [-l I<localized.doc>] -p "
+"file.po"
 msgstr ""
 
 #: ../../po4a-gettextize:25
@@ -1713,18 +1713,19 @@ msgid ""
 "extract the translations it contains and put them in place in the written po "
 "file. Be warned that very few intelligence is used in this process: the Nth "
 "string of the translated file is supposed to be the translation of the Nth "
-"string in the original. If it's not the case, you're dead."
+"string in the original. If it's not the case, you're dead. That's why it is "
+"very important that both file share exactly the same structure."
 msgstr ""
 
-#: ../../po4a-gettextize:40
+# type: textblock
+#: ../../po4a-gettextize:41
 msgid ""
-"That's why it is very important that both file share exactly the same "
-"structure. However, C<po4a-gettextize> is likely to detect any "
-"desyncronisation between files, and will repport about them. In that case, "
-"you should edit manually the files to solve the repported disparity. Even if "
-"no error were repported, you check carefully that the generated po file is "
-"correct (ie, that each msgstr is the translation of the associated msgid, "
-"and not the one before or after)."
+"However, C<po4a-gettextize> will diagnose your death by detecting any "
+"desyncronisation between files, and repporting where they occur. In that "
+"case, you should edit manually the files to solve the repported disparity. "
+"Even if no error were repported, you check carefully that the generated po "
+"file is correct (ie, that each msgstr is the translation of the associated "
+"msgid, and not the one before or after)."
 msgstr ""
 
 #: ../../po4a-gettextize:48
@@ -1740,86 +1741,136 @@ msgid "OPTIONS"
 msgstr ""
 
 # type: =item
-#: ../../po4a-gettextize:57 ../../po4a-updatepo:44 ../../po4a-translate:45
+#: ../../po4a-gettextize:56 ../../po4a-updatepo:44 ../../po4a-translate:38
+msgid "-f, --format"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:58 ../../po4a-updatepo:46 ../../po4a-translate:40
+msgid ""
+"Format type of the documentation you want to handle. Use the --help-format "
+"option to see the list of available formats."
+msgstr ""
+
+#: ../../po4a-gettextize:61 ../../po4a-updatepo:49 ../../po4a-translate:54
+msgid "-m, --master"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:63 ../../po4a-translate:56
+msgid "File containing the master document to translate."
+msgstr ""
+
+# type: =item
+#: ../../po4a-gettextize:65 ../../po4a-updatepo:53 ../../po4a-translate:58
+msgid "-M, --master-charset"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:67 ../../po4a-translate:60
+msgid "Charset of the file containing the document to translate."
+msgstr ""
+
+# type: =item
+#: ../../po4a-gettextize:69 ../../po4a-translate:62
+msgid "-l, --localized"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:71
+msgid "File containing the localized (translated) document."
+msgstr ""
+
+# type: =item
+#: ../../po4a-gettextize:73
+msgid "-L, --localized-charset"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:75
+msgid "Charset of the file containing the localized document."
+msgstr ""
+
+# type: =item
+#: ../../po4a-gettextize:77 ../../po4a-updatepo:58 ../../po4a-translate:66
+msgid "-p, --po"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:79
+msgid ""
+"File where the message catalog should be written. If not given, the message "
+"catalog will be written to the standard output."
+msgstr ""
+
+# type: =item
+#: ../../po4a-gettextize:82 ../../po4a-updatepo:63 ../../po4a-translate:80
 #: ../../po4a-normalize:37
 msgid "-h, --help"
 msgstr ""
 
 # type: textblock
-#: ../../po4a-gettextize:59 ../../po4a-updatepo:46 ../../po4a-translate:47
+#: ../../po4a-gettextize:84 ../../po4a-updatepo:65 ../../po4a-translate:82
 #: ../../po4a-normalize:39
 msgid "Show a short help message."
 msgstr ""
 
 # type: =item
-#: ../../po4a-gettextize:61 ../../po4a-updatepo:48 ../../po4a-translate:49
-#: ../../po4a-normalize:41
-msgid "--help-fmt"
+#: ../../po4a-gettextize:86 ../../po4a-updatepo:67 ../../po4a-translate:84
+msgid "--help-format"
 msgstr ""
 
 # type: textblock
-#: ../../po4a-gettextize:63 ../../po4a-updatepo:50 ../../po4a-translate:51
+#: ../../po4a-gettextize:88 ../../po4a-updatepo:69 ../../po4a-translate:86
 #: ../../po4a-normalize:43
 msgid "List the documentation format understood by po4a."
 msgstr ""
 
-#: ../../po4a-gettextize:65 ../../po4a-updatepo:52 ../../po4a-translate:64
-#: ../../po4a-normalize:45
-msgid "-t"
-msgstr ""
-
-# type: textblock
-#: ../../po4a-gettextize:67 ../../po4a-translate:66 ../../po4a-normalize:47
-msgid ""
-"format type of the documentation you want to handle. Use the --help-fmt "
-"option to see the list of available formats."
-msgstr ""
-
-#: ../../po4a-gettextize:70
-msgid "-o"
-msgstr ""
-
-#: ../../po4a-gettextize:72
-msgid "File where the output should be redirected."
-msgstr ""
-
-#: ../../po4a-gettextize:74 ../../po4a-updatepo:69 ../../po4a-normalize:50
+#: ../../po4a-gettextize:90 ../../po4a-updatepo:71 ../../po4a-translate:88
+#: ../../po4a-normalize:50
 msgid "-V, --version"
 msgstr ""
 
-#: ../../po4a-gettextize:76 ../../po4a-updatepo:71 ../../po4a-normalize:52
+#: ../../po4a-gettextize:92 ../../po4a-updatepo:73 ../../po4a-translate:90
+#: ../../po4a-normalize:52
 msgid "Displays the version of the script and exits."
 msgstr ""
 
-#: ../../po4a-gettextize:78 ../../po4a-updatepo:73 ../../po4a-translate:69
+#: ../../po4a-gettextize:94 ../../po4a-updatepo:75 ../../po4a-translate:92
 msgid "-v, --verbose"
 msgstr ""
 
-#: ../../po4a-gettextize:80 ../../po4a-updatepo:75
+#: ../../po4a-gettextize:96 ../../po4a-updatepo:77 ../../po4a-translate:94
 msgid "Increase the verbosity of the program."
 msgstr ""
 
-#: ../../po4a-gettextize:82 ../../po4a-updatepo:77
+#: ../../po4a-gettextize:98 ../../po4a-updatepo:79 ../../po4a-translate:96
 msgid "-d, --debug"
 msgstr ""
 
-#: ../../po4a-gettextize:84 ../../po4a-updatepo:79
+#: ../../po4a-gettextize:100 ../../po4a-updatepo:81 ../../po4a-translate:98
 msgid "Outputs some debugging informations."
 msgstr ""
 
 # type: textblock
-#: ../../po4a-gettextize:90
+#: ../../po4a-gettextize:106
 msgid ""
 "L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize>."
 msgstr ""
 
-#: ../../po4a-gettextize:94 ../../po4a-updatepo:89 ../../po4a-translate:106
+#: ../../po4a-gettextize:110 ../../po4a-updatepo:91 ../../po4a-translate:128
 #: ../../po4a-normalize:62
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier@linuxfr.org>\n"
 " Martin Quinson <martin.quinson@tuxfamily.org>\n"
 "\n"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-gettextize:115 ../../po4a-updatepo:96 ../../po4a-translate:133
+#: ../../po4a-normalize:67
+msgid "Copyright 2002, 2003 by SPI, inc."
 msgstr ""
 
 #: ../../po4a-updatepo:17
@@ -1837,7 +1888,7 @@ msgstr ""
 # type: textblock
 #: ../../po4a-updatepo:23
 msgid ""
-"po4a-updatepo -t <type> (--input|-i B<doc_file>)+ (--output|-o B<trans.po>)+"
+"po4a-updatepo -f <format> (--master|-m B<doc_file>)+ (--po|-p B<trans.po>)+"
 msgstr ""
 
 # type: textblock
@@ -1856,39 +1907,26 @@ msgid ""
 "translations of several documents in the same po files)."
 msgstr ""
 
-# type: textblock
-#: ../../po4a-updatepo:54
-msgid ""
-"format type of the documentation you want to handle.  Use the --help-fmt "
-"option to see the list of available formats."
-msgstr ""
-
-#: ../../po4a-updatepo:57
-msgid "-o, --output"
-msgstr ""
-
-#: ../../po4a-updatepo:59
-msgid "--trans"
-msgstr ""
-
-#: ../../po4a-updatepo:61
-msgid "File(s) where the po files should be written."
-msgstr ""
-
-#: ../../po4a-updatepo:63
-msgid "-i, --input"
-msgstr ""
-
-#: ../../po4a-updatepo:65
-msgid "-m, --master"
-msgstr ""
-
-#: ../../po4a-updatepo:67
+#: ../../po4a-updatepo:51
 msgid "File(s) containing the master document to translate."
 msgstr ""
 
 # type: textblock
-#: ../../po4a-updatepo:85
+#: ../../po4a-updatepo:55
+msgid ""
+"Charset of the files containing the document to translate. Note that all "
+"files must have the same charset."
+msgstr ""
+
+# type: textblock
+#: ../../po4a-updatepo:60
+msgid ""
+"Po file(s) to update. If these files do not exist, they are created by "
+"C<po4a-updatepo>."
+msgstr ""
+
+# type: textblock
+#: ../../po4a-updatepo:87
 msgid ""
 "L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-normalize>."
 msgstr ""
@@ -1897,9 +1935,11 @@ msgstr ""
 msgid "po4a-translate - convert back po file to documentation format."
 msgstr ""
 
+# type: textblock
 #: ../../po4a-translate:21
 msgid ""
-"po4a-translate -t B<type> [B<options>] B<original-document> B<translation.po>"
+"po4a-translate -f I<type> [I<other options>] -m I<original-document> -p "
+"I<translation.po>"
 msgstr ""
 
 #: ../../po4a-translate:29
@@ -1910,63 +1950,73 @@ msgid ""
 "produced by po4a-gettextize(1)."
 msgstr ""
 
-#: ../../po4a-translate:38
-msgid "-a, --add-file I<file>"
+# type: =item
+#: ../../po4a-translate:43
+msgid "-a, --addendum"
 msgstr ""
 
-#: ../../po4a-translate:40
+# type: textblock
+#: ../../po4a-translate:45
 msgid ""
-"Add I<file> to the resulting file (to put translator's name or a section "
+"Add a file to the resulting file (to put translator's name or a section "
 "\"About this translation, for example). The first line of the file to insert "
 "should be a PO4A header indicating where it should be added (see section "
-"\"Adding content\" below)."
+"I<How to add stuff which is not a translation> in po4a(7))."
 msgstr ""
 
-#: ../../po4a-translate:53
+# type: =item
+#: ../../po4a-translate:50
+msgid "-A, --addendum-charset"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-translate:52
+msgid ""
+"Charset of the addenda. Note that all addenda should be in the same charset."
+msgstr ""
+
+# type: textblock
+#: ../../po4a-translate:64
+msgid "File where the localized (translated) document should be written."
+msgstr ""
+
+# type: textblock
+#: ../../po4a-translate:68
+msgid "File from which the message catalog should be read."
+msgstr ""
+
+#: ../../po4a-translate:70
 msgid "-k, --keep"
 msgstr ""
 
-#: ../../po4a-translate:55
+#: ../../po4a-translate:72
 msgid ""
 "Minimal threshold for translation percentage to keep (ie, write) the "
 "resulting file (default: 80). Ie, by default, files have to be translated at "
 "at least 80% to get written."
 msgstr ""
 
-#: ../../po4a-translate:59
-msgid "-o, --outfile"
-msgstr ""
-
-#: ../../po4a-translate:61
-msgid ""
-"were should written the newly created documentation file (default: standard "
-"output)."
-msgstr ""
-
-#: ../../po4a-translate:71
-msgid "Be verbose about what's going on."
-msgstr ""
-
-#: ../../po4a-translate:73
+#: ../../po4a-translate:76
 msgid "-w, --width"
 msgstr ""
 
-#: ../../po4a-translate:75
+#: ../../po4a-translate:78
 msgid "Column to which we should wrap the resulting file."
 msgstr ""
 
-#: ../../po4a-translate:79
+#: ../../po4a-translate:102
 msgid "Adding content (beside translations) to generated files"
 msgstr ""
 
-#: ../../po4a-translate:81
+# type: textblock
+#: ../../po4a-translate:104
 msgid ""
 "To add some extra content to the generated document beside what you "
 "translated (like the name of the translator, or a \"about this translation\" "
-"section), you should use the C<--add-file> option."
+"section), you should use the C<--addendum> option."
 msgstr ""
 
-#: ../../po4a-translate:85
+#: ../../po4a-translate:108
 msgid ""
 "The first line of the addendum must be a header indicating where to put it "
 "in the document (it can be before or after a given part of the document).  "
@@ -1974,7 +2024,7 @@ msgid ""
 "further processing."
 msgstr ""
 
-#: ../../po4a-translate:90
+#: ../../po4a-translate:113
 msgid ""
 "Note that if po4a-translate fail to add one of the given file, it discards "
 "the whole translation (because the missing file could be the one indicating "
@@ -1983,14 +2033,14 @@ msgid ""
 msgstr ""
 
 # type: textblock
-#: ../../po4a-translate:95
+#: ../../po4a-translate:118
 msgid ""
 "The header have a pretty rigid syntax. For more information on how to use "
 "this feature and how it works, please refer to the po4a(7) man page."
 msgstr ""
 
 # type: textblock
-#: ../../po4a-translate:101
+#: ../../po4a-translate:123
 msgid ""
 "L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-normalize>."
 msgstr ""
@@ -2021,6 +2071,22 @@ msgid ""
 "The generated document will be written to po4a-normalize.output while the "
 "generated po file will be written to po4a-normalize.po. No way to change "
 "that ;)"
+msgstr ""
+
+# type: =item
+#: ../../po4a-normalize:41
+msgid "--help-fmt"
+msgstr ""
+
+#: ../../po4a-normalize:45
+msgid "-t"
+msgstr ""
+
+# type: textblock
+#: ../../po4a-normalize:47
+msgid ""
+"format type of the documentation you want to handle. Use the --help-fmt "
+"option to see the list of available formats."
 msgstr ""
 
 #: ../../po4a-normalize:58
