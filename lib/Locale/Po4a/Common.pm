@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.6 2005-03-03 16:04:40 mquinson Exp $
+# $Id: Common.pm,v 1.7 2005-03-21 10:11:59 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -31,12 +31,18 @@ use strict;
 use warnings;
 use Locale::gettext;
 use Text::WrapI18N qw(wrap $columns);
-use Term::ReadKey qw(GetTerminalSize);
+use Term::ReadKey;
 
 sub setcolumns {
     my ($col,$h,$cp,$hp);
-    ($col,$h,$cp,$hp) = GetTerminalSize();
-    $columns = $ENV{'COLUMNS'} || $col || 80;
+    eval {
+	($col,$h,$cp,$hp) = Term::ReadKey::GetTerminalSize(); 
+    };
+    if ($@) {
+       # GetTerminalSize failed. Maybe a terminal-less build or such strange condition. Let's play safe.
+       $col = 76;
+    }
+    $columns = $ENV{'COLUMNS'} || $col || 76;
 #    print "set col to $columns\n";
 }
 
