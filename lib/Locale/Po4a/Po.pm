@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.26 2004-08-18 00:05:36 jvprat-guest Exp $
+# $Id: Po.pm,v 1.27 2004-08-18 01:38:22 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -1070,7 +1070,7 @@ sub wrap {
 	    if ($pos != -1) {
 		my $end=substr($line,$pos+1);
 		$line=substr($line,0,$pos+1);
-		if ($end=~s/^( +)//) {
+		if ($end =~ s/^( +)//) {
 		    $line .= $1;
 		}
 		unshift @lines,$end;
