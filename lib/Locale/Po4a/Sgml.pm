@@ -355,7 +355,7 @@ sub parse_file {
 	                                    "option orgname ".
 	                                    "para phrase pubdate publishername primary ". 
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber ".
-	                                    "screeninfo seg segtitle subtitle synopfragmentref ".
+	                                    "screeninfo seg segtitle simpara subtitle synopfragmentref ".
 	                                    "term title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
