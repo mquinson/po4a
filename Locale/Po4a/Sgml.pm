@@ -123,7 +123,7 @@ use SGMLS;
 use File::Temp;
 
 my %debug=('tag' => 0, 
-	   'generic' => 1,
+	   'generic' => 0,
 	   'entities' => 0);
 
 sub read {
@@ -221,23 +221,23 @@ sub parse_file {
     if ($prolog =~ /debiandoc/i) {
 	$self->set_tags_kind("translate" => "author version abstract title".
 			                    "date copyrightsummary heading p ".
- 			                    "example tag title footnote ",
+ 			                    "example tag title ",
 			     "empty"     => "date ref manref url toc",
 			     "section"   => "chapt appendix sect sect1 sect2 ".
 			                    "sect3 sect4 debiandoc book",
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
-					    "name email ".
+					    "name email footnote ".
 			                    "strong ftpsite ftppath",
 			     "indent"    => "titlepag toc copyright ".
  			                    "enumlist taglist list item tag ");
 
     } elsif ($prolog =~ /docbook/i) {
 	$self->set_tags_kind("translate" => "para date title subtitle ".
-                                            "firstname surname glossentry ".
-			                    "figure entry footnote address ".
+                                            "glossentry ".
+			                    "figure entry ".
 			        "itemizedlist listitem orderedlist glosslist ".
-			                    "screen literallayout ".
+			                    "screen literallayout author ".
 			                   "table informaltable",
 			     "empty"     => "xref",
 			     "section"   => "book bookinfo preface chapter ".
@@ -247,9 +247,10 @@ sub parse_file {
 			                    "glossterm emphasis citetitle ".
 			                    "literal function option keycap ".
 			                   "prompt userinput computeroutput ".
-			                    "envar email glossdef quote",
-			     "indent"    => "author address ".
-			                   "affiliation abstract legalnotice ".
+			                    "envar email glossdef quote ".
+			                    "firstname surname address ".
+			                    "address affiliation footnote",
+			     "indent"    => "author abstract legalnotice ".
 			                    "toc blockquote ".
 			                    "graphic row ".
 			                    "tgroup tbody thead");
@@ -350,6 +351,7 @@ sub parse_file {
     # Some values for the parsing
     my @open=(); # openned translation container tags
     my $verb=0;  # can we wrap or not
+    my $seenfootnote=0;
     my $indent=0; # indent level
     my $lastchar = ''; # 
     my $buffer= ""; # what we will soon handle
@@ -398,6 +400,15 @@ sub parse_file {
 	    print STDERR "Seen $tag, open level=".(scalar @open)."\n"
 		if ($debug{'tag'});
 
+	    if ($event->data->name() eq 'FOOTNOTE') {
+		# we want to put the <para> inside the <footnote> in the same msgid
+		$seenfootnote = 1;
+	    }
+	    
+	    if ($seenfootnote) {
+		$buffer .= $tag;
+		next EVENT;
+	    } 
 	    if ($translate{$event->data->name()}) {
 		# Build the type
 		if (scalar @open > 0) {
@@ -442,7 +453,16 @@ sub parse_file {
 		if ($debug{'tag'});
 
 	    $lastchar = ">";
-
+	    
+	    if ($event->data->name() eq 'FOOTNOTE') {
+		# we want to put the <para> inside the <footnote> in the same msgid
+		$seenfootnote = 0;
+	    }
+	    
+	    if ($seenfootnote) {
+		$buffer .= $tag;
+		next EVENT;
+	    } 
 	    if ($translate{$event->data->name()}) {
 		$type = $open[$#open] . $tag;
 		$self->end_paragraph($buffer,$ref,$type,$verb,$indent,
