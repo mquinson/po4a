@@ -67,25 +67,28 @@ require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @ISA = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw();
+@EXPORT = qw(%commands %environments
+             $RE_ESCAPE $ESCAPE
+             $no_wrap_environments $separated_commands
+             %command_categories
+             &untranslated &translate_joined &push_environment);
 
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(dgettext);
 
 # hash of known commands and environments, with parsing sub.
 # See end of this file
-my %commands;
-my %environments;
+use vars qw(%commands %environments);
 
 # The escape character used to introduce commands.
-my $RE_ESCAPE = "\\\\"; # TODO: verify it can be overloaded. "@" in texinfo.
-my $ESCAPE    = "\\";
+our $RE_ESCAPE = "\\\\";
+our $ESCAPE    = "\\";
 
 # Space separated list of environments that should not be re-wrapped.
-my $no_wrap_environments = "verbatim";
+our $no_wrap_environments = "verbatim";
 # Space separated list of commands that can be handle separately from
 # when they appear at the beginning or end of a paragraph
-my $separated_commands = "index label";
+our $separated_commands = "index label";
 
 # Hash of categories and their associated commands.
 # Commands are space separated.
@@ -94,8 +97,8 @@ my $separated_commands = "index label";
 #   The command is written as is with its arguments.
 # * translate_joined
 #   All arguments are translated and the command is then reassembled
-my %command_categories = (
-    'untranslated'      => "vspace hspace label ",
+our %command_categories = (
+    'untranslated'      => "vspace hspace label",
     'translate_joined'  => "chapter section subsection subsubsection ".
                            "index"
 );
@@ -451,7 +454,7 @@ sub translate_buffer {
         }
 
         $translated_buffer .= $self->translate($buffer,$self->{ref},
-                                               "Plain text",
+                                               @env?$env[-1]:"Plain text",
                                                "wrap" => $wrap);
         chomp $translated_buffer if ($wrap);
     }
@@ -576,13 +579,17 @@ sub translate_joined {
     my ($t,@e)=("",());
 
     my $translated = "$ESCAPE$command$variant";
+    my $arg=1;
     foreach my $opt (@$opts) {
-        ($t, @e) = translate_buffer($self,$opt,(@$env,$command));
+        ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
         $translated .= "[".$t."]";
+        $arg+=1;
     }
+    $arg=1;
     foreach my $opt (@$args) {
-        ($t, @e) = translate_buffer($self,$opt,(@$env,$command));
+        ($t, @e) = translate_buffer($self,$opt,(@$env,$command."{#$arg}"));
         $translated .= "{".$t."}";
+        $arg+=1;
     }
 
     print "($translated,@$env)\n"
@@ -616,9 +623,13 @@ $commands{'end'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
 
     # verify that this environment was the last pushed environment.
-    if ((pop @$env) ne $args->[0]) {
-        die sprintf("po4a::TeX: unmatched end of environment '%s'",
-                    $args->[0])."\n";
+    if (@$env[-1] ne $args->[0]) {
+        # a begin may have been hidden in the middle of a translated
+        # buffer. Just warn.
+        warn sprintf("po4a::TeX: unmatched end of environment '%s'",
+                     $args->[0])."\n";
+    } else {
+        pop @$env;
     }
 
     my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
