@@ -144,22 +144,4 @@ tar: clean
 deb:
 	dpkg-buildpackage -i'.*CVS.*' -rfakeroot
 
-# This can't be called by the build process because locales must
-# have been generated
-pods:
-	for lang in $(langs) ; do \
-	  for bin in $(bins) ; do \
-	    src=$$src" -m po4a-$$bin"; \
-	  done; \
-	  PERL5LIB=$(CURDIR)/lib ./po4a-updatepo -f pod $$src -p po/pod/pod.$$lang.po; \
-	  for bin in $(bins) ; do \
-	    PERL5LIB=$(CURDIR)/lib ./po4a-translate -f pod \
-	                   -v \
-	                   -a po/pod/po4a-$$bin.addendum.$$lang \
-	                   -m po4a-$$bin \
-	                   -p po/pod/pod.$$lang.po \
-	                   -l po/pod/po4a-$$bin.$$lang.pod; \
-	  done ;\
-	done
-
 .PHONY: build clean binary-indep binary-arch binary install
