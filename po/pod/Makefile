@@ -11,10 +11,8 @@ PATHDOCS=$(foreach file,$(DOCS),../../doc/$(file).pod)
 
 PATHFILES=$(PATHLIBS) $(PATHSCRIPTS) $(PATHDOCS)
 
-POFILES=$(wildcard *.po)
-
-TARGET_LANG=fr
-TRANSLATIONS=$(foreach lang,$(TARGET_LANG),$(foreach file,$(FILES),$(file).$(lang).pod))
+LANGS=$(basename $(wildcard *.po))
+TRANSLATIONS=$(foreach lang,$(LANGS),$(foreach file,$(FILES),$(file).$(lang).pod))
 
 all: po4a-pod.pot $(TRANSLATIONS)
 
@@ -39,30 +37,38 @@ po4a-pod.pot: $(PATHFILES)
 	fi
 	@msgfmt --statistics $@
 
-LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@
-	@if [ -e $@ ] ; then \
-	  mv -f $@ `echo $@| \
+
+##### BEGIN TEMPLATES #####
+define TEMPLATES
+
+LocalePo4a%.$(1).pod: ../../lib/Locale/Po4a/% $(1).po
+	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@
+	@if [ -e $$@ ] ; then \
+	  mv -f $$@ `echo $$@| \
 	            sed 's/LocalePo4a/Locale::Po4a::/' | \
 	            sed 's/\.pm//'` ; \
 	fi
 
-%.fr.pod: ../../% fr.po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@ || true
+%.$(1).pod: ../../% $(1).po
+	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
 
-%.fr.pod: ../../doc/%.pod fr.po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@ || true
+%.$(1).pod: ../../doc/%.pod $(1).po
+	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
+
+endef
+##### END TEMPLATES #####
+
+$(foreach lang,$(LANGS),$(eval $(call TEMPLATES,$(lang))))
 
 clean:
 	rm -f messages *.mo *.pod *~
 
 check:
-	@for file in $(POFILES); do \
-		lang=`echo $$file | sed 's/\.po//'`; \
+	@for lang in $(LANGS); do \
 		printf "$$lang: "; \
 		msgfmt -o /dev/null -c -v --statistics $$lang.po;\
 	done
 
-update: po4a-pod.pot $(POFILES) $(TRANSLATIONS)
+update: po4a-pod.pot $(addsuffix .po,$(LANGS)) $(TRANSLATIONS)
 
-.PHONY:check clean install update
+.PHONY:all check clean install update
