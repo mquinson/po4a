@@ -56,3 +56,5 @@ check:
 		printf "$$lang: "; \
 		msgfmt -o /dev/null -c -v --statistics $$lang.po;\
 	done
+
+update: $(MODULE).pot $(POFILES)

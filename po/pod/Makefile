@@ -48,10 +48,10 @@ LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
 	fi
 
 %.fr.pod: ../../% fr.po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@
+	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@ || true
 
 %.fr.pod: ../../doc/%.pod fr.po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@
+	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@ || true
 
 clean:
 	rm -f messages *.mo *.pod *~
@@ -63,4 +63,6 @@ check:
 		msgfmt -o /dev/null -c -v --statistics $$lang.po;\
 	done
 
-.PHONY:check clean install
+update: po4a-pod.pot $(POFILES) $(TRANSLATIONS)
+
+.PHONY:check clean install update
