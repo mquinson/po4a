@@ -696,9 +696,14 @@ sub tag_in_list {
 	my $i = 0;
 	
 	while (!$found && $i < @list) {
-		$list[$i] =~ /(.*?)(<.*)/;
-		my $options = $1;
-		my $element = $2;
+		my $options;
+		my $element;
+		if ($list[$i] =~ /(.*?)(<.*)/) {
+			$options = $1;
+			$element = $2;
+		} else {
+			$element = $list[$i];
+		}
 		if ($self->{options}{'caseinsensitive'}) {
 			if ( $tag =~ /\Q$element\E$/i ) {
 				$found = 1;
@@ -727,7 +732,7 @@ sub tag_in_list {
 
 This function handles the tags attributes' translation. It receives the tag
 without the beginning / end marks, and then it finds the attributes, and it
-translates the translatables (specified by the module option "attributes").
+translates the translatable ones (specified by the module option "attributes").
 This returns a plain string with the translated tag.
 
 =back
@@ -892,7 +897,7 @@ sub treat_content {
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
-			print sprintf("po4a::xml: ".dgettext ("po4a","Content of tag %s  %s excluded: %s"), $self->get_path,$paragraph[1],$self->join_lines(@paragraph))."\n"
+			print sprintf("po4a::xml: ".dgettext ("po4a","Content of tag %s at %s excluded: %s"), $self->get_path,$paragraph[1],$self->join_lines(@paragraph))."\n"
 			       if $self->debug();
 			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
 		}
