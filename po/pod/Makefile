@@ -13,8 +13,8 @@ PATHFILES=$(PATHLIBS) $(PATHSCRIPTS) $(PATHDOCS)
 
 POFILES=$(wildcard *.po)
 
-LANG=fr
-TRANSLATIONS=$(foreach lang,$(LANG),$(foreach file,$(FILES),$(file).$(lang).pod))
+TARGET_LANG=fr
+TRANSLATIONS=$(foreach lang,$(TARGET_LANG),$(foreach file,$(FILES),$(file).$(lang).pod))
 
 all: po4a-pod.pot $(TRANSLATIONS)
 
@@ -23,7 +23,7 @@ install:
 
 po4a-pod.pot: $(PATHFILES)
 	@echo TRANSLATION=$(TRANSLATIONS)
-	@PERL5LIB=../.. ../../po4a-updatepo -t pod $(foreach file,$(PATHFILES),-i $(file)) -o $@
+	@PERL5LIB=../../lib ../../po4a-updatepo -t pod $(foreach file,$(PATHFILES),-i $(file)) -o $@
 
 %.po: po4a-pod.pot
 	@echo -n "Merging po4a-pod.pot and $@"
@@ -40,7 +40,7 @@ po4a-pod.pot: $(PATHFILES)
 	@msgfmt --statistics $@
 
 LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
-	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	@PERL5LIB=../../lib ../../po4a-translate -t pod -v $< fr.po -o $@
 	@if [ -e $@ ] ; then \
 	  mv -f $@ `echo $@| \
 	            sed 's/LocalePo4a/Locale::Po4a::/' | \
@@ -48,10 +48,10 @@ LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
 	fi
 
 %.fr.pod: ../../% fr.po
-	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	@PERL5LIB=../../lib ../../po4a-translate -t pod -v $< fr.po -o $@
 
 %.fr.pod: ../../doc/%.pod fr.po
-	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	@PERL5LIB=../../lib ../../po4a-translate -t pod -v $< fr.po -o $@
 
 clean:
 	rm -f messages messages.mo *.pod *~
