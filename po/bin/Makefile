@@ -10,8 +10,8 @@ all: $(MODULE).pot $(MOFILES)
 install: all
 	for file in $(MOFILES); do \
 		lang=`echo $$file | sed 's/\.mo//'`; \
-		install -d $(prefix)/usr/share/locale/$$lang/LC_MESSAGES/; \
-		install -m 0644 $$file $(prefix)/usr/share/locale/$$lang/LC_MESSAGES/$(MODULE).mo; \
+		install -d $(DESTDIR)/usr/share/locale/$$lang/LC_MESSAGES/; \
+		install -m 0644 $$file $(DESTDIR)/usr/share/locale/$$lang/LC_MESSAGES/$(MODULE).mo; \
 	done
 
 $(MODULE).pot: $(POTFILES)

@@ -25,7 +25,7 @@ package = po4a
 # This is the debhelper compatibility version to use.
 export DH_COMPAT=2
 
-prefix = debian/$(package)
+DESTDIR = $(shell pwd)/debian/$(package)
 
 build: build-stamp
 build-stamp:
@@ -96,13 +96,13 @@ install: build
 	dh_installdirs
 
 	for bin in $(bins) ; do \
-	  install -c -m 755 po4a-$$bin          $(prefix)/usr/bin/; \
+	  install -c -m 755 po4a-$$bin $(DESTDIR)/usr/bin/; \
 	done
 	for lib in $(libs) ; do \
-	  install -c -m 644 lib/Locale/Po4a/$$lib          $(prefix)$(pathlib); \
+	  install -c -m 644 lib/Locale/Po4a/$$lib $(DESTDIR)$(pathlib); \
 	done
-	prefix=../../$(prefix) $(MAKE) -C po/bin install
-	prefix=../../$(prefix) $(MAKE) -C po/pod install
+	$(MAKE) -C po/bin install DESTDIR=$(DESTDIR)
+	$(MAKE) -C po/pod install DESTDIR=$(DESTDIR)
 
 # Build architecture-independent files here.
 binary-indep: build install
