@@ -29,7 +29,7 @@ $tests[2]{'test'} = "diff -u $diff_po_flags data-02/#format#.po tmp/po";
 $tests[2]{'doc'}  = "updatepo for #format# document";
 
 $tests[3]{'run'}  = "perl ../po4a-translate -f #format# -m data-02/#format# -p data-02/#format#.po-ok -l tmp/#format#.fr";
-$tests[3]{'test'} = "diff -u $diff_pod_flags data-02/#format#.fr tmp/#format#.fr";
+$tests[3]{'test'} = "diff data-02/#format#.fr-normalized tmp/#format#.fr";
 $tests[3]{'doc'}  = "translate #format# document";
 
 
