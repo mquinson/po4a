@@ -219,31 +219,45 @@ recognized keys are:
 
 =over 4
 
-=item position (mandatory when mode=before)
+=item position (mandatory)
 
 a regexp. The addendum will be placed near the line matching this
 regexp. Note that we're speaking about the translated document here, not
-the original. If more than an insertion point is possible (or if no line of
-the translated document match this expression), the addition will fail.
+the original. If more than a line match this expression (or none),
+the addition will fail since we don't know were to put it.
+
+This line is called I<position point> in the following. The point
+were the addendum will be added is called I<insertion point>. Those two
+points are near one from another, but not identique, due to the C<mode>,
+C<beginboundary> and C<endboundary> arguments. See below.
+
 
 =item mode (mandatory)
 
 can be "before" or "after", specifying the position of the addendum,
-relative to the insertion point.
+relative to the I<position point>.
 
-=item beginboundary (usefull only when mode=after)
+=item beginboundary (usefull only when mode=after, and mandatory in that case)
 
 =item endboundary
 
 regexp matching the end of the section after which we should put the
-addendum. These arguments are used only when mode=after. You can give only
-one of them. If you give the beginboundary, that means that you want to
-place the addendum before the given line, and if you give the endboundary
-that means that you want to place the addendum after the given line.
+addendum.
 
-This can seem obscure, but it is needed because some formating language
-(like nroff) don't mark the end of sections, and you have to use the
-beginning of the next section as boundary, and place the addendum before it.
+When mode=after, the I<insertion point> is after the I<position point>, but
+not directly after that point. It is placed after the section which begins
+at the I<insertion point>. So, the C<beginboundary> and C<endboundary>
+arguments are used to specify the regexp matching the end of section.
+
+Both arguments exists because documentation formats are differents. In some
+of them, there is a way to mark the end of a section (think about
+C<E<lt>/sectionE<gt>> in sgml), while some other don't mark the end of
+section (like in nroff). In the former case, you want to make a I<boundary>
+matching the I<end of a section>, so that the I<insertion point> comes after
+it. In the latter case, you want to make a I<boundary> matching the
+I<begining of next section>, so that the I<insertion point> comes just
+before it. This can seem obscure, but hopefully, the next exemples will
+enlighten you.
 
 For example, if you want to add something after the following sgml section:
 
@@ -263,13 +277,14 @@ matching the begining of the next section (ie C<^\.SH>). The addendum will
 then be added B<before> the next line after the C<position> matching the
 C<beginboundary>. 
 
-If you want to add something just after a given line, (say "Copyright
-blabla"), give a regexp matching anything (ie C<^>) as C<beginboundary>
-argument. 
+If you want to add something just after a given line of your translated
+document, (say "Copyright blabla"), give a C<position> matching this line
+(ie, C<Copyright blabla>), and give a C<beginboundary> matching anything (ie
+C<^>).
 
 If you want to add something at the end of the document, give a C<position>
 matching any line of your document (but only one line, because po4a will
-refuse to process your addendum if there is more than one possible insertion
+refuse to process your addendum if there is more than one possible position
 point), and give an C<endboundary> matching nothing. Don't use simple regexp
 here like C<EOF>, but prefere a long string for which you are sure that it
 won't be in your document. C<DummyPo4aBoundaryWhichWontMatchAnything> is a
