@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-08-10 01:51+0200\n"
-"PO-Revision-Date: 2004-08-11 15:01+0200\n"
+"PO-Revision-Date: 2004-08-12 19:42+0200\n"
 "Last-Translator: Danilo Piazzalunga <danilopiazza@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "MIME-Version: 1.0\n"
@@ -45,7 +45,7 @@ msgstr ""
 "  - man: il buon vecchio formato delle pagine di manuale.\n"
 "  - pod: il formato della documentazione online di Perl.\n"
 "  - sgml: DTD sia debiandoc che docbook.\n"
-"  - dia: diagrammi DIA non compressi."
+"  - dia: diagrammi Dia non compressi."
 
 #: ../../lib/Locale/Po4a/KernelHelp.pm:106
 #, perl-format
@@ -103,7 +103,9 @@ msgid "Unparsable line: %s"
 msgstr "Impossibile analizzare la linea «%s»"
 
 # NdT: In questo contesto è difficile adattare la traduzione 
-# «wrapping» -> «a capo automatico».
+# «wrapping» -> «a capo automatico»...
+# ... E infatti ho riformulato la frase, dopo aver controllato groff(7)
+# per capire cosa significavano quelle macro.
 #: ../../lib/Locale/Po4a/Man.pm:507
 #, perl-format
 msgid ""
@@ -114,9 +116,9 @@ msgid ""
 msgstr ""
 "po4a::man: %s: Spazio preceduto da un simbolo di escape alla fine degli\n"
 "po4a::man: argomenti della macro. È improbabile che funzioni con po4a,\n"
-"po4a::man: a causa della riformattazione automatica; sarebbe meglio\n"
-"po4a::man: rimuoverlo e usare le macro di groff .nf/.fi per controllare\n"
-"po4a::man: la riformattazione"
+"po4a::man: a causa dell'a capo automatico; sarebbe meglio rimuoverlo e\n"
+"po4a::man: usare le macro di groff .fi/.nf per attivare e disattivare\n"
+"po4a::man: l'a capo automatico."
 
 #: ../../lib/Locale/Po4a/Man.pm:594
 msgid ""
@@ -236,7 +238,9 @@ msgstr ""
 "po4a gettextize: Correggere il problema aggiungendo qualche voce fittizia "
 "alla traduzione."
 
-# NdT: Non credo esistano altri modi per tradurre «gettextization».
+# NdT: Non credo esistano altri modi per tradurre «gettextization»...
+# ... E infatti l'ho soppresso. L'addendum non viene nemmeno aggiunto nel
+# po da po4a-gettextize, ma nel documento tradotto da po4a-translate.
 #: ../../lib/Locale/Po4a/Po.pm:299
 #, perl-format
 msgid ""
@@ -253,7 +257,7 @@ msgstr ""
 ".po4a gettextize: Correggere il problema rimuovendo le voci extra dal file "
 "tradotto.\n"
 "po4a gettextize: Potrebbe servire un addendum (cfr. po4a(7)) per rimettere "
-"la parta aggiuntiva nel documento dopo la gettextizazione.\n"
+"la parta aggiuntiva nel documento tradotto.\n"
 "po4a gettextize: Una possibile causa è una stringa duplicata nell'originale "
 "che non viene tradotta ogni volta nello stesso modo; rimuovere una delle "
 "traduzioni correggerà il problema."
@@ -269,7 +273,7 @@ msgid ""
 "Translated text: %s\n"
 "(result so far dumped to /tmp/gettextization.failed.po)"
 msgstr ""
-"po4a gettextization: Disparità nella struttura tra l'originale e la "
+"gettextize di po4a: Disparità nella struttura tra l'originale e la "
 "traduzione:\n"
 " msgid (riga %s) è di tipo «%s», mentre\n"
 " msgstr (riga %s) di tipo «%s».\n"
@@ -359,13 +363,12 @@ msgid ""
 "po4a::sgml: files is extracted/translated when handling the master file\n"
 "po4a::sgml: including them."
 msgstr ""
-"po4a::sgml: Questo file non è un documento SGML principale (nessun "
-"DOCTYPE).\n"
+"po4a::sgml: Questo file non è un documento master SGML (nessun DOCTYPE).\n"
 "po4a::sgml: Potrebbe essere un file da includere in un altro: in tal caso,\n"
 "po4a::sgml: non dovrebbe essere passato direttamente a po4a, poiché il "
 "testo\n"
 "po4a::sgml: dei file inclusi viene estratto/tradotto insieme a quello del\n"
-"po4a::sgml: file principale che li contiene."
+"po4a::sgml: file master che li contiene."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:420
 msgid "DTD of this file is unknown, but proceeding as requested."
