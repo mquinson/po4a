@@ -47,9 +47,10 @@ enough. If you insist on trying, check the CVS out.
 This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
 module. This only defines the translatable tags and attributes.
 
-The only known issue is that it doesn't include files, but you can translate
-most of those files alone (except the typical entities files), and it's usually
-better to have them separated.
+The only known issue is that it doesn't handle entities yet, and this includes
+the file inclusion entities, but you can translate most of those files alone
+(except the typical entities files), and it's usually better to maintain them
+separated.
 
 =head1 SEE ALSO
 
