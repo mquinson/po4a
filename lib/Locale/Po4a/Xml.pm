@@ -284,7 +284,7 @@ sub found_string {
 	} elsif ($options->{'type'} eq "attribute") {
 		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
 	} else {
-		die "po4a::xml: ".dgettext("po4a","Internal error: unknown type identifier.")."\n";
+		die "po4a::xml: ".sprintf(dgettext("po4a","Internal error: unknown type identifier '%s' in %s."),$options->{'type'},$ref)."\n";
 	}
 
 	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
@@ -419,7 +419,7 @@ sub tag_trans_doctype {
 	if (defined $self->{options}{'doctype'} ) {
 		my $doctype = $self->{options}{'doctype'};
 		if ( $tag[0] !~ /\Q$doctype\E/i ) {
-			die "po4a::xml: ".sprintf(dgettext("po4a","Bad document type. '%s' expected."),$doctype)."\n";
+			die "po4a::xml: ".sprintf(dgettext("po4a","Bad document type in %s. '%s' expected."),$tag[1],$doctype)."\n";
 		}
 	}
 	my $i = 0;
@@ -469,7 +469,7 @@ sub tag_trans_close {
 
 	my $test = pop @path;
 	if ( $test ne $name ) {
-		die "po4a::xml: ".dgettext("po4a","Unexpected closing tag. The main document may be wrong.")."\n";
+		die "po4a::xml: ".sprintf(dgettext("po4a","Unexpected closing tag </%s> found in %s. The main document may be wrong."),$name,$tag[1])."\n";
 	}
 	return $self->join_lines(@tag);
 }
@@ -790,7 +790,7 @@ sub treat_attributes {
 						if ($self->tag_in_list($self->get_path.$name,@{$self->{attributes}})) {
 							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
 						} else {
-							print sprintf("po4a::xml: ".dgettext ("po4a","Contents of attribute %s excluded: %s"),$self->get_path.$name,$value)."\n"
+							print sprintf("po4a::xml: ".dgettext ("po4a","Contents of attribute %s in %s excluded: %s"),$self->get_path.$name,$ref,$value)."\n"
 							       if $self->debug();
 							$text .= $self->recode_skipped_text($value);
 						}
@@ -892,7 +892,7 @@ sub treat_content {
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
-			print sprintf("po4a::xml: ".dgettext ("po4a","Contents of tag %s excluded: %s"), $self->get_path,$self->join_lines(@paragraph))."\n"
+			print sprintf("po4a::xml: ".dgettext ("po4a","Contents of tag %s in %s excluded: %s"), $self->get_path,$paragraph[1],$self->join_lines(@paragraph))."\n"
 			       if $self->debug();
 			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
 		}
