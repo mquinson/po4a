@@ -533,9 +533,11 @@ sub addendum {
     
     unless ($filename) {
 	warn(dgettext("po4a",
-	    "Can't insert addendum when not given the filename")."\n");
+	    "Can't apply addendum when not given the filename")."\n");
 	return 0;
     }
+    die sprintf(dgettext("po4a","Addendum %s does not exist.")."\n",$filename)
+      unless -e $filename;
   
     my ($errcode,$mode,$position,$boundary,$bmode,$lang,$content)=
 	addendum_parse($filename);
@@ -556,8 +558,8 @@ sub addendum {
     }
 
     if ($mode eq "before") {
-	if ($self->verbose() > 0) {
-	    map { print STDERR sprintf(dgettext("po4a","Adding the addendum %s before the line:\n%s"),
+	if ($self->verbose() > 1) {
+	    map { print STDERR sprintf(dgettext("po4a","Addendum '%s' applied before this line: %s"),
 			 $filename,$_)."\n" if (/$position/);
  	        } @{$self->{TT}{doc_out}};
 	}
@@ -567,35 +569,34 @@ sub addendum {
 	my @newres=();
 	while (my $line=shift @{$self->{TT}{doc_out}}) {
 	    push @newres,$line;
+	    my $outline=mychomp($line);
+	    $outline =~ s/^[ \t]*//;
+	      
 	    if ($line =~ m/$position/) {
-		print STDERR sprintf(dgettext("po4a",
-			"Adding the addendum %s after the section begining with the line:\n%s"),
-			       $filename,mychomp($line))."\n" if ($self->verbose() > 0);
 		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
 		}
 		if (defined $line) {
 		    if ($bmode eq 'before') {
-			printf STDERR (dgettext("po4a",
-				"Next section begins with:\n".
-				"%s\n".
-				"Addendum added before this line."),
-				       mychomp($line))."\n" if ($self->verbose() > 0);
+			print sprintf (dgettext("po4a",
+			    "Addendum '%s' applied before this line: %s")."\n",
+			    $filename,$outline)
+			  if ($self->verbose() > 1);
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
-			printf STDERR (dgettext("po4a",
-				"This section ends with:\n".
-				"%s\n".
-				"Addendum added after this line."),
-				       mychomp($line))."\n" if ($self->verbose() > 0);
+			print sprintf (dgettext("po4a",
+			    "Addendum '%s' applied after the line: %s.")."\n",
+			    $filename,$outline)
+			  if ($self->verbose() > 1);
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
-		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file."))."\n"
-			   if ($self->verbose() > 0);
+		    print sprintf (dgettext("po4a","Addendum '%s' applied at the end of the file.")."\n",
+		        $filename)
+		      if ($self->verbose() > 1);
 		    push @newres,$content;
 		}
 	    }
