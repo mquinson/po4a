@@ -1,7 +1,10 @@
 po4a (0.16.4-1) unstable; urgency=low
 
+  Cleaner build mecanism
+  Bugs fixes (new tags for Sgml, various glitches)
+
   Jordi Vilalta
-  * New build mecanism based on Module::Build instead of the 
+  * New build mecanism based on Module::Build instead of the
     deprecated MakeMaker
   * [po/pod/Makefile] Allow to handle more than one language
   * [po/bin/Makefile] Various cleanups
@@ -9,11 +12,25 @@ po4a (0.16.4-1) unstable; urgency=low
   * [tests] Fix the false alarm resulting of previous change
 
   Michael Wiedmann
-  * [Sgml.pm/docbook] 
+  * [Sgml.pm/docbook]
     translate += revremark secondary tertiary editor othername
     indent += bridgehead
     ignore += keywordset keyword
   * [TransTractor.pm] Fix two typos
+
+  Martin Quinson
+  * [Sgml.pm/docbook]
+    translate += synopsis
+    indent += reference shortcut
+  * Build process (lintian/linda clean again)
+    Call the scripts with "perl ../name" during build/test since
+      Module::Build fails to chmod +x @scripts.
+    Compress the translated manpage at full power to respect debian policy
+  * [debian/control]
+    Put myself as maintainer (not changing the uploaders)
+    Fix my email address for consistancy with my other packages
+    
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Thu, 15 Jul 2004 16:57:48 -0700
 
 po4a (0.16.3-1) unstable; urgency=low
 
