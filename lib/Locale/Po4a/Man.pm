@@ -662,11 +662,13 @@ sub parse{
 				),$line,$ref)."\n";
 	    }
 
-	} elsif ($line =~ /^( +)([^.].*)/) {
+	} elsif ($line =~ /^( +)([^. ].*)/) {
+	    # (Lines containing only spaces are handled as empty lines)
 	    # Not a macro, but not a wrapped paragraph either
 	    $wrapped_mode = $wrapped_mode eq 'YES' ? 'NO' : $wrapped_mode;
 	    $paragraph .= $line."\n";
-	} elsif ($line =~ /^([^.].*)/) {
+	} elsif ($line =~ /^([^.].*)/ && $line !~ /^ *$/) {
+	    # (Lines containing only spaces are handled as empty lines)
             # special case: the line is entirely a comment, keep the
             # comment.
             # NOTE: comment could also be found in the middle of a line.
@@ -679,7 +681,7 @@ sub parse{
             }
 	    # Not a macro
 	    $paragraph .= $line."\n";
-	} else { #empty line
+	} else { #empty line, or line containing only spaces
 	    if ($paragraph) {
 	        do_paragraph($self,$paragraph,$wrapped_mode);
 	        $paragraph="";
