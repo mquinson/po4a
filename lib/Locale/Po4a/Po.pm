@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.5 2003-11-07 10:32:03 mquinson Exp $
+# $Id: Po.pm,v 1.6 2003-11-07 15:12:08 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -75,6 +75,10 @@ use Locale::gettext qw(dgettext);
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
+my %debug=('canonize'	=> 0,
+           'quote'	=> 0,
+           'escape'	=> 0);
+
 =head1 Functions about whole message catalogs
 
 =over 4
@@ -109,7 +113,7 @@ sub initialize {
 	escape_text( " SOME DESCRIPTIVE TITLE\n"
 		    ." Copyright (C) YEAR Free Software Foundation, Inc.\n"
 		    ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
-		    ."\n"
+		    ." \n"
 		    .", fuzzy");
 #    $self->header_tag="fuzzy";
     $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
@@ -645,11 +649,14 @@ sub msgid($$) {
 sub unescape_text {
     my $text = shift;
 
+    print STDERR "\nunescape [$text]====" if $debug{'escape'};
     $text = join("",split(/\n/,$text));
     $text =~ s/\\"/"/g;
-    $text =~ s/\\n/\n/g;
-    $text =~ s/\\t/\t/g;
+    $text =~ s/([^\\])\\n/$1\n/g;
+    $text =~ s/^\\n/\n/mg;
+    $text =~ s/([^\\])\\t/$1\t/g;
     $text =~ s/\\\\/\\/g;
+    print STDERR ">$text<\n" if $debug{'escape'};
 
     return $text;
 }
@@ -658,11 +665,13 @@ sub unescape_text {
 sub escape_text {
     my $text = shift;
     
+    print STDERR "\nescape [$text]====" if $debug{'escape'};
     $text =~ s/\\/\\\\/g;
     $text =~ s/"/\\"/g;
     $text =~ s/\n/\\n/g;
     $text =~ s/\t/\\t/g;
-   
+    print STDERR ">$text<\n" if $debug{'escape'};
+    
     return $text;
 }
 
@@ -674,7 +683,8 @@ sub quote_text {
 
   return '""' unless defined($string) && length($string);
 
-  $string =~ s/\\n/!!DUMMYPOPM!!/gm;
+  print STDERR "\nquote [$string]====" if $debug{'quote'};
+  $string =~ s/([^\\])\\n/$1!!DUMMYPOPM!!/gm;
   $string =~ s|!!DUMMYPOPM!!|\\n\n|gm;
   $string = wrap($string);
   my @string = split(/\n/,$string);
@@ -684,17 +694,20 @@ sub quote_text {
       $string = "\"\"\n".$string;
   }
 
+  print STDERR ">$string<\n" if $debug{'quote'};
   return $string;
 }
 
 # undo the work of the quote_text function
 sub unquote_text {
   my $string = shift;
+  print STDERR "\nunquote [$string]====" if $debug{'quote'};
   $string =~ s/^""\\n//s;
   $string =~ s/^"(.*)"$/$1/s;
   $string =~ s/"\n"//gm;
-  $string =~ s/\\n\n/!!DUMMYPOPM!!/gm;
+  $string =~ s/([^\\])\\n\n/$1!!DUMMYPOPM!!/gm;
   $string =~ s|!!DUMMYPOPM!!|\\n|gm;
+  print STDERR ">$string<\n" if $debug{'quote'};
   return $string;
 }
 
@@ -703,13 +716,15 @@ sub unquote_text {
 # Warning, it changes the string and should only be called if the string is plain text
 sub canonize {
     my $text=shift;
+    print STDERR "\ncanonize [$text]====" if $debug{'canonize'};
     $text =~ s/^ *//s;
-    $text =~ s/([.])\n/$1  /gm;
+    $text =~ s/([^\\])\n/$1  /gm;
     $text =~ s/ \n/ /gm;
-    $text =~ s/\n/ /gm;
+    $text =~ s/([^\\])\n/$1 /gm;
     $text =~ s/([.)])  +/$1  /gm;
     $text =~ s/([^.)])  */$1 /gm;
     $text =~ s/ *$//s;
+    print STDERR ">$text<\n" if $debug{'canonize'};
     return $text;
 }
 
