@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.37 2005-02-27 22:53:53 mquinson Exp $
+# $Id: Po.pm,v 1.38 2005-03-22 12:37:40 jvprat-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -1065,6 +1065,7 @@ sub canonize {
     $text =~ s/^ *//s;
     # if ($text eq "\n"), it messed up the first string (header)
     $text =~ s/\n/  /gm if ($text ne "\n");
+    $text =~ s/\t/  /gm;
     $text =~ s/([.)])  +/$1  /gm;
     $text =~ s/([^.)])  */$1 /gm;
     $text =~ s/ *$//s;
