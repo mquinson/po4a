@@ -312,9 +312,15 @@ sub pre_trans {
 		" %s"),$ref,$origstr)."\n";
     }
 
+    # kill minus sign/hyphen difference. Aestetic of printed man pages may suffer,
+    # but they are translator-unfriendly, and break when using utf8
+    # (didn't understand exactly why/when/how)
     $str =~ s|\\-|-|sg;
+    # Groff bestiary
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
+    # Change groff non-breaking space to ascii one
+    $str =~ s|\\ |\xA0|sg;
     
 # The next commented loop should take care of badly nested font modifiers,
 #  if only it worked ;)
@@ -358,6 +364,8 @@ sub post_trans {
     # No . on first char, or nroff will think it's a macro
     $str =~ s/\n([.'"])/ $1/mg; #'
 
+    # Change ascii non-breaking space to groff one
+    $str =~ s|\xA0|\\ |sg;
     # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
     # an extra space
     $str =~ s/\\ \n/\\ /sg;
