@@ -73,7 +73,14 @@ containing other tags, some of them being of category 'translate'.
 
 =item force
 
+Proceed even if the DTD is unknown.
 
+=item include-all
+
+By default, msgid containing only one entity (like '&version') are skipped
+for the translator comfort. Activating this option prevents this
+optimisation. It can be useful if the document contains a construction like
+"<title>&Acute;</title>", even if I doubt such things to ever happen...
 
 =head1 STATUS OF THIS MODULE
 
@@ -185,6 +192,8 @@ sub initialize {
     $self->{options}{'verbatim'}='';
     $self->{options}{'ignore'}='';
 
+    $self->{options}{'include-all'}='';
+
     $self->{options}{'force'}='';
 
     $self->{options}{'verbose'}='';
@@ -224,12 +233,14 @@ sub translate {
     my (%options)=@_;
  
     # don't translate entries composed of one entity
-    if (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/)){
+    if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
+	 && !($self->{options}{'include-all'}) ){
 	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only an entity)"), $string)."\n";
 	return $string;
     }
     # don't translate entries composed of tags only
-    if ($string =~ /^(((<[^>]*>)|\s)*)$/) {
+    if ( $string =~ /^(((<[^>]*>)|\s)*)$/
+	 && !($self->{options}{'include-all'}) ) {
 	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only tags)"), $string)."\n";
 	return $string;
     }
