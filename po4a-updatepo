@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.22 2004-07-19 10:21:12 jvprat-guest Exp $
+# $Id: po4a-updatepo,v 1.23 2004-08-08 06:48:15 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -144,12 +144,15 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 # Parse our options
 my (@masterfiles,@pofiles);
 my ($help,$help_fmt,$verbose,$debug,$format,@options);
+my $mastchar;
 GetOptions('help|h'      => \$help,
   	   'help-format' => \$help_fmt,
 	   
 	   'master|m=s'  => \@masterfiles,
 	   'po|p=s'      => \@pofiles,
 	   'format|f=s'  => \$format,
+
+           'master-charset|M=s' => \$mastchar,
 
            'option|o=s'    => \@options,
     
@@ -192,18 +195,28 @@ my ($pot_filename);
 
 print STDERR gettext("Parse input files... ") if $verbose;    
 
-$doc->process('file_in_name' => \@masterfiles,
-	      'po_out_name'  => $pot_filename,
-	      'debug'        => $debug,
-	      'verbose'      => $verbose);
+$doc->{TT}{utf_mode} = 1;
 
-print STDERR gettext("done.")."\n" if $verbose;    
+$doc->process('file_in_name'    => \@masterfiles,
+	      'file_in_charset' => $mastchar,
+	      'po_out_name'     => $pot_filename,
+	      'debug'           => $debug,
+	      'verbose'         => $verbose);
+
+print STDERR gettext("done.")."\n" if $verbose;
 
 
 while (my $po_filename=shift @pofiles) {
     if (-e $po_filename) {
 	print STDERR sprintf(gettext("Updating %s:"),$po_filename) 
 	    if $verbose;    
+	# Recode the po file if needed before merging
+	unless ($doc->{TT}{ascii_input}) {
+	    my $oldpo = Locale::Po4a::Po->new();
+	    $oldpo->read($po_filename);
+	    $oldpo->to_utf();
+	    $oldpo->write($po_filename);
+	}
 	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
 	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
 	system "msgfmt --statistics -v -o /dev/null $po_filename" 

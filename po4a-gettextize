@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.22 2004-07-19 10:21:12 jvprat-guest Exp $
+# $Id: po4a-gettextize,v 1.23 2004-08-08 06:48:15 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -158,18 +158,22 @@ sub show_version {
 
 my ($pofile)=('-');
 my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
+my ($mastchar,$locchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
 	'help-format'   => \$help_fmt,
-        
+
         'master|m=s'    => \$masterfile,
 	'localized|l=s' => \$locfile,
         'po|p=s'        => \$pofile,
         'format|f=s'    => \$type,
 
+	'master-charset|M=s'    => \$mastchar,
+	'localized-charset|L=s' => \$locchar,
+
         'option|o=s'    => \@options,
-    
+
         'verbose|v'     => \$verbose,
         'debug|d'       => \$debug,
         'version|V'     => \&show_version
@@ -202,8 +206,10 @@ if (defined $locfile && length($locfile)) {
 my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%options),
 			 Locale::Po4a::Chooser::new($type,%options));
 
-# Parse master file
+# Parse master file forcing conversion to utf if it's not in ascii
 $mastertt->read($masterfile);
+$mastertt->{TT}{utf_mode} = 1;
+$mastertt->{TT}{file_in_charset} = $mastchar;
 $mastertt->parse;
 
 
@@ -214,6 +220,9 @@ unless (defined ($locfile) && length($locfile)) {
   # We have to merge two transtractor files
 
   $transtt->read($locfile);
+  # We force the conversion to utf if the master document wasn't in ascii
+  $transtt->{TT}{utf_mode} = !$mastertt->{TT}{ascii_input};
+  $transtt->{TT}{file_in_charset} = $locchar;
   $transtt->parse;
 
   my $mergedpo = Locale::Po4a::Po->gettextize($mastertt->getpoout(),
