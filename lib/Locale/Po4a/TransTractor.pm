@@ -119,8 +119,8 @@ of each paragraph.
 
  sub parse {
    PARAGRAPH: while (1) {
-       $my ($paragraph,$pararef,$line,$lref)=("","","","");
-       $my $first=1;
+       my ($paragraph,$pararef,$line,$lref)=("","","","");
+       my $first=1;
        while (($line,$lref)=$document->shiftline() && defined($line)) {
 	   if ($line =~ m/<p>/ && !$first--; ) {
 	       # Not the first time we see <p>. 
