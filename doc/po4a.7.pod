@@ -326,7 +326,7 @@ gettext documentation, available in the B<gettext-doc> package.
 
 Once you're done with the translation, you want to get translated
 documentation and distribute it to users along with the original one.
-For that, use the I<po4a-translate> program like that (where XX is the
+For that, use the L<po4a-translate(1)> program like that (where XX is the
 language code):
 
   $ po4a-translate -f <format> -m <master.sgml> -p <doc-XX.po> -l <XX.sgml>
@@ -340,7 +340,7 @@ Please refer to L<po4a-translate(1)> for more details.
 =head2 HOWTO update a po4a translation?
 
 To update your translation when the original file has changed, use the
-I<po4a-updatepo> program like that:
+L<po4a-updatepo(1)> program like that:
 
   $ po4a-updatepo -f <format> -m <new_original.doc> -p <existing.XX.po>
 
@@ -579,7 +579,7 @@ explained below.
 
 In our case, we would have:
 
-     position=<title>About this documentE</title>
+     position=<title>About this document</title>
 
 
 =item mode (mandatory)
@@ -608,7 +608,7 @@ In our case, we can choose to indicate the end of the section we match by
 adding:
 
    endboundary=</section>
-   
+
 or to indicate the beginning of the next section by indicating:
 
    beginboundary=<section>
@@ -666,7 +666,7 @@ won't proceed if it's not uniq), and give an C<endboundary> matching
 nothing. Don't use simple strings here like "C<EOF>", but prefer which have
 less chance to be in your document.
 
- PO4A-HEADER:mode=after;postion=<title>About</this>;beginboundary=FakePo4aBoundary
+ PO4A-HEADER:mode=after;postion=<title>About</title>;beginboundary=FakePo4aBoundary
 
 =back
 
@@ -707,7 +707,7 @@ means "TRANSLATOR", and "moi" means "me")
 
 In order to put your addendum before the AUTHOR, use the following header:
 
- PO4A-HEADER:mode=after;section=NOM;beginboundary=^head1
+ PO4A-HEADER:mode=after;position=NOM;beginboundary=^head1
 
 This works because the next line matching the beginboundary /^head1/ after
 the section "NAME" (translated to "NOM" in French), is the one declaring the
