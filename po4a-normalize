@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.14 2004-04-30 23:05:43 barbier Exp $
+# $Id: po4a-normalize,v 1.15 2004-05-25 19:19:32 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -84,11 +84,8 @@ use 5.006;
 use strict;
 use warnings;
 
-use Locale::Po4a::KernelHelp;
-use Locale::Po4a::Man;
-use Locale::Po4a::Pod;
-use Locale::Po4a::Sgml;
 use Locale::Po4a::Chooser;
+use Locale::Po4a::TransTractor;
 
 use Getopt::Long qw(GetOptions);
 
@@ -109,6 +106,7 @@ sub show_version {
           "conditions. There is NO warranty; not even for\n".
           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
           ),"po4a-normalize",$VERSION)."\n";
+    exit 0;
 }
 
 my ($help_fmt,$help,$type,$debug,$verbose,@options);

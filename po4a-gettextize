@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.19 2004-04-30 23:05:43 barbier Exp $
+# $Id: po4a-gettextize,v 1.20 2004-05-25 19:19:32 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -131,6 +131,7 @@ use warnings;
 use Getopt::Long qw(GetOptions);
 
 use Locale::Po4a::Chooser;
+use Locale::Po4a::TransTractor;
 
 use Pod::Usage qw(pod2usage);
 
@@ -150,6 +151,7 @@ sub show_version {
           "conditions. There is NO warranty; not even for\n".
           "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
           ), "po4a-gettextize", $VERSION)."\n";
+    exit 0;
 }
 
 my ($pofile)=('-');
