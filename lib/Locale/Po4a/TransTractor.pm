@@ -856,10 +856,6 @@ sub translate {
 	}
     }
 
-    if (! defined($options{'comment'})) {
-	$options{'comment'} = "";
-    }
-
     # the comments provided by the modules are automatic comments from the PO point of view
     $self->{TT}{po_out}->push('msgid'     => $string,
 			      'reference' => $ref,

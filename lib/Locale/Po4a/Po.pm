@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.40 2005-04-02 23:05:02 nekral-guest Exp $
+# $Id: Po.pm,v 1.41 2005-04-03 21:15:22 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -102,7 +102,7 @@ sub new {
     $self->initialize();
  
     my $filename = shift;
-    $self->read($filename) if defined($filename) && $filename;
+    $self->read($filename) if defined($filename) && length($filename);
     return $self;
 }
 
@@ -234,7 +234,7 @@ sub write{
     }
 
     print $fh "".format_comment(unescape_text($self->{header_comment}),"") 
-	if $self->{header_comment};
+	if defined($self->{header_comment}) && length($self->{header_comment});
 
     print $fh "msgid \"\"\n";
     print $fh "msgstr ".quote_text($self->{header})."\n\n";
@@ -253,19 +253,24 @@ sub write{
 	}
 	
 	$output .= format_comment($self->{po}{$msgid}{'comment'},"") 
-	    if $self->{po}{$msgid}{'comment'};
-	if ($self->{po}{$msgid}{'automatic'}) {
+	    if    defined($self->{po}{$msgid}{'comment'})
+	       && length ($self->{po}{$msgid}{'comment'});
+	if (   defined($self->{po}{$msgid}{'automatic'})
+	    && length ($self->{po}{$msgid}{'automatic'})) {
 	    foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'}))
 	    {
 		$output .= format_comment($comment, ". ")
 	    }
 	}
 	$output .= format_comment($self->{po}{$msgid}{'type'}," type: ") 
-	    if $self->{po}{$msgid}{'type'};
+	    if    defined($self->{po}{$msgid}{'type'})
+	       && length ($self->{po}{$msgid}{'type'});
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
-	    if $self->{po}{$msgid}{'reference'};
+	    if    defined($self->{po}{$msgid}{'reference'})
+	       && length ($self->{po}{$msgid}{'reference'});
 	$output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
-	    if $self->{po}{$msgid}{'flags'};
+	    if    defined($self->{po}{$msgid}{'flags'})
+	       && length ($self->{po}{$msgid}{'flags'});
 
 	$output .= "msgid ".quote_text($msgid)."\n";
 	$output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
