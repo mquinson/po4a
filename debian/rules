@@ -49,11 +49,11 @@ build-stamp:
 	mkdir mantmp
 	for bin in $(bins) ; do \
 	  pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	    po4a-$$bin > mantmp/po4a-$$bin.1; \
+	    po4a-$$bin > mantmp/po4a-$$bin.1p; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1; \
+	       po/pod/po4a-$$bin.$$lang.pod > mantmp/po4a-$$bin.$$lang.1p; \
 	    fi; \
 	  done; \
 	done
@@ -64,7 +64,7 @@ build-stamp:
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.1; \
+	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.1p; \
 	    fi; \
 	  done; \
 	done
