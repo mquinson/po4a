@@ -8,6 +8,8 @@ use warnings;
 
 my @tests;
 
+mkdir "t/tmp" unless -e "t/tmp";
+
 $tests[0]{'run'}  = '../po4a-translate -f man -a data/man.addendum1 -m data/man -p data/man.po-ok -l tmp/man.fr';
 $tests[0]{'test'} = 'diff -u data/man.fr.add1 tmp/man.fr';
 $tests[0]{'doc'}  = 'translate with addendum1';

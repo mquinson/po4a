@@ -10,6 +10,8 @@ my @tests;
 
 my @formats=qw(pod);
 
+mkdir "t/tmp" unless -e "t/tmp";
+
 my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
   "-I '^\"POT-Creation-Date: ' -I '^\"Content-Type:' -I '^\"Content-Transfer-Encoding:'";
 
