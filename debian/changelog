@@ -20,8 +20,20 @@ po4a (0.20-1) UNRELEASED; urgency=low
   * Honor "" in quoted macro argument, which represent a single double quote.
   * When a macro argument is pushed in the output document, convert " to \(dq
     if the argument has to be quoted.
+  * Handling of input line continuation (\<RET>) should not be reserved for
+    macros.
   (TeX module)
-  * Add a generic TeX module.
+  * Add a generic TeX module (still beta):
+    - it tries to separate entities that can betranslated on their own (i.e.
+      paragraphs, but also some commands when they are located at the
+      beginning or end of these entities);
+    - permits to build derivated parsers (e.g. for LaTeX, but texinfo is also
+      planned);
+    - allows personnalization (with '% po4a: ' lines in the tex file or a class
+      file);
+    - handles file inclusion.
+  (Po.pm)
+  * \n or \t can be preceded by an even number of backslash.
 
   [Martin Quinson]
   (sgml module)
