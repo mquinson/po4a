@@ -78,9 +78,9 @@ Tags not needing to be closed.
 =item ignore
 
 Tags ignored and considered as plain char data by po4a. That is to say that
-they can be part of a msgid. For example, E<gt>bE<lt> is a good candidate
+they can be part of a msgid. For example, E<lt>bE<gt> is a good candidate
 for this category since putting it in the translate section would create
-msgid not being whole sentences, which is bad.
+msgids not being whole sentences, which is bad.
 
 =item force
 
@@ -88,7 +88,7 @@ Proceed even if the DTD is unknown.
 
 =item include-all
 
-By default, msgid containing only one entity (like '&version') are skipped
+By default, msgids containing only one entity (like '&version;') are skipped
 for the translator comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
 "<title>&Acute;</title>", even if I doubt such things to ever happen...
@@ -850,6 +850,7 @@ sub end_paragraph {
 }
 
 1;
+
 =head1 AUTHORS
 
 This module is an adapted version of sgmlspl (SGML postprocesser for the

@@ -153,11 +153,11 @@ to override the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt><title>
 
-=item attributes (TODO)
+=item attributes
 
 Space-separated list of the tag's attributes you want to translate.  You can
 specify the attributes by their name (for example, "lang"), but you can
-prefix it with a tag hierarchy, to specify that this tag will only be
+prefix it with a tag hierarchy, to specify that this attribute will only be
 translated when it's into the specified tag. For example: <bbb><aaa>lang
 specifies that the lang attribute will only be translated if it's into an
 <aaa> tag, and it's into a <bbb> tag.
@@ -194,9 +194,9 @@ sub initialize {
 		}
 	}
 
-	#It will mantain the list of the translateable tags
+	#It will mantain the list of the translatable tags
 	$self->{tags}=();
-	#It will mantain the list of the translateable attributes
+	#It will mantain the list of the translatable attributes
 	$self->{attributes}=();
 	#It will mantain the list of the inline tags
 	$self->{inline}=();
@@ -232,6 +232,24 @@ transformations to them before or after the translation itself.
 It receives the extracted text, the reference on where it was, and a hash
 that contains extra information to control what strings to translate, how
 to translate them and to generate the comment.
+
+This options hash has different contents depending on what kind of string
+it is (specified in an entry of this hash):
+
+=over
+
+=item type="tag"
+
+The found string is the contents of a translatable tag. The entry "tag_options"
+contains the option characters in front of the tag hierarchy in the module
+"tags" option.
+
+=item type="attribute"
+
+Means that the found string is the value of a translatable attribute. The
+entry "attribute" has the name of the attribute.
+
+=back
 
 It must return the text that will replace the original in the translated
 document. Here's a basic example of this function:
@@ -306,16 +324,17 @@ should be defined if the "breaking" option is not.
 
 =item f_extract
 
-If you leave this key undefined, the extraction function will have to extract
-the tag itself.  It's useful for tags that can have other tags or special
-structures in them, so that the main parser doesn't get mad.  This function
-receives a boolean that says if the tag should be removed from the input
-stream or not.
+If you leave this key undefined, the generic extraction function will have to
+extract the tag itself.  It's useful for tags that can have other tags or
+special structures in them, so that the main parser doesn't get mad.  This
+function receives a boolean that says if the tag should be removed from the
+input stream or not.
 
 =item f_translate
 
-This function returns the translated tag (translated attributes or all needed
-transformations) as a single string.
+This function receives the tag (in the get_string_until() format) and returns
+the translated tag (translated attributes or all needed transformations) as a
+single string.
 
 =back
 
@@ -374,10 +393,10 @@ sub tag_trans_xmlhead {
 	my $tag = $self->join_lines(@tag);
 	$tag =~ /encoding=(("|')|)(.*?)(\s|\2)/s;
 	my $in_charset=$3;
-	my $out_charset=$self->detected_charset($in_charset);
+	$self->detected_charset($in_charset);
+	my $out_charset=$self->get_out_charset;
 
-	$tag =~ s/$in_charset/$out_charset/
-		unless !defined($out_charset) or $out_charset eq "";
+	$tag =~ s/$in_charset/$out_charset/;
 
 	return $tag;
 }
@@ -504,7 +523,7 @@ sub tag_trans_open {
 
 =over 4
 
-=item get_path
+=item get_path()
 
 This function returns the path to the current tag from the document's root,
 in the form <html><body><p>.
@@ -520,7 +539,7 @@ sub get_path {
 	}
 }
 
-=item tag_type
+=item tag_type()
 
 This function returns the index from the tag_types list that fits to the next
 tag in the input stream, or -1 if it's at the end of the input file.
@@ -568,7 +587,7 @@ sub tag_type {
 	}
 }
 
-=item extract_tag
+=item extract_tag($$)
 
 This function returns the next tag from the input stream without the beginning
 and end, in an array form, to mantain the references from the input file.  It
@@ -593,7 +612,7 @@ sub extract_tag {
 	return ($eof,@tag);
 }
 
-=item get_tag_name
+=item get_tag_name(@)
 
 This function returns the name of the tag passed as an argument, in the array
 form returned by extract_tag.
@@ -606,7 +625,7 @@ sub get_tag_name {
 	return $1;
 }
 
-=item breaking_tag
+=item breaking_tag()
 
 This function returns a boolean that says if the next tag in the input stream
 is a breaking tag or not (inline tag).  It leaves the input stream intact.
@@ -631,7 +650,7 @@ sub breaking_tag {
 	return $break;
 }
 
-=item treat_tag
+=item treat_tag()
 
 This function translates the next tag from the input stream.  Using each
 tag type's custom translation functions.
@@ -659,12 +678,12 @@ sub treat_tag {
 	return $eof;
 }
 
-=item tag_in_list
+=item tag_in_list($@)
 
 This function returns a string value that says if the first argument (a tag
 hierarchy) matches any of the tags from the second argument (a list of tags
 or tag hierarchies). If it doesn't match, it returns 0. Else, it returns the
-matched tag options (the characters in front of the tag) or 1 (if that tag
+matched tag's options (the characters in front of the tag) or 1 (if that tag
 doesn't have options).
 
 =back
@@ -704,12 +723,12 @@ sub tag_in_list {
 
 =over 4
 
-=item treat_attributes
+=item treat_attributes(@)
 
 This function handles the tags attributes' translation. It receives the tag
 without the beginning / end marks, and then it finds the attributes, and it
-translates the translateables (specified by the option "attributes"). This
-returns a plain string with the translated tag.
+translates the translatables (specified by the module option "attributes").
+This returns a plain string with the translated tag.
 
 =back
 
@@ -894,7 +913,7 @@ sub treat_content {
 
 =over 4
 
-=item treat_options
+=item treat_options()
 
 This function fills the internal structures that contain the tags, attributes
 and inline data with the options of the module (specified in the command-line
@@ -924,10 +943,10 @@ sub treat_options {
 
 =over
 
-=item get_string_until
+=item get_string_until($%)
 
 This function returns an array with the lines (and references) from the input
-stream until it finds the first argument.  The second argument is an options
+document until it finds the first argument.  The second argument is an options
 hash. Value 0 means disabled (the default) and 1, enabled.
 
 The valid options are:
@@ -1014,7 +1033,7 @@ sub get_string_until {
 	return ($eof,@text);
 }
 
-=item skip_spaces
+=item skip_spaces(\@)
 
 This function receives as argument the reference to a paragraph (in the format
 returned by get_string_until), skips his heading spaces and returns them as
@@ -1040,7 +1059,7 @@ sub skip_spaces {
 	return $space;
 }
 
-=item join_lines
+=item join_lines(@)
 
 This function returns a simple string with the text from the argument array
 (discarding the references).
@@ -1062,12 +1081,13 @@ sub join_lines {
 
 =head1 STATUS OF THIS MODULE
 
-Well... hmm... If this works for you now, you're using a very simple
-document format ;)
+This module can translate tags and attributes.
+
+Support for entities and included files is in the TODO list.
+
+The writing of derivate modules is rather limited.
 
 =head1 TODO LIST
-
-XML HEADER (ENCODING)
 
 DOCTYPE (ENTITIES)
 
@@ -1080,7 +1100,7 @@ breaking tag inside non-breaking tag (possible?) causes ugly comments
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>.
+L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>.
 
 =head1 AUTHORS
 

@@ -18,8 +18,8 @@ languages.
 
 This module tries pretty hard to make translator's life easier. For that,
 the text presented to translators isn't a verbatim copy of the text found
-in the man page. Indeed, the cruder parts of the nroff format are hiden, so
-that translators can't mess up with it.
+in the man page. Indeed, the cruder parts of the nroff format are hidden, so
+that translators can't mess up with them.
 
 =head2 Text wrapping
 
@@ -74,9 +74,9 @@ This module is still very limited, and will always be, because it's not a
 real nroff interpreter. It would be possible to do a real nroff
 interpreter, to allow authors to use all the existing macros, or even to
 define new ones in their pages, but we didn't want to. It would be too
-difficult, and we didn't though it was necessary. We do think that if
+difficult, and we thought it wasn't necessary. We do think that if
 manpage authors want to see their production translated, they may have to
-adapt to ease the work of translaters. 
+adapt to ease the work of translators. 
 
 So, the man parser implemented in po4a have some known limitations we are
 not really inclined to correct, and which will constitute some pitfalls
@@ -85,32 +85,32 @@ documentation.
 
 =head2 Don't use the mdoc macro set
 
-The macro set described in mdoc(7) (and widly used under BSD, IIRC) isn't
+The macro set described in mdoc(7) (and widely used under BSD, IIRC) isn't
 supported at all by po4a, and won't be. It would need a completely separate
-parser for this, and I'm not inclined to do so. On my machine, there is
-only 63 pages based on mdoc, from 4323 pages. If someone implement the mdoc
+parser for this, and I'm not inclined to do so. On my machine, there are
+only 63 pages based on mdoc, from 4323 pages. If someone implements the mdoc
 support, I'll happilly include this, though.
 
 =head2 Don't programm in nroff
 
 nroff is a complete programming language, with macro definition,
 conditionals and so on. Since this parser isn't a fully featured nroff
-interpreter, it will fail on pages using these facilities (There is about
+interpreter, it will fail on pages using these facilities (There are about
 200 such pages on my box).
 
 =head2 Avoid file inclusion when possible
 
 The '.so' groff macro used to include another file in the current one is
-supported, but from my personnal experiment, it makes harder to manipulate
+supported, but from my own experience, it makes harder to manipulate
 the man page, since all files have to be installed in the right location so
 that you can see the result (ie, it breaks somehow the '-l' option of man).
 
 =head2 Use the plain macro set
 
-There is still some macros which are not supported by po4a::man. This is
+There are still some macros which are not supported by po4a::man. This is
 only because I failed to find any documentation about them. Here is the
 list of unsupported macros used on my box. Note that this list isn't
-exaustive since the program fails on the first encountered unsupported
+exhaustive since the program fails on the first encountered unsupported
 macro. If you have any information about some of these macros, I'll
 happilly add support for them. Because of these macros, about 250 pages on
 my box are inaccessible to po4a::man.
@@ -131,13 +131,13 @@ my box are inaccessible to po4a::man.
 
 Some authors escape spaces to make sure that the wrapping tool won't mangle
 them. po4a::man I<will> eat them. Use the .nf/.fi groff macro to control
-wheather the text should be wrapped or not.
+whether the text should be wrapped or not.
 
 =head2 Don't mess nest font specifier.
 
 In order to make translator's life easier, po4a::man will change all font
 specifiers in the way explained above. This process is sometimes fragile,
-and need some love from you. For example, don't write the following:
+and needs some love from you. For example, don't write the following:
 
   \fB bold text \fI italic text \fR back to roman
 
@@ -156,7 +156,7 @@ and commands is badly supported for now.
 
 =head2 Conclusion
 
-To summarise this section, keep simple, and don't try to be cleaver while
+To summarise this section, keep simple, and don't try to be clever while
 authoring your man pages. A lot of things are possible in nroff, and not
 supported by this parser. For example, don't try to mess with \c to
 interrupt the text processing (like 40 pages on my box do). Or, be sure to
@@ -167,8 +167,8 @@ handled.
 Of course, another possibility is to use another format, more translator
 friendly (like pod using po4a::pod, or one of the xml familly like sgml),
 but thanks to po4a::man it isn't needed anymore. That being said, if the
-source format of your documentation is pod, or xml, it may be cleaver to
-translate the source format and not this generated one. In most case,
+source format of your documentation is pod, or xml, it may be clever to
+translate the source format and not this generated one. In most cases,
 po4a::man will detect generated pages and issue a warning. It will even
 refuse to process Pod generated pages, because those pages are perfectly
 handled by po4a::pod, and because their nroff counterpart defines a lot of
@@ -219,7 +219,7 @@ above. Isn't that coooool?
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>,
+L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Pod(3pm)>.
 
 =head1 AUTHORS

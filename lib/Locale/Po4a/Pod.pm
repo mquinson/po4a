@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.10 2004-07-30 00:17:41 jvprat-guest Exp $
+# $Id: Pod.pm,v 1.11 2004-08-09 12:58:29 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -163,7 +163,7 @@ pages, see below) which contains:
 
   CE<lt>" #n"E<gt>
 
-Lake of luck, in the po4a version, this was splited on the space by the
+Lack of luck, in the po4a version, this was splited on the space by the
 wrapping. As result, in the original version, the man contain 
 
  " #n"
@@ -195,7 +195,7 @@ one creates a new parser with C<< Locale::Po4a::Pod->new() >> and then
 calls either parse_from_filehandle() or parse_from_file().
 
 new() can take options, in the form of key/value pairs, that control the
-behavior of the parser.  The recognized options common to all Pod:;Parser
+behavior of the parser.  The recognized options common to all Pod::Parser
 children are:
 
 =over 4
@@ -256,9 +256,9 @@ The options specific to Locale::Po4a::Pod are:
 
 =item pomode
 
-In fact, this parser can work in to modes. When pomode=write, it reads a
-pod file, and extract the string which should be translated to a pot
-file. When pomode=read (the default), it reads a pod file and write a
+In fact, this parser can work in two modes. When pomode=write, it reads a
+pod file, and extracts the strings which should be translated to a pot
+file. When pomode=read (the default), it reads a pod file and writes a
 similar pod file, but translating all strings on the way (the translation
 is read from the po file).
 
@@ -271,7 +271,7 @@ extracted po file in memory, for example).
 
 =head1 SEE ALSO
 
-L<Pod::Parser>, L<po4a(7)>, L<Locale::Po4a::TransTractor(3pm)>,
+L<Pod::Parser>, L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Man(3pm)>,
 
 =head1 AUTHORS
