@@ -336,8 +336,8 @@ sub shiftline {
 sub unshiftline {
     die sprintf(dgettext("po4a",
         "po4a::man: The unshiftline is not supported for the man module.\n".
-        "po4a::man: Please send a bug report with the groff page that ".
-        "po4a::man: generated this error."))."\n";
+        "po4a::man: Please send a bug report with the groff page that generated\n".
+        "po4a::man: this error."))."\n";
 }
 
 ###############################################
