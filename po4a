@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.21 2005-02-05 13:03:22 jvprat-guest Exp $
+# $Id: po4a,v 1.22 2005-02-11 10:18:21 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -49,6 +49,17 @@ until the end of the line. Lines can be continued by escaping the end of line.
 All non blank lines must begin with a [] command, followed by its arguments. 
 (sound difficult said that way, but it is rather easy, I hope ;)
 
+=head2 Specifying the template languages
+
+This is an optional command that can simplify the whole config file, and will
+make it more scalable. You have to specify a list of the languages in which
+you want to translate the documents. This is as simple as:
+
+ [po4a_langs] fr de
+
+This will enable you to expand $lang to all the specified languages in the rest
+of the config file.
+
 =head2 Specifying the paths to translator inputs
 
 First, you have to specify where the translator input files (ie, the files 
@@ -60,6 +71,11 @@ The command is thus 'po4a_paths'. The first argument is the path to the pot
 file to use. All subsequent arguments are of the self-explanationary form: 
 
     <lang>:<path to the po file for this lang>
+
+If you've defined the template languages, you can rewrite the line above this
+way:
+
+ [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po
 
 =head2 Specifying the documents to translate
 
@@ -77,6 +93,16 @@ Please refer to po4a(7) for more information about the addendums.
 More formally, the format is: 
 
  [type: <format>] <master_doc> <lang>:<localized_doc>* add_<lang>:<addendum>*
+
+If you've defined the template languages, you can rewrite the line above this
+way:
+
+ [type: pod] script $lang:doc/$lang/script.1 add_fr:doc/l10n/script.fr.add
+
+If all the languages had addendums with similar paths, you could also write
+something like:
+
+ [type: pod] script $lang:doc/$lang/script.1 add_$lang:doc/l10n/script.$lang.add
 
 =head1 OPTIONS
 
@@ -231,6 +257,7 @@ my $config_file= shift(@ARGV) || pod2usage(1);
 -e $config_file || die wrap_msg(gettext("File %s does not exist."), $config_file);
 
 # Parse the config file
+my (@langs);
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
@@ -252,11 +279,30 @@ while (<CONFIG>) {
       unless ($line =~ m/^\[([^\]]*)\] (\S+) (.*)$/ || $line =~ m/^\[([^\]]*)\] (\S+)$/);
     my ($cmd,$main,$args)=($1,$2,$3||"");
 
+    if (@langs) {
+	# Expand the $lang templates
+	my($args2) = "";
+	foreach my $arg (split(/ /,$args)) {
+	    if ( $arg =~ /\$lang/ ) {
+		# Expand for all the langs
+		foreach my $lang (@langs) {
+		    my($arg2) = $arg;
+		    $arg2 =~ s/\$lang/$lang/g;
+		    $args2 .= $arg2." ";
+		}
+	    } else {
+		# Leave the argument as is
+		$args2 .= $arg." ";
+	    }
+	}
+	$args = $args2;
+    }
+
     print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $debug;
 
     if ($cmd eq "po4a_paths") {
 	die wrap_ref_mod("$config_file:$nb", "",
-	    gettext("'po4a_path' redeclared"))
+	    gettext("'%s' redeclared"), "po4a_path")
 	  if (length $pot_filename);
 	$pot_filename = $main;
 	foreach my $arg (split(/ /,$args)) {
@@ -265,6 +311,12 @@ while (<CONFIG>) {
 	      unless ($arg =~ /^([^:]*):(.*)/);
 	    $po_filename{$1}=$2;
 	}
+
+    } elsif ($cmd eq "po4a_langs") {
+	die wrap_ref_mod("$config_file:$nb", "",
+	    gettext("'%s' redeclared"), "po4a_langs")
+	  if (@langs);
+	@langs = split(/ /,$main." ".$args);
 
     } elsif ($cmd =~ m/type: *(.*)/) {
 	$document{$main}{'format'} = $1;
