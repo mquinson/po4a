@@ -141,13 +141,13 @@ sub pre_trans {
 
     # Accentuated characters
     # FIXME: only do this if the encoding is UTF-8?
-    $str =~ s/$RE_ESCAPE`a/à/g;
-#    $str =~ s/$RE_ESCAPEc{c}/ç/g; # not in texinfo: @,{c}
-    $str =~ s/$RE_ESCAPE^e/ê/g;
-#    $str =~ s/$RE_ESCAPE'e/é/g;
-    $str =~ s/$RE_ESCAPE`e/è/g;
-    $str =~ s/$RE_ESCAPE`u/ù/g;
-    $str =~ s/$RE_ESCAPE"i/ï/g;
+    $str =~ s/${RE_ESCAPE}`a/à/g;
+#    $str =~ s/${RE_ESCAPE}c{c}/ç/g; # not in texinfo: @,{c}
+    $str =~ s/${RE_ESCAPE}^e/ê/g;
+    $str =~ s/${RE_ESCAPE}'e/é/g;
+    $str =~ s/${RE_ESCAPE}`e/è/g;
+    $str =~ s/${RE_ESCAPE}`u/ù/g;
+    $str =~ s/${RE_ESCAPE}"i/ï/g;
     # Non breaking space. FIXME: should we change $\sim$ to ~
     $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
 
@@ -163,13 +163,13 @@ sub post_trans {
         if ($debug{'postrans'});
 
     # Accentuated characters
-    $str =~ s/à/$RE_ESCAPE`a/g;
-#    $str =~ s/ç/$RE_ESCAPEc{c}/g; # FIXME: not in texinfo
-    $str =~ s/ê/$RE_ESCAPE^e/g;
-#    $str =~ s/é/$RE_ESCAPE'e/g;
-    $str =~ s/è/$RE_ESCAPE`e/g;
-    $str =~ s/ù/$RE_ESCAPE`u/g;
-    $str =~ s/ï/$RE_ESCAPE"i/g;
+    $str =~ s/à/${ESCAPE}`a/g;
+#    $str =~ s/ç/$ESCAPEc{c}/g; # FIXME: not in texinfo
+    $str =~ s/ê/${ESCAPE}^e/g;
+    $str =~ s/é/${ESCAPE}'e/g;
+    $str =~ s/è/${ESCAPE}`e/g;
+    $str =~ s/ù/${ESCAPE}`u/g;
+    $str =~ s/ï/${ESCAPE}"i/g;
     # Non breaking space. FIXME: should we change ~ to $\sim$
     $str =~ s/\xA0/~/g; # FIXME: not in texinfo
 
