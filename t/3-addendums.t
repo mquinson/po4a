@@ -8,38 +8,33 @@ use warnings;
 
 my @tests;
 
-my %test;
+$tests[0]{'run'}  = '../po4a-translate -f man -a data/man.addendum1 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[0]{'test'} = 'diff -u data/man.fr.add1 tmp/man.fr';
+$tests[0]{'doc'}  = 'translate with addendum1';
 
-$test{'run'}  = 'po4a-translate -f man -a data/man.addendum1 -m data/man -p data/man.po -l tmp/man.fr';
-$test{'test'} = 'diff -u data/man.fr.add1 tmp/man.fr';
-$test{'doc'}  = 'translate with addendum1';
-push @tests,%test;
+$tests[1]{'run'}  = '../po4a-translate -f man -a data/man.addendum2 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[1]{'test'} = 'diff -u data/man.fr.add2 tmp/man.fr';
+$tests[1]{'doc'}  = 'translate with addendum2';
 
-$test{'run'}  = 'po4a-translate -f man -a data/man.addendum2 -m data/man -p data/man.po -l tmp/man.fr';
-$test{'test'} = 'diff -u data/man.fr.add2 tmp/man.fr';
-$test{'doc'}  = 'translate with addendum2';
-push @tests,%test;
+$tests[2]{'run'}  = '../po4a-translate -f man -a data/man.addendum3 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[2]{'test'} = 'diff -u data/man.fr.add3 tmp/man.fr';
+$tests[2]{'doc'}  = 'translate with addendum3';
 
-$test{'run'}  = 'po4a-translate -f man -a data/man.addendum3 -m data/man -p data/man.po -l tmp/man.fr';
-$test{'test'} = 'diff -u data/man.fr.add3 tmp/man.fr';
-$test{'doc'}  = 'translate with addendum3';
-push @tests,%test;
-
-$test{'run'}  = 'po4a-translate -f man -a data/man.addendum4 -m data/man -p data/man.po -l tmp/man.fr';
-$test{'test'} = 'diff -u data/man.fr.add4 tmp/man.fr';
-$test{'doc'}  = 'translate with addendum4';
-push @tests,%test;
+$tests[3]{'run'}  = '../po4a-translate -f man -a data/man.addendum4 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[3]{'test'} = 'diff -u data/man.fr.add4 tmp/man.fr';
+$tests[3]{'doc'}  = 'translate with addendum4';
 
 
-
-use Test::More tests =>8;
+use Test::More tests =>8; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
     
     my ($val,$name);
 
-    $val=system($tests[$i]{'run'});
+    my $cmd=$tests[$i]{'run'};
+    $val=system($cmd);
+    
     $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
     diag(%{$tests[$i]{'run'}}) unless ($val == 0);
