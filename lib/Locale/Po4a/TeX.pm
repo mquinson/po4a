@@ -583,6 +583,22 @@ sub translate_buffer {
         }
     }
 
+    # remove comments from the buffer.
+    # Comments are stored in an array and shown as comments in the PO.
+    while ($buffer =~ m/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)(.*)$/s) { # removed |$ at the end
+        my $end = "";
+        if ($4 =~ m/^\n/s and $buffer !~ m/^%/s) {
+            # a line with comments, followed by an empty line.
+            # Keep the empty line, but remove the comment.
+            # This is an empiracal euristic, but seems to work;)
+            $end = "\n";
+        }
+        if (defined $2 and $2 !~ /^\s*$/) {
+            push @comments, $2;
+        }
+        $buffer    =~ s/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)/$1$end/s;
+    }
+
     # translate leading commands.
     do {
         # keep the leading space to put them back after the translation of
@@ -924,15 +940,7 @@ sub parse {
 
         if ($line =~ /^\s*%\s*po4a\s*:/) {
             parse_definition_line($self, $line);
-        # FIXME: not always, use return of parse_definition_line?
-            $line = "%";
-        } elsif ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
-        # FIXME: in Python-Doc, there is a % in a verbatim environment,which is not a comment.
-            # remove comments, and store them in @comments
-            push @comments, $2
-                if length($2);
-            # Keep the % sign. It will be removed latter.
-            $line = "$1%";
+            goto LINE;
         }
 
         my $closed = is_closed($paragraph);
@@ -940,20 +948,14 @@ sub parse {
         if ($closed and $line =~ /^\s*$/) {
             # An empty line. This indicates the end of the current
             # paragraph.
-            $paragraph =~ s/(?<!\\)(?:\\\\)*%$//;
+            $paragraph .= $line."\n";
             if (length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t);
                 $paragraph="";
             }
-            $self->pushline($line."\n");
         } else {
             # continue the same paragraph
-            if ($paragraph =~ /(?<!\\)(?:\\\\)*%$/) {
-                $paragraph =~ s/%$//s;
-                chomp $paragraph;
-                $line =~ s/^\s*//;
-            }
             $paragraph .= $line."\n";
         }
 
