@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.20 2004-08-08 06:30:56 jvprat-guest Exp $
+# $Id: Po.pm,v 1.21 2004-08-08 11:31:07 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -81,6 +81,7 @@ my @known_flags=qw(wrap no-wrap c-format fuzzy);
 my %debug=('canonize'	=> 0,
            'quote'	=> 0,
            'escape'	=> 0,
+           'encoding'   => 1,
            'filter'     => 1);
 
 =head1 Functions about whole message catalogs
@@ -300,7 +301,19 @@ sub gettextize {
 	        "po4a gettextize: A possible cause is that a text dupplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
 		    $poorig->count_entries() , $potrans->count_entries())."\n";
     }
-    
+
+    if ( $poorig->get_charset =~ /^utf-8$/i ) {
+	$potrans->to_utf;
+	$pores->set_charset("utf-8");
+    } else {
+	$pores->set_charset($potrans->get_charset);
+    }
+    print "Po character sets:\n".
+	"  original=".$poorig->get_charset."\n".
+	"  translated=".$potrans->get_charset."\n".
+	"  result=".$pores->get_charset."\n"
+	    if $debug{'encoding'};
+
     for (my ($o,$t)=(0,0) ;
 	 $o<$poorig->count_entries() && $t<$potrans->count_entries();
 	 $o++,$t++) {
@@ -568,8 +581,8 @@ sub to_utf {
     my $charset = $this->get_charset();
 
     unless ($charset eq "CHARSET" or
-	    $charset eq "ascii" or
-	    $charset eq "utf-8") {
+	    $charset =~ /^ascii$/i or
+	    $charset =~ /^utf-8$/i) {
 	foreach my $msgid ( keys %{$this->{po}} ) {
 	    Encode::from_to($this->{po}{$msgid}{'msgstr'}, $charset, "utf-8");
 	}
