@@ -10,7 +10,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.15";
+$VERSION="0.15.1";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
@@ -636,7 +636,7 @@ sub shiftline   {
     return ($line,$ref);
 }
 sub unshiftline {  unshift @{$_[0]->{TT}{doc_in}},($_[1],$_[2]);  }
-		
+
 sub pushline    {  push @{$_[0]->{TT}{doc_out}}, $_[1] if defined $_[1]; }
 sub popline     {  return pop @{$_[0]->{TT}{doc_out}};            }
 
