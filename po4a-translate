@@ -3,7 +3,7 @@
         if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.8 2003-01-13 08:53:20 mquinson Exp $
+# $Id: po4a-translate,v 1.9 2003-01-23 09:44:12 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -92,9 +92,8 @@ the whole translation (because the missing file could be the one indicating
 the author, what would prevent the users to contact him to report bugs in
 the translation).
 
-The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
-give then several fields (separated by ';') in the form
-"key=value". Whitespaces ARE important. The allowed keys are:
+The header have a pretty rigid syntax. For more information on how to use
+this feature and how it works, please refer to the po4a(7) man page.
 
 
 =head1 SEE ALSO
@@ -159,13 +158,13 @@ push @pos,$po_filename;
 push @masters,$master_filename;
 
 # parser
-my $doc=Locale::Po4a::Chooser::new($type);
+my $doc=Locale::Po4a::Chooser::new($type,"verbose"=>$verbose);
 
 # Prepare the document to be used as translator, but not parser
 $doc->process('po_in_name'   => \@pos,
 	      'file_in_name' => \@masters);
 
-# Verbose ?
+
 my ($percent,$hit,$queries) = $doc->stats();
 print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)\n"),
 		     $master_filename,$percent,$hit,$queries) 
