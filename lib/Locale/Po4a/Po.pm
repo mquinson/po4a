@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.28 2004-08-25 00:42:50 jvprat-guest Exp $
+# $Id: Po.pm,v 1.29 2004-11-05 20:33:51 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -195,6 +195,7 @@ sub read{
 			     $linenum,$line)."\n";
 	    }
 	}
+	$linenum++;
 	$msgstr=$buffer;
 	$msgid = unquote_text($msgid) if (defined($msgid));
 	$msgstr = unquote_text($msgstr) if (defined($msgstr));
