@@ -327,6 +327,13 @@ sub parse_file {
 	$pos += length($prolog);
 	$lvl=1;
 	while ($lvl != 0) {
+	    # Eat comments in the prolog, since it may be some '>' or '<' in them
+	    if ($origfile =~ m/^.{$pos}?(<!--.*?-->)/s) {
+		print "Found a comment in the prolog: $1\n" if ($debug{'generic'});
+		$pos += length($1);
+		next;
+	    }
+	    # Search the closing '>'
 	    my ($c)=substr($origfile,$pos,1);
 	    $lvl++ if ($c eq '<');
 	    $lvl-- if ($c eq '>');
