@@ -468,7 +468,7 @@ sub parse{
     while (defined($line)) {
 #	print STDERR "line=$line;ref=$ref";
 	chomp($line);
-	while ($line =~ /\\$/) {
+	while ($line =~ /^\..*\\$/) {
 	    my ($l2,$r2)=$self->shiftline();
 	    chomp($l2);
 	    $line =~ s/\\$//;
