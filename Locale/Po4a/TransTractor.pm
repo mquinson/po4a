@@ -6,7 +6,7 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.13.4";
+$VERSION="0.13.5";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
@@ -222,7 +222,7 @@ Create a new Po4a document. Accepted options (but be in a hash):
 
 =item verbose ($)
 
-Boolean indicating if we're verbose.
+If an argument is passed, set the verbosity. Otherwise, return the verbosity.
 
 =back
 
@@ -518,6 +518,12 @@ sub addendum_parse {
       return ($errcode,$mode,$position,$boundary,$bmode,$lang,$content);
 }
 
+sub mychomp {
+    my ($str) = shift;
+    chomp($str);
+    return $str;
+}
+
 sub addendum {
     my ($self,$filename) = @_;
     
@@ -544,6 +550,11 @@ sub addendum {
     }
 
     if ($mode eq "before") {
+	if ($self->verbose()) {
+	    map { printf STDERR (dgettext("po4a","Adding the addendum %s before the line:\n%s\n"),
+			 $filename,$_) if (/$position/);
+ 	        } @{$self->{TT}{doc_out}};
+	}
 	@{$self->{TT}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
                                         }  @{$self->{TT}{doc_out}};
     } else {
@@ -551,16 +562,27 @@ sub addendum {
 	while (my $line=shift @{$self->{TT}{doc_out}}) {
 	    push @newres,$line;
 	    if ($line =~ m/$position/) {
+		printf STDERR (dgettext("po4a","Adding the addendum %s after the section begining with the line:\n%s\n"),
+			       $filename,mychomp($line)) if ($self->verbose());
 		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
 		}
-		if ($bmode eq 'before') {
-		    push @newres,$content;
-		    push @newres,$line;
+		if (defined $line) {
+		    if ($bmode eq 'before') {
+			printf STDERR(dgettext("po4a","Next section begins with:\n%s\nAddendum added before this line.\n"),
+				       mychomp($line)) if ($self->verbose());
+			push @newres,$content;
+			push @newres,$line;
+		    } else {
+			printf STDERR(dgettext("po4a","This section ends with:\n%s\nAddendum added after this line.\n"),
+				       mychomp($line)) if ($self->verbose());
+			push @newres,$line;
+			push @newres,$content;
+		    }
 		} else {
-		    push @newres,$line;
-		    push @newres,$content;
+		    printf STDERR(dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file.\n"))
+			   if ($self->verbose());
 		}
 	    }
 	}
@@ -721,7 +743,11 @@ TransTractor.
 =cut
 
 sub verbose {
-    return $_[0]->{TT}{verbose};
+    if (defined $_[1]) {
+	$_[0]->{TT}{verbose} = $_[1];
+    } else {
+	return $_[0]->{TT}{verbose};
+    }
 }
 
 =item debug()
