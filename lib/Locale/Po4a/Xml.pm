@@ -189,7 +189,7 @@ sub initialize {
 
 	foreach my $opt (keys %options) {
 		if ($options{$opt}) {
-			die sprintf(dgettext ("po4a","po4a::xml: Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
+			die sprintf("po4a::xml: ".dgettext ("po4a","Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
 			$self->{options}{$opt} = $options{$opt};
 		}
 	}
@@ -266,7 +266,7 @@ sub found_string {
 	} elsif ($options->{'type'} eq "attribute") {
 		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
 	} else {
-		die dgettext("po4a","po4a::xml: Internal error: unknown type identifier.")."\n";
+		die "po4a::xml: ".dgettext("po4a","Internal error: unknown type identifier.")."\n";
 	}
 
 	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
@@ -321,9 +321,9 @@ transformations) as a single string.
 
 =cut
 
-##### Generic XML tag types #####
+##### Generic XML tag types #####' 
 
-my @tag_types = (
+my @tag_types = ( 
 	{	beginning	=> "!--",
 		end		=> "--",
 		breaking	=> 1,
@@ -398,7 +398,7 @@ sub tag_trans_doctype {
 	if (defined $self->{options}{'doctype'} ) {
 		my $doctype = $self->{options}{'doctype'};
 		if ( $tag[0] !~ /\Q$doctype\E/i ) {
-			die sprintf(dgettext("po4a","po4a::xml: Bad document type. '%s' expected."),$doctype)."\n";
+			die "po4a::xml: ".sprintf(dgettext("po4a","Bad document type. '%s' expected."),$doctype)."\n";
 		}
 	}
 	my $i = 0;
@@ -448,7 +448,7 @@ sub tag_trans_close {
 
 	my $test = pop @path;
 	if ( $test ne $name ) {
-		die dgettext("po4a","po4a::xml: Unexpected closing tag. The main document may be wrong.")."\n";
+		die "po4a::xml: ".dgettext("po4a","Unexpected closing tag. The main document may be wrong.")."\n";
 	}
 	return $self->join_lines(@tag);
 }
@@ -770,7 +770,7 @@ sub treat_attributes {
 							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
 						} else {
 							$text .= $value;
-							print sprintf(dgettext ("po4a","po4a::xml: Contents of attribute %s excluded: %s"),$self->get_path.$name,$value)."\n"
+							print sprintf("po4a::xml: ".dgettext ("po4a","Contents of attribute %s excluded: %s"),$self->get_path.$name,$value)."\n"
 							       if $self->debug();
 						}
 						$text .= $quot;
@@ -778,7 +778,7 @@ sub treat_attributes {
 				}
 			}
           
-			die sprintf(dgettext ("po4a","po4a::xml: Bad attribute syntax at %s"),$ref)."\n";
+			die sprintf("po4a::xml: ".dgettext ("po4a","Bad attribute syntax at %s"),$ref)."\n";
 				unless ($complete);
 		}
 	}
@@ -871,7 +871,7 @@ sub treat_content {
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
-			print sprintf(dgettext ("po4a","po4a::xml: Contents of tag %s excluded: %s"), $self->get_path,$self->join_lines(@paragraph))."\n"
+			print sprintf("po4a::xml: ".dgettext ("po4a","Contents of tag %s excluded: %s"), $self->get_path,$self->join_lines(@paragraph))."\n"
 			       if $self->debug();
 			$self->pushline($self->join_lines(@paragraph));
 		}

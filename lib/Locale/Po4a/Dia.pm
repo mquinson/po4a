@@ -141,7 +141,7 @@ sub parse_file {
 		} else {
 			#Dia's default is UTF-8
 			$charset_dia = 'UTF-8';
-			warn gettext("po4a::dia: Couldn't find file encoding. Assuming UTF-8.")."\n";
+			warn "po4a::dia: ".dgettext("po4a","Couldn't find file encoding. Assuming UTF-8.")."\n";
 		}
 		#how to get command line options to override it?
 		$charset_po = 'ISO-8859-1';

@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.18 2004-08-07 02:15:07 mquinson-guest Exp $
+# $Id: Po.pm,v 1.19 2004-08-07 04:51:33 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -142,14 +142,14 @@ catalog.
 sub read{
     my $self=shift;
     my $filename=shift 
-	|| croak (dgettext("po4a","po4a::po: Please provide a non-nul filename")."\n");
+	|| croak ("po4a::po: ".dgettext("po4a","Please provide a non-nul filename")."\n");
 
     my $fh;
     if ($filename eq '-') {
 	$fh=*STDIN;
     } else {
 	open $fh,"<$filename" 
-	  || croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
+	  || croak ("po4a::po: ".sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
     }
 
     ## Read paragraphs line-by-line

@@ -168,10 +168,7 @@ use Locale::gettext qw(gettext);
 
 eval qq{use SGMLS};
 if ($@) {
-  die gettext(
-  	"po4a::sgml: The needed module SGMLS.pm was not found and needs to be\n".
-	"po4a::sgml: installed. It can be found on the CPAN, in package\n".
-	"po4a::sgml: libsgmls-perl on debian, etc.")."\n";
+  die "po4a::sgml: ".gettext("The needed module SGMLS.pm was not found and needs to be installed. It can be found on the CPAN, in package libsgmls-perl on debian, etc.")."\n";
 }
 
 use File::Temp;
@@ -203,7 +200,7 @@ sub initialize {
     
     foreach my $opt (keys %options) {
 	if ($options{$opt}) {
-	    die sprintf(gettext ("po4a::sgml: Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
+	    die sprintf("po4a::sgml: ".gettext ("Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
 	    $self->{options}{$opt} = $options{$opt};
 	}
     }
@@ -237,14 +234,14 @@ sub translate {
     # don't translate entries composed of one entity
     if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
 	 && !($self->{options}{'include-all'}) ){
-	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only an entity)"), $string)."\n"
+	warn sprintf("po4a::sgml: ".gettext("msgid skipped to help translators (contains only an entity)"), $string)."\n"
 	       unless $self->verbose() <= 0;
 	return $string;
     }
     # don't translate entries composed of tags only
     if ( $string =~ /^(((<[^>]*>)|\s)*)$/
 	 && !($self->{options}{'include-all'}) ) {
-	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only tags)"), $string)."\n"
+	warn sprintf("po4a::sgml: ".gettext("msgid skipped to help translators (contains only tags)"), $string)."\n"
 	       unless $self->verbose() <= 0;
 	return $string;
     }
@@ -293,13 +290,12 @@ sub parse_file {
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die sprintf(gettext("po4a::sgml: can't close %s: %s"),$filename,$!)."\n";
+    close IN || die sprintf("po4a::sgml: ".gettext("can't close %s: %s"),$filename,$!)."\n";
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn sprintf(gettext(
 		"po4a::sgml: Trying to handle a XML document as a SGML one.\n".
-		"po4a::sgml: Feel lucky if it works, help us implementing a proper XML\n".
-		"po4a::sgml: backend if it does not."),$filename)."\n"
+		"po4a::sgml: Feel lucky if it works, help us implementing a proper XML backend if it does not."),$filename)."\n"
 	  unless $self->verbose() <= 0;
 	$xmlprolog=$1;
     }
@@ -410,11 +406,11 @@ sub parse_file {
 
     } else {
 	if ($self->{options}{'force'}) {
-	    warn gettext("po4a::sgml: DTD of this file is unknown, but proceeding as requested.")."\n";
+	    warn "po4a::sgml: ".gettext("DTD of this file is unknown, but proceeding as requested.")."\n";
 	    $self->set_tags_kind();
 	} else {
-	    die sprintf(gettext(
-	    	"po4a::sgml: DTD of this file is unknown. (supported: debiandoc, docbook).\n".
+	    die sprintf("po4a::sgml: ".gettext(
+	    	"DTD of this file is unknown. (supported: debiandoc, docbook).\n".
 		"The prolog follows:\n%s"),
 	  	                $filename,$prolog)."\n";
 	}
@@ -573,7 +569,7 @@ sub parse_file {
 	my $type;
 	
 	if ($event->type eq 'start_element') {
-	    die sprintf(gettext("po4a::Sgml: %s: Unknown tag %s"),
+	    die sprintf("po4a::sgml: ".gettext("%s: Unknown tag %s"),
 			$refs[$parse->line],$event->data->name)."\n" 
 		unless $exist{$event->data->name};
 	    
