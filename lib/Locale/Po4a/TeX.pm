@@ -1238,6 +1238,7 @@ sub initialize {
 
     $self->{options}{'translate'}='';
     $self->{options}{'untranslated'}='';
+    $self->{options}{'exclude_include'}='';
     $self->{options}{'debug'}='';
 
     foreach my $opt (keys %options) {
@@ -1252,6 +1253,12 @@ sub initialize {
     if ($options{'debug'}) {
         foreach ($options{'debug'}) {
             $debug{$_} = 1;
+        }
+    }
+
+    if ($options{'exclude_include'}) {
+        foreach (split(/:/, $options{'exclude_include'})) {
+            push  @exclude_include, $_;
         }
     }
 
