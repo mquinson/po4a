@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.6 2003-01-16 09:11:02 mquinson Exp $
+# $Id: Po.pm,v 1.7 2003-01-22 08:06:01 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -265,10 +265,10 @@ sub gettextize {
     my $pores=Locale::Po4a::Po->new();
  
     if ($poorig->count_entries() > $potrans->count_entries()) {
-	die sprintf(dgettext("po4a","po4a gettextize: Original have more strings that the translation (%d>%d). Please fix it.\n"),
+	warn sprintf(dgettext("po4a","po4a gettextize: Original have more strings that the translation (%d>%d). Please fix it by editing the translated version to add a dummy entry.\n"),
 		    $poorig->count_entries() , $potrans->count_entries());
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
-	die sprintf(dgettext("po4a","po4a gettextize: Original have less strings that the translation (%d<%d). Please fix it.\n"),
+	warn sprintf(dgettext("po4a","po4a gettextize: Original have less strings that the translation (%d<%d). Please fix it by editing the translated file to remove the extra entry (you may want to create an adendum).\n"),
 		    $poorig->count_entries() , $potrans->count_entries());
     }
     
