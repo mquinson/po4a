@@ -11,7 +11,7 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Type:' -I '^\"Content-Transfer-Encoding:'";
+  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
 
 $tests[0]{'run'}  = 'perl ../po4a-gettextize -f pod -m data-04/text-ascii.pod -M iso-8859-1 -p tmp/ascii.po';
 $tests[0]{'test'} = "diff -u $diff_po_flags data-04/ascii.po-ok tmp/ascii.po";
