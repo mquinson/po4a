@@ -23,6 +23,7 @@ $(MODULE).pot: $(POTFILES)
 	@if [ -e $@ ] ; then \
 	   if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new>/dev/null ; then \
 		rm -f $@.new; \
+		touch $@; \
 	   else \
 	   	mv -f $@.new $@; \
 	   fi; \
@@ -43,6 +44,7 @@ clean:
 # changes, so detect and ignore them.
 	@if diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $@ $@.new >/dev/null; then \
 		rm -f $@.new; \
+		touch $@; \
 	else \
 		mv -f $@.new $@; \
 	fi
