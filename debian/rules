@@ -1,18 +1,8 @@
 #!/usr/bin/make -f
-# Sample debian/rules that uses debhelper. 
 # This file is public domain software, originally written by Joey Hess.
-#
-# This version is for packages that are architecture independent.
 
 bins = gettextize updatepo translate normalize
-
-libs=Po.pm TransTractor.pm Chooser.pm   \
-     Man.pm Pod.pm KernelHelp.pm Sgml.pm
-     
-#     Html.pm
-rootlib = Locale::Po4a::
-pathlib = /usr/share/perl5/Locale/Po4a
-
+libs = $(wildcard lib/Locale/Po4a/*.pm)
 docs = po4a
 
 langs= fr
@@ -42,14 +32,15 @@ build-stamp:
 	   exit 1; \
 	fi;
 
+	perl Makefile.PL INSTALLDIRS=vendor
+	$(MAKE)
+
 	@echo Update the translations
 	$(MAKE) -C po 
 
-	@echo Compile the man pages
+	@echo Compile the localized man pages
 	mkdir mantmp
 	for bin in $(bins) ; do \
-	  pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	    po4a-$$bin > mantmp/po4a-$$bin.1p; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
@@ -58,13 +49,11 @@ build-stamp:
 	  done; \
 	done
 	for lib in $(libs) ; do \
-	  l=`echo $$lib|sed 's/\.pm//'`; \
-	  pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	    lib/Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3pm; \
+	  l=`echo $$lib|sed -e 's/\.pm//' -e 's/.*\///'`; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$l.$$lang.pod ] ; then \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$l.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.3pm; \
+	       po/pod/$$l.$$lang.pod > mantmp/Locale::Po4a::$$l.$$lang.3pm; \
 	    fi; \
 	  done; \
 	done
@@ -95,12 +84,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	for bin in $(bins) ; do \
-	  install -c -m 755 po4a-$$bin $(DESTDIR)/usr/bin/; \
-	done
-	for lib in $(libs) ; do \
-	  install -c -m 644 lib/Locale/Po4a/$$lib $(DESTDIR)$(pathlib); \
-	done
+	$(MAKE) install PREFIX=$(DESTDIR)/usr
 	$(MAKE) -C po/bin install DESTDIR=$(DESTDIR)
 	$(MAKE) -C po/pod install DESTDIR=$(DESTDIR)
 
