@@ -80,11 +80,16 @@ sub parse_file {
     my ($self,$filename)=@_;
     my $stream = HTML::TokeParser->new($filename)
         || die "Couldn't read HTML file $filename : $!";
+
+    $stream->unbroken_text( [1] );
     
     my @type=();
     NEXT : while (my $token = $stream->get_token) {
         if($token->[0] eq 'T') {
-            my $text = trim($token->[1]);
+            my $text = $token->[1];
+            my ($pre_spaces) = ($text =~ /^(\s*)/);
+            my ($post_spaces) = ($text =~ /(\s*)$/);
+            $text = trim($text);
             if (notranslation($text) == 1) {
                 $self->pushline( get_tag( $token ) );
                 next NEXT;
@@ -97,14 +102,38 @@ sub parse_file {
 #  $encoded = HTML::Entities::encode($a);
 #  $decoded = HTML::Entities::decode($a);
 	    #print STDERR $token->[0];
-            $self->pushline( " ".$self->translate($text,
+            $self->pushline( $pre_spaces . $self->translate($text,
 		                                  "FIXME:0",
 		                                  (scalar @type ? $type[scalar @type-1]: "NOTYPE")
-	                                         )." " );
+	                                         ) . $post_spaces,
+                             'wrap' => 1
+                             );
             next NEXT;
 	} elsif ($token->[0] eq 'S') {
 	    push @type,$token->[1];
-            $self->pushline( get_tag( $token ) );
+            my $text =  get_tag( $token );
+            if ( $token->[1] eq 'img' ) {
+                my %attr = %{$token->[2]};
+                for my $a (qw/title alt/) {
+                    my $content = $attr{$a};
+                    if (defined $content) {
+                        $content = trim($content);
+                        my $translated = $self->translate( 
+                                              $content,
+                                              "FIXME:0",
+                                              "img_$a"
+                                              );
+                        $attr{$a} = $translated;
+                    }
+                }
+                my ($closing) = ( $text =~ /(\s*\/?>)/ );
+                # reconstruct the tag from scratch
+                delete $attr{'/'}; # Parser thinks closing / in XHTML is an attribute
+                $text = "<img";
+                $text .= " $_=\"$attr{$_}\"" foreach keys %attr;
+                $text .= $closing;
+            }
+            $self->pushline( $text );
         } elsif ($token->[0] eq 'E') {
 	    pop @type;
             $self->pushline( get_tag( $token ) );
@@ -136,11 +165,12 @@ sub get_tag {
 
 sub trim { 
     my $s=shift;
-    $s =~ s/\n//g;  # remove \n in text
-    $s =~ s/\r//g;  # remove \r in text
-    $s =~ s/\t//g;  # remove tabulations
-    $s =~ s/^\s+//; # remove leading spaces
-    $s =~ s/\s+$//; # remove trailing spaces
+    $s =~ s/\n/ /g;  # remove \n in text
+    $s =~ s/\r/ /g;  # remove \r in text
+    $s =~ s/\t/ /g;  # remove tabulations
+    $s =~ s/\s+/ /g; # remove multiple spaces
+    $s =~ s/^\s*//g; # remove leading spaces
+    $s =~ s/\s*$//g; # remove trailing spaces
     return $s;
 } 
 
@@ -163,6 +193,11 @@ sub notranslation {
     # don't translate entries composed of one entity
     return 1 if ($s =~ /^&[^;]*;$/);
     
+# don't translate entries with no letters
+# (happens with e.g.  <b>Hello</b>, <i>world</i> )
+#                                 ^^
+#                    ", " doesn't need translation
+    return 1 unless $s =~ /\w/;
     return 0;          
 }
 
