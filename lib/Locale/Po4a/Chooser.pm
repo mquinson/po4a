@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.15 2004-07-30 00:17:41 jvprat-guest Exp $
+# $Id: Chooser.pm,v 1.16 2004-08-08 23:08:27 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -28,7 +28,7 @@ sub new {
 
     die gettext("Need to provide a module name to the Chooser")."\n"
       unless defined $module;
-    
+
     my $modname;
     if ($module eq 'kernelhelp') {
         $modname = 'KernelHelp';
@@ -72,7 +72,7 @@ Locale::Po4a::Chooser - Manage po4a modules
 Locale::Po4a::Chooser is a module to manage po4a modules. Before, all po4a
 binaries used to know all po4a modules (pod, man, sgml, etc). This made the
 add of a new module a boring, to make sure the documentation is syncronized
-in all modules, and that each of them can access the new module.
+in all modules, and that each one of them can access the new module.
 
 Now, you just have to call the Locale::Po4a::Chooser::new() function,
 passing the name of module as argument.
@@ -86,7 +86,7 @@ available format and exits on the value passed as argument.
 
 =item About po4a:
 
-L<po4a(7)>, 
+L<po4a(7)|po4a.7>, 
 L<Locale::Po4a::TransTractor(3pm)>,
 L<Locale::Po4a::Po(3pm)>
 
