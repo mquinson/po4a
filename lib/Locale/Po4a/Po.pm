@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.12 2004-04-30 22:47:58 barbier Exp $
+# $Id: Po.pm,v 1.13 2004-07-19 20:31:17 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -274,13 +274,14 @@ sub gettextize {
     if ($poorig->count_entries() > $potrans->count_entries()) {
 	warn sprintf(dgettext("po4a",
 		"po4a gettextize: Original have more strings that the translation (%d>%d).\n".
-		"po4a gettextize: Please fix it by editing the translated version to add a dummy entry."),
+		"po4a gettextize: Please fix it by editing the translated version to add some dummy entry."),
 		    $poorig->count_entries() , $potrans->count_entries())."\n";
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
 	warn sprintf(dgettext("po4a",
 		"po4a gettextize: Original have less strings that the translation (%d<%d).\n".
-		"po4a gettextize: Please fix it by removing the extra entry from the\n".
-		"po4a gettextize: translated file. You may need an addendum, cf po4a(7)."),
+		"po4a gettextize: Please fix it by removing the extra entry from the translated file.\n".
+		"po4a gettextize: You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization.\n".
+	        "po4a gettextize: A possible cause is that a text dupplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
 		    $poorig->count_entries() , $potrans->count_entries())."\n";
     }
     
@@ -310,13 +311,15 @@ sub gettextize {
 	#
 	# Make sure both type are the same
 	#
-	if ($typeorig ne $potrans->{po}{$trans}{'type'}){
+	if ($typeorig ne $typetrans){
+	    $pores->write("/tmp/gettextization.failed.po");
 	    die sprintf(dgettext("po4a",
 	    	"po4a gettextization: Structure disparity between original and translated files:\n".
 		"msgid (at %s) is of type '%s' while\n".
 		"msgstr (at %s) is of type '%s'.\n".
 		"Original text: %s\n".
-		"Translated text: %s"),
+		"Translated text: %s\n".
+	        "(result so far dumped to /tmp/gettextization.failed.po)"),
 			$reforig,$typeorig,$reftrans,$typetrans,$orig,$trans)."\n";
 	}
 	
