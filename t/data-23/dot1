@@ -1,0 +1,31 @@
+.TH test 1 TEST test
+.SH FOO
+
+.\" There is no problem here
+.IR 'foo1
+.IR .foo1
+
+\fI'foo2\fP
+\fI.foo2\fP
+
+.\" bug in a groff page:
+.br
+\fI.foo3\fP
+
+.br
+\fI'foo3\fP
+
+.\" This is correct:
+.br
+\fI\&.foo4\fP
+
+.br
+\fI\&'foo4\fP
+
+.\" po4a should not generate such a buggy page. It should add a \&
+.br
+.I .foo5
+
+.br
+.I 'foo5
+
