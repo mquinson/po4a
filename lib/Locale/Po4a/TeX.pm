@@ -1188,14 +1188,14 @@ sub generic_command {
     my ($t,@e)=("",());
 
     # check number of arguments
-    die sprintf("wrong number of optional arguments for command $command %d %d\n",scalar(@$opts), $command_parameters{$command}{'nb_opts'})
+    die sprintf("wrong number of optional arguments for command $command\n")
         if (    scalar($command_parameters{$command}{'nb_opts'}) lt scalar(@$opts)
             and $command_parameters{$command}{'nb_opts'} ne -1);
     if (    $command_parameters{$command}{'nb_args'} ne scalar(@$args)
         and $command_parameters{$command}{'nb_args'} ne -1) {
         unless (    $command_parameters{$command}{'nb_args'} eq (scalar(@$args) - 1)
                 and !length(@$args[-1])) {
-    die sprintf("wrong number of arguments for command $command %d %d %d %d\n", scalar(@$args), $command_parameters{$command}{'nb_args'}, (scalar(@$args) + 1), length(@$args[-1]));
+    die sprintf("wrong number of arguments for command $command\n");
         }
     }
 
