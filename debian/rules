@@ -59,11 +59,11 @@ build-stamp:
 	done
 	for lib in $(libs) ; do \
 	  l=`echo $$lib|sed 's/\.pm//'`; \
-	  pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
-	    lib/Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3perl; \
+	  pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
+	    lib/Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3pm; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
-	      pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
+	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
 	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.1; \
 	    fi; \
 	  done; \
