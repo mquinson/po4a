@@ -800,7 +800,10 @@ sub read_file {
                           defined($ENV{"TEXINPUTS"})?
                               split(/:/, $ENV{"TEXINPUTS"}):
                               ".")) {
-                    if (-r "$_/$newfilename.tex") {
+                    if      (-r "$_/$newfilename") {
+                        $newfilename = "$_/$newfilename";
+                        last;
+                    } elsif (-r "$_/$newfilename.tex") {
                         $newfilename = "$_/$newfilename.tex";
                         last;
                     }
