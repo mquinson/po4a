@@ -290,7 +290,7 @@ sub shiftline {
     $line =~ s/\\\././g;
 
     chomp $line;
-    while ($line =~ /^\..*\\$/ || $line =~ /^(\.[BI])\s*$/) {
+    while ($line =~ /^.*\\$/ || $line =~ /^(\.[BI])\s*$/) {
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
