@@ -680,8 +680,10 @@ sub parse{
 	    # Not a macro
 	    $paragraph .= $line."\n";
 	} else { #empty line
-	    do_paragraph($self,$paragraph,$wrapped_mode);
-	    $paragraph="";
+	    if ($paragraph) {
+	        do_paragraph($self,$paragraph,$wrapped_mode);
+	        $paragraph="";
+	    }
 	    $wrapped_mode = $wrapped_mode eq 'NO' ? 'YES' : $wrapped_mode;
 	    $self->pushline($line."\n");
 	}
