@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.3 2002-12-13 06:55:24 mquinson Exp $
+# $Id: po4a-updatepo,v 1.4 2002-12-18 07:23:02 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.10.2";
+my $VERSION="0.10.3";
 
 =head1 NAME
 
@@ -85,12 +85,19 @@ Outputs some debugging informations.
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>.
+L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-identity>.
 
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
  Martin Quinson <martin.quinson@tuxfamily.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2002 by SPI, inc.
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see COPYING file).
 
 =cut
 
@@ -150,7 +157,8 @@ if (lc($type) eq 'pod') {
   pod2usage(1);
 }
 map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;
-map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @pofiles;
+map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 
+	  if $_ eq '-'  && !-e '-'} @pofiles;
 
 my ($pot_filename);
 (undef,$pot_filename)=File::Temp->tempfile("po4a-updatepoXXXX",
@@ -161,8 +169,6 @@ my ($pot_filename);
     or die sprintf(gettext("Can't create a temporary pot file: %s\n"),$!);
 
 
-map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 
-	  if $_ eq '-'  && !-e '-'} @pofiles;
 print STDERR gettext("Parse input files... ") if $verbose;    
 
 $doc->process('file_in_name' => \@masterfiles,
@@ -174,9 +180,17 @@ print STDERR gettext("done.")."\n" if $verbose;
 
 
 while (my $po_filename=shift @pofiles) {
-    print STDERR sprintf(gettext("Updating %s:"),$po_filename) if $verbose;    
-system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
-	die sprintf(gettext("Error while running msgmerge: %s\n"),$!);
+    if (-e $po_filename) {
+	print STDERR sprintf(gettext("Updating %s:"),$po_filename) 
+	    if $verbose;    
+	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
+	    die sprintf(gettext("Error while running msgmerge: %s\n"),$!);
+    } else {
+	print STDERR sprintf(gettext("Creating %s:"),$po_filename) 
+	    if $verbose;    
+	system ("cp",$pot_filename,$po_filename) == 0 ||
+	    die sprintf(gettext("Error while copying the po file: %s\n"),$!);
+    }
 }
 
 unlink($pot_filename);
