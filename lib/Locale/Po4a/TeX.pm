@@ -41,7 +41,8 @@ enough. If you insist on trying, check the CVS out.
 
 =head1 SEE ALSO
 
-L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
+L<po4a(7)|po4a.7>,
+L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
 
 =head1 AUTHORS
 
@@ -71,21 +72,48 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(dgettext);
 
-my %commands; # hash of known commands, with parsing sub. See end of this file
+# hash of known commands and environments, with parsing sub.
+# See end of this file
+my %commands;
+my %environments;
 
-sub initialize {}
+# The escape character used to introduce commands.
+my $RE_ESCAPE = "\\\\"; # TODO: verify it can be overloaded. "@" in texinfo.
+my $ESCAPE    = "\\";
+
+# Space separated list of environments that should not be re-wrapped.
+my $no_wrap_environments = "verbatim";
+# Space separated list of commands that can be handle separately from
+# when they appear at the beginning or end of a paragraph
+my $separated_commands = "index label";
+
+# Hash of categories and their associated commands.
+# Commands are space separated.
+# There are currently 2 categories:
+# * untranslated
+#   The command is written as is with its arguments.
+# * translate_joined
+#   All arguments are translated and the command is then reassembled
+my %command_categories = (
+    'untranslated'      => "vspace hspace label ",
+    'translate_joined'  => "chapter section subsection subsubsection ".
+                           "index"
+);
 
 #########################
 #### DEBUGGING STUFF ####
 #########################
-my %debug=('pretrans'  => 0,  # see pre-conditioning of translation
-           'postrans'  => 0,  # see post-conditioning of translation
-           'translate' => 0   # see translation
+my %debug=('pretrans'         => 0, # see pre-conditioning of translation
+           'postrans'         => 0, # see post-conditioning of translation
+           'translate'        => 0, # see translation
+           'extract_commands' => 0, # see commands extraction
+           'commands'         => 0, # see command subroutines
+           'environments'     => 0  # see environment subroutines
            );
 
 sub pre_trans {
     my ($self,$str,$ref,$type)=@_;
-    # Preformating, so that translators don't see 
+    # Preformating, so that translators don't see
     # strange chars
     my $origstr=$str;
     print STDERR "pre_trans($str)="
@@ -93,15 +121,15 @@ sub pre_trans {
 
     # Accentuated characters
     # FIXME: only do this if the encoding is UTF-8?
-    $str =~ s/\\`a/à/g;
-    $str =~ s/\\c{c}/ç/g;
-    $str =~ s/\\^e/ê/g;
-    $str =~ s/\\'e/é/g;
-    $str =~ s/\\`e/è/g;
-    $str =~ s/\\`u/ù/g;
-    $str =~ s/\\"i/ï/g;
+    $str =~ s/$RE_ESCAPE`a/à/g;
+#    $str =~ s/$RE_ESCAPEc{c}/ç/g; # not in texinfo: @,{c}
+    $str =~ s/$RE_ESCAPE^e/ê/g;
+#    $str =~ s/$RE_ESCAPE'e/é/g;
+    $str =~ s/$RE_ESCAPE`e/è/g;
+    $str =~ s/$RE_ESCAPE`u/ù/g;
+    $str =~ s/$RE_ESCAPE"i/ï/g;
     # Non breaking space. FIXME: should we change $\sim$ to ~
-    $str =~ s/~/\xA0/g;
+    $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -115,19 +143,24 @@ sub post_trans {
         if ($debug{'postrans'});
 
     # Accentuated characters
-    $str =~ s/à/\\`a/g;
-    $str =~ s/ç/\\c{c}/g;
-    $str =~ s/ê/\\^e/g;
-    $str =~ s/é/\\'e/g;
-    $str =~ s/è/\\`e/g;
-    $str =~ s/ù/\\`u/g;
-    $str =~ s/ï/\\"i/g;
+    $str =~ s/à/$RE_ESCAPE`a/g;
+#    $str =~ s/ç/$RE_ESCAPEc{c}/g; # FIXME: not in texinfo
+    $str =~ s/ê/$RE_ESCAPE^e/g;
+#    $str =~ s/é/$RE_ESCAPE'e/g;
+    $str =~ s/è/$RE_ESCAPE`e/g;
+    $str =~ s/ù/$RE_ESCAPE`u/g;
+    $str =~ s/ï/$RE_ESCAPE"i/g;
     # Non breaking space. FIXME: should we change ~ to $\sim$
-    $str =~ s/\xA0/~/g;
+    $str =~ s/\xA0/~/g; # FIXME: not in texinfo
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
 }
+
+# Comments are extracted in the parse function.
+# They are stored in the @comments array, and then displayed as a PO
+# comment with the first translated string of the paragraph.
+my @comments = ();
 sub translate {
     my ($self,$str,$ref,$type) = @_;
     my (%options)=@_;
@@ -139,67 +172,312 @@ sub translate {
     return $str if ($str eq "\n");
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
+    if (@comments) {
+        $options{'comment'} .= join('\n', @comments);
+        @comments = ();
+    }
     # Translate this
     $str = $self->SUPER::translate($str,
                                    $ref||$self->{ref},
                                    $type || $self->{type},
                                    %options);
-    if ($options{'wrap'}) {
-        my (@paragraph);
-        @paragraph=split (/\n/,$str);
-        if (defined ($paragraph[0]) && $paragraph[0] eq '') {
-            shift @paragraph;
-        }
-        $str = join("\n",@paragraph)."\n";
-    }
     $str=post_trans($self,$str,$ref||$self->{ref},$type);
 
     print STDERR "$str\n" if ($debug{'translate'});
     return $str;
 }
 
-sub do_paragraph {
-    my ($self,$paragraph,$wrapped_mode) = (shift,shift,shift);
+###########################
+### COMMANDS SEPARATION ###
+###########################
 
-    # Handle paragraphs beginning by \index{...}:
-    while ($paragraph =~ m/^\\index{([^{}]*)}\s*(.*)$/s) {
-        $paragraph = $2;
-        my $index = $self->translate($1,$self->{ref},
-                                     "index", "wrap" => 1);
-        chomp $index;
-        $self->pushline( "\\index{".$index."}\n" );
+# =item get_leading_command($buffer)
+#
+# This function returns:
+#
+# =over 4
+#
+# =item The command name
+#
+# If no command is found at the beginning of the given buffer, this
+# string will be empty.
+#
+# =item A variant
+#
+# This indicate if a variant is used. For example, an asterisk (*) can
+# be added at the end of sections command to specify that they should
+# not be numbered. In this case, this field will contain "*". If there
+# is not variant, the field is an empty string.
+#
+# =item An array of optional arguments
+#
+# =item An array of mandatory arguments
+#
+# =item The remaining buffer
+#
+# The rest of the buffer after the removal of this leading command and
+# its arguments. If no command is found, the original buffer is not
+# touched and returned in this field.
+#
+# =back
+#
+# =cut
+sub get_leading_command {
+    my ($self, $buffer) = (shift,shift);
+    my $command = ""; # the command name
+    my $variant = ""; # a varriant for the command (e.g. an asterisk)
+    my @opts = (); # array of optional arguments
+    my @args = (); # array of mandatory arguments
+    print STDERR "get_leading_command($buffer)="
+        if ($debug{'extract_commands'});
+
+    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]*)(\*?)(.*)$/s) {
+        # The buffer begin by a comand (possibly preceded by some
+        # whitespaces).
+        $command = $1;
+        $variant = $2;
+        $buffer  = $3;
+        # read the optional arguments (if any)
+        while ($buffer =~ m/^\s*\[(.*)$/s) {
+            my $opt = "";
+            my $count = 1;
+            $buffer = $1;
+            # stop reading the buffer when the number of ] matches the
+            # the number of [.
+            while ($count > 0) {
+                if ($buffer =~ m/^(.*?)([\[\]])(.*)$/s) {
+                    $opt .= $1;
+                    $buffer = $3;
+                    if ($2 eq "[") {
+                        $count++;
+                    } else { # ]
+                        $count--;
+                    }
+                    if ($count > 0) {
+                        $opt .= $2
+                    }
+                } else {
+                    # FIXME: can an argument contain an empty line?
+                    # If it happens, either we should change the parse
+                    # subroutine (so that it doesn't break entity), or
+                    # we have to shiftline here.
+                    die sprintf "un-balanced [";
+                }
+            }
+            push @opts, $opt;
+        }
+
+        # read the mandatory arguments (if any)
+        while ($buffer =~ m/^\s*\{(.*)$/s) {
+            my $arg = "";
+            my $count = 1;
+            $buffer = $1;
+            # stop reading the buffer when the number of } matches the
+            # the number of {.
+            while ($count > 0) {
+                if ($buffer =~ m/^(.*?)([\{\}])(.*)$/s) {
+                    $arg .= $1;
+                    $buffer = $3;
+                    if ($2 eq "{") {
+                        $count++;
+                    } else {
+                        $count--;
+                    }
+                    if ($count > 0) {
+                        $arg .= $2;
+                    }
+                } else {
+                    # FIXME: can an argument contain an empty line?
+                    # If it happens, either we should change the parse
+                    # subroutine (so that it doesn't break entity), or
+                    # we have to shiftline here.
+                    die sprintf "un-balanced {";
+                }
+            }
+            push @args, $arg;
+        }
     }
 
-    # Handle paragraphs ending by an \index{...}
-    # These commands are removed from the paragraph and will be
-    # translated and pushed after the paragraph.
-    # TODO: the content of the index{} could contain a command
-    my @indexes=();
-    while ($paragraph =~ m/^(.*)\s*\\index{([^{}]*)}\s*$/s) {
-        unshift @indexes, $2;
-        $paragraph = $1;
-    }
-
-    unless ($paragraph =~ m/\n$/s) {
-        my @paragraph = split(/\n/,$paragraph);
-
-        $paragraph .= "\n"
-            unless scalar (@paragraph) == 1;
-    }
-
-    # Translate and push the translated paragraph
-    $self->pushline( $self->translate($paragraph,$self->{ref},"Plain text",
-                                      "wrap" => $wrapped_mode ) );
-
-    # Translate and push the \index commands that were removed from
-    # the end of the paragraph.
-    foreach my $index (@indexes) {
-        $index = $self->translate($index,$self->{ref},
-                                  "index", "wrap" => 1);
-        chomp $index;
-        $self->pushline( "\\index{".$index."}\n" );
-    }
+    print STDERR "($command,$variant,@opts,@args,$buffer)\n"
+        if ($debug{'extract_commands'});
+    return ($command,$variant,\@opts,\@args,$buffer);
 }
+
+# Same as get_leading_command, but for commands at the end of a buffer.
+sub get_trailing_command {
+    my ($self, $buffer) = (shift,shift);
+    my $orig_buffer = $buffer;
+    print STDERR "get_trailing_command($buffer)="
+        if ($debug{'extract_commands'});
+
+    my @args = ();
+    my @opts = ();
+    my $command = "";
+    my $variant = "";
+
+    # While the buffer ends by }, consider it is a mandatory argument
+    # and extract this argument.
+    while ($buffer =~ m/^(.*)\}\s*$/s) {
+        my $arg = "";
+        my $count = 1;
+        $buffer = $1;
+        # stop reading the buffer when the number of } matches the
+        # the number of {.
+        while ($count > 0) {
+            if ($buffer =~ m/^(.*)([\{\}])(.*)$/s) {
+                 $arg = $3.$arg;
+                 $buffer = $1;
+                 if ($2 eq "{") {
+                     $count--;
+                 } else {
+                     $count++;
+                 }
+                 if ($count > 0) {
+                     $arg = $2.$arg;
+                 }
+            } else {
+                # FIXME: can an argument contain an empty line?
+                # If it happens, either we should change the parse
+                # subroutine (so that it doesn't break entity), or
+                # we have to shiftline here.
+                die sprintf "un-balanced }";
+            }
+        }
+        unshift @args, $arg;
+    }
+
+    # While the buffer ends by ], consider it is a mandatory argument
+    # and extract this argument.
+    while ($buffer =~ m/^(.*)\]\s*$/s) {
+        my $opt = "";
+        my $count = 1;
+        $buffer = $1;
+        # stop reading the buffer when the number of ] matches the
+        # the number of [.
+        while ($count > 0) {
+            if ($buffer =~ m/^(.*)([\[\]])(.*)$/s) {
+                 $opt = $3.$opt;
+                 $buffer = $1;
+                 if ($2 eq "[") {
+                     $count--;
+                 } else {
+                     $count++;
+                 }
+                 if ($count > 0) {
+                     $opt = $2.$opt;
+                 }
+            } else {
+                # FIXME: can an argument contain an empty line?
+                # If it happens, either we should change the parse
+                # subroutine (so that it doesn't break entity), or
+                # we have to shiftline here.
+                die sprintf "un-balanced ]";
+            }
+        }
+        unshift @opts, $opt;
+    }
+
+    # There should now be a command, maybe followed by an asterisk.
+    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]*)(\*?)\s*$/s) {
+        $buffer = $1;
+        $command = $2;
+        $variant = $3;
+    }
+
+    # sanitize return values if no command was found.
+    if (!length($command)) {
+        $command = "";
+        $variant = "";
+        @opts = ();
+        @args = ();
+        $buffer = $orig_buffer;
+    }
+
+    print STDERR "($command,$variant,@opts,@args,$buffer)\n"
+        if ($debug{'extract_commands'});
+    return ($command,$variant,\@opts,\@args,$buffer);
+}
+
+# Warning: may be reentrant.
+sub translate_buffer {
+    my ($self,$buffer,@env) = (shift,shift,@_);
+#print STDERR "translate_buffer($buffer,@env)\n";
+    my ($command,$variant) = ("","");
+    my $opts = ();
+    my $args = ();
+    my $translated_buffer = "";
+    my $end_translated_buffer = "";
+    my $t = ""; # a temporary string
+
+    # translate leading commands.
+    do {
+        ($command, $variant, $opts, $args, $buffer) =
+            get_leading_command($self,$buffer);
+        if (length($command)) {
+            # call the command subroutine.
+            # These command subroutine will probably call translate_buffer
+            # with the content of the arguments which need a translation.
+            if (defined ($commands{$command})) {
+                ($t,@env) = &{$commands{$command}}($self,$command,$variant,
+                                                   $opts,$args,\@env);
+                $translated_buffer .= $t;
+            } else {
+                die sprintf("unknown command: '%s'", $command)."\n"
+            }
+        }
+    } while (length($command));
+
+    # array of trailing commands, which will be translated later.
+    my @trailing_commands = ();
+    do {
+        ($command, $variant, $opts, $args, $buffer) =
+            get_trailing_command($self,$buffer);
+        if (length($command)) {
+            unshift @trailing_commands, ($command, $variant, $opts, $args);
+        }
+    } while (length($command));
+
+    # Now, $buffer is just a block that can be translated.
+    if (length($buffer)) {
+        my $wrap = 1;
+        my ($e1, $e2);
+        NO_WRAP_LOOP: foreach $e1 (@env) {
+            foreach $e2 (split(' ', $no_wrap_environments)) {
+                if ($e1 eq $e2) {
+                    $wrap = 0;
+                    last NO_WRAP_LOOP;
+                }
+            }
+        }
+
+        $translated_buffer .= $self->translate($buffer,$self->{ref},
+                                               "Plain text",
+                                               "wrap" => $wrap);
+        chomp $translated_buffer if ($wrap);
+    }
+
+    while (@trailing_commands) {
+        my $command = shift @trailing_commands;
+        my $variant = shift @trailing_commands;
+        my $opts    = shift @trailing_commands;
+        my $args    = shift @trailing_commands;
+        if (defined ($commands{$command})) {
+            ($t,@env) = &{$commands{$command}}($self,$command,$variant,
+                                               $opts,$args,\@env);
+            $translated_buffer .= $t;
+        } else {
+            die sprintf("unknown command: '%s'", $command)."\n";
+        }
+    }
+
+    return ($translated_buffer,@env);
+}
+
+################################
+#### EXTERNAL CUSTOMIZATION ####
+################################
+sub parse_definition_file {}
+sub parse_definition_line {}
 
 #############################
 #### MAIN PARSE FUNCTION ####
@@ -207,45 +485,42 @@ sub do_paragraph {
 sub parse{
     my $self = shift;
     my ($line,$ref);
-    my ($paragraph)=""; # Buffer where we put the paragraph while building
-    my $wrapped_mode=1; # Should we wrap the paragraph?
+    my $paragraph = ""; # Buffer where we put the paragraph while building
+    my @env = (); # environment stack
+    my $t = "";
 
   LINE:
     undef $self->{type};
     ($line,$ref)=$self->shiftline();
-    
+
     while (defined($line)) {
         chomp($line);
         $self->{ref}="$ref";
 
-        if ($line =~ /^\\([^{]*)([*]?){/) {
-            my $command = $1;
-            if (defined ($commands{$command})) {
-                if (length($paragraph)) {
-                    do_paragraph($self,$paragraph,$wrapped_mode);
-                    $paragraph="";
-                }
-                &{$commands{$command}}($self,$line);
-            } else {
-                # continue the paragraph
-                $paragraph .= $line."\n";
-            }
-        } elsif ($line =~ /^%/) {
-            # a commented line
+        # remove comments, and store them in @comments
+        if ($line =~ /^([^%]*)%(.*)$/) {
+            push @comments, $2;
+            # Keep the % sign. It will be removed latter.
+            $line = "$1%";
+        }
+
+        if ($line =~ /^$/) {
+            # An empty line. This indicates the end of the current
+            # paragraph.
+            $paragraph =~ s/%$//;
             if (length($paragraph)) {
-                do_paragraph($self,$paragraph,$wrapped_mode);
-                $paragraph="";
-            }
-            $self->pushline($line."\n");
-        } elsif ($line =~ /^$/) {
-            # end of a paragraph
-            if (length($paragraph)) {
-                do_paragraph($self,$paragraph,$wrapped_mode);
+                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                $self->pushline($t."\n");
                 $paragraph="";
             }
             $self->pushline($line."\n");
         } else {
             # continue the same paragraph
+            if ($paragraph =~ /%$/) {
+                $paragraph =~ s/%$//s;
+                chomp $paragraph;
+                $line =~ s/^ *//;
+            }
             $paragraph .= $line."\n";
         }
 
@@ -255,7 +530,8 @@ sub parse{
     }
 
     if (length($paragraph)) {
-        do_paragraph($self,$paragraph,$wrapped_mode);
+        ($t, @env) = translate_buffer($self,$paragraph,@env);
+        $self->pushline($t);
         $paragraph="";
     }
 } # end of parse
@@ -271,81 +547,158 @@ sub docheader {
 #### DEFINITION OF THE COMMANDS ####
 ####################################
 
-# separate the command and its parameters.
-# TODO: another line could be needed.
-sub parse_command {
-    my $line = shift;
-    if ($line =~ /^\\(.*?){(.*)}$/s) {
-        # TODO: some verifications:
-        #       * no { or } in $1
-        #       * same number of { and } in $2
-        my ($command,$param) = ($1,$2);
-        return ($command,$param);
-    } else {
-        return ($line,"");
+# Rebuild the command with the original arguments.
+sub untranslated {
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "untranslated($command,$variant,@$opts,@$args,@$env)="
+        if ($debug{'commands'});
+
+    my $translated = "$ESCAPE$command$variant";
+    foreach my $opt (@$opts) {
+        $translated .= "[$opt]";
     }
+    foreach my $opt (@$args) {
+        $translated .= "{$opt}";
+    }
+
+    print "($translated,@$env)\n"
+        if ($debug{'commands'});
+    return ($translated,@$env);
 }
 
-$commands{'chapter'}=$commands{'section'}=$commands{'subsection'}= sub {
-    my ($self,$line) = (shift,shift);
-    my ($command,$param) = parse_command($line);
-    my $label = "";
-    # These title may end by a \label.
-    # In these cases, remove the label in order to translate it separately.
-    if ($param =~ /^(.*)\s*\\label{(.*)}$/) {
-        $label = $2;
-        $param = $1;
-    }
-    $param = $self->translate($param,$self->{ref},
-                              $command, "wrap" => 1);
-    chomp $param;
-    if (length $label) {
-        $label = $self->translate($label,$self->{ref},
-                                  "label", "wrap" => 1);
-        chomp $label;
-        $self->pushline("\\".$command."{".$param."\\label{".$label."}}\n");
-    } else {
-        $self->pushline("\\".$command."{".$param."}\n");
-    }
-};
+# Rebuild the command, with all arguments translated.
+sub translate_joined {
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "translate_joined($command,$variant,@$opts,@$args,@$env)="
+        if ($debug{'commands'});
+    my ($t,@e)=("",());
 
+    my $translated = "$ESCAPE$command$variant";
+    foreach my $opt (@$opts) {
+        ($t, @e) = translate_buffer($self,$opt,(@$env,$command));
+        $translated .= "[".$t."]";
+    }
+    foreach my $opt (@$args) {
+        ($t, @e) = translate_buffer($self,$opt,(@$env,$command));
+        $translated .= "{".$t."}";
+    }
+
+    print "($translated,@$env)\n"
+        if ($debug{'commands'});
+    return ($translated,@$env);
+}
+
+# definition of environment related commands
 $commands{'begin'}= sub {
-    my ($self,$line) = (shift,shift);
-    my ($command,$param) = parse_command($line);
-    if ($command eq "begin" && defined $commands{$param}) {
-        &{$commands{$param}}($self,$line);
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "begin($command,$variant,@$opts,@$args,@$env)="
+        if ($debug{'commands'} || $debug{'environments'});
+    my ($t,@e) = ("",());
+
+    if (defined($args->[0]) && defined($environments{$args->[0]})) {
+        ($t, @e) = &{$environments{$args->[0]}}($self,$command,$variant,
+                                                $opts,$args,$env);
     } else {
-        die sprintf("po4a::LaTeX: \\begin command not understood in:\n".
-                    "po4a::LaTeX: '%s'\n", $line);
+        die sprintf("po4a::TeX: unknown environment: '%s'", $args->[0])."\n";
     }
-};
 
+    print "($t, @e)\n"
+        if ($debug{'commands'} || $debug{'environments'});
+    return ($t, @e);
+};
 $commands{'end'}= sub {
-    my ($self,$line) = (shift,shift);
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "end($command,$variant,@$opts,@$args,@$env)="
+        if ($debug{'commands'} || $debug{'environments'});
 
-    # \end commands should be handled in the subroutine called by the
-    # corresponding \begin command.
-    die sprintf("po4a::LaTeX: \\end without a begin in:\n".
-                "po4a::LaTeX: '%s'\n", $line);
-};
-
-$commands{'verbatim'}= sub {
-# XXX: try to handle this with an environment stack ?
-    my ($self,$line) = (shift,shift);
-    my $paragraph = "";
-    my $ref = "";
-    # push the \begin line
-    $self->pushline($line."\n");
-
-    ($line,$ref) = $self->shiftline();
-    while ($line !~ /^\\end{verbatim/) {
-        $paragraph .= $line;
-        ($line,$ref) = $self->shiftline();
+    # verify that this environment was the last pushed environment.
+    if ((pop @$env) ne $args->[0]) {
+        die sprintf("po4a::TeX: unmatched end of environment '%s'",
+                    $args->[0])."\n";
     }
-    $self->pushline($self->translate($paragraph,$self->{ref},
-                                     "verbatim", "wrap" => 0));
 
-    # push the \end line
-    $self->pushline($line);
+    my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
+
+    print "($t, @$env)\n"
+        if ($debug{'commands'} || $debug{'environments'});
+    return ($t, @$env);
 };
+
+########################################
+#### DEFINITION OF THE ENVIRONMENTS ####
+########################################
+# push the environment in the environment stack, and do not translate
+# the command
+sub push_environment {
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "push_environment($command,$variant,$opts,$args,$env)="
+        if ($debug{'environments'});
+
+    my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
+    @e = (@$env, $args->[0]);
+
+    print "($t,@e)\n"
+        if ($debug{'environments'});
+    return ($t,@e);
+}
+
+$environments{'verbatim'} = \&push_environment;
+$environments{'document'} = \&push_environment;
+
+# TODO: a tabular environment to translate cells separately
+
+####################################
+### INITIALIZATION OF THE PARSER ###
+####################################
+sub initialize {
+    my $self = shift;
+    my %options = @_;
+
+    $self->{options}{'translate'}='';
+    $self->{options}{'untranslated'}='';
+    $self->{options}{'debug'}='';
+
+    foreach my $opt (keys %options) {
+        if ($options{$opt}) {
+            die sprintf("po4a::sgml: ".
+                        dgettext ("po4a","Unknown option: %s"), $opt).
+                        "\n"
+                unless exists $self->{options}{$opt};
+            $self->{options}{$opt} = $options{$opt};
+        }
+    }
+
+    if ($options{'debug'}) {
+        foreach ($options{'debug'}) {
+            $debug{$_} = 1;
+        }
+    }
+
+    if ($options{'untranslated'}) {
+        $command_categories{'untranslated'} .=
+            join(' ', split(/,/, $options{'untranslated'}));
+    }
+    foreach (split(/ /, $command_categories{'untranslated'})) {
+        if (defined($commands{$_})) {
+            print "coucou $_\n";
+        }
+        $commands{$_} = \&untranslated;
+    }
+
+    if ($options{'translate'}) {
+        $command_categories{'translate_joined'} .=
+            join(' ', split(/,/, $options{'translate_joined'}));
+    }
+    foreach (split(/ /, $command_categories{'translate_joined'})) {
+        if (defined($commands{$_})) {
+            print "coucou $_\n";
+        }
+        $commands{$_} = \&translate_joined;
+    }
+}
 
