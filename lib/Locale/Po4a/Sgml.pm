@@ -9,7 +9,7 @@
 #
 # Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
 # 
-# The adaptation for po4a was done by Denis Barbier <barbier@debian.org>,
+# The adaptation for po4a was done by Denis Barbier <barbier@linuxfr.org>,
 # Martin Quinson <martin.quinson@tuxfamily.org> and others.
 #
 # This program is free software; you can redistribute it and/or modify
