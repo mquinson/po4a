@@ -59,8 +59,6 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(dgettext);
-#is there any better (or more standard) package than this to recode strings?
-#use Locale::Recode;
 
 #It will mantain the path from the root tag to the current one
 my @path;
@@ -108,6 +106,11 @@ sub parse_file {
 }
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
+
+The global debug option causes this module to show the excluded strings, in
+order to see if it skips something important.
+
+These are this module's particular options:
 
 =over 4
 
@@ -193,6 +196,8 @@ sub initialize {
 
 	#It will mantain the list of the translateable tags
 	$self->{tags}=();
+	#It will mantain the list of the translateable attributes
+	$self->{attributes}=();
 	#It will mantain the list of the inline tags
 	$self->{inline}=();
 
@@ -258,6 +263,8 @@ sub found_string {
 		if($options->{'tag_options'} =~ /W/) {
 			$wrap = 0;
 		}
+	} elsif ($options->{'type'} eq "attribute") {
+		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
 	} else {
 		die dgettext("po4a","po4a::xml: Internal error: unknown string type.")."\n";
 	}
@@ -374,6 +381,7 @@ my $tag = $self->join_lines(@tag);
 }
 
 sub tag_extract_doctype {
+#TODO
 	my ($self,$remove)=(shift,shift);
 	my ($eof,@tag)=$self->get_string_until(']>',{include=>1,unquoted=>1});
 	if ($eof) {
@@ -385,6 +393,7 @@ sub tag_extract_doctype {
 }
 
 sub tag_trans_doctype {
+#TODO
 	my ($self,@tag)=@_;
 	if (defined $self->{options}{'doctype'} ) {
 		my $doctype = $self->{options}{'doctype'};
@@ -434,7 +443,6 @@ sub tag_break_close {
 }
 
 sub tag_trans_close {
-#TODO
 	my ($self,@tag)=@_;
 	my $name = $self->get_tag_name(@tag);
 
@@ -456,20 +464,14 @@ sub tag_break_alone {
 }
 
 sub tag_trans_alone {
-#TODO
 	my ($self,@tag)=@_;
 	my $name = $self->get_tag_name(@tag);
-	my ($spaces,$attr);
 	push @path, $name;
 
-my $tag = $self->join_lines(@tag);
-	$tag =~ /^(\S*)(\s*)(.*)/s;
-	($name,$spaces,$attr)=($1,$2,$3);
-
-	#$attr = $self->treat_attributes(@tag); #should be only the attributes
+	$name = $self->treat_attributes(@tag);
 
 	pop @path;
-	return $name.$spaces.$attr;
+	return $name;
 }
 
 sub tag_break_open {
@@ -483,17 +485,13 @@ sub tag_break_open {
 }
 
 sub tag_trans_open {
-#TODO
 	my ($self,@tag)=@_;
-	my ($spaces,$attr);
 	my $name = $self->get_tag_name(@tag);
 	push @path, $name;
 
-my $tag = $self->join_lines(@tag);
-	$tag =~ /^(\S*)(\s*)(.*)/s;
-	($name,$spaces,$attr)=($1,$2,$3);
-	#$attr = $self->treat_attributes(@tag); #should be only the attributes
-	return $name.$spaces.$attr;
+	$name = $self->treat_attributes(@tag);
+
+	return $name;
 }
 
 ##### END of Generic XML tag types #####
@@ -700,68 +698,89 @@ sub tag_in_list {
 	return $found;
 }
 
-
-
-
-
-
-
-
-
-#TODO
-
 =head2 WORKING WITH ATTRIBUTES
 
 =over 4
 
 =item treat_attributes
 
-TODO
+This function handles the tags attributes' translation. It receives the tag
+without the beginning / end marks, and then it finds the attributes, and it
+translates the translateables (specified by the option "attributes"). This
+returns a plain string with the translated tag.
 
 =back
 
 =cut
 
 sub treat_attributes {
-	my ($self,@attribs)=@_;
-my $attribs = $self->join_lines(@attribs);
-	if ( $attribs ne "" ) {
-#print $structure[$#structure]."\n";
-#		print $attribs."\n";
-		my $value=$self->attribute($attribs,"type");
-#		print $value."\n";
-		if ($value ne "") {
-			$attribs=$self->attribute($attribs,"type","asereje");
-			print $attribs."\n";
-		}
-	}
-	return $attribs;
-}
+	my ($self,@tag)=@_;
 
-sub attribute {
-	my ($self,@attribs,$attrib,$value)=(shift,shift,shift,shift);
-my $attribs = $self->join_lines(@attribs);
-	my ($val,$quotes)=("","");
-	if ( $attribs =~ /\Q$attrib\E=(\")(.*?)\" |
-			\Q$attrib\E=(\')(.*?)\' |
-			\Q$attrib\E=()(\S*?)/sx ) {
-		if (defined($2)) {
-			$quotes=$1;
-			$val=$2;
-		} elsif (defined($4)) {
-			$quotes=$3;
-			$val=$4;
-		} else {
-			$quotes=$5;
-			$val=$6;
+	$tag[0] =~ /^(\S*)(.*)/s;
+	my $text = $1;
+	$tag[0] = $2;
+
+	while (@tag) {
+		my $complete = 1;
+
+		$text .= $self->skip_spaces(\@tag);
+		if (@tag) {
+			# Get the attribute's name
+			$complete = 0;
+
+			$tag[0] =~ /^([^\s=]+)(.*)/s;
+			my $name = $1;
+			my $ref = $tag[1];
+			$tag[0] = $2;
+			$text .= $name;
+			$text .= $self->skip_spaces(\@tag);
+			if (@tag) {
+				# Get the '='
+				if ($tag[0] =~ /^=(.*)/s) {
+					$tag[0] = $1;
+					$text .= "=";
+					$text .= $self->skip_spaces(\@tag);
+					if (@tag) {
+						# Get the value
+						my $value="";
+						$ref=$tag[1];
+						my $quot=substr($tag[0],0,1);
+						if ($quot ne "\"" and $quot ne "'") {
+							# Unquoted value
+							$quot="";
+							$tag[0] =~ /^(\S+)(.*)/s;
+							$value = $1;
+							$tag[0] = $2;
+						} else {
+							# Quoted value
+							$text .= $quot;
+							$tag[0] =~ /^\Q$quot\E(.*)/s;
+							$tag[0] = $1;
+							while ($tag[0] !~ /\Q$quot\E/) {
+								$value .= $tag[0];
+								shift @tag;
+								shift @tag;
+							}
+							$tag[0] =~ /^(.*?)\Q$quot\E(.*)/;
+							$value .= $1;
+							$tag[0] = $2;
+						}
+						$complete = 1;
+						if ($self->tag_in_list($self->get_path.$name,@{$self->{attributes}})) {
+							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
+						} else {
+							$text .= $value;
+							print sprintf(dgettext ("po4a","po4a::xml: Contents of attribute %s excluded: %s"),$self->get_path.$name,$value)."\n"
+							       if $self->debug();
+						}
+						$text .= $quot;
+					}
+				}
+			}
+			if (!$complete) { die sprintf(dgettext ("po4a","po4a::xml: Bad attribute syntax at %s"),$ref)."\n"; }
 		}
 	}
-	if (!defined($value)) {
-		return $val;
-	} else {
-		$attribs =~ s/\Q$attrib\E=$quotes\Q$val\E$quotes/\Q$attrib\E=$quotes\Q$value\E$quotes/s;
-		return $attribs;
-	}
+	return $text;
 }
 
 
@@ -826,6 +845,7 @@ sub treat_content {
 		}
 	}
 
+	# Translate the string when needed
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
 		my $options = $self->tag_in_list($struc,@{$self->{tags}});
@@ -839,9 +859,8 @@ sub treat_content {
 		} else {
 			$inlist = 1;
 		}
-#print $self->{options}{'tagsonly'}."==".$inlist."\n";
 		if ( $self->{options}{'tagsonly'} eq $inlist ) {
-#print "YES\n";
+			# This tag should be translated
 			$self->pushline($self->found_string(
 				$self->join_lines(@paragraph),
 				$paragraph[1], {
@@ -849,12 +868,14 @@ sub treat_content {
 					tag_options=>$options
 				}));
 		} else {
-#print "NO\n";
-#TODO: should print that this tag isn't translated in verbose mode
+			# Inform that this tag isn't translated in debug mode
+			print sprintf(dgettext ("po4a","po4a::xml: Contents of tag %s excluded: %s"), $self->get_path,$self->join_lines(@paragraph))."\n"
+			       if $self->debug();
 			$self->pushline($self->join_lines(@paragraph));
 		}
 	}
 
+	# Push the trailing blanks
 	if ($blank ne "") {
 		$self->pushline($blank);
 	}
@@ -883,17 +904,19 @@ sub treat_options {
 	my $self = shift;
 
 	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
-	my @list = split(/\s+/s,$1);
-	$self->{tags} = \@list;
+	my @list_tags = split(/\s+/s,$1);
+	$self->{tags} = \@list_tags;
 
-#	$self->{options}{'attributes'}
+	$self->{options}{'attributes'} =~ /\s*(.*)\s*/s;
+	my @list_attr = split(/\s+/s,$1);
+	$self->{attributes} = \@list_attr;
 
 	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
-	my @list2 = split(/\s+/s,$1);
-	$self->{inline} = \@list2;
+	my @list_inline = split(/\s+/s,$1);
+	$self->{inline} = \@list_inline;
 }
 
-=head2 GETTING TEXT FROM THE INPUT STREAM
+=head2 GETTING TEXT FROM THE INPUT DOCUMENT
 
 =over
 
@@ -987,12 +1010,35 @@ sub get_string_until {
 	return ($eof,@text);
 }
 
+=item skip_spaces
+
+This function receives as argument the pointer to a paragraph (in the format
+returned by get_string_until) and skips his heading spaces.
+
+=cut
+
+sub skip_spaces {
+	my ($self,$pstring)=@_;
+	my $space="";
+
+	while (@$pstring and (@$pstring[0] =~ /^(\s+)(.*)$/s or @$pstring[0] eq "")) {
+		if (@$pstring[0] ne "") {
+			$space .= $1;
+			@$pstring[0] = $2;
+		}
+
+		if (@$pstring[0] eq "") {
+			shift @$pstring;
+			shift @$pstring;
+		}
+	}
+	return $space;
+}
+
 =item join_lines
 
 This function returns a simple string with the text from the argument array
 (discarding the references).
-
-=back
 
 =cut
 
@@ -1007,6 +1053,8 @@ sub join_lines {
 	return $text;
 }
 
+=back
+
 =head1 STATUS OF THIS MODULE
 
 Well... hmm... If this works for you now, you're using a very simple
@@ -1014,16 +1062,14 @@ document format ;)
 
 =head1 TODO LIST
 
-ATTRIBUTES
-
-MODIFY TAG TYPES FROM INHERITED MODULES
-(move the tag_types structure inside the $self hash?)
-
 XML HEADER (ENCODING)
 
 DOCTYPE (ENTITIES)
 
 INCLUDED FILES
+
+MODIFY TAG TYPES FROM INHERITED MODULES
+(move the tag_types structure inside the $self hash?)
 
 breaking tag inside non-breaking tag (possible?) causes ugly comments
 
