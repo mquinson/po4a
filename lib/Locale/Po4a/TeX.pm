@@ -867,7 +867,7 @@ sub parse_definition_file {
         || die wrap_mod("po4a::tex",
             dgettext("po4a", "Can't open %s: %s"), $filename, $!);
     while (<IN>) {
-        if (/^%\s+po4a:/) {
+        if (/^\s*%\s*po4a\s*:/) {
             parse_definition_line($self, $_);
         }
     }
@@ -883,7 +883,7 @@ See the INLINE CUSTOMIZATION section for more details.
 
 sub parse_definition_line {
     my ($self,$line)=@_;
-    $line =~ s/^%\s+po4a:\s*//;
+    $line =~ s/^\s*%\s+po4a\s*:\s*//;
 
     if ($line =~ /^command\s+(\*?)(\w+)\s+(.*)$/) {
         my $command = $2;
