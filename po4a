@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.6 2004-07-18 06:27:25 mquinson-guest Exp $
+# $Id: po4a,v 1.7 2004-07-18 06:42:40 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -261,11 +261,15 @@ while (<CONFIG>) {
 	$document{$main}{'format'} = $1;	
 	foreach my $arg (split(/ /,$args)) {
 	    die sprintf("%s:%d: ".
+		        gettext("The translated and master file are the same."),
+		        $config_file,$nb)
+	      if ($main eq $2);
+	    die sprintf("%s:%d: ".
 		        gettext("Unparsable argument '%s'").
 		        "\n",
 	                $config_file,$nb,$arg)
 	      unless ($arg =~ /^([^:]*):(.*)/);
-	    push @{$document{$main}{$1}},$2;
+	    $document{$main}{$1} = $2;
 	}
 
     } else {
@@ -337,8 +341,8 @@ foreach my $master (keys %document) {
 	my ($percent,$hit,$queries) = $doc->stats();
 	
 	if ($percent<$threshold)  {
-	    print STDERR sprintf(gettext("Discard the translation of %s (only %s%% translated; need %s%%)."),
-		                 $master,$percent,$threshold)."\n";
+	    print STDERR sprintf(gettext("Discard the translation %s (only %s%% translated; need %s%%)."),
+		                 $document{$master}{$lang},$percent,$threshold)."\n";
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 	    next LANG;
 	}
@@ -347,14 +351,14 @@ foreach my $master (keys %document) {
 	    foreach my $add ($document{$master}{"add_$lang"}) {
 		if ( !$doc->addendum($_) ) {
 		    die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
-			$add,$master)."\n";
+			$add,$document{$master}{$lang})."\n";
 		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		    next LANG;
 		}
 	    }
 	}
 	print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
-	    $master,$percent,$hit,$queries)."\n" 
+	    $document{$master}{$lang},$percent,$hit,$queries)."\n" 
 	  if $verbose;
 
 	$doc->write($document{$master}{$lang});
