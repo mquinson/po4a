@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.11 2004-05-25 17:48:03 mquinson-guest Exp $
+# $Id: Chooser.pm,v 1.12 2004-07-16 04:10:29 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -26,6 +26,9 @@ sub new {
     my ($module)=shift;
     my (%options)=@_;
 
+    die gettext("Need to provide a module name to the Chooser")."\n"
+      unless defined $module;
+    
     my $modname;
     if ($module eq 'kernelhelp') {
         $modname = 'KernelHelp';
