@@ -239,13 +239,63 @@ sub parse_file {
  			                    "enumlist taglist list item tag ");
 
     } elsif ($prolog =~ /docbook/i) {
-	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution command date entry figure glosssee glossseealso glossterm holder member msgaud msglevel msgorig option para phrase pubdate publishername refclass refdescriptor refentrytitle refmiscinfo refname refpurpose remark screeninfo seg segtitle subtitle synopfragmentref term title titleabbrev",
+	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution ".
+	                                    "date ".
+	                                    "entry ".
+	                                    "figure ".
+	                                    "glosssee glossseealso glossterm ".
+	                                    "holder ".
+	                                    "member msgaud msglevel msgorig ".
+	                                    "option ".
+	                                    "para phrase pubdate publishername ". 
+	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose remark ".
+	                                    "screeninfo seg segtitle subtitle synopfragmentref ".
+	                                    "term title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata sbr textdata videodata xref",
 			     "section"   => "",
-			     "indent"    => "abstract answer appendix article audioobject author bibliodiv bibliography blockquote blockinfo book bookinfo callout calloutlist caption caution chapter copyright dedication entry formalpara glossary glossdef cmdsynopsis  glossdiv glossentry glosslist group imageobject important index indexterm informaltable itemizedlist legalnotice listitem lot mediaobject msg msgentry msginfo msgexplan msgmain msgrel msgsub msgtext note objectinfo orderedlist part partintro preface procedure publisher qandadiv qandaentry qandaset question refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo row screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo simplelist simplemsgentry simplesect step synopfragment table tbody textobject tgroup thead tip toc variablelist varlistentry videoobject warning",
+			     "indent"    => "abstract answer appendix article audioobject author ".
+	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo ".
+	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
+	                                    "dedication ".
+	                                    "entry ".
+	                                    "formalpara ".
+	                                    "glossary glossdef glossdiv glossentry glosslist group ".
+	                                    "imageobject important index indexterm informaltable itemizedlist ".
+	                                    "legalnotice listitem lot ".
+	                                    "mediaobject msg msgentry msginfo msgexplan msgmain msgrel msgsub msgtext ".
+	                                    "note ".
+	                                    "objectinfo orderedlist ".
+	                                    "part partintro preface procedure publisher ".
+	                                    "qandadiv qandaentry qandaset question ".
+	                                    "refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo row ".
+	                                    "screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo simplelist simplemsgentry simplesect step synopfragment ".
+	                                    "table tbody textobject tgroup thead tip toc ".
+	                                    "variablelist varlistentry videoobject ".
+	                                    "warning",
 			     "verbatim"  => "address programlisting literallayout screen",
-			     "ignore"    => "action affiliation anchor application author authorinitials citation citerefentry citetitle classname co computeroutput constant corpauthor database email emphasis envar errorcode errorname errortext errortype exceptionname filename firstname firstterm footnote footnoteref foreignphrase function glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu hardware indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename keycap keycode keycombo keysym link literal markup medialabel menuchoice methodname modespec mousebutton nonterminal olink ooclass ooexception oointerface optional othercredit parameter personname phrase productname productnumber prompt property quote remark replaceable returnvalue revhistory sgmltag sidebar structfield structname subscript superscript surname symbol systemitem token trademark type ulink userinput varname wordasword xref ".
-                                            "manvolnum year");
+			     "ignore"    => "action affiliation anchor application author authorinitials ".
+	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
+	                                    "database ".
+	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
+	                                    "filename firstname firstterm footnote footnoteref foreignphrase function ".
+	                                    "glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu ".
+	                                    "hardware ".
+	                                    "indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename ".
+	                                    "keycap keycode keycombo keysym ".
+	                                    "link literal ".
+	                                    "manvolnum markup medialabel menuchoice methodname modespec mousebutton ".
+	                                    "nonterminal ".
+	                                    "olink ooclass ooexception oointerface optional othercredit ".
+	                                    "parameter personname phrase productname productnumber prompt property ".
+	                                    "quote ".
+	                                    "remark replaceable returnvalue revhistory ".
+	                                    "sgmltag sidebar structfield structname subscript superscript surname symbol systemitem ".
+	                                    "token trademark type ".
+	                                    "ulink userinput ".
+	                                    "varname ".
+	                                    "wordasword ".
+	                                    "xref ".
+                                            "year");
 
     } else {
 	die sprintf(gettext("File %s have an unknown DTD\n".
