@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.22 2005-02-14 23:19:24 danilo-guest Exp $
+# $Id: Chooser.pm,v 1.23 2005-02-15 00:12:08 jvprat-guest Exp $
 #
 # Copyright 2002,2003,2004,2005 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -52,14 +52,16 @@ sub new {
 }
 
 sub list {
-    warn wrap_msg(gettext("List of valid formats:\n".
-		"  - kernelhelp: help messages of each kernel compilation option.\n".
-#		"  - html: HTML documents (EXPERIMENTAL).\n".
-		"  - man: good old manual page format.\n".
-		"  - pod: Perl Online Documentation format.\n".
-		"  - sgml: either debiandoc or docbook DTD.\n".
-		"  - dia: uncompressed Dia diagrams.\n".
-		"  - guide: Gentoo Linux's xml documentation format."));
+    warn wrap_msg(gettext("List of valid formats:")
+	."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
+#	."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
+	."\n  - ".gettext("man: Good old manual page format.")
+	."\n  - ".gettext("pod: Perl Online Documentation format.")
+	."\n  - ".gettext("sgml: either debiandoc or docbook DTD.")
+	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
+	."\n  - ".gettext("guide: Gentoo Linux's xml documentation format.")
+	."\n  - ".gettext("docbook: Docbook XML.")
+    );
     exit shift;
 }
 ##############################################################################
