@@ -1,8 +1,9 @@
+MANIFEST			This list of files (needed by MakeMaker)
+META.yml                        Module meta-data (added by MakeMaker)
 COPYING
-MANIFEST			This list of files
-Makefile
-Makefile.PL
+Makefile.PL			The rules to build this module (for MakeMaker)
 README
+README.tests
 TODO
 debian/changelog
 debian/control
@@ -18,24 +19,29 @@ lib/Locale/Po4a/Po.pm
 lib/Locale/Po4a/Pod.pm
 lib/Locale/Po4a/Sgml.pm
 lib/Locale/Po4a/TransTractor.pm
-pm_to_blib
 po/Makefile
 po/bin/Makefile
 po/bin/fr.po
 po/bin/po4a.pot
 po/pod/Makefile
 po/pod/fr.po
-po/pod/messages.mo
-po/pod/po4a-gettextize.fr.pod
-po/pod/po4a-normalize.fr.pod
 po/pod/po4a-pod.pot
-po/pod/po4a-updatepo.fr.pod
+
+# po/pod/po4a-gettextize.fr.pod   Not enough translated for now
+# po/pod/po4a-normalize.fr.pod
+# po/pod/po4a-updatepo.fr.pod
+
+# the binaries
 po4a-gettextize
 po4a-normalize
 po4a-translate
 po4a-updatepo
-t/1-classes.t
-t/2-man.t
+
+# The tests
+t/01-classes.t
+
+t/02-TransTractors.t
+t/03-addendums.t
 t/data/man
 t/data/man.addendum1
 t/data/man.addendum2
@@ -48,9 +54,14 @@ t/data/man.fr.add3
 t/data/man.fr.add4
 t/data/man.po
 t/data/man.po-empty
-t/tmp/man.fr
-t/tmp/po
-testsuite/check
-testsuite/stats.man
-testsuite/test.man
-testsuite/test.man.addendum
+t/data/man.po-ok
+t/data/pod
+t/data/pod.fr
+t/data/pod.po
+t/data/pod.po-empty
+t/data/pod.po-ok
+
+t/10-discard-fuzzy.t
+t/10-data/pod
+t/10-data/pod.fr
+t/10-data/pod.po
