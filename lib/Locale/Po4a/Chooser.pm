@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.18 2004-08-17 23:40:05 mquinson Exp $
+# $Id: Chooser.pm,v 1.19 2005-01-07 22:50:52 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -72,7 +72,7 @@ Locale::Po4a::Chooser - Manage po4a modules
 
 Locale::Po4a::Chooser is a module to manage po4a modules. Before, all po4a
 binaries used to know all po4a modules (pod, man, sgml, etc). This made the
-add of a new module a boring, to make sure the documentation is syncronized
+add of a new module boring, to make sure the documentation is synchronized
 in all modules, and that each of them can access the new module.
 
 Now, you just have to call the Locale::Po4a::Chooser::new() function,
@@ -112,6 +112,6 @@ L<Locale::Po4a::Dia(3pm)>.
 Copyright 2002 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut

@@ -1,10 +1,10 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.13 2004-08-27 18:18:34 barbier Exp $
+# $Id: Pod.pm,v 1.14 2005-01-07 22:50:52 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING).
+# under the terms of GPL (see COPYING file).
 #
 # This module converts POD to PO file, so that it becomes possible to 
 # translate POD formated documentation. See gettext documentation for
@@ -171,10 +171,10 @@ and mine contain
 
  "" #n""
  
-which is logic since C<blabla> is rewritten "blabla"
+which is logic since C<foobar> is rewritten "foobar"
 
 Complete list of pages having this problem on my box (from 564 pages ; note
-that it depend on the choosen wrapping colon):
+that it depends on the chosen wrapping column):
 /usr/lib/perl5/Tk/MainWindow.pod
 /usr/share/perl/5.8.0/overload.pod
 /usr/share/perl/5.8.0/pod/perlapi.pod
@@ -264,6 +264,6 @@ L<Locale::Po4a::Man(3pm)>,
 Copyright 2002 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut

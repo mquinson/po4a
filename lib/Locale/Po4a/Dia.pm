@@ -70,7 +70,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut
 

@@ -40,7 +40,7 @@ Locale::Po4a::Xml is a module to help the translation of XML documents into
 other [human] languages. It can also be used as a base to build modules for
 XML-based documents.
 
-Please note that this module is still under heavy developement, and not
+Please note that this module is still under heavy development, and not
 distributed in official po4a release since we don't feel it to be mature
 enough. If you insist on trying, check the CVS out.
 
@@ -121,7 +121,7 @@ Makes it strip the spaces around the extracted strings. (Typical)
 =item wrap
 
 Canonizes the string to translate, considering that whitespaces are not
-important, and wraps the translated document. This option can be overriden
+important, and wraps the translated document. This option can be overridden
 by custom tag options. See the "tags" option below.
 
 =item caseinsensitive
@@ -194,11 +194,11 @@ sub initialize {
 		}
 	}
 
-	#It will mantain the list of the translatable tags
+	#It will maintain the list of the translatable tags
 	$self->{tags}=();
-	#It will mantain the list of the translatable attributes
+	#It will maintain the list of the translatable attributes
 	$self->{attributes}=();
-	#It will mantain the list of the inline tags
+	#It will maintain the list of the inline tags
 	$self->{inline}=();
 
 	$self->treat_options;
@@ -590,9 +590,9 @@ sub tag_type {
 =item extract_tag($$)
 
 This function returns the next tag from the input stream without the beginning
-and end, in an array form, to mantain the references from the input file.  It
+and end, in an array form, to maintain the references from the input file.  It
 has two parameters: the type of the tag (as returned by tag_type) and a
-boolean, that says if it should be removed from the input stream.
+boolean, that indicates if it should be removed from the input stream.
 
 =cut
 
@@ -730,7 +730,7 @@ sub tag_in_list {
 
 =item treat_attributes(@)
 
-This function handles the tags attributes' translation. It receives the tag
+This function handles the translation of the tags' attributes. It receives the tag
 without the beginning / end marks, and then it finds the attributes, and it
 translates the translatable ones (specified by the module option "attributes").
 This returns a plain string with the translated tag.
@@ -1116,7 +1116,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>
 Copyright (c) 2004 by Jordi Vilalta  E<lt>jvprat@wanadoo.esE<gt>
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut
 

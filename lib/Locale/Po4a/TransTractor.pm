@@ -112,9 +112,9 @@ sub parse {}
 
 =head1 SYNOPSIS
 
-The following example parses a list of paragraphs begining with "<p>". For sake
+The following example parses a list of paragraphs beginning with "<p>". For sake
 of simplicity, we assume that the document is well formatted, ie that '<p>'
-tags are the only tags present, and that this tag is at the very begining
+tags are the only tags present, and that this tag is at the very beginning
 of each paragraph.
 
  sub parse {
@@ -488,11 +488,11 @@ sub stats   {
 
 =item addendum($)
 
-Please refer to L<po4a(7)|po4a.7> for more information on what addendum are,
+Please refer to L<po4a(7)|po4a.7> for more information on what addendums are,
 and how translators should write them. To apply an addendum to the translated
 document, simply pass its filename to this function and you are done ;)
 
-This function returns a non-nul integer on error.
+This function returns a non-null integer on error.
 
 =cut
 
@@ -756,8 +756,8 @@ a hash. For example:
 
 =item wrap
 
-boolean indicating wheather we can consider that whitespaces in string are
-not important. If yes, the function canonize the string before looking for
+boolean indicating whether we can consider that whitespaces in string are
+not important. If yes, the function canonizes the string before looking for
 a translation or extracting it, and wraps the translation.
 
 =item wrapcol

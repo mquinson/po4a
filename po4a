@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.19 2004-11-06 15:09:05 jvprat-guest Exp $
+# $Id: po4a,v 1.20 2005-01-07 22:50:51 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -31,11 +31,11 @@ them to the original documents) and the translated documents (to sync
 them to the po files). The main point is to make the use of po4a easier
 without having to remember of the command line options.
 
-It also allows you to mix document having different formats into the same
-pot files so that you can have only one such file per project.
+It also allows you to mix documents having different formats into the same
+pot file so that you can have only one such file per project.
 
 This behaviour can be mimicked by the other tools of the po4a suite (for
-example with makefiles), but it is rather difficult to do, and exausting to 
+example with makefiles), but it is rather difficult to do, and exhausting to 
 redo the same complicated makefiles for each project using po4a.
 
 =head1 CONFIGURATION FILE SYNTAX
@@ -44,7 +44,7 @@ The (mandatory) argument is the path to the configuration file to use.
 Its syntax aims at being simple and close to the configuration files used 
 by the intl-tools projects.
 
-Comments in this files are noted by the char '#'. It comments everthing 
+Comments in this files are noted by the char '#'. It comments everything 
 until the end of the line. Lines can be continued by escaping the end of line.
 All non blank lines must begin with a [] command, followed by its arguments. 
 (sound difficult said that way, but it is rather easy, I hope ;)
@@ -63,14 +63,14 @@ file to use. All subsequent arguments are of the self-explanationary form:
 
 =head2 Specifying the documents to translate
 
-You now naturally have to to specify which documents are translated, their 
+You now naturally have to specify which documents are translated, their 
 format, and where to put the translations. It can be made by such lines:
 
  [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml de:doc/de/mein_cram.sgml
  [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \
              add_fr:doc/l10n/script.fr.add
 
-This should be rather self-explanationary also. Note that in the second case, 
+This should be rather self-explanatory also. Note that in the second case, 
 doc/l10n/script.fr.add is an addendum to add to the french version of this document.
 Please refer to po4a(7) for more information about the addendums.
 
@@ -110,7 +110,7 @@ Charset of the addenda. Note that all addenda should be in the same charset.
 
 =item -V, --version
 
-Displays the version of the script and exits.
+Display the version of the script and exit.
 
 =item -v, --verbose
 
@@ -122,11 +122,11 @@ Decrease the verbosity of the program.
 
 =item -d, --debug
 
-Outputs some debugging informations.
+Output some debugging information.
 
 =back
 
-=head1 SHORTCOMMING
+=head1 SHORTCOMING
 
 =over 4
 
@@ -136,7 +136,7 @@ Does not allow to pass any options to the modules.
 
 =item
 
-Dupplicates some code with the po4a-* programs.
+Duplicates some code with the po4a-* programs.
 
 =back
 
@@ -156,7 +156,7 @@ L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<
 Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut
 

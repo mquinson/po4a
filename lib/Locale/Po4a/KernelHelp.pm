@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.8 2004-08-27 18:18:34 barbier Exp $
+# $Id: KernelHelp.pm,v 1.9 2005-01-07 22:50:52 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -143,7 +143,7 @@ Locale::Po4a::KernelHelp - Convert kernel configuration help from/to PO files
 =head1 DESCRIPTION
 
 Locale::Po4a::KernelHelp is a module to help the translation of
-documentation for the linux kernel configuration options into other [human]
+documentation for the Linux kernel configuration options into other [human]
 languages.
 
 =head1 STATUS OF THIS MODULE
@@ -169,6 +169,6 @@ L<Locale::Po4a::Pod(3pm)>,
 Copyright 2002 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut

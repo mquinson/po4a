@@ -210,4 +210,4 @@ sub notranslation {
 Laurent Hausermann <laurent@hausermann.org>
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).

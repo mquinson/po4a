@@ -105,12 +105,12 @@ same. But there is still some problems:
 =item * 
 
 the error output of nsgmls is redirected to /dev/null, which is clearly
-bad. I dunno how to avoid that.
+bad. I don't know how to avoid that.
 
-The problem is that I have to "protect" the conditionnal inclusion (ie, the
-C<E<lt>! [ %blah [> and C<]]E<gt>> stuff) from nsgml, because in the other
-case, nsgmls eat them, and I dunno how to restore them in the final
-document. To prevent that, I rewrite them to C<{PO4A-beg-blah}> and
+The problem is that I have to "protect" the conditional inclusions (ie, the
+C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise
+nsgmls eats them, and I don't know how to restore them in the final
+document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
 C<{PO4A-end}>. 
 
 The problem with this is that the C<{PO4A-end}> and such I add are valid in
@@ -122,7 +122,7 @@ prevent us to detect that the document is badly formated.
 =item *
 
 It does work only with the debiandoc and docbook dtd. Adding support for a
-new dtd should be very easy. The mecanism is the same for all dtd, you just
+new dtd should be very easy. The mechanism is the same for all dtd, you just
 have to give a list of the existing tags and some of their characteristics.
 
 I agree, this needs some more documentation, but it is still considered as
@@ -148,7 +148,7 @@ In case of file inclusion, string reference of messages in po files (ie,
 lines like C<#: en/titletoc.sgml:9460>) will be wrong. 
 
 This is because I preprocess the file to protect the conditional inclusion
-(ie, the C<E<lt>! [ %blah [> and C<]]E<gt>> stuff) and some entities (like
+(ie, the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
 &version;) from nsgmls because I want them verbatim to the generated
 document. For that, I make a temp copy of the input file and do all the
 changes I want to this before passing it to nsgmls for parsing.
@@ -895,4 +895,4 @@ The adaptation for po4a was done by:
  Copyright 2002 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).

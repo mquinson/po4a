@@ -1,6 +1,6 @@
 =head1 NAME
 
-po4a - framework to translate documentation and other material
+po4a - framework to translate documentation and other materials
 
 =head1 Introduction
 
@@ -11,7 +11,7 @@ where they were not expected like documentation.
 =cut
 
 In po4a each documentation format is handled by a module. For now, we have
-a module for the pod format (in which the perl documentation is written),
+a module for the pod format (in which the Perl documentation is written),
 the good old man pages, the documentation of the kernel compilation
 options and SGML. Some other modules are underway, like for texinfo or XML.
 
@@ -21,7 +21,7 @@ This document is organized as follow:
 
 =over
 
-=item 1 Why should I use po4a? What it is good for?
+=item 1 Why should I use po4a? What is it good for?
 
 This introducing chapter explains the motivation of the project and its
 philosophy. You should read it first if you are in the process of evaluating
@@ -32,7 +32,7 @@ po4a for your own translations.
 This chapter is a sort of reference manual, trying to answer the users'
 questions and to give you a better understanding of the whole process. This
 introduces how to do things with po4a and serve as an introduction to the
-documentation of specific tools.
+documentation of the specific tools.
 
 =over
 
@@ -70,14 +70,14 @@ E<lt>po4a-devel@lists.alioth.debian.orgE<gt> mailing list. We love feedback.
 
 =item 5 Specific notes about modules
 
-This chapter presents the specificities of each modules from the translator
-and original author point of view. Read this to learn the syntax you will
+This chapter presents the specificities of each module from the translator
+and original author's point of view. Read this to learn the syntax you will
 encounter when translating stuff in this module, or the rules you should
 follow in your original document to make translators' life easier.
 
 Actually, this section is not really part of this document. Instead, it is
 placed in each module's documentation. This helps ensuring that the
-informations are up to date by keeping the documentation and the code
+information is up to date by keeping the documentation and the code
 together.
 
 =item 6 Known bugs and feature requests
@@ -97,13 +97,13 @@ everybody out there.
 
 The perception of this situation by the open-source actors did dramatically
 improved recently. We, as translators, won the first battle and convinced
-everybody of the translations importance. But unfortunately, it was the easy
+everybody of the translations' importance. But unfortunately, it was the easy
 part. Now, we have to do the job and actually translate all this stuff.
 
 Actually, the open-source software themselves benefit of a rather decent
 level of translation, thanks to the wonderful gettext tool suite. It is able
-to extract the strings to translate from the program, present an uniform
-format to translators, and then use the result of their work at run time to
+to extract the strings to translate from the program, present a uniform
+format to translators, and then use the result of their works at run time to
 display translated messages to the user.
 
 But the situation is rather different when it comes to documentation. Too
@@ -120,27 +120,27 @@ longer than the messages of the program and thus take longer to be achieved,
 but no technical skill is really needed to do so. The difficult part comes
 when you have to maintain your work. Detecting which parts did change and
 need to be updated is very difficult, error-prone and highly unpleasant. I
-guess that this explains why so much translated documentation out there is
+guess that this explains why so much translated documentation out there are
 outdated.
 
 =head2 The po4a answers
 
 So, the whole point of po4a is to make the documentation translation
 I<maintainable>. The idea is to reuse the gettext methodology to this new
-field. Like in gettext, texts are extracted from their original location in
-order to be presented in an uniform format to the translators. The classical
-gettext tools help them updating their work when a new release of the
+field. Like in gettext, texts are extracted from their original locations in
+order to be presented in a uniform format to the translators. The classical
+gettext tools help them updating their works when a new release of the
 original comes out. But to the difference of the classical gettext model,
 the translations are then re-injected in the structure of the original
 document so that they can be processed and distributed just like the
 English version.
 
 Thanks to this, discovering which parts of the document were changed and need
-updating becomes very easy. Another good point is that the tools will make
+an update becomes very easy. Another good point is that the tools will make
 almost all the work when the structure of the original document gets
 fundamentally reorganized and when some chapters are moved around, merged or
 split. By extracting the text to translate from the document structure, it also
-keeps you away from the text formating complexity and reduce your chances to
+keeps you away from the text formatting complexity and reduces your chances to
 get a broken document (even if it does not completely prevent you to do so).
 
 Please also see the L<FAQ> below in this document for a more complete list
@@ -148,18 +148,18 @@ of the advantages and disadvantages of this approach.
 
 =head2 Supported formats
 
-Currently, this approach has been successfully implemented to several kind
-of text formating formats:
+Currently, this approach has been successfully implemented to several kinds
+of text formatting formats:
 
 =head3 nroff
 
-The good old manual page format, used by so much programs out there. The
+The good old manual pages' format, used by so much programs out there. The
 po4a support is very welcome here since this format is somehow difficult to
 use and not really friendly to the newbies.
 
 =head3 pod
 
-This is the Perl Online Documentation format. The language and extension
+This is the Perl Online Documentation format. The language and extensions
 themselves are documented that way, as well as most of the existing Perl
 scripts. It makes easy to keep the documentation close to the actual code by
 embedding them both in the same file. It makes programmer life easier, but
@@ -168,7 +168,7 @@ unfortunately, not the translator one.
 =head3 sgml
 
 Even if somehow superseded by XML nowadays, this format is still used
-rather often for document which are more than a few screen long. It allows
+rather often for documents which are more than a few screens long. It allows
 you to make complete books. Updating the translation of so long documents can
 reveal to be a real nightmare. diff reveals often useless when the original
 text was re-indented after update. Fortunately, po4a can help you in that
@@ -177,7 +177,7 @@ process.
 Currently, only the debiandoc and docbook DTD are supported, but adding
 support to a new one is really easy. It is even possible to use po4a on an
 unknown sgml dtd without changing the code by providing the needed
-informations on the command line. See L<Locale::Po4a::Sgml(3pm)> for details.
+information on the command line. See L<Locale::Po4a::Sgml(3pm)> for details.
 
 =head3 others
 
@@ -189,14 +189,14 @@ L<Locale::Po4a::TransTractor(3pm)> for more information about this.
 
 =head2 Unsupported formats
 
-Unfortunately, po4a still miss support for several major documentation
-format. The more proeminent may be XML, since this becomes more and more
+Unfortunately, po4a still lacks support for several major documentation
+formats. The more preeminent may be XML, since this becomes more and more
 used in open-source documentation. The sgml module can provide some limited
 support to it (mainly working when you don't actually use xml specificities
 in your document ;). We are currently working on a better support here, and
 thing may change in a near future. In the meanwhile, if po4a really don't
 fulfill your needs, you may want to check the poxml project. It is similar
-to po4a deal rather decently with docbook xml documentation. Unfortunately,
+to po4a and deals rather decently with docbook xml documentation. Unfortunately,
 it cannot deal with any other format for now. And of course it is ways less
 cool than po4a ;)
 
@@ -221,7 +221,7 @@ wine resource files.
 This chapter is a sort of reference manual, trying to answer the users'
 questions and to give you a better understanding of the whole process. This
 introduces how to do things with po4a and serve as an introduction to the
-documentation of specific tools.
+documentation of the specific tools.
 
 =head2 Graphical overview
 
@@ -271,7 +271,7 @@ system is shown. On the top of the right part, the action of the original
 author is depicted (updating the documentation).  The middle of the right
 part is where the automatic actions of po4a are depicted. The new material
 are extracted, and compared against the exiting translation. Parts which
-didn't change are found, and previous translation are used. Parts which
+didn't change are found, and previous translation is used. Parts which
 where partially modified are also connected to the previous translation, but
 with a specific marker indicating that the translation must be updated. The
 bottom of the figure shows how a formatted document is built.
@@ -282,9 +282,9 @@ It does not translate anything for you...
 
 =head2 HOWTO begin a new translation?
 
-This section presents the needed step required to begin a new translation
-with po4a. The refinement involved in converting an existing project to
-this system at detailed in the relevant section.
+This section presents the needed steps required to begin a new translation
+with po4a. The refinements involved in converting an existing project to
+this system are detailed in the relevant section.
 
 To begin a new translation using po4a, you have to do the following steps:
 
@@ -298,7 +298,7 @@ program that way:
 
   $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>
 
-E<lt>formatE<gt> is naturally the format used in the E<lt>masterE<gt>
+E<lt>formatE<gt> is naturally the format used in the E<lt>master.docE<gt>
 document. As expected, the output goes into E<lt>translation.potE<gt>.
 Please refer to L<po4a-gettextize(1)> for more details about the existing
 options.
@@ -324,16 +324,16 @@ gettext documentation, available in the B<gettext-doc> package.
 
 =head2 HOWTO change the translation back to a documentation file?
 
-Once you're done with the translation, you want to get translated
+Once you're done with the translation, you want to get the translated
 documentation and distribute it to users along with the original one.
 For that, use the L<po4a-translate(1)> program like that (where XX is the
 language code):
 
-  $ po4a-translate -f <format> -m <master.sgml> -p <doc-XX.po> -l <XX.sgml>
+  $ po4a-translate -f <format> -m <master.doc> -p <doc-XX.po> -l <XX.doc>
 
-As before, E<lt>formatE<gt> is the format used in the E<lt>masterE<gt>. But
+As before, E<lt>formatE<gt> is the format used in the E<lt>master.docE<gt> document. But
 this time, the po file provided with the -p flag is part of the input. This
-is your translation. The output goes into E<lt>XX.sgmlE<gt>
+is your translation. The output goes into E<lt>XX.docE<gt>.
 
 Please refer to L<po4a-translate(1)> for more details.
 
@@ -372,10 +372,10 @@ gettextization.
 The key here is to have the same structure in the translated document and in
 the original one so that the tools can match the content accordingly.
 
-If you are lucky (ie, if the structures of both document perfectly match),
-it will work seamlessly and you will be set in a few second. Otherwise, you
-may understand why this process have such an ugly name, and you'd better be
-prepared to some grunt work here. In any case, remember that that's the
+If you are lucky (i.e., if the structures of both documents perfectly match),
+it will work seamlessly and you will be set in a few seconds. Otherwise, you
+may understand why this process has such an ugly name, and you'd better be
+prepared to some grunt work here. In any case, remember that it is the
 price to pay to get the comfort of po4a afterward. And the good point is
 that you have to do so only once.
 
@@ -386,14 +386,14 @@ for the translation and you didn't modify it in the translation process, so
 that you can use it. 
 
 It won't work well when you use the updated original text with the old
-translation. It remains possible, but is harder and really should avoided if
+translation. It remains possible, but is harder and really should be avoided if
 possible. In fact, I guess that if you fail to find the original text again,
 the best solution is to find someone to do the gettextization for you (but,
 please, not me ;).
 
 Maybe I'm too dramatic here. Even when things go wrong, it remains ways
 faster than translating everything again. I was able to gettextize the
-existing french translation of the Perl documentation in one day, even if
+existing French translation of the Perl documentation in one day, even if
 things B<did> went wrong. That was more than two megabytes of text, and a
 new translation would have last months or more. 
 
@@ -415,17 +415,17 @@ Please note that even when things seem to work properly, there is still room
 for errors in this process. The point is that po4a is unable to understand
 the text to make sure that the translation match the original. That's why
 all strings are marked as "fuzzy" in the process. You should check each of
-them carefully before removing those marker.
+them carefully before removing those markers.
 
 Often the document structures don't match exactly, preventing
 po4a-gettextize from doing its job properly. At that point, the whole game
-is about editing the files to get their damn structure matching. 
+is about editing the files to get their damn structures matching. 
 
 It may help to read the section L<Gettextization: how does it work?> below.
 Understanding the internal process will help you to make this work. The good
 point is that po4a-gettextize is rather verbose about what went wrong when
-it happens. First, it pinpoints where in the documents the structures
-discrepancy are. You will learn the strings that don't match, their position
+it happens. First, it pinpoints where in the documents the structures'
+discrepancies are. You will learn the strings that don't match, their positions
 in the text, and the type of each of them. Moreover, the po file generated
 so far will be dumped to /tmp/gettextization.failed.po. 
 
@@ -462,10 +462,10 @@ po4a ;)
 
 =item - 
 
-Sometimes, the paragraph content do match, but their type don't. Fixing it
+Sometimes, the paragraph content does match, but their types don't. Fixing it
 is rather format-dependant. In pod and nroff, it often comes from the fact
-that one of the two contain a line beginning with a whitespace where the
-other don't. In those formats, such paragraph cannot be wrapped and thus
+that one of the two contains a line beginning with a white space where the
+other doesn't. In those formats, such paragraph cannot be wrapped and thus
 become a different type. Just remove the space and you are fine. It may also
 be a typo in the tag name.
 
@@ -503,7 +503,7 @@ remove the second one from where it is and put it in place of the first one.
 In the contrary, if two similar but different paragraphs were translated in the
 exact same way, you will get the feeling that a paragraph of the translation
 disappeared. A solution is to add a stupid string to the original paragraph
-(such as "I'm different") will solve this. Don't be afraid, those thing will
+(such as "I'm different"). Don't be afraid, those things will
 disappear during the synchronization, and when the added text is short enough,
 gettext will match your translation to the existing text (marking it as fuzzy,
 but you don't really care since all strings are fuzzy after gettextization).
@@ -515,7 +515,7 @@ obtain your precious po file. You are now ready to synchronize your file and
 begin your translation. Please note that on large text, it may happen that
 the first synchronization takes a long time. 
 
-For example, the first po4a-updatepo of the Perl documentation french
+For example, the first po4a-updatepo of the Perl documentation's French
 translation (5.5 Mb po file) took about two days full on a 1Ghz G5 computer.
 Yes, 48 hours. But the subsequent ones only take a dozen of seconds on my
 old laptop. This is because the first time, most of the msgid of the po file
@@ -566,14 +566,14 @@ original. If more than a line match this expression (or none), the addition
 will fail. It is indeed better to report an error than inserting the
 addendum at the wrong location.
 
-This line is called I<position point> in the following. The point were the
+This line is called I<position point> in the following. The point where the
 addendum is added is called I<insertion point>. Those two points are near one
 from another, but not equal. For example, if you want to insert a new section,
 it is easier to put the I<position point> on the title of the preceding section
 and explain po4a where the section ends (remember that I<position point> is
-given by a regexp which should match a uniq line).
+given by a regexp which should match a unique line).
 
-The localization of the I<insertion point> with regard to the position point
+The localization of the I<insertion point> with regard to the I<position point>
 is controlled by the C<mode>, C<beginboundary> and C<endboundary> fields, as
 explained below.
 
@@ -584,7 +584,7 @@ In our case, we would have:
 
 =item mode (mandatory)
 
-It can be either the strings "before" or "after", specifying the position of
+It can be either the string "before" or "after", specifying the position of
 the addendum, relative to the I<position point>.
 
 Since we want the new section to be placed below the one we are matching, we
@@ -617,7 +617,7 @@ In both case, our addendum will be placed after the E<lt>/sectionE<gt> and
 before the E<lt>sectionE<gt>. The first one is better since it will work
 even if the document gets reorganized.
 
-Both forms exists because documentation formats are different. In some of
+Both forms exist because documentation formats are different. In some of
 them, there is a way to mark the end of a section (just like the
 C<E<lt>/sectionE<gt>> we just used), while some other don't explicitly mark
 the end of section (like in nroff). In the former case, you want to make a
@@ -646,7 +646,7 @@ If you want to add something after the following nroff section:
 
   .SH "AUTHORS"
 
-you should put a C<position> matching this line, and an C<beginboundary>
+you should put a C<position> matching this line, and a C<beginboundary>
 matching the beginning of the next section (ie C<^\.SH>). The addendum will
 then be added B<after> the I<position point> and immediately B<before> the
 first line matching the C<beginboundary>. That is to say:
@@ -654,7 +654,7 @@ first line matching the C<beginboundary>. That is to say:
  PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\.SH
 
 =item
-If you want to add something into a section (like after "Copyright blabla")
+If you want to add something into a section (like after "Copyright Big Dude")
 instead of adding a whole section, give a C<position> matching this line,
 and give a C<beginboundary> matching any line.
 
@@ -662,7 +662,7 @@ and give a C<beginboundary> matching any line.
 
 =item If you want to add something at the end of the document, give a
 C<position> matching any line of your document (but only one line. Po4a
-won't proceed if it's not uniq), and give an C<endboundary> matching
+won't proceed if it's not unique), and give an C<endboundary> matching
 nothing. Don't use simple strings here like "C<EOF>", but prefer which have
 less chance to be in your document.
 
@@ -679,13 +679,13 @@ don't use C<.fi> as endboundary, because it will match with "the[ fi]le",
 which is obviously not what you expect. The correct endboundary in that case
 is: C<^\.fi$>.
 
-If the addendum don't go where you expected, try to pass the -vv argument to
-the tools, so that it explains you what it does while placing the
+If the addendum doesn't go where you expected, try to pass the -vv argument to
+the tools, so that they explain you what they do while placing the
 addendum.
 
 =head3 More detailed example
 
-Original document (pod formated):
+Original document (pod formatted):
 
  |=head1 NAME
  |
@@ -724,7 +724,7 @@ documents when more than one format was used.
 The L<po4a(1)> program was designed to solve those difficulties. Once your
 project is converted to the system, you write a simple configuration file
 explaining where your translation files are (po and pot), where the original
-documents are, their format and where their translation should be placed.
+documents are, their formats and where their translations should be placed.
 
 Then, calling po4a(1) on this file ensure that the po files are synchronized
 against the original document, and that the translated document are
@@ -768,7 +768,7 @@ both input and disregard the output po, you get po4a-translate.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
 is a little example to show you how it works. It parses a list of paragraphs,
-each of them beginning with <p>
+each of them beginning with <p>.
 
   1 sub parse {
   2   PARAGRAPH: while (1) {
@@ -797,7 +797,7 @@ the original document (line 7) and push the paragraph built so far into the
 outputs. After removing the leading E<lt>pE<gt> of it on line 9, we push the
 concatenation of this tag with the translation of the rest of the paragraph.
 
-This translate() function is very cool. It push its argument into the output
+This translate() function is very cool. It pushes its argument into the output
 po file (extraction) and returns its translation as found in the input po
 file (translation). Since it's used as part of the argument of pushline(),
 this translation lands into the output document.
@@ -831,10 +831,10 @@ For that, po4a parsers are used on both the original and the translation
 files to extract po files, and then a third po file is built from them
 taking strings from the second as translation of strings from the first. In
 order to check that the strings we put together are actually the
-translations of each other, document parsers in po4a should put informations
-about the syntaxical type of extracted strings in the document (all existing
+translations of each other, document parsers in po4a should put information
+about the syntactical type of extracted strings in the document (all existing
 ones do so, yours should also). Then, this information is used to make sure
-that both document have the same syntax. In the previous example, it would
+that both documents have the same syntax. In the previous example, it would
 allow us to detect that string 4 is a paragraph in one case, and a chapter
 title in another case and to report the problem.
 
@@ -857,7 +857,7 @@ algorithms involved here are rather straightforward. We look for a line
 matching the position regexp, and insert the addendum before it if we're in
 mode=before. If not, we search for the next line matching the boundary and
 insert the addendum after this line if it's an C<endboundary> or before this
-line if it's an C<beginboundary>.
+line if it's a C<beginboundary>.
 
 =head1 FAQ 
 
@@ -870,7 +870,7 @@ E<lt>po4a-devel@lists.alioth.debian.orgE<gt> mailing list. We love feedback.
 
 =head2 Why to translate each paragraph separately?
 
-Yes, in po4a, each paragraphs are translated separately (in fact, each
+Yes, in po4a, each paragraph is translated separately (in fact, each
 module decides this, but all existing modules do so, and yours should also).
 There are two main advantages to this approach:
 
@@ -879,7 +879,7 @@ There are two main advantages to this approach:
 =item *
 
 When the technical parts of the document are hidden from the scene, the
-translator can't mess with them. The less markers we present to the
+translator can't mess with them. The fewer markers we present to the
 translator the less error he can do.
 
 =item *
@@ -891,14 +891,14 @@ translation need to be updated is eased by this process.
 =back
 
 Even with these advantages, some people don't like the idea of translating
-each paragraphs separately. Here are some of the answers I can give to
+each paragraph separately. Here are some of the answers I can give to
 their fear:
 
 =over 2
 
 =item *
 
-This approach proved successfully in the KDE project and allow people there
+This approach proved successfully in the KDE project and allows people there
 to produce the biggest corpus of translated and up to date documentation I
 know.
 
@@ -908,13 +908,13 @@ The translators can still use the context to translate, since the strings in
 the po file are in the same order than in the original document. Translating
 sequentially is thus rather comparable whether you use po4a or not.
 And in any case, the best way to get the context remains to convert the
-document to a printable format since the text formating ones are not really
+document to a printable format since the text formatting ones are not really
 readable, IMHO. 
 
 =item *
 
 This approach is the one used by professional translators. I agree, that
-they have somehow different goals that open-source translators. The
+they have somehow different goals than open-source translators. The
 maintenance is for example often less critical to them since the content
 changes rarely.
 
@@ -925,17 +925,17 @@ changes rarely.
 Professional translator tools sometimes split the document at the sentence
 level in order to maximize the reusability of previous translations and
 speed up their process.  The problem is that the same sentence may have
-several translation, depending on the context.
+several translations, depending on the context.
 
-Paragraph are by definition longer than sentences. It will hopefully ensure
+Paragraphs are by definition longer than sentences. It will hopefully ensure
 that having the same paragraph in two documents will have the same meaning
 (and translation), regardless of the context in each case.
 
 Splitting on smaller parts than the sentence would be B<very bad>. It would
 be a bit long to explain why here, but interested reader can refer to the
 L<Locale::Maketext::TPJ13(3pm)|Locale::Maketext::TPJ13(3pm)> man page
-(which comes with the perl documentation), for example. To make short, each
-language have its specific syntaxic rules, and there is no way to build
+(which comes with the Perl documentation), for example. To make short, each
+language has its specific syntactic rules, and there is no way to build
 sentences by aggregating parts of sentences working for all existing
 languages (or even for the 5 of the 10 most spoken ones, or even less).
 
@@ -973,7 +973,7 @@ compilation time). The old system was deprecated because of several issues:
 
 =item * maintenance problems
 
-If several translator provide a patch at the same time, it gets hard to
+If several translators provide a patch at the same time, it gets hard to
 merge them together. 
 
 How will you detect changes to the original, which need to be applied to
@@ -984,7 +984,7 @@ the original you translated. I.e., you need a po file in your file ;)
 
 This solution is viable when only European languages are involved, but the
 introduction of Korean, Russian and/or Arab really complicate the picture.
-UTF could be a solution, but there is still some problems with it.
+UTF could be a solution, but there are still some problems with it.
 
 Moreover, such problems are hard to detect (i.e., only Korean readers will
 detect that the encoding of Korean is broken [because of the Russian
@@ -1002,7 +1002,7 @@ known alternative is manual translation, will all the maintenance issues.
 =head2 What about the other translation tools for documentation using
 gettext?
 
-As far as I know, there is only two of them: 
+As far as I know, there are only two of them: 
 
 =over 
 
@@ -1041,7 +1041,7 @@ comment indicating what the file is, how to use it. This should help the
 poor developers flooded with tons of files in different languages they
 hardly speak, and help them dealing correctly with it.
 
-In the po4a project, translated document are not source files anymore. Since
+In the po4a project, translated documents are not source files anymore. Since
 sgml files are habitually source files, it's an easy mistake. That's why all
 file present this header:
 
@@ -1059,7 +1059,7 @@ file present this header:
 
 Likewise, gettext's regular po files only need to be copied to the po/
 directory. But B<this is not the case of the ones manipulated by po4a>. The
-major risk here is that a developer erase the existing translation of his
+major risk here is that a developer erases the existing translation of his
 program with the translation of his documentation. (Both of them can't be
 stored in the same po file, because the program needs to install its
 translation as mo file while the documentation only use its translation at
@@ -1129,14 +1129,14 @@ at those addresses:
 
 =back
 
-But everything isn't green, and this approach also have some disadvantages
+But everything isn't green, and this approach also has some disadvantages
 we have to deal with.
 
 =over 2
 
 =item *
 
-Addendum are ... strange a the first glance.
+Addendum are ... strange at the first glance.
 
 =item *
 
@@ -1149,21 +1149,21 @@ there is an issue with the original, it should be reported as a bug anyway.
 Even with an easy interface, it remains a new tool people have to learn.
 
 One of my dreams would be to integrate somehow po4a to gtranslator or
-kbabel. When a sgml file is opened, the strings are automatically extracted.
+kbabel. When an sgml file is opened, the strings are automatically extracted.
 When it's saved a translated sgml file can be written to disk. If we manage
-to do a MS Word (TM) module (or at least RTF) professional translators may
+to do an MS Word (TM) module (or at least RTF) professional translators may
 even use it.
 
 =back
 
 =head1 Known bugs and feature requests
 
-The biggest issue (beside missing modules) is the encoding handling. Adding
+The biggest issue (besides missing modules) is the encoding handling. Adding
 a UTF8 perl pragma and then recoding the strings on output is the way to go,
 but it's not done yet.
 
 We would also like to factorise some code (about file insertion) of the sgml
-module back into the TransTractor so that all module can benefit of this,
+module back into the TransTractor so that all modules can benefit of this,
 but this is not user visible.
 
 =head1 AUTHORS

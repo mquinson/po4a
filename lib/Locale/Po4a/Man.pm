@@ -36,8 +36,8 @@ in wrapped paragraph, and I think it's worth.
 
 =head2 Font specification
 
-The first change is about font change specifications.  In nroff, there is
-several way to specify if a given word should be written in small, bold or
+The first change is about font change specifications.  In nroff, there are
+several ways to specify if a given word should be written in small, bold or
 italics. In the text to translate, there is only one way, borrowed from the
 pod (perl online documentation) format:
 
@@ -62,7 +62,7 @@ equivalent to \f(CWtext\fP or ".CW text"
 =back
 
 Remark: The CW face is not available for all groff devices. It is not
-recommanded to use it. It is provided for your convenience.
+recommended to use it. It is provided for your convenience.
 
 =head2 Putting 'E<lt>' and 'E<gt>' in translations
 
@@ -77,8 +77,8 @@ real nroff interpreter. It would be possible to do a real nroff
 interpreter, to allow authors to use all the existing macros, or even to
 define new ones in their pages, but we didn't want to. It would be too
 difficult, and we thought it wasn't necessary. We do think that if
-manpage authors want to see their production translated, they may have to
-adapt to ease the work of translators. 
+manpages' authors want to see their productions translated, they may have to
+adapt to ease the work of translators.
 
 So, the man parser implemented in po4a have some known limitations we are
 not really inclined to correct, and which will constitute some pitfalls
@@ -91,9 +91,9 @@ The macro set described in mdoc(7) (and widely used under BSD, IIRC) isn't
 supported at all by po4a, and won't be. It would need a completely separate
 parser for this, and I'm not inclined to do so. On my machine, there are
 only 63 pages based on mdoc, from 4323 pages. If someone implements the mdoc
-support, I'll happilly include this, though.
+support, I'll happily include this, though.
 
-=head2 Don't programm in nroff
+=head2 Don't program in nroff
 
 nroff is a complete programming language, with macro definition,
 conditionals and so on. Since this parser isn't a fully featured nroff
@@ -114,7 +114,7 @@ only because I failed to find any documentation about them. Here is the
 list of unsupported macros used on my box. Note that this list isn't
 exhaustive since the program fails on the first encountered unsupported
 macro. If you have any information about some of these macros, I'll
-happilly add support for them. Because of these macros, about 250 pages on
+happily add support for them. Because of these macros, about 250 pages on
 my box are inaccessible to po4a::man.
 
  ..               ."              .AT             .b              .bank
@@ -196,7 +196,7 @@ automatically), or have other more serious formatting change (ie, which
 chars are italics, which ones are bold, etc.).
 
 So, it seems like since ignored pages are translatable with po4a::pod and
-since wrapping changes are acceptables in most cases, the current version
+since wrapping changes are acceptable in most cases, the current version
 of po4a can translate 80% of the man pages on my machine. Moreover, most of
 the untranslatable pages could be fixed with some simple tricks given
 above. Isn't that coooool?
@@ -217,7 +217,7 @@ L<Locale::Po4a::Pod(3pm)>.
 Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut
 

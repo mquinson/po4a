@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.31 2004-12-05 19:24:29 mquinson Exp $
+# $Id: Po.pm,v 1.32 2005-01-07 22:50:52 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -145,7 +145,7 @@ catalog.
 sub read{
     my $self=shift;
     my $filename=shift 
-	|| croak ("po4a::po: ".dgettext("po4a","Please provide a non-nul filename")."\n");
+	|| croak ("po4a::po: ".dgettext("po4a","Please provide a non-null filename")."\n");
 
     my $fh;
     if ($filename eq '-') {
@@ -610,7 +610,7 @@ Request the translation of the string given as argument in the current catalog.
 The function returns the original (untranslated) string if the string was not
 found.
 
-After the string to translate, you can pass an hash of extra
+After the string to translate, you can pass a hash of extra
 arguments. Here are the valid entries:
 
 =over
@@ -673,9 +673,9 @@ sub gettext {
 
 =item stats_get()
 
-Returns stats about the hit ratio of gettext since the last time that
+Returns statistics about the hit ratio of gettext since the last time that
 stats_clear() was called. Please note that it's not the same
-statistics than the one printed by msgfmt --statistic. Here, it's stats
+statistics than the one printed by msgfmt --statistic. Here, it's statistics
 about recent usage of the po file, while msgfmt reports the status of the
 file.  Example of use:
 
@@ -699,7 +699,7 @@ sub stats_get() {
 
 =item stats_clear()
 
-Clears the stats about gettext hits.
+Clears the statistics about gettext hits.
 
 =cut
 
@@ -718,7 +718,7 @@ sub stats_clear {
 =item push(%)
 
 Push a new entry at the end of the current catalog. The arguments should
-form an hash table. The valid keys are :
+form a hash table. The valid keys are:
 
 =over 4
 
@@ -733,8 +733,8 @@ the translation.
 =item reference
 
 an indication of where this string was found. Example: file.c:46 (meaning
-in 'file.c' at line 46). It can be a space separated list in case of
-multiple occurences.
+in 'file.c' at line 46). It can be a space-separated list in case of
+multiple occurrences.
 
 =item comment
 
@@ -931,7 +931,7 @@ sub msgid($$) {
 
 =item get_charset()
 
-This returns the character set specified in the po header. If it hasn't been
+Returns the character set specified in the po header. If it hasn't been
 set, it will return "CHARSET".
 
 =cut
