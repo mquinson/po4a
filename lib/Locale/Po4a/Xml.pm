@@ -778,7 +778,7 @@ sub treat_attributes {
 				}
 			}
           
-			die sprintf("po4a::xml: ".dgettext ("po4a","Bad attribute syntax at %s"),$ref)."\n";
+			die sprintf("po4a::xml: ".dgettext ("po4a","Bad attribute syntax at %s"),$ref)."\n"
 				unless ($complete);
 		}
 	}
@@ -1014,8 +1014,9 @@ sub get_string_until {
 
 =item skip_spaces
 
-This function receives as argument the pointer to a paragraph (in the format
-returned by get_string_until) and skips his heading spaces.
+This function receives as argument the reference to a paragraph (in the format
+returned by get_string_until), skips his heading spaces and returns them as
+a simple string.
 
 =cut
 
