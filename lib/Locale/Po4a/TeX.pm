@@ -91,6 +91,18 @@ sub pre_trans {
     print STDERR "pre_trans($str)="
         if ($debug{'pretrans'});
 
+    # Accentuated characters
+    # FIXME: only do this if the encoding is UTF-8?
+    $str =~ s/\\`a/à/g;
+    $str =~ s/\\c{c}/ç/g;
+    $str =~ s/\\^e/ê/g;
+    $str =~ s/\\'e/é/g;
+    $str =~ s/\\`e/è/g;
+    $str =~ s/\\`u/ù/g;
+    $str =~ s/\\"i/ï/g;
+    # Non breaking space. FIXME: should we change $\sim$ to ~
+    $str =~ s/~/\xA0/g;
+
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
 }
@@ -101,6 +113,17 @@ sub post_trans {
 
     print STDERR "post_trans($str)="
         if ($debug{'postrans'});
+
+    # Accentuated characters
+    $str =~ s/à/\\`a/g;
+    $str =~ s/ç/\\c{c}/g;
+    $str =~ s/ê/\\^e/g;
+    $str =~ s/é/\\'e/g;
+    $str =~ s/è/\\`e/g;
+    $str =~ s/ù/\\`u/g;
+    $str =~ s/ï/\\"i/g;
+    # Non breaking space. FIXME: should we change ~ to $\sim$
+    $str =~ s/\xA0/~/g;
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
