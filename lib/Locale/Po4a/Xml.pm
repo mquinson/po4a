@@ -114,9 +114,9 @@ These are this module's particular options:
 
 =over 4
 
-=item strip
+=item nostrip
 
-Makes it strip the spaces around the extracted strings. (Typical)
+Prevents it to strip the spaces around the extracted strings.
 
 =item wrap
 
@@ -175,7 +175,7 @@ sub initialize {
 	my $self = shift;
 	my %options = @_;
 
-	$self->{options}{'strip'}=0;
+	$self->{options}{'nostrip'}=0;
 	$self->{options}{'wrap'}=0;
 	$self->{options}{'caseinsensitive'}=0;
 	$self->{options}{'tagsonly'}=0;
@@ -831,8 +831,8 @@ sub treat_content {
 	}
 
 	# This strips the extracted strings
-	# (only if you specify the 'strip' option)
-	if ($self->{options}{'strip'}) {
+	# (only if you don't specify the 'nostrip' option)
+	if (!$self->{options}{'nostrip'}) {
 		my $clean = 0;
 		# Clean the beginning
 		while (!$clean and $#paragraph > 0) {
