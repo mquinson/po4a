@@ -327,10 +327,16 @@ sub parse_file {
 	$pos += length($prolog);
 	$lvl=1;
 	while ($lvl != 0) {
-	    # Eat comments in the prolog, since it may be some '>' or '<' in them
+	    # Eat comments in the prolog, since it may be some '>' or '<' in them.
 	    if ($origfile =~ m/^.{$pos}?(<!--.*?-->)/s) {
 		print "Found a comment in the prolog: $1\n" if ($debug{'generic'});
 		$pos += length($1);
+		# take care of the line numbers
+		my @a = split(/\n/,$1);
+		shift @a; # nb line - 1
+		while (defined(shift @a)) {
+		    $prolog .= "\n";
+		}
 		next;
 	    }
 	    # Search the closing '>'
@@ -499,16 +505,16 @@ sub parse_file {
 	    }
 	}
     }
-    # Unprotect undefined inclusions
+    # Unprotect undefined inclusions, and die of them
     $prolog =~ s/{PO4A-percent}/%/sg;
     if ($prolog =~ /%([^;\s]*);/) {
        die sprintf("po4a::sgml: ".dgettext("po4a","unrecognized prolog inclusion entity: %%%s;")."\n",$1);
     }
-    # Protect &entities; (but the ones asking for a file inclusion)
+    # Protect &entities; (all but the ones asking for a file inclusion)
     #   search the file inclusion entities
     my %entincl;
     my $searchprolog=$prolog;
-    while ($searchprolog =~ /(.*?)<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {#})"{
+    while ($searchprolog =~ /(.*?)<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {  #})"{
 	print STDERR "Seen the entity of inclusion $2 (=$3)\n"
 	  if ($debug{'entities'});
 	my $key = $2;
@@ -528,7 +534,7 @@ sub parse_file {
 	  if ($debug{'entities'});
     }
 
-    #   Change the entities in the file
+    #   Change the entities including files in the document
     while ($origfile =~ /^(.*?)&([^;\s]*);(.*)$/s) {
 	if (defined $entincl{$2}) {
 	    my ($begin,$key,$end)=($1,$2,$3);
@@ -568,8 +574,7 @@ sub parse_file {
 	    print STDERR "preserve $2\n" if ($debug{'entities'});
 	}
     }
-    #   Reput the entities of inclusion in place
-    $origfile =~ s/{PO4A-keep-amp}/&/g;
+
     if ($debug{'refs'}) {
 	print "XX Resulting shifts\n";
 	for (my $i=0; $i<scalar @refs; $i++) {
@@ -577,7 +582,7 @@ sub parse_file {
 	}
     }
     
-    my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4a-sgml-XXXX",
+    my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4asgml-XXXX",
 					      DIR    => "/tmp",
 					      UNLINK => 0);
     print $tmpfh $origfile;
@@ -630,7 +635,7 @@ sub parse_file {
         while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)">(.*)$/is) { #" ){ 
 	   $self->pushline($1) if length($1);
 	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
-	   warn "Seen text entity $2" if ($debug{'entities'});
+	   warn "Seen text entity $2\n" if ($debug{'entities'});
 	   $prolog = $4;
 	}
         $self->pushline($post."\n") if (length($post));
