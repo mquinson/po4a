@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.13 2004-07-16 04:13:39 mquinson-guest Exp $
+# $Id: Chooser.pm,v 1.14 2004-07-29 01:27:51 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -98,6 +98,8 @@ L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
 L<Locale::Po4a::Html(3pm)>,
 L<Locale::Po4a::Dia(3pm)>.
+
+=back
 
 =head1 AUTHORS
 

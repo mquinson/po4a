@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.13 2004-07-19 20:31:17 mquinson-guest Exp $
+# $Id: Po.pm,v 1.14 2004-07-29 01:27:51 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -333,6 +333,49 @@ sub gettextize {
     }
     return $pores;
 }
+
+=item select_file()
+
+This function extract a catalog from an existing one. Only the entries having a
+reference in the given file will be placed in the resulting catalog.
+
+=cut
+
+sub select_file {
+    my $self=shift;
+    my $file=shift;
+
+    my $res;
+    $res = Locale::Po4a::Po->new();
+
+    for (my $cpt=(0) ;
+	 $cpt<$self->count_entries();
+	 $cpt) {
+	
+	my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
+
+	$msgid = $self->msgid($cpt);
+	$ref=$self->{po}{$msgid}{'reference'};
+	next unless ($ref =~ / $file:/);
+
+	$msgstr= $self->{po}{$msgid}{'msgstr'};
+	$flags =  $self->{po}{$msgid}{'flags'};
+	$type = $self->{po}{$msgid}{'type'};
+	$comment = $self->{po}{$msgid}{'comment'};
+	$automatic = $self->{po}{$msgid}{'automatic'};
+
+	$res->push_raw('msgid' => $msgid, 
+			 'msgstr' => $msgstr,
+			 'flags' => $flags,
+	                 'type'  => $type,
+			 'reference' => $ref,
+			 'comment' => $comment,
+			 'automatic' => $automatic);
+
+    }
+    return $res;
+}
+
 =back
 
 =head1 Functions to use a message catalogs for translations

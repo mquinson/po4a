@@ -118,7 +118,6 @@ of each paragraph.
        $my ($paragraph,$pararef,$line,$lref)=("","","","");
        $my $first=1;
        while (($line,$lref)=$document->shiftline() && defined($line)) {
-	   ($line,$lref)=$document->shiftline();
 	   if ($line =~ m/<p>/ && !$first--; ) {
 	       # Not the first time we see <p>. 
 	       # Reput the current line in input,
@@ -606,6 +605,7 @@ sub addendum {
     return 1;
 }
 
+=back
 
 =head1 INTERNAL FUNCTIONS used to write derivated parsers
 
@@ -752,8 +752,6 @@ sub translate {
 
 Returns if the verbose option was passed during the creation of the
 TransTractor.
-
-=back
 
 =cut
 

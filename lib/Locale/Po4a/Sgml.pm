@@ -82,6 +82,8 @@ for the translator comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
 "<title>&Acute;</title>", even if I doubt such things to ever happen...
 
+=back
+
 =head1 STATUS OF THIS MODULE
 
 The result is perfect. Ie, the generated documents are exactly the

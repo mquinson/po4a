@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.12 2004-07-19 20:28:59 mquinson-guest Exp $
+# $Id: po4a,v 1.13 2004-07-29 01:27:51 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -159,6 +159,8 @@ use Locale::Po4a::TransTractor;
 
 use Pod::Usage qw(pod2usage);
 
+use File::Temp;
+
 use Locale::gettext;
 use POSIX;     # Needed for setlocale()
 
@@ -178,9 +180,10 @@ sub show_version {
     exit 0;
 }
 
-my ($help,$type,$debug,@verbose,$quiet,@options);
+my ($help,$type,$debug,@verbose,$quiet,@options,$split);
 @verbose = ();
 $debug = 0;
+$split = 0;
 my ($threshold)=(80);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
@@ -188,6 +191,7 @@ GetOptions(
         'verbose|v'     => \@verbose,
         'debug|d'       => \$debug,
         'quiet|q'       => \$quiet,
+	'split|s'       => \$split,
 	'keep|k=s'      => \$threshold,
         'version|V'     => \&show_version
 ) or pod2usage(1);
@@ -298,11 +302,11 @@ die gettext("po4a_paths not declared. Dunno where to find the pot and po files")
 
 # make a big pot
 if (-e $pot_filename) {
-    print sprintf(gettext("Updating %s:")."\n",$pot_filename)
-      if $verbose;
+    print sprintf(gettext("Updating %s:"),$pot_filename)
+	if $verbose;
 } else {
-    print sprintf(gettext("Creating %s:")."\n",$pot_filename)
-      if $verbose;
+    print sprintf(gettext("Creating %s:"),$pot_filename)
+	if $verbose;
 }
 
 my $potfile=Locale::Po4a::Po->new();
@@ -317,16 +321,58 @@ foreach my $master (keys %document) {
 }
 $potfile->write($pot_filename);
 
+printf (gettext(" (%d entries)")."\n",$potfile->count_entries());
+
 # update all po files
 my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print STDERR sprintf(gettext("Updating %s: "),$po_filename{$lang})
-	    if $verbose;    
-	system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($verbose?"":">/dev/null 2>/dev/null"))
-	  && die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
-	system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
-	  if $verbose;
+	    if ($verbose);    
+	if ($split) {
+	    my ($pot_filename,$po_filename,$bigpo_filename);
+	    (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
+						       DIR    => "/tmp",
+						       SUFFIX => ".pot",
+						       OPEN   => 0,
+						       UNLINK => 0)
+		or die sprintf(gettext("Can't create a temporary pot file: %s"),$!)."\n";
+	    (undef,$po_filename)=File::Temp->tempfile("po4aXXXX",
+						      DIR    => "/tmp",
+						      SUFFIX => ".po",
+						      OPEN   => 0,
+						      UNLINK => 0)
+		or die sprintf(gettext("Can't create a temporary po file: %s"),$!)."\n";
+	    my ($poorig,$pores)=(Locale::Po4a::Po->new(),Locale::Po4a::Po->new());
+	    $poorig->read($po_filename{$lang});
+	    
+	    foreach my $master (sort keys %document) {
+		my $pot=Locale::Po4a::Po->new();
+		my $po=Locale::Po4a::Po->new();
+		print "  $master:";
+		print "(pot)";
+		$pot=$potfile->select_file($master);
+		print "(po) ";
+		$po=$poorig->select_file($master);
+		unlink($pot_filename) if -e $pot_filename;
+		unlink($po_filename) if -e $po_filename;
+		
+		$pot->write($pot_filename);
+		$po->write($po_filename);
+		system ("msgmerge -U $po_filename $pot_filename")
+		    && die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+		$pores->read($po_filename);
+	    }
+	    $pores->write($po_filename{$lang}.".new");
+	    unlink($pot_filename) if -e $pot_filename;
+	    unlink($po_filename) if -e $po_filename;
+	    
+	} else {    
+	    system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($verbose?"":">/dev/null 2>/dev/null"))
+		&& die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
+	    if $verbose;
+	}
     } else {
 	print STDERR sprintf(gettext("Creating %s:")."\n",$po_filename{$lang}) 
 	    if $verbose;    
@@ -334,7 +380,6 @@ foreach $lang (sort keys %po_filename) {
 	    die sprintf(gettext("Error while copying the po file: %s"),$!)."\n";
     }
 }
-
 # update all translations
 
 foreach $lang (sort keys %po_filename) {
