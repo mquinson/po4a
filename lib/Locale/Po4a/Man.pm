@@ -127,12 +127,6 @@ my box are inaccessible to po4a::man.
  .splitfont       .Sx             .T              .TF             .The
  .TT              .UC             .ul             .Vb             .zZ
 
-=head2 Don't escape spaces to make them non-breaking.
-
-Some authors escape spaces to make sure that the wrapping tool won't mangle
-them. po4a::man I<will> eat them. Use the .nf/.fi groff macro to control
-whether the text should be wrapped or not.
-
 =head2 Don't mess nest font specifier.
 
 In order to make translator's life easier, po4a::man will change all font
@@ -318,7 +312,7 @@ sub pre_trans {
 		" %s"),$ref,$origstr)."\n";
     }
 
-#    $str =~ s|\\-|-|sg;
+    $str =~ s|\\-|-|sg;
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
     
@@ -358,7 +352,8 @@ sub post_trans {
 	if ($debug{'postrans'});
 
     # Post formating, so that groff see the strange chars
-#    $str =~ s|-|\\-|sg;
+    $str =~ s|\\-|-|sg; # in case the translator added some of them manually
+    $str =~ s|-|\\-|sg;
 
     # No . on first char, or nroff will think it's a macro
     $str =~ s/\n([.'"])/ $1/mg; #'
