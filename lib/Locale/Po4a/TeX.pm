@@ -693,6 +693,14 @@ sub parse{
                 $paragraph="";
             }
             $self->pushline($line."\n");
+        } elsif ($line =~ /^\\begin\{/) {
+            # break the paragraph at the beginning of a new environment.
+            $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
+            if (length($paragraph)) {
+                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                $self->pushline($t);
+            }
+            $paragraph = $line."\n";
         } else {
             # continue the same paragraph
             if ($paragraph =~ /(?<!\\)%$/) { # FIXME: even number of \ ...
