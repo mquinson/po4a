@@ -900,7 +900,7 @@ See the INLINE CUSTOMIZATION section for more details.
 
 sub parse_definition_line {
     my ($self,$line)=@_;
-    $line =~ s/^\s*%\s+po4a\s*:\s*//;
+    $line =~ s/^\s*%\s*po4a\s*:\s*//;
 
     if ($line =~ /^command\s+(\*?)(\w+)\s+(.*)$/) {
         my $command = $2;
