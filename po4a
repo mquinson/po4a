@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.18 2004-08-17 22:20:52 jvprat-guest Exp $
+# $Id: po4a,v 1.19 2004-11-06 15:09:05 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -96,6 +96,12 @@ Show a short help message.
 
 Charset of the files containing the documents to translate. Note that all
 master documents must use the same charset for now. This is a known
+limitation, and we are working on solving this.
+
+=item -L, --localized-charset
+
+Charset of the files containing the localized documents. Note that all
+translated documents will use the same charset for now. This is a known
 limitation, and we are working on solving this.
 
 =item -A, --addendum-charset
@@ -191,12 +197,13 @@ my ($help,$type,$debug,@verbose,$quiet,@options,$split);
 $debug = 0;
 $split = 0;
 my ($threshold)=(80);
-my ($mastchar,$addchar);
+my ($mastchar,$locchar,$addchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
     
 	'master-charset|M=s'    => \$mastchar,
+	'localized-charset|L=s' => \$locchar,
 	'addendum-charset|A=s' => \$addchar,
 
         'verbose|v'     => \@verbose,
@@ -406,6 +413,7 @@ foreach $lang (sort keys %po_filename) {
 	              'file_out_name' => $document{$master}{$lang},
 	              'po_in_name'    => \@po_in_name,
                       'file_in_charset'  => $mastchar,
+                      'file_out_charset' => $locchar,
                       'addendum_charset' => $addchar);
 	
 	my ($percent,$hit,$queries) = $doc->stats();
