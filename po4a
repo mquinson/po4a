@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.5 2004-07-18 06:12:01 mquinson-guest Exp $
+# $Id: po4a,v 1.6 2004-07-18 06:27:25 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -81,6 +81,12 @@ More formally, the format is:
 =head1 OPTIONS
 
 =over 4
+
+=item -k, --keep
+
+Minimal threshold for translation percentage to keep (ie, write) the
+resulting file (default: 80). Ie, by default, files have to be translated
+at at least 80% to get written.
 
 =item -h, --help
 
@@ -175,12 +181,14 @@ sub show_version {
 my ($help,$type,$debug,$verbose,$quiet,@options);
 $verbose = 0;
 $debug = 0;
+my ($threshold)=(80);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
         'verbose|v'     => \$verbose,
         'debug|d'       => \$debug,
         'quiet|q'       => \$quiet,
+	'keep|k=s'      => \$threshold,
         'version|V'     => \&show_version
 ) or pod2usage(1);
 
@@ -297,7 +305,7 @@ $potfile->write($pot_filename);
 my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
-	print STDERR sprintf(gettext("Updating %s:")."\n",$po_filename{$lang})
+	print STDERR sprintf(gettext("Updating %s: "),$po_filename{$lang})
 	    if $verbose;    
 	system ("msgmerge","-U",$po_filename{$lang},$pot_filename) == 0 ||
 	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
@@ -328,9 +336,9 @@ foreach my $master (keys %document) {
 	
 	my ($percent,$hit,$queries) = $doc->stats();
 	
-	if ($percent<80)  {
-	    print STDERR sprintf(gettext("Translation of %s discarded: only %s%% are translated."),
-		                 $master,$percent)."\n";
+	if ($percent<$threshold)  {
+	    print STDERR sprintf(gettext("Discard the translation of %s (only %s%% translated; need %s%%)."),
+		                 $master,$percent,$threshold)."\n";
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 	    next LANG;
 	}
@@ -345,6 +353,10 @@ foreach my $master (keys %document) {
 		}
 	    }
 	}
+	print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
+	    $master,$percent,$hit,$queries)."\n" 
+	  if $verbose;
+
 	$doc->write($document{$master}{$lang});
     }
 }
