@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.10 2004-04-28 09:47:25 mquinson-guest Exp $
+# $Id: Po.pm,v 1.11 2004-04-28 21:36:31 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -486,7 +486,7 @@ other's msgid as msgstr. To make sure that things get ok, each msgid in po
 objects are given a type, based on their structure (like "chapt", "sect1",
 "p" and so on in docbook). If the types of strings are not the same, that
 mean that both files do not share the same structure, and the process
-repports an error.
+reports an error.
 
 This information is written as automatic comment in the po file since this
 to translators some context about the strings to translate.
