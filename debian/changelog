@@ -1,7 +1,25 @@
+po4a (0.10.3) unstable; urgency=low
+
+  * Move lib/ to Locale/Po4a/ so that pod translations can be builded
+    without build-depending on ourself
+  * Add a new script po4a-identity usefull to debug po4a modules (by
+    prooving they are idempotent)
+  * Fix the way the bold and italics are handeled in man pages (translator
+    are only faced to POD sequence B<blabla> and I<blibli>, but this was
+    broken and did not work in all cases).
+  * updatepo accept non existing po files, so that you can bootstrap a po
+    file for n documents without gettextize each one and using msgcat to
+    merge the results.
+  * Add a Copyright and License section in all man pages
+
+ -- Martin Quinson <martin.quinson@tuxfamily.org>  Wed, 18 Dec 2002 08:08:45 +0100
+
 po4a (0.10.2) unstable; urgency=low
 
   * Fix a bug repported by Julien Louis: Locale::Po4a::Man was not included 
     in po4a-gettextize.
+  * Other bug repported by Julien Louis: indented paragraph in man pages
+    shouldn't be wrapped.
   * Fix the generation of binary po files, and put the french translation.
 
  -- Martin Quinson <martin.quinson@tuxfamily.org>  Fri, 13 Dec 2002 07:51:00 +0100
@@ -24,8 +42,7 @@ po4a (0.10) unstable; urgency=low
   * Man.pm:
     - first release.
     - seems ok to me (it fails on unknown macro, and shouldn't change the
-      cat result.
-  * 
+      cat result).
 
  -- Martin Quinson <martin.quinson@tuxfamily.org>  Wed, 11 Dec 2002 16:55:20 +0100
 
