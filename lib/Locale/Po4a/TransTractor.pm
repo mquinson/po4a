@@ -890,10 +890,9 @@ This function will return the character set that should be used in the output
 document (usually useful to substitute the input document's detected character
 set where it has been found).
 
-If no character set is specified for the output document, it will use the
-input po's character set, and if the input po has the default "CHARSET", it
-will return the input document's character set, so that no encoding is
-performed.
+It will use the input po's character set, and if the input po has the default
+"CHARSET", it will return the input document's character set, so that no
+encoding is performed.
 
 =cut
 
