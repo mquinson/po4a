@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.13 2004-07-29 01:27:51 mquinson-guest Exp $
+# $Id: po4a,v 1.14 2004-08-09 19:27:26 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -408,7 +408,7 @@ foreach $lang (sort keys %po_filename) {
 	if (defined ($document{$master}{"add_$lang"})) {
 	    foreach my $add (@{$document{$master}{"add_$lang"}}) {
 		if ( !$doc->addendum($add) ) {
-		    die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
+		    die sprintf(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
 			$add,$document{$master}{$lang})."\n";
 		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		    next DOC;
