@@ -205,11 +205,15 @@ original file has changed?> above.
 This one of the major headache for po-based documentation translation
 systems. In po4a, the solution is called addendum.
 
-Addendum can be seen as post-processing patches to the produced
-document. They allow the translator to add original content to the document
-which is not translated from the original document. This way, they can add
-a section giving the name of the contributors to this translation, or
-explain how to report bug against the translation.
+Addendum can be seen as patches to the localized document. Somehow strange
+patches since they have only one line of context, which line can be a
+regular expression, and since they can only add stuff, not remove. Anyhow,
+it helps a lot the comprension to consider them as patch. 
+
+Their goal is to allow the translator to add original content to the
+document which is not translated from the original document. This way, they
+can add a section giving the name of the contributors to this translation,
+or explain how to report bug against the translation.
 
 Addendum must be provided to the system as a file, with the first line
 indicating where in the produced document they should be placed in a so
@@ -272,7 +276,7 @@ For example, if you want to add something after the following sgml section:
 you should put a C<position> matching this line, and an C<endboundary>
 matching the end of a section (ie C<E<lt>/sect1E<gt>>). The addendum will
 then be added B<after> the I<position point> and immediatly B<after> the
-first line matching the C<endboundary>.
+first line matching the C<endboundary> (see below for some use example).
 
 If you want to add something after the following nroff section:
 
@@ -304,15 +308,11 @@ match the end of a nroff section ending with the line
 
 don't use C<.fi> as endboundary, because it will match with "the[ fi]le",
 which is obviously not what you expect. The correct endboundary in that case
-is: C<^\.fi$>
+is: C<^\.fi$>.
 
-If the addenda don't go where you expected, try to pass the -v argument to
-po4a-translate, so that it explains you what it does while placing the
+If the addenda don't go where you expected, try to pass the -vv argument to
+the tools, so that it explains you what it does while placing the
 addendum.
-
-=item lang
-
-language code for which we have to use this insert (NOT USED SO FAR).
 
 =back
 
@@ -344,7 +344,7 @@ If you have the following original pod file:
 
 and a file named C<extra-content> contains this:
 
- |PO4A-HEADER:mode=after;position=AUTEUR;lang=fr;beginboundary=^head
+ |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^head
  |
  |=head1 TRADUCTEUR
  |
@@ -359,7 +359,7 @@ example is in French ; "TRADUCTEUR" means "TRANSLATOR", and "moi" means
 
 To put the addendum before the AUTHORS, you could use the following header:
 
- PO4A-HEADER:mode=after;section=NOM;lang=fr;beginboundary=^head1
+ PO4A-HEADER:mode=after;section=NOM;beginboundary=^head1
 
 because after the section "NAME" (translated to "NOM" in French), the next
 line matching the beginboundary /^head1/ is the one declaring the authors. So,
