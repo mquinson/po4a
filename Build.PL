@@ -248,7 +248,6 @@ my $builder = Module::Build->subclass
 
 my $base= $Config::Config{man1dir};
 $base =~ s/\/man\/man1//;
-print $base;
 
 my $b = $builder->new
   ( module_name => 'po4a',
