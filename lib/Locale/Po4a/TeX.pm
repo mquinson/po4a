@@ -317,6 +317,9 @@ sub translate {
     # add comments (if any and not already added to the PO)
     if (@comments) {
         $options{'comment'} .= join('\n', @comments);
+
+        # encode the comments to the po charset.
+        Encode::from_to($options{'comment'},$self->{TT}{'file_in_charset'},$self->{TT}{po_out}->get_charset);
         @comments = ();
     }
 
