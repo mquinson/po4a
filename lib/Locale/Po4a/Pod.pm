@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.6 2003-11-28 00:21:27 barbier Exp $
+# $Id: Pod.pm,v 1.7 2004-04-06 20:46:15 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -162,7 +162,7 @@ and mine contain
 
  "" #n""
  
-which is logic since C<blabla> is rewriten "blabla"
+which is logic since C<blabla> is rewritten "blabla"
 
 Complete list of pages having this problem on my box (from 564 pages ; note
 that it depend on the choosen wrapping colon):
@@ -254,7 +254,7 @@ is read from the po file).
 
 =item dontwrite
 
-if set, no file is writen at the end (if you want to manipulate the
+if set, no file is written at the end (if you want to manipulate the
 extracted po file in memory, for example).
 
 =back

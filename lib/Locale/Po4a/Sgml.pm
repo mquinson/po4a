@@ -426,7 +426,7 @@ sub parse_file {
     use strict;
 
     # Some values for the parsing
-    my @open=(); # openned translation container tags
+    my @open=(); # opened translation container tags
     my $verb=0;  # can we wrap or not
     my $seenfootnote=0;
     my $indent=0; # indent level

@@ -255,9 +255,9 @@ use Getopt::Std;
 
 my %macro; # hash of known macro, with parsing sub. See end of this file
 
-########################
-#### DEBUGING STUFF ####
-########################
+#########################
+#### DEBUGGING STUFF ####
+#########################
 my %debug=('splitargs' => 0, # see how macro args are separated
 	   'pretrans' => 0,  # see pre-conditioning of translation
 	   'postrans' => 0,  # see post-conditioning of translation
