@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.25 2004-08-09 13:24:30 jvprat-guest Exp $
+# $Id: Po.pm,v 1.26 2004-08-18 00:05:36 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -577,9 +577,9 @@ sub filter {
 
 =item to_utf()
 
-This recodes all the msgstrs in the po from the character set specified in the
-header to utf-8. This process is only ignored if the header character set is
-"CHARSET" (unspecified, usually means ascii), "ascii" or "utf-8".
+Recodes to utf-8 the po's msgstrs. Does nothing if the charset is not
+specified in the po file ("CHARSET" value), or if it's already utf-8 or
+ascii.
 
 =cut
 
