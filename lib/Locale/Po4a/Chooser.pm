@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.5 2003-11-26 22:31:17 barbier Exp $
+# $Id: Chooser.pm,v 1.6 2003-11-27 22:59:45 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -20,40 +20,26 @@ package Locale::Po4a::Chooser;
 use 5.006;
 use strict;
 use warnings;
-
-use Locale::Po4a::KernelHelp;
-# use Locale::Po4a::Html;
-use Locale::Po4a::Man;
-use Locale::Po4a::Pod;
-use Locale::Po4a::Sgml;
-
-require Exporter;
-
-use vars qw($VERSION @ISA @EXPORT $AUTOLOAD);
-$VERSION = $Locale::Po4a::TransTractor::VERSION;
-@ISA = qw();
-@EXPORT = qw(new list);
-
 use Locale::gettext;
 
 sub new {
     my ($module)=shift;
     my (%options)=@_;
 
-    if (lc($module) eq 'kernelhelp') {
-	return Locale::Po4a::KernelHelp->new(%options);
-    } elsif (lc($module) eq 'man') {
-	return Locale::Po4a::Man->new(%options);
-    } elsif (lc($module) eq 'pod') {
-	return Locale::Po4a::Pod->new(%options);
-    } elsif (lc($module) eq 'sgml') {
-	return Locale::Po4a::Sgml->new(%options);
-#    } elsif (lc($module) eq 'html') {
-#	return Locale::Po4a::Html->new(%options);
+    my $modname;
+    if ($module eq 'kernelhelp') {
+        $modname = 'KernelHelp';
     } else {
-	warn sprintf(gettext("Unknown format type: %s.\n"),$module);
-	list(1);
+        $modname = ucfirst($module);
     }
+    if (! UNIVERSAL::can("Locale::Po4a::$modname", 'new')) {
+        eval qq{use Locale::Po4a::$modname};
+        if (@_) {
+            warn sprintf(gettext("Unknown format type: %s.\n"), $module);
+            list(1);
+        }
+    }
+    return "Locale::Po4a::$modname"->new(%options);
 }
 
 sub list {
