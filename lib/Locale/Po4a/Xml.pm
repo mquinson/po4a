@@ -355,10 +355,10 @@ my @tag_types = (
 		end		=> "?",
 		breaking	=> 1,
 		f_translate	=> \&tag_trans_xmlhead},
-#	{	beginning	=> "?",
-#		end		=> "?",
-#		breaking	=> 1,
-#		f_translate	=> \&tag_trans_procins},
+	{	beginning	=> "?",
+		end		=> "?",
+		breaking	=> 1,
+		f_translate	=> \&tag_trans_procins},
 	{	beginning	=> "!DOCTYPE",
 		end		=> "",
 		breaking	=> 1,
@@ -402,6 +402,11 @@ sub tag_trans_xmlhead {
 	$tag =~ s/$in_charset/$out_charset/;
 
 	return $tag;
+}
+
+sub tag_trans_procins {
+	my ($self,@tag)=@_;
+	return $self->join_lines(@tag);
 }
 
 sub tag_extract_doctype {
