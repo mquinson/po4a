@@ -822,6 +822,10 @@ sub translate {
 	}
     }
 
+    if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
+	Encode::from_to($string, $in_charset, $self->{TT}{po_in}->get_charset);
+    }
+
     my $transstring = $self->{TT}{po_in}->gettext($string,
 					'wrap'      => $options{'wrap'}||0,
 					'wrapcol'   => $options{'wrapcol'});
