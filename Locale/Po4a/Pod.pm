@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.1 2002-12-13 09:42:34 mquinson Exp $
+# $Id: Pod.pm,v 1.2 2002-12-18 10:28:24 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -34,10 +34,6 @@ sub writepo {
     my $self=shift;
     $self->Locale::Po4a::TransTractor::writepo(@_);
 }
-sub read { 
-    my $self=shift;
-    $self->Locale::Po4a::TransTractor::read(@_);
-}
 sub write { 
     my $self=shift;
     $self->Locale::Po4a::TransTractor::write(@_);
@@ -56,12 +52,17 @@ sub command {
     my ($self, $command, $paragraph, $line_num) = @_;
 #    print "cmd: '$command' '$paragraph' at $line_num\n";
 
-    unless ($command =~ /over/ || $command =~ /pod/) {
+    if ($command eq 'back'
+	|| $command eq 'pod') {
+	$self->pushline("=$command\n\n");
+    } elsif ($command eq 'over') {
+	$self->pushline("=$command $paragraph\n");
+    } else {
 	$paragraph=$self->translate_wrapped($paragraph,
 					    $self->input_file().":$line_num",
 					    "=$command");
+	$self->pushline("=$command $paragraph\n");
     }
-    $self->pushline("=$command $paragraph\n");
 }
 
 sub verbatim {
@@ -91,6 +92,7 @@ sub read {
     my ($self,$filename)=@_;
 
     push @{$self->{DOCPOD}{infile}}, $filename;
+    $self->Locale::Po4a::TransTractor::read($filename);
 }
 
 sub parse {
