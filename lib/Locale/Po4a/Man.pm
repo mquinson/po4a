@@ -117,7 +117,7 @@ my box are inaccessible to po4a::man.
 
  ..               ."              .AT             .b              .bank
  .BE              ..br            .Bu             .BUGS           .BY
- .ce              .dbmmanage      .do             .DS             .En
+ .ce              .dbmmanage      .do                             .En
  .EP              .EX             .Fi             .hw             .i
  .Id              .l              .LO             .mf             .mso
  .N               .na             .NF             .nh             .nl
@@ -1002,6 +1002,25 @@ $macro{'TS'}=sub {
 	($line,$ref)=$self->shiftline();
     }
 };
+
+###
+### info groff
+### 
+
+## Builtin register, of course they do not need to be translated
+
+$macro{'F'}=$macro{'H'}=$macro{'V'}=$macro{'A'}=$macro{'P'}=$macro{'T'}=\&untranslated;
+
+## ms package
+##
+#
+# Displays and keeps. None of these macro accept a translated argument
+# (they allow to make blocks of text which cannot be breaked by new page)
+
+$macro{'DS'}=$macro{'LD'}=$macro{'DE'}=\&untranslated;
+$macro{'ID'}=$macro{'BD'}=$macro{'CD'}=\&untranslated;
+$macro{'RD'}=$macro{'KS'}=$macro{'KE'}=\&untranslated;
+$macro{'KF'}=$macro{'B1'}=$macro{'B2'}=\&untranslated;
 
 ###
 ### BSD compatibility macros: .AT and .UC
