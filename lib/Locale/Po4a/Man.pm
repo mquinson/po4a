@@ -629,7 +629,7 @@ sub parse{
 	    #  .\"  => comments
 	    #  .    => empty point on the line
 	    #  .tr abcd...
-	    #       => Translate a to b, c to d, etc. on output.
+	    #       => substitution like Perl's tr/ac/bd/ on output.
 	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr') {
 		$self->pushline($line."\n");
 		goto LINE;
