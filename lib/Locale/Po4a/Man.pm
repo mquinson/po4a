@@ -767,6 +767,8 @@ sub splitargs {
             $buffer .= " ".$elem;
             print STDERR "Continuation of a quote\n"
                 if ($debug{'splitargs'});
+            # Inside a quoted argument, "" indicates a double quote
+            while ($buffer =~ s/^"([^"]*?)""/"$1\\(dq/) {}
             # print "buffer=$buffer.\n";
             if ($buffer =~ m/^"(.*)"(.+)$/) {
                 print STDERR "End of quote, with stuff after it\n"
@@ -804,6 +806,8 @@ sub splitargs {
             print STDERR "Quoted, no space\n"
                 if ($debug{'splitargs'});
             my $a = $1;
+            # Inside a quoted argument, "" indicates a double quote
+            $a =~ s/""/\\(dq/g;
             $a =~ s/\xA0/\\ /g;
             push @args,$a;
         } elsif ($elem =~ m/^"/) { #") {
@@ -824,6 +828,8 @@ sub splitargs {
         }
     }
     if (length($buffer)) {
+        # Inside a quoted argument, "" indicates a double quote
+        while ($buffer =~ s/^"([^"]*?)""/"$1\\(dq/) {}
         $buffer=~ s/"//g;
         $buffer =~ s/\xA0/\\ /g;
         push @args,$buffer;
