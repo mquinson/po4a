@@ -725,7 +725,8 @@ $macro{'TH'}= sub {
 #    print STDERR "TH=$th;titre=$title;sec=$section;date=$date;source=$source;manual=$manual\n";
     $self->pushmacro($th,
 		     $self->t($title),
-		     $section,$date,
+		     $section,
+		     $self->t($date),
 		     $self->t($source),
 		     $self->t($manual));
 };
@@ -956,3 +957,12 @@ $macro{'TS'}=sub {
 	($line,$ref)=$self->shiftline();
     }
 };
+
+###
+### BSD compatibility macros: .AT and .UC
+### (define the version of Berkley used)
+### FIXME: the header ("3rd Berkeley Distribution" or such) declared 
+###        by this macro isn't translatable we may want to remove 
+###        this from the generated manpage, and declare our own header
+###
+$macro{'UC'}=$macro{'AT'}=\&untranslated;

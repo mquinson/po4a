@@ -6,7 +6,7 @@ package Locale::Po4a::TransTractor;
 use strict;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.13.5";
+$VERSION="0.13.6";
 @ISA = ();
 @EXPORT = qw(process translate 
 	     read write readpo writepo);
@@ -570,18 +570,18 @@ sub addendum {
 		}
 		if (defined $line) {
 		    if ($bmode eq 'before') {
-			printf STDERR(dgettext("po4a","Next section begins with:\n%s\nAddendum added before this line.\n"),
+			printf STDERR (dgettext("po4a","Next section begins with:\n%s\nAddendum added before this line.\n"),
 				       mychomp($line)) if ($self->verbose());
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
-			printf STDERR(dgettext("po4a","This section ends with:\n%s\nAddendum added after this line.\n"),
+			printf STDERR (dgettext("po4a","This section ends with:\n%s\nAddendum added after this line.\n"),
 				       mychomp($line)) if ($self->verbose());
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
-		    printf STDERR(dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file.\n"))
+		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file.\n"))
 			   if ($self->verbose());
 		}
 	    }

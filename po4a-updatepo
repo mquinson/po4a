@@ -3,7 +3,7 @@
         if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.9 2003-01-13 08:53:20 mquinson Exp $
+# $Id: po4a-updatepo,v 1.10 2003-01-23 16:12:58 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -181,6 +181,8 @@ while (my $po_filename=shift @pofiles) {
 	    if $verbose;    
 	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
 	    die sprintf(gettext("Error while running msgmerge: %s\n"),$!);
+	system "msgfmt --statistics -v -o /dev/null $po_filename" 
+	  if $verbose;
     } else {
 	print STDERR sprintf(gettext("Creating %s:"),$po_filename) 
 	    if $verbose;    
