@@ -31,9 +31,9 @@ po4a (0.18-1) unstable; urgency=low
     my attention to this.
   - [man] add support for the groff builtin registers and for the ms
     "Displays and keeps" macros. Allows to deal with the shadow package.
-  - [TransTractor] change a 'while (shift @toto) {}' to a 'map {} @toto' so
-    that we proceed even if @toto contains empty strings while applying
-    addendums.
+  - [TransTractor/addendum] change a 'while (shift @toto) {}' to a 
+    'do {shift; bla} while (scalar @toto)' so that we proceed even if @toto
+    contains empty strings.
   - [Sgml] stop pushline()ing empty strings since it breaks TransTractor
   Each of the two previous ones (Closes: #265383) of Debian. Yup, this bug
   is fixed twice. Slam!

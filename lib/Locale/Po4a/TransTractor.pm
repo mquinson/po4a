@@ -621,10 +621,11 @@ sub addendum {
                                         }  @{$self->{TT}{doc_out}};
     } else {
 	my @newres=();
-	map {
-	    my $line = $_;
+
+	do {
+	    # make sure it doesnt whine on empty document
+	    my $line = scalar @{$self->{TT}{doc_out}} ? shift @{$self->{TT}{doc_out}} : "";
 	    push @newres,$line;
-	    print STDERR "Consider $line" if $self->debug();
 	    my $outline=mychomp($line);
 	    $outline =~ s/^[ \t]*//;
 	      
@@ -656,7 +657,7 @@ sub addendum {
 		    push @newres,$content;
 		}
 	    }
-	} @{$self->{TT}{doc_out}};
+	} while (scalar @{$self->{TT}{doc_out}});
 	@{$self->{TT}{doc_out}} = @newres;
     }
     print STDERR "done.\n" if $self->debug();
