@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (c) 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright (c) 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 #
 # This file is part of po4a.
 #
@@ -22,7 +22,20 @@
 
 =head1 NAME
 
-Locale::Po4a::LaTeX - 
+Locale::Po4a::LaTeX - Convert LaTeX documents and derivates from/to PO files
+
+=head1 DESCRIPTION
+
+The po4a (po for anything) project goal is to ease translations (and more
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
+
+Locale::Po4a::LaTeX is a module to help the translation of LaTeX documents into
+other [human] languages. It can also be used as a base to build modules for
+LaTeX-based documents.
+
+This module contains the definitions of common LaTeX commands and
+environments.
 
 =head1 SEE ALSO
 
@@ -36,7 +49,7 @@ L<Locale::Po4a::TeX(3pm)|Locale::Po4a::TeX>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+Copyright 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).

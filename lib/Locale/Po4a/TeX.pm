@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (c) 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright (c) 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 #
 # This file is part of po4a.
 #
@@ -34,10 +34,6 @@ areas where they were not expected like documentation.
 Locale::Po4a::TeX is a module to help the translation of TeX documents into
 other [human] languages. It can also be used as a base to build modules for
 TeX-based documents.
-
-Please note that this module is still under heavy developement, and not
-distributed in official po4a release since we don't feel it to be mature
-enough. If you insist on trying, check the CVS out.
 
 Users should probably use the LaTeX module, which inherite from the TeX module
 and contains the definitions of common LaTeX commands.
@@ -1441,7 +1437,7 @@ L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+Copyright 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
