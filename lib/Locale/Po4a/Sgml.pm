@@ -178,7 +178,7 @@ use File::Temp;
 
 my %debug=('tag' => 0, 
 	   'generic' => 0,
-	   'entities' => 1,
+	   'entities' => 0,
            'refs'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
