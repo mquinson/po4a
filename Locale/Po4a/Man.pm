@@ -1,5 +1,37 @@
 #!/usr/bin/perl -w
 
+=head1 NAME
+
+Locale::Po4a::Man - Convert manual pages from/to PO files
+
+=head1 DESCRIPTION
+
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.  
+
+Locale::Po4a::Man is a module to help the translation of documentation in
+the nroff format (the language of manual pages) into other [human]
+languages.
+
+=head1 SEE ALSO
+
+L<po4a(7)>, L<Locale::Po4a::TransTranctor(3perl)>.
+
+=head1 AUTHORS
+
+ Denis Barbier <denis.barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2002 by SPI, inc.
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see COPYING file).
+
+=cut
+
 package Locale::Po4a::Man;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
@@ -30,33 +62,65 @@ sub pushmacro {
     }
 }
 
-sub translate {
-    my ($self,$str,$ref,$type) = @_;
-    
-    return $str unless (defined $str) && $str;
+sub pre_trans {
+    my ($self,$str,$ref,$type)=@_;
     # Preformating, so that translators don't see 
     # strange chars
     $str =~ s/>/E<gt>/g;
     $str =~ s/</E<lt>/g;
-    $str =~ s/E<lt>gt>/E<gt>/g; # could be done in a smarter way?
+    $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
     
     $str =~ s/\\f([BI])(.*?)\\f[PR]/$1<$2>/g;
     $str =~ s|\\-|-|g;
+    return $str;
+}
 
+sub post_trans {
+    my ($self,$str,$ref,$type)=@_;
+    my $transstr=$str;
+
+    # Post formating, so that groff see the strange chars
+    $str =~ s|-|\\-|mg;
+
+    # Make sure we compute internal sequences right.
+    # think about: B<AZE E<lt> EZA E<gt>>
+    warn "postrans($str)";
+    while ($str =~ m/^(.*)([BI])<(.*)$/s) {
+	my ($done,$rest)=($1."\\f$2",$3);
+	my $lvl=1;
+	while (length $rest && $lvl > 0) {
+	    my $first=substr($rest,0,1);
+	    if ($first eq '<') {
+		$lvl++;
+	    } elsif ($first eq '>') {
+		$lvl--;
+	    } 
+	    $done .= $first  if ($lvl > 0);
+	    $rest=substr($rest,1);
+	}
+	die sprintf(gettext("Unbalanced '<' and '>' in '%s' (reference=%s)\n"),$transstr,$ref||$self->{ref})
+	    if ($lvl > 0);
+	$done .= "\\fR$rest";
+	$str=$done;
+    }
+
+    $str =~ s/E<gt>/>/mg;
+    $str =~ s/E<lt>/</mg;
+    $str =~ s/^\\f([BI])(.*?)\\fR$/\.$1 $2/mg;
+    return $str;
+}
+sub translate {
+    my ($self,$str,$ref,$type) = @_;
+    my $origstr=$str;
+    
+    return $str unless (defined $str) && $str;
+
+    $str=pre_trans($self,$str,$ref,$type);
     # Translate this
     $str = $self->SUPER::translate($str,
 				   $ref||$self->{ref},
 				   $type || $self->{type});
-
-    # Post formating, so that groff see the strange chars
-    # FIXME: The next lines do not work.
-    # Counter example: B<AZE E<lt> EZA E<gt>>
-    # B<> will contain "AZE E<lt"
-    $str =~ s/([BI])<(.*?)>/\\f$1$2\\fR/gs;
-    $str =~ s|-|\\-|g;
-    $str =~ s/^\\f([BI])(.*?)\\fR$/.$1 $2/;
-    $str =~ s/E<gt>/>/g;
-    $str =~ s/E<lt>/</g;
+    $str=post_trans($self,$str,$ref,$type);
     return $str;
 }
 
@@ -277,7 +341,6 @@ sub do_paragraph {
     my ($self,$paragraph,$wrapped_mode) = (shift,shift,shift);
 
     if ($wrapped_mode) {
-	#FIXME, wrap this 
 	$paragraph = $self->translate_wrapped($paragraph,$self->{ref},"Plain text");
 	my @paragraph=split (/\n/,$paragraph);
 	if (defined ($paragraph[0]) && $paragraph[0] eq '') {
@@ -313,7 +376,7 @@ sub parse{
 	    if ($macro eq 'B' || $macro eq 'I') {
 		my $arg=$2;
 		$arg =~ s/^ //;
-		$paragraph .= $macro."<".$arg."> \n\n";
+		$paragraph .= "\\f$macro".$arg."\\fR\n";
 		goto LINE;
 	    }
 	    if ($paragraph) {
