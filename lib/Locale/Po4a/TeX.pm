@@ -883,11 +883,16 @@ sub is_closed {
     my $tmp = $paragraph;
     my $closing = 0;
     my $opening = 0;
+    # FIXME: { and } should not be counted in verbatim blocks
+    # Remove comments
+    $tmp =~ s/(?<!\\)(?:\\\\)*%.*//mg;
     while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\{(.*)$/s) {
         $opening += 1;
         $tmp = $1;
     }
     $tmp = $paragraph;
+    # Remove comments
+    $tmp =~ s/(?<!\\)(?:\\\\)*%.*//mg;
     while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\}(.*)$/s) {
         $closing += 1;
         $tmp = $1;
