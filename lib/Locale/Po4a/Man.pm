@@ -294,7 +294,13 @@ sub shiftline {
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
-            $l2 =~ s/"/\\"/g;
+            # convert " to the groff's double quote glyph; it will be
+            # converted back to " in pre_trans. It is needed because
+            # otherwise, these quotes will be taken as arguments
+            # delimiters.
+            $l2 =~ s/"/\\(dq/g;
+            # append this line to the macro, with surrounding quotes, so
+            # that the line appear as an uniq argument.
             $line .= ' "'.$l2.'"';
         } else {
             $line =~ s/\\$//;
@@ -416,6 +422,7 @@ sub pre_trans {
     # Groff bestiary
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
+    $str =~ s/\\\(dq/"/sg;
     # Change groff non-breaking space to ascii one
     $str =~ s|\\ |\xA0|sg;
 
