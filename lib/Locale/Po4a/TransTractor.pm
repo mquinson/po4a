@@ -35,7 +35,7 @@ The po4a (po for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-This class is the ancestor of all the po4a parsers used to parse a document to
+This class is the ancestor of every po4a parsers used to parse a document to
 search translatable strings, extract them to a po file and replace them by
 their translation in the output document. 
 
@@ -198,25 +198,25 @@ ARGUMENTS, beside the ones accepted by new() (with expected type):
 
 =item file_in_name (@)
 
-list of filenames where we should read the input document.
+List of filenames where we should read the input document.
 
 =item file_in_charset ($)
 
-character set used in the input document (if it isn't specified, it will try
+Charset used in the input document (if it isn't specified, it will try
 to detect it from the input document).
 
 =item file_out_name ($)
 
-filename where we should write the output document.
+Filename where we should write the output document.
 
 =item po_in_name (@)
 
-list of filenames where we should read the input po files from, containing
+List of filenames where we should read the input po files from, containing
 the translation which will be used to translate the document.
 
 =item po_out_name ($)
 
-filename where we should write the output po file, containing the strings
+Filename where we should write the output po file, containing the strings
 extracted from the input document.
 
 =item addendum (@)
@@ -225,7 +225,7 @@ list of filenames where we should read the addendum from.
 
 =item addendum_charset ($)
 
-character set for the addendum.
+Charset for the addendum.
 
 =back
 
@@ -592,7 +592,7 @@ sub addendum {
       if $self->debug();
     
     # We only recode the addendum if an origin charset is specified, else we
-    # suppose it's already in the output document's character set
+    # suppose it's already in the output document's charset
     if (defined($self->{TT}{'addendum_charset'}) &&
         length($self->{TT}{'addendum_charset'})) {
 	Encode::from_to($content,$self->{TT}{'addendum_charset'},
@@ -774,7 +774,7 @@ parser can build the doc_out.
 
 =item -
 
-Handles the character sets to recode the strings before sending them to
+Handles the charsets to recode the strings before sending them to
 po_out and before returning the translations.
 
 =back
@@ -811,7 +811,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
+	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
 
@@ -887,9 +887,9 @@ sub debug {
 
 =item detected_charset($)
 
-This tells TransTractor that a new character set (the first argument) has been
+This tells TransTractor that a new charset (the first argument) has been
 detected from the input document. It can usually be read from the document
-header. Only the first character set will remain, coming either from the
+header. Only the first charset will remain, coming either from the
 process() arguments or detected from the document.
 
 =cut
@@ -905,12 +905,12 @@ sub detected_charset {
 
 =item get_out_charset()
 
-This function will return the character set that should be used in the output
-document (usually useful to substitute the input document's detected character
-set where it has been found).
+This function will return the charset that should be used in the output
+document (usually useful to substitute the input document's detected charset
+where it has been found).
 
-It will use the input po's character set, and if the input po has the default
-"CHARSET", it will return the input document's character set, so that no
+It will use the input po's charset, and if the input po has the default
+"CHARSET", it will return the input document's charset, so that no
 encoding is performed.
 
 =cut
@@ -935,7 +935,7 @@ sub get_out_charset {
 =item recode_skipped_text($)
 
 This function returns the recoded text passed as argument, from the input
-document's character set to the output document's one. This isn't needed when
+document's charset to the output document's one. This isn't needed when
 translating a string (translate() recodes everything itself), but it is when
 you skip a string from the input document and you want the output document to
 be consistent with the global encoding.
@@ -951,7 +951,7 @@ sub recode_skipped_text {
 		$self->get_out_charset);
 	    return $text;
 	} else {
-	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
+	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
 }
