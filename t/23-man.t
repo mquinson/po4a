@@ -45,15 +45,15 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags data-23/dot1.fr tmp/dot1.fr",
   'doc'  => "translate this document",
 }, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
+  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
   'test' => "diff -u tmp/dot2.err data-23/dot2.err $diff_po_flags",
   'doc'  => "gettextize well various lines beginning by a dot (2)",
 }, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/dot3 -p tmp/dot3.pot 2>tmp/dot3.err || true",
+  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot3 -p tmp/dot3.pot 2>tmp/dot3.err || true",
   'test' => "diff -u tmp/dot3.err data-23/dot3.err $diff_po_flags",
   'doc'  => "gettextize well various lines beginning by a dot (3)",
 }, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/dot4 -p tmp/dot4.pot 2>tmp/dot4.err || true",
+  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot4 -p tmp/dot4.pot 2>tmp/dot4.err || true",
   'test' => "diff -u tmp/dot4.err data-23/dot4.err $diff_po_flags",
   'doc'  => "gettextize well various lines beginning by a dot (4)",
 }, {
