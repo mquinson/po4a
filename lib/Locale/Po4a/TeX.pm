@@ -692,8 +692,13 @@ sub parse{
         chomp($line);
         $self->{ref}="$ref";
 
-        # remove comments, and store them in @comments
-        if ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
+        if ($line =~ /^\s*%\s*po4a\s*:/) {
+            parse_definition_line($self, $line);
+        # FIXME: not always, use return of parse_definition_line?
+            $line = "%";
+        } elsif ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
+        #FIXME: in Python-Doc, there is a % in a verbatim environment,which is not a comment.
+            # remove comments, and store them in @comments
             push @comments, $2;
             # Keep the % sign. It will be removed latter.
             $line = "$1%";
