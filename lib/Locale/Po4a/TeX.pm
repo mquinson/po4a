@@ -98,6 +98,8 @@ our $RE_ESCAPE = "\\\\";
 our $ESCAPE    = "\\";
 
 # Space separated list of environments that should not be re-wrapped.
+# FIXME: check what should be done if a verbatim block ends by a \label (or
+# other command).
 our $no_wrap_environments = "verbatim";
 # Space separated list of commands that can be handled separately from
 # when they appear at the beginning or end of a paragraph
@@ -118,9 +120,14 @@ our %command_categories = (
                            "index"
 );
 
+=item debug
+
+Activate debugging for some internal mechanisms of this module.
+Use the source to see which parts can be debugged.
+
 =item translate
 
-Coma separated list of commands whose arguments have to be proposed for
+Coma-separated list of commands whose arguments have to be proposed for
 translation.
 This list is appended to the default list containing
 chapter, section, subsection, subsubsection and index.
@@ -132,6 +139,15 @@ This list is appended to the default list containing
 vspace, hspace and label.
 
 =back
+
+Using these options permits to override the behaviour of the commands defined
+in the default lists.
+
+Note: currently, the behaviour of commands specified in the TeX files (see the
+B<INLINE CUSTIOMIZATION> section) cannot be overriden with these options.
+
+If you don't want to translate the chapters and sections, then you can specify:
+ -o untranslated=chapter,section
 
 =cut
 
@@ -161,6 +177,39 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
 =head1 WRITING DERIVATE MODULES
 
 =head1 INTERNAL FUNCTIONS used to write derivated parsers
+
+=head2 Command functions
+
+=over 4
+
+=item translate_joined
+
+Every argument of the command is translated separately, and the command is
+reassembled with its arguments in the output document.
+
+=item untranslated
+
+No argument of the command is proposed for translation. The command is
+reassembled with its arguments in the output document.
+
+=back
+
+=head2 Environment functions
+
+These functions are called when a \begin command is found.
+
+=over 4
+
+=item push_environment
+
+This function push the environment name in a stack, and push the \begin command
+untranslated in the output document.
+This stack of environments is then used to change the behaviour of the parser
+(e.g. blocks are not re-wrapped in the verbatim environment).
+The type of PO strings is either set to the last environment of this stack or
+to the name of the command (if the string is part of a command argument).
+
+=back
 
 =cut
 
@@ -667,7 +716,7 @@ sub read_file {
     return @entries;
 }
 
-=head1 INLINE CUSTIOMIZATION OF THE TEX MODULE
+=head1 INLINE CUSTIOMIZATION
 
 The TeX module can be customized with lines starting by "% po4a:".
 These lines are interpreted as commands to the parser.
@@ -684,14 +733,12 @@ treated as the arguments of the I<command2> command.
 
 Indicates that the I<command1> command should be handled by I<function1>.
 
-=item % po4a: environment <env1> <function1>
-
-Indicates that the I<env1> environment should be handled by I<function1>.
-
-TODO
-
 =item % po4a: command <command1> x,y,z,t
 
+This permits a better control of the translated arguments and some
+verifications of the number of arguments.
+
+The meaning of the x, y, z and t is the following:
   * x is the number of optional arguments (between [])
       0 - no optional argument
      -1 - variable
@@ -703,11 +750,18 @@ TODO
       0 - none
   1 3 7 - the 1st, 3rd and 7th arguments should be translated
   * t indexes of the arguments that have to be translated
-This permits a better control of the translated arguments and some
-verifications and some verifications of the number of arguments.
 
-It could be usefull to define commands without argument as "0,0,,"
+It could be useful to define commands without argument as "0,0,,"
 instead of either translated or untranslated.
+
+=item % po4a: environment <env1> <function1>
+
+Indicates that the I<env1> environment should be handled by I<function1>.
+
+=back
+
+See the B<INTERNAL FUNCTIONS> section for the list of function which could be
+used for commands or environments.
 
 =cut
 
@@ -1140,7 +1194,40 @@ sub initialize {
 
 =head1 STATUS OF THIS MODULE
 
+This module needs more tests.
+
+It was tested on a book and with the Python documentation.
+
 =head1 TODO LIST
+
+=over 4
+
+=item tabular environment
+
+=back
+
+=head1 KNOWN BUGS
+
+=over 4
+
+=item environments
+
+Beginning and end of environments can be missed.
+
+=item commands
+
+The parser assumes all commands is followed by optional arguments (enclosed in
+[]) and then by mandatory arguments (enclosed in {}).
+
+=item verbatim environments
+
+A % in a verbatim environments cause the end of the line to be ignored.
+
+=item Others
+
+Various others points are tagged FIXME in the source.
+
+=back
 
 =head1 SEE ALSO
 
