@@ -93,6 +93,8 @@ sub initialize {
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'tags'}.=' <dia:string>';
 	$self->treat_options;
+	# Force the output po to be in utf-8
+	$self->{TT}{po_out}->set_charset("utf-8")
 }
 
 sub found_string {
