@@ -93,6 +93,8 @@ use vars qw(%commands %environments);
 # hash to describe the number of parameters and which one have to be
 # translated. Used by generic commands
 our %command_parameters = ();
+# hash to describe the separators of environments.
+our %env_separators =();
 
 # The escape character used to introduce commands.
 our $RE_ESCAPE = "\\\\";
@@ -201,6 +203,24 @@ instead of either translated or untranslated.
 =item % po4a: environment <env1> <function1>
 
 Indicates that the I<env1> environment should be handled by I<function1>.
+
+=item % po4a: separator <env> "<regex>"
+
+Indicates that an environment should be split according to the given
+regular expression.
+
+The regular expression is delimited by quotes.
+It should not create any backreference.
+You should use (?:) if you need a group.
+It may also need some escapes.  
+
+For example, the LaTeX module uses the "(?:&|\\\\)" regular expression to
+translate separately each cell of a table (lines are separated by '\\' and
+cells by '&'.
+
+The notion of environment is expended to the type displayed in the PO file.
+This can be used to split on "\\\\" in the first mandatory argument of the
+title command.  In this case, the environment is title[#1].
 
 =back
 
@@ -703,6 +723,28 @@ sub translate_buffer {
     } while (length($command));
 
     # Now, $buffer is just a block that can be translated.
+
+    # environment specific treatment
+    if (@env and defined $env_separators{$env[-1]}) {
+        my $re_separator = $env_separators{$env[-1]};
+        my $buf_begin = "";
+        while ($buffer =~ m/^(.*?)(\s*$re_separator\s*)(.*)$/s) {
+            my ($begin, $sep, $end) = ($1, $2, $3);
+            $buf_begin .= $begin;
+            if (is_closed($buf_begin)) {
+                my $t = "";
+                ($t, @env) = translate_buffer($self, $buf_begin, @env);
+                $translated_buffer .= $t.$sep;
+                $buf_begin = "";
+            } else {
+                # the command is in a command argument
+                $buf_begin .= $sep;
+            }
+            $buffer = $end;
+        }
+    }
+
+    # finally, translate
     if (length($buffer)) {
         my $wrap = 1;
         my ($e1, $e2);
@@ -940,6 +982,10 @@ sub parse_definition_line {
                 die "Unknown environment ($1) for $env\n";
             }
         }
+    } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
+        my $env = $1; # This is not necessarily an environment.
+                      # It can also be smth like 'title[#1]'.
+        $env_separators{$env} = $2
     }
 }
 
@@ -1311,8 +1357,6 @@ sub push_environment {
 $environments{'verbatim'} = \&push_environment;
 $environments{'document'} = \&push_environment;
 
-# TODO: a tabular environment to translate cells separately
-
 ####################################
 ### INITIALIZATION OF THE PARSER ###
 ####################################
@@ -1400,9 +1444,10 @@ It was tested on a book and with the Python documentation.
 
 =over 4
 
-=item tabular environment
+=item other categories
 
-A tabular environment would have to translate every cell separately.
+A verbatim category may be needed to indicate that po4a should not attempt
+to rewrap lines, and that percent signs do not introduce any comment.
 
 =item Others
 

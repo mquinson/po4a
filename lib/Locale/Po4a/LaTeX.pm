@@ -81,6 +81,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
             $no_wrap_environments $separated_commands
             %commands             %environments
             %command_categories   %separated
+            %env_separators
             @exclude_include);
 *RE_ESCAPE             = \$Locale::Po4a::TeX::RE_ESCAPE;
 *ESCAPE                = \$Locale::Po4a::TeX::ESCAPE;
@@ -90,6 +91,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
 *environments          = \%Locale::Po4a::TeX::environments;
 *command_categories    = \%Locale::Po4a::TeX::command_categories;
 *separated             = \%Locale::Po4a::TeX::separated;
+*env_separators        = \%Locale::Po4a::TeX::env_separators;
 *exclude_include       = \@Locale::Po4a::TeX::exclude_include;
 
 
@@ -313,7 +315,7 @@ foreach (qw(a *appendix *backmatter backslash *baselineskip *baselinestretch bf
             pushtabs *qquad *quad raggedbottom raggedleft raggedright right rm
             sc scriptsize sf sl small *smallskip *startbreaks *stopbreaks
             *tableofcontents textwidth textheight tiny today tt unitlength
-            vdots verb *vfill *vline fussy sloppy
+            vdots verb *vfill *vline *fussy *sloppy
 
             aleph hbar imath jmath ell wp Re Im prime nabla surd angle forall
             exists partial infty triangle Box Diamond flat natural sharp
@@ -341,5 +343,16 @@ foreach (qw(abstract align array cases center description displaymath enumerate
             trivlist verbatim verse wrapfigure)) {
     $environments{$_} = \&push_environment;
 }
+
+
+# Commands and environments with separators.
+
+# & is the cell separator, \\ is the line separator
+# '\' is escaped twice
+$env_separators{'tabular'} = "(?:&|\\\\\\\\)";
+
+$env_separators{'enumerate'} = $env_separators{'itemize'} = "\\\\item";
+
+$env_separators{'author[#1]'} = $env_separators{'title[#1]'} = "\\\\\\\\";
 
 1;
