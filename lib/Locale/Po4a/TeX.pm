@@ -138,7 +138,7 @@ vspace, hspace and label.
 
 =item no_wrap
 
-Coma-separated list of environments whose arguments should not be re-wrapped.
+Coma-separated list of environments which should not be re-wrapped.
 
 Note that there is a difference between verbatim and no_wrap environments.
 There is no command and comments analysis in verbatim blocks.
@@ -1022,7 +1022,7 @@ sub parse {
 } # end of parse
 
 
-=item docheader
+=item docheader()
 
 =back
 
@@ -1045,15 +1045,15 @@ addition to the $self object):
 
 =over 4
 
-=item a command
+=item A command name
 
-=item a variant
+=item A variant
 
-=item an array of optional arguments
+=item An array of optional arguments
 
-=item an array of mandatory arguments
+=item An array of mandatory arguments
 
-=item the current environment
+=item The current environment
 
 =back
 
