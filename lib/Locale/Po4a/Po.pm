@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.14 2004-07-29 01:27:51 mquinson-guest Exp $
+# $Id: Po.pm,v 1.15 2004-08-01 09:44:50 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -364,13 +364,13 @@ sub select_file {
 	$comment = $self->{po}{$msgid}{'comment'};
 	$automatic = $self->{po}{$msgid}{'automatic'};
 
-	$res->push_raw('msgid' => $msgid, 
-			 'msgstr' => $msgstr,
-			 'flags' => $flags,
-	                 'type'  => $type,
-			 'reference' => $ref,
-			 'comment' => $comment,
-			 'automatic' => $automatic);
+#	$res->push_raw('msgid' => $msgid, 
+#			 'msgstr' => $msgstr,
+#			 'flags' => $flags,
+#	                 'type'  => $type,
+#			 'reference' => $ref,
+#			 'comment' => $comment,
+#			 'automatic' => $automatic);
 
     }
     return $res;
