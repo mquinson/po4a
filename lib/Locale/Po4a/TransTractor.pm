@@ -944,14 +944,14 @@ be consistent with the global encoding.
 
 sub recode_skipped_text {
     my ($self,$text)=(shift,shift);
-    unless (!$self->{TT}{'ascii_input'}) {
+    unless ($self->{TT}{'ascii_input'}) {
 	if(defined($self->{TT}{'file_in_charset'}) and
 	    length($self->{TT}{'file_in_charset'}) ) {
 	    Encode::from_to($text,$self->{TT}{'file_in_charset'},
 		$self->get_out_charset);
 	    return $text;
 	} else {
-	    die dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line.")."\n";
+	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
 }
