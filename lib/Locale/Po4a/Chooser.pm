@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.3 2003-02-14 15:37:24 mquinson Exp $
+# $Id: Chooser.pm,v 1.4 2003-11-07 12:57:56 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -22,7 +22,7 @@ use strict;
 use warnings;
 
 use Locale::Po4a::KernelHelp;
-use Locale::Po4a::Html;
+# use Locale::Po4a::Html;
 use Locale::Po4a::Man;
 use Locale::Po4a::Pod;
 use Locale::Po4a::Sgml;
@@ -48,8 +48,8 @@ sub new {
 	return Locale::Po4a::Pod->new(%options);
     } elsif (lc($module) eq 'sgml') {
 	return Locale::Po4a::Sgml->new(%options);
-    } elsif (lc($module) eq 'html') {
-	return Locale::Po4a::Html->new(%options);
+#    } elsif (lc($module) eq 'html') {
+#	return Locale::Po4a::Html->new(%options);
     } else {
 	warn sprintf(gettext("Unknown format type: %s.\n"),$module);
 	list(1);
@@ -59,7 +59,7 @@ sub new {
 sub list {
     warn gettext("This version of po4a knows the following formats:\n".
 		 "  - kernelhelp: The help messages associated with each kernel compilation option.\n".
-		 "  - html: HTML documents (EXPERIMENTAL).\n".
+#		 "  - html: HTML documents (EXPERIMENTAL).\n".
 		 "  - man: Good old manual page format.\n".
 		 "  - pod: Perl documentation format.\n".
 		 "  - sgml: either debiandoc or docbook DTD.\n");
