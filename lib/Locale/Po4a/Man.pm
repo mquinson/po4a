@@ -421,8 +421,21 @@ sub post_trans {
         $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
     }
 
-    # No . on first char, or nroff will think it's a macro
-    $str =~ s/\n([.'"])/ $1/mg; #'
+    # No . or ' on first char, or nroff will think it's a macro
+    # * at the beginning of a paragraph, add \& (zero width space) at
+    #   the beginning of the line
+    unless (defined $self->{type} && $self->{type} =~ m/^(TS|TP|HP)$/) {
+        # This doesn't work after a TP, HP or TS (all those macros shift
+        # lines, which may contain macros)
+        $str =~ s/^((?:
+                       (?:CW|[RBI])<
+                      |$FONT_RE
+                    )?
+                    [.']
+                   )/\\&$1/mgx;
+    }
+    # * degraded mode, doesn't work for the first line of a paragraph
+    $str =~ s/\n([.'])/ $1/mg;
 
     # Change ascii non-breaking space to groff one
     $str =~ s|\xA0|\\ |sg;
