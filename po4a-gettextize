@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.25 2005-01-07 22:50:51 nekral-guest Exp $
+# $Id: po4a-gettextize,v 1.26 2005-02-05 13:03:22 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -139,6 +139,7 @@ use Getopt::Long qw(GetOptions);
 
 use Locale::Po4a::Chooser;
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 
@@ -150,14 +151,7 @@ textdomain('po4a');
 
 
 sub show_version {
-    print sprintf(gettext(
-          "%s version %s.\n".
-          "written by Martin Quinson and Denis Barbier.\n\n".
-          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
-          "This is free software; see source code for copying\n".
-          "conditions. There is NO warranty; not even for\n".
-          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-          ), "po4a-gettextize", $VERSION)."\n";
+    Locale::Po4a::Common::show_version("po4a-gettextize");
     exit 0;
 }
 
@@ -166,22 +160,22 @@ my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
 my ($mastchar,$locchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
-        'help|h'        => \$help,
+	'help|h'        => \$help,
 	'help-format'   => \$help_fmt,
 
-        'master|m=s'    => \$masterfile,
+	'master|m=s'    => \$masterfile,
 	'localized|l=s' => \$locfile,
-        'po|p=s'        => \$pofile,
-        'format|f=s'    => \$type,
+	'po|p=s'        => \$pofile,
+	'format|f=s'    => \$type,
 
 	'master-charset|M=s'    => \$mastchar,
 	'localized-charset|L=s' => \$locchar,
 
-        'option|o=s'    => \@options,
+	'option|o=s'    => \@options,
 
-        'verbose|v'     => \$verbose,
-        'debug|d'       => \$debug,
-        'version|V'     => \&show_version
+	'verbose|v'     => \$verbose,
+	'debug|d'       => \$debug,
+	'version|V'     => \&show_version
 ) or pod2usage(1);
 
 # Argument check
@@ -202,9 +196,9 @@ foreach (@options) {
     }
 }
 # Check file existence
--e $masterfile || die sprintf(gettext("File %s does not exist."),$masterfile)."\n";
+-e $masterfile || die wrap_msg(gettext("File %s does not exist."), $masterfile);
 if (defined $locfile && length($locfile)) {
-    -e $locfile || die sprintf(gettext("File %s does not exist."),$locfile)."\n";
+    -e $locfile || die wrap_msg(gettext("File %s does not exist."), $locfile);
 }
 
 # Declare the TransTractor parsers
@@ -235,5 +229,5 @@ unless (defined ($locfile) && length($locfile)) {
 
   $mergedpo->write($pofile);
 }
-  
+
 __END__

@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.20 2005-01-07 22:50:51 nekral-guest Exp $
+# $Id: po4a,v 1.21 2005-02-05 13:03:22 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -168,6 +168,7 @@ use Getopt::Long qw(GetOptions);
 
 use Locale::Po4a::Chooser;
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 
@@ -181,14 +182,7 @@ textdomain('po4a');
 
 
 sub show_version {
-    print sprintf(gettext(
-          "%s version %s.\n".
-          "written by Martin Quinson and Denis Barbier.\n\n".
-          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
-          "This is free software; see source code for copying\n".
-          "conditions. There is NO warranty; not even for\n".
-          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-          ), "po4a", $VERSION)."\n";
+    Locale::Po4a::Common::show_version("po4a");
     exit 0;
 }
 
@@ -200,18 +194,18 @@ my ($threshold)=(80);
 my ($mastchar,$locchar,$addchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
-        'help|h'        => \$help,
-    
+	'help|h'        => \$help,
+
 	'master-charset|M=s'    => \$mastchar,
 	'localized-charset|L=s' => \$locchar,
 	'addendum-charset|A=s' => \$addchar,
 
-        'verbose|v'     => \@verbose,
-        'debug|d'       => \$debug,
-        'quiet|q'       => \$quiet,
+	'verbose|v'     => \@verbose,
+	'debug|d'       => \$debug,
+	'quiet|q'       => \$quiet,
 	'split|s'       => \$split,
 	'keep|k=s'      => \$threshold,
-        'version|V'     => \&show_version
+	'version|V'     => \&show_version
 ) or pod2usage(1);
 
 # Argument check
@@ -234,13 +228,13 @@ foreach (@options) {
 
 my $config_file= shift(@ARGV) || pod2usage(1);
 # Check file existence
--e $config_file || die sprintf(gettext("File %s does not exist."),$config_file)."\n";
+-e $config_file || die wrap_msg(gettext("File %s does not exist."), $config_file);
 
 # Parse the config file
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
-open CONFIG,"$config_file" || die sprintf(gettext("Can't open %s: %s"),$config_file,$!)."\n";
+open CONFIG,"$config_file" || die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
     $nb++;
@@ -253,72 +247,63 @@ while (<CONFIG>) {
     chomp($line);
     next if ($line =~ s/\\$//);
     next unless ($line =~ /\S/);
-    
-    die sprintf("%s:%d: ".gettext("Syntax error: %s")."\n",$config_file,$nb,$line)
+
+    die wrap_ref_mod("$config_file:$nb", "", gettext("Syntax error: %s"), $line)
       unless ($line =~ m/^\[([^\]]*)\] (\S+) (.*)$/ || $line =~ m/^\[([^\]]*)\] (\S+)$/);
     my ($cmd,$main,$args)=($1,$2,$3||"");
-    
+
     print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $debug;
-        
+
     if ($cmd eq "po4a_paths") {
-	die sprintf("%s:%d: ".
-	            gettext("'po4a_path' redeclared").
-	            "\n",
-	            $config_file,$nb)
+	die wrap_ref_mod("$config_file:$nb", "",
+	    gettext("'po4a_path' redeclared"))
 	  if (length $pot_filename);
 	$pot_filename = $main;
 	foreach my $arg (split(/ /,$args)) {
-	    die sprintf("%s:%d: ".
-		        gettext("Unparsable argument '%s'.").
-		        "\n",
-	                $config_file,$nb,$arg)
+	    die wrap_ref_mod("$config_file:$nb", "",
+		gettext("Unparsable argument '%s'."), $arg)
 	      unless ($arg =~ /^([^:]*):(.*)/);
 	    $po_filename{$1}=$2;
 	}
-	
+
     } elsif ($cmd =~ m/type: *(.*)/) {
-	$document{$main}{'format'} = $1;	
+	$document{$main}{'format'} = $1;
 	foreach my $arg (split(/ /,$args)) {
-	    die sprintf("%s:%d: ".
-		        gettext("Unparsable argument '%s' (%s).").
-		        "\n",
-	                $config_file,$nb,$arg,$line)
+	    die wrap_ref_mod("$config_file:$nb", "",
+		gettext("Unparsable argument '%s' (%s)."), $arg, $line)
 	      unless ($arg =~ /^([^:]*):(.*)/);
 	    my ($lang,$trans)=($1,$2);
-	    die sprintf("%s:%d: ".
-		        gettext("The translated and master file are the same.")."\n",
-		        $config_file,$nb)
+	    die wrap_ref_mod("$config_file:$nb", "",
+		gettext("The translated and master file are the same."))
 	      if ($main eq $trans);
-	    
+
 	    if ($lang =~ /add_/) {
 		push @{$document{$main}{$lang}},$trans;
 	    } else {
-		die sprintf("%s:%d: ".
-		            gettext("Translation of %s in %s redefined"),
-		            $config_file,$nb,$main,$lang)
+		die wrap_ref_mod("$config_file:$nb", "",
+		    gettext("Translation of %s in %s redefined"), $main, $lang)
 		  if (defined $document{$main}{$lang});
 		$document{$main}{$lang} = $trans;
 	    }
 	}
 
     } else {
-	die sprintf("%s:%d: ".
-	            gettext("Unparsable command '%s'.")."\n",
-	            $config_file,$nb,$cmd);
+	die wrap_ref_mod("$config_file:$nb", "",
+	    gettext("Unparsable command '%s'."), $cmd);
     }
-  
+
     $line = "";
 }
 close CONFIG; # don't care about error here
-die gettext("po4a_paths not declared. Dunno where to find the pot and po files")."\n"
+die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and po files"))
   unless (length $pot_filename);
 
 # make a big pot
 if (-e $pot_filename) {
-    print sprintf(gettext("Updating %s:"),$pot_filename)
+    print wrap_msg(gettext("Updating %s:"), $pot_filename)
 	if $verbose;
 } else {
-    print sprintf(gettext("Creating %s:"),$pot_filename)
+    print wrap_msg(gettext("Creating %s:"), $pot_filename)
 	if $verbose;
 }
 
@@ -328,7 +313,7 @@ foreach my $master (keys %document) {
     # We ensure that the generated po will be in utf-8 if the input document
     # isn't entirely in ascii
     $doc->{TT}{utf_mode} = 1;
-    
+
     $doc->setpoout($potfile);
     my @file_in_name;
     push @file_in_name, $master;
@@ -338,14 +323,14 @@ foreach my $master (keys %document) {
 }
 $potfile->write($pot_filename);
 
-printf (gettext(" (%d entries)")."\n",$potfile->count_entries());
+print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
 
 # update all po files
 my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
-	print STDERR sprintf(gettext("Updating %s: "),$po_filename{$lang})
-	    if ($verbose);    
+	print STDERR wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
+	    if ($verbose);
 	if ($split) {
 	    my ($pot_filename,$po_filename,$bigpo_filename);
 	    (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
@@ -353,16 +338,16 @@ foreach $lang (sort keys %po_filename) {
 						       SUFFIX => ".pot",
 						       OPEN   => 0,
 						       UNLINK => 0)
-		or die sprintf(gettext("Can't create a temporary pot file: %s"),$!)."\n";
+		or die wrap_msg(gettext("Can't create a temporary pot file: %s"), $!);
 	    (undef,$po_filename)=File::Temp->tempfile("po4aXXXX",
 						      DIR    => "/tmp",
 						      SUFFIX => ".po",
 						      OPEN   => 0,
 						      UNLINK => 0)
-		or die sprintf(gettext("Can't create a temporary po file: %s"),$!)."\n";
+		or die wrap_msg(gettext("Can't create a temporary po file: %s"), $!);
 	    my ($poorig,$pores)=(Locale::Po4a::Po->new(),Locale::Po4a::Po->new());
 	    $poorig->read($po_filename{$lang});
-	    
+
 	    foreach my $master (sort keys %document) {
 		my $pot=Locale::Po4a::Po->new();
 		my $po=Locale::Po4a::Po->new();
@@ -373,28 +358,28 @@ foreach $lang (sort keys %po_filename) {
 		$po=$poorig->select_file($master);
 		unlink($pot_filename) if -e $pot_filename;
 		unlink($po_filename) if -e $po_filename;
-		
+
 		$pot->write($pot_filename);
 		$po->write($po_filename);
 		system ("msgmerge -U $po_filename $pot_filename")
-		    && die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+		    && die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
 		$pores->read($po_filename);
 	    }
 	    $pores->write($po_filename{$lang}.".new");
 	    unlink($pot_filename) if -e $pot_filename;
 	    unlink($po_filename) if -e $po_filename;
-	    
-	} else {    
+
+	} else {
 	    system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($verbose?"":">/dev/null 2>/dev/null"))
-		&& die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+		&& die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
 	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
 	    if $verbose;
 	}
     } else {
-	print STDERR sprintf(gettext("Creating %s:")."\n",$po_filename{$lang}) 
-	    if $verbose;    
+	print STDERR wrap_msg(gettext("Creating %s:"), $po_filename{$lang}) 
+	    if $verbose;
 	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
-	    die sprintf(gettext("Error while copying the po file: %s"),$!)."\n";
+	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
     }
 }
 # update all translations
@@ -402,34 +387,34 @@ foreach $lang (sort keys %po_filename) {
 foreach $lang (sort keys %po_filename) {
     DOC: foreach my $master (sort keys %document) {
 	next unless defined $document{$master}{$lang};
-	
+
 	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'} ,%options);
-	
+
 	my (@file_in_name,@po_in_name);
 	push @file_in_name, $master;
 	push @po_in_name, $po_filename{$lang};
-	
+
 	$doc->process('file_in_name'  => \@file_in_name,
 	              'file_out_name' => $document{$master}{$lang},
 	              'po_in_name'    => \@po_in_name,
                       'file_in_charset'  => $mastchar,
                       'file_out_charset' => $locchar,
                       'addendum_charset' => $addchar);
-	
+
 	my ($percent,$hit,$queries) = $doc->stats();
-	
+
 	if ($percent<$threshold)  {
-	    print STDERR sprintf(gettext("Discard %s (only %s%% translated; need %s%%)."),
-		                 $document{$master}{$lang},$percent,$threshold)."\n";
+	    print STDERR wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
+		$document{$master}{$lang}, $percent, $threshold);
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 	    next DOC;
 	}
-    
+
 	if (defined ($document{$master}{"add_$lang"})) {
 	    foreach my $add (@{$document{$master}{"add_$lang"}}) {
 		if ( !$doc->addendum($add) ) {
-		    die sprintf(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
-			$add,$document{$master}{$lang})."\n";
+		    die wrap_msg(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
+			$add, $document{$master}{$lang});
 		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		    next DOC;
 		}
@@ -437,11 +422,11 @@ foreach $lang (sort keys %po_filename) {
 	}
 	if ($verbose) {
 	    if ($percent == 100) {
-		print STDERR sprintf(gettext("%s is %s%% translated (%s strings)."),
-		    $document{$master}{$lang},$percent,$queries)."\n";
+		print STDERR wrap_msg(gettext("%s is %s%% translated (%s strings)."),
+		    $document{$master}{$lang}, $percent, $queries);
 	    } else {
-		print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
-		    $document{$master}{$lang},$percent,$hit,$queries)."\n";
+		print STDERR wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
+		    $document{$master}{$lang}, $percent, $hit, $queries);
 	    }
 	}
 

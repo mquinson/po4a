@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.31 2005-01-07 22:50:51 nekral-guest Exp $
+# $Id: po4a-translate,v 1.32 2005-02-05 13:03:22 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -154,6 +154,7 @@ use warnings;
 
 use Locale::Po4a::Chooser;
 use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 use Getopt::Long qw(GetOptions);
@@ -165,14 +166,7 @@ setlocale(LC_ALL, "");
 textdomain("po4a");
 
 sub show_version {
-    print sprintf(gettext(
-          "%s version %s.\n".
-          "written by Martin Quinson and Denis Barbier.\n\n".
-          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
-          "This is free software; see source code for copying\n".
-          "conditions. There is NO warranty; not even for\n".
-          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-          ),"po4a-translate",$VERSION)."\n";
+    Locale::Po4a::Common::show_version("po4a-translate");
     exit 0;
 }
 
@@ -183,11 +177,11 @@ my ($help,$help_fmt,@verbose,$debug,@addfiles,$format,@options);
 my ($master_filename,$po_filename);
 my ($mastchar,$locchar,$addchar);
 GetOptions(
-        'help|h'        => \$help,
-        'help-format'   => \$help_fmt,
+	'help|h'        => \$help,
+	'help-format'   => \$help_fmt,
 
 	'master|m=s'    => \$master_filename,
-        'localized|l=s' => \$outfile,
+	'localized|l=s' => \$outfile,
 	'po|p=s'        => \$po_filename,
 	'addendum|a=s'  => \@addfiles,
 	'format|f=s'    => \$format,
@@ -196,14 +190,14 @@ GetOptions(
 	'localized-charset|L=s' => \$locchar,
 	'addendum-charset|A=s' => \$addchar,
 
-        'option|o=s'    => \@options,
-    
+	'option|o=s'    => \@options,
+
 	'width|w=s'     => \$width,
 	'verbose|v'     => \@verbose,
 	'debug|d'       => \$debug,
 	'keep|k=s'      => \$threshold,
-    
-        'version|V'     => \&show_version
+
+	'version|V'     => \&show_version
 ) or pod2usage(1);
 
 $help && pod2usage(0);
@@ -211,8 +205,8 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 
 (defined($master_filename) && length($master_filename))||pod2usage(1);
 (defined($po_filename)     && length($po_filename))    ||pod2usage(1);
--e $master_filename || die sprintf(gettext("%s: file %s does not exist."),"po4a-translate",$master_filename)."\n";
--e $po_filename || die sprintf(gettext("%s: file %s does not exist."),"po4a-translate",$po_filename)."\n";
+-e $master_filename || die wrap_msg(gettext("File %s does not exist."), $master_filename);
+-e $po_filename || die wrap_msg(gettext("File %s does not exist."), $po_filename);
 
 my (@pos,@masters);
 push @pos,$po_filename;
@@ -243,21 +237,21 @@ $doc->process('po_in_name'       => \@pos,
 my ($percent,$hit,$queries) = $doc->stats();
 my $error=0;
 
-print STDERR sprintf(gettext("%s is %s%% translated (%s of %s strings)."),
-		     $master_filename,$percent,$hit,$queries)."\n" 
-    if (scalar @verbose) && ($percent>=$threshold);
+print STDERR wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
+    $master_filename, $percent, $hit, $queries)
+  if (scalar @verbose) && ($percent>=$threshold);
 
 
 if ($percent<$threshold)  {
-    print STDERR sprintf(gettext("Discard the translation of %s (only %s%% translated; need %s%%)."),
-			 $master_filename,$percent,$threshold)."\n";
+    print STDERR wrap_msg(gettext("Discard the translation of %s (only %s%% translated; need %s%%)."),
+	$master_filename, $percent, $threshold);
     unlink($outfile) if (-e $outfile);
 } else {
     foreach my $add (@addfiles) {
 	unless ($doc->addendum($add)) {
 	    unlink($outfile) if (-e $outfile);
-	    die sprintf(gettext("Discard the translation of %s (addendum %s does not apply)."),
-		$master_filename,$add)."\n";
+	    die wrap_msg(gettext("Discard the translation of %s (addendum %s does not apply)."),
+		$master_filename, $add);
 	}
     }
     $doc->write($outfile);
