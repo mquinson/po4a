@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.17 2004-08-06 22:48:51 jvprat-guest Exp $
+# $Id: Po.pm,v 1.18 2004-08-07 02:15:07 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -72,6 +72,7 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 use Carp qw(croak);
 use Locale::gettext qw(dgettext);
+use File::Path; # mkdir before write
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
@@ -218,6 +219,13 @@ sub write{
     if ($filename eq '-') {
 	$fh=\*STDOUT;
     } else {
+	# make sure the directory in which we should write the localized file exists
+	my $dir = $filename;
+	$dir =~ s|/[^/]*$||;
+	
+	File::Path::mkpath($dir, 0, 0755) # Croaks on error
+	  if (length ($dir) && ! -e $dir);
+
 	open $fh,">$filename" 
 	    || croak (sprintf((dgettext("po4a","Can't write to %s: %s"),$filename,$!))."\n");
     }
