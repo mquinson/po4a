@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.17 2004-07-19 10:21:12 jvprat-guest Exp $
+# $Id: po4a-normalize,v 1.18 2004-11-06 09:29:01 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -55,6 +55,10 @@ List the documentation format understood by po4a.
 
 Format type of the documentation you want to handle. Use the --help-format
 option to see the list of available formats.
+
+=item -M, --master-charset
+
+Charset of the file containing the document to translate.
 
 =item -V, --version
 
@@ -110,12 +114,15 @@ sub show_version {
 }
 
 my ($help_fmt,$help,$type,$debug,$verbose,@options);
+my ($mastchar);
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
 	'help-format'  => \$help_fmt,
         'format|f=s'   => \$type,
-    
+
+	'master-charset|M=s'    => \$mastchar,
+
         'option|o=s'    => \@options,
 
         'verbose|v'   => \$verbose,
@@ -144,6 +151,8 @@ my $filename = shift || pod2usage(1);
 -e $filename || die sprintf(gettext("File %s does not exist."),$filename)."\n";
 
 $parser->read($filename);
+$parser->{TT}{utf_mode} = 1;
+$parser->{TT}{file_in_charset} = $mastchar;
 $parser->parse();
 $parser->write('po4a-normalize.output');
 $parser->writepo('po4a-normalize.po');
