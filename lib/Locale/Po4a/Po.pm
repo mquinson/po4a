@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.39 2005-04-02 22:19:29 nekral-guest Exp $
+# $Id: Po.pm,v 1.40 2005-04-02 23:05:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -254,8 +254,12 @@ sub write{
 	
 	$output .= format_comment($self->{po}{$msgid}{'comment'},"") 
 	    if $self->{po}{$msgid}{'comment'};
-	$output .= format_comment($self->{po}{$msgid}{'automatic'},". ")
-	   if $self->{po}{$msgid}{'automatic'};
+	if ($self->{po}{$msgid}{'automatic'}) {
+	    foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'}))
+	    {
+		$output .= format_comment($comment, ". ")
+	    }
+	}
 	$output .= format_comment($self->{po}{$msgid}{'type'}," type: ") 
 	    if $self->{po}{$msgid}{'type'};
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
