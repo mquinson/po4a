@@ -129,7 +129,8 @@ use File::Temp;
 
 my %debug=('tag' => 0, 
 	   'generic' => 0,
-	   'entities' => 0);
+	   'entities' => 0,
+           'refs'   => 0);
 
 sub read {
     my ($self,$filename)=@_;
@@ -238,27 +239,13 @@ sub parse_file {
  			                    "enumlist taglist list item tag ");
 
     } elsif ($prolog =~ /docbook/i) {
-	$self->set_tags_kind("translate" => "para date title subtitle ".
-                                            "glossentry ".
-			                    "figure entry ".
-			        "itemizedlist listitem orderedlist glosslist ".
-			                    "screen literallayout author ".
-			                   "table informaltable",
-			     "empty"     => "xref",
-			     "section"   => "book bookinfo preface chapter ".
-			                    "sect1 sect2 appendix glossary ",
-			     "verbatim"  => "screen literallayout ",
-			     "ignore"    => "ulink command filename xref ".
-			                    "glossterm emphasis citetitle ".
-			                    "literal function option keycap ".
-			                   "prompt userinput computeroutput ".
-			                    "envar email glossdef quote ".
-			                    "firstname surname address ".
-			                    "address affiliation footnote",
-			     "indent"    => "author abstract legalnotice ".
-			                    "toc blockquote ".
-			                    "graphic row ".
-			                    "tgroup tbody thead");
+	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution command date entry figure glosssee glossseealso glossterm holder member msgaud msglevel msgorig option para phrase pubdate publishername refclass refdescriptor refentrytitle refmiscinfo refname refpurpose remark screeninfo seg segtitle subtitle synopfragmentref term title titleabbrev",
+			     "empty"     => "audiodata colspec graphic imagedata sbr textdata videodata xref",
+			     "section"   => "",
+			     "indent"    => "abstract answer appendix article audioobject author bibliodiv bibliography blockquote blockinfo book bookinfo callout calloutlist caption caution chapter copyright dedication entry formalpara glossary glossdef cmdsynopsis  glossdiv glossentry glosslist group imageobject important index indexterm informaltable itemizedlist legalnotice listitem lot mediaobject msg msgentry msginfo msgexplan msgmain msgrel msgsub msgtext note objectinfo orderedlist part partintro preface procedure publisher qandadiv qandaentry qandaset question refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo row screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo simplelist simplemsgentry simplesect step synopfragment table tbody textobject tgroup thead tip toc variablelist varlistentry videoobject warning",
+			     "verbatim"  => "address programlisting literallayout screen",
+			     "ignore"    => "action affiliation anchor application author authorinitials citation citerefentry citetitle classname co computeroutput constant corpauthor database email emphasis envar errorcode errorname errortext errortype exceptionname filename firstname firstterm footnote footnoteref foreignphrase function glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu hardware indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename keycap keycode keycombo keysym link literal markup medialabel menuchoice methodname modespec mousebutton nonterminal olink ooclass ooexception oointerface optional othercredit parameter personname phrase productname productnumber prompt property quote remark replaceable returnvalue revhistory sgmltag sidebar structfield structname subscript superscript surname symbol systemitem token trademark type ulink userinput varname wordasword xref ".
+                                            "manvolnum year");
 
     } else {
 	die sprintf(gettext("File %s have an unknown DTD\n".
@@ -266,6 +253,13 @@ sub parse_file {
 		    $filename);
     }
     
+    # Prepare the reference indirection stuff
+    my @refs;
+    my @lines = split(/\n/, $origfile);
+    for (my $i=0; $i<scalar @lines; $i++) {
+	push @refs,"$filename:$i";
+    }
+
     # protect the conditional inclusions in the file
     $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
     $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
@@ -276,22 +270,45 @@ sub parse_file {
     while ($searchprolog =~ /<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {#})"{
 	print STDERR "Seen the entity of inclusion $1 (=$2)\n"
 	    if ($debug{'entities'});
-	$entincl{$1}=$2;
+	$entincl{$1}{'filename'}=$2;
 	$searchprolog = $3;
     }
     #   Change the entities to their content
     foreach my $key (keys %entincl) {
-	print STDERR "read ".$entincl{$key}."\n" if ($debug{'entities'});
-	open IN,"<".$entincl{$key}  ||
+	open IN,"<".$entincl{$key}{'filename'}  ||
 	    die sprintf(gettext("Can't open %s: %s\n"),$entincl{$key},$!);
 	local $/ = undef;
-	$entincl{$key} = <IN>;
+	$entincl{$key}{'content'} = <IN>;
 	close IN;
+	@lines= split(/\n/,$entincl{$key}{'content'});
+	$entincl{$key}{'length'} = scalar @lines;
+	print STDERR "read $entincl{$key}{'filename'} ($entincl{$key}{'length'} lines long)\n" 
+	    if ($debug{'entities'});
     }
     #   Change the entities
     while ($origfile =~ /^(.*?)&([^;\s]*);(.*)$/s) {
 	if (defined $entincl{$2}) {
-	    $origfile = "$1".$entincl{$2}."$3";
+	    my ($begin,$key,$end)=($1,$2,$3);
+	    $end =~ s/^\s*\n//s;
+
+	    # add the refs
+	    my @refcpy;
+	    my $i;
+	    for ($i=0;$i<scalar @refs;$i++){
+		$refcpy[$i]=$refs[$i];
+	    }
+	    my @begin = split(/\n/,$begin);
+	    my @end = split(/\n/,$end);	    
+	    for ($i=1; $i<=$entincl{$key}{'length'}; $i++) {
+		$refs[$i+scalar @begin+1]="$entincl{$key}{'filename'}:$i";
+	    }
+	    for ($i=1; $i<=scalar @end; $i++) {
+		$refs[$i+scalar @begin+1+$entincl{$key}{'length'}]=
+		    $refcpy[$i+scalar @begin+2];
+	    }
+
+	    # Do the substitution
+	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
 	    print STDERR "substitute $2\n" if ($debug{'entities'});
 	} else {
 	    $origfile = "$1".'{PO4A-amp}'."$2;$3";
@@ -300,6 +317,11 @@ sub parse_file {
     }
     #   Reput the entities of inclusion in place
     $origfile =~ s/{PO4A-keep-amp}/&/g;
+    if ($debug{'refs'}) {
+	for (my $i=0; $i<scalar @refs; $i++) {
+	    print STDERR "$filename:$i -> $refs[$i]\n";
+	}
+    }
     
     my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4a-sgml-XXXX",
 					      DIR    => "/tmp",
@@ -364,12 +386,12 @@ sub parse_file {
     # run the appropriate handler for each event
     EVENT: while (my $event = $parse->next_event) {
 	# to build po entries
-	my $ref="$filename:".$parse->line;
+	my $ref=$refs[$parse->line];
 	my $type;
 	
 	if ($event->type eq 'start_element') {
-	    die sprintf(gettext("po4a::Sgml: %s:%d: Unknown tag %s\n"),
-			$filename,$parse->line,$event->data->name) 
+	    die sprintf(gettext("po4a::Sgml: %s: Unknown tag %s\n"),
+			$refs[$parse->line],$event->data->name) 
 		unless $exist{$event->data->name};
 	    
 	    $lastchar = ">";
@@ -535,7 +557,7 @@ sub parse_file {
 
 	else {
 	    die sprintf(gettext("%s:%d: Unknown SGML event type: %s\n"),
-			$filename,$parse->line,$event->type);
+			$refs[$parse->line],$event->type);
 	    
 	}
     }
