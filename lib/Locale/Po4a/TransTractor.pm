@@ -21,6 +21,8 @@ use Locale::Po4a::Po;
 
 use Locale::gettext qw(dgettext);
 
+use Encode::Guess;
+
 =head1 NAME
 
 Po4a TransTractor - Generic trans(lator ex)tractor.
@@ -307,6 +309,8 @@ sub new {
     if (defined $options{'debug'}) {
 	$self->{TT}{debug}  =  $options{'debug'};
     }
+    # Input document is in ascii until we prove the opposite (in read())
+    $self->{TT}{ascii_input}=1;
 
     ## initialize the plugin
     $self->initialize(%options);
@@ -344,6 +348,15 @@ sub read() {
 	my $ref="$filename:$linenum";
 	my @entry=($textline,$ref);
 	push @{$self->{TT}{doc_in}}, @entry;
+
+	# Detect if this file has non-ascii characters
+	if($self->{TT}{ascii_input}) {
+	    my $decoder = guess_encoding($textline);
+	    if (!ref($decoder) or $decoder !~ /Encode::XS=/) {
+	        # We have detected a non-ascii line
+		$self->{TT}{ascii_input} = 0;
+	    }
+	}
     }
     close INPUT 
 	or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
