@@ -22,6 +22,7 @@ use Locale::Po4a::Po;
 use Locale::gettext qw(dgettext);
 use File::Path; # mkdir before write
 
+use Encode;
 use Encode::Guess;
 
 =head1 NAME
@@ -34,7 +35,7 @@ The po4a (po for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-This class is the ancestor of all po4a parsers used to parse a document to
+This class is the ancestor of all the po4a parsers used to parse a document to
 search translatable strings, extract them to a po file and replace them by
 their translation in the output document. 
 
@@ -84,7 +85,7 @@ Here is a graphical representation of this:
 
 =item parse()
 
-This is where all the work take place: the parsing of input documents, the
+This is where all the work takes place: the parsing of input documents, the
 generation of output, and the extraction of the translatable strings. This
 is pretty simple using the provided functions presented in the section
 "INTERNAL FUNCTIONS" below. See also the synopsis, which present an
@@ -97,9 +98,9 @@ you will have to call this function yourself.
 =item docheader()
 
 This function returns the header we should add to the produced document,
-quoted properly to be comment in the target language.  See the section
-"Educating developers about translations", from po4a(7), for what it is
-good for.
+quoted properly to be a comment in the target language.  See the section
+"Educating developers about translations", from L<po4a(7)|po4a.7>, for what
+it is good for.
 
 =back
 
@@ -111,7 +112,7 @@ sub parse {}
 
 =head1 SYNOPSIS
 
-The following example parse a list paragraphs begining with "<p>". For sake
+The following example parses a list of paragraphs begining with "<p>". For sake
 of simplicity, we assume that the document is well formatted, ie that '<p>'
 tags are the only tags present, and that this tag is at the very begining
 of each paragraph.
@@ -124,7 +125,7 @@ of each paragraph.
 	   if ($line =~ m/<p>/ && !$first--; ) {
 	       # Not the first time we see <p>. 
 	       # Reput the current line in input,
-	       #  and put the builded paragraph to output
+	       #  and put the built paragraph to output
 	       $document->unshiftline($line,$lref);
 	      
 	       # Now that the document is formed, translate it:
@@ -161,7 +162,7 @@ class, using the public interface presented in the next section.
 =item process(%)
 
 This function can do all you need to do with a po4a document in one
-invocation:. Its arguments must be packed as a hash. ACTIONS:
+invocation. Its arguments must be packed as a hash. ACTIONS:
 
 =over 3
 
@@ -175,11 +176,11 @@ Reads all original documents specified in file_in_name
 
 =item c.
 
-Parse the document
+Parses the document
 
 =item d.
 
-Read and apply all the addendum specified
+Reads and applies all the addendum specified
 
 =item e.
 
@@ -187,17 +188,22 @@ Writes the translated document to file_out_name (if given)
 
 =item f.
 
-Write the extracted po file to po_out_name (if given)
+Writes the extracted po file to po_out_name (if given)
 
 =back
 
-ARGUMENTS, beside the ones accepted by new()(with expected type):
+ARGUMENTS, beside the ones accepted by new() (with expected type):
 
 =over 4
 
 =item file_in_name (@)
 
 list of filenames where we should read the input document.
+
+=item file_in_charset ($)
+
+character set used in the input document (if it isn't specified, it will try
+to detect it from the input document).
 
 =item file_out_name ($)
 
@@ -217,6 +223,10 @@ extracted from the input document.
 
 list of filenames where we should read the addendum from.
 
+=item addendum_charset ($)
+
+character set for the addendum.
+
 =back
 
 =item new(%)
@@ -227,7 +237,11 @@ Create a new Po4a document. Accepted options (but be in a hash):
 
 =item verbose ($)
 
-If an argument is passed, set the verbosity. Otherwise, return the verbosity.
+Sets the verbosity.
+
+=item debug ($)
+
+Sets the debugging.
 
 =back
 
@@ -247,10 +261,15 @@ sub process {
 	next if ($_ eq 'po_in_name' ||
 		 $_ eq 'po_out_name' ||
 		 $_ eq 'file_in_name' ||
+		 $_ eq 'file_in_charset' ||
 		 $_ eq 'file_out_name' ||
-		 $_ eq 'addendum');
+		 $_ eq 'addendum' ||
+		 $_ eq 'addendum_charset');
 	$newparams{$_}=$params{$_};
     }
+
+    $self->{TT}{'file_in_charset'}=$params{'file_in_charset'};
+    $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
     foreach my $file (@{$params{'po_in_name'}}) {
 	print STDERR "readpo($file)... " if $self->debug();
@@ -312,6 +331,9 @@ sub new {
     }
     # Input document is in ascii until we prove the opposite (in read())
     $self->{TT}{ascii_input}=1;
+    # We try not to use utf unless it's forced from the outside (in case the
+    # document isn't in ascii)
+    $self->{TT}{utf_mode}=0;
 
     ## initialize the plugin
     $self->initialize(%options);
@@ -321,7 +343,7 @@ sub new {
 
 =back
 
-=head2 manipulating document files
+=head2 Manipulating document files
 
 =over 4
 
@@ -457,8 +479,8 @@ sub stats   {
 
 =item addendum($)
 
-Please refer to po4a(7) for more information on what addendum are, and how
-translators should write them. To apply an addendum to the translated
+Please refer to L<po4a(7)|po4a.7> for more information on what addendum are,
+and how translators should write them. To apply an addendum to the translated
 document, simply pass its filename to this function and you are done ;)
 
 This function returns a non-nul integer on error.
@@ -674,7 +696,7 @@ sub popline     {  return pop @{$_[0]->{TT}{doc_out}};            }
 
 =head2 Marking strings as translatable
 
-Two functions are provided to handle the text which should be translated. 
+One function is provided to handle the text which should be translated. 
 
 =over 4
 
@@ -695,8 +717,8 @@ The reference of this string (ie, position in inputfile)
 =item -
 
 The type of this string (ie, the textual description of its structural role
-; used in Locale::Po4a::Po::gettextization() ; see also po4a(7), section
-I<Gettextization: how does it work?>)
+; used in Locale::Po4a::Po::gettextization() ; see also L<po4a(7)|po4a.7>,
+section I<Gettextization: how does it work?>)
 
 =back
 
@@ -733,6 +755,11 @@ Pushes the string, reference and type to po_out.
 Returns the translation of the string (as found in po_in) so that the
 parser can build the doc_out.
 
+=item -
+
+Handles the character sets to recode the strings before sending them to
+po_out and before returning the translations.
+
 =back
 
 =back
@@ -755,15 +782,58 @@ sub translate {
     #	    unless $validoption{$_};
     # }
 
+    my $in_charset;
+    if ($self->{TT}{ascii_input}) {
+	$in_charset = "ascii";
+    } else {
+	if (defined($self->{TT}{'file_in_charset'}) and
+	    length($self->{TT}{'file_in_charset'}) and
+	    $self->{TT}{'file_in_charset'} ne "CHARSET" and
+	    $self->{TT}{'file_in_charset'} ne "ascii") {
+	    $in_charset=$self->{TT}{'file_in_charset'};
+	} else {
+	    die dgettext("po4a","Couldn't determine the input document's character set before finding the first string that needs recoding. Please specify it in the command line.")."\n"
+	}
+    }
+
+    my $transstring = $self->{TT}{po_in}->gettext($string,
+					'wrap'      => $options{'wrap'}||0,
+					'wrapcol'   => $options{'wrapcol'});
+
+    if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
+	Encode::from_to($transstring,$self->{TT}{po_in}->get_charset,
+	    $self->get_out_charset);
+    }
+
+    # If the input document isn't completely in ascii, we should see what to
+    # do with the current string
+    unless ($self->{TT}{ascii_input}) {
+        my $out_charset = $self->{TT}{po_out}->get_charset;
+	# We set the output po charset 
+        if ($out_charset eq "CHARSET") {
+	    if ($self->{TT}{utf_mode}) {
+		$out_charset="utf-8";
+	    } else {
+		$out_charset=$in_charset;
+	    }
+	    $self->{TT}{po_out}->set_charset($out_charset);
+	}
+	if ( $in_charset !~ /^$out_charset$/i ) {
+	    Encode::from_to($string,$in_charset,$out_charset);
+	}
+    }
+
     $self->{TT}{po_out}->push('msgid'     => $string,
 			      'reference' => $ref,
 			      'type'      => $type,
 			      'wrap'      => $options{'wrap'}||0,
 			      'wrapcol'   => $options{'wrapcol'});
 
-    return $self->{TT}{po_in}->gettext($string,
-				       'wrap'      => $options{'wrap'}||0,
-				       'wrapcol'   => $options{'wrapcol'});
+#    if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
+#	Encode::from_to($transstring,$self->{TT}{po_in}->get_charset,
+#	    $self->get_out_charset);
+#    }
+    return $transstring;
 }
 
 =head2 Misc functions
@@ -790,13 +860,85 @@ sub verbose {
 Returns if the debug option was passed during the creation of the
 TransTractor.
 
-=back
-
 =cut
 
 sub debug {
     return $_[0]->{TT}{debug};
 }
+
+=item detected_charset($)
+
+This tells TransTractor that a new character set (the first argument) has been
+detected from the input document. It can usually be read from the document
+header. Only the first character set will remain, coming either from the
+process() arguments or detected from the document.
+
+=cut
+
+sub detected_charset {
+    my ($self,$charset)=(shift,shift);
+    unless (defined($self->{TT}{'file_in_charset'}) and
+	length($self->{TT}{'file_in_charset'}) ) {
+
+	$self->{TT}{'file_in_charset'}=$charset;
+    }
+}
+
+=item get_out_charset()
+
+This function will return the character set that should be used in the output
+document (usually useful to substitute the input document's detected character
+set where it has been found).
+
+If no character set is specified for the output document, it will use the
+input po's character set, and if the input po has the default "CHARSET", it
+will return the input document's character set, so that no encoding is
+performed.
+
+=cut
+
+sub get_out_charset {
+    my $self=shift;
+    my $charset;
+    if ($self->{TT}{utf_mode} && $self->{TT}{ascii_input}) {
+	$charset="utf-8";
+    } else {
+	$charset=$self->{TT}{po_in}->get_charset;
+	$charset=$self->{TT}{'file_in_charset'}
+	    if $charset eq "CHARSET" and
+		defined($self->{TT}{'file_in_charset'}) and
+		length($self->{TT}{'file_in_charset'});
+	$charset="ascii"
+	    if $charset eq "CHARSET";
+    }
+    return $charset;
+}
+
+=item recode_skipped_text($)
+
+This function returns the recoded text passed as argument, from the input
+document's character set to the output document's one. This isn't needed when
+translating a string (translate() recodes everything itself), but it is when
+you skip a string from the input document and you want the output document to
+be consistent with the global encoding.
+
+=cut
+
+sub recode_skipped_text {
+    my ($self,$text)=(shift,shift);
+    unless (!$self->{TT}{'ascii_input'}) {
+	if(defined($self->{TT}{'file_in_charset'}) and
+	    length($self->{TT}{'file_in_charset'}) ) {
+	    Encode::from_to($text,$self->{TT}{'file_in_charset'},
+		$self->get_out_charset);
+	    return $text;
+	} else {
+	    die dgettext("po4a","Couldn't determine the input document's character set before finding the first string that needs recoding. Please specify it in the command line.")."\n";
+	}
+    }
+}
+
+=back
 
 =head1 FUTURE DIRECTIONS
 
