@@ -378,6 +378,8 @@ sub read() {
 	    if (!ref($decoder) or $decoder !~ /Encode::XS=/) {
 	        # We have detected a non-ascii line
 		$self->{TT}{ascii_input} = 0;
+		# Save the reference for future error message
+		$self->{TT}{non_ascii_ref} ||= $ref;
 	    }
 	}
     }
@@ -809,7 +811,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die "po4a: ".dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line.")."\n"
+	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line. First non-ascii character appears in %s"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
 
