@@ -846,6 +846,9 @@ sub translate {
 	}
 	if ( $in_charset !~ /^$out_charset$/i ) {
 	    Encode::from_to($string,$in_charset,$out_charset);
+	    if (defined($options{'comment'}) and length($options{'comment'})) {
+		Encode::from_to($options{'comment'},$in_charset,$out_charset);
+	    }
 	}
     }
 
