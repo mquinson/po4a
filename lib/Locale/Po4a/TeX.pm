@@ -888,7 +888,7 @@ sub parse {
         if ($closed and $line =~ /^ *$/) {#FIXME: should it be \s*?
             # An empty line. This indicates the end of the current
             # paragraph.
-            $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
+            $paragraph =~ s/(?<!\\)(?:\\\\)*%$//;
             if (length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t);
@@ -897,7 +897,7 @@ sub parse {
             $self->pushline($line."\n");
         } elsif ($line =~ /^\\begin\{/) {
             # break the paragraph at the beginning of a new environment.
-            $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
+            $paragraph =~ s/(?<!\\)(?:\\\\)*%$//;
             $closed = is_closed($paragraph);
             if ($closed and length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
@@ -907,7 +907,7 @@ sub parse {
             $paragraph .= $line."\n";
         } else {
             # continue the same paragraph
-            if ($paragraph =~ /(?<!\\)%$/) { # FIXME: even number of \ ...
+            if ($paragraph =~ /(?<!\\)(?:\\\\)*%$/) {
                 $paragraph =~ s/%$//s;
                 chomp $paragraph;
                 $line =~ s/^ *//;
