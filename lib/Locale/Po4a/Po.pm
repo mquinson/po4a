@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.30 2004-11-27 01:08:56 nekral-guest Exp $
+# $Id: Po.pm,v 1.31 2004-12-05 19:24:29 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -689,7 +689,7 @@ file.  Example of use:
 sub stats_get() {
     my $self=shift;
     my ($h,$q)=($self->{gettexthits},$self->{gettextqueries});
-    my $p = ($q == 0 ? 0 : int($h/$q*10000)/100);
+    my $p = ($q == 0 ? 100 : int($h/$q*10000)/100);
 
 #    $p =~ s/\.00//;
 #    $p =~ s/(\..)0/$1/;
