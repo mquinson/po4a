@@ -381,11 +381,12 @@ sub write {
     } else {
 	# make sure the directory in which we should write the localized file exists
 	my $dir = $filename;
-	$dir =~ s|/[^/]*$||;
+	if ($dir =~ m|/|) {
+	    $dir =~ s|/[^/]*$||;
 	
-	File::Path::mkpath($dir, 0, 0755) # Croaks on error
-	  if (length ($dir) && ! -e $dir);
-	  
+	    File::Path::mkpath($dir, 0, 0755) # Croaks on error
+	      if (length ($dir) && ! -e $dir);
+	}
 	open $fh,">$filename"
 	    || croak (sprintf((dgettext("po4a","can't write to %s: %s"),$filename,$!))."\n");
     }
