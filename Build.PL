@@ -7,7 +7,7 @@ Module::Build->new
 	requires => {Locale::gettext => '1.01',
 		SGMLS => 0},
 	script_files => ['po4a-gettextize', 'po4a-updatepo',
-		'po4a-translate', 'po4a-normalize'],
+		'po4a-translate', 'po4a-normalize', 'po4a'],
 	add_to_cleanup => ['t/tmp'],
 	dist_abstract => 'Tools for helping translation of documentation',
 	dist_author => ['Martin Quinson <martin.quinson@tuxfamily.org>',

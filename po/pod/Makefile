@@ -1,5 +1,5 @@
 # List here all source files with translatable strings.
-SCRIPTS=po4a-gettextize po4a-updatepo po4a-translate po4a-normalize
+SCRIPTS=po4a po4a-gettextize po4a-updatepo po4a-translate po4a-normalize
 LIBS=Po.pm TransTractor.pm Pod.pm Man.pm Sgml.pm Chooser.pm KernelHelp.pm Dia.pm
 DOCS=po4a.7
 
