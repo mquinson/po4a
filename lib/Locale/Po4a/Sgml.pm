@@ -204,12 +204,17 @@ sub parse_file {
 	$origfile .= $_;
     }
     close IN || die sprintf(gettext("Can't close %s: %s\n"),$filename,$!);
+    # Detect the XML pre-prolog
+    $prolog=$origfile;
+    if ($prolog =~ s/<\?xml version="[0-9\.]*"\?>//) {
+	warn sprintf(gettext("po4a::sgml: %s seems to be a XML document. It will be attempted to handle it as a SGML document.\n".
+	    "po4a::sgml: Feel lucky if it works, help us implementing a proper XML backend if it does not.\n"),$filename);
+    }
     # Get the prolog
     {
 	my $lvl;    # number of '<' seen without matching '>'
 	my $pos;    # where in the document (in chars)
 	
-	$prolog=$origfile;
 	$prolog=~ s/^(.*<!DOCTYPE).*$/$1/is;
 	$pos=length($prolog);
 	$lvl=1;
