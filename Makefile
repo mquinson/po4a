@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 # This file is public domain software, originally written by Joey Hess.
 
-bins = gettextize updatepo translate normalize
+bins = po4a po4a-gettextize po4a-updatepo po4a-translate po4a-normalize
 libs = $(basename $(notdir $(wildcard lib/Locale/Po4a/*.pm)))
 docs = $(subst .7.pod,,$(notdir $(wildcard doc/*.pod)))
 langs = $(basename $(notdir $(wildcard po/pod/*.po)))
@@ -37,13 +37,13 @@ man-stamp: po-pod-stamp
 #  so input file is temporarily copied.
 	for bin in $(bins) ; do \
 	  for lang in $(langs) ; do \
-	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
+	    if [ -e po/pod/$$bin.$$lang.pod ] ; then \
 	      mkdir -p mantmp/$$lang/man1; \
-	      cp po/pod/po4a-$$bin.$$lang.pod mantmp/po4a-$$bin.pod && \
+	      cp po/pod/$$bin.$$lang.pod mantmp/$$bin.pod && \
 	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	       mantmp/po4a-$$bin.pod > mantmp/$$lang/man1/po4a-$$bin.1; \
-	      gzip -9 mantmp/$$lang/man1/po4a-$$bin.1; \
-	      rm -f mantmp/po4a-$$bin.pod; \
+	       mantmp/$$bin.pod > mantmp/$$lang/man1/$$bin.1; \
+	      gzip -9 mantmp/$$lang/man1/$$bin.1; \
+	      rm -f mantmp/$$bin.pod; \
 	    fi; \
 	  done; \
 	done
@@ -102,7 +102,7 @@ man-install: man-stamp
 	  done \
 	done
 
-tar: Build
+dist: Build
 	./Build dist
 
 .PHONY: build clean install build-install po-install man-install tar
