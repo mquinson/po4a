@@ -159,7 +159,10 @@ use Locale::gettext qw(gettext);
 
 eval qq{use SGMLS};
 if ($@) {
-  die gettext("po4a::sgml: The needed module SGMLS.pm was not found and needs to be\npo4a::sgml: installed. It can be found on the CPAN, in package\npo4a::sgml: libsgmls-perl on debian, etc.\n");
+  die gettext(
+  	"po4a::sgml: The needed module SGMLS.pm was not found and needs to be\n".
+	"po4a::sgml: installed. It can be found on the CPAN, in package\n".
+	"po4a::sgml: libsgmls-perl on debian, etc.")."\n";
 }
 
 use File::Temp;
@@ -189,7 +192,7 @@ sub initialize {
     
     foreach my $opt (keys %options) {
 	if ($options{$opt}) {
-	    die sprintf(gettext ("po4a::sgml: Unknown option: %s\n"), $opt) unless exists $self->{options}{$opt};
+	    die sprintf(gettext ("po4a::sgml: Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
 	    $self->{options}{$opt} = $options{$opt};
 	}
     }
@@ -222,12 +225,12 @@ sub translate {
  
     # don't translate entries composed of one entity
     if (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/)){
-	warn sprintf gettext ("po4a::sgml: msgid skipped to help translators (contains only an entity)\n"), $string;
+	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only an entity)"), $string)."\n";
 	return $string;
     }
     # don't translate entries composed of tags only
     if ($string =~ /^(((<[^>]*>)|\s)*)$/) {
-	warn sprintf gettext ("po4a::sgml: msgid skipped to help translators (contains only tags)\n"), $string;
+	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only tags)"), $string)."\n";
 	return $string;
     }
 
@@ -270,15 +273,18 @@ sub parse_file {
     #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
     #   - protect entities from expansion (ie "&release;")
     open (IN,"<$filename") 
-	|| die sprintf(gettext("Can't open %s: %s\n"),$filename,$!);
+	|| die sprintf(gettext("Can't open %s: %s"),$filename,$!)."\n";
     my $origfile="";
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die sprintf(gettext("po4a::sgml: can't close %s: %s\n"),$filename,$!);
+    close IN || die sprintf(gettext("po4a::sgml: can't close %s: %s"),$filename,$!)."\n";
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
-	warn sprintf(gettext("po4a::sgml: Trying to handle a XML document as a SGML one.\npo4a::sgml: Feel lucky if it works, help us implementing a proper XML\npo4a::sgml: backend if it does not.\n"),$filename);
+	warn sprintf(gettext(
+		"po4a::sgml: Trying to handle a XML document as a SGML one.\n".
+		"po4a::sgml: Feel lucky if it works, help us implementing a proper XML\n".
+		"po4a::sgml: backend if it does not."),$filename)."\n";
 	$xmlprolog=$1;
     }
     # Get the prolog
@@ -288,7 +294,12 @@ sub parse_file {
 	my $pos = 0;  # where in the document (in chars) while detecting prolog boundaries
 	
 	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
-	    die sprintf(gettext("po4a::sgml: This file is not a master SGML document (no DOCTYPE).\npo4a::sgml: It may be a file to be included by another one, in which case\npo4a::sgml: it should not be passed to po4a directly. Text from included\npo4a::sgml: files is extracted/translated when handling the master file\npo4a::sgml: including them.\n"), $filename);
+	    die sprintf(gettext(
+	    	"po4a::sgml: This file is not a master SGML document (no DOCTYPE).\n".
+		"po4a::sgml: It may be a file to be included by another one, in which case\n".
+		"po4a::sgml: it should not be passed to po4a directly. Text from included\n".
+		"po4a::sgml: files is extracted/translated when handling the master file\n".
+		"po4a::sgml: including them."), $filename)."\n";
 	}
 	$pos += length($prolog);
 	$lvl=1;
@@ -382,11 +393,13 @@ sub parse_file {
 
     } else {
 	if ($self->{options}{'force'}) {
-	    warn gettext("po4a::sgml: DTD of this file is unknown, but proceeding as requested.\n");
+	    warn gettext("po4a::sgml: DTD of this file is unknown, but proceeding as requested.")."\n";
 	    $self->set_tags_kind();
 	} else {
-	    die sprintf(gettext("po4a::sgml: DTD of this file is unknown. (supported: debiandoc, docbook).\nThe prolog follows:\n%s\n"),
-	  	                $filename,$prolog);
+	    die sprintf(gettext(
+	    	"po4a::sgml: DTD of this file is unknown. (supported: debiandoc, docbook).\n".
+		"The prolog follows:\n%s"),
+	  	                $filename,$prolog)."\n";
 	}
     }
     
@@ -413,7 +426,7 @@ sub parse_file {
     #   Change the entities to their content
     foreach my $key (keys %entincl) {
 	open IN,"<".$entincl{$key}{'filename'}  ||
-	    die sprintf(gettext("Can't open %s: %s\n"),$entincl{$key},$!);
+	    die sprintf(gettext("Can't open %s: %s"),$entincl{$key},$!)."\n";
 	local $/ = undef;
 	$entincl{$key}{'content'} = <IN>;
 	close IN;
@@ -464,12 +477,12 @@ sub parse_file {
 					      DIR    => "/tmp",
 					      UNLINK => 0);
     print $tmpfh $origfile;
-    close $tmpfh || die sprintf(gettext("Can't close tempfile: %s\n"),$!);
+    close $tmpfh || die sprintf(gettext("Can't close tempfile: %s"),$!)."\n";
 
     my $cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
     print STDERR "CMD=$cmd\n" if ($debug{'generic'});
 
-    open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s\n"),$!);
+    open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s"),$!)."\n";
 
     # The kind of tags
     my (%translate,%empty,%verbatim,%indent,%exist);
@@ -542,8 +555,8 @@ sub parse_file {
 	my $type;
 	
 	if ($event->type eq 'start_element') {
-	    die sprintf(gettext("po4a::Sgml: %s: Unknown tag %s\n"),
-			$refs[$parse->line],$event->data->name) 
+	    die sprintf(gettext("po4a::Sgml: %s: Unknown tag %s"),
+			$refs[$parse->line],$event->data->name)."\n" 
 		unless $exist{$event->data->name};
 	    
 	    $lastchar = ">";
@@ -607,8 +620,8 @@ sub parse_file {
 		push @open,$tag;
 	    } elsif ($indent{$event->data->name()}) {
 		die sprintf(gettext(
-		    "Closing tag for a translation container missing before %s, at %s\n"
-				    ),$tag,$ref)
+		    "Closing tag for a translation container missing before %s, at %s"
+				    ),$tag,$ref)."\n"
 		    if (scalar @open);
 	    }
 
@@ -654,8 +667,8 @@ sub parse_file {
 		}
 	    } elsif ($indent{$event->data->name()}) {
 		die sprintf(gettext(
-           "Closing tag for a translation container missing before %s, at %s\n"
-				    ),$tag,$ref)
+           "Closing tag for a translation container missing before %s, at %s"
+				    ),$tag,$ref)."\n"
 		    if (scalar @open);
 	    }
 
@@ -708,8 +721,8 @@ sub parse_file {
 	}
 
 	else {
-	    die sprintf(gettext("%s:%d: Unknown SGML event type: %s\n"),
-			$refs[$parse->line],$event->type);
+	    die sprintf(gettext("%s:%d: Unknown SGML event type: %s"),
+			$refs[$parse->line],$event->type)."\n";
 	    
 	}
     }

@@ -334,11 +334,11 @@ function when you're done with packing input files into the document.
 sub read() {
     my $self=shift;
     my $filename=shift
-	or croak(dgettext("po4a","Can't read from file without having a filename\n"));
+	or croak(dgettext("po4a","Can't read from file without having a filename")."\n");
     my $linenum=1;
 
     open INPUT,"<$filename" 
-	or croak (sprintf(dgettext("po4a","Can't read from %s: %s\n"),$filename,$!));
+	or croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
     while (defined (my $textline = <INPUT>)) {
 	$linenum++;
 	my $ref="$filename:$linenum";
@@ -346,7 +346,7 @@ sub read() {
 	push @{$self->{TT}{doc_in}}, @entry;
     }
     close INPUT 
-	or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s\n"),$filename,$!));
+	or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
 
 }
 
@@ -359,21 +359,21 @@ Write the translated document to the given filename.
 sub write {
     my $self=shift;
     my $filename=shift
-	or croak (dgettext("po4a","Can't write to a file without filename\n"));
+	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
 
     my $fh;
     if ($filename eq '-') {
 	$fh=\*STDOUT;
     } else {
 	open $fh,">$filename" 
-	    || croak (sprintf((dgettext("po4a","can't write to %s: %s\n"),$filename,$!)));
+	    || croak (sprintf((dgettext("po4a","can't write to %s: %s"),$filename,$!))."\n");
     }
     
     map { print $fh $_ } $self->docheader();
     map { print $fh $_ } @{$self->{TT}{doc_out}};
 
     if ($filename ne '-') {
-	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s\n"),$filename,$!));
+	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s"),$filename,$!)."\n");
     }
 
 }
@@ -448,25 +448,25 @@ sub addendum_parse {
 	(1,"","","","","");
 
     unless (open (INS, "<$filename")) {
-	warn sprintf(dgettext("po4a","Can't read from %s: %s\n"),$filename,$!);
+	warn sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n";
 	goto END_PARSE_ADDFILE;
     } 
 
     unless (defined ($header=<INS>) && $header)  {
-	warn sprintf(dgettext("po4a","Can't read Po4a header from %s.\n"),
-		     $filename);
+	warn sprintf(dgettext("po4a","Can't read Po4a header from %s."),
+		     $filename)."\n";
 	goto END_PARSE_ADDFILE;
     }
 
     unless ($header =~ s/PO4A-HEADER://i) {
-	warn sprintf(dgettext("po4a","First line of %s does not look like a Po4a header.\n"),
-		     $filename);
+	warn sprintf(dgettext("po4a","First line of %s does not look like a Po4a header."),
+		     $filename)."\n";
 	goto END_PARSE_ADDFILE;
     }
     foreach my $part (split(/;/,$header)) {
 	unless ($part =~ m/^([^=]*)=(.*)$/) {
-	    warn sprintf(dgettext("po4a","Syntax error in Po4a header of %s, near \"%s\"\n"),
-			 $filename,$part);
+	    warn sprintf(dgettext("po4a","Syntax error in Po4a header of %s, near \"%s\""),
+			 $filename,$part)."\n";
 	    goto END_PARSE_ADDFILE;
 	}
 	my ($key,$value)=($1,$2);
@@ -481,30 +481,30 @@ sub addendum_parse {
 	    $boundary=$value;
 	    $bmode='before';
 	} else { 
-	    warn sprintf(dgettext("po4a","Invalid argument in the Po4a header of %s: %s\n"),
-			 $filename,$key);
+	    warn sprintf(dgettext("po4a","Invalid argument in the Po4a header of %s: %s"),
+			 $filename,$key)."\n";
 	    goto END_PARSE_ADDFILE;
 	}
     }
 
     unless (length($mode)) {
-	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the mode.\n"),
-		     $filename);
+	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the mode."),
+		     $filename)."\n";
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || $mode eq "after") {
-	warn sprintf(dgettext("po4a","Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s.\n"),
-		     $filename,$mode);
+	warn sprintf(dgettext("po4a","Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s."),
+		     $filename,$mode)."\n";
 	goto END_PARSE_ADDFILE;
     }
 
     unless (length($position)) {
-	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the position.\n"),
-		     $filename);
+	warn sprintf(dgettext("po4a","The Po4a header of %s does not define the position."),
+		     $filename)."\n";
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || length($boundary)) {
-    	warn dgettext("po4a","No ending boundary given in the Po4a header, but mode=after.\n");
+    	warn dgettext("po4a","No ending boundary given in the Po4a header, but mode=after.")."\n";
 	goto END_PARSE_ADDFILE;
     }
 
@@ -528,7 +528,7 @@ sub addendum {
     my ($self,$filename) = @_;
     
     warn(dgettext("po4a",
-		  "Can't insert addendum when not given the filename\n"))
+		  "Can't insert addendum when not given the filename")."\n")
 	unless $filename;
   
     my ($errcode,$mode,$position,$boundary,$bmode,$lang,$content)=
@@ -538,21 +538,21 @@ sub addendum {
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
 	warn sprintf(dgettext("po4a",
-			      "No candidate position for the addendum %s.\n"),
-		     $filename);
+			      "No candidate position for the addendum %s."),
+		     $filename)."\n";
 	return 0;
     }
     if ($found > 1) {
 	warn sprintf(dgettext("po4a",
-			      "More than one cadidate position found for the addendum %s.\n"),
-		     $filename);
+			      "More than one cadidate position found for the addendum %s."),
+		     $filename)."\n";
 	return 0;
     }
 
     if ($mode eq "before") {
 	if ($self->verbose()) {
-	    map { printf STDERR (dgettext("po4a","Adding the addendum %s before the line:\n%s\n"),
-			 $filename,$_) if (/$position/);
+	    map { printf STDERR (dgettext("po4a","Adding the addendum %s before the line:\n%s"),
+			 $filename,$_),"\n" if (/$position/);
  	        } @{$self->{TT}{doc_out}};
 	}
 	@{$self->{TT}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
@@ -562,26 +562,33 @@ sub addendum {
 	while (my $line=shift @{$self->{TT}{doc_out}}) {
 	    push @newres,$line;
 	    if ($line =~ m/$position/) {
-		printf STDERR (dgettext("po4a","Adding the addendum %s after the section begining with the line:\n%s\n"),
-			       $filename,mychomp($line)) if ($self->verbose());
+		printf STDERR (dgettext("po4a",
+			"Adding the addendum %s after the section begining with the line:\n%s"),
+			       $filename,mychomp($line)),"\n" if ($self->verbose());
 		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
 		}
 		if (defined $line) {
 		    if ($bmode eq 'before') {
-			printf STDERR (dgettext("po4a","Next section begins with:\n%s\nAddendum added before this line.\n"),
-				       mychomp($line)) if ($self->verbose());
+			printf STDERR (dgettext("po4a",
+				"Next section begins with:\n".
+				"%s\n".
+				"Addendum added before this line."),
+				       mychomp($line))."\n" if ($self->verbose());
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
-			printf STDERR (dgettext("po4a","This section ends with:\n%s\nAddendum added after this line.\n"),
-				       mychomp($line)) if ($self->verbose());
+			printf STDERR (dgettext("po4a",
+				"This section ends with:\n".
+				"%s\n".
+				"Addendum added after this line."),
+				       mychomp($line))."\n" if ($self->verbose());
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
-		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file.\n"))
+		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file."))."\n"
 			   if ($self->verbose());
 		    push @newres,$content;
 		}
