@@ -368,15 +368,17 @@ sub tag_trans_comment {
 }
 
 sub tag_trans_xmlhead {
-#TODO
 	my ($self,@tag)=@_;
-my $tag = $self->join_lines(@tag);
-	$tag =~ /^(\S*)(\s*)(.*)/s;
-	my ($name,$spaces,$attr)=($1,$2,$3);
 
-	#We get the file encoding
-	#my $enc=$self->attribute($attr,"encoding");
-	#print $enc."\n";
+	# We don't have to translate anything from here: throw away references
+	my $tag = $self->join_lines(@tag);
+	$tag =~ /encoding=(("|')|)(.*?)(\s|\2)/s;
+	my $in_charset=$3;
+	my $out_charset=$self->detected_charset($in_charset);
+
+	$tag =~ s/$in_charset/$out_charset/
+		unless !defined($out_charset) or $out_charset eq "";
+
 	return $tag;
 }
 
