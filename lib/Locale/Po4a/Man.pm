@@ -395,6 +395,7 @@ sub pre_trans {
     print STDERR "pre_trans($str)="
 	if ($debug{'pretrans'});
 
+    # Note: if you want to implement \c support, the gdb man page is your playground
     die sprintf("po4a::man: %s: ".dgettext("po4a","Escape sequence \\c encountered. This is not completely handled yet.")
 		,$ref)."\n"
 	if ($str =~ /\\c/);
