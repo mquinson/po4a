@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.26 2004-08-25 00:42:50 jvprat-guest Exp $
+# $Id: po4a-updatepo,v 1.27 2004-10-30 10:40:47 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -214,13 +214,6 @@ while (my $po_filename=shift @pofiles) {
     if (-e $po_filename) {
 	print STDERR sprintf(gettext("Updating %s:"),$po_filename) 
 	    if $verbose;    
-	# Recode the po file if needed before merging
-	unless ($doc->{TT}{ascii_input}) {
-	    my $oldpo = Locale::Po4a::Po->new();
-	    $oldpo->read($po_filename);
-	    $oldpo->to_utf8();
-	    $oldpo->write($po_filename);
-	}
 	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
 	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
 	system "msgfmt --statistics -v -o /dev/null $po_filename" 
