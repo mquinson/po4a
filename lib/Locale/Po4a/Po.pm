@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.27 2004-08-18 01:38:22 mquinson Exp $
+# $Id: Po.pm,v 1.28 2004-08-25 00:42:50 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -304,7 +304,7 @@ sub gettextize {
     }
 
     if ( $poorig->get_charset =~ /^utf-8$/i ) {
-	$potrans->to_utf;
+	$potrans->to_utf8;
 	$pores->set_charset("utf-8");
     } else {
 	if ($potrans->get_charset eq "CHARSET") {
@@ -575,7 +575,7 @@ sub filter {
     return $res;
 }
 
-=item to_utf()
+=item to_utf8()
 
 Recodes to utf-8 the po's msgstrs. Does nothing if the charset is not
 specified in the po file ("CHARSET" value), or if it's already utf-8 or
@@ -583,7 +583,7 @@ ascii.
 
 =cut
 
-sub to_utf { 
+sub to_utf8 { 
     my $this = shift;
     my $charset = $this->get_charset();
 
