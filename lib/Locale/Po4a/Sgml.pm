@@ -123,7 +123,11 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(gettext);
 
-use SGMLS;
+eval qq{use SGMLS};
+if ($@) {
+  die gettext("po4a::sgml: The needed module SGMLS.pm was not found and needs to be installed.\n".
+      "po4a::sgml: It can be found on the CPAN, in package libsgmls-perl on debian, etc.\n");
+}
 
 use File::Temp;
 
