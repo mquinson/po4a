@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.8 2003-11-26 23:16:41 barbier Exp $
+# $Id: Po.pm,v 1.9 2003-11-28 00:21:27 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -739,7 +739,6 @@ sub wrap {
     my $first=1;
     while (my $line=shift @lines) {
 	if ($first && length($line) > $col - 10) {
-	    $res .= "\n";
 	    unshift @lines,$line;
 	    $first=0;
 	    next;

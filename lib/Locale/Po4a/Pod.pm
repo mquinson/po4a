@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.5 2003-11-27 23:11:27 barbier Exp $
+# $Id: Pod.pm,v 1.6 2003-11-28 00:21:27 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -43,9 +43,7 @@ sub command {
 				    $self->input_file().":$line_num",
 				    "=$command",
 				    "wrap"=>1);
-	$paragraph =~ s/\n*$//m;
 	$self->pushline("=$command $paragraph\n");
-	$self->pushline("\n") if ($command eq 'item');
     }
 }
 
