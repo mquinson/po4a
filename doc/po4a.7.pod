@@ -295,7 +295,7 @@ If you have the following original pod file:
 
 and a file named C<extra-content> contains this:
 
- |PO4A-HEADER:mode=after;position=AUTEUR;lang=fr;boundary=^head
+ |PO4A-HEADER:mode=after;position=AUTEUR;lang=fr;beginboundary=^head
  |
  |=head1 TRADUCTEUR
  |
@@ -421,7 +421,8 @@ directly to disk, but kept in memory until all addendum are applied. The
 algorithms involved here are very easy. We look for a line matching the
 position regexp, and insert the addendum before it if we're in
 mode=before. If not, we search for the next line matching the boundary and
-insert the addendum after this line.
+insert the addendum after this line if it's an C<endboundary> or before this
+line if it's an C<beginboundary>.
 
 =head1 FAQ 
 
