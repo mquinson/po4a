@@ -206,14 +206,14 @@ called Po4a header. The rest of the addendum file with be added verbatim in
 the resulting document.
 
 The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
-followed by a colon (;) separated list of fields, each of them having the
+followed by a semi-colon (;) separated list of fields, each of them having the
 "key=value" syntax. White spaces ARE important. Note that you cannot use the
 colon char (;) in the value, and that quoting it doesn't help. The
 recognized keys are:
 
 =over 4
 
-=item position (mandatory)
+=item position (mandatory when mode=before)
 
 a regexp. The addendum will be placed near the line matching this
 regexp. Note that we're speaking about the translated document here, not
@@ -225,26 +225,41 @@ the translated document match this expression), the addition will fail.
 can be "before" or "after", specifying the position of the addendum,
 relative to the insertion point.
 
-=item beginboundary (mandatory when mode=after)
+=item beginboundary (usefull only when mode=after)
 
-=item endboundary 
+=iten endboundary
 
-a regexp matching the end of the insertion point. 
+regexp matching the end of the section after which we should put the
+addendum. These arguments are used only when mode=after. You can give only
+one of them. If you give the beginboundary, that means that you want to
+place the addendum before the given line, and if you give the endboundary
+that means that you want to place the addendum after the given line.
 
-In order to allow insertion of addendum after a section, we must be able to
-determine the end of this section. The boundary argument is a regexp
-matching then end of the section, and the beginning of the next one.
+This can seem obscure, but it is needed because some formating language
+(like nroff) don't mark the end of sections, and you have to use the
+beginning of the next section as boundary, and place the addendum before it.
 
-There is two form of boundaries. Endboundary match the end of this section,
-and the addendum should be inserted before the matching line. Beginboundary
-should match the beginning of next section, and addendum should be inserted
-before the matching line.
+For example, if you want to add something after the following sgml section:
 
-When mode=after, you must give one (and only one) of the beginboundary and
-endboundary argument.
+  <sect1><header>AUTHORS</header>
+  
+you should put a C<position> matching this line, and an C<endboundary>
+matching the end of a section (ie C<E<lt>/sect1E<gt>>). The addendum will
+then be added B<after> the next line after the C<position> matching the
+C<endboundary>. 
 
-In that case, the content of the file is added just before the next line
-matching this (see example 2 below).
+If you want to add something after the following nroff section:
+
+  .SH "AUTHORS"
+
+you should put a C<position> matching this line, and an C<beginboundary>
+matching the begining of the next section (ie C<^\.SH>). The addendum will
+then be added B<before> the next line after the C<position> matching the
+C<beginboundary>. 
+
+If you want to add something just after a given line, (say "Copyright
+blabla"), give a regexp matching anything (ie C<^>) as C<beginboundary>
+argument. 
 
 =item lang
 
@@ -263,8 +278,8 @@ here):
 
  PO4A-HEADER:mode=after;endboundary=</sect1>;position=AUTHORS
 
- PO4A-HEADER:mode=after;endboundary=^=head1;position=AUTHORS
- PO4A-HEADER:mode=after;endboundary=\.SH;position=AUTHORS
+ PO4A-HEADER:mode=after;beginboundary=^=head1;position=AUTHORS
+ PO4A-HEADER:mode=after;beginboundary=\.SH;position=AUTHORS
 
 =head3 Example 1
 
@@ -295,10 +310,10 @@ example is in French ; "TRADUCTEUR" means "TRANSLATOR", and "moi" means
 
 To put the addendum before the AUTHORS, you could use the following header:
 
- PO4A-HEADER:mode=after;section=NOM;lang=fr;boundary=^head1
+ PO4A-HEADER:mode=after;section=NOM;lang=fr;beginboundary=^head1
 
 because after the section "NAME" (translated to "NOM" in French), the next
-line matching the boundary /^head1/ is the one declaring the authors. So,
+line matching the beginboundary /^head1/ is the one declaring the authors. So,
 the addendum will be put between both sections.
 
 =head2 Graphical summary
@@ -406,8 +421,7 @@ directly to disk, but kept in memory until all addendum are applied. The
 algorithms involved here are very easy. We look for a line matching the
 position regexp, and insert the addendum before it if we're in
 mode=before. If not, we search for the next line matching the boundary and
-insert the addendum before or after this line, depending if it's a
-beginboundary or an endboundary.
+insert the addendum after this line.
 
 =head1 FAQ 
 
@@ -792,6 +806,6 @@ file itself, as comment.
 =cut
 
 LocalWords:  po gettext sgml xml texinfo perl gettextize fr kbabel KDE updatepo
-LocalWords:  gtranslator gettextization cvs regexp beginboundary endboundary
+LocalWords:  gtranslator gettextization cvs regexp boundary
 LocalWords:  lang TransTractor debconf diff poxml debiandoc LocalWords
 LocalWords: Denis barbier linuxfr org Quinson tuxfamily
