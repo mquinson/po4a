@@ -71,13 +71,13 @@ my $builder = Module::Build->subclass
 		    } else {
 			rename "po/bin/$lang.po.new", "po/bin/$lang.po" || die;
 		    }
-		    unless ($self->up_to_date("po/bin/$lang.po","blib/po/$lang/LC_MESSAGES/po4a.mo")) {
-			system("mkdir -p blib/po/$lang/LC_MESSAGES") && die;
-			system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo po/bin/$lang.po") && die;
-		    } 
 		} else {
 		    print "XX po/bin/$lang.po uptodate.\n";
 		}
+		unless ($self->up_to_date("po/bin/$lang.po","blib/po/$lang/LC_MESSAGES/po4a.mo")) {
+		    system("mkdir -p blib/po/$lang/LC_MESSAGES") && die;
+		    system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo po/bin/$lang.po") && die;
+		} 
 	    }
 
 	}
