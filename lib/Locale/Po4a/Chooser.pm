@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.12 2004-07-16 04:10:29 mquinson-guest Exp $
+# $Id: Chooser.pm,v 1.13 2004-07-16 04:13:39 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -39,7 +39,7 @@ sub new {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
             warn sprintf(gettext("Unknown format type: %s."), $module)."\n";
-	    warn sprintf(gettext("Module loading error: %s"), $@)."\n" if $options{'verbose'};
+	    warn sprintf(gettext("Module loading error: %s"), $@)."\n" if $options{'verbose'} > 0;
             list(1);
         }
     }
