@@ -934,6 +934,8 @@ $macro{'lf'}=\&untranslated;
 # .ll N     Set line length according to N
 $macro{'ll'}=\&untranslated;
 
+# .na       No Adjusting (see ad)
+$macro{'na'}=\&untranslated;
 # .ne N     Need N vertical space
 $macro{'ne'}=\&untranslated;
 # .nr register N M
