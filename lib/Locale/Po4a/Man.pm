@@ -70,6 +70,39 @@ Since these chars are used to delimit parts under font modification, you
 can't use them verbatim. Use EE<lt>ltE<gt> and EE<lt>gtE<gt> instead (as in
 pod, one more time).
 
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over 4
+
+=item B<debug>
+
+Activate debugging for some internal mechanisms of this module.
+Use the source to see which parts can be debugged.
+
+=item B<with-non_breaking_spaces> (boolean)
+
+Allow po4a to generate non breaking spaces in the PO file (when needed).
+
+Anyway, users can use non breaking spaces in the PO and are always converted to
+the roff non breaking space ('\ ').
+
+This option is disabled by default because non breaking spaces are not present
+in all character set.
+
+=item B<with-hyphen_to_minus> (boolean)
+
+Allow the automatic convertion of hyphens (in roff: '-') to minus signs ('\-').
+When enable, translators will only see/use '-' instead of '\\-' in their PO
+files.
+
+This option is enabled by default, because man pages autors and translators
+always forget to use '\-' instead of '-' (and it doesn't harm to have a minus
+sign instead of an hyphen).
+
+=back
+
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
 
 This module is still very limited, and will always be, because it's not a
@@ -247,8 +280,6 @@ my %macro; # hash of known macro, with parsing sub. See end of this file
 # .    - a single char (e.g. B, I, R, P, 1, 2, 3, 4, etc.)
 my $FONT_RE = "\\\\f(?:\\[[^\\]]*\\]|\\(..|[^\\(\\[])";
 
-sub initialize {}
-
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -257,6 +288,44 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 	   'postrans' => 0,  # see post-conditioning of translation
 	   'fonts'    => 0,  # see font modifier handling
 	   );
+
+
+######## CONFIG #########
+my %transliterations = (
+    'nbs'   => 0,     # allow generating non breaking spaces?
+    'minus' => 1      # force using minus signs instead of hyphens?
+    );
+sub initialize {
+    my $self = shift;
+    my %options = @_;
+
+    $self->{options}{'with-non_breaking_spaces'}='';
+    $self->{options}{'with-hyphen_to_minus'}='';
+    $self->{options}{'debug'}='';
+
+    foreach my $opt (keys %options) {
+        if ($options{$opt}) {
+            die wrap_mod("po4a::tex",
+                         dgettext("po4a", "Unknown option: %s"), $opt)
+                unless exists $self->{options}{$opt};
+            $self->{options}{$opt} = $options{$opt};
+        }
+    }
+
+    if (defined $options{'debug'}) {
+        foreach ($options{'debug'}) {
+            $debug{$_} = 1;
+        }
+    }
+
+    if (defined $options{'with-non_breaking_spaces'}) {
+        $transliterations{'nbs'} = $options{'with-non_breaking_spaces'};
+    }
+
+    if (defined $options{'with-hyphen_to_minus'}) {
+        $transliterations{'minus'} = $options{'with-hyphen_to_minus'};
+    }
+}
 
 # This function returns the next line of the document being parsed
 # (and its reference).
@@ -436,13 +505,20 @@ sub pre_trans {
     #  * they break when using utf8 (for obscure reasons)
     #  * they forbid the searches, since keybords don't have hyphen key
     #  * they forbid copy/paste, since options need minus sign, not hyphen
-    $str =~ s|\\-|-|sg;
+    if ($transliterations{'minus'}) {
+        $str =~ s|\\-|-|sg;
+    }
     # Groff bestiary
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
     $str =~ s/\\\(dq/"/sg;
     # Change groff non-breaking space to ascii one
-    $str =~ s|\\ |\xA0|sg;
+    if ($transliterations{'nbs'}) {
+        $str =~ s|\\ |\xA0|sg;
+    } else {
+        # some \xA0 may have been added during the parsing
+        $str =~ s|\xA0|\\ |sg;
+    }
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -456,12 +532,14 @@ sub post_trans {
 	if ($debug{'postrans'});
 
     # Post formatting, so that groff see the strange chars
-    $str =~ s|\\-|-|sg; # in case the translator added some of them manually
-    # change hyphens to minus signs
-    # (this shouldn't be done for \s-<number> font size modifiers)
-    # nor on .so/.mso args
-    unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
-        $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
+    if ($transliterations{'minus'}) {
+        $str =~ s|\\-|-|sg; # in case the translator added some of them manually
+        # change hyphens to minus signs
+        # (this shouldn't be done for \s-<number> font size modifiers)
+        # nor on .so/.mso args
+        unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
+            $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
+        }
     }
 
     # No . or ' on first char, or nroff will think it's a macro
