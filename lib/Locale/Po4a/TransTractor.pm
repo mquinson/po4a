@@ -934,7 +934,7 @@ sub recode_skipped_text {
 		$self->get_out_charset);
 	    return $text;
 	} else {
-	    die dgettext("po4a","Couldn't determine the input document's character set before finding the first string that needs recoding. Please specify it in the command line.")."\n";
+	    die dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line.")."\n";
 	}
     }
 }
