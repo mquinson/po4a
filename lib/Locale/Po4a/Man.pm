@@ -765,6 +765,8 @@ $macro{'SS'}=$macro{'SH'}=\&translate_joined;
 
 $macro{'SM'}=\&translate_joined;
 
+# .SP n     Skip n lines (I think)
+$macro{'SP'}=\&untranslated;	
 
 #Normal Paragraphs
 #  .LP      Same as .PP (begin a new paragraph).
