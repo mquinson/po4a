@@ -613,15 +613,20 @@ sub read_file {
     while (defined (my $textline = <$in>)) {
         $linenum++;
         my $ref="$filename:$linenum";
-        while ($textline =~ /^(.*)\\include\{([^\{]*)\}(.*)$/) {
-            my ($begin,$newfilename,$end) = ($1,$2,$3);
+        # FIXME: includeonly is not supported
+        while ($textline =~ /^(.*)\\(include|input)\{([^\{]*)\}(.*)$/) {
+            my ($begin,$newfilename,$end) = ($1,$3,$4);
+            my $tag = $2;
             my $include = 1;
             foreach my $f (@exclude_include) {
                 if ($f eq $newfilename) {
                     $include = 0;
-                    $begin .= "\\include{$newfilename}";
+                    $begin .= "\\$tag"."{$newfilename}";
                     $textline = $end;
                 }
+            }
+            if ($include and ($tag eq "include")) {
+                $begin .= "\\clearpage";
             }
             if ($begin !~ /^\s*$/) {
                 push @entries, ($begin,$ref);
@@ -629,7 +634,11 @@ sub read_file {
             if ($include) {
                 push @entries, read_file($self,
                                          "$my_dirname/$newfilename.tex");
-                $textline = $end;
+                if ($tag eq "include") {
+                    $textline = "\\clearpage".$end;
+                } else {
+                    $textline = $end;
+                }
             }
         }
         if (length($textline)) {
