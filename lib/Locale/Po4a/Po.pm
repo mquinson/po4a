@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.32 2005-01-07 22:50:52 nekral-guest Exp $
+# $Id: Po.pm,v 1.33 2005-01-09 18:13:22 nekral-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -972,16 +972,35 @@ sub unescape_text {
     print STDERR "\nunescape [$text]====" if $debug{'escape'};
     $text = join("",split(/\n/,$text));
     $text =~ s/\\"/"/g;
-    $text =~ s/([^\\])\\n/$1\n/g;
-    $text =~ s/^\\n/\n/mg;
-    $text =~ s/([^\\])\\t/$1\t/g;
+    # unescape newlines
+    #   NOTE on \G:
+    #   The following regular expression introduce newlines.
+    #   Thus, ^ doesn't match all beginnings of lines.
+    #   \G is a zero-width assertion that matches the position
+    #   of the previous substitution with s///g. As every 
+    #   substitution ends by a newline, it always matches a
+    #   position just after a newline.
+    $text =~ s/(           # $1:
+                (\G|[^\\]) #    beginning of the line or any char
+                           #    different from '\'
+                (\\\\)*    #    followed by any even number of '\'
+               )\\n        # and followed by an escaped newline
+              /$1\n/sgx;   # single string, match globally, allow comments
+    # unescape tabulations
+    $text =~ s/(          # $1:
+                (^|[^\\]) #    beginning of the line or any char
+                          #    different from '\'
+                (\\\\)*   #    followed by any even number of '\'
+               )\\t       # and followed by an escaped tabulation
+              /$1\t/mgx;  # multilines string, match globally, allow comments
+    # and unescape the escape character
     $text =~ s/\\\\/\\/g;
     print STDERR ">$text<\n" if $debug{'escape'};
 
     return $text;
 }
 
-# transforme the string to its representation as it should be written in po files
+# transform the string to its representation as it should be written in po files
 sub escape_text {
     my $text = shift;
     
@@ -1004,8 +1023,14 @@ sub quote_text {
   return '""' unless defined($string) && length($string);
 
   print STDERR "\nquote [$string]====" if $debug{'quote'};
-  $string =~ s/([^\\])\\n/$1!!DUMMYPOPM!!/gm;
-  $string =~ s|!!DUMMYPOPM!!|\\n\n|gm;
+  # break lines on newlines, if any
+  # see unescape_text for an explanation on \G
+  $string =~ s/(           # $1:
+                (\G|[^\\]) #    beginning of the line or any char
+                           #    different from '\'
+                (\\\\)*    #    followed by any even number of '\'
+               \\n)        # and followed by an escaped newline
+              /$1\n/sgx;   # single string, match globally, allow comments
   $string = wrap($string);
   my @string = split(/\n/,$string);
   $string = join ("\"\n\"",@string);
@@ -1025,6 +1050,8 @@ sub unquote_text {
   $string =~ s/^""\\n//s;
   $string =~ s/^"(.*)"$/$1/s;
   $string =~ s/"\n"//gm;
+  # Note: an even number of '\' could precede \\n, but I could not build a
+  # document to test this
   $string =~ s/([^\\])\\n\n/$1!!DUMMYPOPM!!/gm;
   $string =~ s|!!DUMMYPOPM!!|\\n|gm;
   print STDERR ">$string<\n" if $debug{'quote'};
@@ -1032,15 +1059,14 @@ sub unquote_text {
 }
 
 # canonize the string: write it on only one line, changing consecutive whitespace to
-# only on space.
+# only one space.
 # Warning, it changes the string and should only be called if the string is plain text
 sub canonize {
     my $text=shift;
     print STDERR "\ncanonize [$text]====" if $debug{'canonize'};
     $text =~ s/^ *//s;
-    $text =~ s/([^\\])\n/$1  /gm;
-    $text =~ s/ \n/ /gm;
-    $text =~ s/([^\\])\n/$1 /gm;
+    # if ($text eq "\n"), it messed up the first string (header)
+    $text =~ s/\n/  /gm if ($text ne "\n");
     $text =~ s/([.)])  +/$1  /gm;
     $text =~ s/([^.)])  */$1 /gm;
     $text =~ s/ *$//s;
