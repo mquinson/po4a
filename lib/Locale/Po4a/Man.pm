@@ -658,10 +658,12 @@ sub parse{
 
 	    # Special case: Don't change these lines
 	    #  .\"  => comments
+	    #  ."   => comments
 	    #  .    => empty point on the line
 	    #  .tr abcd...
 	    #       => substitution like Perl's tr/ac/bd/ on output.
-	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr') {
+	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr' ||
+                $macro eq '"') {
 		$self->pushline($line."\n");
 		goto LINE;
 	    }
@@ -704,6 +706,16 @@ sub parse{
 	    $wrapped_mode='NO';
 	    $paragraph .= $line."\n";
 	} elsif ($line =~ /^([^.].*)/) {
+            # special case: the line is entirely a comment, keep the
+            # comment.
+            # NOTE: comment could also be found in the middle of a line.
+            # From info groff:
+            # Escape: \": Start a comment.  Everything to the end of the
+            # input line is ignored.
+            if ($line =~ /^\\"/) {
+		$self->pushline($line."\n");
+		goto LINE;
+            }
 	    # Not a macro
 	    $paragraph .= $line."\n";
 	} else { #empty line
