@@ -809,7 +809,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line.")."\n"
+	    die "po4a: ".dgettext("po4a","Couldn't determine the input document's character set. Please specify it on the command line.")."\n"
 	}
     }
 
