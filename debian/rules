@@ -62,9 +62,9 @@ build-stamp:
 	  pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
 	    lib/Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3pm; \
 	  for lang in $(langs) ; do \
-	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
+	    if [ -e po/pod/$$l.$$lang.pod ] ; then \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.3pm; \
+	       po/pod/$$l.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.3pm; \
 	    fi; \
 	  done; \
 	done
@@ -147,14 +147,18 @@ deb:
 # This can't be called by the build mecanism, or we build-dep on ourselves.	
 pods:
 	for lang in $(langs) ; do \
-	po4a-updatepo -t pod -i po4a-updatepo -i po4a-gettextize -i po4a-translate -o po/pod/pod.$$lang.po; \
-	for bin in gettextize updatepo translate ; do \
-	po4a-translate -t pod \
-                       -v \
-                       -a po/pod/po4a-$$bin.addendum.$$lang \
-	               po4a-$$bin \
-                       po/pod/pod.fr.po \
-                       -o po/pod/po4a-bin.$$lang.pod; \
-	done ;\
+	  for bin in $(bins) ; do \
+	    src=$$src" -m po4a-$$bin"; \
+	  done; \
+	  po4a-updatepo -f pod $$src -p po/pod/pod.$$lang.po; \
+	  for bin in $(bins) ; do \
+	    po4a-translate -f pod \
+	                   -v \
+	                   -a po/pod/po4a-$$bin.addendum.$$lang \
+	                   -m po4a-$$bin \
+	                   -p po/pod/pod.$$lang.po \
+	                   -l po/pod/po4a-$$bin.$$lang.pod; \
+	  done ;\
 	done
+
 .PHONY: build clean binary-indep binary-arch binary install
