@@ -31,9 +31,9 @@ Locale::Po4a::Html - Convert html documents from/to PO files
 
 =head1 DESCRIPTION
 
-The goal po4a [po for anything] project is to ease translations (and more
-interestingly, the maintenance of translation) using gettext tools on areas
-where they were not expected like documentation.  
+The po4a (po for anything) project goal is to ease translations (and more
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
 
 Locale::Po4a::Html is a module to help the translation of documentation in
 the HTML format into other [human] languages.

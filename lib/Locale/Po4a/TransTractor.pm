@@ -28,8 +28,8 @@ Po4a TransTractor - Generic trans(lator ex)tractor.
 =head1 DESCRIPTION
 
 The po4a (po for anything) project goal is to ease translations (and more
-interestingly, the maintenance of translation) using gettext tools on areas
-where they were not expected like documentation.  
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
 
 This class is the ancestor of all po4a parsers used to parse a document to
 search translatable strings, extract them to a po file and replace them by

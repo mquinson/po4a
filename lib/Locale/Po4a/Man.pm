@@ -7,8 +7,8 @@ Locale::Po4a::Man - Convert manual pages from/to PO files
 =head1 DESCRIPTION
 
 The po4a (po for anything) project goal is to ease translations (and more
-interestingly, the maintenance of translation) using gettext tools on areas
-where they were not expected like documentation.  
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
 
 Locale::Po4a::Man is a module to help the translation of documentation in
 the nroff format (the language of manual pages) into other [human]
