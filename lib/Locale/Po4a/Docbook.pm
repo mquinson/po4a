@@ -86,6 +86,7 @@ sub initialize {
 
 	$self->SUPER::initialize(%options);
 	$self->{options}{'tagsonly'}=1;
+	$self->{options}{'wrap'}=1;
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
 	$self->{options}{'tags'}.='
 		<abbrev>
@@ -106,7 +107,7 @@ sub initialize {
 		<msgorig>
 		<option>
 		<orgname>
-		w<para>
+		<para>
 		<phrase>
 		<pubdate>
 		<publishername>
