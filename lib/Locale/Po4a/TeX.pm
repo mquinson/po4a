@@ -1101,10 +1101,6 @@ sub initialize {
         }
     }
 
-    if ($options{'untranslated'}) {
-        $command_categories{'untranslated'} .=
-            join(' ', split(/,/, $options{'untranslated'}));
-    }
     foreach (split(/ /, $command_categories{'untranslated'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
@@ -1114,10 +1110,6 @@ sub initialize {
         $commands{$_} = \&untranslated;
     }
 
-    if ($options{'translate'}) {
-        $command_categories{'translate_joined'} .=
-            join(' ', split(/,/, $options{'translate_joined'}));
-    }
     foreach (split(/ /, $command_categories{'translate_joined'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
@@ -1125,6 +1117,19 @@ sub initialize {
             #        gettextization.
         }
         $commands{$_} = \&translate_joined;
+    }
+
+    # commands provided on the command line have an higher priority
+    # FIXME: commands defined in the files have an even higher priority
+    if ($options{'translate'}) {
+        foreach (split(/,/, $options{'translate'})) {
+            $commands{$_} = \&translate_joined;
+        }
+    }
+    if ($options{'untranslated'}) {
+        foreach (split(/,/, $options{'untranslated'})) {
+            $commands{$_} = \&untranslated;
+        }
     }
 
     # build an hash with keys in $separated_commands to ease searches.
