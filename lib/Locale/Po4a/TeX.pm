@@ -645,14 +645,30 @@ sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^%\s+po4a:\s*//;
 
-    if ($line =~ /^command\s+(\w)\s+(.*)$/) {
+    if ($line =~ /^command\s+(\w+)\s+(.*)$/) {
         my $command = $1;
-        my $line = $2;
-        if ($line =~ /^alias\s+(\w)/) {
-            if (defined ($commands{$2})) {
-                $commands{$command} = $commands{$2}
+        $line = $2;
+        if ($line =~ /^alias\s+(\w+)\s*$/) {
+            if (defined ($commands{$1})) {
+                $commands{$command} = $commands{$1};
             } else {
                 die "Cannot use an alias to the unknown command $2\n";
+            }
+        } elsif ($line =~ /^(\w+)\s*$/) {
+            if (defined &$1) {
+                $commands{$command} = \&$1;
+            } else {
+                die "Unknown command ($1) for $command\n";
+            }
+        }
+    } elsif ($line =~ /^environment\s+(\w+)\s+(.*)$/) {
+        my $env = $1;
+        $line = $2;
+        if ($line =~ /^(\w+)\s*$/) {
+            if (defined &$1) {
+                $environments{$env} = \&$1;
+            } else {
+                die "Unknown environment ($1) for $env\n";
             }
         }
     }
