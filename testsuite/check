@@ -48,7 +48,7 @@ for fich in `cat LISTE.TOTAL` ; do
 	
 	echo "####### $fich"; 
 	rm -f po4a-normalize.*
-	if po4a-normalize -t $module $tmp/$newfich 2>&1 ; then
+	if PERLLIB=../lib ../po4a-normalize -f $module $tmp/$newfich 2>&1 ; then
 		if [ -e po4a-normalize.output ] ; then
 		        mv po4a-normalize.output $tmp/po4a-normalize.output
 			$cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
@@ -59,7 +59,7 @@ for fich in `cat LISTE.TOTAL` ; do
 				echo $fich >> LISTE.OK
 			else 
 			        echo ">wdiff"
-			        if mywdiff $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
+			        if wdiff -3 -n $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
 				       echo $fich >> LISTE.DIFF
 				else
 				       echo $fich >> LISTE.WDIFF
