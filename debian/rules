@@ -25,7 +25,7 @@ package = po4a
 # This is the debhelper compatibility version to use.
 export DH_COMPAT=2
 
-DESTDIR = $(shell pwd)/debian/$(package)
+DESTDIR = $(CURDIR)/debian/$(package)
 
 build: build-stamp
 build-stamp:
@@ -64,7 +64,7 @@ build-stamp:
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
 	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.1p; \
+	       po/pod/$$lib.$$lang.pod > mantmp/$(rootlib)$$l.$$lang.3pm; \
 	    fi; \
 	  done; \
 	done
