@@ -3,7 +3,7 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-    'NAME'		=> 'Locale::Po4a',
+    'NAME'		=> 'po4a',
     'VERSION_FROM'	=> 'lib/Locale/Po4a/TransTractor.pm', # finds $VERSION
     'PREREQ_PM'		=> {'Locale::gettext' => '1.01',
                             'SGMLS' => ''}, # e.g., Module::Name => 1.1
