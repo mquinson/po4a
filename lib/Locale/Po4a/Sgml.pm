@@ -215,7 +215,11 @@ sub parse_file {
 	my $lvl;    # number of '<' seen without matching '>'
 	my $pos;    # where in the document (in chars)
 	
-	$prolog=~ s/^(.*<!DOCTYPE).*$/$1/is;
+	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
+	    die sprintf(gettext("po4a:sgml: %s does not seem to be a master SGML document (no DOCTYPE found).\n".
+		"po4a::sgml: It may be a file to be included by another one, in which case it should not be passed to po4a directly.\n".
+		"po4a::sgml: Text from included files is extracted/translated when handling the master file including them.\n"), $filename);
+	}
 	$pos=length($prolog);
 	$lvl=1;
 	while ($lvl != 0) {
