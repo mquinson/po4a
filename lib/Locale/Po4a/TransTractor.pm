@@ -551,8 +551,8 @@ sub addendum {
 
     if ($mode eq "before") {
 	if ($self->verbose()) {
-	    map { printf STDERR (dgettext("po4a","Adding the addendum %s before the line:\n%s"),
-			 $filename,$_),"\n" if (/$position/);
+	    map { print STDERR sprintf(dgettext("po4a","Adding the addendum %s before the line:\n%s"),
+			 $filename,$_)."\n" if (/$position/);
  	        } @{$self->{TT}{doc_out}};
 	}
 	@{$self->{TT}{doc_out}} = map { /$position/ ? ($content,$_) : $_ 
@@ -562,9 +562,9 @@ sub addendum {
 	while (my $line=shift @{$self->{TT}{doc_out}}) {
 	    push @newres,$line;
 	    if ($line =~ m/$position/) {
-		printf STDERR (dgettext("po4a",
+		print STDERR sprintf(dgettext("po4a",
 			"Adding the addendum %s after the section begining with the line:\n%s"),
-			       $filename,mychomp($line)),"\n" if ($self->verbose());
+			       $filename,mychomp($line))."\n" if ($self->verbose());
 		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
