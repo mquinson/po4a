@@ -20,11 +20,15 @@ eval q{use Locale::Po4a::Pod.pm};
 
 =head1 NAME
 
-Po4a TransTractor - Generic trans(later-ex)tracor.
+Po4a TransTractor - Generic trans(later ex)tracor.
 
 =head1 DESCRIPTION
 
-This class is the ancestor of all po4a parsers used to parse a docyment to
+The goal po4a [po for anything] project is to ease translations (and more
+interstingly, the maintainance of translation) using gettext tools on areas
+where they were not expected like documentation.  
+
+This class is the ancestor of all po4a parsers used to parse a document to
 search translatable strings, extract them to a po file and remplace them by
 their translation in the output document. 
 
