@@ -18,17 +18,17 @@ my $builder = Module::Build->subclass
 	}
 	sub ACTION_install {
 	    my $self = shift;
-	    
+
 	    require ExtUtils::Install;
 #	    $self->depends_on('build');
-	    
+
 	    ExtUtils::Install::install($self->install_map, 1, 0, $self->{args}{uninst}||0); 
 	}
 	sub ACTION_binpo {
 	    my $self = shift;
-	    
+
 	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}));
-	    
+
 	    unless ($self->up_to_date(\@files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a.pot\n";
 		my $podfiles = join ("", map {" ../../".$_ } @files);
@@ -56,7 +56,7 @@ my $builder = Module::Build->subclass
 		next if m|/.#|;
 		$_ =~ /.*\/(.*)\.po$/;
 		my $lang = $1;
-		
+
 		unless ($self->up_to_date("po/bin/po4a.pot","po/bin/$lang.po")) {
 		    print "XX Sync po/bin/$lang.po: ";
 		    system("msgmerge po/bin/$lang.po po/bin/po4a.pot -o po/bin/$lang.po.new") && die;
@@ -84,7 +84,7 @@ my $builder = Module::Build->subclass
 	}
 	sub ACTION_manpo {
 	    my $self = shift;
-	    
+
 	    # update pot
 	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})}));
 	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
@@ -94,20 +94,20 @@ my $builder = Module::Build->subclass
 		  && die;
 		my ($atime, $mtime) = (time,time);
 		utime $atime, $mtime, "po/pod/po4a-pod.pot";
-		
+
 	    } else {
 		print "XX Documentation pot file uptodate.\n";
 	    }
-	    
+
 	    # update languages
 	    @files = @{$self->rscan_dir('po/pod',qr{\.po$})};
 	    foreach (@files) {
 		$_ =~ /.*\/(.*)\.po$/;
 		my $lang = $1;
-		
+
 		unless ($self->up_to_date("po/pod/po4a-pod.pot","po/pod/$lang.po")) {
 		    print "XX Update documentation $lang.po: ";
-		    
+
 		    system("msgmerge po/pod/$lang.po po/pod/po4a-pod.pot -o po/pod/$lang.po.new")
 		      && die;
 
@@ -129,12 +129,12 @@ my $builder = Module::Build->subclass
 	}
 	sub ACTION_man {
 	    my $self = shift;
-	    
+
 	    $self->depends_on('manpo');
 	    use Pod::Man;
 
 	    my $options = "-v -f pod -M utf-8 -L iso8859-1";
-	    
+
 	    #get the languages
 	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
 	    my $i=0;
@@ -143,14 +143,14 @@ my $builder = Module::Build->subclass
 		$langs[$i] = $1;
 		$i++;
 	    }
-	    
+
 	    system("rm -rf blib/man") && die;
 	    system("mkdir -p blib/man") && die;
-	    
+
 	    # Translate binaries manpages
 	    my $parser = Pod::Man->new (release => "Po4a Tools",
 		center => "Po4a Tools", section => "1p");
-	    
+
 	    foreach $lang (@langs) {
 		print ("X Translate binary manpages to $lang\n");
 		foreach $file (keys(%{$self->script_files()})) {
@@ -164,11 +164,11 @@ my $builder = Module::Build->subclass
 		    }
 		}
 	    }
-	    
+
 	    # Translate modules manpages
 	    $parser = Pod::Man->new (release => "Po4a Tools",
 		center => "Po4a Tools", section => "3pm");
-	    
+
 	    foreach $lang (@langs) {
 		print ("X Translate module manpages to $lang\n");
 		foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
@@ -186,11 +186,11 @@ my $builder = Module::Build->subclass
 		    }
 		}
 	    }
-	    
+
 	    # Translate docs manpages
 	    $parser = Pod::Man->new (release => "Po4a Tools",
 		center => "Po4a Tools", section => 7);
-	    
+
 	    foreach $file (@{$self->rscan_dir('doc',qr{\.pod$})}) {
 		$file =~ /.*\/(.*)\.pod$/;
 		my $filename = $1;
@@ -246,6 +246,10 @@ my $builder = Module::Build->subclass
     },
 );
 
+my $base= $Config::Config{man1dir};
+$base =~ s/\/man\/man1//;
+print $base;
+
 my $b = $builder->new
   ( module_name => 'po4a',
       license => 'gpl',
@@ -256,8 +260,7 @@ my $b = $builder->new
 	  'po4a-translate', 'po4a-normalize', 'po4a'],
       add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html',
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
-      install_path => {po => '/usr/share/locale',
-	  man => '/usr/share/man'},
+      install_path => {po => $base.'/locale', man => $base.'/man'},
       dist_abstract => 'Tools for helping translation of documentation',
       dist_author => ['Martin Quinson <martin.quinson@tuxfamily.org>',
 	  'Denis Barbier <barbier@linuxfr.org>']
