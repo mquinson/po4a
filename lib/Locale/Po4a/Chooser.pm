@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.24 2005-02-27 22:53:52 mquinson Exp $
+# $Id: Chooser.pm,v 1.25 2005-02-27 23:32:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -33,6 +33,8 @@ sub new {
         $modname = 'KernelHelp';
     } elsif ($module eq 'newsdebian') {
         $modname = 'NewsDebian';
+    } elsif ($module eq 'latex') {
+        $modname = 'LaTeX';
     } else {
         $modname = ucfirst($module);
     }
@@ -59,6 +61,7 @@ sub list {
 	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
 	."\n  - ".gettext("guide: Gentoo Linux's xml documentation format.")
 	."\n  - ".gettext("docbook: Docbook XML.")
+	."\n  - ".gettext("latex: LaTeX format.")
     );
     exit shift;
 }
@@ -103,7 +106,8 @@ L<Locale::Po4a::Man(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
 L<Locale::Po4a::Html(3pm)>,
-L<Locale::Po4a::Dia(3pm)>.
+L<Locale::Po4a::Dia(3pm)>,
+L<Locale::Po4a::LateX(3pm)>.
 
 =back
 
