@@ -35,8 +35,8 @@ The po4a (po for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-Locale::Po4a::Guide is a module to help the translation of the Gentoo
-documentation in the Guide XML format into other [human] languages.
+Locale::Po4a::Guide is a module to help in the translation of the Gentoo
+Linux documentation in the Guide XML format into other [human] languages.
 
 This format is documented here: http://www.gentoo.org/doc/en/xml-guide.xml
 

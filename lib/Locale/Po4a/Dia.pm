@@ -52,10 +52,10 @@ Another way is to uncompress the dia files from command line with:
 
 =head1 STATUS OF THIS MODULE
 
-This module is fully functional, as it relies in the Locale::Po4a::Xml module.
-This only defines the translateable tags (E<lt>dia:stringE<gt>), and filters
-the internal strings (the content of the E<lt>dia:diagramdataE<gt> tag), not
-interesting for translation).
+This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
+module. This only defines the translatable tags (E<lt>dia:stringE<gt>), and
+filters the internal strings (the content of the E<lt>dia:diagramdataE<gt>
+tag), not interesting for translation.
 
 =head1 SEE ALSO
 
