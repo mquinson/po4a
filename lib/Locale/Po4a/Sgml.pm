@@ -403,7 +403,8 @@ sub parse_file {
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
-			     "verbatim"  => "address programlisting literallayout option refentrytitle screen title",
+			     "verbatim"  => "address holder literallayout option programlisting ".
+	                                    "refentrytitle refname refpurpose screen title",
 			     "ignore"    => "action affiliation anchor application author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database ".
