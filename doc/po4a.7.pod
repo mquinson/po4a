@@ -68,9 +68,8 @@ the gettext format. For that, use the I<po4a-gettextize> program like that:
 
   $ po4a-gettextize -t <module> original.file > original.pot
 
-Please refer to L<po4a-translate(1)|po4a-translate(1)> for more details,
-like the list of existing modules (which is also documented elsewhere in
-this document)
+Please refer to L<po4a-translate(1)> for more details, like the list of
+existing modules (which is also documented elsewhere in this document)
 
 =item -
 
@@ -86,6 +85,8 @@ If you need more information about this task, you definitively need to
 refer to the gettext documentation, available in the B<gettext-doc>
 package.
 
+=back
+
 =head2 How do I convert back the translation to a documentation file?
 
 Once you have an up-to-date and completely translated po file, you need to
@@ -96,8 +97,8 @@ For that, use the I<po4a-translate> program like that (where XX is the
 language code):
 
   $ po4a-translate -t <module> original.file XX.po -o XX.sgml
-  
-Please refer to L<po4a-translate(1)|po4a-translate(1)> for more details.
+
+Please refer to L<po4a-translate(1)> for more details.
 
 =head2 What do I do when the original file has changed?
 
@@ -107,7 +108,7 @@ when the original file has changed, use the I<po4a-updatepo> program like that:
 
   $ po4a-updatepo -t <module> -i new_original.file -o existing.XX.po
 
-(Please refer to L<po4a-updatepo(1)|po4a-updatepo(1)> for more details)
+(Please refer to L<po4a-updatepo(1)> for more details)
 
 Naturally, the new paragraph in the document won't get magically translated
 in the C<po> file with this operation, and you'll need to update the C<po>
@@ -169,7 +170,7 @@ your XX.sgml translation and the original.old.sgml files using the
 following command:
 
  $ po4a-gettextize -t sgml original.old.sgml XX.sgml > XX.po
- 
+
 If the translated and the original files don't have the exact same
 structure, this command will fail. In that case, you need to edit them to
 correct the problem. See the section I<Gettextization: how does it work?>
@@ -263,7 +264,7 @@ enlighten you.
 For example, if you want to add something after the following sgml section:
 
   <sect1><header>AUTHORS</header>
-  
+
 you should put a C<position> matching this line, and an C<endboundary>
 matching the end of a section (ie C<E<lt>/sect1E<gt>>). The addendum will
 then be added B<after> the I<position point> and immediatly B<after> the
@@ -296,7 +297,7 @@ In any case, remember that these are regexp. For example, if you want to
 match the end of a nroff section ending with the line 
 
   .fi
-  
+
 don't use C<.fi> as endboundary, because it will match with "the[ fi]le",
 which is obviously not what you expect. The correct endboundary in that case
 is: C<^\.fi$>
