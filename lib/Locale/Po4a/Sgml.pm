@@ -486,7 +486,7 @@ sub parse_file {
 	    } else {
 		# AAAARGH stupid document using %bla; and having then defined in another inclusion!
 		# Protect it for this pass, and unprotect it on next one
-		print STDERR "entitity $ent not defined yet ?!\n"
+		print STDERR "entity $ent not defined yet ?!\n"
 		  if $debug{'entities'};
 		$prolog = "$pre".'{PO4A-percent}'."$ent;$post";
 	    }
@@ -495,7 +495,7 @@ sub parse_file {
     # Unprotect undefined inclusions
     $prolog =~ s/{PO4A-percent}/%/sg;
     if ($prolog =~ /%([^;\s]*);/) {
-       die sprintf("po4a::sgml: ".dgettext("po4a","unrecognized prolog inclusion entitity: %%%s;")."\n",$1);
+       die sprintf("po4a::sgml: ".dgettext("po4a","unrecognized prolog inclusion entity: %%%s;")."\n",$1);
     }
     # Protect &entities; (but the ones asking for a file inclusion)
     #   search the file inclusion entities
