@@ -900,6 +900,7 @@ $macro{'fc'}=\&untranslated;
 $macro{'ft'}=\&untranslated;
 # .hc c     Set up additional hyphenation indicator character c.
 $macro{'hc'}=\&untranslated;
+# .hy       Enable hyphenation (see nh)
 # .hy N     Switch to hyphenation mode N.
 # .hym n    Set the hyphenation margin to n (default scaling indicator m).
 # .hys n    Set the hyphenation space to n.
@@ -929,11 +930,14 @@ $macro{'ig'}=sub {
     }
 };
 
-# .lf N file  Set input line number to N and filename to file.
-$macro{'lf'}=\&untranslated;
-# .ll N     Set line length according to N
-$macro{'ll'}=\&untranslated;
 
+# .lf N file  Set input line number to N and filename to file.
+$macro{'lf'}=\&untranslated; 
+# .ll N       Set line length according to N
+$macro{'ll'}=\&untranslated; 
+
+# .nh         disable hyphenation (see hy)
+$macro{'nh'}=\&untranslated;
 # .na       No Adjusting (see ad)
 $macro{'na'}=\&untranslated;
 # .ne N     Need N vertical space
