@@ -1,25 +1,34 @@
 # List here all source files with translatable strings.
-PODFILES=$(wildcard ../../po4a-*)
-PODPOFILES=$(wildcard pod-*.po)
+SCRIPTS=po4a-gettextize po4a-updatepo po4a-translate po4a-identity
+LIBS=Po.pm TransTractor.pm Pod.pm Man.pm
+
+FILES=$(SCRIPTS) $(foreach lib,$(LIBS),LocalePo4a$(lib))
+
+PATHSCRIPTS=$(foreach file,$(SCRIPTS),../../$(file))
+PATHLIBS=$(foreach file,$(LIBS),../../Locale/Po4a/$(file))
+PATHFILES=$(PATHLIBS) $(PATHSCRIPTS)
+
+POFILES=$(wildcard *.po)
 
 LANG=fr
-TRANSLATIONS=$(basename $(foreach lang,$(LANG),$(foreach file,$(PODFILES),$(file).$(lang).pod)))
+TRANSLATIONS=$(foreach lang,$(LANG),$(foreach file,$(FILES),$(file).$(lang).pod))
 
-# all can't depend on TRANSLATIONS because it would make po4a depend on itself,
-# but make sure to decomment this if you copy this Makefile to another project
 all: po4a-pod.pot $(TRANSLATIONS)
 
 install: 
 # install do nothing in po4a, because it would make po4a depend on itself.
 
-po4a-pod.pot: $(PODFILES)
-	po4a-updatepo -t pod $(foreach file,$(PODFILES),-i $(file)) -o $@
+po4a-pod.pot: $(PATHFILES)
+	@echo TRANSLATION=$(TRANSLATIONS)
+	PERL5LIB=../.. ../../po4a-updatepo -t pod $(foreach file,$(PATHFILES),-i $(file)) -o $@
 
-pod-%.po: po4a-pod.pot
+%.po: po4a-pod.pot
 	@echo -n "Merging po4a-pod.pot and $@"
-	@msgmerge $@ po4a-pod.pot -o $@,new
+	@msgmerge $@ po4a-pod.pot -o $@.new
 # Typically all that changes was a date. I'd prefer not to cvs commit such
 # changes, so detect and ignore them.
+# That's why I don't use po4a-updatepo on po files but on pot ones. It makes
+# it easier to detect and ignore such changes.
 	@if [ "`diff $@ $@.new | grep '[<>]' | wc -l`" -ne 2 ]; then \
 		mv -f $@.new $@; \
 	else \
@@ -27,14 +36,22 @@ pod-%.po: po4a-pod.pot
 	fi
 	@msgfmt --statistics $@
 
-%.fr.pod: ../../% pod-fr.po
-	po4a-translate -t pod -v $^ pod.fr.po -o $@
+LocalePo4a%.fr.pod: ../../Locale/Po4a/% fr.po
+	PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
+	if [ -e $@ ] ; then \
+	  mv -f $@ `echo $@| \
+	            sed 's/LocalePo4a/Locale::Po4a::/' | \
+	            sed 's/\.pm//'` ; \
+	fi
+
+%.fr.pod: ../../% fr.po
+	PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
 
 clean:
-	rm -f $(MOFILES) messages messages.mo
+	rm -f messages messages.mo *.pod *~
 
 check:
-	@for file in $(PODPOFILES); do \
+	@for file in $(POFILES); do \
 		lang=`echo $$file | sed 's/\.po//'`; \
 		printf "$$lang: "; \
 		msgfmt -o /dev/null -c -v --statistics $$lang.po;\
