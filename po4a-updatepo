@@ -3,9 +3,9 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.17 2004-03-24 21:57:20 barbier Exp $
+# $Id: po4a-updatepo,v 1.18 2004-04-28 09:01:10 mquinson-guest Exp $
 #
-# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -58,6 +58,11 @@ files must have the same charset.
 Po file(s) to update. If these files do not exist, they are created by
 C<po4a-updatepo>.
 
+=item -o, --option
+
+Pass an extra option to the format plugin. See the documentation of each
+plugin for more information about the valid options and their meaning.
+
 =item -h, --help
 
 Show a short help message.
@@ -91,7 +96,7 @@ L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003 by SPI, inc.
+Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -118,7 +123,7 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("po4a-updatepo version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-updatepo",$VERSION);
 }
 
 
@@ -127,7 +132,7 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 
 # Parse our options
 my (@masterfiles,@pofiles);
-my ($help,$help_fmt,$verbose,$debug,$format);
+my ($help,$help_fmt,$verbose,$debug,$format,@options);
 GetOptions('help|h'      => \$help,
   	   'help-format' => \$help_fmt,
 	   
@@ -135,6 +140,8 @@ GetOptions('help|h'      => \$help,
 	   'po|p=s'      => \@pofiles,
 	   'format|f=s'  => \$format,
 
+           'option|o=s'    => \@options,
+    
 	   'verbose|v'   => \$verbose,
 	   'debug|d'     => \$debug,
 	   'version|V'   => \&show_version)
@@ -144,8 +151,20 @@ $help && pod2usage (0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
-my ($doc); # parser
-$doc=Locale::Po4a::Chooser::new($format,"verbose" => $verbose, "debug" => $debug);
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+
+foreach (@options) {
+    if (m/^([^=]*)=(.*)$/) {
+	$options{$1}="$2";
+    } else {
+	$options{$_}=1;
+    }
+}
+
+# parser
+my ($doc)=Locale::Po4a::Chooser::new($format,%options);
 
 map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;
 map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 

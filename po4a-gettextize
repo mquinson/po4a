@@ -3,9 +3,9 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.15 2004-03-24 21:57:20 barbier Exp $
+# $Id: po4a-gettextize,v 1.16 2004-04-28 09:01:10 mquinson-guest Exp $
 #
-# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -79,6 +79,11 @@ Charset of the file containing the localized document.
 File where the message catalog should be written. If not given, the message
 catalog will be written to the standard output.
 
+=item -o, --option
+
+Pass an extra option to the format plugin. See the documentation of each
+plugin for more information about the valid options and their meaning.
+
 =item -h, --help
 
 Show a short help message.
@@ -112,7 +117,7 @@ L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003 by SPI, inc.
+Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -137,11 +142,11 @@ textdomain('po4a');
 
 
 sub show_version {
-    print sprintf(gettext("po4a-gettextize version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$"po4a-gettextize",VERSION);
 }
 
 my ($pofile)=('-');
-my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose);
+my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
@@ -152,6 +157,8 @@ GetOptions(
         'po|p=s'        => \$pofile,
         'format|f=s'    => \$type,
 
+        'option|o=s'    => \@options,
+    
         'verbose|v'     => \$verbose,
         'debug|d'       => \$debug,
         'version|V'     => \&show_version
@@ -163,6 +170,17 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) if (scalar @ARGV > 1) || 
     (!defined($masterfile)) || (!length($masterfile));
 
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+
+foreach (@options) {
+    if (m/^([^=]*)=(.*)$/) {
+	$options{$1}="$2";
+    } else {
+	$options{$_}=1;
+    }
+}
 # Check file existence
 -e $masterfile || die sprintf(gettext("File %s does not exists.\n"),$masterfile);
 if (defined $locfile && length($locfile)) {
@@ -170,12 +188,8 @@ if (defined $locfile && length($locfile)) {
 }
 
 # Declare the TransTractor parsers
-my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,
-						    "verbose" => $verbose, 
-						    "debug" => $debug),
-			 Locale::Po4a::Chooser::new($type,
-						    "verbose" => $verbose, 
-						    "debug" => $debug));
+my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%options),
+			 Locale::Po4a::Chooser::new($type,%options));
 
 # Parse master file
 $mastertt->read($masterfile);

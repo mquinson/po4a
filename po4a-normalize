@@ -3,9 +3,9 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.12 2004-03-24 21:57:20 barbier Exp $
+# $Id: po4a-normalize,v 1.13 2004-04-28 09:01:10 mquinson-guest Exp $
 #
-# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -38,6 +38,11 @@ that ;)
 
 =over 4
 
+=item -o, --option
+
+Pass an extra option to the format plugin. See the documentation of each
+plugin for more information about the valid options and their meaning.
+
 =item -h, --help
 
 Show a short help message.
@@ -68,7 +73,7 @@ L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-gettextize(1)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003 by SPI, inc.
+Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -96,15 +101,17 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("po4a-normalize version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),$VERSION);
+    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-normalize",$VERSION);
 }
 
-my ($help_fmt,$help,$type,$debug,$verbose);
+my ($help_fmt,$help,$type,$debug,$verbose,@options);
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
 	'help-format'  => \$help_fmt,
         'format|f=s'   => \$type,
+    
+        'option|o=s'    => \@options,
 
         'verbose|v'   => \$verbose,
         'debug|d'     => \$debug,
@@ -115,7 +122,18 @@ $help && pod2usage (0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage (1) unless scalar @ARGV == 1;
 
-my $parser=Locale::Po4a::Chooser::new($type);
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+foreach (@options) {
+    if (m/^([^=]*)=(.*)$/) {
+	$options{$1}="$2";
+    } else {
+	$options{$_}=1;
+    }
+}
+
+my $parser=Locale::Po4a::Chooser::new($type,%options);
 
 my $filename = shift || pod2usage(1);
 -e $filename || die sprintf(gettext("File %s does not exists.\n"),$filename);

@@ -3,9 +3,9 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.16 2004-03-24 21:57:20 barbier Exp $
+# $Id: po4a-translate,v 1.17 2004-04-28 09:01:10 mquinson-guest Exp $
 #
-# Copyright 2002, 2003 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
+# Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -66,6 +66,11 @@ File where the localized (translated) document should be written.
 =item -p, --po
 
 File from which the message catalog should be read.
+
+=item -o, --option
+
+Pass an extra option to the format plugin. See the documentation of each
+plugin for more information about the valid options and their meaning.
 
 =item -k, --keep
 
@@ -130,7 +135,7 @@ L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-normalize(1)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003 by SPI, inc.
+Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -152,9 +157,14 @@ use POSIX;     # Needed for setlocale()
 setlocale(LC_ALL, "");
 textdomain("po4a");
 
+sub show_version {
+    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-translate",$VERSION);
+}
+
+
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
-my ($help,$help_fmt,$verbose,$debug,@addfiles,$format);
+my ($help,$help_fmt,$verbose,$debug,@addfiles,$format,@options);
 my ($master_filename,$po_filename);
 GetOptions(
         'help|h'        => \$help,
@@ -166,10 +176,14 @@ GetOptions(
 	'addendum|a=s'  => \@addfiles,
 	'format|f=s'    => \$format,
 
+        'option|o=s'    => \@options,
+    
 	'width|w=s'     => \$width,
 	'verbose|v'     => \$verbose,
 	'debug|d'       => \$debug,
-	'keep|k=s'      => \$threshold
+	'keep|k=s'      => \$threshold,
+    
+        'version|V'     => \&show_version
 ) or pod2usage(1);
 
 $help && pod2usage(0);
@@ -177,15 +191,26 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 
 (defined($master_filename) && length($master_filename))||pod2usage(1);
 (defined($po_filename)     && length($po_filename))    ||pod2usage(1);
--e $master_filename || die sprintf(gettext("File %s does not exist\n"),$master_filename);
--e $po_filename || die sprintf(gettext("File %s does not exist\n"),$po_filename);
+-e $master_filename || die sprintf(gettext("%s: file %s does not exist\n"),"po4a-translate",$master_filename);
+-e $po_filename || die sprintf(gettext("%s: file %s does not exist\n"),"po4a-translate",$po_filename);
 
 my (@pos,@masters);
 push @pos,$po_filename;
 push @masters,$master_filename;
 
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+
+foreach (@options) {
+    if (m/^([^=]*)=(.*)$/) {
+	$options{$1}="$2";
+    } else {
+	$options{$_}=1;
+    }
+}
 # parser
-my $doc=Locale::Po4a::Chooser::new($format,"verbose"=>$verbose, "debug" => $debug);
+my $doc=Locale::Po4a::Chooser::new($format,%options);
 
 # Prepare the document to be used as translator, but not parser
 $doc->process('po_in_name'   => \@pos,
