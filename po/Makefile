@@ -6,6 +6,9 @@ all:
 install:
 	for dir in $(SUBDIRS) ; do make -C $$dir install || exit $$? ; done
 
+clean:
+	for dir in $(SUBDIRS) ; do make -C $$dir clean || exit $$? ; done
+
 
 stats:
 	@for dir in $(SUBDIRS) ; do \

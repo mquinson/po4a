@@ -54,7 +54,7 @@ LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
 	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $< -p fr.po -l $@
 
 clean:
-	rm -f messages messages.mo *.pod *~
+	rm -f messages *.mo *.pod *~
 
 check:
 	@for file in $(POFILES); do \
