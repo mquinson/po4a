@@ -11,7 +11,7 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Type:' -I '^\"Content-Transfer-Encoding:'";
+  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
 
 $tests[0]{'run'}  = 'perl ../po4a-gettextize -f dia -m data-21/extract.dia -p tmp/dia_extract.po';
 $tests[0]{'test'} = "diff -u $diff_po_flags data-21/extract.po-ok tmp/dia_extract.po";
