@@ -355,7 +355,7 @@ sub parse_file {
 	                                    "option orgname othername ".
 	                                    "para phrase pubdate publishername primary ". 
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
-	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref ".
+	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref synopsis ".
 	                                    "term tertiary title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
@@ -373,8 +373,8 @@ sub parse_file {
 	                                    "objectinfo orderedlist ".
 	                                    "part partintro preface procedure publisher ".
 	                                    "qandadiv qandaentry qandaset question ".
-	                                    "refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo revision revdescription row ".
-	                                    "screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo simplelist simplemsgentry simplesect step synopfragment ".
+	                                    "reference refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo revision revdescription row ".
+	                                    "screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo shortcut simplelist simplemsgentry simplesect step synopfragment ".
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
