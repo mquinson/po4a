@@ -363,14 +363,22 @@ sub pushmacro {
 	# Adding extra quotes as in:
 	# .IP "CATALOG\ "ddddddddddddd""
 	# results in two args: 'CATALOG\ ' and 'ddddddddddddd""'
-  
-	$self->pushline(join(" ",map { defined $_ ? 
-					 ($_ eq '0' ? "0" 
-					            : ( length($_) && m/([^\\] |^ )/ ? "\"$_\"" 
-							                   : "$_"||'""'
-						      )
-				         ) : ''
-				      } @_)."\n");
+	$self->pushline(join(" ",map {
+		# Replace double quotes by \(dq (double quotes could be
+		# taken as an argument delimiter).
+		# Only quotes not preceded by \ are taken into account
+		# (\" introduces a comment).
+		s/(?<!\\)"/\\\(dq/g if (defined $_);
+
+		defined $_ ? (
+			length($_)?
+			    (m/([^\\] |^ )/ ? "\"$_\"" : "$_")
+			    # Quote arguments that contain a space.
+			    # (not needd for non breaknig spaces, i.e.
+			    # spaces preceded by '\')
+			    :'""' # empty argument
+		) : '' # no argument
+	    } @_)."\n");
     } else {
 	$self->pushline("\n");
     }
