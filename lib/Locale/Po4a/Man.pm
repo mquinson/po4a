@@ -664,7 +664,7 @@ sub parse{
 
 	} elsif ($line =~ /^( +)([^.].*)/) {
 	    # Not a macro, but not a wrapped paragraph either
-	    $wrapped_mode='NO';
+	    $wrapped_mode = $wrapped_mode eq 'YES' ? 'NO' : $wrapped_mode;
 	    $paragraph .= $line."\n";
 	} elsif ($line =~ /^([^.].*)/) {
             # special case: the line is entirely a comment, keep the
