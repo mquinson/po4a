@@ -52,7 +52,7 @@ See the section "Writing derivate modules" below, for the process description.
 
 This module can also be customized by lines starting with "% po4a:" in the
 TeX file.
-These customization are described
+These customization are described in the B<INLINE CUSTOMIZATION> section.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -144,10 +144,57 @@ Using these options permits to override the behaviour of the commands defined
 in the default lists.
 
 Note: currently, the behaviour of commands specified in the TeX files (see the
-B<INLINE CUSTIOMIZATION> section) cannot be overriden with these options.
+B<INLINE CUSTOMIZATION> section) cannot be overriden with these options.
 
 If you don't want to translate the chapters and sections, then you can specify:
  -o untranslated=chapter,section
+
+=head1 INLINE CUSTOMIZATION
+
+The TeX module can be customized with lines starting by "% po4a:".
+These lines are interpreted as commands to the parser.
+The following commands are recognized:
+
+=over 4
+
+=item % po4a: command I<command1> alias I<command2>
+
+Indicates that the arguments of the I<command1> command should be
+treated as the arguments of the I<command2> command.
+
+=item % po4a: command I<command1> I<function1>
+
+Indicates that the I<command1> command should be handled by I<function1>.
+
+=item % po4a: command <command1> x,y,z,t
+
+This permits a better control of the translated arguments and some
+verifications of the number of arguments.
+
+The meaning of the x, y, z and t is the following:
+  * x is the number of optional arguments (between [])
+      0 - no optional argument
+     -1 - variable
+      n - maximum number of optional arguments
+  * y is the number of arguments
+    maybe x and y are not needed
+  * z indexes of the optional arguments that have to be translated
+     -1 - all optional argument should be translated
+      0 - none
+  1 3 7 - the 1st, 3rd and 7th arguments should be translated
+  * t indexes of the arguments that have to be translated
+
+It could be useful to define commands without argument as "0,0,,"
+instead of either translated or untranslated.
+
+=item % po4a: environment <env1> <function1>
+
+Indicates that the I<env1> environment should be handled by I<function1>.
+
+=back
+
+See the B<INTERNAL FUNCTIONS> section for the list of function which could be
+used for commands or environments.
 
 =cut
 
@@ -176,40 +223,9 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
 
 =head1 WRITING DERIVATE MODULES
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
-
-=head2 Command functions
-
 =over 4
 
-=item translate_joined
-
-Every argument of the command is translated separately, and the command is
-reassembled with its arguments in the output document.
-
-=item untranslated
-
-No argument of the command is proposed for translation. The command is
-reassembled with its arguments in the output document.
-
-=back
-
-=head2 Environment functions
-
-These functions are called when a \begin command is found.
-
-=over 4
-
-=item push_environment
-
-This function push the environment name in a stack, and push the \begin command
-untranslated in the output document.
-This stack of environments is then used to change the behaviour of the parser
-(e.g. blocks are not re-wrapped in the verbatim environment).
-The type of PO strings is either set to the last environment of this stack or
-to the name of the command (if the string is part of a command argument).
-
-=back
+=item pre_trans
 
 =cut
 
@@ -236,6 +252,10 @@ sub pre_trans {
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
 }
+
+=item post_trans
+
+=cut
 
 sub post_trans {
     my ($self,$str,$ref,$type)=@_;
@@ -264,10 +284,15 @@ sub post_trans {
 # comment with the first translated string of the paragraph.
 my @comments = ();
 
-# Wrapper arround Transtractor's translate, with pre- and post-processing
-# filters.
-# Comments of a paragraph are inserted as a PO comment for the first
-# translated string of this paragraph.
+=item translate
+Wrapper arround Transtractor's translate, with pre- and post-processing
+filters.
+
+Comments of a paragraph are inserted as a PO comment for the first
+translated string of this paragraph.
+
+=cut
+
 sub translate {
     my ($self,$str,$ref,$type) = @_;
     my (%options)=@_;
@@ -315,37 +340,40 @@ sub translate {
 ### COMMANDS SEPARATION ###
 ###########################
 
-# =item get_leading_command($buffer)
-#
-# This function returns:
-#
-# =over 4
-#
-# =item The command name
-#
-# If no command is found at the beginning of the given buffer, this
-# string will be empty.
-#
-# =item A variant
-#
-# This indicate if a variant is used. For example, an asterisk (*) can
-# be added at the end of sections command to specify that they should
-# not be numbered. In this case, this field will contain "*". If there
-# is not variant, the field is an empty string.
-#
-# =item An array of optional arguments
-#
-# =item An array of mandatory arguments
-#
-# =item The remaining buffer
-#
-# The rest of the buffer after the removal of this leading command and
-# its arguments. If no command is found, the original buffer is not
-# touched and returned in this field.
-#
-# =back
-#
-# =cut
+=item get_leading_command($buffer)
+
+This function returns:
+
+=over 4
+
+=item A command name
+
+If no command is found at the beginning of the given buffer, this string
+will be empty.  Only commands that can be separated are considered.
+The $separated_commands variable contains the space separated list of
+these commands.
+
+=item A variant
+
+This indicate if a variant is used.  For example, an asterisk (*) can
+be added at the end of sections command to specify that they should
+not be numbered.  In this case, this field will contain "*".  If there
+is not variant, the field is an empty string.
+
+=item An array of optional arguments
+
+=item An array of mandatory arguments
+
+=item The remaining buffer
+
+The rest of the buffer after the removal of this leading command and
+its arguments.  If no command is found, the original buffer is not
+touched and returned in this field.
+
+=back
+
+=cut
+
 sub get_leading_command {
     my ($self, $buffer) = (shift,shift);
     my $command = ""; # the command name
@@ -382,9 +410,6 @@ sub get_leading_command {
                         $opt .= $2
                     }
                 } else {
-                    # FIXME: an argument can contain an empty line.
-                    # We should change the parse subroutine (so that it doesn't
-                    # break entity).
                     die sprintf "un-balanced [";
                 }
             }
@@ -411,9 +436,6 @@ sub get_leading_command {
                         $arg .= $2;
                     }
                 } else {
-                    # FIXME: an argument can contain an empty line.
-                    # We should change the parse subroutine (so that it doesn't
-                    # break entity).
                     die sprintf "un-balanced {";
                 }
             }
@@ -426,7 +448,12 @@ sub get_leading_command {
     return ($command,$variant,\@opts,\@args,$buffer);
 }
 
-# Same as get_leading_command, but for commands at the end of a buffer.
+=item get_trailing_command($buffer)
+
+The same as get_leading_command, but for commands at the end of a buffer.
+
+=cut
+
 sub get_trailing_command {
     my ($self, $buffer) = (shift,shift);
     my $orig_buffer = $buffer;
@@ -459,9 +486,6 @@ sub get_trailing_command {
                      $arg = $2.$arg;
                  }
             } else {
-                # FIXME: an argument can contain an empty line.
-                # We should change the parse subroutine (so that it doesn't
-                # break entity).
                 die sprintf "un-balanced }";
             }
         }
@@ -489,10 +513,6 @@ sub get_trailing_command {
                      $opt = $2.$opt;
                  }
             } else {
-                # FIXME: an argument can contain an empty line.
-                # We should change the parse subroutine (so that it doesn't
-                # break entity).
-                # FIXME: see ch06:267
                 die sprintf "un-balanced ]";
             }
         }
@@ -521,9 +541,14 @@ sub get_trailing_command {
     return ($command,$variant,\@opts,\@args,$buffer);
 }
 
-# Recursively translate a buffer by separating leading and trailing
-# commands (those which should be translatted separately) from the
-# buffer.
+=item translate_buffer
+
+Recursively translate a buffer by separating leading and trailing
+commands (those which should be translatted separately) from the
+buffer.
+
+=cut
+
 sub translate_buffer {
     my ($self,$buffer,@env) = (shift,shift,@_);
     print STDERR "translate_buffer($buffer,@env)="
@@ -636,7 +661,12 @@ sub translate_buffer {
 #### EXTERNAL CUSTOMIZATION ####
 ################################
 
-# Overload Transtractor's read
+=item read
+
+Overload Transtractor's read
+
+=cut
+
 sub read {
     my $self=shift;
     my $filename=shift;
@@ -647,9 +677,15 @@ sub read {
     push @{$self->{TT}{doc_in}}, read_file($self, $filename);
 }
 
-# Recursively read a file, appending included files.
-# Except from the file inclusion part, it is a cut and paste from
-# Transtractor's read.
+=item read_file
+
+Recursively read a file, appending included files.
+
+Except from the file inclusion part, it is a cut and paste from
+Transtractor's read.
+
+=cut
+
 sub read_file {
     my $self=shift;
     my $filename=shift
@@ -664,7 +700,7 @@ sub read_file {
     while (defined (my $textline = <$in>)) {
         $linenum++;
         my $ref="$filename:$linenum";
-        # FIXME: includeonly is not supported
+        # TODO: add support for includeonly
         while ($textline =~ /^(.*)\\(include|input)\{([^\{]*)\}(.*)$/) {
             my ($begin,$newfilename,$end) = ($1,$3,$4);
             my $tag = $2;
@@ -716,57 +752,18 @@ sub read_file {
     return @entries;
 }
 
-=head1 INLINE CUSTIOMIZATION
+=back
 
-The TeX module can be customized with lines starting by "% po4a:".
-These lines are interpreted as commands to the parser.
-The following commands are recognized:
 
 =over 4
 
-=item % po4a: command I<command1> alias I<command2>
+=item parse_definition_file
 
-Indicates that the arguments of the I<command1> command should be
-treated as the arguments of the I<command2> command.
-
-=item % po4a: command I<command1> I<function1>
-
-Indicates that the I<command1> command should be handled by I<function1>.
-
-=item % po4a: command <command1> x,y,z,t
-
-This permits a better control of the translated arguments and some
-verifications of the number of arguments.
-
-The meaning of the x, y, z and t is the following:
-  * x is the number of optional arguments (between [])
-      0 - no optional argument
-     -1 - variable
-      n - maximum number of optional arguments
-  * y is the number of arguments
-    maybe x and y are not needed
-  * z indexes of the optional arguments that have to be translated
-     -1 - all optional argument should be translated
-      0 - none
-  1 3 7 - the 1st, 3rd and 7th arguments should be translated
-  * t indexes of the arguments that have to be translated
-
-It could be useful to define commands without argument as "0,0,,"
-instead of either translated or untranslated.
-
-=item % po4a: environment <env1> <function1>
-
-Indicates that the I<env1> environment should be handled by I<function1>.
-
-=back
-
-See the B<INTERNAL FUNCTIONS> section for the list of function which could be
-used for commands or environments.
+Subroutine for parsing a file with po4a directive (definitions for
+newcommands).
 
 =cut
 
-# Subroutine for parsing a file with po4a directive (definitions for
-# newcommands).
 sub parse_definition_file {
     my ($self,$filename)=@_;
 
@@ -779,7 +776,15 @@ sub parse_definition_file {
         }
     }
 }
-# Parse a definition line ("% po4a: ")
+
+=item parse_definition_line
+
+Parse a definition line of the form "% po4a: ".
+
+See the INLINE CUSTOMIZATION section for more details.
+
+=cut
+
 sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^%\s+po4a:\s*//;
@@ -821,6 +826,10 @@ sub parse_definition_line {
     }
 }
 
+=item is_closed
+
+=cut
+
 sub is_closed {
     my $paragraph = shift;
 # FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument
@@ -838,10 +847,15 @@ sub is_closed {
     }
     return $opening eq $closing;
 }
+
 #############################
 #### MAIN PARSE FUNCTION ####
 #############################
-sub parse{
+=item parse
+
+=cut
+
+sub parse {
     my $self = shift;
     my ($line,$ref);
     my $paragraph = ""; # Buffer where we put the paragraph while building
@@ -861,7 +875,7 @@ sub parse{
         # FIXME: not always, use return of parse_definition_line?
             $line = "%";
         } elsif ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
-        #FIXME: in Python-Doc, there is a % in a verbatim environment,which is not a comment.
+        # FIXME: in Python-Doc, there is a % in a verbatim environment,which is not a comment.
             # remove comments, and store them in @comments
             push @comments, $2
                 if length($2);
@@ -871,7 +885,7 @@ sub parse{
 
         my $closed = is_closed($paragraph);
 
-        if ($closed and $line =~ /^ *$/) {#FIXME: \s*?
+        if ($closed and $line =~ /^ *$/) {#FIXME: should it be \s*?
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
@@ -915,6 +929,12 @@ sub parse{
 } # end of parse
 
 
+=item docheader
+
+=back
+
+=cut
+
 sub docheader {
     return "% This file was generated with po4a. Translate the source file.\n".
            "%\n";
@@ -924,6 +944,67 @@ sub docheader {
 ####################################
 #### DEFINITION OF THE COMMANDS ####
 ####################################
+
+=head1 INTERNAL FUNCTIONS used to write derivated parsers
+
+Command and environment functions take the following arguments (in
+addition to the $self object):
+
+=over 4
+
+=item a command
+
+=item a variant
+
+=item an array of optional arguments
+
+=item an array of mandatory arguments
+
+=item the current environment
+
+=back
+
+The first 4 arguments are extracted from get_leading_command or
+get_trailing_command.
+
+Command and environment functions return the translation of the command
+with its arguments and a new environment.
+
+Environment functions are called when a \begin command is found. They are
+called with the \begin command and its arguments.
+
+=head2 Command functions
+
+=over 4
+
+=item translate_joined
+
+Every argument of the command is translated separately, and the command is
+reassembled with its arguments in the output document.
+
+=item untranslated
+
+No argument of the command is proposed for translation. The command is
+reassembled with its arguments in the output document.
+
+=back
+
+=head2 Environment functions
+
+=over 4
+
+=item push_environment
+
+This function push the environment name in a stack, and push the \begin command
+untranslated in the output document.
+This stack of environments is then used to change the behaviour of the parser
+(e.g. blocks are not re-wrapped in the verbatim environment).
+The type of PO strings is either set to the last environment of this stack or
+to the name of the command (if the string is part of a command argument).
+
+=back
+
+=cut
 
 # Rebuild the command with the original arguments.
 sub untranslated {
@@ -973,6 +1054,9 @@ sub translate_joined {
 }
 
 # definition of environment related commands
+
+# FIXME: a \begin{env} can be followed by an argument. For example:
+# \begin{important}[the law of conservation of energy]
 $commands{'begin'}= sub {
     my $self = shift;
     my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
@@ -1107,9 +1191,6 @@ sub register_generic {
 ########################################
 # push the environment in the environment stack, and do not translate
 # the command
-# FIXME: a \begin{env} can be followed by an argument. For example:
-# \begin{important}[the law of conservation of energy]
-# FIXME: The environment name can be followed by a '*'
 sub push_environment {
     my $self = shift;
     my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
@@ -1204,6 +1285,12 @@ It was tested on a book and with the Python documentation.
 
 =item tabular environment
 
+A tabular environment would have to translate every cell separately.
+
+=item Others
+
+Various other points are tagged TODO in the source.
+
 =back
 
 =head1 KNOWN BUGS
@@ -1216,7 +1303,7 @@ Beginning and end of environments can be missed.
 
 =item commands
 
-The parser assumes all commands is followed by optional arguments (enclosed in
+The parser assumes every command is followed by optional arguments (enclosed in
 []) and then by mandatory arguments (enclosed in {}).
 
 =item verbatim environments
@@ -1225,7 +1312,7 @@ A % in a verbatim environments cause the end of the line to be ignored.
 
 =item Others
 
-Various others points are tagged FIXME in the source.
+Various other points are tagged FIXME in the source.
 
 =back
 
@@ -1243,7 +1330,7 @@ L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
 Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL (see the COPYING file).
 
 =cut
 
