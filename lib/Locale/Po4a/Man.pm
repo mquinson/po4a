@@ -961,7 +961,10 @@ $macro{'nr'}=\&untranslated;
 # .ps N    Point size; same as \s[N]
 $macro{'ps'}=\&untranslated;
 # .so filename Include source file.
-$macro{'so'}=\&translate_joined;
+$macro{'so'}= sub {
+    die "po4a::man: ".
+      dgettext("po4a","This page includes another file with '.so'. This is not supported yet, but will soon.")."\n";
+};
 # .sp     Skip one line vertically.
 # .sp N   Space  vertical distance N
 $macro{'sp'}=\&untranslated;
