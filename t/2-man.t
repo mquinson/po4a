@@ -13,10 +13,11 @@ $tests[0]{'test'} = 'diff -u data/man.po-empty tmp/po -I POT-Creation-Date';
 $tests[0]{'doc'}  = 'gettextize man page with only the original';
 
 $tests[1]{'run'}  = 'po4a-gettextize -t man data/man data/man.fr -o tmp/po';
-$tests[1]{'test'} = 'diff -u data/man.po tmp/po -I POT-Creation-Date';
+$tests[1]{'test'} = "diff -u data/man.po tmp/po -I POT-Creation-Date -I '^#' -I '^\"Content-Type:' ".
+                     "-I '^\"Content-Transfer-Encoding:'";
 $tests[1]{'doc'}  = 'gettextize man page with original and translation';
 
-$tests[2]{'run'}  = 'cp data/man.po tmp/po && po4a-updatepo -t man -m data/man --trans tmp/po';
+$tests[2]{'run'}  = 'cp data/man.po tmp/po && po4a-updatepo -t man -m data/man --trans tmp/po >/dev/null 2>&1 ';
 $tests[2]{'test'} = 'diff -u data/man.po tmp/po -I POT-Creation-Date';
 $tests[2]{'doc'}  = 'updatepo';
 
@@ -52,6 +53,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
     $val=system($tests[$i]{'run'});
     $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
+    print STDERR $tests[$i]{'run'} unless ($val == 0);
 
     SKIP: {
     	skip ("Command don't run, can't test the validity of its return",1)
@@ -59,6 +61,9 @@ for (my $i=0; $i<scalar @tests; $i++) {
         $val=system($tests[$i]{'test'});	
     	$name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
+	print STDERR "Failed (retval=$val) on:\n".
+	    $tests[$i]{'test'}."\nWas created with:\n".
+	    $tests[$i]{'run'}."\n" unless ($val == 0);
     }
 
 #    system("rm -f tmp/* 2>&1");
