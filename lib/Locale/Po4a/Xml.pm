@@ -40,6 +40,10 @@ Locale::Po4a::Xml is a module to help the translation of XML documents into
 other [human] languages. It can also be used as a base to build modules for
 XML-based documents.
 
+Please note that this module is still under heavy developement, and not
+distributed in official po4a release since we don't feel it to be mature
+enough. If you insist on trying, check the CVS out.
+
 =cut
 
 package Locale::Po4a::Xml;
@@ -159,6 +163,8 @@ specifies that the lang attribute will only be translated if it's into an
 
 Space-separated list of the tags you want to treat as inline.  By default,
 all tags break the sequence.  This follows the same syntax as the tags option.
+
+=back
 
 =cut
 
@@ -303,6 +309,8 @@ stream or not.
 
 This function returns the translated tag (translated attributes or all needed
 transformations) as a single string.
+
+=back
 
 =cut
 
@@ -494,6 +502,8 @@ my $tag = $self->join_lines(@tag);
 
 =head2 WORKING WITH TAGS
 
+=over 4
+
 =item get_path
 
 This function returns the path to the current tag from the document's root,
@@ -657,6 +667,8 @@ or tag hierarchies). If it doesn't match, it returns 0. Else, it returns the
 matched tag options (the characters in front of the tag) or 1 (if that tag
 doesn't have options).
 
+=back
+
 =cut
 
 sub tag_in_list {
@@ -700,9 +712,13 @@ sub tag_in_list {
 
 =head2 WORKING WITH ATTRIBUTES
 
+=over 4
+
 =item treat_attributes
 
 TODO
+
+=back
 
 =cut
 
@@ -851,11 +867,15 @@ sub treat_content {
 
 =head2 WORKING WITH THE MODULE OPTIONS
 
+=over 4
+
 =item treat_options
 
 This function fills the internal structures that contain the tags, attributes
 and inline data with the options of the module (specified in the command-line
 or in the initialize function).
+
+=back
 
 =cut
 
@@ -874,6 +894,8 @@ sub treat_options {
 }
 
 =head2 GETTING TEXT FROM THE INPUT STREAM
+
+=over
 
 =item get_string_until
 
@@ -967,6 +989,8 @@ sub get_string_until {
 
 This function returns a simple string with the text from the argument array
 (discarding the references).
+
+=back
 
 =cut
 

@@ -38,6 +38,10 @@ areas where they were not expected like documentation.
 Locale::Po4a::Html is a module to help the translation of documentation in
 the HTML format into other [human] languages.
 
+Please note that this module is not distributed with the main po4a archive
+because we don't feel it mature enough for that. If you insist on using it
+anyway, check it from the CVS out.
+
 =cut
 
 package Locale::Po4a::Html;
