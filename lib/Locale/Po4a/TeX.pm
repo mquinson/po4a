@@ -312,8 +312,9 @@ sub translate {
 # FIXME: translate may append a newline, keep the trailing spaces so we can
 # recover them.
     my $spaces = "";
-    if ($str =~ m/(\s+)$/s) {
-        $spaces = $1;
+    if ($options{'wrap'} and $str =~ m/^(.*?)(\s+)$/s) {
+        $str    = $1;
+        $spaces = $2;
     }
 
     # Translate this
@@ -381,7 +382,7 @@ sub get_leading_command {
     print STDERR "get_leading_command($buffer)="
         if ($debug{'extract_commands'});
 
-    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s
+    if ($buffer =~ m/^$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s
         && $separated{$1}) {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
@@ -465,7 +466,7 @@ sub get_trailing_command {
 
     # While the buffer ends by }, consider it is a mandatory argument
     # and extract this argument.
-    while ($buffer =~ m/^(.*\{.*)\}\s*$/s) {
+    while ($buffer =~ m/^(.*\{.*)\}$/s) {
         my $arg = "";
         my $count = 1;
         $buffer = $1;
@@ -587,9 +588,10 @@ sub translate_buffer {
         # keep the leading space to put them back after the translation of
         # the command.
         my $spaces = "";
-        if ($buffer =~ /^(\s+)(.*)$/s) {
+        if ($buffer =~ /^(\s+)(.*?)$/s) {
             $spaces = $1;
-            $buffer = $2;
+#            $buffer = $2; # FIXME: this also remove trailing spaces!!
+            $buffer =~ s/^\s*//;
         }
         ($command, $variant, $opts, $args, $buffer) =
             get_leading_command($self,$buffer);
@@ -603,9 +605,10 @@ sub translate_buffer {
                 $translated_buffer .= $spaces.$t;
                 # Handle spaces after a command.
                 $spaces = "";
-                if ($buffer =~ /^(\s+)(.*)$/s) {
+                if ($buffer =~ /^(\s+)(.*?)$/s) {
                     $spaces = $1;
-                    $buffer = $2;
+#                    $buffer = $2;  # FIXME: this also remove trailing spaces!!
+                    $buffer =~ s/^\s*//;
                 }
                 $translated_buffer .= $spaces;
             } else {
@@ -620,7 +623,7 @@ sub translate_buffer {
     my @trailing_commands = ();
     do {
         my $spaces = "";
-        if ($buffer =~ /^(.*)(\s+)$/s) {
+        if ($buffer =~ /^(.*?)(\s+)$/s) {
             $buffer = $1;
             $spaces = $2;
         }
@@ -647,7 +650,7 @@ sub translate_buffer {
         }
         # Keep spaces at the end of the buffer.
         my $spaces = "";
-        if ($buffer =~ /^(.*)(\s+)$/s) {
+        if ($buffer =~ /^(.*?)(\s+)$/s) {
             $spaces = $2;
             $buffer = $1;
         }
@@ -929,7 +932,7 @@ sub parse {
 
         my $closed = is_closed($paragraph);
 
-        if ($closed and $line =~ /^ *$/) {#FIXME: should it be \s*?
+        if ($closed and $line =~ /^\s*$/) {
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph =~ s/(?<!\\)(?:\\\\)*%$//;
@@ -944,9 +947,8 @@ sub parse {
             if ($paragraph =~ /(?<!\\)(?:\\\\)*%$/) {
                 $paragraph =~ s/%$//s;
                 chomp $paragraph;
-                $line =~ s/^ *//;
+                $line =~ s/^\s*//;
             }
-            # FIXME: s/^\s+/ /
             $paragraph .= $line."\n";
         }
 
