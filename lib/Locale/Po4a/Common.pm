@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.5 2005-03-03 09:58:32 mquinson Exp $
+# $Id: Common.pm,v 1.6 2005-03-03 16:04:40 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -31,16 +31,13 @@ use strict;
 use warnings;
 use Locale::gettext;
 use Text::WrapI18N qw(wrap $columns);
+use Term::ReadKey qw(GetTerminalSize);
 
 sub setcolumns {
-    eval qq{
-	# won't work on windows, at least.
-	use Term::ReadKey qw(GetTerminalSize);
-	($columns) = GetTerminalSize();
-    };
-    if ($@) {
-	$columns = $ENV{'COLUMNS'} || 80;
-    }
+    my ($col,$h,$cp,$hp);
+    ($col,$h,$cp,$hp) = GetTerminalSize();
+    $columns = $ENV{'COLUMNS'} || $col || 80;
+#    print "set col to $columns\n";
 }
 
 sub min {
