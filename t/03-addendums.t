@@ -8,19 +8,19 @@ use warnings;
 
 my @tests;
 
-$tests[0]{'run'}  = '../po4a-translate -f man -a data/man.addendum1 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[0]{'run'}  = '../po4a-translate -f man -a data/man.addendum1 -m data/man -p data/man.po-ok -l tmp/man.fr';
 $tests[0]{'test'} = 'diff -u data/man.fr.add1 tmp/man.fr';
 $tests[0]{'doc'}  = 'translate with addendum1';
 
-$tests[1]{'run'}  = '../po4a-translate -f man -a data/man.addendum2 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[1]{'run'}  = '../po4a-translate -f man -a data/man.addendum2 -m data/man -p data/man.po-ok -l tmp/man.fr';
 $tests[1]{'test'} = 'diff -u data/man.fr.add2 tmp/man.fr';
 $tests[1]{'doc'}  = 'translate with addendum2';
 
-$tests[2]{'run'}  = '../po4a-translate -f man -a data/man.addendum3 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[2]{'run'}  = '../po4a-translate -f man -a data/man.addendum3 -m data/man -p data/man.po-ok -l tmp/man.fr';
 $tests[2]{'test'} = 'diff -u data/man.fr.add3 tmp/man.fr';
 $tests[2]{'doc'}  = 'translate with addendum3';
 
-$tests[3]{'run'}  = '../po4a-translate -f man -a data/man.addendum4 -m data/man -p data/man.po -l tmp/man.fr';
+$tests[3]{'run'}  = '../po4a-translate -f man -a data/man.addendum4 -m data/man -p data/man.po-ok -l tmp/man.fr';
 $tests[3]{'test'} = 'diff -u data/man.fr.add4 tmp/man.fr';
 $tests[3]{'doc'}  = 'translate with addendum4';
 
