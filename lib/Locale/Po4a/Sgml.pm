@@ -195,8 +195,8 @@ sub parse_file {
     my ($prolog);
 
     # Rewrite the file to:
-    #   - protect optionnal inclusion marker (ie, "<![ %str [" and "]]>")
-    #   - protect entities from expension (ie "&release;")
+    #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
+    #   - protect entities from expansion (ie "&release;")
     open (IN,"<$filename") 
 	|| die sprintf(gettext("Can't open %s: %s\n"),$filename,$!);
     my $origfile="";
