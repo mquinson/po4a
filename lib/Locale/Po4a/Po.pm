@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.3 2003-02-12 07:58:33 mquinson Exp $
+# $Id: Po.pm,v 1.4 2003-11-06 16:38:46 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -239,7 +239,7 @@ sub write{
 	    if $self->{po}{$msgid}{'type'};
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
 	    if $self->{po}{$msgid}{'reference'};
-	$output .= format_comment($self->{po}{$msgid}{'flags'},", ") 
+	$output .= format_comment( join(", ", sort split(/ /,$self->{po}{$msgid}{'flags'})) ,", ")
 	    if $self->{po}{$msgid}{'flags'};
 
 	$output .= "msgid ".quote_text($msgid)."\n";
@@ -282,6 +282,7 @@ sub gettextize {
 	# Extract some informations
 	#
 	my ($orig,$trans)=($poorig->msgid($o),$potrans->msgid($t));
+#	print STDERR "Matches [[$orig]]<<$trans>>\n";
 
 	my ($reforig,$reftrans)=($poorig->{po}{$orig}{'reference'},
 				 $potrans->{po}{$trans}{'reference'});
@@ -309,8 +310,8 @@ sub gettextize {
 	# Push the entry
 	#
 	$pores->push_raw('msgid' => $orig, 'msgstr' => $trans, 
-			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"").
-                                    " fuzzy",
+			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"")." fuzzy",
+	                 'type'  => $typeorig,
 			 'reference' => $reforig);
     }
     return $pores;
@@ -371,7 +372,8 @@ sub gettext {
     
     if ($self->{po}{$esc_text}  && 
 	defined( $self->{po}{$esc_text}{'msgstr'} ) &&
-	length( $self->{po}{$esc_text}{'msgstr'} )) { 
+	length( $self->{po}{$esc_text}{'msgstr'} ) && 
+	!( ($self->{po}{$esc_text}{'flags'}||"") =~ /fuzzy/) ) { 
 
 	$self->{gettexthits}++;
 	$res= unescape_text($self->{po}{$esc_text}{'msgstr'});
@@ -546,6 +548,7 @@ sub push_raw {
 #    print STDERR "Push_raw\n";
 #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
 #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
+#    Carp::cluck " flags=$flags\n" if $flags;
     
     return unless defined($entry{'msgid'});
 
@@ -567,6 +570,7 @@ sub push_raw {
 	    my ($first,$second)=
 		(format_comment(". ",$self->{po}{$msgid}{'reference'}).
 		 quote_text($self->{po}{$msgid}{'msgstr'}),
+		    
 		 format_comment(". ",$reference).
 		 quote_text($msgstr));
 
