@@ -16,4 +16,7 @@ dist: Build
 stats: Build
 	@./Build postats
 
-.PHONY: all install clean dist stats
+bugreport:
+	script -c 'perl -V;perl Build.PL;./Build clean;./Build test verbose=1' po4a.log
+
+.PHONY: all install clean dist stats bugreport
