@@ -21,7 +21,7 @@ install:
 
 po4a-pod.pot: $(PATHFILES)
 	@echo TRANSLATION=$(TRANSLATIONS)
-	@PERL5LIB=../../lib ../../po4a-updatepo -f pod $(foreach file,$(PATHFILES),-m $(file)) -p $@
+	@PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $(foreach file,$(PATHFILES),-m $(file)) -p $@
 
 %.po: po4a-pod.pot
 	@echo -n "Merging po4a-pod.pot and $@"
@@ -42,7 +42,7 @@ po4a-pod.pot: $(PATHFILES)
 define TEMPLATES
 
 LocalePo4a%.$(1).pod: ../../lib/Locale/Po4a/% $(1).po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@
+	@PERL5LIB=../../lib perl ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@
 	@if [ -e $$@ ] ; then \
 	  mv -f $$@ `echo $$@| \
 	            sed 's/LocalePo4a/Locale::Po4a::/' | \
@@ -50,10 +50,10 @@ LocalePo4a%.$(1).pod: ../../lib/Locale/Po4a/% $(1).po
 	fi
 
 %.$(1).pod: ../../% $(1).po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
+	@PERL5LIB=../../lib perl ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
 
 %.$(1).pod: ../../doc/%.pod $(1).po
-	@PERL5LIB=../../lib ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
+	@PERL5LIB=../../lib perl ../../po4a-translate -f pod -v -m $$< -p $(1).po -l $$@ || true
 
 endef
 ##### END TEMPLATES #####
