@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.23 2004-08-08 06:48:15 jvprat-guest Exp $
+# $Id: po4a-updatepo,v 1.24 2004-08-08 07:19:05 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -36,6 +36,10 @@ on this new pot and on the provided po files.
 It is possible to give more than one po file (if you want to update several
 languages at once), and several documentation file (if you want to store
 the translations of several documents in the same po files).
+
+If the master document has non-ascii characters, it will convert the po files
+to utf-8 (if they weren't already), in order to allow non-standard characters
+in a culture independent way.
 
 =head1 OPTIONS
 

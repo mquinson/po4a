@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.23 2004-08-08 06:48:15 jvprat-guest Exp $
+# $Id: po4a-gettextize,v 1.24 2004-08-08 07:19:05 jvprat-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -50,6 +50,11 @@ the associated msgid, and not the one before or after).
 Even if the script manage to do its job without apparent problems, it still
 mark all extracted translation as fuzzy, to make sure that the translator
 will have a look at them, and detect any remaining problem.
+
+If the master document has non-ascii characters, the new generated po file
+will be in utf-8, in order to allow non-standard characters in a culture
+independent way. Else (if the master document is completely in ascii), the
+generated po will use the encoding of the translated input document.
 
 =head1 OPTIONS
 
