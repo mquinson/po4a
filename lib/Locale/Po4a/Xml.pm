@@ -233,8 +233,8 @@ It receives the extracted text, the reference on where it was, and a hash
 that contains extra information to control what strings to translate, how
 to translate them and to generate the comment.
 
-This options hash has different content depending on what kind of string
-it is (specified in an entry of this hash):
+The content of these options depends on the kind of string it is (specified in an 
+entry of this hash):
 
 =over
 
