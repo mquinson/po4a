@@ -39,6 +39,9 @@ Please note that this module is still under heavy developement, and not
 distributed in official po4a release since we don't feel it to be mature
 enough. If you insist on trying, check the CVS out.
 
+Users should probably use the LaTeX module, which inherite from the TeX module
+and contains the definitions of common LaTeX commands.
+
 =head1 TRANSLATING WITH PO4A::TEX
 
 This module can be used directly to handle generic TeX documents.
@@ -1409,6 +1412,12 @@ Various other points are tagged TODO in the source.
 =head1 KNOWN BUGS
 
 =over 4
+
+=item environments
+
+Arguments of the begin command are never translated.
+There is currently only one environment function.
+More functions should come in future releases.
 
 =item commands
 
