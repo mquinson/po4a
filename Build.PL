@@ -240,7 +240,7 @@ my $b = $builder->new
 	  'SGMLS' => 0},
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a'],
-      add_to_cleanup => ['t/tmp','messages.mo',
+      add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html', 'messages.mo',
 	  'po/pod/po4a-pod.pot~'],
       install_path => {po => '/usr/share/locale',
 	  man => '/usr/share/man'},
