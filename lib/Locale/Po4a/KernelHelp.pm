@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.3 2003-11-26 22:31:17 barbier Exp $
+# $Id: KernelHelp.pm,v 1.4 2004-04-28 08:51:38 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -31,6 +31,8 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @EXPORT = qw(); # new process write read writepo readpo);
 
 my $debug=0;
+
+sub initialize {}
 
 sub parse {
     my $self=shift;

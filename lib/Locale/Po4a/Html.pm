@@ -56,6 +56,8 @@ use HTML::TokeParser;
 
 use File::Temp;
 
+sub initialize {}
+
 sub read {
     my ($self,$filename)=@_;
     push @{$self->{DOCPOD}{infile}}, $filename;
