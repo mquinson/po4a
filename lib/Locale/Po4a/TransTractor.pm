@@ -209,6 +209,11 @@ to detect it from the input document).
 
 Filename where we should write the output document.
 
+=item file_out_charset ($)
+
+Charset used in the output document (if it isn't specified, it will use
+the po file charset).
+
 =item po_in_name (@)
 
 List of filenames where we should read the input po files from, containing
@@ -263,12 +268,14 @@ sub process {
 		 $_ eq 'file_in_name' ||
 		 $_ eq 'file_in_charset' ||
 		 $_ eq 'file_out_name' ||
+		 $_ eq 'file_out_charset' ||
 		 $_ eq 'addendum' ||
 		 $_ eq 'addendum_charset');
 	$newparams{$_}=$params{$_};
     }
 
     $self->{TT}{'file_in_charset'}=$params{'file_in_charset'};
+    $self->{TT}{'file_out_charset'}=$params{'file_out_charset'};
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
     foreach my $file (@{$params{'po_in_name'}}) {
@@ -915,8 +922,9 @@ This function will return the charset that should be used in the output
 document (usually useful to substitute the input document's detected charset
 where it has been found).
 
-It will use the input po's charset, and if the input po has the default
-"CHARSET", it will return the input document's charset, so that no
+It will use the output charset specified in the command line. If it wasn't
+specified, it will use the input po's charset, and if the input po has the
+default "CHARSET", it will return the input document's charset, so that no
 encoding is performed.
 
 =cut
@@ -924,16 +932,23 @@ encoding is performed.
 sub get_out_charset {
     my $self=shift;
     my $charset;
-    if ($self->{TT}{utf_mode} && $self->{TT}{ascii_input}) {
-	$charset="utf-8";
+
+    # Use the value specified at the command line
+    if (defined($self->{TT}{'file_out_charset'}) and
+	length($self->{TT}{'file_out_charset'})) {
+	$charset=$self->{TT}{'file_out_charset'};
     } else {
-	$charset=$self->{TT}{po_in}->get_charset;
-	$charset=$self->{TT}{'file_in_charset'}
-	    if $charset eq "CHARSET" and
-		defined($self->{TT}{'file_in_charset'}) and
-		length($self->{TT}{'file_in_charset'});
-	$charset="ascii"
-	    if $charset eq "CHARSET";
+	if ($self->{TT}{utf_mode} && $self->{TT}{ascii_input}) {
+	    $charset="utf-8";
+	} else {
+	    $charset=$self->{TT}{po_in}->get_charset;
+	    $charset=$self->{TT}{'file_in_charset'}
+		if $charset eq "CHARSET" and
+		    defined($self->{TT}{'file_in_charset'}) and
+		    length($self->{TT}{'file_in_charset'});
+	    $charset="ascii"
+		if $charset eq "CHARSET";
+	}
     }
     return $charset;
 }
