@@ -75,6 +75,11 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 use Locale::Po4a::TransTractor;
 use Locale::gettext qw(dgettext);
+use File::Basename qw(dirname);
+use Carp qw(croak);
+
+use Encode;
+use Encode::Guess;
 
 # hash of known commands and environments, with parsing sub.
 # See end of this file
@@ -103,6 +108,15 @@ our %command_categories = (
                            "index"
 );
 
+# Directory name of the main file.
+# It is the directory where included files will be searched.
+# See read_file.
+my $my_dirname;
+
+# Array of files that should not be included by read_file.
+# See read_file.
+our @exclude_include;
+
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -111,7 +125,8 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
            'translate'        => 0, # see translation
            'extract_commands' => 0, # see commands extraction
            'commands'         => 0, # see command subroutines
-           'environments'     => 0  # see environment subroutines
+           'environments'     => 0, # see environment subroutines
+           'translate_buffer' => 0  # see buffer translation
            );
 
 sub pre_trans {
@@ -164,6 +179,11 @@ sub post_trans {
 # They are stored in the @comments array, and then displayed as a PO
 # comment with the first translated string of the paragraph.
 my @comments = ();
+
+# Wrapper arround Transtractor's translate, with pre- and post-processing
+# filters.
+# Comments of a paragraph are inserted as a PO comment for the first
+# translated string of this paragraph.
 sub translate {
     my ($self,$str,$ref,$type) = @_;
     my (%options)=@_;
@@ -175,18 +195,35 @@ sub translate {
     return $str if ($str eq "\n");
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
+
+    # add comments (if any and not already added to the PO)
     if (@comments) {
         $options{'comment'} .= join('\n', @comments);
         @comments = ();
     }
+
+# FIXME: translate may append a newline, keep the trailing spaces so we can
+# recover them.
+    my $spaces = "";
+    if ($str =~ m/(\s+)$/s) {
+        $spaces = $1;
+    }
+
     # Translate this
     $str = $self->SUPER::translate($str,
                                    $ref||$self->{ref},
                                    $type || $self->{type},
                                    %options);
+
+# FIXME: translate may append a newline, see above
+    if ($options{'wrap'}) {
+        chomp $str;
+        $str .= $spaces;
+    }
+
     $str=post_trans($self,$str,$ref||$self->{ref},$type);
 
-    print STDERR "$str\n" if ($debug{'translate'});
+    print STDERR "'$str'\n" if ($debug{'translate'});
     return $str;
 }
 
@@ -370,10 +407,10 @@ sub get_trailing_command {
                      $opt = $2.$opt;
                  }
             } else {
-                # FIXME: can an argument contain an empty line?
-                # If it happens, either we should change the parse
-                # subroutine (so that it doesn't break entity), or
-                # we have to shiftline here.
+                # FIXME: an argument can contain an empty line.
+                # We should change the parse subroutine (so that it doesn't
+                # break entity).
+                # FIXME: see ch06:267
                 die sprintf "un-balanced ]";
             }
         }
@@ -401,42 +438,68 @@ sub get_trailing_command {
     return ($command,$variant,\@opts,\@args,$buffer);
 }
 
-# Warning: may be reentrant.
+# Recursively translate a buffer by separating leading and trailing
+# commands (those which should be translatted separately) from the
+# buffer.
 sub translate_buffer {
     my ($self,$buffer,@env) = (shift,shift,@_);
-#print STDERR "translate_buffer($buffer,@env)\n";
+    print STDERR "translate_buffer($buffer,@env)="
+        if ($debug{'translate_buffer'});
     my ($command,$variant) = ("","");
     my $opts = ();
     my $args = ();
     my $translated_buffer = "";
-    my $end_translated_buffer = "";
+    my $orig_buffer = $buffer;
     my $t = ""; # a temporary string
 
     # translate leading commands.
     do {
+        # keep the leading space to put them back after the translation of
+        # the command.
+        my $spaces = "";
+        if ($buffer =~ /^(\s+)(.*)$/s) {
+            $spaces = $1;
+            $buffer = $2;
+        }
         ($command, $variant, $opts, $args, $buffer) =
             get_leading_command($self,$buffer);
         if (length($command)) {
             # call the command subroutine.
-            # These command subroutine will probably call translate_buffer
-            # with the content of the arguments which need a translation.
+            # These command subroutines will probably call translate_buffer
+            # with the content of each argument that need a translation.
             if (defined ($commands{$command})) {
                 ($t,@env) = &{$commands{$command}}($self,$command,$variant,
                                                    $opts,$args,\@env);
-                $translated_buffer .= $t;
+                $translated_buffer .= $spaces.$t;
+                # Handle spaces after a command.
+                $spaces = "";
+                if ($buffer =~ /^(\s+)(.*)$/s) {
+                    $spaces = $1;
+                    $buffer = $2;
+                }
+                $translated_buffer .= $spaces;
             } else {
                 die sprintf("unknown command: '%s'", $command)."\n"
             }
+        } else {
+            $buffer = $spaces.$buffer;
         }
     } while (length($command));
 
     # array of trailing commands, which will be translated later.
     my @trailing_commands = ();
     do {
+        my $spaces = "";
+        if ($buffer =~ /^(.*)(\s+)$/s) {
+            $buffer = $1;
+            $spaces = $2;
+        }
         ($command, $variant, $opts, $args, $buffer) =
             get_trailing_command($self,$buffer);
         if (length($command)) {
-            unshift @trailing_commands, ($command, $variant, $opts, $args);
+            unshift @trailing_commands, ($command, $variant, $opts, $args, $spaces);
+        } else {
+            $buffer .= $spaces;
         }
     } while (length($command));
 
@@ -452,35 +515,145 @@ sub translate_buffer {
                 }
             }
         }
-
+        # Keep spaces at the end of the buffer.
+        my $spaces = "";
+        if ($buffer =~ /^(.*)(\s+)$/s) {
+            $spaces = $2;
+            $buffer = $1;
+        }
         $translated_buffer .= $self->translate($buffer,$self->{ref},
                                                @env?$env[-1]:"Plain text",
                                                "wrap" => $wrap);
-        chomp $translated_buffer if ($wrap);
+        # Restore spaces at the end of the buffer.
+        $translated_buffer .= $spaces;
     }
 
+    # append the translation of the trailing commands
     while (@trailing_commands) {
         my $command = shift @trailing_commands;
         my $variant = shift @trailing_commands;
         my $opts    = shift @trailing_commands;
         my $args    = shift @trailing_commands;
+        my $spaces  = shift @trailing_commands;
         if (defined ($commands{$command})) {
             ($t,@env) = &{$commands{$command}}($self,$command,$variant,
                                                $opts,$args,\@env);
-            $translated_buffer .= $t;
+            $translated_buffer .= $t.$spaces;
         } else {
             die sprintf("unknown command: '%s'", $command)."\n";
         }
     }
 
+    print STDERR "($translated_buffer,@env)\n"
+        if ($debug{'translate_buffer'});
     return ($translated_buffer,@env);
 }
 
 ################################
 #### EXTERNAL CUSTOMIZATION ####
 ################################
-sub parse_definition_file {}
-sub parse_definition_line {}
+
+# Overload Transtractor's read
+sub read {
+    my $self=shift;
+    my $filename=shift;
+
+    # keep the directory name of the main file.
+    $my_dirname = dirname($filename);
+
+    push @{$self->{TT}{doc_in}}, read_file($self, $filename);
+}
+
+# Recursively read a file, appending included files.
+# Except from the file inclusion part, it is a cut and paste from
+# Transtractor's read.
+sub read_file {
+    my $self=shift;
+    my $filename=shift
+        or croak(dgettext("po4a","Can't read from file without having a filename")."\n");
+    my $linenum=0;
+    my @entries=();
+
+    open (my $in, $filename)
+        or croak (sprintf(dgettext("po4a","Can't read from %s: %s"),
+                          $filename,$!)."\n");
+    while (defined (my $textline = <$in>)) {
+        $linenum++;
+        my $ref="$filename:$linenum";
+        while ($textline =~ /^(.*)\\include\{([^\{]*)\}(.*)$/) {
+            my ($begin,$newfilename,$end) = ($1,$2,$3);
+            my $include = 1;
+            foreach my $f (@exclude_include) {
+                if ($f eq $newfilename) {
+                    $include = 0;
+                    $begin .= "\\include{$newfilename}";
+                    $textline = $end;
+                }
+            }
+            if ($begin !~ /^\s*$/) {
+                push @entries, ($begin,$ref);
+            }
+            if ($include) {
+                push @entries, read_file($self,
+                                         "$my_dirname/$newfilename.tex");
+                $textline = $end;
+            }
+        }
+        if (length($textline)) {
+        my @entry=($textline,$ref);
+        push @entries, @entry;
+
+        # Detect if this file has non-ascii characters
+        if($self->{TT}{ascii_input}) {
+
+            my $decoder = guess_encoding($textline);
+            if (!ref($decoder) or $decoder !~ /Encode::XS=/) {
+                # We have detected a non-ascii line
+                $self->{TT}{ascii_input} = 0;
+                # Save the reference for future error message
+                $self->{TT}{non_ascii_ref} ||= $ref;
+                print "cucu'$ref'$textline'\n";
+            }
+        }
+        }
+    }
+    close $in
+        or croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),
+                          $filename,$!)."\n");
+
+    return @entries;
+}
+
+# Subroutine for parsing a file with po4a directive (definitions for
+# newcommands).
+sub parse_definition_file {
+    my ($self,$filename)=@_;
+
+    open (IN,"<$my_dirname/$filename")
+        || die sprintf(dgettext("po4a","Can't open %s: %s"),$filename,$!)."\n";
+    while (<IN>) {
+        if (/^%\s+po4a:/) {
+            parse_definition_line($self, $_);
+        }
+    }
+}
+# Parse a definition line ("% po4a: ")
+sub parse_definition_line {
+    my ($self,$line)=@_;
+    $line =~ s/^%\s+po4a:\s*//;
+
+    if ($line =~ /^command\s+(\w)\s+(.*)$/) {
+        my $command = $1;
+        my $line = $2;
+        if ($line =~ /^alias\s+(\w)/) {
+            if (defined ($commands{$2})) {
+                $commands{$command} = $commands{$2}
+            } else {
+                die "Cannot use an alias to the unknown command $2\n";
+            }
+        }
+    }
+}
 
 #############################
 #### MAIN PARSE FUNCTION ####
@@ -513,7 +686,7 @@ sub parse{
             $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
             if (length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
-                $self->pushline($t."\n");
+                $self->pushline($t);
                 $paragraph="";
             }
             $self->pushline($line."\n");
@@ -696,7 +869,7 @@ sub initialize {
     }
     foreach (split(/ /, $command_categories{'untranslated'})) {
         if (defined($commands{$_})) {
-            print "coucou $_\n";
+            # FIXME: Should we allow to redefine commands
         }
         $commands{$_} = \&untranslated;
     }
@@ -707,7 +880,7 @@ sub initialize {
     }
     foreach (split(/ /, $command_categories{'translate_joined'})) {
         if (defined($commands{$_})) {
-            print "coucou $_\n";
+            # FIXME: Should we allow to redefine commands
         }
         $commands{$_} = \&translate_joined;
     }
