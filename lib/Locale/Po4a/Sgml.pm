@@ -235,13 +235,15 @@ sub translate {
     # don't translate entries composed of one entity
     if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
 	 && !($self->{options}{'include-all'}) ){
-	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only an entity)"), $string)."\n";
+	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only an entity)"), $string)."\n"
+	       unless $self->verbose() <= 0;
 	return $string;
     }
     # don't translate entries composed of tags only
     if ( $string =~ /^(((<[^>]*>)|\s)*)$/
 	 && !($self->{options}{'include-all'}) ) {
-	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only tags)"), $string)."\n";
+	warn sprintf(gettext("po4a::sgml: msgid skipped to help translators (contains only tags)"), $string)."\n"
+	       unless $self->verbose() <= 0;
 	return $string;
     }
 
@@ -295,7 +297,8 @@ sub parse_file {
 	warn sprintf(gettext(
 		"po4a::sgml: Trying to handle a XML document as a SGML one.\n".
 		"po4a::sgml: Feel lucky if it works, help us implementing a proper XML\n".
-		"po4a::sgml: backend if it does not."),$filename)."\n";
+		"po4a::sgml: backend if it does not."),$filename)."\n"
+	  unless $self->verbose() <= 0;
 	$xmlprolog=$1;
     }
     # Get the prolog
