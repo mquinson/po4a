@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.8 2004-07-18 07:15:16 mquinson-guest Exp $
+# $Id: po4a,v 1.9 2004-07-18 08:33:36 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -178,14 +178,14 @@ sub show_version {
     exit 0;
 }
 
-my ($help,$type,$debug,$verbose,$quiet,@options);
-$verbose = 0;
+my ($help,$type,$debug,@verbose,$quiet,@options);
+@verbose = ();
 $debug = 0;
 my ($threshold)=(80);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
-        'verbose|v'     => \$verbose,
+        'verbose|v'     => \@verbose,
         'debug|d'       => \$debug,
         'quiet|q'       => \$quiet,
 	'keep|k=s'      => \$threshold,
@@ -195,6 +195,7 @@ GetOptions(
 # Argument check
 $help && pod2usage (0);
 
+my ($verbose) = (scalar @verbose);
 $verbose = 1 if $debug;
 $verbose = -1 if $quiet;
 my %options = (
@@ -223,12 +224,13 @@ while (<CONFIG>) {
     $nb++;
     s/#.*//; 
     $line.=$_;
-    chomp($line);
-    next if ($line =~ s/\\$//);
-    next unless ($line =~ /\S/);
+    $line =~ s/\t/ /g;
     $line =~ s/ +/ /g;
     $line =~ s/^ //;
     $line =~ s/ $//;
+    chomp($line);
+    next if ($line =~ s/\\$//);
+    next unless ($line =~ /\S/);
     
     die sprintf("%s:%d: ".gettext("Syntax error: %s")."\n",$config_file,$nb,$line)
       unless ($line =~ m/^\[([^\]]*)\] (\S+) (.*)$/ || $line =~ m/^\[([^\]]*)\] (\S+)$/);
@@ -250,7 +252,7 @@ while (<CONFIG>) {
 	$pot_filename = $main;
 	foreach my $arg (split(/ /,$args)) {
 	    die sprintf("%s:%d: ".
-		        gettext("Unparsable argument '%s'").
+		        gettext("Unparsable argument '%s'.").
 		        "\n",
 	                $config_file,$nb,$arg)
 	      unless ($arg =~ /^([^:]*):(.*)/);
@@ -261,20 +263,30 @@ while (<CONFIG>) {
 	$document{$main}{'format'} = $1;	
 	foreach my $arg (split(/ /,$args)) {
 	    die sprintf("%s:%d: ".
-		        gettext("Unparsable argument '%s'").
+		        gettext("Unparsable argument '%s' (%s).").
 		        "\n",
-	                $config_file,$nb,$arg)
+	                $config_file,$nb,$arg,$line)
 	      unless ($arg =~ /^([^:]*):(.*)/);
+	    my ($lang,$trans)=($1,$2);
 	    die sprintf("%s:%d: ".
 		        gettext("The translated and master file are the same."),
 		        $config_file,$nb)
-	      if ($main eq $2);
-	    $document{$main}{$1} = $2;
+	      if ($main eq $trans);
+	    
+	    if ($lang =~ /add_/) {
+		push @{$document{$main}{$lang}},$trans;
+	    } else {
+		die sprintf("%s:%d: ".
+		            gettext("Translation of %s in %s redefined"),
+		            $config_file,$nb,$main,$lang)
+		  if (defined $document{$main}{$lang});
+		$document{$main}{$lang} = $trans;
+	    }
 	}
 
     } else {
 	die sprintf("%s:%d: ".
-	            gettext("Unparsable command '%s'")."\n",
+	            gettext("Unparsable command '%s'.")."\n",
 	            $config_file,$nb,$cmd);
     }
   
@@ -311,8 +323,8 @@ foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print STDERR sprintf(gettext("Updating %s: "),$po_filename{$lang})
 	    if $verbose;    
-	system ("msgmerge","-U",$po_filename{$lang},$pot_filename) == 0 ||
-	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
+	system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($verbose?"":">/dev/null 2>/dev/null"))
+	  && die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
 	system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
 	  if $verbose;
     } else {
@@ -324,9 +336,10 @@ foreach $lang (sort keys %po_filename) {
 }
 
 # update all translations
-foreach my $master (keys %document) {
-    LANG: foreach $lang (keys %{$document{$master}}) {
-	next if $lang eq "format" || $lang =~ /^add_/;
+
+foreach $lang (sort keys %po_filename) {
+    DOC: foreach my $master (keys %document) {
+	next unless defined $document{$master}{$lang};
 	
 	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'} ,%options);
 	
@@ -341,19 +354,19 @@ foreach my $master (keys %document) {
 	my ($percent,$hit,$queries) = $doc->stats();
 	
 	if ($percent<$threshold)  {
-	    print STDERR sprintf(gettext("Discard the translation %s (only %s%% translated; need %s%%)."),
+	    print STDERR sprintf(gettext("Discard %s (only %s%% translated; need %s%%)."),
 		                 $document{$master}{$lang},$percent,$threshold)."\n";
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
-	    next LANG;
+	    next DOC;
 	}
     
 	if (defined ($document{$master}{"add_$lang"})) {
-	    foreach my $add ($document{$master}{"add_$lang"}) {
-		if ( !$doc->addendum($_) ) {
+	    foreach my $add (@{$document{$master}{"add_$lang"}}) {
+		if ( !$doc->addendum($add) ) {
 		    die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
 			$add,$document{$master}{$lang})."\n";
 		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
-		    next LANG;
+		    next DOC;
 		}
 	    }
 	}
