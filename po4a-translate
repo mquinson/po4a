@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.27 2004-08-15 06:33:26 mquinson Exp $
+# $Id: po4a-translate,v 1.28 2004-08-15 07:28:15 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -227,12 +227,12 @@ foreach (@options) {
 # parser
 my $doc=Locale::Po4a::Chooser::new($format,%options);
 
+
 # Prepare the document to be used as translator, but not parser
 $doc->process('po_in_name'       => \@pos,
 	      'file_in_name'     => \@masters,
 	      'file_in_charset'  => $mastchar,
 	      'addendum_charset' => $addchar);
-
 
 my ($percent,$hit,$queries) = $doc->stats();
 my $error=0;
@@ -247,19 +247,14 @@ if ($percent<$threshold)  {
 			 $master_filename,$percent,$threshold)."\n";
     unlink($outfile) if (-e $outfile);
 } else {
-    foreach (@addfiles) {
-	unless ($error) {
-	    $error ||= !$doc->addendum($_);
+    foreach my $add (@addfiles) {
+	unless ($doc->addendum($add)) {
+	    unlink($outfile) if (-e $outfile);
 	    die sprintf(gettext("Discard the translation of %s (addendum %s does not apply)."),
-				 $master_filename,$_)."\n"
-		if $error;
+		$master_filename,$add)."\n";
 	}
     }
-    if ($error) {
-	unlink($outfile) if (-e $outfile);
-    } else {
-	$doc->write($outfile);
-    }
+    $doc->write($outfile);
 }
 
 1;
