@@ -15,7 +15,7 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with Foobar; if not, write to the Free Software
+# along with po4a; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 ########################################################################
@@ -39,21 +39,26 @@ Please note that this module is still under heavy developement, and not
 distributed in official po4a release since we don't feel it to be mature
 enough. If you insist on trying, check the CVS out.
 
-=head1 SEE ALSO
+=head1 TRANSLATING WITH PO4A::TEX
 
-L<po4a(7)|po4a.7>,
-L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
+This module can be used directly to handle generic TeX documents.
+This will split your document in smaller blocks (paragraphs, verbatim
+blocks, or even smaller like titles or indexes).
 
-=head1 AUTHORS
+There are some options (described in the next section) that can customize
+this behavior.  If this doesn't fit to your document format you're encouraged
+to write your own module derived from this, to describe your format's details.
+See the section "Writing derivate modules" below, for the process description.
 
- Nicolas François <nicolas.francois@centraliens.net>
+This module can also be customized by lines starting with "% po4a:" in the
+TeX file.
+These customization are described
 
-=head1 COPYRIGHT AND LICENSE
+=head1 OPTIONS ACCEPTED BY THIS MODULE
 
-Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+These are this module's particular options:
 
-This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+=over 4
 
 =cut
 
@@ -91,7 +96,7 @@ our $ESCAPE    = "\\";
 
 # Space separated list of environments that should not be re-wrapped.
 our $no_wrap_environments = "verbatim";
-# Space separated list of commands that can be handle separately from
+# Space separated list of commands that can be handled separately from
 # when they appear at the beginning or end of a paragraph
 our $separated_commands = "index label";
 # hash with these commands
@@ -110,6 +115,23 @@ our %command_categories = (
                            "index"
 );
 
+=item translate
+
+Coma separated list of commands whose arguments have to be proposed for
+translation.
+This list is appended to the default list containing
+chapter, section, subsection, subsubsection and index.
+
+=item untranslated
+
+Coma-separated list of commands whose arguments shoud not be translated.
+This list is appended to the default list containing
+vspace, hspace and label.
+
+=back
+
+=cut
+
 # Directory name of the main file.
 # It is the directory where included files will be searched.
 # See read_file.
@@ -118,6 +140,8 @@ my $my_dirname;
 # Array of files that should not be included by read_file.
 # See read_file.
 our @exclude_include;
+
+# TODO: define the directory were files have to be searched for (TEXINPUTS?).
 
 #########################
 #### DEBUGGING STUFF ####
@@ -130,6 +154,12 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
            'environments'     => 0, # see environment subroutines
            'translate_buffer' => 0  # see buffer translation
            );
+
+=head1 WRITING DERIVATE MODULES
+
+=head1 INTERNAL FUNCTIONS used to write derivated parsers
+
+=cut
 
 sub pre_trans {
     my ($self,$str,$ref,$type)=@_;
@@ -300,10 +330,9 @@ sub get_leading_command {
                         $opt .= $2
                     }
                 } else {
-                    # FIXME: can an argument contain an empty line?
-                    # If it happens, either we should change the parse
-                    # subroutine (so that it doesn't break entity), or
-                    # we have to shiftline here.
+                    # FIXME: an argument can contain an empty line.
+                    # We should change the parse subroutine (so that it doesn't
+                    # break entity).
                     die sprintf "un-balanced [";
                 }
             }
@@ -330,10 +359,9 @@ sub get_leading_command {
                         $arg .= $2;
                     }
                 } else {
-                    # FIXME: can an argument contain an empty line?
-                    # If it happens, either we should change the parse
-                    # subroutine (so that it doesn't break entity), or
-                    # we have to shiftline here.
+                    # FIXME: an argument can contain an empty line.
+                    # We should change the parse subroutine (so that it doesn't
+                    # break entity).
                     die sprintf "un-balanced {";
                 }
             }
@@ -379,10 +407,9 @@ sub get_trailing_command {
                      $arg = $2.$arg;
                  }
             } else {
-                # FIXME: can an argument contain an empty line?
-                # If it happens, either we should change the parse
-                # subroutine (so that it doesn't break entity), or
-                # we have to shiftline here.
+                # FIXME: an argument can contain an empty line.
+                # We should change the parse subroutine (so that it doesn't
+                # break entity).
                 die sprintf "un-balanced }";
             }
         }
@@ -627,6 +654,50 @@ sub read_file {
     return @entries;
 }
 
+=head1 INLINE CUSTIOMIZATION OF THE TEX MODULE
+
+The TeX module can be customized with lines starting by "% po4a:".
+These lines are interpreted as commands to the parser.
+The following commands are recognized:
+
+=over 4
+
+=item % po4a: command I<command1> alias I<command2>
+
+Indicates that the arguments of the I<command1> command should be
+treated as the arguments of the I<command2> command.
+
+=item % po4a: command I<command1> I<function1>
+
+Indicates that the I<command1> command should be handled by I<function1>.
+
+=item % po4a: environment <env1> <function1>
+
+Indicates that the I<env1> environment should be handled by I<function1>.
+
+TODO
+
+=item % po4a: command <command1> x,y,z,t
+
+  * x is the number of optional arguments (between [])
+      0 - no optional argument
+     -1 - variable
+      n - maximum number of optional arguments
+  * y is the number of arguments
+    maybe x and y are not needed
+  * z indexes of the optional arguments that have to be translated
+     -1 - all optional argument should be translated
+      0 - none
+  1 3 7 - the 1st, 3rd and 7th arguments should be translated
+  * t indexes of the arguments that have to be translated
+This permits a better control of the translated arguments and some
+verifications and some verifications of the number of arguments.
+
+It could be usefull to define commands without argument as "0,0,,"
+instead of either translated or untranslated.
+
+=cut
+
 # Subroutine for parsing a file with po4a directive (definitions for
 # newcommands).
 sub parse_definition_file {
@@ -831,7 +902,7 @@ $commands{'end'}= sub {
     # verify that this environment was the last pushed environment.
     if (!@$env || @$env[-1] ne $args->[0]) {
         # a begin may have been hidden in the middle of a translated
-        # buffer. Just warn.
+        # buffer. FIXME: Just warn for now.
         warn sprintf("po4a::TeX: unmatched end of environment '%s'",
                      $args->[0])."\n";
     } else {
@@ -850,6 +921,9 @@ $commands{'end'}= sub {
 ########################################
 # push the environment in the environment stack, and do not translate
 # the command
+# FIXME: a \begin{env} can be followed by an argument. For example:
+# \begin{important}[the law of conservation of energy]
+# FIXME: The environment name can be followed by a '*'
 sub push_environment {
     my $self = shift;
     my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
@@ -903,6 +977,8 @@ sub initialize {
     foreach (split(/ /, $command_categories{'untranslated'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
+            #        No die, because this function is called twice during
+            #        gettextization.
         }
         $commands{$_} = \&untranslated;
     }
@@ -914,6 +990,8 @@ sub initialize {
     foreach (split(/ /, $command_categories{'translate_joined'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
+            #        No die, because this function is called twice during
+            #        gettextization.
         }
         $commands{$_} = \&translate_joined;
     }
@@ -924,3 +1002,26 @@ sub initialize {
     };
 }
 
+=head1 STATUS OF THIS MODULE
+
+=head1 TODO LIST
+
+=head1 SEE ALSO
+
+L<po4a(7)|po4a.7>,
+L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
+
+=head1 AUTHORS
+
+ Nicolas François <nicolas.francois@centraliens.net>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2004 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see COPYING file).
+
+=cut
+
+1;
