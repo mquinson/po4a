@@ -209,6 +209,17 @@ my $builder = Module::Build->subclass
 		}
 	    }
 	}
+	sub ACTION_dist {
+	    my ($self) = @_;
+
+	    $self->depends_on('test');
+	    $self->depends_on('distdir');
+
+	    my $dist_dir = $self->dist_dir;
+
+	    $self->make_tarball($dist_dir);
+	    $self->delete_filetree($dist_dir);
+	} 
 	sub ACTION_postats {
 	    my $self = shift;
 	    $self->depends_on('binpo');
