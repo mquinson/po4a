@@ -1,12 +1,6 @@
 #!/usr/bin/make -f
 # This file is public domain software, originally written by Joey Hess.
 
-bins = gettextize updatepo translate normalize
-libs = $(wildcard lib/Locale/Po4a/*.pm)
-docs = po4a
-
-langs= fr
-
 package = po4a
 
 # Uncomment this to turn on verbose mode.
@@ -17,8 +11,7 @@ package = po4a
 
 DESTDIR = $(CURDIR)/debian/$(package)
 
-build: build-stamp
-build-stamp:
+build:
 	dh_testdir
 
 # Make sure the VERSION string were updated in binaries
@@ -32,63 +25,14 @@ build-stamp:
 	   exit 1; \
 	fi;
 
-	perl Makefile.PL INSTALLDIRS=vendor
 	$(MAKE)
-
-	@echo Update the translations
-	$(MAKE) -C po 
-
-	@echo Compile the localized man pages
-	-rm -rf mantmp
-	mkdir mantmp
-#  Woody version of pod2man does not accept the --name option,
-#  so input file is temporarily copied.
-	for bin in $(bins) ; do \
-	  for lang in $(langs) ; do \
-	    if [ -e po/pod/po4a-$$bin.$$lang.pod ] ; then \
-	      cp po/pod/po4a-$$bin.$$lang.pod mantmp/po4a-$$bin.pod && \
-	      pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
-	       mantmp/po4a-$$bin.pod > mantmp/po4a-$$bin.$$lang.1p; \
-	      rm -f mantmp/po4a-$$bin.pod; \
-	    fi; \
-	  done; \
-	done
-	for lib in $(libs) ; do \
-	  l=`echo $$lib|sed -e 's/\.pm//' -e 's/.*\///'`; \
-	  for lang in $(langs) ; do \
-	    if [ -e po/pod/$$l.$$lang.pod ] ; then \
-	      cp po/pod/$$l.$$lang.pod mantmp/$$l.pod && \
-	      pod2man --section=3pm --center='Po4a Tools' --release='Po4a Tools' \
-	       mantmp/$$l.pod > mantmp/Locale::Po4a::$$l.$$lang.3pm; \
-	      rm -f mantmp/$$l.pod; \
-	    fi; \
-	  done; \
-	done
-	for doc in $(docs) ; do \
-	  pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
-	    doc/$$doc.7.pod > mantmp/$$doc.7; \
-	  for lang in $(langs) ; do \
-	    if [ -e po/pod/$$doc.$$lang.pod ] ; then \
-	      cp po/pod/$$doc.$$lang.pod mantmp/$$doc.pod && \
-	      pod2man --section=7 --center='Po4a Tools' --release='Po4a Tools' \
-	       mantmp/$$doc.pod > mantmp/$$doc.$$lang.7; \
-	      rm -f mantmp/$$doc.pod; \
-	    fi; \
-	  done; \
-	done
-	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
 
-	-$(MAKE) clean
-	$(MAKE) -C po clean
-	find -name '.#*'|xargs rm || true
-	rm -rf t/tmp/* Makefile.old po4a.log
-	rm -rf blib mantmp
+	$(MAKE) clean
 
-	rm -f build-stamp
 	dh_clean
 
 install: build
@@ -97,9 +41,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	$(MAKE) install PREFIX=$(DESTDIR)/usr
-	$(MAKE) -C po/bin install DESTDIR=$(DESTDIR)
-	$(MAKE) -C po/pod install DESTDIR=$(DESTDIR)
+	$(MAKE) install DESTDIR=$(DESTDIR)
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -114,11 +56,8 @@ binary-indep: build install
 #	dh_installmime
 #	dh_installinit
 #	dh_installcron
-	dh_installman mantmp/*
-#	dh_installinfo
-#	dh_undocumented
-	dh_installchangelogs
-	dh_compress
+#TODO: Now manpages are installed in the install target. Is it wrong for Debian?
+#	dh_installman mantmp/*
 	dh_fixperms
 	dh_installdeb
 	dh_perl
@@ -136,7 +75,8 @@ binary: binary-indep binary-arch
 tar: clean
 	version=`sed -e 's/.* (//' -e 's/-.*//' -e 1q debian/changelog`; \
 	echo Creating ../$(package)_$$version.orig.tar.gz; \
-  tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x '.*.cvsignore' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
+	#tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x '.*.cvsignore' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
+	$(MAKE) tar
 
 deb:
 	dpkg-buildpackage -i -rfakeroot
