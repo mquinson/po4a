@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.17 2004-04-28 09:01:10 mquinson-guest Exp $
+# $Id: po4a-translate,v 1.18 2004-04-30 23:05:43 barbier Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -158,7 +158,14 @@ setlocale(LC_ALL, "");
 textdomain("po4a");
 
 sub show_version {
-    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-translate",$VERSION);
+    print sprintf(gettext(
+          "%s version %s.\n".
+          "written by Martin Quinson and Denis Barbier.\n\n".
+          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
+          "This is free software; see source code for copying\n".
+          "conditions. There is NO warranty; not even for\n".
+          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+          ),"po4a-translate",$VERSION)."\n";
 }
 
 
@@ -191,8 +198,8 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 
 (defined($master_filename) && length($master_filename))||pod2usage(1);
 (defined($po_filename)     && length($po_filename))    ||pod2usage(1);
--e $master_filename || die sprintf(gettext("%s: file %s does not exist\n"),"po4a-translate",$master_filename);
--e $po_filename || die sprintf(gettext("%s: file %s does not exist\n"),"po4a-translate",$po_filename);
+-e $master_filename || die sprintf(gettext("%s: file %s does not exist."),"po4a-translate",$master_filename)."\n";
+-e $po_filename || die sprintf(gettext("%s: file %s does not exist."),"po4a-translate",$po_filename)."\n";
 
 my (@pos,@masters);
 push @pos,$po_filename;

@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.13 2004-04-28 09:01:10 mquinson-guest Exp $
+# $Id: po4a-normalize,v 1.14 2004-04-30 23:05:43 barbier Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -101,7 +101,14 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-normalize",$VERSION);
+    print sprintf(gettext(
+          "%s version %s.\n".
+          "written by Martin Quinson and Denis Barbier.\n\n".
+          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
+          "This is free software; see source code for copying\n".
+          "conditions. There is NO warranty; not even for\n".
+          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+          ),"po4a-normalize",$VERSION)."\n";
 }
 
 my ($help_fmt,$help,$type,$debug,$verbose,@options);
@@ -136,7 +143,7 @@ foreach (@options) {
 my $parser=Locale::Po4a::Chooser::new($type,%options);
 
 my $filename = shift || pod2usage(1);
--e $filename || die sprintf(gettext("File %s does not exists.\n"),$filename);
+-e $filename || die sprintf(gettext("File %s does not exist."),$filename)."\n";
 
 $parser->read($filename);
 $parser->parse();

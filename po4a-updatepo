@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.18 2004-04-28 09:01:10 mquinson-guest Exp $
+# $Id: po4a-updatepo,v 1.19 2004-04-30 23:05:43 barbier Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -123,7 +123,14 @@ setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext("%s version %s.\nwritten by Martin Quinson and Denis Barbier.\n\nCopyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\nThis is free software; see source code for copying\nconditions. There is NO warranty; not even for \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),"po4a-updatepo",$VERSION);
+    print sprintf(gettext(
+          "%s version %s.\n".
+          "written by Martin Quinson and Denis Barbier.\n\n".
+          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
+          "This is free software; see source code for copying\n".
+          "conditions. There is NO warranty; not even for\n".
+          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+          ),"po4a-updatepo",$VERSION)."\n";
 }
 
 
@@ -166,8 +173,8 @@ foreach (@options) {
 # parser
 my ($doc)=Locale::Po4a::Chooser::new($format,%options);
 
-map { -e $_ || die sprintf(gettext("File %s does not exist\n"),$_) } @masterfiles;
-map { die(gettext("po4a-update can't take the input po from the file '-'.\n")) 
+map { -e $_ || die sprintf(gettext("File %s does not exist."),$_)."\n" } @masterfiles;
+map { die(gettext("po4a-update can't take the input po from the file '-'."))."\n"
 	  if $_ eq '-'  && !-e '-'} @pofiles;
 
 my ($pot_filename);
@@ -176,7 +183,7 @@ my ($pot_filename);
 					   SUFFIX => ".pot",
 					   OPEN   => 0,
 					   UNLINK => 0)
-    or die sprintf(gettext("Can't create a temporary pot file: %s\n"),$!);
+    or die sprintf(gettext("Can't create a temporary pot file: %s"),$!)."\n";
 
 
 print STDERR gettext("Parse input files... ") if $verbose;    
@@ -194,14 +201,14 @@ while (my $po_filename=shift @pofiles) {
 	print STDERR sprintf(gettext("Updating %s:"),$po_filename) 
 	    if $verbose;    
 	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
-	    die sprintf(gettext("Error while running msgmerge: %s\n"),$!);
+	    die sprintf(gettext("Error while running msgmerge: %s"),$!)."\n";
 	system "msgfmt --statistics -v -o /dev/null $po_filename" 
 	  if $verbose;
     } else {
 	print STDERR sprintf(gettext("Creating %s:"),$po_filename) 
 	    if $verbose;    
 	system ("cp",$pot_filename,$po_filename) == 0 ||
-	    die sprintf(gettext("Error while copying the po file: %s\n"),$!);
+	    die sprintf(gettext("Error while copying the po file: %s"),$!)."\n";
     }
 }
 
