@@ -26,11 +26,17 @@ po4a (0.18-1) unstable; urgency=low
     since the filename can contain colons in which case we get false
     positive on this one. Thanks to Julien Louis for reporting. 
     (Closes: #265684) in Debian.
-  - [man] Convert on the fly the groff horror  \*(lqlibc5\*(rq, which stands
+  - [man] Convert on the fly the groff horror \*(lqlibc5\*(rq, which stands
     for "libc5", with the quotes. Thanks to Phillipe Batailler for bringing
     my attention to this.
   - [man] add support for the groff builtin registers and for the ms
     "Displays and keeps" macros. Allows to deal with the shadow package.
+  - [TransTractor] change a 'while (shift @toto) {}' to a 'map {} @toto' so
+    that we proceed even if @toto contains empty strings while applying
+    addendums.
+  - [Sgml] stop pushline()ing empty strings since it breaks TransTractor
+  Each of the two previous ones (Closes: #265383) of Debian. Yup, this bug
+  is fixed twice. Slam!
 
   [Danilo Piazzalunga]
   - [po/bin/it.po & po/pod/it.po] Add Italian translation
