@@ -10,10 +10,11 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION="0.16.4";
+$VERSION="0.17";
 @ISA = ();
 @EXPORT = qw(process translate 
-	     read write readpo writepo);
+	     read write readpo writepo
+             getpoout setpoout);
 
 use Carp qw(croak);
 use Locale::Po4a::Po;
@@ -414,6 +415,9 @@ of use:
 sub getpoout {
     return $_[0]->{TT}{po_out};
 }
+sub setpoout {
+    $_[0]->{TT}{po_out} = $_[1];
+}
 sub readpo  { 
     $_[0]->{TT}{po_in}->read($_[1]);        
 }
@@ -550,7 +554,7 @@ sub addendum {
     }
 
     if ($mode eq "before") {
-	if ($self->verbose()) {
+	if ($self->verbose() > 0) {
 	    map { print STDERR sprintf(dgettext("po4a","Adding the addendum %s before the line:\n%s"),
 			 $filename,$_)."\n" if (/$position/);
  	        } @{$self->{TT}{doc_out}};
@@ -564,7 +568,7 @@ sub addendum {
 	    if ($line =~ m/$position/) {
 		print STDERR sprintf(dgettext("po4a",
 			"Adding the addendum %s after the section begining with the line:\n%s"),
-			       $filename,mychomp($line))."\n" if ($self->verbose());
+			       $filename,mychomp($line))."\n" if ($self->verbose() > 0);
 		while ($line=shift @{$self->{TT}{doc_out}}) {
 		    last if ($line=~/$boundary/);
 		    push @newres,$line;
@@ -575,7 +579,7 @@ sub addendum {
 				"Next section begins with:\n".
 				"%s\n".
 				"Addendum added before this line."),
-				       mychomp($line))."\n" if ($self->verbose());
+				       mychomp($line))."\n" if ($self->verbose() > 0);
 			push @newres,$content;
 			push @newres,$line;
 		    } else {
@@ -583,13 +587,13 @@ sub addendum {
 				"This section ends with:\n".
 				"%s\n".
 				"Addendum added after this line."),
-				       mychomp($line))."\n" if ($self->verbose());
+				       mychomp($line))."\n" if ($self->verbose() > 0);
 			push @newres,$line;
 			push @newres,$content;
 		    }
 		} else {
 		    printf STDERR (dgettext("po4a","Can't find the end of the section in the file. Addendum added at the end of the file."))."\n"
-			   if ($self->verbose());
+			   if ($self->verbose() > 0);
 		    push @newres,$content;
 		}
 	    }
@@ -754,7 +758,7 @@ sub verbose {
     if (defined $_[1]) {
 	$_[0]->{TT}{verbose} = $_[1];
     } else {
-	return $_[0]->{TT}{verbose};
+	return $_[0]->{TT}{verbose} || 0; # undef and 0 have the same meaning, but one generates warnings
     }
 }
 
