@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.3 2002-12-18 10:50:58 mquinson Exp $
+# $Id: Pod.pm,v 1.4 2002-12-18 11:11:15 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -82,7 +82,7 @@ sub textblock {
     $paragraph=$self->translate_wrapped($paragraph,
 					$self->input_file().":$line_num",
 					'textblock');
-    $paragraph=~ s/^\n*//s;
+    $paragraph=~ s/ +\n/\n/gm;
     $self->pushline("$paragraph\n");
 }
 
