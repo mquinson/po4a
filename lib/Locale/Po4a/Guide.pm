@@ -1,0 +1,106 @@
+#!/usr/bin/perl
+
+# Po4a::Guide.pm 
+# 
+# extract and translate translatable strings from Guide XML documents.
+# 
+# This code extracts plain text from tags and attributes on Guide XML
+# documents.
+#
+# Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#
+########################################################################
+
+=head1 NAME
+
+Locale::Po4a::Guide - Convert Guide XML documents from/to PO files
+
+=head1 DESCRIPTION
+
+The po4a (po for anything) project goal is to ease translations (and more
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
+
+Locale::Po4a::Guide is a module to help the translation of the Gentoo
+documentation in the Guide XML format into other [human] languages.
+
+This format is documented here: http://www.gentoo.org/doc/en/xml-guide.xml
+
+=head1 SEE ALSO
+
+L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>.
+
+=head1 AUTHORS
+
+Jordi Vilalta <jvprat@wanadoo.es>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see COPYING file).
+
+=cut
+
+package Locale::Po4a::Guide;
+
+use 5.006;
+use strict;
+use warnings;
+
+use Locale::Po4a::Xml;
+
+use vars qw(@ISA);
+@ISA = qw(Locale::Po4a::Xml);
+
+sub initialize {
+	my $self = shift;
+	my %options = @_;
+
+#TODO: <include href="..."> includes a file
+	$self->SUPER::initialize(%options);
+	$self->{options}{'strip'}=1;
+	$self->{options}{'tagsonly'}=1;
+	$self->{options}{'tags'}.='
+		w<abstract>
+		<codenote>
+		<comment>
+		<date>
+		<impo>
+		<li>
+		<note>
+		w<p>
+		W<pre>
+		<th>
+		<ti>
+		<title>
+		<warn>';
+	$self->{options}{'attributes'}.='
+		<author>title
+		<figure>caption
+		<figure>short
+		<guide>link
+		<pre>caption';
+	$self->{options}{'inline'}.='
+		<c>
+		<e>
+		<i>
+		<path>
+		<uri>';
+	$self->treat_options;
+}
