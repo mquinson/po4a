@@ -856,11 +856,15 @@ sub translate {
 	}
     }
 
+    if (! defined($options{'comment'})) {
+	$options{'comment'} = "";
+    }
+
     # the comments provided by the modules are automatic comments from the PO point of view
     $self->{TT}{po_out}->push('msgid'     => $string,
 			      'reference' => $ref,
 			      'type'      => $type,
-	                      'automatic' => $options{'comment'}||"",
+	                      'automatic' => $options{'comment'},
 			      'wrap'      => $options{'wrap'}||0,
 			      'wrapcol'   => $options{'wrapcol'});
 
