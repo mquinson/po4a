@@ -234,7 +234,7 @@ sub get_leading_command {
     print STDERR "get_leading_command($buffer)="
         if ($debug{'extract_commands'});
 
-    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]*)(\*?)(.*)$/s) {
+    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s) {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
         $command = $1;
@@ -320,7 +320,7 @@ sub get_trailing_command {
 
     # While the buffer ends by }, consider it is a mandatory argument
     # and extract this argument.
-    while ($buffer =~ m/^(.*)\}\s*$/s) {
+    while ($buffer =~ m/^(.*\{.*)\}\s*$/s) {
         my $arg = "";
         my $count = 1;
         $buffer = $1;
@@ -351,7 +351,7 @@ sub get_trailing_command {
 
     # While the buffer ends by ], consider it is a mandatory argument
     # and extract this argument.
-    while ($buffer =~ m/^(.*)\]\s*$/s) {
+    while ($buffer =~ m/^(.*\[.*)\]\s*$/s) {
         my $opt = "";
         my $count = 1;
         $buffer = $1;
@@ -381,7 +381,7 @@ sub get_trailing_command {
     }
 
     # There should now be a command, maybe followed by an asterisk.
-    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]*)(\*?)\s*$/s) {
+    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]+)(\*?)\s*$/s) {
         $buffer = $1;
         $command = $2;
         $variant = $3;
@@ -501,7 +501,7 @@ sub parse{
         $self->{ref}="$ref";
 
         # remove comments, and store them in @comments
-        if ($line =~ /^([^%]*)%(.*)$/) {
+        if ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
             push @comments, $2;
             # Keep the % sign. It will be removed latter.
             $line = "$1%";
@@ -510,7 +510,7 @@ sub parse{
         if ($line =~ /^$/) {
             # An empty line. This indicates the end of the current
             # paragraph.
-            $paragraph =~ s/%$//;
+            $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
             if (length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t."\n");
@@ -519,7 +519,7 @@ sub parse{
             $self->pushline($line."\n");
         } else {
             # continue the same paragraph
-            if ($paragraph =~ /%$/) {
+            if ($paragraph =~ /(?<!\\)%$/) { # FIXME: even number of \ ...
                 $paragraph =~ s/%$//s;
                 chomp $paragraph;
                 $line =~ s/^ *//;
@@ -623,7 +623,7 @@ $commands{'end'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
 
     # verify that this environment was the last pushed environment.
-    if (@$env[-1] ne $args->[0]) {
+    if (!@$env || @$env[-1] ne $args->[0]) {
         # a begin may have been hidden in the middle of a translated
         # buffer. Just warn.
         warn sprintf("po4a::TeX: unmatched end of environment '%s'",
