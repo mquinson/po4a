@@ -76,7 +76,8 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
              $RE_ESCAPE $ESCAPE
              $no_wrap_environments $separated_commands
              %command_categories %separated
-             &untranslated &translate_joined &push_environment);
+             &untranslated &translate_joined &push_environment
+             &register_generic);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
@@ -90,6 +91,7 @@ use Encode::Guess;
 # hash of known commands and environments, with parsing sub.
 # See end of this file
 use vars qw(%commands %environments);
+our %command_parameters = ();
 
 # The escape character used to introduce commands.
 our $RE_ESCAPE = "\\\\";
@@ -734,9 +736,14 @@ sub parse_definition_line {
         if ($line =~ /^alias\s+(\w+)\s*$/) {
             if (defined ($commands{$1})) {
                 $commands{$command} = $commands{$1};
+                if ($commands{$command} eq \&generic_command) {
+                    $command_parameters{$command} = $command_parameters{$1};
+                }
             } else {
                 die "Cannot use an alias to the unknown command $2\n";
             }
+        } elsif ($line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/) {
+            register_generic("$command,$1,$2,$3,$4");
         } elsif ($line =~ /^(\w+)\s*$/) {
             if (defined &$1) {
                 $commands{$command} = \&$1;
@@ -948,6 +955,94 @@ $commands{'end'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
     return ($t, @$env);
 };
+
+sub generic_command {
+    my $self = shift;
+    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    print "generic_command($command,$variant,@$opts,@$args,@$env)="
+        if ($debug{'commands'} || $debug{'environments'});
+    my ($t,@e)=("",());
+
+    # check number of arguments
+    die sprintf("wrong number of optional arguments for command $command %d %d\n",scalar(@$opts), $command_parameters{$command}{'nb_opts'})
+        if (    scalar($command_parameters{$command}{'nb_opts'}) lt scalar(@$opts)
+            and $command_parameters{$command}{'nb_opts'} ne -1);
+    if (    $command_parameters{$command}{'nb_args'} ne scalar(@$args)
+        and $command_parameters{$command}{'nb_args'} ne -1) {
+        unless (    $command_parameters{$command}{'nb_args'} eq (scalar(@$args) - 1)
+                and !length(@$args[-1])) {
+    die sprintf("wrong number of arguments for command $command %d %d %d %d\n", scalar(@$args), $command_parameters{$command}{'nb_args'}, (scalar(@$args) + 1), length(@$args[-1]));
+        }
+    }
+
+    my $translated = "$ESCAPE$command$variant";
+    my $arg=1;
+    # handle optional arguments
+    foreach my $opt (@$opts) {
+        my $have_to_be_translated = 0;
+        # if translated_opts = -1, all arguments are translated
+        # if translated_opts = 0, no argument is translated
+        # else, translated_opts contains the space separated list
+        #       of the translated arguments
+        if ($command_parameters{$command}{'translated_opts'} eq -1) {
+            $have_to_be_translated = 1;
+        } elsif ($command_parameters{$command}{'translated_opts'} ne 0) {
+            foreach (split(/ /, $command_parameters{$command}{'translated_opts'})) {
+                $have_to_be_translated = 1 if ($_ eq $arg);
+            }
+        }
+        if ($have_to_be_translated) {
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
+        } else {
+            $t = $opt;
+        }
+        $translated .= "[".$t."]";
+        $arg+=1;
+    }
+    # handle arguments
+    $arg=1;
+    foreach my $opt (@$args) {
+        my $have_to_be_translated = 0;
+        if ($command_parameters{$command}{'translated_args'} eq -1) {
+            $have_to_be_translated = 1;
+        } elsif ($command_parameters{$command}{'translated_args'} ne 0) {
+            foreach (split(/ /, $command_parameters{$command}{'translated_args'})) {
+                $have_to_be_translated = 1 if ($_ eq $arg);
+            }
+        }
+        if ($have_to_be_translated) {
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
+        } else {
+            $t = $opt;
+        }
+        $translated .= "{".$t."}";
+        $arg+=1;
+    }
+
+    print "($translated, @$env)\n"
+        if ($debug{'commands'} || $debug{'environments'});
+    return ($translated, @$env);
+}
+
+sub register_generic {
+    my ($command, $nb_opts, $nb_args, $translated_opts, $translated_args) = split(/,/, $_[0]);
+    if ($command =~ /^\*(.*)$/) {
+        $command = $1;
+        $separated{$command}=1;
+    }
+
+    $command_parameters{$command} = {
+        'nb_opts'         => $nb_opts,         # number of optional arguments
+        'nb_args'         => $nb_args,         # number of arguments
+        # space separated list of indexes of the optional arguments that have
+        # to be translated. The first argument is 1 (not 0).
+        'translated_opts' => $translated_opts,
+        # space separated list of indexes of the arguments that have
+        # to be translated. The first argument is 1 (not 0).
+        'translated_args' => $translated_args
+    };
+    $commands{$command} = \&generic_command;
+}
 
 ########################################
 #### DEFINITION OF THE ENVIRONMENTS ####
