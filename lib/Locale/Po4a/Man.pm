@@ -831,21 +831,27 @@ $macro{'HP'}=sub {
     $self->pushline($line.$self->t($l2)."\n");
 };
 
-#Indented Paragraph Macros
-#  .IP x i  Indented paragraph with optional hanging tag.  If the tag x is  omitted,
-#           the  entire  following paragraph is indented by i.  If the tag x is pro-
-#           vided, it is hung at the left margin before the following indented para-
-#           graph (this is just like .TP except the tag is included with the command
-#           instead of being on the following line).  If the tag is  too  long,  the
-#           text after the tag will be moved down to the next line (text will not be
-#           lost or garbled).  For bulleted lists, use this macro with \(bu (bullet)
-#           or  \(em (em dash) as the tag, and for numbered lists, use the number or
-#           letter followed by a period as the tag; this simplifies  translation  to
-#           other formats.
+# Indented Paragraph Macros
+#       .IP [designator] [nnn]
+#              Sets up an indented paragraph, using designator as a  tag  to  mark
+#              its  beginning.   The indentation is set to nnn if that argument is
+#              supplied (default unit is `n'), otherwise the  default  indentation
+#              value  is  used.   Font size and face of the paragraph (but not the
+#              designator) are reset to its default values.  To start an  indented
+#              paragraph  with  a particular indentation but without a designator,
+#              use `""' (two doublequotes) as the second argument.
+	
+# Note that the above is the groff_man(7) version, which of course differs radically
+# from man(7). In one case, the designator is optional and the nnn is not, and the 
+# contrary in the other. This implies that when sticking to groff_man(7), we should
+# mark an uniq argument as translatable. 
+	
 $macro{'IP'}=sub {
     my $self=shift;
     if (defined $_[2]) {
 	$self->pushmacro($_[0],$self->t($_[1]),$_[2]);
+    } elsif (defined $_[1]) {
+	$self->pushmacro($_[0],$self->t($_[1]));
     } else {
 	$self->pushmacro(@_);
     }
