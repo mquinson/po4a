@@ -219,11 +219,12 @@ L<Locale::Po4a::Pod(3pm)>.
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
+ Nicolas François <nicolas.francois@centraliens.net>
  Martin Quinson <martin.quinson@tuxfamily.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002 by SPI, inc.
+Copyright 2002, 2003, 2004 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -311,9 +312,12 @@ sub pre_trans {
 		" %s"),$ref,$origstr)."\n";
     }
 
-    # kill minus sign/hyphen difference. Aestetic of printed man pages may suffer,
-    # but they are translator-unfriendly, and break when using utf8
-    # (didn't understand exactly why/when/how)
+    # Kill minus sign/hyphen difference.
+    # Aestetic of printed man pages may suffer, but:
+    #  * they are translator-unfriendly
+    #  * they break when using utf8 (for obscure reasons)
+    #  * they forbid the searches, since keybords don't have hyphen key
+    #  * they forbid copy/paste, since options need minus sign, not hyphen
     $str =~ s|\\-|-|sg;
     # Groff bestiary
     $str =~ s/\\\*\(lq/``/sg;
@@ -358,7 +362,11 @@ sub post_trans {
 
     # Post formating, so that groff see the strange chars
     $str =~ s|\\-|-|sg; # in case the translator added some of them manually
-    $str =~ s|-|\\-|sg;
+    # change hyphens to minus signs
+    # (this shouldn't be done for \s-<number> font size modifiers)
+    if (! (defined $self->{type} && $self->{type} eq "so")) {
+        $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
+    }
 
     # No . on first char, or nroff will think it's a macro
     $str =~ s/\n([.'"])/ $1/mg; #'
