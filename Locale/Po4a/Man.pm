@@ -84,7 +84,7 @@ sub post_trans {
 
     # Make sure we compute internal sequences right.
     # think about: B<AZE E<lt> EZA E<gt>>
-    warn "postrans($str)";
+#    warn "postrans($str)";
     while ($str =~ m/^(.*)([BI])<(.*)$/s) {
 	my ($done,$rest)=($1."\\f$2",$3);
 	my $lvl=1;
