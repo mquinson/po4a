@@ -178,7 +178,7 @@ use File::Temp;
 
 my %debug=('tag' => 0, 
 	   'generic' => 0,
-	   'entities' => 0,
+	   'entities' => 1,
            'refs'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
@@ -536,10 +536,11 @@ sub parse_file {
     #  <!ENTITY myentity "definition_of_my_entity">
     # and push("<!ENTITY myentity \"".$self->translate("definition_of_my_entity")
     if ($prolog =~ m/(.*?\[)(.*)(\]>)/s) {
+	warn "Pre=~~$1~~;Post=~~$3~~\n" if ($debug{'entities'});
         $self->pushline($1);
         $prolog=$2;					       
         my ($post) = $3;			
-        while ($prolog =~ m/^(.*?)<!ENTITY\s(\S*)\s*"([^>"]*)">(.*)$/is) { #" ){ 
+        while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)">(.*)$/is) { #" ){ 
 	   $self->pushline($1);
 	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
 	   warn "Seen text entity $2" if ($debug{'entities'});
@@ -548,8 +549,8 @@ sub parse_file {
         $self->pushline($post);
     } else {
 	warn "No entity declaration detected in ~~$prolog~~...\n" if ($debug{'entities'});
+	$self->pushline($prolog);
     } 
-    $self->pushline($prolog);
 
     # The parse object.
     # Damn SGMLS. It makes me crude things.
