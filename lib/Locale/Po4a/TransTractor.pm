@@ -531,9 +531,11 @@ sub mychomp {
 sub addendum {
     my ($self,$filename) = @_;
     
-    warn(dgettext("po4a",
-		  "Can't insert addendum when not given the filename")."\n")
-	unless $filename;
+    unless ($filename) {
+	warn(dgettext("po4a",
+	    "Can't insert addendum when not given the filename")."\n")
+	return 0;
+    }
   
     my ($errcode,$mode,$position,$boundary,$bmode,$lang,$content)=
 	addendum_parse($filename);
