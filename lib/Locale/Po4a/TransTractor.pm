@@ -949,11 +949,11 @@ sub recode_skipped_text {
 	    length($self->{TT}{'file_in_charset'}) ) {
 	    Encode::from_to($text,$self->{TT}{'file_in_charset'},
 		$self->get_out_charset);
-	    return $text;
 	} else {
 	    die "po4a: ".sprintf(dgettext("po4a","Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"),$self->{TT}{non_ascii_ref})."\n"
 	}
     }
+    return $text;
 }
 
 =back
