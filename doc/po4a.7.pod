@@ -181,6 +181,12 @@ translation you made for future version of the original document (which
 will use the unmodified sentences). But if you need to, go ahead and change
 the original. You need to get this damned gettextization done.
 
+Note that the generated po file will have all entries marked as fuzzy. This
+is because the gettextization process may be error prone, and because it
+would be a bad idea to trust it completely. That way, we are sure that
+translators will check the result of the gettextization before using the
+translation obtained.
+
 =back
 
 After this difficult step, you successfully converted your translation to
@@ -208,7 +214,7 @@ the resulting document.
 The header have a pretty rigid syntax: They must begin with "PO4A-HEADER:",
 followed by a semi-colon (;) separated list of fields, each of them having the
 "key=value" syntax. White spaces ARE important. Note that you cannot use the
-colon char (;) in the value, and that quoting it doesn't help. The
+semi-colon char (;) in the value, and that quoting it doesn't help. The
 recognized keys are:
 
 =over 4
