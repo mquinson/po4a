@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.4 2003-11-06 16:38:46 mquinson Exp $
+# $Id: Po.pm,v 1.5 2003-11-07 10:32:03 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -239,7 +239,7 @@ sub write{
 	    if $self->{po}{$msgid}{'type'};
 	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
 	    if $self->{po}{$msgid}{'reference'};
-	$output .= format_comment( join(", ", sort split(/ /,$self->{po}{$msgid}{'flags'})) ,", ")
+	$output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
 	    if $self->{po}{$msgid}{'flags'};
 
 	$output .= "msgid ".quote_text($msgid)."\n";
@@ -593,10 +593,11 @@ sub push_raw {
         $flags = " $flags ";
         $flags =~ s/,/ /g;
 	foreach my $flag (@known_flags) {
-	    if ($flags =~ /\s$flag\s/) {
-	       $self->{po}{$msgid}{'flags'} .= (defined($self->{po}{$msgid}{'flags'}) ? 
-                                                  "," : "")
-                                                 .$flag;
+	    if ($flags =~ /\s$flag\s/) { # if flag to be set
+		unless (defined($self->{po}{$msgid}{'flags'}) && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/) {
+		    # flag not already set
+		    $self->{po}{$msgid}{'flags'} .= (defined($self->{po}{$msgid}{'flags'}) ? " " : "") .$flag;
+		}
             }
         }
     }
