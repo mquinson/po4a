@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-# XML module tester.
+# Man module tester.
 
 #########################
 
