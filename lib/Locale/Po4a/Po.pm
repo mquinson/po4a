@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.19 2004-08-07 04:51:33 mquinson-guest Exp $
+# $Id: Po.pm,v 1.20 2004-08-08 06:30:56 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -73,6 +73,8 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 use Carp qw(croak);
 use Locale::gettext qw(dgettext);
 use File::Path; # mkdir before write
+
+use Encode;
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
@@ -551,6 +553,28 @@ sub filter {
 	       if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic)); # DO NOT CHANGE THE ORDER
     }
     return $res;
+}
+
+=item to_utf()
+
+This recodes all the msgstrs in the po from the character set specified in the
+header to utf-8. This process is only ignored if the header character set is
+"CHARSET" (unspecified, usually means ascii), "ascii" or "utf-8".
+
+=cut
+
+sub to_utf { 
+    my $this = shift;
+    my $charset = $this->get_charset();
+
+    unless ($charset eq "CHARSET" or
+	    $charset eq "ascii" or
+	    $charset eq "utf-8") {
+	foreach my $msgid ( keys %{$this->{po}} ) {
+	    Encode::from_to($this->{po}{$msgid}{'msgstr'}, $charset, "utf-8");
+	}
+	$this->set_charset("utf-8");
+    }
 }
 
 =back
