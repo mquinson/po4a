@@ -266,7 +266,7 @@ sub found_string {
 	} elsif ($options->{'type'} eq "attribute") {
 		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
 	} else {
-		die dgettext("po4a","po4a::xml: Internal error: unknown string type.")."\n";
+		die dgettext("po4a","po4a::xml: Internal error: unknown type identifier.")."\n";
 	}
 
 	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
