@@ -302,8 +302,8 @@ sub pre_trans {
     my $origstr=$str;
     print STDERR "pre_trans($str)="
 	if ($debug{'pretrans'});
-    $str =~ s/>/E<gt>/g;
-    $str =~ s/</E<lt>/g;
+    $str =~ s/>/E<gt>/sg;
+    $str =~ s/</E<lt>/sg;
     $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
 
     $str =~ s/\\f([SBI])(([^\\]*\\[^f])?.*?)\\f([PR])/$1<$2>/sg;
@@ -318,8 +318,9 @@ sub pre_trans {
 		" %s"),$ref,$origstr)."\n";
     }
 
-    $str =~ s/\\\*\(lq/``/;
-    $str =~ s/\\\*\(rq/''/;
+#    $str =~ s|\\-|-|sg;
+    $str =~ s/\\\*\(lq/``/sg;
+    $str =~ s/\\\*\(rq/''/sg;
     
 # The next commented loop should take care of badly nested font modifiers,
 #  if only it worked ;)
@@ -345,7 +346,6 @@ sub pre_trans {
 #    }
 
 
-#    $str =~ s|\\-|-|g;
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
 }
@@ -358,11 +358,15 @@ sub post_trans {
 	if ($debug{'postrans'});
 
     # Post formating, so that groff see the strange chars
-#    $str =~ s|-|\\-|mg;
+#    $str =~ s|-|\\-|sg;
 
     # No . on first char, or nroff will think it's a macro
     $str =~ s/\n([.'"])/ $1/mg; #'
 
+    # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
+    # an extra space
+    $str =~ s/\\ \n/\\ /sg;
+	
     # Make sure we compute internal sequences right.
     # think about: B<AZE E<lt> EZA E<gt>>
     while ($str =~ m/^(.*)([RSBI])<(.*)$/s) {
@@ -387,10 +391,10 @@ sub post_trans {
     $str =~ s/E<gt>/>/mg;
     $str =~ s/E<lt>/</mg;
     # Don't do that, because we'll go into trouble if previous line was .TP
-    $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
+    # $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
     
-    $str =~ s/``/\\\*\(lq/g;
-    $str =~ s/''/\\\*\(rq/g;
+    $str =~ s/``/\\\*\(lq/sg;
+    $str =~ s/''/\\\*\(rq/sg;
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
