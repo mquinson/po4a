@@ -558,6 +558,30 @@ sub translate_buffer {
     my $orig_buffer = $buffer;
     my $t = ""; # a temporary string
 
+    if ($buffer =~ /^\s*$/s) {
+        return ($buffer, @env);
+    }
+    if ($buffer =~ /^(.+?)(\\begin\{.*)$/s) {
+        my ($begin, $end) = ($1, $2);
+        my ($t1, $t2) = ("", "");
+        if (is_closed($begin)) {
+            ($t1, @env) = translate_buffer($self, $begin, @env);
+            ($t2, @env) = translate_buffer($self, $end,   @env);
+
+            return ($t1.$t2, @env);
+        }
+    }
+    if ($buffer =~ /^(.+?)(\\end\{.*)$/s) {
+        my ($begin, $end) = ($1, $2);
+        my ($t1, $t2) = ("", "");
+        if (is_closed($begin)) {
+            ($t1, @env) = translate_buffer($self, $begin, @env);
+            ($t2, @env) = translate_buffer($self, $end,   @env);
+
+            return ($t1.$t2, @env);
+        }
+    }
+
     # translate leading commands.
     do {
         # keep the leading space to put them back after the translation of
@@ -909,16 +933,6 @@ sub parse {
                 $paragraph="";
             }
             $self->pushline($line."\n");
-        } elsif ($line =~ /^\\begin\{/) {
-            # break the paragraph at the beginning of a new environment.
-            $paragraph =~ s/(?<!\\)(?:\\\\)*%$//;
-            $closed = is_closed($paragraph);
-            if ($closed and length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,@env);
-                $self->pushline($t);
-                $paragraph = "";
-            }
-            $paragraph .= $line."\n";
         } else {
             # continue the same paragraph
             if ($paragraph =~ /(?<!\\)(?:\\\\)*%$/) {
@@ -1322,10 +1336,6 @@ Various other points are tagged TODO in the source.
 =head1 KNOWN BUGS
 
 =over 4
-
-=item environments
-
-Beginning and end of environments can be missed.
 
 =item commands
 
