@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.7 2004-04-06 20:46:15 mquinson-guest Exp $
+# $Id: Pod.pm,v 1.8 2004-04-28 09:42:10 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -28,6 +28,8 @@ require Exporter;
 use vars qw($VERSION @ISA);
 $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
+
+sub initialize {}
 
 sub command {
     my ($self, $command, $paragraph, $line_num) = @_;
