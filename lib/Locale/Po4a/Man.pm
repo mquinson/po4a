@@ -529,7 +529,7 @@ sub parse{
 	    }
 	    if ($debug{'splitargs'}) {
 		print STDERR "ARGS=";
-		map { print STDERR "$_°"} @args;
+		map { print STDERR "$_^"} @args;
 		print STDERR "\n";
 	    }
 			  
