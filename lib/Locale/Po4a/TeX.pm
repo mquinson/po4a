@@ -704,7 +704,7 @@ sub parse{
             $line = "$1%";
         }
 
-        if ($line =~ /^$/) {
+        if ($line =~ /^ *$/) {#FIXME: \s*?
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph =~ s/(?<!\\)%$//; # FIXME: even number of \ ...
@@ -729,6 +729,7 @@ sub parse{
                 chomp $paragraph;
                 $line =~ s/^ *//;
             }
+            # FIXME: s/^\s+/ /
             $paragraph .= $line."\n";
         }
 
