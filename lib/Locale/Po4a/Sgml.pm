@@ -401,6 +401,7 @@ sub parse_file {
 	$exist{uc $_} = 1;
     }
     foreach (split(/ /, ($self->{SGML}->{k}{'verbatim'}||'') )) {
+	$translate{uc $_} = 1;
 	$verbatim{uc $_} = 1;
 	$exist{uc $_} = 1;
     }
