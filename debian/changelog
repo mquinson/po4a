@@ -20,6 +20,7 @@ po4a (0.18-1) unstable; urgency=low
     - po4a-updatepo: was rather poor. Closes #264537 in Debian
     - Sgml.pm: induced a perl error (not enough args for format).
       Thanks Olivier Trichet for the last one, and Danilo for the others.
+  - Various documentation & messages improvements
   (TransTractor)
   - Do not try (and fail miserably) to create path to output file when it's
     in the current directory (also in Po.pm).
@@ -46,6 +47,8 @@ po4a (0.18-1) unstable; urgency=low
   - Stick to groff_man(7) intead of man(7), and consider that when IP is
     given only one argument, that's the designator (which we have to
     translate) instead of the column indentation. Thanks Francois.
+  - Deal properly with '\ ' in macro arguments. Ie, stop changing 
+    '.BI -a\  addresses' to '.BI "-a addresses"' (but to .BI "-a " addresses)
   (po4a)
   - Kill the code checking that the first argument contains no colon, since
     the filename can contain colons. This triggers false positives here.

@@ -266,13 +266,12 @@ sub pushmacro {
     my $self=shift;
     if (scalar @_) { 
 	$self->pushline(join(" ",map { defined $_ ? 
-					 (
-					   $_ eq '0' ? "0" 
-					             : ( length($_) && m/ / ? "\"$_\"" 
-							                    : "$_"||'""'
-						       )
+					 ($_ eq '0' ? "0" 
+					            : ( length($_) && m/ / ? "\"$_\"" 
+							                   : "$_"||'""'
+						      )
 				         ) : ''
-				     } @_)."\n");
+				      } @_)."\n");
     } else {
 	$self->pushline("\n");
     }
@@ -430,8 +429,7 @@ sub translate {
 
 # shortcut
 sub t { 
-    my ($self,$str)=(shift,shift);
-    return $self->translate($str);
+    return $_[0]->translate($_[1]);
 }
 
 
@@ -494,6 +492,12 @@ sub parse{
 	    my @args=();
 	    my $buffer="";
 	    my $escaped=0;
+	    # change non-breaking space before to ensure that split does what we want
+	    # We change them back before pushing into the arguments. The one which will be
+	    # translated will have the same change again (in pre_trans and post_trans), but
+	    # the ones which won't get translated are not changed anymore. Let's play safe.
+	    $line =~ s/\\ /\xA0/g; 
+	    
 	    foreach my $elem (split (/ +/,$line)) {
 		print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
 		    if ($debug{'splitargs'});
@@ -506,13 +510,18 @@ sub parse{
 		    if ($buffer =~ m/^"(.*)"(.+)$/) {
 			print STDERR "End of quote, with stuff after it\n"
 			    if ($debug{'splitargs'});
-			push @args,$1;
-			push @args,$2;
+			my ($a,$b)=($1,$2);
+			$a =~ s/\xA0/\\ /g;
+			$b =~ s/\xA0/\\ /g;
+			push @args,$a;
+			push @args,$b;
 			$buffer = "";
 		    } elsif ($buffer =~ m/^"(.*)"$/) {
 			print STDERR "End of a quote\n"
 			    if ($debug{'splitargs'});
-			push @args,$1;
+			my $a = $1;
+			$a =~ s/\xA0/\\ /g;
+			push @args,$a;
 			$buffer = "";
 		    } elsif ($escaped) {
 			print STDERR "End of an escaped sequence\n"
@@ -525,6 +534,7 @@ sub parse{
 					"po4a::man: macro to control the wrapping."),
 					 $ref)."\n";
 			}
+			$buffer =~ s/\xA0/\\ /g;
 			push @args,$buffer;
 			$buffer = "";
 			$escaped = 0;
@@ -532,7 +542,9 @@ sub parse{
 		} elsif ($elem =~ m/^"(.*)"$/) {
 		    print STDERR "Quoted, no space\n"
 			if ($debug{'splitargs'});
-		    push @args,$1;
+		    my $a = $1;
+		    $a =~ s/\xA0/\\ /g;
+		    push @args,$a;
 		} elsif ($elem =~ m/^"/) { #") {
 		    print STDERR "Begin of a quoting arg\n"
 			if ($debug{'splitargs'});
@@ -552,6 +564,7 @@ sub parse{
 	    }
 	    if ($buffer) {
 		$buffer=~ s/"//g; #"
+		$buffer =~ s/\xA0/\\ /g;
 		push @args,$buffer;
 	    }
 	    if ($debug{'splitargs'}) {
@@ -559,13 +572,13 @@ sub parse{
 		map { print STDERR "$_^"} @args;
 		print STDERR "\n";
 	    }
-			  
+	    # Done with spliting the args. Do the job.
 
 	    if ($macro eq 'B' || $macro eq 'I') {
 		# pass macro name
 		shift @args;
 		my $arg=join(" ",@args);
-		$arg =~ s/^ //;
+		$arg =~ s/^ +//;
 		this_macro_needs_args($macro,$ref,$arg);
 		$paragraph .= "\\f$macro".$arg."\\fP\n";
 		goto LINE;
