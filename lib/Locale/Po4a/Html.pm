@@ -168,7 +168,7 @@ sub notranslation {
 
 =head1 AUTHORS
 
-Laurent Hausermann <laurent@hausermann.org>
+ Laurent Hausermann <laurent@hausermann.org>
 
 =head1 COPYRIGHT AND LICENSE
 

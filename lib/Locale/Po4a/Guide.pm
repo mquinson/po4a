@@ -55,7 +55,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 
 =head1 AUTHORS
 
-Jordi Vilalta <jvprat@wanadoo.es>
+ Jordi Vilalta <jvprat@wanadoo.es>
 
 =head1 COPYRIGHT AND LICENSE
 
