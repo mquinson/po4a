@@ -3,14 +3,14 @@
         if $running_under_some_shell;
 
 # pod2man -- Convert POD data to PO file.
-# $Id: po4a-gettextize,v 1.6 2002-12-27 20:36:20 mquinson Exp $
+# $Id: po4a-gettextize,v 1.7 2003-01-09 08:43:23 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION="0.11";
+my $VERSION="0.12";
 
 =head1 NAME
 
@@ -93,7 +93,7 @@ Outputs some debugging informations.
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-identity>.
+L<po4a(7)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize>.
 
 =head1 AUTHORS
 
@@ -116,6 +116,7 @@ use Getopt::Long qw(GetOptions);
 use Locale::Po4a::Pod qw(writepo process);
 use Locale::Po4a::Man qw(writepo process);
 use Locale::Po4a::KernelHelp qw(writepo process);
+use Locale::Po4a::Sgml qw(writepo process);
 
 use Pod::Usage qw(pod2usage);
 
@@ -157,9 +158,12 @@ if (lc($type) eq 'kernelhelp') {
 } elsif (lc($type) eq 'pod') {
    ($origpod,$transpod)=(Locale::Po4a::Pod->new(),
 			 Locale::Po4a::Pod->new());
+} elsif (lc($type) eq 'sgml') {
+   ($origpod,$transpod)=(Locale::Po4a::Sgml->new(),
+			 Locale::Po4a::Sgml->new());
 } else {
   warn sprintf(gettext("Unknown format type: %s.\n".
-"Allowed values are: kernelhelp, man, pod.\n"),$type);
+"Allowed values are: kernelhelp, man, sgml, pod.\n"),$type);
   pod2usage(1);
 }
 
