@@ -730,9 +730,12 @@ sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^%\s+po4a:\s*//;
 
-    if ($line =~ /^command\s+(\w+)\s+(.*)$/) {
-        my $command = $1;
-        $line = $2;
+    if ($line =~ /^command\s+(\*?)(\w+)\s+(.*)$/) {
+        my $command = $2;
+        $line = $3;
+        if ($1) {
+            $separated{$command} = 1;
+        }
         if ($line =~ /^alias\s+(\w+)\s*$/) {
             if (defined ($commands{$1})) {
                 $commands{$command} = $commands{$1};
