@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.8 2004-04-28 09:42:10 mquinson-guest Exp $
+# $Id: Pod.pm,v 1.9 2004-07-19 20:32:43 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -53,6 +53,10 @@ sub verbatim {
     my ($self, $paragraph, $line_num) = @_;
 #    print "verb: '$paragraph' at $line_num\n";
 
+    if ($paragraph eq "\n") {
+	$self->pushline("$paragraph\n");
+	return;
+    }
     $paragraph=$self->translate($paragraph,
 				$self->input_file().":$line_num",
 				"verbatim");
@@ -72,7 +76,11 @@ sub textblock {
     # That way, we'll declare more paragraphs as verbatim than needed, but
     #  that's harmless (only less confortable for translators).
 
-    if ($paragraph =~ m/^ /m) {
+    if ($paragraph eq "\n") {
+	$self->pushline("$paragraph\n");
+	return;
+    }
+    if ($paragraph =~ m/^[ \t]/m) {
 	$self->verbatim($paragraph, $line_num) ;
 	return;
     }
