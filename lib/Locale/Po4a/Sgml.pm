@@ -67,9 +67,20 @@ containing other tags, some of them being of category 'translate'.
 
 =item verbatim
 
+The layout within those tags should not be changed. The paragraph won't get
+wrapped, and no extra indentation space or new line will be added for
+cosmetic purpose.
+
 =item empty
 
+Tags not needing to be closed.
 
+=item ignore
+
+Tags ignored and considered as plain char data by po4a. That is to say that
+they can be part of a msgid. For example, E<gt>bE<lt> is a good candidate
+for this category since putting it in the translate section would create
+msgid not being whole sentences, which is bad.
 
 =item force
 
@@ -164,11 +175,11 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
-use Locale::gettext qw(gettext);
+use Locale::gettext qw(dgettext);
 
 eval qq{use SGMLS};
 if ($@) {
-  die "po4a::sgml: ".gettext("The needed module SGMLS.pm was not found and needs to be installed. It can be found on the CPAN, in package libsgmls-perl on debian, etc.")."\n";
+  die "po4a::sgml: ".dgettext("po4a","The needed module SGMLS.pm was not found and needs to be installed. It can be found on the CPAN, in package libsgmls-perl on debian, etc.")."\n";
 }
 
 use File::Temp;
@@ -200,7 +211,7 @@ sub initialize {
     
     foreach my $opt (keys %options) {
 	if ($options{$opt}) {
-	    die sprintf("po4a::sgml: ".gettext ("Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
+	    die sprintf("po4a::sgml: ".dgettext ("po4a","Unknown option: %s"), $opt)."\n" unless exists $self->{options}{$opt};
 	    $self->{options}{$opt} = $options{$opt};
 	}
     }
@@ -234,14 +245,14 @@ sub translate {
     # don't translate entries composed of one entity
     if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
 	 && !($self->{options}{'include-all'}) ){
-	warn sprintf("po4a::sgml: ".gettext("msgid skipped to help translators (contains only an entity)"), $string)."\n"
+	warn sprintf("po4a::sgml: ".dgettext("po4a","msgid skipped to help translators (contains only an entity)"), $string)."\n"
 	       unless $self->verbose() <= 0;
 	return $string;
     }
     # don't translate entries composed of tags only
     if ( $string =~ /^(((<[^>]*>)|\s)*)$/
 	 && !($self->{options}{'include-all'}) ) {
-	warn sprintf("po4a::sgml: ".gettext("msgid skipped to help translators (contains only tags)"), $string)."\n"
+	warn sprintf("po4a::sgml: ".dgettext("po4a","msgid skipped to help translators (contains only tags)"), $string)."\n"
 	       unless $self->verbose() <= 0;
 	return $string;
     }
@@ -285,15 +296,15 @@ sub parse_file {
     #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
     #   - protect entities from expansion (ie "&release;")
     open (IN,"<$filename") 
-	|| die sprintf(gettext("Can't open %s: %s"),$filename,$!)."\n";
+	|| die sprintf(dgettext("po4a","Can't open %s: %s"),$filename,$!)."\n";
     my $origfile="";
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die sprintf("po4a::sgml: ".gettext("can't close %s: %s"),$filename,$!)."\n";
+    close IN || die sprintf("po4a::sgml: ".dgettext("po4a","can't close %s: %s"),$filename,$!)."\n";
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
-	warn sprintf(gettext(
+	warn sprintf(dgettext("po4a",
 		"po4a::sgml: Trying to handle a XML document as a SGML one.\n".
 		"po4a::sgml: Feel lucky if it works, help us implementing a proper XML backend if it does not."),$filename)."\n"
 	  unless $self->verbose() <= 0;
@@ -306,7 +317,7 @@ sub parse_file {
 	my $pos = 0;  # where in the document (in chars) while detecting prolog boundaries
 	
 	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
-	    die sprintf(gettext(
+	    die sprintf(dgettext("po4a",
 	    	"po4a::sgml: This file is not a master SGML document (no DOCTYPE).\n".
 		"po4a::sgml: It may be a file to be included by another one, in which case\n".
 		"po4a::sgml: it should not be passed to po4a directly. Text from included\n".
@@ -406,10 +417,10 @@ sub parse_file {
 
     } else {
 	if ($self->{options}{'force'}) {
-	    warn "po4a::sgml: ".gettext("DTD of this file is unknown, but proceeding as requested.")."\n";
+	    warn "po4a::sgml: ".dgettext("po4a","DTD of this file is unknown, but proceeding as requested.")."\n";
 	    $self->set_tags_kind();
 	} else {
-	    die sprintf("po4a::sgml: ".gettext(
+	    die sprintf("po4a::sgml: ".dgettext("po4a",
 	    	"DTD of this file is unknown. (supported: debiandoc, docbook).\n".
 		"The prolog follows:\n%s"),
 	  	                $filename,$prolog)."\n";
@@ -426,29 +437,89 @@ sub parse_file {
     # protect the conditional inclusions in the file
     $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
     $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
+    
+    # Deal with the %entities; in the prolog. God damn it, this code is gross!
+    # Try hard not to change the number of lines to not fuck up the references
+    my %prologentincl;
+    my $moretodo=1;
+    while ($moretodo) { # non trivial loop to deal with recursiv inclusion
+	$moretodo = 0;
+	# Unprotect not yet defined inclusions
+	$prolog =~ s/{PO4A-percent}/%/sg;
+	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {  #})"{ (Stupid editor)
+	    print STDERR "Seen the definition entity of prolog inclusion $2 (=$3)\n"
+	      if ($debug{'entities'});
+	    # Preload the content of the entity.
+	    my $key = $2;
+	    my $filename=$3;
+	    $prolog = $1.$4;
+	    (-e $filename && open IN,"<$filename")  ||
+	      die sprintf("po4a::sgml: ".dgettext("po4a","Can't open %s (content of entity %s%s;): %s"),
+		  $filename,'%',$key,$!)."\n";
+	    local $/ = undef;
+	    $prologentincl{$key} = <IN>;
+	    close IN;
+	    my @lines = split(/\n/,$prologentincl{$key});
+	    print STDERR "Content of \%$key; is $filename (".(scalar @lines)." lines long)\n"
+	      if ($debug{'entities'});
+	    # leave those damn references in peace by making sure it fits on one line
+	    $prologentincl{$key} = join (" ", @lines);
+	    print STDERR "content: ".$prologentincl{$key}."\n"
+	      if ($debug{'entities'});
+	    $moretodo = 1;
+	}
+        print STDERR "prolog=>>>>$prolog<<<<\n"
+	      if ($debug{'entities'});
+        while ($prolog =~ /^(.*?)%([^;\s]*);(.*)$/s) {
+	    my ($pre,$ent,$post) = ($1,$2,$3);
+	    # Yeah, right, the content of the entity can be defined in a not yet loaded entity
+	    # It's easy to build a weird case where all that shit colapse poorly. But why the
+	    # hell are you using those strange constructs in your document, damn it?
+	    print STDERR "Seen prolog inclusion $ent\n" if ($debug{'entities'});
+	    if (defined ($prologentincl{$ent})) {
+		$prolog = $pre.$prologentincl{$ent}.$post;
+		print STDERR "Change \%$ent; to its content in the prolog\n"
+		  if $debug{'entities'};
+		$moretodo = 1;
+	    } else {
+		# AAAARGH stupid document using %bla; and having then defined in another inclusion!
+		# Protect it for this pass, and unprotect it on next one
+		print STDERR "entitity $ent not defined yet ?!\n"
+		  if $debug{'entities'};
+		$prolog = "$pre".'{PO4A-percent}'."$ent;$post";
+	    }
+	}
+    }
+    # Unprotect undefined inclusions
+    $prolog =~ s/{PO4A-percent}/%/sg;
+    if ($prolog =~ /%([^;\s]*);/) {
+       die sprintf("po4a::sgml: ".dgettext("po4a","unrecognized prolog inclusion entitity: %%%s;")."\n",$1);
+    }
     # Protect &entities; (but the ones asking for a file inclusion)
     #   search the file inclusion entities
     my %entincl;
     my $searchprolog=$prolog;
-    while ($searchprolog =~ /<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {#})"{
-	print STDERR "Seen the entity of inclusion $1 (=$2)\n"
-	    if ($debug{'entities'});
-	$entincl{$1}{'filename'}=$2;
-	$searchprolog = $3;
-    }
-    #   Change the entities to their content
-    foreach my $key (keys %entincl) {
-	open IN,"<".$entincl{$key}{'filename'}  ||
-	    die sprintf(gettext("Can't open %s: %s"),$entincl{$key},$!)."\n";
+    while ($searchprolog =~ /(.*?)<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {#})"{
+	print STDERR "Seen the entity of inclusion $2 (=$3)\n"
+	  if ($debug{'entities'});
+	my $key = $2;
+	my $filename = $3;
+	$searchprolog = $1.$4;
+	$entincl{$key}{'filename'}=$filename;
+	# Preload the content of the entity
+	(-e $filename && open IN,"<$filename")  ||
+	  die sprintf("po4a::sgml: ".dgettext("po4a","Can't open %s (content of entity %s%s;): %s"),
+	      $filename,'&',$key,$!)."\n";
 	local $/ = undef;
 	$entincl{$key}{'content'} = <IN>;
 	close IN;
 	@lines= split(/\n/,$entincl{$key}{'content'});
 	$entincl{$key}{'length'} = scalar @lines;
-	print STDERR "read $entincl{$key}{'filename'} ($entincl{$key}{'length'} lines long)\n" 
-	    if ($debug{'entities'});
+	print STDERR "read $filename (content of \&$key;, $entincl{$key}{'length'} lines long)\n" 
+	  if ($debug{'entities'});
     }
-    #   Change the entities
+
+    #   Change the entities in the file
     while ($origfile =~ /^(.*?)&([^;\s]*);(.*)$/s) {
 	if (defined $entincl{$2}) {
 	    my ($begin,$key,$end)=($1,$2,$3);
@@ -490,12 +561,12 @@ sub parse_file {
 					      DIR    => "/tmp",
 					      UNLINK => 0);
     print $tmpfh $origfile;
-    close $tmpfh || die sprintf(gettext("Can't close tempfile: %s"),$!)."\n";
+    close $tmpfh || die sprintf(dgettext("po4a","Can't close tempfile: %s"),$!)."\n";
 
     my $cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
     print STDERR "CMD=$cmd\n" if ($debug{'generic'});
 
-    open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s"),$!)."\n";
+    open (IN,$cmd) || die sprintf(dgettext("po4a","Can't run nsgmls: %s"),$!)."\n";
 
     # The kind of tags
     my (%translate,%empty,%verbatim,%indent,%exist);
@@ -569,7 +640,7 @@ sub parse_file {
 	my $type;
 	
 	if ($event->type eq 'start_element') {
-	    die sprintf("po4a::sgml: ".gettext("%s: Unknown tag %s"),
+	    die sprintf("po4a::sgml: ".dgettext("po4a","%s: Unknown tag %s"),
 			$refs[$parse->line],$event->data->name)."\n" 
 		unless $exist{$event->data->name};
 	    
@@ -633,7 +704,7 @@ sub parse_file {
 		$buffer="";
 		push @open,$tag;
 	    } elsif ($indent{$event->data->name()}) {
-		die sprintf(gettext(
+		die sprintf(dgettext("po4a",
 		    "Closing tag for a translation container missing before %s, at %s"
 				    ),$tag,$ref)."\n"
 		    if (scalar @open);
@@ -682,7 +753,7 @@ sub parse_file {
 		    push @open,$tag;
 		}
 	    } elsif ($indent{$event->data->name()}) {
-		die sprintf(gettext(
+		die sprintf(dgettext("po4a",
            "Closing tag for a translation container missing before %s, at %s"
 				    ),$tag,$ref)."\n"
 		    if (scalar @open);
@@ -739,7 +810,7 @@ sub parse_file {
 	}
 
 	else {
-	    die sprintf(gettext("%s:%d: Unknown SGML event type: %s"),
+	    die sprintf(dgettext("po4a","%s:%d: Unknown SGML event type: %s"),
 			$refs[$parse->line],$event->type)."\n";
 	    
 	}
