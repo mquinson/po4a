@@ -318,8 +318,8 @@ sub pre_trans {
 		" %s"),$ref,$origstr)."\n";
     }
 
-    $str =~ s/\\\*\(lq/"/; #"
-    $str =~ s/\\\*\(rq/"/; #"
+    $str =~ s/\\\*\(lq/``/;
+    $str =~ s/\\\*\(rq/''/;
     
 # The next commented loop should take care of badly nested font modifiers,
 #  if only it worked ;)
@@ -389,7 +389,8 @@ sub post_trans {
     # Don't do that, because we'll go into trouble if previous line was .TP
     $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
     
-    $str =~ s/"([^"]*)"/\\\*\(lq$1\\\*\(rq/mg; #" 
+    $str =~ s/``/\\\*\(lq/g;
+    $str =~ s/''/\\\*\(rq/g;
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
