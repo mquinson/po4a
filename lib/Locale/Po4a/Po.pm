@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.7 2003-11-26 23:12:20 barbier Exp $
+# $Id: Po.pm,v 1.8 2003-11-26 23:16:41 barbier Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -783,7 +783,7 @@ __END__
 
 =head1 AUTHORS
 
- Denis Barbier <barbier@linuxfr.org>;
- Martin Quinson <martin.quinson@tuxfamily.org>;
+ Denis Barbier <barbier@linuxfr.org>
+ Martin Quinson <martin.quinson@tuxfamily.org>
 
 =cut
