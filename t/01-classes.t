@@ -2,15 +2,24 @@
 
 #########################
 
-use Test::Simple tests =>7;
+use Test::More tests =>8;
 
-use Locale::Po4a::Po;           ok(1, 'Po.pm loadable');
-use Locale::Po4a::TransTractor; ok(1, 'TransTractor.pm loadable');
+eval qq{use Locale::Po4a::Po};           ok(!$@, 'Po.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::TransTractor}; ok(!$@, 'TransTractor.pm loadable');
+diag($@) if $@;
 
-use Locale::Po4a::KernelHelp;   ok(1, 'KernelHelp.pm loadable');
-use Locale::Po4a::Man;          ok(1, 'Man.pm loadable');
-use Locale::Po4a::Pod;          ok(1, 'Pod.pm loadable');
-use Locale::Po4a::Sgml;         ok(1, 'Sgml.pm loadable');
+eval qq{use Locale::Po4a::KernelHelp};   ok(!$@, 'KernelHelp.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::Man};          ok(!$@, 'Man.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::Pod};          ok(!$@, 'Pod.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::Sgml};         ok(!$@, 'Sgml.pm loadable');
+diag($@) if $@;
 
-use Locale::Po4a::Chooser;      ok(1, 'Chooser.pm loadable');
+eval qq{use Locale::Po4a::Dia};          ok(!$@, 'Dia.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::Chooser};      ok(!$@, 'Chooser.pm loadable');
+diag($@) if $@;
 
