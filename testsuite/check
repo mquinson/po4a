@@ -1,77 +1,155 @@
 #! /bin/sh
 module=man
 
-rm -f  LISTE*
-touch LISTE.{TOTAL,OK,DIFF,WDIFF,PBS,IGNORED}
-
-if [ "$module" = "man" ] ; then
-   find /usr/share/man/man[1-8] -type f > LISTE.TOTAL
-   cmdtotxt="mantotxt"
-else if [ "$module" = "pod" ] ; then
-   locate pod|egrep '\.pod$' > LISTE.TOTAL
-   cmdtotxt="podtotxt" 
-fi fi
+rm -f LISTE*
+touch LISTE.{TOTAL,OK,OK2,WDIFF,PBS,IGN,WOK1,WOK2,WOK3}
 
 if [ $# != 0 ] ; then
   echo $@ > LISTE.TOTAL
 fi
+tmp=/tmp/po4a-check-$module-$$
+mkdir -p $tmp
+if [ "$module" = "man" ] ; then
+   [ $# = 0 ] && find /usr/share/man/man[1-8] -type f | sort > LISTE.TOTAL
+   cmdtotxt="mantotxt"
+elif [ "$module" = "pod" ] ; then
+   [ $# = 0 ] && locate pod|egrep '\.pod$' | sort > LISTE.TOTAL
+   cmdtotxt="podtotxt" 
+fi
+
 
 mantotxt() {
    man -Pcat -l $1 > $1.txt
 }
 
 podtotxt() { # $1 file to convert ; $2 name to pretend to have
-   if [ $1 != $2 ] ; then
-     mv $2 $2.old
-     mv $1 $2
-   fi
-   pod2man $2 > $2.man
-   man -Pcat -l $2.man > $2.txt
-   if [ $1 != $2 ] ; then
-     mv $2.txt $1.txt
-     mv $2 $1
-     mv $2.old $2
-   fi
+  if [ $1 != $2 ] ; then
+    mv $2 $2.old
+    mv $1 $2
+  fi
+  pod2man $2 > $2.man
+  man -Pcat -l $2.man > $2.txt
+  if [ $1 != $2 ] ; then
+    mv $2.txt $1.txt
+    mv $2 $1
+    mv $2.old $2
+  fi
 }
 
-tmp=/tmp/po4a-check-$module-$$
-mkdir -p $tmp
 
 for fich in `cat LISTE.TOTAL` ; do
-        if echo $fich | egrep '\.gz$' ; then
-	      newfich=`basename $fich .gz`; 
- 	      zcat $fich > $tmp/$newfich;
-	else
-	      newfich=`basename $fich`
-	      cat $fich > $tmp/$newfich;
-	fi
+  if echo $fich | egrep '\.gz$' ; then
+    newfich=`basename $fich .gz`; 
+    zcat $fich > $tmp/$newfich;
+  else
+    newfich=`basename $fich`
+    cat $fich > $tmp/$newfich;
+  fi
 	
-	echo "####### $fich"; 
-	rm -f po4a-normalize.*
-	if PERLLIB=../lib ../po4a-normalize -f $module $tmp/$newfich 2>&1 ; then
-		if [ -e po4a-normalize.output ] ; then
-		        mv po4a-normalize.output $tmp/po4a-normalize.output
-			$cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
-			$cmdtotxt $tmp/$newfich $tmp/$newfich;
-			echo ">diff"
-			if diff -uBb $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
-				echo "Ok"
-				echo $fich >> LISTE.OK
-			else 
-			        echo ">wdiff"
-			        if wdiff -3 -n $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
-				       echo $fich >> LISTE.DIFF
-				else
-				       echo $fich >> LISTE.WDIFF
-				fi
-			fi	
-		else
-			echo $fich >> LISTE.IGNORED
-		fi
-	else 
-		echo $fich >> LISTE.PBS
-	fi
-	rm $tmp/*
-	echo '-------------------'
+  echo "####### $fich"; 
+  rm -f po4a-normalize.*
+  if PERLLIB=../lib ../po4a-normalize -f $module $tmp/$newfich 2>&1 ; then
+    if [ -e po4a-normalize.output ] ; then
+      mv po4a-normalize.output $tmp/po4a-normalize.output
+      $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
+      $cmdtotxt $tmp/$newfich $tmp/$newfich;
+      echo $fich
+      echo "diff -uBb $tmp/$newfich.txt $tmp/po4a-normalize.output.txt"
+      if diff -uBb $tmp/$newfich.txt $tmp/po4a-normalize.output.txt ; then
+        echo ">ok"
+        echo $fich >> LISTE.OK
+      else
+        awk 'BEGIN{RS=" ";ORS=" "}
+             {gsub("\xE2\x80\x90","-"); # this is safe
+              gsub("\xE2\x80\x98\xE2\x80\x98","\xE2\x80\x9C"); # this can
+              # be troublesome (e.g. two single quotes => " insteas of ""
+              gsub("\xE2\x80\x99\xE2\x80\x99","\xE2\x80\x9D");
+              print}' $tmp/$newfich.txt > $tmp/"$newfich"_ignore
+        awk 'BEGIN{RS=" ";ORS=" "}
+             {gsub("\xE2\x80\x90","-");
+              gsub("\xE2\x80\x98\xE2\x80\x98","\xE2\x80\x9C");
+              gsub("\xE2\x80\x99\xE2\x80\x99","\xE2\x80\x9D");
+              print}' $tmp/po4a-normalize.output.txt > $tmp/po4a-normalize.ignore
+        echo $fich
+        echo "diff -uBb $tmp/"$newfich"_ignore $tmp/po4a-normalize.ignore"
+        if diff -uBb $tmp/"$newfich"_ignore $tmp/po4a-normalize.ignore ; then
+          echo ">ok2"
+          echo $fich >> LISTE.OK2
+        else
+          echo $fich
+          echo "wdiff -3 -n $tmp/"$newfich"_ignore $tmp/po4a-normalize.ignore"
+          if wdiff -3 -n $tmp/"$newfich"_ignore $tmp/po4a-normalize.ignore; then
+            echo ">wok"
+            echo $fich >> LISTE.WOK1
+          else
+            awk 'BEGIN{RS=";";ORS=";"}
+                 {gsub("-\n +",""); # remove hyphen at the end of lines
+                                    # this permits to detect some diff due
+                                    # to word rewrapping (fails if a word
+                                    # containing a hyphen was wrapped)
+                  print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore2
+            awk 'BEGIN{RS=";";ORS=";"}
+                 {gsub("-\n +","");
+                  print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore2
+            # the same, but for word wrapped on hyphen.
+            # This is useful only if there is either word wrapped on
+            # hyphen or word not wrapped on hyphen. But this may be
+            # usefull to classify the diff
+            awk 'BEGIN{RS=";";ORS=";"}
+                 {gsub("-\n +","-");
+                  print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore2b
+            awk 'BEGIN{RS=";";ORS=";"}
+                 {gsub("-\n +","-");
+                  print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore2b
+            echo $fich
+            echo "wdiff -3 -n $tmp/"$newfich"_ignore2 $tmp/po4a-normalize.ignore2"
+            wdiff -3 -n $tmp/"$newfich"_ignore2 $tmp/po4a-normalize.ignore2
+            ret1=$?
+            echo $fich
+            echo "wdiff -3 -n $tmp/"$newfich"_ignore2b $tmp/po4a-normalize.ignore2b"
+            wdiff -3 -n $tmp/"$newfich"_ignore2b $tmp/po4a-normalize.ignore2b
+            ret2=$?
+            if [ $ret1 = 0 ] || [ $ret2 = 0 ]; then
+              echo ">wok2"
+              echo $fich >> LISTE.WOK2
+            else
+              awk '{gsub(".\x08",""); # this hides font diff ?
+                    print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore3_tmp
+              awk 'BEGIN{RS=";";ORS=";"}
+                   {gsub("-\n +","");
+                    gsub("-","");
+                    print}' $tmp/"$newfich"_ignore3_tmp > $tmp/"$newfich"_ignore3
+
+              awk '{gsub(".\x08",""); # this hides font diff ?
+                    print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore3_tmp
+              awk 'BEGIN{RS=";";ORS=";"}
+                   {gsub("-\n +","");
+                    gsub("-","");
+                    print}' $tmp/po4a-normalize.ignore3_tmp > $tmp/po4a-normalize.ignore3
+
+              echo $fich
+              echo "wdiff -3 -n $tmp/"$newfich"_ignore3 $tmp/po4a-normalize.ignore3"
+              if wdiff -3 -n $tmp/"$newfich"_ignore3 $tmp/po4a-normalize.ignore3
+              then
+                echo ">wok3"
+                echo $fich >> LISTE.WOK3
+              else
+                echo ">wdiff"
+                echo $fich >> LISTE.WDIFF
+              fi
+            fi
+          fi
+        fi
+      fi	
+    else
+      echo ">ign"
+      echo $fich >> LISTE.IGN
+    fi
+  else 
+    echo ">pbs"
+    echo $fich >> LISTE.PBS
+  fi
+  rm -f $tmp/$newfich* $tmp/po4a-normalize.*
+  echo '-------------------'
 done
 rm -r $tmp
