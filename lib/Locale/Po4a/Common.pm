@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.4 2005-03-03 09:49:20 mquinson Exp $
+# $Id: Common.pm,v 1.5 2005-03-03 09:58:32 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -31,6 +31,17 @@ use strict;
 use warnings;
 use Locale::gettext;
 use Text::WrapI18N qw(wrap $columns);
+
+sub setcolumns {
+    eval qq{
+	# won't work on windows, at least.
+	use Term::ReadKey qw(GetTerminalSize);
+	($columns) = GetTerminalSize();
+    };
+    if ($@) {
+	$columns = $ENV{'COLUMNS'} || 80;
+    }
+}
 
 sub min {
     return $_[0] < $_[1] ? $_[0] : $_[1];
@@ -69,7 +80,8 @@ This function wraps a message handling the parameters like sprintf does.
 sub wrap_msg {
     my $msg = shift;
     my @args = @_;
-
+    
+    setcolumns();
     return wrap("", "", sprintf($msg, @args))."\n";
 }
 
@@ -84,6 +96,7 @@ sub wrap_mod {
     my ($mod, $msg) = (shift, shift);
     my @args = @_;
 
+    setcolumns();
     $mod .= ": ";
     my $spaces = " " x min(length($mod), 15);
     return wrap($mod, $spaces, sprintf($msg, @args))."\n";
@@ -101,6 +114,7 @@ sub wrap_ref_mod {
     my ($ref, $mod, $msg) = (shift, shift, shift);
     my @args = @_;
 
+    setcolumns();
     if (!$mod) {
 	# If we don't get a module name, show the message like wrap_mod does
 	return wrap_mod($ref, $msg, @args);
