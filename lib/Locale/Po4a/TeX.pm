@@ -834,8 +834,9 @@ sub parse{
             if ($closed and length($paragraph)) {
                 ($t, @env) = translate_buffer($self,$paragraph,@env);
                 $self->pushline($t);
+                $paragraph = "";
             }
-            $paragraph = $line."\n";
+            $paragraph .= $line."\n";
         } else {
             # continue the same paragraph
             if ($paragraph =~ /(?<!\\)%$/) { # FIXME: even number of \ ...
