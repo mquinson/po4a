@@ -388,6 +388,11 @@ sub pre_trans {
     my $origstr=$str;
     print STDERR "pre_trans($str)="
 	if ($debug{'pretrans'});
+
+    die sprintf("po4a::man: %s: ".dgettext("po4a","Escape sequence \\c encountered. This is not completely handled yet.")
+		,$ref)."\n"
+	if ($str =~ /\\c/);
+
     $str =~ s/>/E<gt>/sg;
     $str =~ s/</E<lt>/sg;
     $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
@@ -560,9 +565,6 @@ sub parse{
 	chomp($line);
 	$self->{ref}="$ref";
 #	print STDERR "LINE=$line<<\n";
-	die sprintf("po4a::man: %s: ".dgettext("po4a","Escape sequence \\c encountered. This is not handled yet.")
-			    ,$ref)."\n"
-	    if ($line =~ /\\c/);
 
 
 	if ($line =~ /^[.']/) {
@@ -681,19 +683,23 @@ sub parse{
 	    $wrapped_mode = $wrapped_mode eq 'YES' ? 'NO' : $wrapped_mode;
 	    $paragraph .= $line."\n";
 	} elsif ($line =~ /^([^.].*)/ && $line !~ /^ *$/) {
-	    # (Lines containing only spaces are handled as empty lines)
-            # special case: the line is entirely a comment, keep the
-            # comment.
-            # NOTE: comment could also be found in the middle of a line.
-            # From info groff:
-            # Escape: \": Start a comment.  Everything to the end of the
-            # input line is ignored.
-            if ($line =~ /^\\"/) {
+	    # (Lines containing only spaces are handled latter as empty lines)
+	    if ($line =~ /^\\"/) {
+		# special case: the line is entirely a comment, keep the
+		# comment.
+		# NOTE: comment could also be found in the middle of a line.
+		# From info groff:
+		# Escape: \": Start a comment.  Everything to the end of the
+		# input line is ignored.
 		$self->pushline($line."\n");
 		goto LINE;
-            }
-	    # Not a macro
-	    $paragraph .= $line."\n";
+            } else {
+		# Not a macro
+		# * first, try to handle some "output line continuation" (\c)
+		$paragraph =~ s/\\c *(($FONT_RE)?)\n?$/$1/s;
+		# * append the line to the current paragraph
+		$paragraph .= $line."\n";
+	    }
 	} else { #empty line, or line containing only spaces
 	    if ($paragraph) {
 	        do_paragraph($self,$paragraph,$wrapped_mode);
