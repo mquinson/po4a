@@ -133,7 +133,7 @@ my $builder = Module::Build->subclass
 	    $self->depends_on('manpo');
 	    use Pod::Man;
 
-	    my $options = "-v -f pod -M iso8859-1";
+	    my $options = "-v -f pod -M iso8859-1 -L iso8859-1";
 	    
 	    #get the languages
 	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
