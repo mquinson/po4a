@@ -10,6 +10,8 @@ my @tests;
 
 my @formats=qw(man pod);
 
+mkdir "t/tmp" unless -e "t/tmp";
+
 my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
   "-I '^\"POT-Creation-Date: ' -I '^\"Content-Type:' -I '^\"Content-Transfer-Encoding:'";
 
@@ -17,7 +19,7 @@ $tests[0]{'run'}  = "../po4a-gettextize -f #format# -m data/#format# -p tmp/po";
 $tests[0]{'test'} = "diff -u data/#format#.po-empty tmp/po -I POT-Creation-Date";
 $tests[0]{'doc'}  = "gettextize #format# document with only the original";
 
-$tests[1]{'run'}  = "../po4a-gettextize -f #format# -m data/#format# -l data/#format#.fr -p tmp/po";
+$tests[1]{'run'}  = "../po4a-gettextize -f #format# -m data/#format# -l data/#format#.fr -p tmp/po 2>/dev/null";
 $tests[1]{'test'} = "diff -u data/#format#.po tmp/po $diff_po_flags";
 $tests[1]{'doc'}  = "gettextize #format# page with original and translation";
 
