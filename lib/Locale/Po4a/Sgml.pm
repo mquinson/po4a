@@ -136,6 +136,8 @@ my %debug=('tag' => 0,
 	   'entities' => 0,
            'refs'   => 0);
 
+my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
+
 sub read {
     my ($self,$filename)=@_;
 
@@ -157,9 +159,15 @@ sub translate {
     my (%options)=@_;
  
     # don't translate entries composed of one entity
-    return $string if ($string =~ /^&[^;]*;$/);
+    if (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/)){
+	warn sprintf gettext ("po4a::sgml: msgid '%s' skipped since it contains only an entity (translator friendly feature ;)\n"), $string;
+	return $string;
+    }
     # don't translate entries composed of tags only
-    return $string if ($string =~ /^(((<[^>]*>)|\s)*)$/);
+    if ($string =~ /^(((<[^>]*>)|\s)*)$/) {
+	warn sprintf gettext ("po4a::sgml: msgid '%s' skipped since it contains only tags (translator friendly feature ;)\n"), $string;
+	return $string;
+    }
 
     return $self->SUPER::translate($string,$ref,$type,%options);
 }
@@ -207,24 +215,26 @@ sub parse_file {
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die sprintf(gettext("Can't close %s: %s\n"),$filename,$!);
+    close IN || die sprintf(gettext("po4a::sgml: can't close %s: %s\n"),$filename,$!);
     # Detect the XML pre-prolog
-    $prolog=$origfile;
-    if ($prolog =~ s/<\?xml version="[0-9\.]*"\?>//) {
-	warn sprintf(gettext("po4a::sgml: %s seems to be a XML document. It will be attempted to handle it as a SGML document.\n".
+    if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
+	warn sprintf(gettext("po4a::sgml: %s seems to be a XML document.\n".
+	    "po4a::sgml: It will be attempted to handle it as a SGML document.\n".
 	    "po4a::sgml: Feel lucky if it works, help us implementing a proper XML backend if it does not.\n"),$filename);
+	$xmlprolog=$1;
     }
     # Get the prolog
     {
+	$prolog=$origfile;
 	my $lvl;    # number of '<' seen without matching '>'
-	my $pos;    # where in the document (in chars)
+	my $pos = 0;  # where in the document (in chars) while detecting prolog boundaries
 	
 	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
 	    die sprintf(gettext("po4a:sgml: %s does not seem to be a master SGML document (no DOCTYPE found).\n".
 		"po4a::sgml: It may be a file to be included by another one, in which case it should not be passed to po4a directly.\n".
 		"po4a::sgml: Text from included files is extracted/translated when handling the master file including them.\n"), $filename);
 	}
-	$pos=length($prolog);
+	$pos += length($prolog);
 	$lvl=1;
 	while ($lvl != 0) {
 	    my ($c)=substr($origfile,$pos,1);
@@ -259,14 +269,14 @@ sub parse_file {
 	                                    "glosssee glossseealso glossterm ".
 	                                    "holder ".
 	                                    "member msgaud msglevel msgorig ".
-	                                    "option ".
-	                                    "para phrase pubdate publishername ". 
-	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose remark ".
+	                                    "option orgname ".
+	                                    "para phrase pubdate publishername primary ". 
+	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber ".
 	                                    "screeninfo seg segtitle subtitle synopfragmentref ".
 	                                    "term title titleabbrev",
 			     "empty"     => "audiodata colspec graphic imagedata sbr textdata videodata xref",
 			     "section"   => "",
-			     "indent"    => "abstract answer appendix article articleinfo audioobject author ".
+			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
 	                                    "dedication ".
@@ -280,7 +290,7 @@ sub parse_file {
 	                                    "objectinfo orderedlist ".
 	                                    "part partintro preface procedure publisher ".
 	                                    "qandadiv qandaentry qandaset question ".
-	                                    "refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo row ".
+	                                    "refsect1 refentry refentryinfo refmeta refnamediv refsect1 refsect1info refsect2 refsect2info refsect3 refsect3info refsection refsectioninfo refsynopsisdiv refsynopsisdivinfo revision revdescription row ".
 	                                    "screenshot sect1 sect1info sect2 sect2info sect3 sect3info sect4 sect4info sect5 sect5info section sectioninfo seglistitem segmentedlist set setindex setinfo simplelist simplemsgentry simplesect step synopfragment ".
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
@@ -311,9 +321,10 @@ sub parse_file {
                                             "year");
 
     } else {
-	die sprintf(gettext("File %s have an unknown DTD\n".
-			    "Supported for now: debiandoc, docbook.\n"),
-		    $filename);
+	die sprintf(gettext("File %s have an unknown DTD. (supported for now: debiandoc, docbook)\n".
+	                    "The prolog follows:\n".
+			    "%s\n"),
+		    $filename,$prolog);
     }
     
     # Prepare the reference indirection stuff
@@ -392,7 +403,12 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh || die sprintf(gettext("Can't close tempfile: %s\n"),$!);
 
-    my $cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
+    my $cmd;
+    if ($xmlprolog) {
+	$cmd="cat $tmpfile|";
+    } else {
+	$cmd="cat $tmpfile|nsgmls -l -E 0 2>/dev/null|";
+    }
     print STDERR "CMD=$cmd\n" if ($debug{'generic'});
 
     open (IN,$cmd) || die sprintf(gettext("Can't run nsgmls: %s\n"),$!);
@@ -430,9 +446,28 @@ sub parse_file {
 
     # What to do before parsing
 
-    # push the prolog
-    $self->pushline($prolog."\n\n");
-    
+    # push the XML prolog if existing
+    $self->pushline($xmlprolog."\n") if ($xmlprolog);
+
+    # Put the prolog into the file, allowing for entity definition translation
+    #  <!ENTITY myentity "definition_of_my_entity">
+    # and push("<!ENTITY myentity \"".$self->translate("definition_of_my_entity")
+    if ($prolog =~ m/(.*?\[)(.*)(\]>)/s) {
+        $self->pushline($1);
+        $prolog=$2;					       
+        my ($post) = $3;			
+        while ($prolog =~ m/^(.*?)<!ENTITY\s(\S*)\s*"([^>"]*)">(.*)$/is) { #" ){ 
+	   $self->pushline($1);
+	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
+	   warn "Seen text entity $2" if ($debug{'entities'});
+	   $prolog = $4;
+	}
+        $self->pushline($post);
+    } else {
+	warn "No entity declaration detected in ~~$prolog~~...\n" if ($debug{'entities'});
+    } 
+    $self->pushline($prolog);
+
     # The parse object.
     # Damn SGMLS. It makes me crude things.
     no strict "subs";
@@ -659,6 +694,7 @@ sub end_paragraph {
     $self->pushline( $para );
 }
 
+1;
 =head1 AUTHORS
 
 This module is an adapted version of sgmlspl (SGML postprocesser for the
