@@ -61,7 +61,18 @@ $tests[11]{'run'}  = "perl ../po4a-translate -f #format# -m data-23/null -p data
 $tests[11]{'test'} = "diff -u $diff_pod_flags data-23/null.fr tmp/null.fr";
 $tests[11]{'doc'}  = "translate this document";
 
-use Test::More tests =>24; # $formats * $tests * 2 
+# Escaped tabs and newlines
+$tests[12]{'run'} = "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/escapes1 -p tmp/escapes1.pot 2>/dev/null";
+$tests[12]{'test'} = "diff -u tmp/escapes1.pot data-23/escapes1.pot $diff_po_flags";
+$tests[12]{'doc'} = "gettextize well escaped newlines and tabs";
+$tests[13]{'run'} = "cp data-23/escapes1.it.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/escapes1 -p tmp/escapes1.it.po >/dev/null 2>&1 ";
+$tests[13]{'test'} = "diff -u $diff_po_flags data-23/escapes1.it.po tmp/escapes1.it.po";
+$tests[13]{'doc'} = "updatepo for this document";
+$tests[14]{'run'} = "perl ../po4a-translate -f #format# -m data-23/escapes1 -p data-23/escapes1.it.po -l tmp/escapes1.it";
+$tests[14]{'test'} = "diff -u $diff_pod_flags data-23/escapes1.it tmp/escapes1.it";
+$tests[14]{'doc'} = "translate this document";
+
+use Test::More tests =>30; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
