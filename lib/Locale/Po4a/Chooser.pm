@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.10 2004-05-25 16:51:22 mquinson-guest Exp $
+# $Id: Chooser.pm,v 1.11 2004-05-25 17:48:03 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -45,7 +45,7 @@ sub new {
 
 sub list {
     warn gettext("List of valid formats:\n".
-		 "  - kernelhelp: The help messages associated with each kernel compilation option.\n".
+		 "  - kernelhelp: Help messages of each kernel compilation option.\n".
 #		 "  - html: HTML documents (EXPERIMENTAL).\n".
 		 "  - man: Good old manual page format.\n".
 		 "  - pod: Perl Online Documentation format.\n".
