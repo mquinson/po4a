@@ -377,7 +377,7 @@ my @tag_types = (
 
 sub tag_extract_comment {
 	my ($self,$remove)=(shift,shift);
-	my ($eof,@tag)=$self->get_string_until('-->',{include=>1,remove=>$remove,unquoted=>1});
+	my ($eof,@tag)=$self->get_string_until('-->',{include=>1,remove=>$remove});
 	return ($eof,@tag);
 }
 
@@ -468,7 +468,7 @@ sub tag_trans_close {
 	my $name = $self->get_tag_name(@tag);
 
 	my $test = pop @path;
-	if ( $test ne $name ) {
+	if (!defined($test) || $test ne $name ) {
 		die "po4a::xml: ".sprintf(dgettext("po4a","Unexpected closing tag </%s> found in %s. The main document may be wrong."),$name,$tag[1])."\n";
 	}
 	return $self->join_lines(@tag);
