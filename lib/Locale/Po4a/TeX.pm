@@ -70,7 +70,7 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @EXPORT = qw(%commands %environments
              $RE_ESCAPE $ESCAPE
              $no_wrap_environments $separated_commands
-             %command_categories
+             %command_categories %separated
              &untranslated &translate_joined &push_environment);
 
 use Locale::Po4a::TransTractor;
@@ -94,6 +94,8 @@ our $no_wrap_environments = "verbatim";
 # Space separated list of commands that can be handle separately from
 # when they appear at the beginning or end of a paragraph
 our $separated_commands = "index label";
+# hash with these commands
+our %separated = ();
 
 # Hash of categories and their associated commands.
 # Commands are space separated.
@@ -271,7 +273,8 @@ sub get_leading_command {
     print STDERR "get_leading_command($buffer)="
         if ($debug{'extract_commands'});
 
-    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s) {
+    if ($buffer =~ m/^\s*$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s
+        && $separated{$1}) {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
         $command = $1;
@@ -418,7 +421,8 @@ sub get_trailing_command {
     }
 
     # There should now be a command, maybe followed by an asterisk.
-    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]+)(\*?)\s*$/s) {
+    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]+)(\*?)\s*$/s
+        && $separated{$2}) {
         $buffer = $1;
         $command = $2;
         $variant = $3;
@@ -612,7 +616,6 @@ sub read_file {
                 $self->{TT}{ascii_input} = 0;
                 # Save the reference for future error message
                 $self->{TT}{non_ascii_ref} ||= $ref;
-                print "cucu'$ref'$textline'\n";
             }
         }
         }
@@ -884,5 +887,10 @@ sub initialize {
         }
         $commands{$_} = \&translate_joined;
     }
+
+    # build an hash with keys in $separated_commands to ease searches.
+    foreach (split(/ /, $separated_commands)){
+        $separated{$_}=1;
+    };
 }
 
