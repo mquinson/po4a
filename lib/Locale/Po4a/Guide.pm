@@ -40,6 +40,15 @@ Linux documentation in the Guide XML format into other [human] languages.
 
 This format is documented here: http://www.gentoo.org/doc/en/xml-guide.xml
 
+=head1 STATUS OF THIS MODULE
+
+This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
+module. This only defines the translatable tags and attributes.
+
+The only known issue is that it doesn't include files with the <include
+href="..."> tag, but you can translate all those files alone, and it's usually
+better to have them separated.
+
 =head1 SEE ALSO
 
 L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>.
