@@ -744,7 +744,10 @@ sub read_file {
             }
             if ($include) {
                 # search the file
-                foreach (($my_dirname, split(/:/, $ENV{"TEXINPUTS"}))) {
+                foreach (($my_dirname,
+                          defined($ENV{"TEXINPUTS"})?
+                              split(/:/, $ENV{"TEXINPUTS"}):
+                              ".")) {
                     if (-r "$_/$newfilename.tex") {
                         $newfilename = "$_/$newfilename.tex";
                         last;
@@ -798,7 +801,10 @@ newcommands).
 sub parse_definition_file {
     my ($self,$filename)=@_;
 
-    foreach (($my_dirname, split(/:/, $ENV{"TEXINPUTS"}))) {
+    foreach (($my_dirname,
+              defined($ENV{"TEXINPUTS"})?
+                  split(/:/, $ENV{"TEXINPUTS"}):
+                  ".")) {
         if (-r $_."/".$filename) {
             $filename = $_."/".$filename;
             last;
