@@ -799,7 +799,8 @@ sub parse{
         } elsif ($line =~ /^([^%]*)(?<!\\)%(.*)$/) { # FIXME: even number of \ ...
         #FIXME: in Python-Doc, there is a % in a verbatim environment,which is not a comment.
             # remove comments, and store them in @comments
-            push @comments, $2;
+            push @comments, $2
+                if length($2);
             # Keep the % sign. It will be removed latter.
             $line = "$1%";
         }
