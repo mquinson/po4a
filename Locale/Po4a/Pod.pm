@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.5 2002-12-27 20:36:20 mquinson Exp $
+# $Id: Pod.pm,v 1.6 2003-01-09 09:01:37 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -168,12 +168,18 @@ I think that this module is rock stable, and there is only one known bug:
 
 I have another problem with /usr/lib/perl5/Tk/MainWindow.pod (and some other
 pages, see below) which contains:
+
   CE<lt>" #n"E<gt>
-Lake of luck, in the po4a-identity version, this was splited on the space by
-the wrapping. As result, in the original version, the man contain
+
+Lake of luck, in the po4a version, this was splited on the space by the
+wrapping. As result, in the original version, the man contain 
+
  " #n"
+
 and mine contain
+
  "" #n""
+ 
 which is logic since C<blabla> is rewriten "blabla"
 
 Complete list of pages having this problem on my box (from 564 pages ; note
