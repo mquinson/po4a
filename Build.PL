@@ -53,6 +53,7 @@ my $builder = Module::Build->subclass
 	    # update languages
 	    @files = @{$self->rscan_dir('po/bin',qr{\.po$})};
 	    foreach (@files) {
+		next if m|/.#|;
 		$_ =~ /.*\/(.*)\.po$/;
 		my $lang = $1;
 		
