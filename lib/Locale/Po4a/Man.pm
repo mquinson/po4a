@@ -639,9 +639,9 @@ sub parse{
 	    #  .fi => wrap again
 	    if ($macro eq 'nf' || $macro eq 'fi') {
 		if ($macro eq 'fi') {
-		    $wrapped_mode='MACRONO';
-		} else {
 		    $wrapped_mode='YES';
+		} else {
+		    $wrapped_mode='MACRONO';
 		}
 		$self->pushline($line."\n");
 		goto LINE;
