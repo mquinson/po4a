@@ -4,7 +4,7 @@
 #
 # This version is for packages that are architecture independent.
 
-bins = gettextize updatepo translate
+bins = gettextize updatepo translate identity
 
 libs=Po.pm TransTractor.pm    Pod.pm Man.pm
 rootlib = Locale::Po4a::
@@ -37,7 +37,10 @@ build-stamp:
 	 fi; \
 	done
 
-	@# Compile the man pages
+	@echo Update the translations
+	$(MAKE) -C po 
+
+	@echo Compile the man pages
 	mkdir mantmp
 	for bin in $(bins) ; do \
 	  pod2man --section=1 --center='Po4a Tools' --release='Po4a Tools' \
