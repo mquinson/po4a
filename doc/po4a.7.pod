@@ -233,7 +233,7 @@ relative to the insertion point.
 
 =item beginboundary (usefull only when mode=after)
 
-=iten endboundary
+=item endboundary
 
 regexp matching the end of the section after which we should put the
 addendum. These arguments are used only when mode=after. You can give only
@@ -266,6 +266,28 @@ C<beginboundary>.
 If you want to add something just after a given line, (say "Copyright
 blabla"), give a regexp matching anything (ie C<^>) as C<beginboundary>
 argument. 
+
+If you want to add something at the end of the document, give a C<position>
+matching any line of your document (but only one line, because po4a will
+refuse to process your addendum if there is more than one possible insertion
+point), and give an C<endboundary> matching nothing. Don't use simple regexp
+here like C<EOF>, but prefere a long string for which you are sure that it
+won't be in your document. C<DummyPo4aBoundaryWhichWontMatchAnything> is a
+pretty good example.
+
+
+In any case, remember that these are regexp. For example, if you want to
+match the end of a nroff section ending with the line 
+
+  .fi
+  
+don't use C<.fi> as endboundary, because it will match with "the[ fi]le",
+which is obviously not what you expect. The correct endboundary in that case
+is: C<^\.fi$>
+
+If the addenda don't go where you expected, try to pass the -v argument to
+po4a-translate, so that it explains you what it does while placing the
+addendum.
 
 =item lang
 
