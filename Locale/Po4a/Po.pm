@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.5 2003-01-13 08:53:21 mquinson Exp $
+# $Id: Po.pm,v 1.6 2003-01-16 09:11:02 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -539,6 +539,8 @@ sub push_raw {
 #    print STDERR "Push_raw\n";
 #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
 #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
+    
+    return unless defined($entry{'msgid'});
     
     #no msgid => header definition
     unless (length($entry{'msgid'})) { 
