@@ -777,7 +777,9 @@ sub treat_attributes {
 					}
 				}
 			}
-			if (!$complete) { die sprintf(dgettext ("po4a","po4a::xml: Bad attribute syntax at %s"),$ref)."\n"; }
+          
+			die sprintf(dgettext ("po4a","po4a::xml: Bad attribute syntax at %s"),$ref)."\n";
+				unless ($complete);
 		}
 	}
 	return $text;
