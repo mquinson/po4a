@@ -539,10 +539,10 @@ sub parse{
 	    if ($line =~ /\\c/);
 
 
-	if ($line =~ /^\./) {
+	if ($line =~ /^[.']/) {
 	    die sprintf("po4a::man: ".dgettext("po4a","Unparsable line: %s"),$line)."\n"
-		unless ($line =~ /^(\.+\\*?)(\\\")(.*)/ ||
-			$line =~ /^(\.)(\S*)(.*)/);
+		unless ($line =~ /^([.']+\\*?)(\\\")(.*)/ ||
+			$line =~ /^([.'])(\S*)(.*)/);
 	    my $arg1=$1;
 	    $arg1 .= $2;
 	    my $macro=$2;
