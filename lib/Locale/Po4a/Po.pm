@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.15 2004-08-01 09:44:50 mquinson-guest Exp $
+# $Id: Po.pm,v 1.16 2004-08-02 09:35:39 mquinson-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -77,7 +77,8 @@ my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
 my %debug=('canonize'	=> 0,
            'quote'	=> 0,
-           'escape'	=> 0);
+           'escape'	=> 0,
+           'filter'     => 1);
 
 =head1 Functions about whole message catalogs
 
@@ -142,16 +143,21 @@ sub read{
     my $filename=shift 
 	|| croak (dgettext("po4a","po4a::po: Please provide a non-nul filename")."\n");
 
-    open INPUT,"<$filename" 
-	|| croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
+    my $fh;
+    if ($filename eq '-') {
+	$fh=*STDIN;
+    } else {
+	open $fh,"<$filename" 
+	  || croak (sprintf(dgettext("po4a","Can't read from %s: %s"),$filename,$!)."\n");
+    }
 
     ## Read paragraphs line-by-line
     my $pofile="";
     my $textline;
-    while (defined ($textline = <INPUT>)) {
+    while (defined ($textline = <$fh>)) {
 	$pofile .= $textline;
     }
-    close INPUT || croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
+#    close INPUT || croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
 
     my $linenum=0;
 
@@ -334,29 +340,192 @@ sub gettextize {
     return $pores;
 }
 
-=item select_file()
+=item filter()
 
 This function extract a catalog from an existing one. Only the entries having a
 reference in the given file will be placed in the resulting catalog.
 
+This function parses its argument, convert it to a perl function definition, 
+eval this definition and filter the fields for which this function returns true. 
+I love perl sometimes ;)
+
 =cut
 
-sub select_file {
+sub filter {
     my $self=shift;
-    my $file=shift;
+    our $filter=shift;
 
     my $res;
     $res = Locale::Po4a::Po->new();
 
+    # Parse the filter
+    our $code="sub apply { return ";
+    our $pos=0;
+    our $length = length $filter;
+    our @filter = split(//,$filter); # explode chars to parts. How to subscript a string in Perl?
+
+    sub gloups {
+	my $fmt=shift;
+	my $space;
+	for (1..$pos){
+	    $space .= ' ';
+	}
+	die (sprintf(dgettext("po4a",$fmt)."\n",@_)."$filter\n$space^ HERE\n");;
+    }
+    sub showmethecode {
+	return unless $debug{'filter'};
+	my $fmt=shift;
+	my $space="";
+	for (1..$pos){
+	    $space .= ' ';
+	}
+	print STDERR "$filter\n$space^ $fmt\n";#"$code\n";
+    }
+    
+    # I dream of a lex in perl :-/
+    sub parse_expression {
+	showmethecode("Begin expression");
+
+	gloups("Begin of expression expected, got '%s'",$filter[$pos])
+	  unless ($filter[$pos] eq '(');
+	$pos ++; # pass the '('
+	if ($filter[$pos] eq '&') {
+	    # AND
+	    $pos++;
+	    showmethecode("Begin of AND");
+	    $code .= "(";
+	    while (1) {
+		gloups ("Unfinished AND statement.") 
+		  if ($pos == $length);
+		parse_expression();
+		if ($filter[$pos] eq '(') {
+		    $code .= " && ";
+		} elsif ($filter[$pos] eq ')') {
+		    last; # do not eat that char
+		} else {
+		    gloups("End of AND or begin of sub-expression expected, got '%s'", $filter[$pos]);
+		}
+	    }
+	    $code .= ")";
+	} elsif ($filter[$pos] eq '|') {
+	    # OR
+	    $pos++;
+	    $code .= "(";
+	    while (1) {
+		gloups("Unfinished OR statement.")
+		  if ($pos == $length);
+		parse_expression();
+		if ($filter[$pos] eq '(') {
+		    $code .= " || ";
+		} elsif ($filter[$pos] eq ')') {
+		    last; # do not eat that char
+		} else {
+		    gloups("End of OR or begin of sub-expression expected, got '%s'",$filter[$pos]);
+		}
+	    }
+	    $code .= ")";
+	} elsif ($filter[$pos] eq '!') {
+	    # NOT
+	    $pos++;
+	    $code .= "(!";
+	    gloups("Missing sub-expression in NOT statement.")
+	      if ($pos == $length);
+	    parse_expression();
+	    $code .= ")";
+	} else {
+	    # must be an equal. Let's get field and argument
+	    my ($field,$arg,$done);
+	    $field = substr($filter,$pos);
+	    gloups("EQ statement contains no '=' or invalid field name")
+	      unless ($field =~ /([a-z]*)=/i); 
+	    $field = lc($1);
+	    $pos += (length $field) + 1;
+
+	    # check that we've got a valid field name, and the number it referes to
+	    my @names=qw(msgid msgstr reference flags comment automatic); # DO NOT CHANGE THE ORDER
+	    my $fieldpos;
+	    for ($fieldpos = 0; 
+ 		 $fieldpos < scalar @names && $field ne $names[$fieldpos];
+		 $fieldpos++) {}
+	    gloups("Invalid field name: %s",$field)
+	      if $fieldpos == scalar @names; # not found
+	    
+	    # Now, get the argument value. It has to be between quotes, which can be escaped
+	    # We point right on the first char of the argument (first quote already ate)
+	    my $escaped = 0;
+	    my $quoted = 0;
+	    if ($filter[$pos] eq '"') {
+		$pos++;
+		$quoted = 1;
+	    }
+	    showmethecode(($quoted?"Quoted":"Unquoted")." argument of field '$field'");
+
+	    while (!$done) {
+		gloups("Unfinished EQ argument.")
+		  if ($pos == $length);
+
+		if ($quoted) {
+		    if ($filter[$pos] eq '\\') {
+			if ($escaped) {
+			    $arg .= '\\';
+			    $escaped = 0;
+			} else {
+			    $escaped = 1;
+			}
+		    } elsif ($escaped) {
+			if ($filter[$pos] eq '"') {
+			    $arg .= '"';
+			    $escaped = 0;
+			} else {
+			    gloups("Invalid escape sequence in argument: '\\%s'",$filter[$pos]);
+			}
+		    } else {
+			if ($filter[$pos] eq '"') {
+			    $done = 1;
+			} else {
+			    $arg .= $filter[$pos];
+			}
+		    }
+		} else {
+		    if ($filter[$pos] eq ')') {
+			$pos--; # counter the next ++ since we don't want to eat this char
+			$done = 1;
+		    } else {
+			$arg .= $filter[$pos];
+		    }
+		}
+		$pos++;
+	    }
+	    # and now, add the code to check this equality
+	    $code .= "(\$_[$fieldpos] =~ m/$arg/)";
+	    
+	}
+	showmethecode("End of expression");
+        gloups("Unfinished statement.")
+	  if ($pos == $length);
+	gloups("End of expression expected, got '%s'",$filter[$pos])
+	  unless ($filter[$pos] eq ')');
+	$pos++;
+    }
+    # And now, launch the beast, finish the function and use eval to construct this function.
+    # Ok, the lack of lexer is a fair price for the eval ;)
+    parse_expression();
+    gloups("Garbage at the end of the expression")
+      if ($pos != $length);
+    $code .= "; }";
+    print STDERR "CODE = $code\n";
+    eval $code;
+    die (sprintf(dgettext("po4a","Eval failure: %s")."\n",$@)) 
+      if $@;
+    
     for (my $cpt=(0) ;
 	 $cpt<$self->count_entries();
-	 $cpt) {
+	 $cpt++) {
 	
 	my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
 
 	$msgid = $self->msgid($cpt);
 	$ref=$self->{po}{$msgid}{'reference'};
-	next unless ($ref =~ / $file:/);
 
 	$msgstr= $self->{po}{$msgid}{'msgstr'};
 	$flags =  $self->{po}{$msgid}{'flags'};
@@ -364,14 +533,14 @@ sub select_file {
 	$comment = $self->{po}{$msgid}{'comment'};
 	$automatic = $self->{po}{$msgid}{'automatic'};
 
-#	$res->push_raw('msgid' => $msgid, 
-#			 'msgstr' => $msgstr,
-#			 'flags' => $flags,
-#	                 'type'  => $type,
-#			 'reference' => $ref,
-#			 'comment' => $comment,
-#			 'automatic' => $automatic);
-
+	$res->push_raw('msgid' => $msgid, 
+		       'msgstr' => $msgstr,
+		       'flags' => $flags,
+	               'type'  => $type,
+		       'reference' => $ref,
+		       'comment' => $comment,
+		       'automatic' => $automatic)
+	       if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic)); # DO NOT CHANGE THE ORDER
     }
     return $res;
 }
