@@ -187,7 +187,7 @@ Parses the document
 
 =item d.
 
-Reads and applies all the addendum specified
+Reads and applies all the addenda specified
 
 =item e.
 
@@ -233,11 +233,11 @@ extracted from the input document.
 
 =item addendum (@)
 
-list of filenames where we should read the addendum from.
+list of filenames where we should read the addenda from.
 
 =item addendum_charset ($)
 
-Charset for the addendum.
+Charset for the addenda.
 
 =back
 
@@ -489,13 +489,13 @@ sub stats   {
 
 =cut
 
-=head2 Manipulating addendum
+=head2 Manipulating addenda
 
 =over 4
 
 =item addendum($)
 
-Please refer to L<po4a(7)|po4a.7> for more information on what addendums are,
+Please refer to L<po4a(7)|po4a.7> for more information on what addenda are,
 and how translators should write them. To apply an addendum to the translated
 document, simply pass its filename to this function and you are done ;)
 

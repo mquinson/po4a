@@ -164,7 +164,7 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
 
 sub pre_trans {
     my ($self,$str,$ref,$type)=@_;
-    # Preformating, so that translators don't see
+    # Preformatting, so that translators don't see
     # strange chars
     my $origstr=$str;
     print STDERR "pre_trans($str)="

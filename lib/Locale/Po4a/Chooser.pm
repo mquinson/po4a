@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.21 2005-02-12 14:02:20 jvprat-guest Exp $
+# $Id: Chooser.pm,v 1.22 2005-02-14 23:19:24 danilo-guest Exp $
 #
 # Copyright 2002,2003,2004,2005 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -7,7 +7,7 @@
 # under the terms of GPL (see COPYING).
 #
 # This module converts POD to PO file, so that it becomes possible to 
-# translate POD formated documentation. See gettext documentation for
+# translate POD formatted documentation. See gettext documentation for
 # more info about PO files.
 
 ############################################################################
@@ -53,9 +53,9 @@ sub new {
 
 sub list {
     warn wrap_msg(gettext("List of valid formats:\n".
-		"  - kernelhelp: Help messages of each kernel compilation option.\n".
+		"  - kernelhelp: help messages of each kernel compilation option.\n".
 #		"  - html: HTML documents (EXPERIMENTAL).\n".
-		"  - man: Good old manual page format.\n".
+		"  - man: good old manual page format.\n".
 		"  - pod: Perl Online Documentation format.\n".
 		"  - sgml: either debiandoc or docbook DTD.\n".
 		"  - dia: uncompressed Dia diagrams.\n".

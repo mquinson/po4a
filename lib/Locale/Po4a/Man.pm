@@ -398,7 +398,7 @@ sub this_macro_needs_args {
 
 sub pre_trans {
     my ($self,$str,$ref,$type)=@_;
-    # Preformating, so that translators don't see 
+    # Preformatting, so that translators don't see 
     # strange chars
     my $origstr=$str;
     print STDERR "pre_trans($str)="
@@ -455,7 +455,7 @@ sub post_trans {
     print STDERR "post_trans($str)="
 	if ($debug{'postrans'});
 
-    # Post formating, so that groff see the strange chars
+    # Post formatting, so that groff see the strange chars
     $str =~ s|\\-|-|sg; # in case the translator added some of them manually
     # change hyphens to minus signs
     # (this shouldn't be done for \s-<number> font size modifiers)
@@ -685,7 +685,7 @@ sub parse{
 	    #  .Dd => Indicates that this is a mdoc page
 	    if ($macro eq 'Dd') {
 		die wrap_mod("po4a::man", dgettext("po4a",
-		    "This page seems to be a mdoc(7) formated one. This is not supported (yet)."));
+		    "This page seems to be a mdoc(7) formatted one. This is not supported (yet)."));
 	    }
 		
 	    unshift @args,$self;

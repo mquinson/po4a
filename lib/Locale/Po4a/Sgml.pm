@@ -91,7 +91,7 @@ Proceed even if the DTD is unknown.
 By default, msgids containing only one entity (like '&version;') are skipped
 for the translator comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
-"<title>&Acute;</title>", even if I doubt such things to ever happen...
+"<title>&Aacute;</title>", even if I doubt such things to ever happen...
 
 =back
 
@@ -117,12 +117,12 @@ The problem with this is that the C<{PO4A-end}> and such I add are valid in
 the document (not in a E<lt>pE<gt> tag or so).
 
 Everything works well with nsgmls's output redirected that way, but it will
-prevent us to detect that the document is badly formated.
+prevent us to detect that the document is badly formatted.
 
 =item *
 
 It does work only with the debiandoc and docbook dtd. Adding support for a
-new dtd should be very easy. The mechanism is the same for all dtd, you just
+new dtd should be very easy. The mechanism is the same for every dtd, you just
 have to give a list of the existing tags and some of their characteristics.
 
 I agree, this needs some more documentation, but it is still considered as
@@ -131,7 +131,7 @@ beta, and I hate to document stuff which may/will change.
 =item *
 
 Warning, support for dtds is quite experimental. I did not read any
-reference manual to find the definition of all tags. I did add tag
+reference manual to find the definition of every tag. I did add tag
 definition to the module 'till it works for some documents I found on the
 net. If your document use more tags than mine, it won't work. But as I said
 above, fixing that should be quite easy.
@@ -140,7 +140,7 @@ I did test docbook against the SAG (System Administrator Guide) only, but
 this document is quite big, and should use most of the docbook
 specificities. 
 
-For debiandoc, I tested some of the manual of the DDP, but not all yet.
+For debiandoc, I tested some of the manuals from the DDP, but not all yet.
 
 =item * 
 

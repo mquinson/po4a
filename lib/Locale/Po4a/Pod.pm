@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.14 2005-01-07 22:50:52 nekral-guest Exp $
+# $Id: Pod.pm,v 1.15 2005-02-14 23:19:24 danilo-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -7,7 +7,7 @@
 # under the terms of GPL (see COPYING file).
 #
 # This module converts POD to PO file, so that it becomes possible to 
-# translate POD formated documentation. See gettext documentation for
+# translate POD formatted documentation. See gettext documentation for
 # more info about PO files.
 
 ############################################################################

@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.34 2005-02-12 14:02:21 jvprat-guest Exp $
+# $Id: Po.pm,v 1.35 2005-02-14 23:19:24 danilo-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -292,15 +292,15 @@ sub gettextize {
 
     if ($poorig->count_entries() > $potrans->count_entries()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
-	    "Original have more strings that the translation (%d>%d). ".
+	    "Original has more strings that the translation (%d>%d). ".
 	    "Please fix it by editing the translated version to add some dummy entry."),
 		$poorig->count_entries() , $potrans->count_entries());
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
-	    "Original have less strings that the translation (%d<%d). ".
+	    "Original has less strings than the translation (%d<%d). ".
 	    "Please fix it by removing the extra entry from the translated file. ".
 	    "You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization. ".
-	    "A possible cause is that a text dupplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
+	    "A possible cause is that a text duplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
 		$poorig->count_entries(), $potrans->count_entries());
     }
 
@@ -773,7 +773,7 @@ gives to translators some context about the strings to translate.
 =item wrap
 
 boolean indicating whether whitespaces can be mangled in cosmetic
-reformatings. If true, the string is canonized before use.
+reformattings. If true, the string is canonized before use.
 
 This information is written to the po file using the 'wrap' or 'no-wrap' flag.
 
