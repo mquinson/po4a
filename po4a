@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.4 2004-07-18 06:02:53 mquinson-guest Exp $
+# $Id: po4a,v 1.5 2004-07-18 06:12:01 mquinson-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -318,13 +318,12 @@ foreach my $master (keys %document) {
 	
 	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'} ,%options);
 	
-	my (@file_in_name,@file_out_name,@po_in_name);
+	my (@file_in_name,@po_in_name);
 	push @file_in_name, $master;
-	push @file_out_name, $document{$master}{$lang};
 	push @po_in_name, $po_filename{$lang};
 	
 	$doc->process('file_in_name'  => \@file_in_name,
-	              'file_out_name' => \@file_out_name,
+	              'file_out_name' => $document{$master}{$lang},
 	              'po_in_name'    => \@po_in_name);
 	
 	my ($percent,$hit,$queries) = $doc->stats();
@@ -336,12 +335,14 @@ foreach my $master (keys %document) {
 	    next LANG;
 	}
     
-	foreach my $add ($document{$master}{add_$lang}) {
-	    if ( !$doc->addendum($_) ) {
-		die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
-		    $add,$master)."\n";
-		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
-		next LANG;
+	if (defined ($document{$master}{"add_$lang"})) {
+	    foreach my $add ($document{$master}{"add_$lang"}) {
+		if ( !$doc->addendum($_) ) {
+		    die sprintf(gettext("Addendum %s does apply to %s (translation discarded)."),
+			$add,$master)."\n";
+		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+		    next LANG;
+		}
 	    }
 	}
 	$doc->write($document{$master}{$lang});
