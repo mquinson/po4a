@@ -32,7 +32,9 @@ build-stamp:
 	dh_testdir
 
 	@# Make sure the VERSION string were updated in binaries
-	@ pkgver=`dpkg-parsechangelog|grep Version|sed -e 's/Version: //' -e 's/-.*//'`;\
+	@ pkgver=`dpkg-parsechangelog|\
+	          grep Version|\
+		  sed -e 's/Version: //' -e 's/-.*//' -e 's/[[:blank:]]*//g'`;\
 	libver=`grep '$$VERSION=' lib/Locale/Po4a/TransTractor.pm| \
                 sed -e 's/^.*"\([^"]*\)".*/\1/'`; \
 	if [ "x$$pkgver" != "x$$libver" ] ; then \
