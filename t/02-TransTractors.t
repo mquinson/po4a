@@ -21,15 +21,15 @@ $tests[0]{'test'} = "diff -u data-02/#format#.po-empty tmp/po -I POT-Creation-Da
 $tests[0]{'doc'}  = "gettextize #format# document with only the original";
 
 $tests[1]{'run'}  = "../po4a-gettextize -f #format# -m data-02/#format# -l data-02/#format#.fr -p tmp/po 2>/dev/null";
-$tests[1]{'test'} = "diff -u data-02/#format#.po tmp/po $diff_po_flags";
+$tests[1]{'test'} = "diff -u $diff_po_flags data-02/#format#.po tmp/po";
 $tests[1]{'doc'}  = "gettextize #format# page with original and translation";
 
 $tests[2]{'run'}  = "cp data-02/#format#.po tmp/po && ../po4a-updatepo -f #format# -m data-02/#format# -p tmp/po >/dev/null 2>&1 ";
-$tests[2]{'test'} = "diff -u data-02/#format#.po tmp/po $diff_po_flags";
+$tests[2]{'test'} = "diff -u $diff_po_flags data-02/#format#.po tmp/po";
 $tests[2]{'doc'}  = "updatepo for #format# document";
 
 $tests[3]{'run'}  = "../po4a-translate -f #format# -m data-02/#format# -p data-02/#format#.po-ok -l tmp/#format#.fr";
-$tests[3]{'test'} = "diff -u data-02/#format#.fr tmp/#format#.fr $diff_pod_flags";
+$tests[3]{'test'} = "diff -u $diff_pod_flags data-02/#format#.fr tmp/#format#.fr";
 $tests[3]{'doc'}  = "translate #format# document";
 
 
