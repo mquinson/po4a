@@ -84,6 +84,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
 # Only read the documentclass in order to find some po4a directives.
 # FIXME: The documentclass could contain translatable strings.
 # Maybe it should be implemented as \include{}.
+$separated_commands .= " documentclass";
 $commands{'documentclass'} = sub {
     my $self = shift;
     my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
@@ -133,7 +134,7 @@ register_generic("*hyphenation,0,1,,1");       # Translators may wish to add/rem
 register_generic("include,0,1,,");            # file
 #register_generic("includeonly,0,1,,");       # should not be supported for now
 register_generic("input,0,1,,");              # file
-register_generic("*item,1,0,,");
+register_generic("*item,1,0,1,");
 register_generic("*label,0,1,,");
 register_generic("lefteqn,0,1,,1");
 register_generic("line,0,0,,");               # The first argument is (x,y)
@@ -150,7 +151,7 @@ register_generic("mbox,0,1,,1");
 register_generic("multicolumn,0,3,,3");
 register_generic("multiput,0,0,,");           # The first arguments are (x,y)(dx,dy)
 register_generic("name,0,1,,1");
-register_generic("*newcommand,0,-1,,");       # The second argument is [args]
+register_generic("*newcommand,0,-1,,2");      # The second argument is [args]
 register_generic("*newcounter,0,1,,");        # The second argument is [counter]
 register_generic("*newenvironment,-1,-1,,");  # The second argument is [args]
 register_generic("*newfont,0,2,,");
@@ -235,7 +236,13 @@ register_generic("mathit,0,1,,1");
 register_generic("mathnormal,0,1,,1");
 register_generic("mathversion,0,1,,");
 
+register_generic("*contentspage,0,0,,");
+register_generic("*tablelistpage,0,0,,");
+register_generic("*figurepage,0,0,,");
+
 register_generic("*PassOptionsToPackage,0,2,,");
+
+register_generic("*ifthenelse,0,3,,2 3");
 
 # graphics
 register_generic("*includegraphics,1,1,,");
@@ -271,28 +278,38 @@ register_generic("*fcolorbox,0,3,,3");
 register_generic("*pagecolor,0,1,,1");
 register_generic("*color,0,1,,1");
 
-$command_categories{'untranslated'} .= "addtolength";
+# equations/theorems
+register_generic("*qedhere,0,0,,");
+register_generic("*qedsymbol,0,0,,");
+register_generic("*theoremstyle,0,1,,");
+register_generic("*proclaim,0,1,,1");
+register_generic("*endproclaim,0,0,,");
+register_generic("*shoveleft,0,1,,1");
+register_generic("*shoveright,0,1,,1");
 
 # commands without arguments. This is better than untranslated or
 # translate_joined because the number of arguments will be checked.
-foreach (qw(a appendix backslash baselineskip baselinestretch bf *bigskip
-            boldmath cal
+foreach (qw(a *appendix *backmatter backslash *baselineskip *baselinestretch bf
+            *bigskip boldmath cal cdots *centering *cleardoublepage *clearpage
+            ddots dotfill em flushbottom *footnotesize frenchspacing
+            *frontmatter *glossary *hfill *hline hrulefill huge Huge indent it
+            kill large Large LARGE ldots left linewidth listoffigures
+            listoftables *mainmatter *makeatletter *makeglossary *makeindex
+            *maketitle *medskip *newline *newpage noindent nonumber *normalsize
+            not *null *onecolumn *par parindent *parskip *printindex protect ps
+            pushtabs *qquad *quad raggedbottom raggedleft raggedright right rm
+            sc scriptsize sf sl small *smallskip *startbreaks *stopbreaks
+            *tableofcontents textwidth textheight tiny today tt unitlength
+            vdots verb *vfill *vline fussy sloppy
+
             aleph hbar imath jmath ell wp Re Im prime nabla surd angle forall
             exists partial infty triangle Box Diamond flat natural sharp
             clubsuit diamondsuit heartsuit spadesuit dag ddag S P copyright
             pounds Delta ASCII
-            cdots *centering *cleardoublepage *clearpage ddots dotfill em
-            flushbottom *footnotesize frenchspacing *glossary *hfill *hline hrulefill
-            huge Huge indent it kill large Large LARGE ldots left linewidth
-            listoffigures listoftables *makeatletter *makeglossary *makeindex *maketitle
-            *medskip *newline *newpage noindent nonumber *normalsize not *null
-            *onecolumn *par parindent *parskip *printindex protect ps pushtabs
-            raggedbottom raggedleft raggedright right rm sc scriptsize sf sl
-            small *smallskip *startbreaks *stopbreaks *tableofcontents
-            textwidth textheight tiny today tt unitlength vdots verb *vfill
-            *vline fussy sloppy
-            rmfamily itshape mdseries bfseries upshape slshape sffamily scshape ttfamily *normalfont 
-            width height depth totalheight
+
+            rmfamily itshape mdseries bfseries upshape slshape sffamily scshape
+            ttfamily *normalfont width height depth totalheight
+
             *fboxsep *fboxrule
             *itemi *itemii *itemiii *itemiv
             *theitemi *theitemii *theitemiii *theitemiv)) {
@@ -300,18 +317,8 @@ foreach (qw(a appendix backslash baselineskip baselinestretch bf *bigskip
 }
 
 
-$separated_commands .= " documentclass begin end hbox vbox vcenter".
-    " startdqi qandaquestion qandaanswer";
-
-foreach (qw(*makeindex *myeqnspacing *setprotcode font *frontmatter
-            quad *mainmatter *backmatter chaptermark printindex qquad junit
-            sunit pdfprotrudechars contentspage nunit perp)) {
-    register_generic("$_,0,0,,");
-}
-
-register_generic("*ifthenelse,0,3,,2 3");
-$command_categories{'translate_joined'} .= " hbox vbox vcenter".
-    " shoveright zu text";
+$separated_commands .= " begin end hbox vbox vcenter";
+$command_categories{'translate_joined'} .= " hbox vbox vcenter";
 
 # standard environments.
 foreach (qw(abstract align array cases center description displaymath enumerate
