@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.22 2004-08-08 19:58:48 mquinson-guest Exp $
+# $Id: Po.pm,v 1.23 2004-08-08 21:51:06 jvprat-guest Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -81,14 +81,14 @@ my @known_flags=qw(wrap no-wrap c-format fuzzy);
 my %debug=('canonize'	=> 0,
            'quote'	=> 0,
            'escape'	=> 0,
-           'encoding'   => 1,
+           'encoding'   => 0,
            'filter'     => 1);
 
 =head1 Functions about whole message catalogs
 
 =over 4
 
-=item B<new()>
+=item new()
 
 Creates a new message catalog. If an argument is provided, it's the name of
 a po file we should load.
@@ -134,7 +134,7 @@ sub initialize {
     $self->stats_clear();
 }
 
-=item B<read()>
+=item read()
 
 Reads a po file (which name is given as argument).  Previously existing
 entries in self are not removed, the new one are added to the end of the
@@ -207,7 +207,7 @@ sub read{
     }
 }
 
-=item B<write()>
+=item write()
 
 Writes the current catalog to the given file.
 
@@ -307,7 +307,11 @@ sub gettextize {
 	$potrans->to_utf;
 	$pores->set_charset("utf-8");
     } else {
-	$pores->set_charset($potrans->get_charset);
+	if ($potrans->get_text eq "CHARSET") {
+	    $pores->set_charset("ascii");
+	} else {
+	    $pores->set_charset($potrans->get_charset);
+	}
     }
     print "Po character sets:\n".
 	"  original=".$poorig->get_charset."\n".
@@ -597,7 +601,7 @@ sub to_utf {
 
 =over 4
 
-=item B<gettext($%)>
+=item gettext($%)
 
 Request the translation of the string given as argument in the current catalog.
 The function returns the empty string if the string was not found.
@@ -663,7 +667,7 @@ sub gettext {
     return $res;
 }
 
-=item B<stats_get()>
+=item stats_get()
 
 Returns stats about the hit ratio of gettext since the last time that
 stats_clear() were called. Please note that it's not the same
@@ -689,7 +693,7 @@ sub stats_get() {
     return ( $p,$h,$q );
 }
 
-=item B<stats_clear()>
+=item stats_clear()
 
 Clears the stats about gettext hits.
 
@@ -707,7 +711,7 @@ sub stats_clear {
 
 =over 4
 
-=item B<push()>
+=item push()
 
 Push a new entry at the end of the current catalog. The arguments should
 form an hash table. The valid keys are :
