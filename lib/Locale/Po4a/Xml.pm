@@ -771,9 +771,9 @@ sub treat_attributes {
 						if ($self->tag_in_list($self->get_path.$name,@{$self->{attributes}})) {
 							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
 						} else {
-							$text .= $value;
 							print sprintf("po4a::xml: ".dgettext ("po4a","Contents of attribute %s excluded: %s"),$self->get_path.$name,$value)."\n"
 							       if $self->debug();
+							$text .= $self->recode_skipped_text($value);
 						}
 						$text .= $quot;
 					}
@@ -875,7 +875,7 @@ sub treat_content {
 			# Inform that this tag isn't translated in debug mode
 			print sprintf("po4a::xml: ".dgettext ("po4a","Contents of tag %s excluded: %s"), $self->get_path,$self->join_lines(@paragraph))."\n"
 			       if $self->debug();
-			$self->pushline($self->join_lines(@paragraph));
+			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
 		}
 	}
 
