@@ -3,7 +3,7 @@
         if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.7 2003-01-09 09:09:49 mquinson Exp $
+# $Id: po4a-updatepo,v 1.8 2003-01-09 09:12:31 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -159,7 +159,7 @@ if (lc($type) eq 'kernelhelp') {
 } elsif (lc($type) eq 'pod') {
     $doc=Locale::Po4a::Pod->new();
 } elsif (lc($type) eq 'sgml') {
-    $doc=(Locale::Po4a::Sgml->new();
+    $doc=Locale::Po4a::Sgml->new();
 } else {
   warn sprintf(gettext("Unknown format type: %s.\n".
 "Allowed values are: kernelhelp, man, pod, sgml.\n"),$type);
