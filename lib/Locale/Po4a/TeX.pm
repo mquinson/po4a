@@ -138,7 +138,7 @@ vspace, hspace and label.
 
 =item no_wrap
 
-Coma-separated list of environments whose arguments shouldnot be re-wrapped.
+Coma-separated list of environments whose arguments should not be re-wrapped.
 
 Note that there is a difference between verbatim and no_wrap environments.
 There is no command and comments analysis in verbatim blocks.
