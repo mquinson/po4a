@@ -30,10 +30,10 @@ build-stamp:
 
 	@# Make sure the VERSION string were updated in binaries
 	@ pkgver=`dpkg-parsechangelog|grep Version|sed 's/Version: //'`;\
-	libver=`grep '$$VERSION=' Locale/Po4a/TransTractor.pm| \
+	libver=`grep '$$VERSION=' lib/Locale/Po4a/TransTractor.pm| \
                 sed 's/^.*"\([^"]*\)".*/\1/'`; \
 	if [ "x$$pkgver" != "x$$libver" ] ; then \
-	   echo "VERSION in Locale/Po4a/TransTractor.pm is wrong ($$pkgver!=$$libver)";\
+	   echo "VERSION in lib/Locale/Po4a/TransTractor.pm is wrong ($$pkgver!=$$libver)";\
 	   exit 1; \
 	fi;
 
@@ -55,7 +55,7 @@ build-stamp:
 	for lib in $(libs) ; do \
 	  l=`echo $$lib|sed 's/\.pm//'`; \
 	  pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
-	    Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3perl; \
+	    lib/Locale/Po4a/$$lib > mantmp/$(rootlib)$$l.3perl; \
 	  for lang in $(langs) ; do \
 	    if [ -e po/pod/$$lib.$$lang.pod ] ; then \
 	      pod2man --section=3perl --center='Po4a Tools' --release='Po4a Tools' \
@@ -94,7 +94,7 @@ install: build
 	  install -c -m 755 po4a-$$bin          $(prefix)/usr/bin/; \
 	done
 	for lib in $(libs) ; do \
-	  install -c -m 644 Locale/Po4a/$$lib          $(prefix)$(pathlib); \
+	  install -c -m 644 lib/Locale/Po4a/$$lib          $(prefix)$(pathlib); \
 	done
 	prefix=../../$(prefix) $(MAKE) -C po/bin install
 	prefix=../../$(prefix) $(MAKE) -C po/pod install

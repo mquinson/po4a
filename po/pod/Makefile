@@ -6,7 +6,7 @@ DOCS=po4a.7
 FILES=$(SCRIPTS) $(foreach lib,$(LIBS),LocalePo4a$(lib)) $(DOCS)
 
 PATHSCRIPTS=$(foreach file,$(SCRIPTS),../../$(file))
-PATHLIBS=$(foreach file,$(LIBS),../../Locale/Po4a/$(file))
+PATHLIBS=$(foreach file,$(LIBS),../../lib/Locale/Po4a/$(file))
 PATHDOCS=$(foreach file,$(DOCS),../../doc/$(file).pod)
 
 PATHFILES=$(PATHLIBS) $(PATHSCRIPTS) $(PATHDOCS)
@@ -39,7 +39,7 @@ po4a-pod.pot: $(PATHFILES)
 	fi
 	@msgfmt --statistics $@
 
-LocalePo4a%.fr.pod: ../../Locale/Po4a/% fr.po
+LocalePo4a%.fr.pod: ../../lib/Locale/Po4a/% fr.po
 	@PERL5LIB=../.. ../../po4a-translate -t pod -v $< fr.po -o $@
 	@if [ -e $@ ] ; then \
 	  mv -f $@ `echo $@| \
