@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.11 2004-08-09 12:58:29 jvprat-guest Exp $
+# $Id: Pod.pm,v 1.12 2004-08-17 23:43:02 mquinson Exp $
 #
 # Copyright 2002 by Martin Quinson <Martin.Quinson@ens-lyon.fr>
 #
@@ -247,25 +247,6 @@ into a single space.  Defaults to true.
 =item width
 
 The column at which to wrap text on the right-hand side.  Defaults to 76.
-
-=back
-
-The options specific to Locale::Po4a::Pod are:
-
-=over 4
-
-=item pomode
-
-In fact, this parser can work in two modes. When pomode=write, it reads a
-pod file, and extracts the strings which should be translated to a pot
-file. When pomode=read (the default), it reads a pod file and writes a
-similar pod file, but translating all strings on the way (the translation
-is read from the po file).
-
-=item dontwrite
-
-if set, no file is written at the end (if you want to manipulate the
-extracted po file in memory, for example).
 
 =back
 
