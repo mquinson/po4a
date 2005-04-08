@@ -868,7 +868,9 @@ sub parse{
 
     # flush the last comments
     push @comments, @next_comments;
-    for my $c (@comments) {
+    @next_comments = @comments;
+    @comments = ();
+    for my $c (@next_comments) {
 	$self->pushline(".\\\"$c\n");
     }
 } # end of main
