@@ -104,7 +104,9 @@ $commands{'documentclass'} = sub {
     my $self = shift;
     my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
 
-    parse_definition_file($self,$args->[0].".cls");
+    # Only try to parse the file.  We don't want to fail or parse this file
+    # if it is a standard documentclass.
+    parse_definition_file($self, $args->[0].".cls", 1);
 
     my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
 

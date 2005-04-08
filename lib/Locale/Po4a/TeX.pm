@@ -914,7 +914,7 @@ newcommands).
 =cut
 
 sub parse_definition_file {
-    my ($self,$filename)=@_;
+    my ($self,$filename,$only_try)=@_;
 
     foreach (($my_dirname,
               defined($ENV{"TEXINPUTS"})?
@@ -926,9 +926,15 @@ sub parse_definition_file {
         }
     }
 
-    open (IN,"<$filename")
-        || die wrap_mod("po4a::tex",
+    if (! open (IN,"<$filename")) {
+        warn wrap_mod("po4a::tex",
             dgettext("po4a", "Can't open %s: %s"), $filename, $!);
+        if (defined $only_try && $only_try) {
+            return;
+        } else {
+            exit 1;
+        }
+    }
     while (<IN>) {
         if (/^\s*%\s*po4a\s*:/) {
             parse_definition_line($self, $_);
