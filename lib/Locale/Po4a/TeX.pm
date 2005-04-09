@@ -442,7 +442,11 @@ sub get_leading_command {
                         $opt .= $2
                     }
                 } else {
-                    die sprintf "un-balanced [";
+                    die wrap_ref_mod($self->{ref},
+                                     "po4a::tex",
+                                     dgettext("po4a", "un-balanced %s in '%s'"),
+                                     "[",
+                                     $buffer);
                 }
             }
             push @opts, $opt;
@@ -468,7 +472,11 @@ sub get_leading_command {
                         $arg .= $2;
                     }
                 } else {
-                    die sprintf "un-balanced {";
+                    die wrap_ref_mod($self->{ref},
+                                     "po4a::tex",
+                                     dgettext("po4a", "un-balanced %s in '%s'"),
+                                     "{",
+                                     $buffer);
                 }
             }
             push @args, $arg;
@@ -518,7 +526,11 @@ sub get_trailing_command {
                      $arg = $2.$arg;
                  }
             } else {
-                die sprintf "un-balanced }";
+                die wrap_ref_mod($self->{ref},
+                                 "po4a::tex",
+                                 dgettext("po4a", "un-balanced %s in '%s'"),
+                                 "}",
+                                 $buffer);
             }
         }
         unshift @args, $arg;
@@ -545,7 +557,11 @@ sub get_trailing_command {
                      $opt = $2.$opt;
                  }
             } else {
-                die sprintf "un-balanced ]";
+                die wrap_ref_mod($self->{ref},
+                                 "po4a::tex",
+                                 dgettext("po4a", "un-balanced %s in '%s'"),
+                                 "]",
+                                 $buffer);
             }
         }
         unshift @opts, $opt;
@@ -698,7 +714,10 @@ sub translate_buffer {
                 }
                 $translated_buffer .= $spaces;
             } else {
-                die sprintf("unknown command: '%s'", $command)."\n"
+                die wrap_ref_mod($self->{ref},
+                                 "po4a::tex",
+                                 dgettext("po4a", "Unknown command: '%s'"),
+                                 $command);
             }
         } else {
             $buffer = $spaces.$buffer;
@@ -781,7 +800,10 @@ sub translate_buffer {
                                                $opts,$args,\@env);
             $translated_buffer .= $t.$spaces;
         } else {
-            die sprintf("unknown command: '%s'", $command)."\n";
+            die wrap_ref_mod($self->{ref},
+                             "po4a::tex",
+                             dgettext("po4a", "Unknown command: '%s'"),
+                             $command);
         }
     }
 
@@ -967,7 +989,9 @@ sub parse_definition_line {
                     $command_parameters{$command} = $command_parameters{$1};
                 }
             } else {
-                die "Cannot use an alias to the unknown command $2\n";
+                die wrap_mod("po4a::tex",
+                             dgettext("po4a", "Cannot use an alias to the unknown command '%s'"),
+                             $2);
             }
         } elsif ($line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/) {
             register_generic("$command,$1,$2,$3,$4");
@@ -975,7 +999,9 @@ sub parse_definition_line {
             if (defined &$1) {
                 $commands{$command} = \&$1;
             } else {
-                die "Unknown command ($1) for $command\n";
+                die wrap_mod("po4a::tex",
+                             dgettext("po4a", "Unknown function (%s) for '%s'"),
+                             $1, $command);
             }
         }
     } elsif ($line =~ /^environment\s+(\w+)\s+(.*)$/) {
@@ -985,7 +1011,9 @@ sub parse_definition_line {
             if (defined &$1) {
                 $environments{$env} = \&$1;
             } else {
-                die "Unknown environment ($1) for $env\n";
+                die wrap_mod("po4a::tex",
+                             dgettext("po4a", "Unknown function (%s) for '%s'"),
+                             $1, $env);
             }
         }
     } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
@@ -1223,7 +1251,9 @@ $commands{'begin'}= sub {
         ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
                                             $opts,$args,$env);
     } else {
-        die wrap_mod("po4a::tex", "unknown environment: '%s'", $args->[0]);
+        die wrap_mod("po4a::tex",
+                     dgettext("po4a", "unknown environment: '%s'"),
+                     $args->[0]);
     }
 
     print "($t, @e)\n"
@@ -1240,8 +1270,9 @@ $commands{'end'}= sub {
     if (!@$env || @$env[-1] ne $args->[0]) {
         # a begin may have been hidden in the middle of a translated
         # buffer. FIXME: Just warn for now.
-        warn wrap_mod("po4a::tex", "unmatched end of environment '%s'",
-                     $args->[0]);
+        warn wrap_mod("po4a::tex",
+                      dgettext("po4a", "unmatched end of environment '%s'"),
+                      $args->[0]);
     } else {
         pop @$env;
     }
@@ -1261,14 +1292,19 @@ sub generic_command {
     my ($t,@e)=("",());
 
     # check number of arguments
-    die sprintf("wrong number of optional arguments for command $command\n")
+    die wrap_mod("po4a::tex",
+                 dgettext("po4a", "wrong number of optional arguments for command '%s'"),
+                 $command)
         if (    scalar($command_parameters{$command}{'nb_opts'}) lt scalar(@$opts)
             and $command_parameters{$command}{'nb_opts'} ne -1);
     if (    $command_parameters{$command}{'nb_args'} ne scalar(@$args)
         and $command_parameters{$command}{'nb_args'} ne -1) {
         unless (    $command_parameters{$command}{'nb_args'} eq (scalar(@$args) - 1)
                 and !length(@$args[-1])) {
-    die sprintf("wrong number of arguments for command $command\n");
+            die wrap_mod("po4a::tex",
+                         dgettext("po4a",
+                                  "wrong number of arguments for command '%s'"),
+                         $command);
         }
     }
 
