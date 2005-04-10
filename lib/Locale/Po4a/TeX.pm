@@ -216,11 +216,11 @@ It may also need some escapes.
 
 For example, the LaTeX module uses the "(?:&|\\\\)" regular expression to
 translate separately each cell of a table (lines are separated by '\\' and
-cells by '&'.
+cells by '&').
 
 The notion of environment is expended to the type displayed in the PO file.
 This can be used to split on "\\\\" in the first mandatory argument of the
-title command.  In this case, the environment is title[#1].
+title command.  In this case, the environment is title{#1}.
 
 =back
 
@@ -1325,7 +1325,7 @@ sub generic_command {
             }
         }
         if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."{#$arg}"));
         } else {
             $t = $opt;
         }

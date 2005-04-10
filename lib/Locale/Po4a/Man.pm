@@ -88,7 +88,7 @@ Translators can use non-breaking spaces in their translations.  These
 non-breaking spaces (0xA0) will be transliterated into a roff
 non-breaking space ('\ ').
 
-=item quotes
+=item quotes transliterations
 
 `` and '' are respectively tranliterated into \*(lq and \*(rq.
 
