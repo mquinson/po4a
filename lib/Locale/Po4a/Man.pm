@@ -92,8 +92,8 @@ non-breaking space ('\ ').
 
 `` and '' are respectively tranliterated into \*(lq and \*(rq.
 
-To avoid this transliterations, translators can insert a zero width roff
-character (\&).
+To avoid these transliterations, translators can insert a zero width roff
+character (i.e., using `\&` or '\&' respectively).
 
 =back
 
