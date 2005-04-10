@@ -64,6 +64,39 @@ equivalent to \f(CWtext\fP or ".CW text"
 Remark: The CW face is not available for all groff devices. It is not
 recommended to use it. It is provided for your convenience.
 
+=head2 Automatic characters transliteration
+
+Po4a automatically transliterate some characters to ease the translation
+or the review of the translation.
+Here is the list of the transliterations:
+
+=over
+
+=item hyphens
+
+Hyphens (-) and minus signs (\-) in man pages are all transliterated
+as simple dashes (-) in the PO file.  Then all dash are transliterated into
+roff minus signs (\-) when the translation is inserted into the output
+document.
+
+Translators can force an hyphen by using the roff glyph '\[hy]' in their
+translations.
+
+=item non-breaking spaces
+
+Translators can use non-breaking spaces in their translations.  These
+non-breaking spaces (0xA0) will be transliterated into a roff
+non-breaking space ('\ ').
+
+=item quotes
+
+`` and '' are respectively tranliterated into \*(lq and \*(rq.
+
+To avoid this transliterations, translators can insert a zero width roff
+character (\&).
+
+=back
+
 =head2 Putting 'E<lt>' and 'E<gt>' in translations
 
 Since these chars are used to delimit parts under font modification, you
@@ -80,26 +113,6 @@ These are this module's particular options:
 
 Activate debugging for some internal mechanisms of this module.
 Use the source to see which parts can be debugged.
-
-=item B<with-non_breaking_spaces> (boolean)
-
-Allow po4a to generate non breaking spaces in the PO file (when needed).
-
-Anyway, users can use non breaking spaces in the PO and are always converted to
-the roff non breaking space ('\ ').
-
-This option is disabled by default because non breaking spaces are not present
-in all character set.
-
-=item B<with-hyphen_to_minus> (boolean)
-
-Allow the automatic convertion of hyphens (in roff: '-') to minus signs ('\-').
-When enable, translators will only see/use '-' instead of '\\-' in their PO
-files.
-
-This option is enabled by default, because man pages autors and translators
-always forget to use '\-' instead of '-' (and it doesn't harm to have a minus
-sign instead of an hyphen).
 
 =back
 
@@ -291,16 +304,10 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 
 
 ######## CONFIG #########
-my %transliterations = (
-    'nbs'   => 0,     # allow generating non breaking spaces?
-    'minus' => 1      # force using minus signs instead of hyphens?
-    );
 sub initialize {
     my $self = shift;
     my %options = @_;
 
-    $self->{options}{'with-non_breaking_spaces'}='';
-    $self->{options}{'with-hyphen_to_minus'}='';
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'}='';
 
@@ -317,14 +324,6 @@ sub initialize {
         foreach ($options{'debug'}) {
             $debug{$_} = 1;
         }
-    }
-
-    if (defined $options{'with-non_breaking_spaces'}) {
-        $transliterations{'nbs'} = $options{'with-non_breaking_spaces'};
-    }
-
-    if (defined $options{'with-hyphen_to_minus'}) {
-        $transliterations{'minus'} = $options{'with-hyphen_to_minus'};
     }
 }
 
@@ -581,20 +580,16 @@ sub pre_trans {
     #  * they break when using utf8 (for obscure reasons)
     #  * they forbid the searches, since keybords don't have hyphen key
     #  * they forbid copy/paste, since options need minus sign, not hyphen
-    if ($transliterations{'minus'}) {
-        $str =~ s|\\-|-|sg;
-    }
+    $str =~ s|\\-|-|sg;
+
     # Groff bestiary
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
     $str =~ s/\\\(dq/"/sg;
-    # Change groff non-breaking space to ascii one
-    if ($transliterations{'nbs'}) {
-        $str =~ s|\\ |\xA0|sg;
-    } else {
-        # some \xA0 may have been added during the parsing
-        $str =~ s|\xA0|\\ |sg;
-    }
+    
+    # non-breaking spaces
+    # some \xA0 may have been added during the parsing
+    $str =~ s|\xA0|\\ |sg;
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -608,14 +603,12 @@ sub post_trans {
 	if ($debug{'postrans'});
 
     # Post formatting, so that groff see the strange chars
-    if ($transliterations{'minus'}) {
-        $str =~ s|\\-|-|sg; # in case the translator added some of them manually
-        # change hyphens to minus signs
-        # (this shouldn't be done for \s-<number> font size modifiers)
-        # nor on .so/.mso args
-        unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
-            $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
-        }
+    $str =~ s|\\-|-|sg; # in case the translator added some of them manually
+    # change hyphens to minus signs
+    # (this shouldn't be done for \s-<number> font size modifiers)
+    # nor on .so/.mso args
+    unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
+        $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
     }
 
     # No . or ' on first char, or nroff will think it's a macro
