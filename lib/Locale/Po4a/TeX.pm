@@ -390,7 +390,7 @@ these commands.
 This indicate if a variant is used.  For example, an asterisk (*) can
 be added at the end of sections command to specify that they should
 not be numbered.  In this case, this field will contain "*".  If there
-is not variant, the field is an empty string.
+is no variant, the field is an empty string.
 
 =item An array of optional arguments
 
