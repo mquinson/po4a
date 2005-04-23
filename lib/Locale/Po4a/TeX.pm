@@ -1411,6 +1411,11 @@ sub initialize {
     $self->{options}{'exclude_include'}='';
     $self->{options}{'no_wrap'}='';
     $self->{options}{'debug'}='';
+    $self->{options}{'verbose'}='';
+
+    %debug = ();
+    # FIXME: %commands and %separated should also be restored to their
+    #        default values.
 
     foreach my $opt (keys %options) {
         if ($options{$opt}) {
