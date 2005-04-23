@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.26 2005-03-04 16:40:40 danilo-guest Exp $
+# $Id: po4a,v 1.27 2005-04-23 17:03:17 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -213,45 +213,122 @@ sub show_version {
     exit 0;
 }
 
-my ($help,$type,$debug,@verbose,$quiet,@options,$split);
-@verbose = ();
-$debug = 0;
-$split = 0;
-my ($threshold)=(80);
-my ($mastchar,$locchar,$addchar);
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
-GetOptions(
-	'help|h'        => \$help,
+# keep the command line arguments
+my @ORIGINAL_ARGV = @ARGV;
+# remove the config file
+pop @ORIGINAL_ARGV;
 
-	'master-charset|M=s'    => \$mastchar,
-	'localized-charset|L=s' => \$locchar,
-	'addendum-charset|A=s' => \$addchar,
-
-	'verbose|v'     => \@verbose,
-	'debug|d'       => \$debug,
-	'quiet|q'       => \$quiet,
-	'split|s'       => \$split,
-	'keep|k=s'      => \$threshold,
-	'version|V'     => \&show_version
-) or pod2usage();
-
-# Argument check
-$help && pod2usage (-verbose => 1, -exitval => 0);
-
-my ($verbose) = (scalar @verbose);
-$verbose = 1 if $debug;
-$verbose = -1 if $quiet;
-my %options = (
-    "verbose" => $verbose,
-    "debug" => $debug);
-
-foreach (@options) {
-    if (m/^([^=]*)=(.*)$/) {
-	$options{$1}="$2";
+# Parse the options provided on the command line, or in argument
+sub get_options {
+    if (defined $_[0]) {
+        @ARGV = @_;
     } else {
-	$options{$_}=1;
+        @ARGV = @ORIGINAL_ARGV;
     }
+
+    # temporary array for GetOptions
+    my @verbose = ();
+    my @options = ();
+
+    my %opts = (
+        "help"      => 0,
+        "type"      => "",
+        "debug"     => 0,
+        "verbose"   => 0,
+        "quiet"     => 0,
+        "split"     => 0,
+        "threshold" => 80,
+        "mastchar"  => "",
+        "locchar"   => "",
+        "addchar"   => "",
+        "options"   => {"verbose" => 0, "debug" => 0}
+    );
+    Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+    GetOptions(
+        'help|h'        => \$opts{"help"},
+
+        'master-charset|M=s'    => \$opts{"mastchar"},
+        'localized-charset|L=s' => \$opts{"locchar"},
+        'addendum-charset|A=s'  => \$opts{"addchar"},
+
+        'verbose|v'     => \@verbose,
+        'debug|d'       => \$opts{"debug"},
+        'quiet|q'       => \$opts{"quiet"},
+        'split|s'       => \$opts{"split"},
+        'keep|k=s'      => \$opts{"threshold"},
+        'version|V'     => \&show_version,
+        'option|o=s'    => \@options
+    ) or pod2usage();
+
+    $opts{"verbose"} = scalar @verbose;
+    $opts{"verbose"} =  1 if $opts{"debug"};
+    $opts{"verbose"} = -1 if $opts{"quiet"};
+
+    # options to transmit to the modules
+    %{$opts{"options"}} = (
+        "verbose" => $opts{"verbose"},
+        "debug"   => $opts{"debug"}
+    );
+    foreach (@options) {
+        if (m/^([^=]*)=(.*)$/) {
+            $opts{"options"}{$1}="$2";
+        } else {
+            $opts{"options"}{$_}=1;
+        }
+    }
+    return %opts;
 }
+
+# Parse a config line and extract the parameters that correspond to options.
+# These options are appended to the options provided in argument (as a
+# reference to an hash). The options are sorted by category in this hash.
+# The categories are: global and the various languages.
+sub parse_config_options {
+    my $ref = shift;       # a line reference for the die messages
+    my $line = shift;      # the line to parse
+    my $orig_line = $line; # keep the original line for die messages
+    my $options = shift;   # reference to an hash of options
+
+    while (defined $line and $line !~ m/^\s*$/) {
+        if ($line =~ m/^\s*opt(?:_(.+?))?:\s*(.+)\s*$/) {
+            my $lang = $1;
+            $line = $2;
+            my $opt = "";
+            if ($line =~ m/^\s*"(.+?(?<!\\)(?:\\\\)*)"(?:\s+(.+))?$/) {
+                # take up to the next " not preceeded by an odd number of \
+                $opt = $1;
+                $line = $2;
+            } else {
+                # Use the first space separated arg
+                if ($line =~ m/^\s*([^\s]+?)(?:\s+(.+))?$/) {
+                    $opt = $1;
+                    $line = $2;
+                } else {
+                    die wrap_ref_mod("$ref", "",
+                                     gettext("Unparsable argument '%s' (%s)."),
+                                     $line, $orig_line);
+                }
+            }
+            if (! defined $lang) {
+                $lang = "global";
+            }
+            if (! defined ${%$options}{$lang}) {
+                ${%$options}{$lang} = $opt;
+            } else {
+                ${%$options}{$lang} .= " $opt";
+            }
+        } else {
+            last;
+        }
+    }
+
+    $line = "" unless defined $line;
+    return $line;
+}
+
+my %po4a_opts = get_options(@ARGV);
+# Argument check
+$po4a_opts{"help"} && pod2usage (-verbose => 1, -exitval => 0);
 
 my $config_file= shift(@ARGV) || pod2usage();
 # Check file existence
@@ -259,6 +336,7 @@ my $config_file= shift(@ARGV) || pod2usage();
 
 # Parse the config file
 my (@langs);
+my (%aliases); # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
@@ -299,7 +377,7 @@ while (<CONFIG>) {
 	$args = $args2;
     }
 
-    print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $debug;
+    print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $po4a_opts{"debug"};
 
     if ($cmd eq "po4a_paths") {
 	die wrap_ref_mod("$config_file:$nb", "",
@@ -321,6 +399,23 @@ while (<CONFIG>) {
 
     } elsif ($cmd =~ m/type: *(.*)/) {
 	$document{$main}{'format'} = $1;
+	my %options;
+	if (defined $aliases{$1}) {
+	    $document{$main}{'format'} = $aliases{$1}{"module"};
+	    if (defined %{$aliases{$1}{"options"}}) {
+		%options = %{$aliases{$1}{"options"}};
+	    }
+	}
+	# separate the end of the line, which contains options.
+	# Something more clever could be done to allow options in the
+	# middle of a line.
+	if ($args =~ m/^(.*?) +(opt(_.+)?:(.*))$/) {
+	    $args = $1;
+	    $args = "" unless defined $args;
+	    $args .= " ".parse_config_options("$config_file:$nb",
+	                                      $2, \%options);
+	}
+	%{$document{$main}{'options'}} = %options;
 	foreach my $arg (split(/ /,$args)) {
 	    die wrap_ref_mod("$config_file:$nb", "",
 		gettext("Unparsable argument '%s' (%s)."), $arg, $line)
@@ -339,7 +434,14 @@ while (<CONFIG>) {
 		$document{$main}{$lang} = $trans;
 	    }
 	}
-
+    } elsif ($cmd =~ m/po4a_alias: *(.*)/) {
+	my $name = $1;
+	my %alias = ();
+	$alias{"module"} = $main;
+	my %options;
+	$args = parse_config_options("$config_file:$nb", $args, \%options);
+	%{$alias{"options"}} = %options;
+	%{$aliases{$name}} = %alias;
     } else {
 	die wrap_ref_mod("$config_file:$nb", "",
 	    gettext("Unparsable command '%s'."), $cmd);
@@ -354,15 +456,24 @@ die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and p
 # make a big pot
 if (-e $pot_filename) {
     print wrap_msg(gettext("Updating %s:"), $pot_filename)
-	if $verbose;
+	if $po4a_opts{"verbose"};
 } else {
     print wrap_msg(gettext("Creating %s:"), $pot_filename)
-	if $verbose;
+	if $po4a_opts{"verbose"};
 }
 
 my $potfile=Locale::Po4a::Po->new();
 foreach my $master (keys %document) {
-    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},%options);
+    my %file_opts = %po4a_opts;
+    my $options = $document{$master}{"options"}{"global"};
+    if (defined $options) {
+        %file_opts = get_options(@ORIGINAL_ARGV,
+                                 split(/ /, $options));
+    }
+    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
+                                       %{$file_opts{"options"}});
+
+
     # We ensure that the generated po will be in utf-8 if the input document
     # isn't entirely in ascii
     $doc->{TT}{utf_mode} = 1;
@@ -371,7 +482,7 @@ foreach my $master (keys %document) {
     my @file_in_name;
     push @file_in_name, $master;
     $doc->process('file_in_name'     => \@file_in_name,
-                  'file_in_charset'  => $mastchar);
+                  'file_in_charset'  => $file_opts{"mastchar"});
     $potfile = $doc->getpoout();
 }
 $potfile->write($pot_filename);
@@ -383,8 +494,8 @@ my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print STDERR wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
-	    if ($verbose);
-	if ($split) {
+	    if ($po4a_opts{"verbose"});
+	if ($po4a_opts{"split"}) {
 	    my ($pot_filename,$po_filename,$bigpo_filename);
 	    (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
 						       DIR    => "/tmp",
@@ -423,14 +534,14 @@ foreach $lang (sort keys %po_filename) {
 	    unlink($po_filename) if -e $po_filename;
 
 	} else {
-	    system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($verbose?"":">/dev/null 2>/dev/null"))
+	    system ("msgmerge -U ".$po_filename{$lang}." $pot_filename ".($po4a_opts{"verbose"}?"":">/dev/null 2>/dev/null"))
 		&& die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
 	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
-	    if $verbose;
+	    if $po4a_opts{"verbose"};
 	}
     } else {
 	print STDERR wrap_msg(gettext("Creating %s:"), $po_filename{$lang}) 
-	    if $verbose;
+	    if $po4a_opts{"verbose"};
 	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
 	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
     }
@@ -440,8 +551,23 @@ foreach $lang (sort keys %po_filename) {
 foreach $lang (sort keys %po_filename) {
     DOC: foreach my $master (sort keys %document) {
 	next unless defined $document{$master}{$lang};
-
-	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'} ,%options);
+    
+	my %file_opts = %po4a_opts;
+	my $options = "";
+	if (defined $document{$master}{"options"}{"global"}) {
+	    $options .= $document{$master}{"options"}{"global"};
+	}
+	# append the language options
+	if (defined $document{$master}{"options"}{$lang}) {
+	    $options .= " ".$document{$master}{"options"}{$lang};
+	}
+	if (defined $options) {
+	    # also use the options provided on the command line
+	    %file_opts = get_options(@ORIGINAL_ARGV,
+	                             split(/ /, $options));
+	}
+	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
+	                                   %{$file_opts{"options"}});
 
 	my (@file_in_name,@po_in_name);
 	push @file_in_name, $master;
@@ -450,15 +576,15 @@ foreach $lang (sort keys %po_filename) {
 	$doc->process('file_in_name'  => \@file_in_name,
 	              'file_out_name' => $document{$master}{$lang},
 	              'po_in_name'    => \@po_in_name,
-                      'file_in_charset'  => $mastchar,
-                      'file_out_charset' => $locchar,
-                      'addendum_charset' => $addchar);
+	              'file_in_charset'  => $file_opts{"mastchar"},
+	              'file_out_charset' => $file_opts{"locchar"},
+	              'addendum_charset' => $file_opts{"addchar"});
 
 	my ($percent,$hit,$queries) = $doc->stats();
 
-	if ($percent<$threshold)  {
+	if ($percent<$file_opts{"threshold"})  {
 	    print STDERR wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
-		$document{$master}{$lang}, $percent, $threshold);
+		$document{$master}{$lang}, $percent, $file_opts{"threshold"});
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 	    next DOC;
 	}
@@ -473,7 +599,7 @@ foreach $lang (sort keys %po_filename) {
 		}
 	    }
 	}
-	if ($verbose) {
+	if ($file_opts{"verbose"}) {
 	    if ($percent == 100) {
 		print STDERR wrap_msg(gettext("%s is %s%% translated (%s strings)."),
 		    $document{$master}{$lang}, $percent, $queries);
