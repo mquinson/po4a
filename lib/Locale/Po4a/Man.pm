@@ -293,6 +293,12 @@ my %macro; # hash of known macro, with parsing sub. See end of this file
 # .    - a single char (e.g. B, I, R, P, 1, 2, 3, 4, etc.)
 my $FONT_RE = "\\\\f(?:\\[[^\\]]*\\]|\\(..|[^\\(\\[])";
 
+# Variable used to identify non breaking spaces.
+# These non breaking spaces are used to ease the parsing, and a
+# translator can use them in her translation (and they will be translated
+# into the groff non-breaking space.
+my $nbs;
+
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -588,8 +594,8 @@ sub pre_trans {
     $str =~ s/\\\(dq/"/sg;
     
     # non-breaking spaces
-    # some \xA0 may have been added during the parsing
-    $str =~ s|\xA0|\\ |sg;
+    # some non-breaking spaces may have been added during the parsing
+    $str =~ s/\Q$nbs/\\ /sg;
 
     print STDERR "$str\n" if ($debug{'pretrans'});
     return $str;
@@ -628,11 +634,14 @@ sub post_trans {
     $str =~ s/\n([.'])/ $1/mg;
 
     # Change ascii non-breaking space to groff one
-    $str =~ s|\xA0|\\ |sg;
+    my $nbs_out = "\xA0";
+    my $enc_length = Encode::from_to($nbs_out, "latin1",
+                                               $self->get_out_charset);
+    $str =~ s/\Q$nbs_out/\\ /sg if defined $enc_length;
     # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
     # an extra space
     $str =~ s/\\ \n/\\ /sg;
-	
+
     # Make sure we compute internal sequences right.
     # think about: B<AZE E<lt> EZA E<gt>>
     while ($str =~ m/^(.*)(CW|[RBI])<(.*)$/s) {
@@ -729,6 +738,15 @@ sub parse{
                             # MACRONO: don't wrap because we saw the nf macro. It stays so 
                             #          until the next fi macro.
 
+
+    # change the non-breaking space according to the input document charset
+    $nbs = "\xA0";
+    my $enc_length = Encode::from_to($nbs, "latin-1",
+                                           $self->{TT}{'file_in_charset'});
+    # fall back solution
+    $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES";
+        unless defined $enc_length;
+
   LINE:
     undef $self->{type};
     ($line,$ref)=$self->shiftline();
@@ -751,7 +769,7 @@ sub parse{
 
 	    # Split on spaces for arguments, but not spaces within double quotes
 	    my @args=();
-	    $line =~ s/\\ /\xA0/g; # This is probably not needed
+	    $line =~ s/\\ /$nbs/g; # This is probably not needed
 	    push @args,$arg1;
 	    push @args, splitargs($ref,$arguments);
 
@@ -887,7 +905,7 @@ sub splitargs {
     # will be translated will have the same change again (in pre_trans and
     # post_trans), but the ones which won't get translated are not changed
     # anymore. Let's play safe.
-    $arguments =~ s/\\ /\xA0/g;
+    $arguments =~ s/\\ /$nbs/g;
     $arguments =~ s/^ +//;
     foreach my $elem (split (/ +/,$arguments)) {
         print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
@@ -904,8 +922,8 @@ sub splitargs {
                 print STDERR "End of quote, with stuff after it\n"
                     if ($debug{'splitargs'});
                 my ($a,$b)=($1,$2);
-                $a =~ s/\xA0/\\ /g;
-                $b =~ s/\xA0/\\ /g;
+                $a =~ s/\Q$nbs/\\ /g;
+                $b =~ s/\Q$nbs/\\ /g;
                 push @args,$a;
                 push @args,$b;
                 $buffer = "";
@@ -913,7 +931,7 @@ sub splitargs {
                 print STDERR "End of a quote\n"
                     if ($debug{'splitargs'});
                 my $a = $1;
-                $a =~ s/\xA0/\\ /g;
+                $a =~ s/\Q$nbs/\\ /g;
                 push @args,$a;
                 $buffer = "";
             } elsif ($escaped) {
@@ -921,9 +939,9 @@ sub splitargs {
                     if ($debug{'splitargs'});
                 unless(length($elem)){
                     die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
-			"Escaped space at the end of macro arg. With high probability, it won't do the trick with po4a (because of wrapping). You may want to remove it and use the .nf/.fi groff macro to control the wrapping."));
+                        "Escaped space at the end of macro arg. With high probability, it won't do the trick with po4a (because of wrapping). You may want to remove it and use the .nf/.fi groff macro to control the wrapping."));
                 }
-                $buffer =~ s/\xA0/\\ /g;
+                $buffer =~ s/\Q$nbs/\\ /g;
                 push @args,$buffer;
                 $buffer = "";
                 $escaped = 0;
@@ -934,7 +952,7 @@ sub splitargs {
             my $a = $1;
             # Inside a quoted argument, "" indicates a double quote
             $a =~ s/""/\\(dq/g;
-            $a =~ s/\xA0/\\ /g;
+            $a =~ s/\Q$nbs/\\ /g;
             push @args,$a;
         } elsif ($elem =~ m/^"/) { #") {
             print STDERR "Begin of a quoting arg\n"
@@ -957,7 +975,7 @@ sub splitargs {
         # Inside a quoted argument, "" indicates a double quote
         while ($buffer =~ s/^"([^"]*?)""/"$1\\(dq/) {}
         $buffer=~ s/"//g;
-        $buffer =~ s/\xA0/\\ /g;
+        $buffer =~ s/\Q$nbs/\\ /g;
         push @args,$buffer;
     }
     if ($debug{'splitargs'}) {
