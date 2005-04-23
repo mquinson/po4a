@@ -317,6 +317,9 @@ sub initialize {
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'}='';
 
+    # reset the debug options
+    %debug = ();
+
     foreach my $opt (keys %options) {
         if (defined $options{$opt}) {
             die wrap_mod("po4a::man",
