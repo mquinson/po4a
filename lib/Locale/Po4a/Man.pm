@@ -318,7 +318,7 @@ sub initialize {
     $self->{options}{'verbose'}='';
 
     foreach my $opt (keys %options) {
-        if ($options{$opt}) {
+        if (defined $options{$opt}) {
             die wrap_mod("po4a::man",
                          dgettext("po4a", "Unknown option: %s"), $opt)
                 unless exists $self->{options}{$opt};
@@ -900,6 +900,9 @@ sub splitargs {
     my @args=();
     my $buffer="";
     my $escaped=0;
+    if (! defined $arguments) {
+        return @args;
+    }
     # change non-breaking space before to ensure that split does what we want
     # We change them back before pushing into the arguments. The one which
     # will be translated will have the same change again (in pre_trans and
