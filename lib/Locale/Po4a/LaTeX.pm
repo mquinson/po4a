@@ -147,7 +147,7 @@ register_generic("frac,0,2,,1 2");
 register_generic("*frame,0,1,,1");
 register_generic("*framebox,2,1,,1");         # There is another form in picture environment
 register_generic("*hspace,1,1,,");
-register_generic("*hyphenation,0,1,,1");       # Translators may wish to add/remove words
+register_generic("*hyphenation,0,1,,1");      # Translators may wish to add/remove words
 register_generic("include,0,1,,");            # file
 #register_generic("includeonly,0,1,,");       # should not be supported for now
 register_generic("input,0,1,,");              # file

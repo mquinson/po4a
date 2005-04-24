@@ -744,10 +744,15 @@ sub parse{
 
     # change the non-breaking space according to the input document charset
     $nbs = "\xA0";
-    my $enc_length = Encode::from_to($nbs, "latin-1",
+    my $enc_length;
+    if (defined $self->{TT}{'file_in_charset'} and
+        length $self->{TT}{'file_in_charset'})
+    {
+        $enc_length = Encode::from_to($nbs, "latin-1",
                                            $self->{TT}{'file_in_charset'});
+    }
     # fall back solution
-    $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES";
+    $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES"
         unless defined $enc_length;
 
   LINE:

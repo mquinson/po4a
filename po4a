@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.27 2005-04-23 17:03:17 nekral-guest Exp $
+# $Id: po4a,v 1.28 2005-04-24 01:09:24 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -290,7 +290,7 @@ sub parse_config_options {
     my $options = shift;   # reference to an hash of options
 
     while (defined $line and $line !~ m/^\s*$/) {
-        if ($line =~ m/^\s*opt(?:_(.+?))?:\s*(.+)\s*$/) {
+        if ($line =~ m/^\s*opt(?:_(.+?))?:\s*(.+?)\s*$/) {
             my $lang = $1;
             $line = $2;
             my $opt = "";
