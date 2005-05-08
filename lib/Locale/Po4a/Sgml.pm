@@ -389,7 +389,7 @@ sub parse_file {
 	                                    "formalpara ".
 	                                    "glossary glossdef glossdiv glossentry glosslist group ".
 	                                    "imageobject important index indexterm informaltable itemizedlist ".
-			                    "kerword keywordset ".
+	                                    "keyword keywordset ".
 	                                    "legalnotice listitem lot ".
 	                                    "mediaobject msg msgentry msginfo msgexplan msgmain msgrel msgsub msgtext ".
 	                                    "note ".
