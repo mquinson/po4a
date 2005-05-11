@@ -808,7 +808,7 @@ sub parse_file {
 	    $cdata =~ s/{PO4A-lt}/</g;
 	    $cdata =~ s/{PO4A-gt}/>/g;
 	    $cdata =~ s/{PO4A-amp}/&/g;
-	    if ($cdata =~ /^(({PO4A-(beg|end)[^\}]*})|\s)+$/ &&
+	    if ($cdata =~ /(({PO4A-(beg|end)[^\}]*})|\s)+$/ &&
 		$cdata =~ /\S/) {
 		$cdata =~ s/\s*{PO4A-end}/\]\]>\n/g;
 		$cdata =~ s/\s*{PO4A-beg-([^\}]+)}/<!\[$1\[\n/g;
