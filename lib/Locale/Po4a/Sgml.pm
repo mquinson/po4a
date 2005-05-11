@@ -351,7 +351,8 @@ sub parse_file {
     if ($prolog =~ /debiandoc/i) {
 	$self->set_tags_kind("translate" => "author version abstract title".
 			                    "date copyrightsummary heading p ".
- 			                    "example tag title ",
+			                    "example tag title contrib ".
+			                    "epigraph",
 			     "empty"     => "date ref manref url toc",
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
