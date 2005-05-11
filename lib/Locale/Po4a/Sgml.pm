@@ -812,16 +812,15 @@ sub parse_file {
 		$cdata =~ /\S/) {
 		$cdata =~ s/\s*{PO4A-end}/\]\]>\n/g;
 		$cdata =~ s/\s*{PO4A-beg-([^\}]+)}/<!\[$1\[\n/g;
-		$self->pushline($cdata);
 	    } else {
 		if (!$verb) {
 		    $cdata =~ s/\\t/ /g;
 		    $cdata =~ s/\s+/ /g;
 		    $cdata =~ s/^\s//s if $lastchar eq ' ';
 		}
-		$lastchar = substr($cdata, -1, 1);
-		$buffer .= $cdata;
 	    }
+	    $lastchar = substr($cdata, -1, 1);
+	    $buffer .= $cdata;
 	} # end of type eq 'cdata'
 
 	elsif ($event->type eq 'sdata') {
