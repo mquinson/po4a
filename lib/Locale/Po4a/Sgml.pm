@@ -450,7 +450,19 @@ sub parse_file {
     # protect the conditional inclusions in the file
     $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
     $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
-    
+
+    my $tmp1 = $origfile;
+    $origfile = "";
+    while ($tmp1 =~ m/^(.*?{PO4A-beg-[^}]*})(.+?)({PO4A-end}.*)$/s) {
+        my ($begin, $tmp) = ($1, $2);
+        $tmp1 = $3;
+        $tmp =~ s/</{PO4A-lt}/gs;
+        $tmp =~ s/>/{PO4A-gt}/gs;
+        $tmp =~ s/&/{PO4A-amp}/gs;
+        $origfile .= $begin.$tmp;
+    }
+    $origfile .= $tmp1;
+
     # Deal with the %entities; in the prolog. God damn it, this code is gross!
     # Try hard not to change the number of lines to not fuck up the references
     my %prologentincl;
@@ -793,6 +805,9 @@ sub parse_file {
 	
 	elsif ($event->type eq 'cdata') {
 	    my $cdata = $event->data;
+	    $cdata =~ s/{PO4A-lt}/</g;
+	    $cdata =~ s/{PO4A-gt}/>/g;
+	    $cdata =~ s/{PO4A-amp}/&/g;
 	    if ($cdata =~ /^(({PO4A-(beg|end)[^\}]*})|\s)+$/ &&
 		$cdata =~ /\S/) {
 		$cdata =~ s/\s*{PO4A-end}/\]\]>\n/g;
