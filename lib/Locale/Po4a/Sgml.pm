@@ -351,8 +351,7 @@ sub parse_file {
     if ($prolog =~ /debiandoc/i) {
 	$self->set_tags_kind("translate" => "author version abstract title".
 			                    "date copyrightsummary heading p ".
-			                    "example tag title contrib ".
-			                    "epigraph",
+			                    "example tag title",
 			     "empty"     => "date ref manref url toc",
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
@@ -380,7 +379,8 @@ sub parse_file {
 	                                    "para phrase pubdate publishername primary ". 
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
 	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref synopsis ".
-	                                    "term tertiary title titleabbrev",
+	                                    "term tertiary title titleabbrev ".
+	                                    "contrib epigraph",
 			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
