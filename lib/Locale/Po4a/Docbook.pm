@@ -212,7 +212,7 @@ sub initialize {
 		<sgmltag>
 		<sidebar>
 		<structfield>
-		<structname
+		<structname>
 		<subscript>
 		<superscript>
 		<surname>
