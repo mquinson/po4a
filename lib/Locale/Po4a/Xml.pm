@@ -399,7 +399,11 @@ sub tag_trans_xmlhead {
 	$self->detected_charset($in_charset);
 	my $out_charset=$self->get_out_charset;
 
-	$tag =~ s/$in_charset/$out_charset/;
+	if (defined $in_charset) {
+		$tag =~ s/$in_charset/$out_charset/;
+	} else {
+		$tag.= " encoding=\"$out_charset\"";
+	}
 
 	return $tag;
 }
