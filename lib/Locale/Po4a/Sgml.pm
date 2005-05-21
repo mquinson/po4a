@@ -2,9 +2,9 @@
 
 # Po4a::Sgml.pm 
 # 
-# extract and translate translatable strings from a sgml based document.
+# extract and translate translatable strings from an sgml based document.
 # 
-# This code is an adapted version of sgmlspl (SGML postprocesser for the
+# This code is an adapted version of sgmlspl (SGML postprocessor for the
 #   SGMLS and NSGMLS parsers) which was:
 #
 # Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
@@ -78,7 +78,7 @@ Tags not needing to be closed.
 =item ignore
 
 Tags ignored and considered as plain char data by po4a. That is to say that
-they can be part of a msgid. For example, E<lt>bE<gt> is a good candidate
+they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
 for this category since putting it in the translate section would create
 msgids not being whole sentences, which is bad.
 
@@ -97,8 +97,8 @@ optimisation. It can be useful if the document contains a construction like
 
 =head1 STATUS OF THIS MODULE
 
-The result is perfect. Ie, the generated documents are exactly the
-same. But there is still some problems:
+The result is perfect. I.e., the generated documents are exactly the
+same. But there are still some problems:
 
 =over 2
 
@@ -117,7 +117,7 @@ The problem with this is that the C<{PO4A-end}> and such I add are valid in
 the document (not in a E<lt>pE<gt> tag or so).
 
 Everything works well with nsgmls's output redirected that way, but it will
-prevent us to detect that the document is badly formatted.
+prevent us from detecting that the document is badly formatted.
 
 =item *
 
@@ -155,7 +155,7 @@ changes I want to this before passing it to nsgmls for parsing.
 
 So that it works, I replace the entities asking for a file inclusion by the
 content of the given file (so that I can protect what needs to in subfile
-also). But nothing is done so far to correct the references (ie, filename
+also). But nothing is done so far to correct the references (i.e., filename
 and line number) afterward. I'm not sure what the best thing to do is.
 
 =back
@@ -325,7 +325,7 @@ sub parse_file {
 	$pos += length($prolog);
 	$lvl=1;
 	while ($lvl != 0) {
-	    # Eat comments in the prolog, since it may be some '>' or '<' in them.
+	    # Eat comments in the prolog, since there may be some '>' or '<' in them.
 	    if ($origfile =~ m/^.{$pos}?(<!--.*?-->)/s) {
 		print "Found a comment in the prolog: $1\n" if ($debug{'generic'});
 		$pos += length($1);
@@ -467,7 +467,7 @@ sub parse_file {
     # Try hard not to change the number of lines to not fuck up the references
     my %prologentincl;
     my $moretodo=1;
-    while ($moretodo) { # non trivial loop to deal with recursiv inclusion
+    while ($moretodo) { # non trivial loop to deal with recursive inclusion
 	$moretodo = 0;
 	# Unprotect not yet defined inclusions
 	$prolog =~ s/{PO4A-percent}/%/sg;
@@ -498,7 +498,7 @@ sub parse_file {
         while ($prolog =~ /^(.*?)%([^;\s]*);(.*)$/s) {
 	    my ($pre,$ent,$post) = ($1,$2,$3);
 	    # Yeah, right, the content of the entity can be defined in a not yet loaded entity
-	    # It's easy to build a weird case where all that shit colapse poorly. But why the
+	    # It's easy to build a weird case where all that shit collapses poorly. But why the
 	    # hell are you using those strange constructs in your document, damn it?
 	    print STDERR "Seen prolog inclusion $ent\n" if ($debug{'entities'});
 	    if (defined ($prologentincl{$ent})) {
@@ -655,7 +655,7 @@ sub parse_file {
     } 
 
     # The parse object.
-    # Damn SGMLS. It makes me crude things.
+    # Damn SGMLS. It makes me do crude things.
     no strict "subs";
     my $parse= new SGMLS(IN);
     use strict;
@@ -747,7 +747,7 @@ sub parse_file {
 	    $verb++ if $verbatim{$event->data->name()};
 	    if ($indent{$event->data->name()}) {
 		# push the indenting space only if not in verb before that tag
-		# push tailing "\n" only if not in verbose afterward
+		# push trailing "\n" only if not in verbose afterward
 		$self->pushline( ($verb>1?"": (" " x $indent)).$tag.($verb?"":"\n"));
 		$indent ++ unless $empty{$event->data->name()} ;
 	    }  else {
@@ -887,7 +887,7 @@ sub end_paragraph {
 
 =head1 AUTHORS
 
-This module is an adapted version of sgmlspl (SGML postprocesser for the
+This module is an adapted version of sgmlspl (SGML postprocessor for the
 SGMLS and NSGMLS parsers) which was:
 
  Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
