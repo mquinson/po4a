@@ -280,7 +280,7 @@ sub set_tags_kind {
     
     foreach (keys %kinds) {
 	die "po4a::sgml: internal error: set_tags_kind called with unrecognized arg $_"
-	    if ($_ ne 'translate' && $_ ne 'empty' && $_ ne 'verbatim'  && $_ ne 'ignore' && $_ ne 'indent');
+	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent)$/);
 	
 	$self->{SGML}->{k}{$_} .= $kinds{$_};
     }    
