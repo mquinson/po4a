@@ -290,24 +290,24 @@ sub set_tags_kind {
 # Do the actual work, using the SGMLS package and settings done elsewhere.
 #
 sub parse_file {
-    my ($self,$filename)=@_;
+    my ($self,$mastername)=@_;
     my ($prolog);
 
     # Rewrite the file to:
     #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
     #   - protect entities from expansion (ie "&release;")
-    open (IN,"<$filename") 
-	|| die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s: %s"), $filename, $!);
+    open (IN,"<$mastername")
+	|| die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s: %s"), $mastername, $!);
     my $origfile="";
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close %s: %s"), $filename, $!);
+    close IN || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close %s: %s"), $mastername, $!);
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a",
 		"Trying to handle a XML document as a SGML one. ".
-		"Feel lucky if it works, help us implementing a proper XML backend if it does not."), $filename)
+		"Feel lucky if it works, help us implementing a proper XML backend if it does not."), $mastername)
 	  unless $self->verbose() <= 0;
 	$xmlprolog=$1;
     }
@@ -443,8 +443,8 @@ sub parse_file {
     my @lines = split(/\n/, $origfile);
     print "XX Prepare reference indirection stuff\n" if $debug{'refs'};
     for (my $i=1; $i<=scalar @lines; $i++) {
-	push @refs,"$filename:$i";
-	print "$filename:$i\n" if $debug{'refs'};
+	push @refs,"$mastername:$i";
+	print "$mastername:$i\n" if $debug{'refs'};
     }
 
     # protect the conditional inclusions in the file
@@ -478,6 +478,12 @@ sub parse_file {
 	    my $key = $2;
 	    my $filename=$3;
 	    $prolog = $1.$4;
+	    if ($filename !~ m%/%)
+	    {
+	        my $dir=$mastername;
+	        $dir =~ s%/[^/]*$%%;
+	        $filename="$dir/$filename";
+	    }
 	    (-e $filename && open IN,"<$filename")  ||
 	      die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s (content of entity %s%s;): %s"),
 		  $filename, '%', $key, $!);
@@ -530,6 +536,12 @@ sub parse_file {
 	my $key = $2;
 	my $filename = $3;
 	$searchprolog = $1.$4;
+	if ($filename !~ m%/%)
+	{
+	    my $dir=$mastername;
+	    $dir =~ s%/[^/]*$%%;
+	    $filename="$dir/$filename";
+	}
 	$entincl{$key}{'filename'}=$filename;
 	# Preload the content of the entity
 	(-e $filename && open IN,"<$filename")  ||
@@ -588,7 +600,7 @@ sub parse_file {
     if ($debug{'refs'}) {
 	print "XX Resulting shifts\n";
 	for (my $i=0; $i<scalar @refs; $i++) {
-	    print "$filename:".($i+1)." -> $refs[$i]\n";
+	    print "$mastername:".($i+1)." -> $refs[$i]\n";
 	}
     }
     
