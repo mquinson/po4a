@@ -217,7 +217,7 @@ sub initialize {
 	}
     }
     if ($options{'debug'}) {
-	foreach ($options{'debug'}) {
+	foreach (split /\s+/, $options{'debug'}) {
 	    $debug{$_} = 1;
 	}
     }
