@@ -113,8 +113,8 @@ sub parse {}
 
 =head1 SYNOPSIS
 
-The following example parses a list of paragraphs beginning with "<p>". For sake
-of simplicity, we assume that the document is well formatted, ie that '<p>'
+The following example parses a list of paragraphs beginning with "<p>". For the sake
+of simplicity, we assume that the document is well formatted, i.e. that '<p>'
 tags are the only tags present, and that this tag is at the very beginning
 of each paragraph.
 
@@ -152,7 +152,7 @@ of each paragraph.
            # Reinit the loop
            ($line,$lref)=$self->shiftline();
        }
-       # Did not got a defined line? End of input file.
+       # Did not get a defined line? End of input file.
        return;
    }
  } 
@@ -233,7 +233,7 @@ extracted from the input document.
 
 =item addendum (@)
 
-list of filenames where we should read the addenda from.
+List of filenames where we should read the addenda from.
 
 =item addendum_charset ($)
 
@@ -992,9 +992,9 @@ To address this problem, the only interface changes needed are:
 
 =over 2
 
-=item - 
+=item -
 
-take an hash as po_in_name (a list per language)
+take a hash as po_in_name (a list per language)
 
 =item -
 
