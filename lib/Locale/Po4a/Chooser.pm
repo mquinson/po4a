@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.25 2005-02-27 23:32:02 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.26 2005-05-25 17:08:40 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -41,9 +41,10 @@ sub new {
     if (! UNIVERSAL::can("Locale::Po4a::$modname", 'new')) {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
+            my $error=$@;
             warn wrap_msg(gettext("Unknown format type: %s."), $module);
 	    warn wrap_mod("po4a::chooser",
-		gettext("Module loading error: %s"), $@)
+		gettext("Module loading error: %s"), $error)
 	      if defined $options{'verbose'} && $options{'verbose'} > 0;
             list(1);
         }
