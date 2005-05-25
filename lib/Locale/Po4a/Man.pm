@@ -661,7 +661,7 @@ sub post_trans {
 	    $done .= $first  if ($lvl > 0);
 	    $rest=substr($rest,1);
 	}
-	die wrap_ref_mod($ref||$self->{ref}, "po4a::man", dgettext("po4a","Unbalanced '<' and '>'"))
+	die wrap_ref_mod($ref||$self->{ref}, "po4a::man", dgettext("po4a","Unbalanced '<' and '>' in font modifier. Faulty message: %s"),$str)
 	    if ($lvl > 0);
 	# Return to the regular font
 	$done .= "\\fP$rest";
