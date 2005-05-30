@@ -2,14 +2,13 @@
 eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
-# $Id: msgsearch,v 1.7 2005-05-30 07:05:21 mquinson Exp $
+# $Id: msgsearch,v 1.8 2005-05-30 07:13:37 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 # 
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
-my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -150,14 +149,7 @@ use Pod::Usage qw(pod2usage);
 textdomain('po4a');
 
 sub show_version {
-    print sprintf(gettext(
-          "%s version %s.\n".
-          "written by Martin Quinson and Denis Barbier.\n\n".
-          "Copyright (C) 2002, 2003, 2004 Software of Public Interest, Inc.\n".
-          "This is free software; see source code for copying\n".
-          "conditions. There is NO warranty; not even for\n".
-          "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-          ), "msgsearch", $VERSION)."\n";
+    Locale::Po4a::Common::show_version("msgsearch");
     exit 0;
 }
 

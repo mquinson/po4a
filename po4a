@@ -3,14 +3,12 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.28 2005-04-24 01:09:24 nekral-guest Exp $
+# $Id: po4a,v 1.29 2005-05-30 07:13:38 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
-
-my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -201,10 +199,6 @@ use Pod::Usage qw(pod2usage);
 
 use File::Temp;
 
-use Locale::gettext;
-use POSIX;     # Needed for setlocale()
-
-setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 
