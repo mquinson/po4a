@@ -864,7 +864,7 @@ sub parse_file {
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
-    die wrap_mod("po4a::sgml", dgettext("po4a","nsgmls is missing or non-functional"));
+    die wrap_mod("po4a::sgml", dgettext("po4a","nsgmls is missing or non-functional")) if ($? != 0);
     unlink ($tmpfile) unless $debug{'refs'};
 }
 
