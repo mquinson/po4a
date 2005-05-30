@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.7 2005-03-21 10:11:59 mquinson Exp $
+# $Id: Common.pm,v 1.8 2005-05-30 07:00:34 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -24,12 +24,11 @@ package Locale::Po4a::Common;
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
-@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod load_config);
+@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod textdomain gettext dgettext load_config);
 
 use 5.006;
 use strict;
 use warnings;
-use Locale::gettext;
 use Text::WrapI18N qw(wrap $columns);
 use Term::ReadKey;
 
@@ -51,6 +50,50 @@ sub min {
 }
 
 =head1 FUNCTIONS
+
+=head2 Wrappers for other modules
+
+=item textdomain($)
+
+This is a wrapper for Locale::gettext's textdomain() so that po4a still
+works if that module is missing. This wrapper also calls
+setlocale(LC_MESSAGES, "") so callers don't depend on the POSIX module either.
+
+=cut
+
+sub textdomain
+{
+    my ($domain)=@_;
+    return eval "use Locale::gettext; use POSIX; setlocale(LC_MESSAGES, ''); textdomain(\$domain)";
+}
+
+=item gettext($)
+
+This is a wrapper for Locale::gettext's gettext() so that things still
+work ok if that module is missing.
+
+=cut
+
+sub gettext
+{
+    my ($str)=@_;
+    my $rc=eval "use Locale::gettext; Locale::gettext::gettext(\$str)";
+    return ($@ ? $str : $rc);
+}
+
+=item dgettext($$)
+
+This is a wrapper for Locale::gettext's dgettext() so that things still
+work ok if that module is missing.
+
+=cut
+
+sub dgettext
+{
+    my ($domain, $str)=@_;
+    my $rc=eval "use Locale::gettext; dgettext(\$domain, \$str)";
+    return ($@ ? $str : $rc);
+}
 
 =head2 Showing output messages
 
