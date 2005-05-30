@@ -59,7 +59,6 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
-use Locale::gettext qw(dgettext);
 
 #It will mantain the path from the root tag to the current one
 my @path;

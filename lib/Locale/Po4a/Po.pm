@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.41 2005-04-03 21:15:22 nekral-guest Exp $
+# $Id: Po.pm,v 1.42 2005-05-30 07:05:22 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -57,7 +57,7 @@ require Exporter;
 package Locale::Po4a::Po;
 
 use Locale::Po4a::TransTractor;
-use Locale::Po4a::Common;
+use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use 5.006;
 use strict;
@@ -70,7 +70,6 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @EXPORT = qw(load write gettext);
 
 use Carp qw(croak);
-use Locale::gettext qw(dgettext);
 use File::Path; # mkdir before write
 
 use Encode;

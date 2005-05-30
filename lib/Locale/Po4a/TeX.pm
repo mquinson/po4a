@@ -80,7 +80,6 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
-use Locale::gettext qw(dgettext);
 use File::Basename qw(dirname);
 use Carp qw(croak);
 

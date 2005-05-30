@@ -61,7 +61,6 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
-use Locale::gettext qw(dgettext);
 
 
 sub initialize {}

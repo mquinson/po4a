@@ -280,7 +280,6 @@ $VERSION=$Locale::Po4a::TransTractor::VERSION;
 @EXPORT = qw();#  new initialize);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
-use Locale::gettext qw(dgettext);
 
 use File::Spec;
 use Getopt::Std;

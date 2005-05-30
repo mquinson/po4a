@@ -2,7 +2,7 @@
 eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
-# $Id: msgsearch,v 1.6 2005-02-27 22:56:00 mquinson Exp $
+# $Id: msgsearch,v 1.7 2005-05-30 07:05:21 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 # 
@@ -143,13 +143,10 @@ use warnings;
 use Getopt::Long qw(GetOptions);
 
 use Locale::Po4a::Po;
+use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 
-use Locale::gettext;
-use POSIX;     # Needed for setlocale()
-
-setlocale(LC_MESSAGES, "");
 textdomain('po4a');
 
 sub show_version {

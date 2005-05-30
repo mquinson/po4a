@@ -51,7 +51,6 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(new initialize);
 
 use Locale::Po4a::TransTractor;
-use Locale::gettext qw(gettext);
 
 use strict;
 use warnings;

@@ -20,7 +20,6 @@ use Carp qw(croak);
 use Locale::Po4a::Po;
 use Locale::Po4a::Common;
 
-use Locale::gettext qw(dgettext);
 use File::Path; # mkdir before write
 
 use Encode;

@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.26 2005-05-25 17:08:40 mquinson Exp $
+# $Id: Chooser.pm,v 1.27 2005-05-30 07:05:22 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -18,7 +18,6 @@ package Locale::Po4a::Chooser;
 use 5.006;
 use strict;
 use warnings;
-use Locale::gettext;
 use Locale::Po4a::Common;
 
 sub new {

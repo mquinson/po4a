@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.37 2005-05-25 16:34:13 mquinson Exp $
+# $Id: po4a-translate,v 1.38 2005-05-30 07:05:21 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -161,10 +161,6 @@ use Locale::Po4a::Common;
 use Pod::Usage qw(pod2usage);
 use Getopt::Long qw(GetOptions);
 
-use Locale::gettext;
-use POSIX;     # Needed for setlocale()
-
-setlocale(LC_ALL, "");
 textdomain("po4a");
 
 sub show_version {
