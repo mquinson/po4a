@@ -68,8 +68,7 @@ use strict;
 use warnings;
 
 require Exporter;
-use vars qw($VERSION @ISA @EXPORT);
-$VERSION=$Locale::Po4a::TransTractor::VERSION;
+use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(%commands %environments
              $RE_ESCAPE $ESCAPE

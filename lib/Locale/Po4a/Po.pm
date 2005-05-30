@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.42 2005-05-30 07:05:22 mquinson Exp $
+# $Id: Po.pm,v 1.43 2005-05-30 07:15:21 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -64,8 +64,7 @@ use strict;
 use warnings;
 
 use subs qw(makespace);
-use vars qw($VERSION @ISA @EXPORT);
-$VERSION=$Locale::Po4a::TransTractor::VERSION;
+use vars qw(@ISA @EXPORT);
 @ISA = ();
 @EXPORT = qw(load write gettext);
 

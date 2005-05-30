@@ -274,8 +274,7 @@ use strict;
 use warnings;
 
 require Exporter;
-use vars qw($VERSION @ISA @EXPORT);
-$VERSION=$Locale::Po4a::TransTractor::VERSION;
+use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();#  new initialize);
 use Locale::Po4a::TransTractor;

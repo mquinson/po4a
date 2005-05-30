@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.16 2005-02-27 22:53:53 mquinson Exp $
+# $Id: Pod.pm,v 1.17 2005-05-30 07:15:23 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -23,8 +23,7 @@ use warnings;
 
 require Exporter;
 
-use vars qw($VERSION @ISA);
-$VERSION=$Locale::Po4a::TransTractor::VERSION;
+use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
 
 sub initialize {}

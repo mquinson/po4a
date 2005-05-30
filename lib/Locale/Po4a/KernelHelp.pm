@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.12 2005-02-27 22:53:52 mquinson Exp $
+# $Id: KernelHelp.pm,v 1.13 2005-05-30 07:15:19 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -24,8 +24,7 @@ use warnings;
 
 require Exporter;
 
-use vars qw($VERSION @ISA @EXPORT $AUTOLOAD);
-$VERSION=$Locale::Po4a::TransTractor::VERSION;
+use vars qw(@ISA @EXPORT $AUTOLOAD);
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(); # new process write read writepo readpo);
 
