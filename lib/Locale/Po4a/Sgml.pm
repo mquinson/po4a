@@ -82,6 +82,18 @@ they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
 for this category since putting it in the translate section would create
 msgids not being whole sentences, which is bad.
 
+=item attribute
+
+A space separated list of attributes that need to be translated. You can
+specify the attributes by their name (for example, "lang"), but you can also
+prefix it with a tag hierarchy, to specify that this attribute will only be
+translated when it is into the specified tag. For example:
+E<lt>bbbE<gt>E<lt>aaaE<gt>lang specifies that the lang attribute will only be
+translated if it is in an E<lt>aaaE<gt> tag, which is in a E<lt>bbbE<gt> tag.
+The tag names are actually regular expressions so you can also write things
+like E<lt>aaa|bbbbE<gt>lang to only translate lang attributes that are in
+an E<lt>aaaE<gt> or a E<lt>bbbE<gt> tag.
+
 =item force
 
 Proceed even if the DTD is unknown.
@@ -273,13 +285,13 @@ sub set_tags_kind {
     my $self=shift;
     my (%kinds)=@_;
 
-    foreach (qw(translate empty section verbatim ignore)) {
+    foreach (qw(translate empty section verbatim ignore attribute)) {
 	$self->{SGML}->{k}{$_} = $self->{options}{$_} ? $self->{options}{$_}.' ' : '';
     }
     
     foreach (keys %kinds) {
 	die "po4a::sgml: internal error: set_tags_kind called with unrecognized arg $_"
-	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent)$/);
+	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent|attribute)$/);
 	
 	$self->{SGML}->{k}{$_} .= $kinds{$_};
     }    
@@ -425,7 +437,8 @@ sub parse_file {
 	                                    "varname ".
 	                                    "wordasword ".
 	                                    "xref ".
-                                            "year");
+                                            "year",
+	                     "attribute" => "<(article|book)>lang");
 
     } else {
 	if ($self->{options}{'force'}) {
@@ -615,7 +628,7 @@ sub parse_file {
     open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run nsgmls: %s"), $!);
 
     # The kind of tags
-    my (%translate,%empty,%verbatim,%indent,%exist);
+    my (%translate,%empty,%verbatim,%indent,%exist,%attribute);
     foreach (split(/ /, ($self->{SGML}->{k}{'translate'}||'') )) {
 	$translate{uc $_} = 1;
 	$indent{uc $_} = 1;
@@ -638,7 +651,28 @@ sub parse_file {
     foreach (split(/ /, ($self->{SGML}->{k}{'ignore'}) || '')) {
 	$exist{uc $_} = 1;
     }
-   
+    foreach (split(/ /, ($self->{SGML}->{k}{'attribute'}) || '')) {
+        my ($attr, $tags);
+        if (m/(^.*>)(\w+)/)
+        {
+            $attr=uc $2;
+            $tags=$1;
+        }
+        else
+        {
+            $attr=uc $_;
+            $tags=".*";
+        }
+        if (exists $attribute{$attr})
+        {
+            $attribute{$attr}.="|$tags";
+        }
+        else
+        {
+            $attribute{$attr} = $tags;
+        }
+    }
+
 
     # What to do before parsing
 
@@ -703,6 +737,25 @@ sub parse_file {
                 if ($val->type() eq 'CDATA' ||
 		    $val->type() eq 'IMPLIED') {
 		    if (defined $value && length($value)) {
+                        my $name=lc $attr;
+                        if (exists $attribute{uc($attr)}) {
+                            my $context="";
+                            foreach my $o (@open) {
+                                next if (!defined $o or $o =~ m%^</%);
+                                $o =~ s/ .*/>/;
+                                $context.=$o;
+                            }
+                            $context=join("", $context,
+                                          "<", lc($event->data->name()), ">");
+                            if ($context =~ /^($attribute{uc($attr)})$/) {
+                                my $translated = $self->translate("$name=$value", $ref, "attribute $context$name");
+                                if ($translated =~ s/^$name=//) {
+                                    $value=$translated;
+                                } else {
+                                    die wrap_mod("po4a::sgml", dgettext("po4a", "bad translation '%s' for '%s' in '%s'"), $translated, "$context$name", $ref);
+                                }
+                            }
+                        }
 			if ($value =~ m/"/) { #"
 			    $value = "'".$value."'";
 			} else {
