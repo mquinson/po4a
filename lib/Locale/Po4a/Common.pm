@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.8 2005-05-30 07:00:34 mquinson Exp $
+# $Id: Common.pm,v 1.9 2005-06-23 15:42:37 jvprat-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -24,7 +24,7 @@ package Locale::Po4a::Common;
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Exporter);
-@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod textdomain gettext dgettext load_config);
+@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod textdomain gettext dgettext);
 
 use 5.006;
 use strict;
