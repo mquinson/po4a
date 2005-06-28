@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.9 2005-06-23 15:42:37 jvprat-guest Exp $
+# $Id: Common.pm,v 1.10 2005-06-28 19:37:34 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -29,23 +29,30 @@ use vars qw(@ISA @EXPORT);
 use 5.006;
 use strict;
 use warnings;
-use Text::WrapI18N qw(wrap $columns);
-use Term::ReadKey;
 
-sub setcolumns {
-    my ($col,$h,$cp,$hp);
-    eval {
-	($col,$h,$cp,$hp) = Term::ReadKey::GetTerminalSize(); 
-    };
-    if ($@) {
-       # GetTerminalSize failed. Maybe a terminal-less build or such strange condition. Let's play safe.
-       $col = 76;
+sub setcolumns() {
+    my $col=$ENV{COLUMNS};
+    if (!defined $col)
+    {
+        my @term=eval "use Term::ReadKey; Term::ReadKey::GetTerminalSize()";
+        $col=$term[0] if (!$@);
+        # If GetTerminalSize() failed we will fallback to a safe default.
+        # This can happen if Term::ReadKey is not available
+        # or this is a terminal-less build or such strange condition.
     }
-    $columns = $ENV{'COLUMNS'} || $col || 76;
-#    print "set col to $columns\n";
+    $col=76 if (!defined $col);
+    eval "use Text::WrapI18N qw(\$columns); \$columns = $col";
 }
 
-sub min {
+sub wrapi18n($$$) {
+    my ($header1, $header2, $msg) = @_;
+    setcolumns();
+    my $wrapped=eval "use Text::WrapI18N qw(wrap); wrap(\$header1, \$header2, \$msg)";
+    $wrapped="$header1$msg" if ($@);
+    return $wrapped;
+}
+
+sub min($$) {
     return $_[0] < $_[1] ? $_[0] : $_[1];
 }
 
@@ -123,12 +130,11 @@ This function wraps a message handling the parameters like sprintf does.
 
 =cut
 
-sub wrap_msg {
+sub wrap_msg($@) {
     my $msg = shift;
     my @args = @_;
-    
-    setcolumns();
-    return wrap("", "", sprintf($msg, @args))."\n";
+
+    return wrapi18n("", "", sprintf($msg, @args))."\n";
 }
 
 =item wrap_mod($$@)
@@ -138,14 +144,13 @@ argument, and leaves a space at the left of the message.
 
 =cut
 
-sub wrap_mod {
+sub wrap_mod($$@) {
     my ($mod, $msg) = (shift, shift);
     my @args = @_;
 
-    setcolumns();
     $mod .= ": ";
     my $spaces = " " x min(length($mod), 15);
-    return wrap($mod, $spaces, sprintf($msg, @args))."\n";
+    return wrapi18n($mod, $spaces, sprintf($msg, @args))."\n";
 }
 
 =item wrap_ref_mod($$$@)
@@ -156,11 +161,10 @@ of the message.
 
 =cut
 
-sub wrap_ref_mod {
+sub wrap_ref_mod($$$@) {
     my ($ref, $mod, $msg) = (shift, shift, shift);
     my @args = @_;
 
-    setcolumns();
     if (!$mod) {
 	# If we don't get a module name, show the message like wrap_mod does
 	return wrap_mod($ref, $msg, @args);
@@ -168,7 +172,7 @@ sub wrap_ref_mod {
 	$ref .= ": ";
 	my $spaces = " " x min(length($ref), 15);
 	$msg = "$ref($mod)\n$msg";
-	return wrap("", $spaces, sprintf($msg, @args))."\n";
+	return wrapi18n("", $spaces, sprintf($msg, @args))."\n";
     }
 }
 
