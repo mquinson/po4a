@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.29 2005-05-30 07:13:38 mquinson Exp $
+# $Id: po4a,v 1.30 2005-06-29 17:14:48 mquinson Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -36,6 +36,18 @@ This behaviour can be mimicked by the other tools of the po4a suite (for
 example with makefiles), but it is rather difficult to do, and exhausting to 
 redo the same complicated makefiles for each project using po4a.
 
+The dataflow can be summarized as follow. Any changes to the master document
+will be reflected in the po files, and all changes to the po files (either
+manual or caused by previous step) will be reflected in translation
+documents.
+
+ master document --> po files --> translations
+
+The dataflow cannot be inversed in this tool, and changes in translations
+are overwritten by the content of the po files. As a matter of fact, this
+tool cannot be used to convert existing translations to the po4a system. For
+that task, please refer to L<po4a-gettextize(1)>.
+ 
 =head1 CONFIGURATION FILE SYNTAX
 
 The (mandatory) argument is the path to the configuration file to use. 
