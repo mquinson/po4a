@@ -1,6 +1,7 @@
 po4a (0.22-1) UNRELEASED; urgency=low
 
-  [Nicolas François]
+ [Nicolas François]
+
   (Sgml module)
   * Fix a typo in the "keyword" tag.
     Thanks to Chris Karakas.
@@ -11,11 +12,12 @@ po4a (0.22-1) UNRELEASED; urgency=low
     not output at the right position
   * Don't forget some {PO4A-beg/end} in the output document
 
-  [François Gouget (fgouget@free.fr)]
+ [François Gouget (fgouget@free.fr)]
+
   (Xml module)
   * Append the encoding attribute if it is not defined in the <?xml> tag.
+
   (Sgml module) 
-  * Add support for translating attribute values.
   * Use a regular expression to simplify the tag kind check.
   * Assorted spelling fixes.
   * If relative, the path of included file must be considered to be relative
@@ -25,14 +27,27 @@ po4a (0.22-1) UNRELEASED; urgency=low
     information for. So we must split it to set $debug.
   * Check the nsgmls exit code and issue an error if it is non-zero.
     This lets us detect the case where nsgmls is missing.
+  * Add support for translating attribute values.
+  * Add a 'qualify' option to denote which attributes should get an
+    msgid 'qualified' by the attribute name.
+  * Don't qualify the lang attribute by default for consistency with Xml.pm
+  * Rename the 'attribute' option to 'attributes' for consistency with Xml.pm
+
+  (Po module)
+  * Add a porefs option controlling the file reference verbosity, and thus
+    the diff verbosity.
+
   (Chooser)
   * Store '\$@' in an intermediate variable so it does not get clobbered
     before we report the plugin-load error.
+
   (binaries)
   * Clarify the '--option' documentation.
   * Remove unneeded imports of TransTractor::VERSION.
+
   (libraries)
   * Remove unneeded imports and exports of TransTractor::VERSION.
+
   (General)
   * Various documentation improvements
   * Implement wrappers for textdomain(), gettext() and dgettext() in
@@ -40,14 +55,24 @@ po4a (0.22-1) UNRELEASED; urgency=low
   * Remove unused load_config export in Po4a::Common
   * Make the Text::WrapI18N and Term::ReadKey dependencies optional
 
-  [Jordi Vilalta]
+ [Jordi Vilalta]
+
   (Docbook module)
   * Add the missing > in <structname>
 
-  [Martin Quinson]
+ [Martin Quinson]
+
   (po4a(1))
   * Document the dataflow to explain that this tool cannot be used to 
     gettextize (Closes: #313165)
+
+  (Sgml module)
+  * Allow prolog entities which are not SYSTEM ones
+  * Fix the way included files are looked for (was broken when everything is
+    in the same dir)
+
+  (Transtractor module)
+  * Allow to pass options to the po modules as to the plugins.
 
  -- Martin Quinson <mquinson@debian.org>  Wed, 27 Apr 2005 15:03:10 +0200
 
