@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.43 2005-05-30 07:15:21 mquinson Exp $
+# $Id: Po.pm,v 1.44 2005-07-24 17:07:34 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -45,6 +45,16 @@ This module is part of the PO4A project, which objective is to use po files
 translate everything, including documentation (man page, info manual),
 package description, debconf templates, and everything which may benefit
 from this.
+
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+=over 4
+
+=item porefs
+
+This specifies the reference format. It can be one of 'none' to not produce
+any reference, 'noline' to not specify the line number, and 'full' to
+include complete references.
 
 
 =cut
@@ -93,11 +103,11 @@ a po file we should load.
 =cut
 
 sub new {
-    my $this = shift;
+    my ($this, $options) = (shift, shift);
     my $class = ref($this) || $this;
     my $self = {};
     bless $self, $class;
-    $self->initialize();
+    $self->initialize($options);
  
     my $filename = shift;
     $self->read($filename) if defined($filename) && length($filename);
@@ -105,9 +115,22 @@ sub new {
 }
 
 sub initialize {
-    my $self = shift;
+    my ($self, $options) = (shift, shift);
     my $date = `date +'%Y-%m-%d %k:%M%z'`;
     chomp $date;
+#    $options = ref($options) || $options;
+
+    $self->{options}{'porefs'}= 'full';
+    foreach my $opt (keys %$options) {
+	if ($options->{$opt}) {
+	    die wrap_mod("po4a::po", dgettext ("po4a", "Unknown option: %s"), $opt) unless exists $self->{options}{$opt};
+	    $self->{options}{$opt} = $options->{$opt};
+	}
+    }
+    $self->{options}{'porefs'} =~ /^(full|noline|none)$/ ||
+        die wrap_mod("po4a::po", 
+                     dgettext ("po4a", "Invalid value for option 'porefs' ('%s' is not one of 'full', 'noline' or 'none')"), 
+                     $self->{options}{'porefs'});
 
     $self->{po}=();
     $self->{count}=0;
@@ -641,7 +664,7 @@ sub gettext {
     my $res;
 
     return "" unless defined($text) && length($text); # Avoid returning the header.
-    my $validoption="wrap wrapcol";
+    my $validoption="reference wrap wrapcol";
     my %validoption;
 
     map { $validoption{$_}=1 } (split(/ /,$validoption));
@@ -850,7 +873,13 @@ sub push_raw {
 	$self->{header_comment}=$comment;
 	return;
     }
-    
+
+    if ($self->{options}{'porefs'} eq "none") {
+        $reference = "";
+    } elsif ($self->{options}{'porefs'} eq "noline") {
+        $reference =~ s/:[0-9]*/:1/g;
+    }
+
     if (defined($self->{po}{$msgid})) {
         warn wrap_mod("po4a::po", dgettext("po4a","msgid defined twice: %s"), $msgid) if (0); # FIXME: put a verbose stuff
 	if ($msgstr && $self->{po}{$msgid}{'msgstr'} 
