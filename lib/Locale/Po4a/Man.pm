@@ -114,6 +114,10 @@ These are this module's particular options:
 Activate debugging for some internal mechanisms of this module.
 Use the source to see which parts can be debugged.
 
+=item B<verbose>
+
+Increase verbosity.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
