@@ -82,7 +82,7 @@ they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
 for this category since putting it in the translate section would create
 msgids not being whole sentences, which is bad.
 
-=item attribute
+=item attributes
 
 A space separated list of attributes that need to be translated. You can
 specify the attributes by their name (for example, "lang"), but you can also
@@ -93,6 +93,12 @@ translated if it is in an E<lt>aaaE<gt> tag, which is in a E<lt>bbbE<gt> tag.
 The tag names are actually regular expressions so you can also write things
 like E<lt>aaa|bbbbE<gt>lang to only translate lang attributes that are in
 an E<lt>aaaE<gt> or a E<lt>bbbE<gt> tag.
+
+=item qualify
+
+A space separated list of attributes for which the translation must be
+qualified by the attribute name. Note that this setting automatically adds the
+given attribute into the 'attributes' list too.
 
 =item force
 
@@ -285,13 +291,13 @@ sub set_tags_kind {
     my $self=shift;
     my (%kinds)=@_;
 
-    foreach (qw(translate empty section verbatim ignore attribute)) {
+    foreach (qw(translate empty section verbatim ignore attributes qualify)) {
 	$self->{SGML}->{k}{$_} = $self->{options}{$_} ? $self->{options}{$_}.' ' : '';
     }
     
     foreach (keys %kinds) {
 	die "po4a::sgml: internal error: set_tags_kind called with unrecognized arg $_"
-	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent|attribute)$/);
+	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent|attributes|qualify)$/);
 	
 	$self->{SGML}->{k}{$_} .= $kinds{$_};
     }    
@@ -438,7 +444,7 @@ sub parse_file {
 	                                    "wordasword ".
 	                                    "xref ".
                                             "year",
-	                     "attribute" => "<(article|book)>lang");
+                             "attributes" =>"<(article|book)>lang");
 
     } else {
 	if ($self->{options}{'force'}) {
@@ -479,19 +485,20 @@ sub parse_file {
     # Try hard not to change the number of lines to not fuck up the references
     my %prologentincl;
     my $moretodo=1;
-    while ($moretodo) { # non trivial loop to deal with recursive inclusion
+    PROLOGENTITY: while ($moretodo) { # non trivial loop to deal with recursive inclusion
 	$moretodo = 0;
 	# Unprotect not yet defined inclusions
 	$prolog =~ s/{PO4A-percent}/%/sg;
+        print STDERR "prolog=>>>>$prolog<<<<\n"
+	      if ($debug{'entities'});
 	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {  #})"{ (Stupid editor)
-	    print STDERR "Seen the definition entity of prolog inclusion $2 (=$3)\n"
+	    print STDERR "Seen the definition entity of prolog inclusion '$2' (=$3)\n"
 	      if ($debug{'entities'});
 	    # Preload the content of the entity.
 	    my $key = $2;
 	    my $filename=$3;
 	    $prolog = $1.$4;
-	    if ($filename !~ m%/%)
-	    {
+	    if ($filename !~ m%/% && $mastername =~ m%/%) {
 	        my $dir=$mastername;
 	        $dir =~ s%/[^/]*$%%;
 	        $filename="$dir/$filename";
@@ -510,9 +517,20 @@ sub parse_file {
 	    print STDERR "content: ".$prologentincl{$key}."\n"
 	      if ($debug{'entities'});
 	    $moretodo = 1;
+	    next PROLOGENTITY;
 	}
-        print STDERR "prolog=>>>>$prolog<<<<\n"
+	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)">(.*)$/is) {  #})"{ (Stupid editor)
+	    print STDERR "Seen the definition entity of prolog definition '$2' (=$3)\n"
 	      if ($debug{'entities'});
+	    # Preload the content of the entity.
+	    my $key = $2;
+	    $prolog = $1.$4;
+	    $prologentincl{$key} = $3;
+	    print STDERR "content: ".$prologentincl{$key}."\n"
+	      if ($debug{'entities'});
+	    $moretodo = 1;
+	    next PROLOGENTITY;
+	}
         while ($prolog =~ /^(.*?)%([^;\s]*);(.*)$/s) {
 	    my ($pre,$ent,$post) = ($1,$2,$3);
 	    # Yeah, right, the content of the entity can be defined in a not yet loaded entity
@@ -548,8 +566,7 @@ sub parse_file {
 	my $key = $2;
 	my $filename = $3;
 	$searchprolog = $1.$4;
-	if ($filename !~ m%/%)
-	{
+	if ($filename !~ m%/% && $mastername =~ m%/%) {
 	    my $dir=$mastername;
 	    $dir =~ s%/[^/]*$%%;
 	    $filename="$dir/$filename";
@@ -628,7 +645,7 @@ sub parse_file {
     open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run nsgmls: %s"), $!);
 
     # The kind of tags
-    my (%translate,%empty,%verbatim,%indent,%exist,%attribute);
+    my (%translate,%empty,%verbatim,%indent,%exist,%attribute,%qualify);
     foreach (split(/ /, ($self->{SGML}->{k}{'translate'}||'') )) {
 	$translate{uc $_} = 1;
 	$indent{uc $_} = 1;
@@ -651,26 +668,24 @@ sub parse_file {
     foreach (split(/ /, ($self->{SGML}->{k}{'ignore'}) || '')) {
 	$exist{uc $_} = 1;
     }
-    foreach (split(/ /, ($self->{SGML}->{k}{'attribute'}) || '')) {
+    foreach (split(/ /, ($self->{SGML}->{k}{'attributes'} || ''))) {
         my ($attr, $tags);
-        if (m/(^.*>)(\w+)/)
-        {
+        if (m/(^.*>)(\w+)/) {
             $attr=uc $2;
             $tags=$1;
-        }
-        else
-        {
+        } else {
             $attr=uc $_;
             $tags=".*";
         }
-        if (exists $attribute{$attr})
-        {
+        if (exists $attribute{$attr}) {
             $attribute{$attr}.="|$tags";
-        }
-        else
-        {
+        } else {
             $attribute{$attr} = $tags;
         }
+    }
+    foreach (split(/ /, ($self->{SGML}->{k}{'qualify'}) || '')) {
+        $qualify{uc $_} = 1;
+        $attribute{uc $_} = '.*' unless exists $attribute{uc $_};
     }
 
 
@@ -737,8 +752,9 @@ sub parse_file {
                 if ($val->type() eq 'CDATA' ||
 		    $val->type() eq 'IMPLIED') {
 		    if (defined $value && length($value)) {
-                        my $name=lc $attr;
-                        if (exists $attribute{uc($attr)}) {
+                        my $lattr=lc $attr;
+                        my $uattr=uc $attr;
+                        if (exists $attribute{$uattr}) {
                             my $context="";
                             foreach my $o (@open) {
                                 next if (!defined $o or $o =~ m%^</%);
@@ -747,12 +763,16 @@ sub parse_file {
                             }
                             $context=join("", $context,
                                           "<", lc($event->data->name()), ">");
-                            if ($context =~ /^($attribute{uc($attr)})$/) {
-                                my $translated = $self->translate("$name=$value", $ref, "attribute $context$name");
-                                if ($translated =~ s/^$name=//) {
-                                    $value=$translated;
+                            if ($context =~ /^($attribute{$uattr})$/) {
+                                if ($qualify{$uattr}) {
+                                    my $translated = $self->translate("$lattr=$value", $ref, "attribute $context$lattr");
+                                    if ($translated =~ s/^$lattr=//) {
+                                        $value=$translated;
+                                    } else {
+                                        die wrap_mod("po4a::sgml", dgettext("po4a", "bad translation '%s' for '%s' in '%s'"), $translated, "$context$lattr", $ref);
+                                    }
                                 } else {
-                                    die wrap_mod("po4a::sgml", dgettext("po4a", "bad translation '%s' for '%s' in '%s'"), $translated, "$context$name", $ref);
+                                    $value = $self->translate($value, $ref, "attribute $context$lattr");
                                 }
                             }
                         }
@@ -761,7 +781,7 @@ sub parse_file {
 			} else {
 			    $value = '"'.$value.'"';
 			}
-			$tag .= ' '.lc($attr).'='.$value;
+			$tag .= " $lattr=$value";
 		    }
 		} elsif ($val->type() eq 'NOTATION') {
 		} else {
