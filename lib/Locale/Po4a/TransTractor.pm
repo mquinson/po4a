@@ -326,11 +326,20 @@ sub new {
     ## Bless ourselves into the desired class and perform any initialization
     bless $self, $class;
     
+    ## initialize the plugin
+    # prevent the plugin from croaking on the options intended for Po.pm
+    $self->{options}{'porefs'} = '';
+    # let the plugin parse the options and such
+    $self->initialize(%options);
+
     ## Create our private data
+    my %po_options;
+    $po_options{'porefs'} = $self->{options}{'porefs'};
+    
     # private data
     $self->{TT}=(); 
     $self->{TT}{po_in}=Locale::Po4a::Po->new();
-    $self->{TT}{po_out}=Locale::Po4a::Po->new();
+    $self->{TT}{po_out}=Locale::Po4a::Po->new(\%po_options);
     # Warning, this is an array of array:
     #  The document is splited on lines, and for each
     #  [0] is the line content, [1] is the reference [2] the type
@@ -348,8 +357,6 @@ sub new {
     # document isn't in ascii)
     $self->{TT}{utf_mode}=0;
 
-    ## initialize the plugin
-    $self->initialize(%options);
     
     return $self;
 }
