@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.10 2005-06-28 19:37:34 mquinson Exp $
+# $Id: Common.pm,v 1.11 2005-08-10 14:10:59 mquinson Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -30,26 +30,29 @@ use 5.006;
 use strict;
 use warnings;
 
-sub setcolumns() {
-    my $col=$ENV{COLUMNS};
-    if (!defined $col)
-    {
-        my @term=eval "use Term::ReadKey; Term::ReadKey::GetTerminalSize()";
-        $col=$term[0] if (!$@);
-        # If GetTerminalSize() failed we will fallback to a safe default.
-        # This can happen if Term::ReadKey is not available
-        # or this is a terminal-less build or such strange condition.
+BEGIN {
+    if (eval { require Text::WrapI18N }) {
+    
+        # Don't bother determining the wrap column if we cannot wrap.
+        my $col=$ENV{COLUMNS};
+        if (!defined $col) {
+            my @term=eval "use Term::ReadKey; Term::ReadKey::GetTerminalSize()";
+            $col=$term[0] if (!$@);
+            # If GetTerminalSize() failed we will fallback to a safe default.
+            # This can happen if Term::ReadKey is not available
+            # or this is a terminal-less build or such strange condition.
+        }
+        $col=76 if (!defined $col);
+        
+        use Text::WrapI18N qw($columns); 
+        $columns = $col;
+       
+        eval ' sub wrapi18n($$$) { Text::WrapI18N::wrap($_[0],$_[1],$_[2]) } '
+    } else {
+    
+        # If we cannot wrap, well, that's too bad. Survive anyway.
+        eval ' sub wrapi18n($$$) { $_[0].$_[2] } '
     }
-    $col=76 if (!defined $col);
-    eval "use Text::WrapI18N qw(\$columns); \$columns = $col";
-}
-
-sub wrapi18n($$$) {
-    my ($header1, $header2, $msg) = @_;
-    setcolumns();
-    my $wrapped=eval "use Text::WrapI18N qw(wrap); wrap(\$header1, \$header2, \$msg)";
-    $wrapped="$header1$msg" if ($@);
-    return $wrapped;
 }
 
 sub min($$) {
@@ -58,53 +61,13 @@ sub min($$) {
 
 =head1 FUNCTIONS
 
-=head2 Wrappers for other modules
-
-=item textdomain($)
-
-This is a wrapper for Locale::gettext's textdomain() so that po4a still
-works if that module is missing. This wrapper also calls
-setlocale(LC_MESSAGES, "") so callers don't depend on the POSIX module either.
-
-=cut
-
-sub textdomain
-{
-    my ($domain)=@_;
-    return eval "use Locale::gettext; use POSIX; setlocale(LC_MESSAGES, ''); textdomain(\$domain)";
-}
-
-=item gettext($)
-
-This is a wrapper for Locale::gettext's gettext() so that things still
-work ok if that module is missing.
-
-=cut
-
-sub gettext
-{
-    my ($str)=@_;
-    my $rc=eval "use Locale::gettext; Locale::gettext::gettext(\$str)";
-    return ($@ ? $str : $rc);
-}
-
-=item dgettext($$)
-
-This is a wrapper for Locale::gettext's dgettext() so that things still
-work ok if that module is missing.
-
-=cut
-
-sub dgettext
-{
-    my ($domain, $str)=@_;
-    my $rc=eval "use Locale::gettext; dgettext(\$domain, \$str)";
-    return ($@ ? $str : $rc);
-}
-
 =head2 Showing output messages
 
-=item show_version($)
+=over
+
+=item 
+
+show_version($)
 
 Shows the current version of the script, and a short copyright message. It
 takes the name of the script as an argument.
@@ -124,9 +87,12 @@ sub show_version {
 	), $name, $Locale::Po4a::TransTractor::VERSION)."\n";
 }
 
-=item wrap_msg($@)
+=item 
 
-This function wraps a message handling the parameters like sprintf does.
+wrap_msg($@)
+
+This function displays a message the same way than sprintf() does, but wraps
+the result so that they look nice on the terminal.
 
 =cut
 
@@ -137,7 +103,9 @@ sub wrap_msg($@) {
     return wrapi18n("", "", sprintf($msg, @args))."\n";
 }
 
-=item wrap_mod($$@)
+=item 
+
+wrap_mod($$@)
 
 This function works like wrap_msg(), but it takes a module name as the first
 argument, and leaves a space at the left of the message.
@@ -153,11 +121,15 @@ sub wrap_mod($$@) {
     return wrapi18n($mod, $spaces, sprintf($msg, @args))."\n";
 }
 
-=item wrap_ref_mod($$$@)
+=item 
+
+wrap_ref_mod($$$@)
 
 This function works like wrap_msg(), but it takes a file:line reference as the
 first argument, a module name as the second one, and leaves a space at the left
 of the message.
+
+=back
 
 =cut
 
@@ -175,6 +147,64 @@ sub wrap_ref_mod($$$@) {
 	return wrapi18n("", $spaces, sprintf($msg, @args))."\n";
     }
 }
+
+=head2 Wrappers for other modules
+
+=over 
+
+=item 
+
+Locale::Gettext
+
+When the Locale::Gettext module cannot be loaded, this module provide dummy
+(empty) implementation of the following functions. In that case, po4a
+messages won't get translated but the program will continue to work.
+
+If Locale::gettext is present, this wrapper also calls
+setlocale(LC_MESSAGES, "") so callers don't depend on the POSIX module
+either.
+
+=over
+
+=item 
+
+bindtextdomain($$)
+
+=item 
+
+textdomain($)
+
+=item 
+
+gettext($)
+
+=item 
+
+dgettext($$)
+
+=back
+
+=back
+
+=cut
+
+BEGIN {
+    if (eval { require Locale::gettext }) {
+       import Locale::gettext;
+       use POSIX;
+       setlocale(LC_MESSAGES, '');
+    } else {
+       eval '
+           sub bindtextdomain($$) { }
+           sub textdomain($) { }
+           sub gettext($) { shift }
+           sub dgettext($$) { shift $_[1] }
+       '
+    }
+}
+
+
+=cut
 
 1;
 __END__
