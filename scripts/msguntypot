@@ -1,0 +1,241 @@
+#! /usr/bin/perl 
+
+eval 'exec /usr/bin/perl  -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
+    if $running_under_some_shell;
+
+# msg untypo pot -- Update the po files when you remove a typo in pot file not needing any translation update
+# $Id: msguntypot,v 1.1 2005-08-26 21:48:43 mquinson Exp $
+#
+# Copyright 2005 by Martin Quinson (mquinson#debian.fr)
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of GPL (see COPYING).
+
+my $VERSION=$Locale::Po4a::TransTractor::VERSION;
+
+=head1 NAME
+
+msguntypot - update po files when a typo is fixed in pot file
+
+=head1 SYNOPSIS
+
+po4a -o E<lt>old_potE<gt> -n E<lt>new_potE<gt> pofiles...
+
+=head1 DESCRIPTION
+
+When you fix a trivial error which surely doesn't affect translations (e.g.
+a typo) in a .pot file, you should unfuzzy the corresponding msgstr in the
+translated .po files to avoid so extra work to the translators.
+
+This task is difficult and error prone when done manually, and this tool is
+there to help doing so correctly. You just need to provide the two versions
+of the pot file: before the edition and after as marked in the above
+synopsis, and it all becomes automatic.
+
+=head1 HOW TO USE IT
+
+In short, when you discover a typo in one of your [english] message, do the
+following:
+
+=over 
+
+=item - Regenerate your pot and po files.
+
+  make -C po/ update-po # for message program translations
+  debconf-updatepo      # for debconf translations
+  po4a -c po4a.conf     # for po4a based documentation translations
+
+or something else, depending on your project's building settings. You know
+how to make sure your pot an po files are uptodate, don't you??
+
+=item - Make a copy of your pot file.
+
+  cp myfile.pot myfile.pot.orig
+
+=item - Make a copy of all your files.
+
+  mkdir po_fridge; cp *.po po_fridge
+
+=item - Fix your typo
+
+$EDITOR the_file_in_which_there_is_a_typo
+
+=item - Regenerate your pot and po files.
+
+See above.
+
+=back
+
+At this point, the typo fix fuzzied all the translations, and this
+unfortunate change is the only one between the po files of your main
+directory and the one from the fridge. Here is how to solve this.
+
+=over
+
+=item - Discard fuzzy translation, restore the ones from the fridge.
+
+  cp po_fridge/*.po .
+
+=item - Manually merge the po files with the new pot file, but taking the useless fuzzy into account
+
+  msguntypot -o myfile.pot.orig -n myfile.pot *.po
+
+=item - Cleanups.
+
+  rm -rf myfile.pot.orig po_fridge
+
+=back
+
+You're done. The typo was eradicated from msgstr of both your pot and po
+files, and the po files were not fuzzyied in the process. Your translators
+love you already.
+
+=head1 SEE ALSO
+
+Despite its name, this tool is not part of the gettext tool suite. It is
+instead part of po4a. More precisely, it's a random perl script using the
+fine po4a modules. For more information about po4a, please see:
+
+L<po4a(7)>.
+
+=head1 AUTHORS
+
+ Martin Quinson (mquinson#debian,org)
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2005 by SPI, inc.
+
+This program is free software; you may redistribute it and/or modify it
+under the terms of GPL (see the COPYING file).
+
+=cut
+
+use 5.006;
+use strict;
+use warnings;
+
+use Getopt::Long qw(GetOptions);
+
+use Locale::Po4a::TransTractor;
+use Locale::Po4a::Common;
+
+use Pod::Usage qw(pod2usage);
+
+use File::Temp;
+
+use Locale::gettext;
+use POSIX;     # Needed for setlocale()
+
+setlocale(LC_MESSAGES, "");
+textdomain('po4a');
+
+sub show_version {
+    Locale::Po4a::Common::show_version("msguntypot");
+    exit 0;
+}
+
+my ($help,$debug,@verbose,$quiet);
+@verbose = ();
+$debug = 0;
+
+my ($newfile,$oldfile)=("","");
+
+Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+GetOptions(
+	'help|h'        => \$help,
+
+	'new|n=s'       => \$newfile,
+	'old|o=s'       => \$oldfile,
+
+	'verbose|v'     => \@verbose,
+	'debug|d'       => \$debug,
+	'quiet|q'       => \$quiet,
+	'version|V'     => \&show_version
+) or pod2usage();
+
+# Argument check
+$help && pod2usage (-verbose => 1, -exitval => 0);
+
+my ($verbose) = (scalar @verbose);
+$verbose = 1 if $debug;
+$verbose = -1 if $quiet;
+my %options = (
+    "verbose" => $verbose,
+    "debug" => $debug);
+
+# Argument checking
+defined($oldfile) && length($oldfile) || die wrap_msg(gettext("Mandatory argument '%s' missing."), "-o");
+-e $oldfile || die wrap_msg(gettext("File %s does not exist."), $oldfile);
+defined($newfile) && length($newfile) || die wrap_msg(gettext("Mandatory argument '%s' missing."), "-n");
+-e $newfile || die wrap_msg(gettext("File %s does not exist."), $newfile);
+
+# Parse files
+my $newpot=Locale::Po4a::Po->new();
+my $oldpot=Locale::Po4a::Po->new();
+$newpot->read($newfile);
+$oldpot->read($oldfile);
+
+die wrap_msg(gettext("The new and old pot files have different amount of strings (%d != %d).".
+                     " Something's seriously wrong here."),
+    $newpot->count_entries(), $oldpot->count_entries())
+  if ($newpot->count_entries() != $oldpot->count_entries());
+
+# Compare them and find differences between them
+my (%diff)=();
+
+for (my ($o,$n)=(0,0) ;
+    $o<$oldpot->count_entries() && $n<$newpot->count_entries();
+    $o++,$n++) {
+	
+	my ($oldstr,$newstr)=($oldpot->msgid($o),$newpot->msgid($n));
+	
+	$diff{$oldstr} = $newstr
+	  if ($oldstr ne $newstr);
+
+    }		     
+print wrap_msg(gettext("Found %d modified entries."),scalar keys %diff) if $verbose;
+
+# Get all po files and report differences in them
+my ($pofile);
+(undef,$pofile)=File::Temp->tempfile("po4aXXXX",
+    DIR    => "/tmp",
+    SUFFIX => ".po",
+    OPEN   => 0,
+    UNLINK => 0)
+  or die wrap_msg(gettext("Can't create a temporary po file: %s"), $!);
+
+my $pocount = 0;
+while (my $poarg = shift) {
+    $pocount ++;
+    print wrap_msg(gettext("Handling %s"),$poarg) if $verbose;
+    if (system("msgmerge -o $pofile $poarg $oldfile 2>/dev/null")) {
+	my $msg = $!;
+	unlink ($pofile);
+	die wrap_msg(gettext("Error while running msgmerge: %s"), $msg);
+    }
+    my $po=Locale::Po4a::Po->new();
+    $po->read($pofile);
+    
+    for (my $n=0 ; $n<$po->count_entries(); $n++) {
+	my $str=$po->msgid($n);
+	my $newstr = $diff{$str};
+	
+	if (defined $newstr) {
+	    $po->{po}{ $newstr } = { %{ $po->{po}{ $str } } };
+	    $po->{po}{ $str } = ();
+	    delete $po->{po}{ $str };
+	    print " Changed \"$str\" to \"$newstr\"\n" if ($verbose);
+	}
+    }    
+    $po->write($poarg);
+}
+unlink($pofile);
+
+
+print wrap_msg(gettext("Modified %d entries in %d files."),scalar keys %diff,$pocount);
+
+exit 0;
+__END__;
