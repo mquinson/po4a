@@ -79,7 +79,7 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
-
+use File::Temp;
 
 sub initialize {}
 
@@ -93,40 +93,72 @@ sub read {
 sub parse {
     my $self = shift;
 
-    foreach my $filename,@{$self->{DOCWML}{infile}} {
+    my $tmp_filename;
+    (undef,$tmp_filename)=File::Temp->tempfile("po4aXXXX",
+                                                DIR    => "/tmp",
+					        SUFFIX => ".xml",
+                                                OPEN   => 0,
+						UNLINK => 0)
+        or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
+    foreach my $filename (@{$self->{DOCWML}{infile}}) {
+      print STDERR "FILE: $filename\n";
+      print STDERR "TMP: $tmp_filename\n";
       my $file;
       open FILEIN,"$filename" || die "Cannot read $filename: $!\n";
       {
         $/ = undef; 
-        $file=<>;
-        while ($file =~ m|^(.*?)<perl>(.*?)</perl>(.*?)$|ms || $file =~ m|^(.*?)<:(.*?):>(.*?)$|ms) {
-          my ($pre,$in,$post) = ($1,$2,$3):
-          $in =~ s/</PO4ALT/g;
-          $in =~ s/>/PO4AGT/g;
-          # ok, perl parts should be dead
-          $file = "${pre}<!--PO4ABEGINPERL${in}PO4AENDPERL-->$post"
-        }
-        
-        while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|s) {
-          my $line = $1;
-          if ($line =~ m/^use wml::debian::mainpage title="([^"]*)") {#"){
-            warn "We should translate the page title: $1\n";
-          }          
-        }
-        
-        
-        (undef,$tmp_filename)=File::Temp->tempfile("po4aXXXX",
-                                                   DIR    => "/tmp",
-						   SUFFIX => ".xml",
-                                                   OPEN   => 0,
-						   UNLINK => 0)
-		or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
-        open OUTFILE,">$tmp_filename";
-        print OUTFILE, $file;
-        close INFILE;
-        close OUTFILE || die "Cannot write $tmp_filename: $!\n";
+        $file=<FILEIN>;
       }
+      
+      # Mask perl cruft out of XML sight
+      while ($file =~ m|^(.*?)<perl>(.*?)</perl>(.*?)$|ms || $file =~ m|^(.*?)<:(.*?):>(.*)$|ms) {
+        my ($pre,$in,$post) = ($1,$2,$3);
+        $in =~ s/</PO4ALT/g;
+        $in =~ s/>/PO4AGT/g;
+        $file = "${pre}<!--PO4ABEGINPERL${in}PO4AENDPERL-->$post";
+      }
+
+      # Mask mp4h cruft         
+      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
+        my $line = $1;
+        print STDERR "PROTECT HEADER: $line\n";
+        if ($line =~ m/title="([^"]*)"/) { # ) {#"){
+          warn "FIXME: We should translate the page title: $1\n";
+        }          
+      }
+                
+      # Flush the result to disk          
+      open OUTFILE,">$tmp_filename";
+      print OUTFILE $file;
+      close INFILE;
+      close OUTFILE || die "Cannot write $tmp_filename: $!\n";
+      
+      # Build the XML TransTractor which will do the job for us
+      my $xmlizer = Locale::Po4a::Chooser::new("xml");
+      $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
+      $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
+      
+      # Let it do the job
+      $xmlizer->read("$tmp_filename");
+      $xmlizer->parse();
+      my ($percent,$hit,$queries) = $xmlizer->stats();
+      print "We found translations for $percent\%  ($hit from $queries) of strings.\n";
+                        
+      # Get the output po file back
+      $self->{TT}{po_out}=$xmlizer->{TT}{po_out};
+      
+      # Get the document back (undoing our wml masking)
+      $file = join("",@{$xmlizer->{TT}{doc_out}});
+print "FILE=$file";
+      $file =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
+      $file =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/msg;
+      $file =~ s/PO4ALT/</msg;
+      $file =~ s/PO4AGT/>/msg;
+
+print "FILE=$file";
+      map { push @{$self->{TT}{doc_out}},"$_\n" } split(/\n/,$file);
     }
+#    unlink "$tmp_filename";
 }
 
 1;
