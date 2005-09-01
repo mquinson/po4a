@@ -187,8 +187,16 @@ for fich in `cat LISTE.TOTAL` ; do
       echo ">ign"
       echo $fich >> LISTE.IGN
     else
-      echo ">pbs"
-      echo $fich >> LISTE.PBS
+      l=$(wc -l $tmp/$newfich|cut -d" " -f1)
+      egrep "^.so " $tmp/$newfich 2>&1 > /dev/null
+      if [ "$?" = "0" ] && [ "$l" = "1" ];
+      then
+        echo ">ign"
+        echo $fich >> LISTE.IGN
+      else
+        echo ">pbs"
+        echo $fich >> LISTE.PBS
+      fi
     fi
   fi
   rm -f $tmp/$newfich* $tmp/po4a-normalize.*
