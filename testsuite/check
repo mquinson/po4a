@@ -102,12 +102,14 @@ for fich in `cat LISTE.TOTAL` ; do
       else
         awk 'BEGIN{RS=" ";ORS=" "}
              {gsub("\xE2\x80\x90","-"); # this is safe
+              gsub("\xE2\x88\x92","-"); # the minus sign in eqn
               gsub("\xE2\x80\x98\xE2\x80\x98","\xE2\x80\x9C"); # this can
               # be troublesome (e.g. two single quotes => " insteas of ""
               gsub("\xE2\x80\x99\xE2\x80\x99","\xE2\x80\x9D");
               print}' $tmp/$newfich.txt > $tmp/"$newfich"_ignore
         awk 'BEGIN{RS=" ";ORS=" "}
              {gsub("\xE2\x80\x90","-");
+              gsub("\xE2\x88\x92","-");
               gsub("\xE2\x80\x98\xE2\x80\x98","\xE2\x80\x9C");
               gsub("\xE2\x80\x99\xE2\x80\x99","\xE2\x80\x9D");
               print}' $tmp/po4a-normalize.output.txt > $tmp/po4a-normalize.ignore
