@@ -61,7 +61,7 @@ fi
 
 
 mantotxt() {
-   man -Pcat -l $1 > $1.txt
+    `grog -Tutf8 $1` > $1.txt
 }
 
 podtotxt() { # $1 file to convert ; $2 name to pretend to have
@@ -124,23 +124,23 @@ for fich in `cat LISTE.TOTAL` ; do
             echo $fich >> LISTE.WOK1
           else
             awk 'BEGIN{RS=";";ORS=";"}
-                 {gsub("-\n +",""); # remove hyphen at the end of lines
+                 {gsub("-\n[[:blank:]]+",""); # remove hyphen at the end of lines
                                     # this permits to detect some diff due
                                     # to word rewrapping (fails if a word
                                     # containing a hyphen was wrapped)
                   print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore2
             awk 'BEGIN{RS=";";ORS=";"}
-                 {gsub("-\n +","");
+                 {gsub("-\n[[:blank:]]+","");
                   print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore2
             # the same, but for word wrapped on hyphen.
             # This is useful only if there is either word wrapped on
             # hyphen or word not wrapped on hyphen. But this may be
             # usefull to classify the diff
             awk 'BEGIN{RS=";";ORS=";"}
-                 {gsub("-\n +","-");
+                 {gsub("-\n[[:blank:]]+","-");
                   print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore2b
             awk 'BEGIN{RS=";";ORS=";"}
-                 {gsub("-\n +","-");
+                 {gsub("-\n[[:blank:]]+","-");
                   print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore2b
             echo $fich
             echo "$WDIFF $tmp/"$newfich"_ignore2 $tmp/po4a-normalize.ignore2"
@@ -157,14 +157,14 @@ for fich in `cat LISTE.TOTAL` ; do
               awk '{gsub(".\x08",""); # this hides font diff ?
                     print}' $tmp/"$newfich"_ignore > $tmp/"$newfich"_ignore3_tmp
               awk 'BEGIN{RS=";";ORS=";"}
-                   {gsub("-\n +","");
+                   {gsub("-\n[[:blank:]]+","");
                     gsub("-","");
                     print}' $tmp/"$newfich"_ignore3_tmp > $tmp/"$newfich"_ignore3
 
               awk '{gsub(".\x08",""); # this hides font diff ?
                     print}' $tmp/po4a-normalize.ignore > $tmp/po4a-normalize.ignore3_tmp
               awk 'BEGIN{RS=";";ORS=";"}
-                   {gsub("-\n +","");
+                   {gsub("-\n[[:blank:]]+","");
                     gsub("-","");
                     print}' $tmp/po4a-normalize.ignore3_tmp > $tmp/po4a-normalize.ignore3
 
