@@ -160,6 +160,19 @@ arguments of the macro.
 With B<translate_each>, the arguments will also be proposed for the
 translation, except that each one will be translated separately.
 
+=item B<no_wrap>
+
+This option takes in argument a list of coma-separated couples
+I<begin>:I<end>, where I<begin> and I<end> are commands that delimit
+the begin and end of a section that should not be rewrapped.
+
+Note: no test is done to ensure that an I<end> command matches its
+I<begin> command; any ending command stop the no_wrap mode.
+If you have a I<begin> (respectively I<end>) macro that has no I<end>
+(respectively I<begin>), you can specify an existing I<end> (like fi) or
+I<begin> (like nf) as a counterpart.
+These options (and their arguments) wont be translated.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
@@ -357,6 +370,20 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 # These variables indicate if the associated options were activated.
 my $translate_groff_code;
 my $verbatim_groff_code;
+# %no_wrap_begin and %no_wrap_end are lists of macros that respectively
+# begins and ends a no_wrap paragraph.
+# Any ending macro will end the no_wrap paragraph started by any beginning
+# macro.
+my %no_wrap_begin = (
+    'nf' => 1,
+    'EX' => 1,
+    'EQ' => 1
+);
+my %no_wrap_end = (
+    'fi' => 1,
+    'EE' => 1,
+    'EN' => 1
+);
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -369,7 +396,7 @@ sub initialize {
     $self->{options}{'noarg'}='';
     $self->{options}{'translate_joined'}='';
     $self->{options}{'translate_each'}='';
-
+    $self->{options}{'no_wrap'}='';
 
     # reset the debug options
     %debug = ();
@@ -418,6 +445,16 @@ sub initialize {
     if (defined $options{'translate_each'}) {
         foreach (split(/,/, $options{'translate_each'})) {
             $macro{$_} = \&translate_each;
+        }
+    }
+    if (defined $options{'no_wrap'}) {
+        foreach (split(/,/, $options{'no_wrap'})) {
+            if ($_ =~ m/^(.*):(.*)$/) {
+               $no_wrap_begin{$1} = 1;
+               $no_wrap_end{$2} = 1;
+            } else {
+                die "The no_wrap parameters must be a set of comma-separated begin:end couples.\n"
+            }
         }
     }
 
@@ -935,9 +972,8 @@ sub parse{
 	    # Special case:
 	    #  .nf => stop wrapped mode
 	    #  .fi => wrap again
-	    if ($macro eq 'nf' || $macro eq 'fi' ||
-                $macro eq 'EX' || $macro eq 'EE') {
-		if ($macro eq 'fi' || $macro eq 'EE') {
+	    if ($no_wrap_begin{$macro} or $no_wrap_end{$macro}) {
+		if ($no_wrap_end{$macro}) {
 		    $wrapped_mode='YES';
 		} else {
 		    $wrapped_mode='MACRONO';
