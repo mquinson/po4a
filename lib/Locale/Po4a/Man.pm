@@ -118,6 +118,18 @@ Use the source to see which parts can be debugged.
 
 Increase verbosity.
 
+=item B<verbatim_groff_code>
+
+With this option, the .de, .ie or .if sections are copied as is from the
+original to the translated document.
+
+=item B<translate_groff_code>
+
+With this option, the .de, .ie or .if sections will be proposed for the
+translation. You should only use this option if a translatable string is
+contained in one of these section. Otherwise, B<verbatim_groff_code>
+should be preferred.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
@@ -312,12 +324,17 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 
 
 ######## CONFIG #########
+# These variables indicate if the associated options were activated.
+my $translate_groff_code;
+my $verbatim_groff_code;
 sub initialize {
     my $self = shift;
     my %options = @_;
 
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'}='';
+    $self->{options}{'translate_groff_code'}='';
+    $self->{options}{'verbatim_groff_code'}='';
 
     # reset the debug options
     %debug = ();
@@ -335,6 +352,17 @@ sub initialize {
         foreach ($options{'debug'}) {
             $debug{$_} = 1;
         }
+    }
+
+    if (defined $options{'translate_groff_code'}) {
+        $translate_groff_code = 1;
+    } else {
+        $translate_groff_code = 0;
+    }
+    if (defined $options{'verbatim_groff_code'}) {
+        $verbatim_groff_code = 1;
+    } else {
+        $verbatim_groff_code = 0;
     }
 }
 
@@ -357,6 +385,12 @@ NEW_LINE:
 
     if (!defined $line) {
         # end of file
+        return ($line,$ref);
+    }
+
+    # Do as few treatments as possible with the .de, .ie and .if sections
+    if ($line =~ /^\.\s*(if|ie|de)/) {
+        chomp $line;
         return ($line,$ref);
     }
 
@@ -572,6 +606,11 @@ sub pre_trans {
     print STDERR "pre_trans($str)="
 	if ($debug{'pretrans'});
 
+    # Do as few treatments as possible with the .de, .ie and .if sections
+    if (defined $self->{type} && $self->{type} =~ m/^(ie|if|de)$/) {
+        return $str;
+    }
+
     # Note: if you want to implement \c support, the gdb man page is your playground
     die wrap_ref_mod($ref, "po4a::man", dgettext("po4a","Escape sequence \\c encountered. This is not completely handled yet."))
 	if ($str =~ /\\c/);
@@ -625,6 +664,11 @@ sub post_trans {
 
     print STDERR "post_trans($str)="
 	if ($debug{'postrans'});
+    
+    # Do as few treatments as possible with the .de, .ie and .if sections
+    if (defined $self->{type} && $self->{type} =~ m/^(ie|if|de)$/) {
+        return $str;
+    }
 
     # Post formatting, so that groff see the strange chars
     $str =~ s|\\-|-|sg; # in case the translator added some of them manually
@@ -1434,7 +1478,35 @@ $macro{'bp'}=\&untranslated;
 $macro{'ad'}=\&untranslated;
 # .de macro Define or redefine macro until .. is encountered.
 $macro{'de'}=sub {
-    die wrap_mod("po4a::man", dgettext("po4a", "This page defines a new macro with '.de'. Since po4a is not a real groff parser, this is not supported."));
+    if ($verbatim_groff_code or $translate_groff_code) {
+        my $self = shift;
+        my $paragraph = "@_";
+        my $end = ".";
+        if ($paragraph=~/^[.'][\t ]*de[\t ]+([^\t ]+)[\t ]+([^\t ]+)[\t ]$/) {
+            $end = $2;
+        }
+        my ($line, $ref) = $self->SUPER::shiftline();
+        chomp $line;
+        $paragraph .= "\n".$line;
+        while (defined($line) and $line ne ".$end") {
+            ($line, $ref) = $self->SUPER::shiftline();
+            if (defined $line) {
+                chomp $line;
+                $paragraph .= "\n".$line;
+            }
+        }
+        $paragraph .= "\n";
+        if ($verbatim_groff_code) {
+            $self->pushline($paragraph);
+        } else {
+            $self->pushline( $self->translate($paragraph,
+                                              $self->{ref},
+                                              "groff code",
+                                              "wrap" => 0) );
+        }
+    } else {
+        die wrap_mod("po4a::man", dgettext("po4a", "This page defines a new macro with '.de'. Since po4a is not a real groff parser, this is not supported."));
+    }
 };
 # .ds stringvar anything
 #                 Set stringvar to anything.
@@ -1472,8 +1544,53 @@ $macro{'hy'}=$macro{'hym'}=$macro{'hys'}=\&untranslated;
 # .ie cond anything  If cond then anything else goto .el.
 # .if cond anything  If cond then anything; otherwise do nothing.
 $macro{'ie'}=$macro{'if'}=sub {
-    die wrap_mod("po4a::man", dgettext("po4a",
-    	"This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported."), $_[1]);
+    if ($verbatim_groff_code or $translate_groff_code) {
+        my $self = shift;
+        my $m = $_[0];
+        my $paragraph = "@_";
+        my ($line,$ref);
+        my $count = 0;
+        $count = 1 if ($paragraph =~ m/(?<!\\)\\\{/s);
+        while (   ($paragraph =~ m/(?<!\\)\\$/s)
+               or ($count > 0)) {
+            ($line,$ref)=$self->SUPER::shiftline();
+            chomp $line;
+            $paragraph .= "\n".$line;
+            $count += 1 if ($line =~ m/(?<!\\)\\\{/s);
+            $count -= 1 if ($line =~ m/(?<!\\)\\\}/s);
+        }
+        if ($m eq '.ie') {
+            ($line,$ref)=$self->SUPER::shiftline();
+            chomp $line;
+            if ($line !~ m/^\.[ \t]*el\s/) {
+                die ".ie without .el\n"
+            }
+            my $paragraph2 = $line;
+            $count = 0;
+            $count = 1 if ($line =~ m/(?<!\\)\\\{/s);
+            while (   ($paragraph2 =~ m/(?<!\\)\\$/s)
+                   or ($count > 0)) {
+                ($line,$ref)=$self->SUPER::shiftline();
+                chomp $line;
+                $paragraph2 .= "\n".$line;
+                $count += 1 if ($line =~ m/(?<!\\)\\\{/s);
+                $count -= 1 if ($line =~ m/(?<!\\)\\\}/s);
+            }
+            $paragraph .= "\n".$paragraph2;
+        }
+        $paragraph .= "\n";
+        if ($verbatim_groff_code) {
+            $self->pushline($paragraph);
+        } else {
+            $self->pushline( $self->translate($paragraph,
+                                              $self->{ref},
+                                              "groff code",
+                                              "wrap" => 0) );
+        }
+    } else {
+        die wrap_mod("po4a::man", dgettext("po4a",
+            "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported."), $_[1]);
+    }
 };
 # .in  N    Change indent according to N (default scaling indicator m).
 $macro{'in'}=\&untranslated;
