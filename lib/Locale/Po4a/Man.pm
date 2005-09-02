@@ -1626,3 +1626,11 @@ $macro{'ec'}=sub {
 ###        this from the generated manpage, and declare our own header
 ###
 $macro{'UC'}=$macro{'AT'}=\&untranslated;
+
+# Request: .hw word1 word2 ...
+#   Define how WORD1, WORD2, etc. are to be hyphenated.  The words
+#   must be given with hyphens at the hyphenation points.
+#
+#   If the english page needs to specify how a word must be hyphanted, the
+#   translated page may also have this need.
+$macro{'hw'}=\&translate_each;
