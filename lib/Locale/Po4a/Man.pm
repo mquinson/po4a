@@ -632,7 +632,24 @@ sub post_trans {
     # (this shouldn't be done for \s-<number> font size modifiers)
     # nor on .so/.mso args
     unless (defined $self->{type} && $self->{type} =~ m/^m?so$/) {
-        $str =~ s/(?<!\\s)-/\\-/sg; # (?<!pattern) means "not preceded by pattern"
+        my $tmp = "";
+        while ($str =~ m/^(.*?)-(.*)$/s) {
+            my $begin = $1;
+            $str = $2;
+            my $tmp2 = $tmp.$begin;
+            if (   ($begin =~ m/\\s$/s)
+                or ($begin =~ m/\\\((.|E<[gl]t>)$/s)
+                or ($tmp2 =~ m/\\h'([^']|\\')*$/)) {
+                # Do not change - to \- for
+                #  * \s-n (reduce font size)
+                #  * \(.- (a character named '.-', e.g. '<-')
+                #  * inside a \h'...'
+                $tmp = $tmp2."-";
+            } else {
+                $tmp = $tmp2."\\-";
+            }
+        }
+        $str = $tmp.$str;
     }
 
     # No . or ' on first char, or nroff will think it's a macro
