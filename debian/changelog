@@ -11,6 +11,23 @@ po4a (0.22-1) UNRELEASED; urgency=low
   * Append the content of a CDATA to the current buffer because it was
     not output at the right position
   * Don't forget some {PO4A-beg/end} in the output document
+  (Man module)
+  * Fix the .ds macro (it arguments must be translated, except the name of the
+    variable, which must be dispalyed to the translator)
+  * implement .vs, .hw .EQ and .EN macros
+  * Do not wrap the first line following a .TP
+  * translate the .ta arguments in case they contain a word
+  * better support for .B or .I macros when they don't have arguments and are
+    followed by a font macro, a .SH or a .TP
+  * fix the translate_exh function
+  * Fix some issues with the '-' to '\-' transliteration
+  * Add support for the .de, .ie and .if section with the verbatim_groff_code
+    and translate_groff_code options
+  * Add options to deal with new options defined with .de, or options not
+    supported by po4a (untranslated, noarg, translate_joined,
+    translate_each, no_wrap, inline)
+  (po4a)
+  * document the support for options/aliases in the config files.
 
  [François Gouget (fgouget@free.fr)]
 
