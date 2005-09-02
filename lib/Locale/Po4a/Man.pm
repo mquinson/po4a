@@ -107,7 +107,7 @@ pod, one more time).
 
 These are this module's particular options:
 
-=over 4
+=over
 
 =item B<debug>
 
@@ -129,6 +129,36 @@ With this option, the .de, .ie or .if sections will be proposed for the
 translation. You should only use this option if a translatable string is
 contained in one of these section. Otherwise, B<verbatim_groff_code>
 should be preferred.
+
+=item B<untranslated>
+
+=item B<noarg>
+
+=item B<translate_joined>
+
+=item B<translate_each>
+
+These options permit to specify the behavior of a new macro (defined with
+a .de request), or of a macro not supported by po4a.
+They take in argument a coma separated list of macros.
+For example:
+
+ -o noarg=FO,OB,AR -o translate_joined=BA,ZQ,UX
+
+Note: if a macro is not supported by po4a and if you consider that it is a
+standard roff macro, you should submit it to the po4a development team.
+
+B<untranslated> indicates that this macro (at its arguments) don't have to
+be translated.
+
+B<noarg> is like B<untranslated>, except that po4a will verify that no
+argument is added to this macro.
+
+B<translate_joined> indicates that po4a must propose to translate the
+arguments of the macro.
+
+With B<translate_each>, the arguments will also be proposed for the
+translation, except that each one will be translated separately.
 
 =back
 
@@ -335,6 +365,11 @@ sub initialize {
     $self->{options}{'verbose'}='';
     $self->{options}{'translate_groff_code'}='';
     $self->{options}{'verbatim_groff_code'}='';
+    $self->{options}{'untranslated'}='';
+    $self->{options}{'noarg'}='';
+    $self->{options}{'translate_joined'}='';
+    $self->{options}{'translate_each'}='';
+
 
     # reset the debug options
     %debug = ();
@@ -364,6 +399,28 @@ sub initialize {
     } else {
         $verbatim_groff_code = 0;
     }
+
+    if (defined $options{'untranslated'}) {
+        foreach (split(/,/, $options{'untranslated'})) {
+            $macro{$_} = \&untranslated;
+        }
+    }
+    if (defined $options{'noarg'}) {
+        foreach (split(/,/, $options{'noarg'})) {
+            $macro{$_} = \&noarg;
+        }
+    }
+    if (defined $options{'translate_joined'}) {
+        foreach (split(/,/, $options{'translate_joined'})) {
+            $macro{$_} = \&translate_joined;
+        }
+    }
+    if (defined $options{'translate_each'}) {
+        foreach (split(/,/, $options{'translate_each'})) {
+            $macro{$_} = \&translate_each;
+        }
+    }
+
 }
 
 my @comments = ();
