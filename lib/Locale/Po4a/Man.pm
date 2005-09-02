@@ -433,14 +433,27 @@ NEW_LINE:
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
-            # convert " to the groff's double quote glyph; it will be
-            # converted back to " in pre_trans. It is needed because
-            # otherwise, these quotes will be taken as arguments
-            # delimiters.
-            $l2 =~ s/"/\\(dq/g;
-            # append this line to the macro, with surrounding quotes, so
-            # that the line appear as an uniq argument.
-            $line .= ' "'.$l2.'"';
+            if ($l2 =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/) {
+                # another font macro. Forget about the first one
+                $line = $l2;
+                $ref = $r2;
+            } elsif ($l2 =~ /^[.']/) {
+                die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
+                        "po4a does not support font modifiers followed by a ".
+                        "command.  You should either remove the font modifier ".
+                        "'%s', or integrate a \\f font modifier in the ".
+                        "following command ('%s')"
+                        ), $line, $l2);
+            } else {
+                # convert " to the groff's double quote glyph; it will be
+                # converted back to " in pre_trans. It is needed because
+                # otherwise, these quotes will be taken as arguments
+                # delimiters.
+                $l2 =~ s/"/\\(dq/g;
+                # append this line to the macro, with surrounding quotes, so
+                # that the line appear as an uniq argument.
+                $line .= ' "'.$l2.'"';
+            }
         } else {
             $line =~ s/\\$//;
             $line .= $l2;
