@@ -1488,6 +1488,12 @@ $macro{'so'}= $macro{'mso'} = sub {
 # .sp     Skip one line vertically.
 # .sp N   Space  vertical distance N
 $macro{'sp'}=\&untranslated;
+# .vs [space]
+# .vs +space
+# .vs -space
+# Change (increase, decrease) the vertical spacing by SPACE.  The
+# default scaling indicator is `p'.
+$macro{'vs'}=\&untranslated;
 # .ta T N   Set tabs after every position that is a multiple of N.
 # .ta n1 n2 ... nn T r1 r2 ... rn
 #           Set  tabs at positions n1, n2, ..., nn, [...]
