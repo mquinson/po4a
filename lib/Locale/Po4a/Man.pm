@@ -1196,8 +1196,8 @@ sub translate_joined {
 
 # For macro taking several arguments, having to be translated separatly
 sub translate_each {
-   my ($self,$first)= (shift,0);
-    $self->pushmacro( map { $first++ ? $_:$self->t($_) } @_);
+    my ($self,$first)= (shift,0);
+    $self->pushmacro( map { $first++ ?$self->t($_):$_ } @_);
 }
 
 # For macro which shouldn't be given any arg
