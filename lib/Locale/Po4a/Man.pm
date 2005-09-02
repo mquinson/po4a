@@ -1497,7 +1497,15 @@ $macro{'vs'}=\&untranslated;
 # .ta T N   Set tabs after every position that is a multiple of N.
 # .ta n1 n2 ... nn T r1 r2 ... rn
 #           Set  tabs at positions n1, n2, ..., nn, [...]
-$macro{'ta'}=\&untranslated;
+$macro{'ta'}=sub {
+    # In some cases, a ta request can contain a translatable argument.
+    # FIXME: detect those cases (something like 5i does not need to be
+    # translated)
+    my ($self,$m)=(shift,shift);
+    my $line = "@_";
+    $line =~ s/^ +//;
+    $self->pushline($m." ".$self->translate($line,$self->{ref},'ta')."\n");
+};
 # .ti +N    Temporary indent next line (default scaling indicator m).
 $macro{'ti'}=\&untranslated;
 
