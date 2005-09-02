@@ -173,6 +173,13 @@ If you have a I<begin> (respectively I<end>) macro that has no I<end>
 I<begin> (like nf) as a counterpart.
 These options (and their arguments) wont be translated.
 
+=item inline
+
+This option permits to specify a list of coma-separated macros that must
+not split the current paragraph. The string to translate will then contain
+I<foo E<lt>.bar baz quxE<gt> quux>, where I<foo> is the command that
+should be inlined.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
@@ -384,6 +391,8 @@ my %no_wrap_end = (
     'EE' => 1,
     'EN' => 1
 );
+my %inline = (
+);
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -397,6 +406,7 @@ sub initialize {
     $self->{options}{'translate_joined'}='';
     $self->{options}{'translate_each'}='';
     $self->{options}{'no_wrap'}='';
+    $self->{options}{'inline'}='';
 
     # reset the debug options
     %debug = ();
@@ -457,7 +467,11 @@ sub initialize {
             }
         }
     }
-
+    if (defined $options{'inline'}) {
+        foreach (split(/,/, $options{'inline'})) {
+            $inline{$_} = 1;
+        }
+    }
 }
 
 my @comments = ();
@@ -713,6 +727,15 @@ sub pre_trans {
     $str =~ s/</E<lt>/sg;
     $str =~ s/EE<lt>gt>/E<gt>/g; # could be done in a smarter way?
 
+    while ($str =~ m/^(.*)PO4A-INLINE:(.*?):PO4A-INLINE(.*)$/s) {
+        my ($t1,$t2, $t3) = ($1, $2, $3);
+        $str = "$1E<$2>";
+        if (defined $t3 and length $t3) {
+            $t3 =~ s/^\n//s;
+            $str .= "\n$t3";
+        }
+    }
+
     # simplify the fonts for the translators
     if (defined $self->{type} && $self->{type} =~ m/^(SH|SS)$/) {
         set_regular("B");
@@ -753,7 +776,7 @@ sub pre_trans {
 }
 
 sub post_trans {
-    my ($self,$str,$ref,$type)=@_;
+    my ($self,$str,$ref,$type,$wrap)=@_;
     my $transstr=$str;
 
     print STDERR "post_trans($str)="
@@ -838,6 +861,26 @@ sub post_trans {
 	$str=$done;
     }
 
+    while ($str =~ m/^(.*?)E<([.'][\t ]*.*?)(?<!E<[gl]t)>(.*)$/s) {
+        my ($t1, $t2, $t3) = ($1,$2,$3);
+        $t1 =~ s/ +$//s;
+        $t2 =~ s/\n/ /gs;
+        $t3 =~ s/^ +//s;
+        if ($wrap) {
+        # The no-wrap case should be checked
+            $t1 =~ s/\n$//s;
+        }
+        $str = $t1;
+        if (length $t1) {
+            $t1 =~ s/\n$//s;
+            $str = "$t1\n";
+        }
+        $str .= $t2;
+        if (defined $t3 and length $t3) {
+            $t3 =~ s/^\n//s;
+            $str.= "\n$t3";
+        }
+    }
     $str =~ s/E<gt>/>/mg;
     $str =~ s/E<lt>/</mg;
     # Don't do that, because we'll go into trouble if previous line was .TP
@@ -872,7 +915,7 @@ sub translate {
 	}
 	$str = join("\n",@paragraph)."\n";
     }
-    $str=post_trans($self,$str,$ref||$self->{ref},$type);
+    $str=post_trans($self,$str,$ref||$self->{ref},$type, $options{'wrap'});
     return $str;
 }
 
@@ -944,6 +987,11 @@ sub parse{
 	    $arg1 .= $2;
 	    my $macro=$2;
 	    my $arguments=$3;
+
+	    if ($inline{$macro}) {
+		$paragraph .= "PO4A-INLINE:".$line.":PO4A-INLINE\n";
+		goto LINE;
+	    }
 
 	    # Split on spaces for arguments, but not spaces within double quotes
 	    my @args=();
