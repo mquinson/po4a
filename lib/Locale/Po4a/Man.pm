@@ -294,7 +294,7 @@ man page.
 
 Parser fails on pages based on mdoc(7), pages using conditionals with .if,
 defining new macros with .de, using non standard fonts, and more generally,
-not following the advices of previous section.
+not following the advices of the previous section.
 
 Pages with undetected problems are processed without complain by po4a::man,
 but the generated output is different from the original one (some strings
@@ -685,7 +685,7 @@ sub pushmacro {
 			length($_)?
 			    (m/([^\\] |^ )/ ? "\"$_\"" : "$_")
 			    # Quote arguments that contain a space.
-			    # (not needd for non breaknig spaces, i.e.
+			    # (not needed for non breaknig spaces, i.e.
 			    # spaces preceded by '\')
 			    :'""' # empty argument
 		) : '' # no argument
