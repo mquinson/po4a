@@ -1507,14 +1507,22 @@ $macro{'TP'}=sub {
 	($l2,$ref2) = $self->shiftline();
 	chomp($l2);
     }
-    if ($l2 =~/^[.']/) {
-	# If the line after a .TP is a macro,
-	# let the parser do it's job.
-	# Note: use Transtractor unshiftline for now. This may require an
-	#       implementation of the man module's own implementation.
-	#       This may be a problem if, for example, the line resulted
-	#       of a line continuation.
-	$self->SUPER::unshiftline($l2,$ref2);
+    if ($l2 =~/^([.'][\t ]*([^\t ]*))(?:[\t ]+(.*)$|$)/) {
+        if ($inline{$2}) {
+            my $tmp = "";
+            if (defined $3 and length $3) {
+                $tmp = $self->t($3, "wrap" => 0);
+            }
+            $self->pushline($1.$tmp."\n");
+        } else {
+            # If the line after a .TP is a macro,
+            # let the parser do it's job.
+            # Note: use Transtractor unshiftline for now. This may require an
+            #       implementation of the man module's own implementation.
+            #       This may be a problem if, for example, the line resulted
+            #       of a line continuation.
+            $self->SUPER::unshiftline($l2,$ref2);
+        }
     } else {
 	$self->pushline($self->t($l2, "wrap" => 0)."\n");
     }
