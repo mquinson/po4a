@@ -44,20 +44,6 @@ Still to be implemented.
 
 =head1 TODO
 
-Faut charger le fichier wml en mémoire 
-Faut faire toutes les embrouilles pour cacher ce que xml ne saurait voir
-    while ($file =~ /^(.*?)<perl>(.*?)</perl>(.*?)$) {
-       my ($pre,$in,$post) = ($1,$2,$3):
-       Ensuite, dans $in, tu changes tous les "<" par PO4ALT et ">" par PO4AGT
-       comme ca, le perl va plus te faire chier
-       Et tu remplace $file par ${pre}<!--PO4ABEGINPERL${in}PO4AENDPERL-->$post
-    Ensuite, tu lances le module xml sur $file
-
-Faut écrire le tout dans un fichier temporaire sur disque
-Faut créer un TransTractor de type xml sur ce fichier
-Faut lui voler son fichier po
-Faut récupérer le fichier traduit qu'il a produit
-Et faut défaire toutes les cochonneries qu'on a faites
 Dans le po, faut corriger les références pour pointer sur le fichier de départ, pas le temporaire 
 
 (12:11:26) adn: et pour les # du début ?
@@ -101,8 +87,7 @@ sub parse {
 						UNLINK => 0)
         or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
     foreach my $filename (@{$self->{DOCWML}{infile}}) {
-      print STDERR "FILE: $filename\n";
-      print STDERR "TMP: $tmp_filename\n";
+#      print STDERR "TMP: $tmp_filename\n";
       my $file;
       open FILEIN,"$filename" || die "Cannot read $filename: $!\n";
       {
@@ -119,7 +104,7 @@ sub parse {
       }
 
       # Mask mp4h cruft         
-      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
+      while ($file =~ m|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
         my $line = $1;
         print STDERR "PROTECT HEADER: $line\n";
         if ($line =~ m/title="([^"]*)"/) { # ) {#"){
@@ -134,7 +119,7 @@ sub parse {
       close OUTFILE || die "Cannot write $tmp_filename: $!\n";
       
       # Build the XML TransTractor which will do the job for us
-      my $xmlizer = Locale::Po4a::Chooser::new("xml");
+      my $xmlizer = Locale::Po4a::Chooser::new("xhtml");
       $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
       $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
       
@@ -149,16 +134,14 @@ sub parse {
       
       # Get the document back (undoing our wml masking)
       $file = join("",@{$xmlizer->{TT}{doc_out}});
-print "FILE=$file";
       $file =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
       $file =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/msg;
       $file =~ s/PO4ALT/</msg;
       $file =~ s/PO4AGT/>/msg;
 
-print "FILE=$file";
       map { push @{$self->{TT}{doc_out}},"$_\n" } split(/\n/,$file);
     }
-#    unlink "$tmp_filename";
+    unlink "$tmp_filename";
 }
 
 1;
