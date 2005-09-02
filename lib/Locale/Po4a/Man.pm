@@ -1301,7 +1301,7 @@ $macro{'TP'}=sub {
 	#       of a line continuation.
 	$self->SUPER::unshiftline($l2,$ref2);
     } else {
-	$self->pushline($self->t($l2)."\n");
+	$self->pushline($self->t($l2, "wrap" => 0)."\n");
     }
 
     # From info groff:
