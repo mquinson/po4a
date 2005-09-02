@@ -1408,7 +1408,16 @@ $macro{'de'}=sub {
 };
 # .ds stringvar anything
 #                 Set stringvar to anything.
-$macro{'ds'}=\&untranslated;
+$macro{'ds'}=sub {
+    my ($self, $m) = (shift,shift);
+    my $name = shift;
+    my $string = "@_";
+    # indicate to which variable this corresponds. The translator can
+    # find references to this string in the translation "\*(name" or
+    # "\*[name]"
+    $self->{type} = "ds $name";
+    $self->pushline($m." ".$name." ".$self->translate($string)."\n");
+};
 #       .fam      Return to previous font family.
 #       .fam name Set the current font family to name.
 $macro{'fam'}=\&untranslated;
