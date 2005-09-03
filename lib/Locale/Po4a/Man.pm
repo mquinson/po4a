@@ -1507,11 +1507,11 @@ $macro{'TP'}=sub {
 	($l2,$ref2) = $self->shiftline();
 	chomp($l2);
     }
-    if ($l2 =~/^([.'][\t ]*([^\t ]*))(?:[\t ]+(.*)$|$)/) {
+    if ($l2 =~/^([.'][\t ]*([^\t ]*))(?:([\t ]+)(.*)$|$)/) {
         if ($inline{$2}) {
             my $tmp = "";
-            if (defined $3 and length $3) {
-                $tmp = $self->t($3, "wrap" => 0);
+            if (defined $4 and length $4) {
+                $tmp = $3.$self->t($4, "wrap" => 0);
             }
             $self->pushline($1.$tmp."\n");
         } else {
