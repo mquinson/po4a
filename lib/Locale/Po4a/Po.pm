@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.44 2005-07-24 17:07:34 mquinson Exp $
+# $Id: Po.pm,v 1.45 2005-09-03 20:22:36 mquinson Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -317,19 +317,31 @@ sub gettextize {
     my ($poorig,$potrans)=(shift,shift);
 
     my $pores=Locale::Po4a::Po->new();
+    
+    my $please_fail = 0;
+    my $toobad = dgettext("po4a",
+  	"\nThe gettextization failed (once again). Don't give up, gettextizing is a subtle art, ".
+	"but this is only needed once to convert a project to the gorgeous luxus offered ".
+        "by po4a to translators.".
+        "\nPlease refer to the po4a(7) documentation, the section \"HOWTO convert a pre-existing ".
+        "translation to po4a?\" contains several hints to help you in your task");
 
+    # Don't fail right now when the entry count does not match. Instead, give it a try so that the user
+    # can see where we fail (which is probably where the problem is).
     if ($poorig->count_entries() > $potrans->count_entries()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
 	    "Original has more strings than the translation (%d>%d). ".
 	    "Please fix it by editing the translated version to add some dummy entry."),
 		$poorig->count_entries() , $potrans->count_entries());
+        $please_fail = 1;      
     } elsif ($poorig->count_entries() < $potrans->count_entries()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
 	    "Original has less strings than the translation (%d<%d). ".
 	    "Please fix it by removing the extra entry from the translated file. ".
 	    "You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization. ".
 	    "A possible cause is that a text duplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
-		$poorig->count_entries(), $potrans->count_entries());
+               $poorig->count_entries(), $potrans->count_entries());
+        $please_fail = 1;
     }
 
     if ( $poorig->get_charset =~ /^utf-8$/i ) {
@@ -382,8 +394,8 @@ sub gettextize {
 		"msgstr (at %s) is of type '%s'.\n".
 		"Original text: %s\n".
 		"Translated text: %s\n".
-	        "(result so far dumped to /tmp/gettextization.failed.po)"),
-		    $reforig, $typeorig, $reftrans, $typetrans, $orig, $trans);
+	        "(result so far dumped to /tmp/gettextization.failed.po)")."%s",
+	        $reforig, $typeorig, $reftrans, $typetrans, $orig, $trans,$toobad);
 	}
 
 	# 
@@ -394,6 +406,7 @@ sub gettextize {
 	                 'type'  => $typeorig,
 			 'reference' => $reforig);
     }
+    die "$toobad\n" if $please_fail; # make sure we return a useful error message when entry count differ
     return $pores;
 }
 
