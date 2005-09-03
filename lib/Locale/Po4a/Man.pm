@@ -816,15 +816,22 @@ sub post_trans {
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
     #   the beginning of the line
-    unless (defined $self->{type} && $self->{type} =~ m/^(TS)$/) {
-        # This doesn't work after a TS (this macros shift
+    if (not defined $self->{type}) {
+        # Only do it on regular text, because
+        # his doesn't work after a TS (this macros shift
         # lines, which may contain macros)
+        # or for the .ta arguments (e.g. .ta .5i 3i)
         $str =~ s/^((?:
                        (?:CW|[RBI])<
                       |$FONT_RE
                     )?
                     [.']
                    )/\\&$1/mgx;
+    } elsif ($self->{type} =~ m/^(TP)$/) {
+        # But it is also needed for some type (e.g. TP, if followed by a
+        # font macro)
+        # This regular expression is the same as above
+        $str =~ s/^((?:(?:CW|[RBI])<|$FONT_RE)?[.'])/\\&$1/mg;
     }
     # * degraded mode, doesn't work for the first line of a paragraph
     $str =~ s/\n([.'])/ $1/mg;
