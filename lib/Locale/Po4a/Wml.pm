@@ -44,11 +44,11 @@ Still to be implemented.
 
 =head1 TODO
 
-Dans le po, faut corriger les références pour pointer sur le fichier de départ, pas le temporaire 
+Dans le po, faut corriger les references pour pointer sur le fichier de depart, pas le temporaire 
 
-(12:11:26) adn: et pour les # du début ?
+(12:11:26) adn: et pour les # du debut ?
 (12:11:57) adn: si y a moyen juste de sortir le pagetitle="foo" en <title>foo</title>, c'est encore mieux
-(00:42:51) adn: #use wml::debian::mainpage title="Le système d'exploitation universel"
+(00:42:51) adn: #use wml::debian::mainpage title="Le systeme d'exploitation universel"
 
 =cut
 
@@ -107,18 +107,18 @@ sub parse {
       while ($file =~ m|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
         my $line = $1;
         print STDERR "PROTECT HEADER: $line\n";
-        if ($line =~ m/title="([^"]*)"/) { # ) {#"){
+        if ($line =~ m/title="([^"]*)"/) { #) {#"){
           warn "FIXME: We should translate the page title: $1\n";
         }          
       }
                 
-      # Flush the result to disk          
+      # Flush the result to disk          
       open OUTFILE,">$tmp_filename";
       print OUTFILE $file;
       close INFILE;
       close OUTFILE || die "Cannot write $tmp_filename: $!\n";
       
-      # Build the XML TransTractor which will do the job for us
+      # Build the XML TransTractor which will do the job for us
       my $xmlizer = Locale::Po4a::Chooser::new("xhtml");
       $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
       $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
