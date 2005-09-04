@@ -7,7 +7,7 @@
 # This code extracts plain text from tags and attributes from strict Xhtml
 # documents.
 #
-# Copyright (c) 2005 by Yves Rütschlé <po4a@rutschle.net>
+# Copyright (c) 2005 by Yves RÃ¼tschlÃ© <po4a@rutschle.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -59,11 +59,11 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 
 =head1 AUTHORS
 
- Yves Rütschlé <po4a@rutschle.net>
+ Yves RÃ¼tschlÃ© <po4a@rutschle.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2004 by Yves Rütschlé <po4a@rutschle.net>
+Copyright (c) 2004 by Yves RÃ¼tschlÃ© <po4a@rutschle.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
