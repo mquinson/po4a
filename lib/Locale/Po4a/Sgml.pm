@@ -425,7 +425,7 @@ sub parse_file {
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
-	                                    "filename firstname firstterm footnote footnoteref foreignphrase function".
+	                                    "filename firstname firstterm footnote footnoteref foreignphrase function ".
 	                                    "glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu ".
 	                                    "hardware ".
 	                                    "indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename ".
