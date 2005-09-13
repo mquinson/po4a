@@ -606,7 +606,8 @@ sub parse_file {
     }
 
     #   Change the entities including files in the document
-    while ($origfile =~ /^(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*);(.*)$/s) {
+    while ($origfile =~
+        /^(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);(.*)$/s) {
 	if (defined $entincl{$2}) {
 	    my ($begin,$key,$end)=($1,$2,$3);
 	    $end =~ s/^\s*\n//s;
