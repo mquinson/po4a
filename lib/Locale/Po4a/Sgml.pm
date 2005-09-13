@@ -469,7 +469,27 @@ sub parse_file {
     $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
     $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
 
+    # Remove <![ IGNORE [ sections
+    # FIXME: we don't support included PO4A-beg-
     my $tmp1 = $origfile;
+    while ($tmp1 =~ m/^(.*?)({PO4A-beg-\s*IGNORE\s*}(?:.+?){PO4A-end})(.*)$/s)
+    {
+        my ($begin,$ignored,$end) = ($1, $2, $3);
+        my @begin   = split(/\n/, $begin);
+        my @ignored = split(/\n/, $ignored);
+        my $pre = scalar @begin;
+        my $len = (scalar @ignored) -1;
+        $pre++ if ($begin =~ /\n$/s);
+        $len++ if ($end   =~ /^\n/s);
+        # remove the references of the ignored lines
+        splice @refs, $pre+1, $len-1;
+        # remove the lines
+        $tmp1 = $begin.$end;
+    }
+    $origfile = $tmp1;
+    # The <, >, and & in a CDATA must be escaped because they do not
+    # correspond to tags or entities delimiters.
+    $tmp1 = $origfile;
     $origfile = "";
     while ($tmp1 =~ m/^(.*?{PO4A-beg-[^}]*})(.+?)({PO4A-end}.*)$/s) {
         my ($begin, $tmp) = ($1, $2);
