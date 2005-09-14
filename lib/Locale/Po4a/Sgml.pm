@@ -759,7 +759,7 @@ sub parse_file {
     # run the appropriate handler for each event
     EVENT: while (my $event = $parse->next_event) {
 	# to build po entries
-	my $ref=$refs[$parse->line];
+	my $ref=$refs[$parse->line-1];
 	my $type;
 	
 	if ($event->type eq 'start_element') {
