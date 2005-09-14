@@ -491,7 +491,7 @@ sub parse_file {
     # correspond to tags or entities delimiters.
     $tmp1 = $origfile;
     $origfile = "";
-    while ($tmp1 =~ m/^(.*?{PO4A-beg-[^}]*})(.+?)({PO4A-end}.*)$/s) {
+    while ($tmp1 =~ m/^(.*?{PO4A-beg-\s*(?:CDATA|RCDATA)\s*})(.+?)({PO4A-end}.*)$/s) {
         my ($begin, $tmp) = ($1, $2);
         $tmp1 = $3;
         $tmp =~ s/</{PO4A-lt}/gs;
