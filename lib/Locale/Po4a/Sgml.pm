@@ -911,8 +911,8 @@ sub parse_file {
 	    $cdata =~ s/{PO4A-lt}/</g;
 	    $cdata =~ s/{PO4A-gt}/>/g;
 	    $cdata =~ s/{PO4A-amp}/&/g;
-            $cdata =~ s/\s*{PO4A-end}/\]\]>\n/g;
-            $cdata =~ s/\s*{PO4A-beg-([^\}]+)}/<!\[$1\[\n/g;
+            $cdata =~ s/{PO4A-end}/\]\]>/g;
+            $cdata =~ s/{PO4A-beg-([^\}]+)}/<!\[$1\[/g;
             unless ($verb) {
               $cdata =~ s/\\t/ /g;
               $cdata =~ s/\s+/ /g;
