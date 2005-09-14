@@ -660,7 +660,7 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
 
-    my $cmd="nsgmls -l -E 0 <$tmpfile 2>/dev/null|";
+    my $cmd="nsgmls -l -E 0 -wno-valid <$tmpfile 2>/dev/null|";
     print STDERR "CMD=$cmd\n" if ($debug{'generic'});
 
     open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run nsgmls: %s"), $!);
@@ -954,7 +954,11 @@ sub parse_file {
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
-    die wrap_mod("po4a::sgml", dgettext("po4a","nsgmls is missing or non-functional")) if ($? != 0);
+    die wrap_mod("po4a::sgml",
+                 dgettext("po4a","nsgmls is missing or non-functional. ".
+                 "Please make sure that nsgmls is present and does not ".
+                 "produce any error (with the -wno-valid option), ".
+                 "and report a bug otherwise.")) if ($? != 0);
     unlink ($tmpfile) unless $debug{'refs'};
 }
 
