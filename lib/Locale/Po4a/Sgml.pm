@@ -606,10 +606,9 @@ sub parse_file {
     }
 
     #   Change the entities including files in the document
-    while ($origfile =~
-        /^(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);(.*)$/s) {
-	if (defined $entincl{$2}) {
-	    my ($begin,$key,$end)=($1,$2,$3);
+    foreach my $key (keys %entincl) {
+        while ($origfile =~/^(.*?)&$key;(.*)$/s) {
+	    my ($begin,$end)=($1,$2);
 	    $end =~ s/^\s*\n//s;
 
 	    # add the refs
@@ -641,11 +640,10 @@ sub parse_file {
 	    # Do the substitution
 	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
 	    print STDERR "substitute $2\n" if ($debug{'entities'});
-	} else {
-	    $origfile = "$1".'{PO4A-amp}'."$2;$3";
-	    print STDERR "preserve $2\n" if ($debug{'entities'});
-	}
+        }
     }
+    $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);/$1\{PO4A-amp\}$2;/gs;
+}
 
     if ($debug{'refs'}) {
 	print "XX Resulting shifts\n";
