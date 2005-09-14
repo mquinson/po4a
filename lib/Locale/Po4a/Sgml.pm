@@ -265,14 +265,14 @@ sub translate {
 	 && !($self->{options}{'include-all'}) ){
 	warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only an entity)"), $string)
 	    unless $self->verbose() <= 0;
-	return $string;
+	return $string.($options{'wrap'}?"\n":"");
     }
     # don't translate entries composed of tags only
     if ( $string =~ /^(((<[^>]*>)|\s)*)$/
 	 && !($self->{options}{'include-all'}) ) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only tags)"), $string)
 	       unless $self->verbose() <= 0;
-	return $string;
+	return $string.($options{'wrap'}?"\n":"");
     }
 
     # don't translate entries composed of marked section tags only
@@ -282,7 +282,7 @@ sub translate {
                       "help translators (contains only opening or closing ".
                       "tags of marked sections)"), $string)
                unless $self->verbose() <= 0;
-        return $string;
+        return $string.($options{'wrap'}?"\n":"");
     }
 
     return $self->SUPER::translate($string,$ref,$type,%options);
