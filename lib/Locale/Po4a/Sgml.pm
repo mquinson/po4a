@@ -619,33 +619,45 @@ sub parse_file {
     foreach my $key (keys %entincl) {
         while ($origfile =~/^(.*?)&$key;(.*)$/s) {
 	    my ($begin,$end)=($1,$2);
-	    $end =~ s/^\s*\n//s;
 
 	    # add the refs
-	    my @refcpy;
-	    my $i;
-	    for ($i=0;$i<scalar @refs;$i++){
-		$refcpy[$i]=$refs[$i];
-	    }
-	    my @begin = split(/\n/,$begin);
-	    my @end = split(/\n/,$end);
-	    my ($pre,$len,$post) = (scalar @begin,$entincl{$key}{'length'},scalar @end);
-	    # make sure pre and content have a line in common. It will be the case if the entity is
-	    # indented ($begin contains the indenting spaces), but not if the entity is on the first
-	    # column
-	    $pre++ if ($begin =~ /\n$/s);
-	    # same for post
-	    $len++ if ($end =~ /^\n/s);
-	    
+	    my $len  = $entincl{$key}{'length'}; # number added by the inclusion
+	    my $pre  = ($begin =~ tr/\n/\n/); # number of \n
+	    my $post = ($end =~ tr/\n/\n/);
 	    print "XX Add a ref. pre=$pre; len=$len; post=$post\n" if $debug{'refs'};
-	    my $main = $refs[$pre-1]; # Keep a reference of inclusion position in main file
-	    for ($i=-1; $i<$len-1; $i++) {
-		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+2);
+	    my $main = $refs[$pre]; # Keep a reference of inclusion position in main file
+
+	    # Remove the references for the lines after the inclusion
+	    # point.
+	    my @endrefs = splice @refs, $pre+1;
+
+	    # Add the references of the added lines
+	    my $i;
+	    for ($i=0; $i<$len; $i++) {
+		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+1);
 	    }
-	    for ($i=0; $i<$post; $i++) {
-		    $refs[$pre+$i+$len-1] = # -1 since pre and len have a line in common
-		  $refcpy[$pre+$i];
+
+	    if ($begin !~ m/\n[ \t]*$/s) {
+		if ($entincl{$key}{'content'} =~ m/^[ \t]*\n/s) {
+		    # There is nothing in the first line of the included
+		    # file, and something on the line before the inclusion
+		    # The line reference will be more informative like
+		    # this:
+		    $refs[$pre] = $main;
+		}
 	    }
+	    if ($end !~ s/^[ \t]*\n//s) {
+		if ($entincl{$key}{'content'} =~ m/\n[ \t]*$/s) {
+		    # There is something on the line after the inclusion,
+		    # and there is an end of line at the end of the
+		    # included file. We must add the line reference of the
+		    # remainder on the line:
+		    push @refs, $main;
+		}
+	    }
+	    # Append the references removed earlier (lines after the
+	    # inclusion point).
+	    push @refs, @endrefs;
 
 	    # Do the substitution
 	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
