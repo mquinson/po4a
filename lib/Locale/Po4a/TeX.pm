@@ -75,7 +75,8 @@ use vars qw(@ISA @EXPORT);
              $no_wrap_environments $separated_commands
              %command_categories %separated
              &untranslated &translate_joined &push_environment
-             &register_generic);
+             &register_generic_command
+             &register_generic_environment);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
@@ -91,6 +92,7 @@ use vars qw(%commands %environments);
 # hash to describe the number of parameters and which one have to be
 # translated. Used by generic commands
 our %command_parameters = ();
+our %environment_parameters = ();
 # hash to describe the separators of environments.
 our %env_separators =();
 
@@ -102,7 +104,7 @@ our $ESCAPE    = "\\";
 our $no_wrap_environments = "verbatim";
 # Space separated list of commands that can be handled separately from
 # when they appear at the beginning or end of a paragraph
-our $separated_commands = "index label";
+our $separated_commands = "";
 # hash with these commands
 our %separated = ();
 
@@ -113,10 +115,10 @@ our %separated = ();
 #   The command is written as is with its arguments.
 # * translate_joined
 #   All arguments are translated and the command is then reassembled
+# FIXME: to be removed
 our %command_categories = (
-    'untranslated'      => "vspace hspace label",
-    'translate_joined'  => "chapter section subsection subsubsection ".
-                           "index"
+    'untranslated'      => "",
+    'translate_joined'  => ""
 );
 
 =item debug
@@ -124,6 +126,7 @@ our %command_categories = (
 Activate debugging for some internal mechanisms of this module.
 Use the source to see which parts can be debugged.
 
+# FIXME: to be removed
 =item translate
 
 Coma-separated list of commands whose arguments have to be proposed for
@@ -131,6 +134,7 @@ translation.
 This list is appended to the default list containing
 chapter, section, subsection, subsubsection and index.
 
+# FIXME: to be removed
 =item untranslated
 
 Coma-separated list of commands whose arguments shoud not be translated.
@@ -168,15 +172,19 @@ The following commands are recognized:
 
 =over 4
 
+# FIXME: to be checked: are the parameters copied
 =item % po4a: command I<command1> alias I<command2>
 
 Indicates that the arguments of the I<command1> command should be
 treated as the arguments of the I<command2> command.
 
+# FIXME: for sub-modules only. generic is prefered for LaTeX
 =item % po4a: command I<command1> I<function1>
 
 Indicates that the I<command1> command should be handled by I<function1>.
 
+# FIXME: to be removed
+# FIXME: document new format
 =item % po4a: command <command1> x,y,z,t
 
 This permits a better control of the translated arguments and some
@@ -198,6 +206,8 @@ The meaning of the x, y, z and t is the following:
 It could be useful to define commands without argument as "0,0,,"
 instead of either translated or untranslated.
 
+# FIXME: to be removed ?
+# FIXME: document generic
 =item % po4a: environment <env1> <function1>
 
 Indicates that the I<env1> environment should be handled by I<function1>.
@@ -222,6 +232,7 @@ title command.  In this case, the environment is title{#1}.
 
 =back
 
+# FIXME: to be removed ?
 See the B<INTERNAL FUNCTIONS> section for the list of function which could be
 used for commands or environments.
 
@@ -235,6 +246,8 @@ my $my_dirname;
 # Array of files that should not be included by read_file.
 # See read_file.
 our @exclude_include;
+
+my %type_end=('{'=>'}', '['=>']');
 
 #########################
 #### DEBUGGING STUFF ####
@@ -390,9 +403,10 @@ be added at the end of sections command to specify that they should
 not be numbered.  In this case, this field will contain "*".  If there
 is no variant, the field is an empty string.
 
-=item An array of optional arguments
+=item An array of tuples (type of argument, argument)
 
-=item An array of mandatory arguments
+The type of argument can be either '{' (for mandatory arguments) or '['
+(for optional arguments)
 
 =item The remaining buffer
 
@@ -408,8 +422,7 @@ sub get_leading_command {
     my ($self, $buffer) = (shift,shift);
     my $command = ""; # the command name
     my $variant = ""; # a varriant for the command (e.g. an asterisk)
-    my @opts = (); # array of optional arguments
-    my @args = (); # array of mandatory arguments
+    my @args; # array of arguments
     print STDERR "get_leading_command($buffer)="
         if ($debug{'extract_commands'});
 
@@ -420,70 +433,64 @@ sub get_leading_command {
         $command = $1;
         $variant = $2;
         $buffer  = $3;
-        # read the optional arguments (if any)
-        while ($buffer =~ m/^\s*\[(.*)$/s) {
-            my $opt = "";
-            my $count = 1;
-            $buffer = $1;
-            # stop reading the buffer when the number of ] matches the
-            # the number of [.
-            while ($count > 0) {
-                if ($buffer =~ m/^(.*?)([\[\]])(.*)$/s) {
-                    $opt .= $1;
-                    $buffer = $3;
-                    if ($2 eq "[") {
-                        $count++;
-                    } else { # ]
-                        $count--;
-                    }
-                    if ($count > 0) {
-                        $opt .= $2
-                    }
-                } else {
-                    die wrap_ref_mod($self->{ref},
-                                     "po4a::tex",
-                                     dgettext("po4a", "un-balanced %s in '%s'"),
-                                     "[",
-                                     $buffer);
-                }
-            }
-            push @opts, $opt;
-        }
-
-        # read the mandatory arguments (if any)
-        while ($buffer =~ m/^\s*\{(.*)$/s) {
+        # read the arguments (if any)
+        while ($buffer =~ m/^\s*([\[\{])(.*)$/s) {
+            my $type = $1;
             my $arg = "";
             my $count = 1;
-            $buffer = $1;
-            # stop reading the buffer when the number of } matches the
-            # the number of {.
+            $buffer = $2;
+            # stop reading the buffer when the number of ] (or }) matches the
+            # the number of [ (or {).
             while ($count > 0) {
-                if ($buffer =~ m/^(.*?)([\{\}])(.*)$/s) {
+                if ($buffer =~ m/^(.*?)([\[\]\{\}])(.*)$/s) {
                     $arg .= $1;
                     $buffer = $3;
-                    if ($2 eq "{") {
+                    if ($2 eq $type) {
                         $count++;
-                    } else {
+                    } elsif ($2 eq $type_end{$type}) {
                         $count--;
                     }
                     if ($count > 0) {
-                        $arg .= $2;
+                        $arg .= $2
                     }
                 } else {
                     die wrap_ref_mod($self->{ref},
                                      "po4a::tex",
                                      dgettext("po4a", "un-balanced %s in '%s'"),
-                                     "{",
+                                     $type,
                                      $buffer);
                 }
             }
-            push @args, $arg;
+            push @args, ($type,$arg);
+        }
+    }
+    if (defined $command and length $command) {
+        # verify the number of arguments
+        my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
+        if (not $check) {
+            die "Error while checking the number of arguments of the ".
+                "'$command' command at ".$self->{ref}.". $reason\n";
+        }
+
+        if (@$remainder) {
+            # FIXME: we should also keep the spaces to be idempotent
+            my ($temp,$type,$arg);
+            while (@$remainder) {
+                $type = shift @$remainder;
+                $arg  = shift @$remainder;
+                $temp .= $type.$arg.$type_end{$type};
+                # And remove the same number of arguments from @args
+                pop @args;
+                pop @args;
+            }
+            print "found1: '$temp'\n";
+            $buffer = $temp.$buffer;
         }
     }
 
-    print STDERR "($command,$variant,@opts,@args,$buffer)\n"
+    print STDERR "($command,$variant,@args,$buffer)\n"
         if ($debug{'extract_commands'});
-    return ($command,$variant,\@opts,\@args,$buffer);
+    return ($command,$variant,\@args,$buffer);
 }
 
 =item get_trailing_command($buffer)
@@ -498,26 +505,27 @@ sub get_trailing_command {
     print STDERR "get_trailing_command($buffer)="
         if ($debug{'extract_commands'});
 
-    my @args = ();
-    my @opts = ();
+    my @args;
     my $command = "";
     my $variant = "";
 
     # While the buffer ends by }, consider it is a mandatory argument
     # and extract this argument.
-    while ($buffer =~ m/^(.*\{.*)\}$/s) {
+    while (   $buffer =~ m/^(.*(\{).*)\}$/s
+           or $buffer =~ m/^(.*(\[).*)\]$/s) {
         my $arg = "";
         my $count = 1;
         $buffer = $1;
-        # stop reading the buffer when the number of } matches the
-        # the number of {.
+        my $type = $2;
+        # stop reading the buffer when the number of } (or ]) matches the
+        # the number of { (or [).
         while ($count > 0) {
-            if ($buffer =~ m/^(.*)([\{\}])(.*)$/s) {
+            if ($buffer =~ m/^(.*)([\{\}\[\]])(.*)$/s) {
                  $arg = $3.$arg;
                  $buffer = $1;
-                 if ($2 eq "{") {
+                 if ($2 eq $type) {
                      $count--;
-                 } else {
+                 } elsif ($2 eq $type_end{$type}) {
                      $count++;
                  }
                  if ($count > 0) {
@@ -527,42 +535,11 @@ sub get_trailing_command {
                 die wrap_ref_mod($self->{ref},
                                  "po4a::tex",
                                  dgettext("po4a", "un-balanced %s in '%s'"),
-                                 "}",
+                                 $type_end{$type},
                                  $buffer);
             }
         }
-        unshift @args, $arg;
-    }
-
-    # While the buffer ends by ], consider it is a mandatory argument
-    # and extract this argument.
-    while ($buffer =~ m/^(.*\[.*)\]\s*$/s) {
-        my $opt = "";
-        my $count = 1;
-        $buffer = $1;
-        # stop reading the buffer when the number of ] matches the
-        # the number of [.
-        while ($count > 0) {
-            if ($buffer =~ m/^(.*)([\[\]])(.*)$/s) {
-                 $opt = $3.$opt;
-                 $buffer = $1;
-                 if ($2 eq "[") {
-                     $count--;
-                 } else {
-                     $count++;
-                 }
-                 if ($count > 0) {
-                     $opt = $2.$opt;
-                 }
-            } else {
-                die wrap_ref_mod($self->{ref},
-                                 "po4a::tex",
-                                 dgettext("po4a", "un-balanced %s in '%s'"),
-                                 "]",
-                                 $buffer);
-            }
-        }
-        unshift @opts, $opt;
+        unshift @args, ($type,$arg);
     }
 
     # There should now be a command, maybe followed by an asterisk.
@@ -571,20 +548,39 @@ sub get_trailing_command {
         $buffer = $1;
         $command = $2;
         $variant = $3;
+        my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
+        if (not $check) {
+            die "Error while checking the number of arguments of the ".
+                "'$command' command at ".$self->{ref}.". $reason\n";
+        }
+        if (@$remainder) {
+            # FIXME: we should also keep the spaces to be idempotent
+            my ($temp,$type,$arg);
+            while (@$remainder) {
+                $type = shift @$remainder;
+                $arg  = shift @$remainder;
+                $temp .= $type.$arg.$type_end{$type};
+                # And remove the same number of arguments from @args
+                pop @args;
+                pop @args;
+            }
+            print "found2: '$temp'\n";
+            $buffer .= $temp;
+        }
     }
 
     # sanitize return values if no command was found.
     if (!length($command)) {
         $command = "";
         $variant = "";
-        @opts = ();
-        @args = ();
+        undef @args;
         $buffer = $orig_buffer;
     }
+# verify the number of arguments
 
-    print STDERR "($command,$variant,@opts,@args,$buffer)\n"
+    print STDERR "($command,$variant,@args,$buffer)\n"
         if ($debug{'extract_commands'});
-    return ($command,$variant,\@opts,\@args,$buffer);
+    return ($command,$variant,\@args,$buffer);
 }
 
 =item translate_buffer
@@ -600,8 +596,7 @@ sub translate_buffer {
     print STDERR "translate_buffer($buffer,@env)="
         if ($debug{'translate_buffer'});
     my ($command,$variant) = ("","");
-    my $opts = ();
-    my $args = ();
+    my $args;
     my $translated_buffer = "";
     my $orig_buffer = $buffer;
     my $t = ""; # a temporary string
@@ -651,7 +646,7 @@ sub translate_buffer {
                         |                       # or
                          (?<!\\)(?:\\\\)*\\%)*? # a % preceded by an odd nb of \
                      )                          # $2 is a \begin{ with the end of the line
-                      (\\(?:begin|end)\{.*)$/sx
+                      (${RE_ESCAPE}(?:begin|end)\{.*)$/sx
         and length $1) {
         my ($begin, $end) = ($1, $2);
         my ($t1, $t2) = ("", "");
@@ -693,7 +688,7 @@ sub translate_buffer {
 #            $buffer = $2; # FIXME: this also remove trailing spaces!!
             $buffer =~ s/^\s*//;
         }
-        ($command, $variant, $opts, $args, $buffer) =
+        ($command, $variant, $args, $buffer) =
             get_leading_command($self,$buffer);
         if (length($command)) {
             # call the command subroutine.
@@ -701,7 +696,7 @@ sub translate_buffer {
             # with the content of each argument that need a translation.
             if (defined ($commands{$command})) {
                 ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                                   $opts,$args,\@env);
+                                                   $args,\@env);
                 $translated_buffer .= $spaces.$t;
                 # Handle spaces after a command.
                 $spaces = "";
@@ -730,10 +725,10 @@ sub translate_buffer {
             $buffer = $1;
             $spaces = $2;
         }
-        ($command, $variant, $opts, $args, $buffer) =
+        ($command, $variant, $args, $buffer) =
             get_trailing_command($self,$buffer);
         if (length($command)) {
-            unshift @trailing_commands, ($command, $variant, $opts, $args, $spaces);
+            unshift @trailing_commands, ($command, $variant, $args, $spaces);
         } else {
             $buffer .= $spaces;
         }
@@ -790,12 +785,11 @@ sub translate_buffer {
     while (@trailing_commands) {
         my $command = shift @trailing_commands;
         my $variant = shift @trailing_commands;
-        my $opts    = shift @trailing_commands;
         my $args    = shift @trailing_commands;
         my $spaces  = shift @trailing_commands;
         if (defined ($commands{$command})) {
             ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                               $opts,$args,\@env);
+                                               $args,\@env);
             $translated_buffer .= $t.$spaces;
         } else {
             die wrap_ref_mod($self->{ref},
@@ -970,6 +964,8 @@ See the INLINE CUSTOMIZATION section for more details.
 
 =cut
 
+# FIXME: To be checked: untranslated do not exist anymore
+#        parameters must be always copied
 sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^\s*%\s*po4a\s*:\s*//;
@@ -992,7 +988,10 @@ sub parse_definition_line {
                              $2);
             }
         } elsif ($line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/) {
-            register_generic("$command,$1,$2,$3,$4");
+#FIXME: die for the old format
+            register_generic_command("$command,$1,$2,$3,$4");
+        } elsif ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
+            register_generic_command("$command,$1");
         } elsif ($line =~ /^(\w+)\s*$/) {
             if (defined &$1) {
                 $commands{$command} = \&$1;
@@ -1005,7 +1004,9 @@ sub parse_definition_line {
     } elsif ($line =~ /^environment\s+(\w+)\s+(.*)$/) {
         my $env = $1;
         $line = $2;
-        if ($line =~ /^(\w+)\s*$/) {
+        if ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
+            register_generic_environment("$env,$1");
+        } elsif ($line =~ /^(\w+)\s*$/) {
             if (defined &$1) {
                 $environments{$env} = \&$1;
             } else {
@@ -1183,18 +1184,20 @@ to the name of the command (if the string is part of a command argument).
 =cut
 
 # Rebuild the command with the original arguments.
+# FIXME: This function should be removed
 sub untranslated {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "untranslated($command,$variant,@$opts,@$args,@$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "untranslated($command,$variant,@$args,@$env)="
         if ($debug{'commands'});
 
     my $translated = "$ESCAPE$command$variant";
-    foreach my $opt (@$opts) {
-        $translated .= "[$opt]";
-    }
-    foreach my $opt (@$args) {
-        $translated .= "{$opt}";
+    my ($type, $opt);
+    my @targs = @$args;
+    while (@targs) {
+        $type = shift @targs;
+        $opt  = shift @targs;
+        $translated .= $type.$opt.$type_end{$type};
     }
 
     print "($translated,@$env)\n"
@@ -1203,24 +1206,23 @@ sub untranslated {
 }
 
 # Rebuild the command, with all arguments translated.
+# FIXME: This function should be removed
 sub translate_joined {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "translate_joined($command,$variant,@$opts,@$args,@$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "translate_joined($command,$variant,@$args,@$env)="
         if ($debug{'commands'});
     my ($t,@e)=("",());
 
     my $translated = "$ESCAPE$command$variant";
     my $arg=1;
-    foreach my $opt (@$opts) {
-        ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
-        $translated .= "[".$t."]";
-        $arg+=1;
-    }
-    $arg=1;
-    foreach my $opt (@$args) {
-        ($t, @e) = translate_buffer($self,$opt,(@$env,$command."{#$arg}"));
-        $translated .= "{".$t."}";
+    my ($type, $opt);
+    my @targs = @$args;
+    while (@targs) {
+        $type = shift @targs;
+        $opt  = shift @targs;
+        ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$arg.$type_end{$type}));
+        $translated .= $type.$t.$type_end{$type};
         $arg+=1;
     }
 
@@ -1231,27 +1233,25 @@ sub translate_joined {
 
 # definition of environment related commands
 
-# FIXME: a \begin{env} can be followed by an argument. For example:
-# \begin{important}[the law of conservation of energy]
 $commands{'begin'}= sub {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "begin($command,$variant,@$opts,@$args,@$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "begin($command,$variant,@$args,@$env)="
         if ($debug{'commands'} || $debug{'environments'});
     my ($t,@e) = ("",());
 
-    my $envir = $args->[0];
+    my $envir = $args->[1];
     if (defined($envir) and $envir =~ /^(.*)\*$/) {
         $envir = $1;
     }
 
     if (defined($env) && defined($environments{$envir})) {
         ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
-                                            $opts,$args,$env);
+                                            $args,$env);
     } else {
         die wrap_mod("po4a::tex",
                      dgettext("po4a", "unknown environment: '%s'"),
-                     $args->[0]);
+                     $args->[1]);
     }
 
     print "($t, @e)\n"
@@ -1260,94 +1260,77 @@ $commands{'begin'}= sub {
 };
 $commands{'end'}= sub {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "end($command,$variant,@$opts,@$args,@$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "end($command,$variant,@$args,@$env)="
         if ($debug{'commands'} || $debug{'environments'});
 
     # verify that this environment was the last pushed environment.
-    if (!@$env || @$env[-1] ne $args->[0]) {
+    if (!@$env || @$env[-1] ne $args->[1]) {
         # a begin may have been hidden in the middle of a translated
         # buffer. FIXME: Just warn for now.
         warn wrap_mod("po4a::tex",
                       dgettext("po4a", "unmatched end of environment '%s'"),
-                      $args->[0]);
+                      $args->[1]);
     } else {
         pop @$env;
     }
 
-    my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
+    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
 
     print "($t, @$env)\n"
         if ($debug{'commands'} || $debug{'environments'});
     return ($t, @$env);
 };
+$separated{'begin'} = 1;
+$command_parameters{'end'}{'types'} = ();
+push @{$command_parameters{'end'}{'types'}}, '{';
+$separated{'end'} = 1;
 
 sub generic_command {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "generic_command($command,$variant,@$opts,@$args,@$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "generic_command($command,$variant,@$args,@$env)="
         if ($debug{'commands'} || $debug{'environments'});
     my ($t,@e)=("",());
 
-    # check number of arguments
-    die wrap_mod("po4a::tex",
-                 dgettext("po4a", "wrong number of optional arguments for command '%s'"),
-                 $command)
-        if (    scalar($command_parameters{$command}{'nb_opts'}) lt scalar(@$opts)
-            and $command_parameters{$command}{'nb_opts'} ne -1);
-    if (    $command_parameters{$command}{'nb_args'} ne scalar(@$args)
-        and $command_parameters{$command}{'nb_args'} ne -1) {
-        unless (    $command_parameters{$command}{'nb_args'} eq (scalar(@$args) - 1)
-                and !length(@$args[-1])) {
-            die wrap_mod("po4a::tex",
-                         dgettext("po4a",
-                                  "wrong number of arguments for command '%s'"),
-                         $command);
-        }
-    }
+    # the number of arguments is checked during the extraction of the
+    # arguments
 
     my $translated = "$ESCAPE$command$variant";
-    my $arg=1;
-    # handle optional arguments
-    foreach my $opt (@$opts) {
-        my $have_to_be_translated = 0;
-        # if translated_opts = -1, all arguments are translated
-        # if translated_opts = 0, no argument is translated
-        # else, translated_opts contains the space separated list
-        #       of the translated arguments
-        if ($command_parameters{$command}{'translated_opts'} eq -1) {
-            $have_to_be_translated = 1;
-        } elsif ($command_parameters{$command}{'translated_opts'} ne 0) {
-            foreach (split(/ /, $command_parameters{$command}{'translated_opts'})) {
-                $have_to_be_translated = 1 if ($_ eq $arg);
-            }
-        }
-        if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."{#$arg}"));
-        } else {
-            $t = $opt;
-        }
-        $translated .= "[".$t."]";
-        $arg+=1;
-    }
     # handle arguments
-    $arg=1;
-    foreach my $opt (@$args) {
+    my @arg_types = @{$command_parameters{$command}{'types'}};
+    my @arg_translated = @{$command_parameters{$command}{'translated'}};
+    my ($type, $opt);
+    my @targs = @$args;
+    my $count = 0;
+    while (@targs) {
+        $type = shift @targs;
+        $opt  = shift @targs;
         my $have_to_be_translated = 0;
-        if ($command_parameters{$command}{'translated_args'} eq -1) {
-            $have_to_be_translated = 1;
-        } elsif ($command_parameters{$command}{'translated_args'} ne 0) {
-            foreach (split(/ /, $command_parameters{$command}{'translated_args'})) {
-                $have_to_be_translated = 1 if ($_ eq $arg);
+        TEST_TYPE:
+            if ($count >= scalar @arg_types) {
+                # The number of arguments does not match,
+                # and a variable number of arguments was not specified
+#FIXME: die message, this should have been found before => mail
+                die "wrong number of argument '$command'@$args'$count'$type'\n";
+            } elsif ($type eq $arg_types[$count]) {
+                $have_to_be_translated = $arg_translated[$count];
+                $count ++;
+            } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+                # an optionnal argument was not provided,
+                # try with the next argument.
+                $count++;
+                goto TEST_TYPE;
+            } else {
+#FIXME: msg
+                die "optional argument provided, but a mandatory one is expected\n"
             }
-        }
         if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$command."[#$arg]"));
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".($count+1).$type_end{$type}));
         } else {
             $t = $opt;
         }
-        $translated .= "{".$t."}";
-        $arg+=1;
+        $translated .= $type.$t.$type_end{$type};
     }
 
     print "($translated, @$env)\n"
@@ -1355,24 +1338,33 @@ sub generic_command {
     return ($translated, @$env);
 }
 
-sub register_generic {
-    my ($command, $nb_opts, $nb_args, $translated_opts, $translated_args) = split(/,/, $_[0]);
-    if ($command =~ /^\*(.*)$/) {
-        $command = $1;
-        $separated{$command}=1;
+sub register_generic_command {
+    if ($_[0] =~ m/^.*,(-1|[0-9]),(-1|[0-9]),(-1|[0-9 *])?,(-1|[0-9 ]*)?$/) {
+# FIXME: old format
+        die "You are using an old format '$_[0]'.\n";
+    } elsif ($_[0] =~ m/^(.*),((\{_?\}|\[_?\])*)$/) {
+        my $command = $1;
+        my $arg_types = $2;
+        if ($command =~ /^\*(.*)$/) {
+            $command = $1;
+            $separated{$command}=1;
+        }
+        my @types = ();
+        my @translated = ();
+        while (    defined $arg_types
+               and length $arg_types
+               and $arg_types =~ m/^(?:([\{\[])(_?)[\}\]])(.*)$/) {
+            push @types, $1;
+            push @translated, ($2 eq "_")?1:0;
+            $arg_types = $3;
+        }
+        $command_parameters{$command}{'types'} = \@types;
+        $command_parameters{$command}{'translated'} = \@translated;
+        $command_parameters{$command}{'nb_args'} = "";
+        $commands{$command} = \&generic_command;
+    } else {
+        die "unsupported format: '$_[0]'.\n"
     }
-
-    $command_parameters{$command} = {
-        'nb_opts'         => $nb_opts,         # number of optional arguments
-        'nb_args'         => $nb_args,         # number of arguments
-        # space separated list of indexes of the optional arguments that have
-        # to be translated. The first argument is 1 (not 0).
-        'translated_opts' => $translated_opts,
-        # space separated list of indexes of the arguments that have
-        # to be translated. The first argument is 1 (not 0).
-        'translated_args' => $translated_args
-    };
-    $commands{$command} = \&generic_command;
 }
 
 ########################################
@@ -1380,22 +1372,151 @@ sub register_generic {
 ########################################
 # push the environment in the environment stack, and do not translate
 # the command
+# FIXME: This function should be removed
 sub push_environment {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
-    print "push_environment($command,$variant,$opts,$args,$env)="
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "push_environment($command,$variant,@$args,@$env)="
         if ($debug{'environments'});
 
-    my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
-    @e = (@$env, $args->[0]);
+    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
+    @e = (@$env, $args->[1]);
 
     print "($t,@e)\n"
         if ($debug{'environments'});
     return ($t,@e);
 }
 
-$environments{'verbatim'} = \&push_environment;
-$environments{'document'} = \&push_environment;
+sub generic_environment {
+    my $self = shift;
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "generic_environment($command,$variant,$args,$env)="
+        if ($debug{'environments'});
+    my ($t,@e)=("",());
+
+    # The first argument (the name of the environment is never translated)
+    # For the others, @types and @translated are used.
+    my $translated = "$ESCAPE$command$variant";
+    my @targs = @$args;
+    my $type = shift @targs;
+    my $opt  = shift @targs;
+    my $new_env = $opt;
+    $translated .= $type.$new_env.$type_end{$type};
+    my @arg_types = @{$environment_parameters{$new_env}{'types'}};
+    my @arg_translated = @{$environment_parameters{$new_env}{'translated'}};
+
+    my $count = 0;
+    while (@targs) {
+        $type = shift @targs;
+        $opt  = shift @targs;
+        my $have_to_be_translated = 0;
+TEST_TYPE:
+        if ($count >= scalar @arg_types) {
+# FIXME: die msg
+            warn "wrong number of argument. This should have been found ".
+                "earlier.\n'$command'$new_env'@$args'$count'$type'\n";
+        } elsif ($type eq $arg_types[$count]) {
+            $have_to_be_translated = $arg_translated[$count];
+            $count ++;
+        } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+            # an optionnal argument was not provided,
+            # try with the next argument.
+            $count++;
+            goto TEST_TYPE;
+        } else {
+            die "optional argument provided, but a mandatory one is expected\n"
+        }
+
+        if ($have_to_be_translated) {
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$new_env.$type."#".$count.$type_end{$type}));
+        } else {
+            $t = $opt;
+        }
+        $translated .= $type.$t.$type_end{$type};
+
+    }
+    @e = (@$env, $new_env);
+
+    print "($translated,@e)\n"
+        if ($debug{'environments'});
+    return ($translated,@e);
+}
+
+
+sub check_arg_count {
+    my $self = shift;
+    my $command = shift;
+    my $args = shift;
+    my @targs = @$args;
+    my $check = 1;
+    my @remainder = ();
+    my $reason = "";
+    my ($type, $arg);
+    my @arg_types;
+    
+    if ($command eq 'begin') {
+        $type = shift @targs;
+        # The name of the environment is mandatory
+        if (   (not defined $type)
+            or ($type ne '{')) {
+# FIXME: gettext
+            $reason = "The first argument of \\begin is mandatory.";
+            $check = 0;
+        }
+        my $env = shift @targs;
+        @arg_types = @{$environment_parameters{$env}{'types'}};
+    } else {
+        @arg_types = @{$command_parameters{$command}{'types'}};
+    }
+    
+    my $count = 0;
+    while ($check and @targs) {
+        $type = shift @targs;
+        $arg  = shift @targs;
+TEST_TYPE:
+        if ($count >= scalar @arg_types) {
+            # Too many arguments some will remain
+            @remainder = ($type, $arg, @targs);
+            last;
+        } elsif ($type eq $arg_types[$count]) {
+            $count ++;
+        } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+            # an optionnal argument was not provided,
+            # try with the next argument.
+            $count++;
+            goto TEST_TYPE;
+        } else {
+            $check = 0;
+# FIXME: gettext
+            $reason = "An optional argument was provided, but a mandatory one is expected.";
+        }
+    }
+
+    return ($check, $reason, \@remainder);
+}
+
+sub register_generic_environment {
+    print "register_generic_environment($_[0])\n"
+        if ($debug{'environments'});
+    if ($_[0] =~ m/^(.*),((?:\{_?\}|\[_?\])*)$/) {
+        my $env = $1;
+        my $arg_types = $2;
+        my @types = ();
+        my @translated = ();
+        while (    defined $arg_types
+               and length $arg_types
+               and $arg_types =~ m/^(?:([\{\[])(_?)[\}\]])(.*)$/) {
+            push @types, $1;
+            push @translated, ($2 eq "_")?1:0;
+            $arg_types = $3;
+        }
+        $environment_parameters{$env} = {
+            'types'      => \@types,
+            'translated' => \@translated
+        };
+        $environments{$env} = \&generic_environment;
+    }
+}
 
 ####################################
 ### INITIALIZATION OF THE PARSER ###
@@ -1442,6 +1563,7 @@ sub initialize {
         }
     }
 
+# FIXME: to be removed ?
     foreach (split(/ /, $command_categories{'untranslated'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
@@ -1451,6 +1573,7 @@ sub initialize {
         $commands{$_} = \&untranslated;
     }
 
+# FIXME: to be removed ?
     foreach (split(/ /, $command_categories{'translate_joined'})) {
         if (defined($commands{$_})) {
             # FIXME: Should we allow to redefine commands
@@ -1460,6 +1583,7 @@ sub initialize {
         $commands{$_} = \&translate_joined;
     }
 
+# FIXME: to be removed ?
     # commands provided on the command line have an higher priority
     # FIXME: commands defined in the files have an even higher priority
     if ($options{'translate'}) {
@@ -1467,16 +1591,20 @@ sub initialize {
             $commands{$_} = \&translate_joined;
         }
     }
+# FIXME: to be removed ?
     if ($options{'untranslated'}) {
         foreach (split(/,/, $options{'untranslated'})) {
             $commands{$_} = \&untranslated;
         }
     }
 
+# FIXME: to be removed ?
     # build an hash with keys in $separated_commands to ease searches.
     foreach (split(/ /, $separated_commands)){
         $separated{$_}=1;
     };
+# FIXME: we need a way to give new definition on the command line
+#        (parse_file ?)
 }
 
 =head1 STATUS OF THIS MODULE
@@ -1503,17 +1631,6 @@ Various other points are tagged TODO in the source.
 =head1 KNOWN BUGS
 
 =over 4
-
-=item environments
-
-Arguments of the begin command are never translated.
-There is currently only one environment function.
-More functions should come in future releases.
-
-=item commands
-
-The parser assumes every command is followed by optional arguments (enclosed in
-[]) and then by mandatory arguments (enclosed in {}).
 
 =item Others
 
