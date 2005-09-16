@@ -69,240 +69,249 @@ $VERSION= $Locale::Po4a::TeX::VERSION;
 @EXPORT= qw();
 
 use Locale::Po4a::TeX;
-use subs qw(&untranslated     &translate_joined
-            &push_environment &parse_definition_file
-            &register_generic);
-*untranslated          = \&Locale::Po4a::TeX::untranslated;
-*translate_joined      = \&Locale::Po4a::TeX::translate_joined;
-*push_environment      = \&Locale::Po4a::TeX::push_environment;
-*parse_definition_file = \&Locale::Po4a::TeX::parse_definition_file;
-*register_generic      = \&Locale::Po4a::TeX::register_generic;
+use subs qw(&untranslated
+            &parse_definition_file
+            &register_generic_command
+            &register_generic_environment);
+*untranslated                  = \&Locale::Po4a::TeX::untranslated;
+*parse_definition_file         = \&Locale::Po4a::TeX::parse_definition_file;
+*register_generic_command      = \&Locale::Po4a::TeX::register_generic_command;
+*register_generic_environment  = \&Locale::Po4a::TeX::register_generic_environment;
 use vars qw($RE_ESCAPE            $ESCAPE
             $no_wrap_environments $separated_commands
             %commands             %environments
             %command_categories   %separated
+            %command_parameters %environment_parameters
             %env_separators
             @exclude_include);
-*RE_ESCAPE             = \$Locale::Po4a::TeX::RE_ESCAPE;
-*ESCAPE                = \$Locale::Po4a::TeX::ESCAPE;
-*no_wrap_environments  = \$Locale::Po4a::TeX::no_wrap_environments;
-*separated_commands    = \$Locale::Po4a::TeX::separated_commands;
-*commands              = \%Locale::Po4a::TeX::commands;
-*environments          = \%Locale::Po4a::TeX::environments;
-*command_categories    = \%Locale::Po4a::TeX::command_categories;
-*separated             = \%Locale::Po4a::TeX::separated;
-*env_separators        = \%Locale::Po4a::TeX::env_separators;
-*exclude_include       = \@Locale::Po4a::TeX::exclude_include;
+*RE_ESCAPE                = \$Locale::Po4a::TeX::RE_ESCAPE;
+*ESCAPE                   = \$Locale::Po4a::TeX::ESCAPE;
+*no_wrap_environments     = \$Locale::Po4a::TeX::no_wrap_environments;
+*separated_commands       = \$Locale::Po4a::TeX::separated_commands;
+*commands                 = \%Locale::Po4a::TeX::commands;
+*environments             = \%Locale::Po4a::TeX::environments;
+*command_categories       = \%Locale::Po4a::TeX::command_categories;
+*separated                = \%Locale::Po4a::TeX::separated;
+*env_separators           = \%Locale::Po4a::TeX::env_separators;
+*exclude_include          = \@Locale::Po4a::TeX::exclude_include;
+*command_parameters       = \%Locale::Po4a::TeX::command_parameters;
+*environment_parameters   = \%Locale::Po4a::TeX::environment_parameters;
 
 
 # documentclass:
 # Only read the documentclass in order to find some po4a directives.
 # FIXME: The documentclass could contain translatable strings.
 # Maybe it should be implemented as \include{}.
-$separated_commands .= " documentclass";
 $commands{'documentclass'} = sub {
     my $self = shift;
-    my ($command,$variant,$opts,$args,$env) = (shift,shift,shift,shift,shift);
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
 
     # Only try to parse the file.  We don't want to fail or parse this file
     # if it is a standard documentclass.
-    parse_definition_file($self, $args->[0].".cls", 1);
+    parse_definition_file($self, $args->[1].".cls", 1);
 
-    my ($t,@e) = untranslated($self,$command,$variant,$opts,$args,$env);
+    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
 
     return ($t, @$env);
 };
+$command_parameters{'documentclass'}{'types'} = ();
+push @{$command_parameters{'documentclass'}{'types'}}, '{';
+$separated{'documentclass'} = 1;
 
 # LaTeX 2
 # I choosed not to translate files, counters, lengths
-register_generic("*addcontentsline,0,3,,3");
-register_generic("address,0,1,,1");           # lines are seperated by \\
-register_generic("*addtocontents,0,2,,2");
-register_generic("*addtocounter,0,2,,");
-register_generic("*addtolength,0,2,,");
-register_generic("*addvspace,0,1,,");
-register_generic("alph,0,1,,");               # another language may not want this alphabet
-register_generic("arabic,0,1,,");             # another language may not want an arabic numbering
-register_generic("*author,0,1,,1");           # authors are separated by \and
-register_generic("bibitem,1,1,,");
-register_generic("*bibliographystyle,0,1,,"); # BibTeX
-register_generic("*bibliography,0,1,,");      # BibTeX
-register_generic("*centerline,0,1,,1");
-register_generic("*caption,1,1,,1");
-register_generic("cc,0,1,,1");
-register_generic("circle,1,1,,");
-register_generic("cite,1,1,1,");
-register_generic("cline,0,1,,");
-register_generic("closing,0,1,,1");
-register_generic("dashbox,0,1,,");            # followed by a (w,h) argument
-register_generic("date,0,1,,1");
-register_generic("*enlargethispage,0,1,,");
-register_generic("ensuremath,0,1,,1");
-register_generic("*fbox,0,1,,1");
-register_generic("fnsymbol,0,1,,");
-register_generic("*footnote,1,1,,1");
-register_generic("*footnotemark,1,0,,");
-register_generic("*footnotetext,1,1,,1");
-register_generic("frac,0,2,,1 2");
-register_generic("*frame,0,1,,1");
-register_generic("*framebox,2,1,,1");         # There is another form in picture environment
-register_generic("*hspace,1,1,,");
-register_generic("*hyphenation,0,1,,1");      # Translators may wish to add/remove words
-register_generic("include,0,1,,");            # file
-#register_generic("includeonly,0,1,,");       # should not be supported for now
-register_generic("input,0,1,,");              # file
-register_generic("*item,1,0,1,");
-register_generic("*label,0,1,,");
-register_generic("lefteqn,0,1,,1");
-register_generic("line,0,0,,");               # The first argument is (x,y)
-register_generic("*linebreak,1,0,,");
-register_generic("linethickness,0,1,,");
-register_generic("location,0,1,,1");
-register_generic("makebox,2,1,,1");           # There's another form in picture environment
-register_generic("makelabels,0,1,,");
-register_generic("*markboth,0,2,,1 2");
-register_generic("*markright,0,1,,1");
-register_generic("mathcal,0,1,,1");           #
-register_generic("mathop,0,1,,1");
-register_generic("mbox,0,1,,1");
-register_generic("multicolumn,0,3,,3");
-register_generic("multiput,0,0,,");           # The first arguments are (x,y)(dx,dy)
-register_generic("name,0,1,,1");
-register_generic("*newcommand,0,-1,,2");      # The second argument is [args]
-register_generic("*newcounter,0,1,,");        # The second argument is [counter]
-register_generic("*newenvironment,-1,-1,,");  # The second argument is [args]
-register_generic("*newfont,0,2,,");
-register_generic("*newlength,0,1,,");
-register_generic("*newsavebox,0,1,,");
-register_generic("*newtheorem,0,2,,2");       # Two forms, the optionnal arg is not the first one
-register_generic("nocite,0,1,,");
-register_generic("nolinebreak,1,0,,");
-register_generic("*nopagebreak,1,0,,");
-register_generic("opening,0,1,,1");
-register_generic("oval,0,0,,");               # The first argument is (w,h)
-register_generic("overbrace,0,1,,1");
-register_generic("overline,0,1,,1");
-register_generic("*pagebreak,1,0,,");
-register_generic("*pagenumbering,0,1,,1");
-register_generic("pageref,0,1,,");
-register_generic("*pagestyle,0,1,,");
-register_generic("*parbox,3,2,,2");
-register_generic("providecommand,0,1,,");     #
-register_generic("put,0,0,,");                # The first argument is (x,y)
-register_generic("raisebox,0,1,,");           # Optional arguments in 2nd & 3rd position
-register_generic("ref,0,1,,");
-register_generic("*refstepcounter,0,1,,");
-register_generic("*renewcommand,0,-1,,");     # The second argument is [args]
-register_generic("*renewenvironment,0,1,,");  # The second argument is [args]
-register_generic("roman,0,1,,");              # another language may not want a roman numbering
-register_generic("rule,1,2,,,");
-register_generic("savebox,0,1,,");            # Optional arguments in 2nd & 3rd position
-register_generic("sbox,0,2,,2");
-register_generic("*setcounter,0,2,,");
-register_generic("*setlength,0,2,,");
-register_generic("*settodepth,0,2,,2");
-register_generic("*settoheight,0,2,,2");
-register_generic("*settowidth,0,2,,2");
-register_generic("shortstack,1,1,,1");
-register_generic("signature,0,1,,1");
-register_generic("sqrt,1,1,1,1");
-register_generic("stackrel,0,2,,1 2");
-register_generic("stepcounter,0,1,,");
-register_generic("*subfigure,1,1,1,1");
-register_generic("symbol,0,1,,1");
-register_generic("telephone,0,1,,1");
-register_generic("thanks,0,1,,1");
-register_generic("*thispagestyle,0,1,,");
-register_generic("*title,0,1,,1");
-register_generic("typeout,0,1,,1");
-register_generic("typein,1,1,,1");
-register_generic("twocolumn,1,0,1,");
-register_generic("underbrace,0,1,,1");
-register_generic("underline,0,1,,1");
-register_generic("*usebox,0,1,,");
-register_generic("usecounter,0,1,,");
-register_generic("*usepackage,1,1,,");
-register_generic("value,0,1,,");
-register_generic("vector,0,0,,");             # The first argument is (x,y)
-register_generic("vphantom,0,1,,1");
-register_generic("*vspace,1,1,,");
+register_generic_command("*addcontentsline,{}{}{_}");
+register_generic_command("address,{_}");           # lines are seperated by \\
+register_generic_command("*addtocontents,{}{_}");
+register_generic_command("*addtocounter,{}{}");
+register_generic_command("*addtolength,{}{}");
+register_generic_command("*addvspace,{}");
+register_generic_command("alph,{}");               # another language may not want this alphabet
+register_generic_command("arabic,{}");             # another language may not want an arabic numbering
+register_generic_command("*author,{_}");           # authors are separated by \and
+register_generic_command("bibitem,[]{}");
+register_generic_command("*bibliographystyle,{}"); # BibTeX
+register_generic_command("*bibliography,{}");      # BibTeX
+register_generic_command("*centerline,{_}");
+register_generic_command("*caption,[]{_}");
+register_generic_command("cc,{_}");
+register_generic_command("circle,[]{}");
+register_generic_command("cite,[_]{}");
+register_generic_command("cline,{}");
+register_generic_command("closing,{_}");
+register_generic_command("dashbox,{}");            # followed by a (w,h) argument
+register_generic_command("date,{_}");
+register_generic_command("*enlargethispage,{}");
+register_generic_command("ensuremath,{_}");
+register_generic_command("*fbox,{_}");
+register_generic_command("fnsymbol,{}");
+register_generic_command("*footnote,[]{_}");
+register_generic_command("*footnotemark,[]");
+register_generic_command("*footnotetext,[]{_}");
+register_generic_command("frac,{_}{_}");
+register_generic_command("*frame,{_}");
+register_generic_command("*framebox,[][]{_}");     # There is another form in picture environment
+register_generic_command("*hbox,{}");
+register_generic_command("*hspace,[]{}");
+register_generic_command("*hyphenation,{_}");      # Translators may wish to add/remove words
+register_generic_command("include,{}");
+#register_generic_command("includeonly,{}");       # should not be supported for now
+register_generic_command("*index,{_}");
+register_generic_command("input,{}");
+register_generic_command("*item,[_]");
+register_generic_command("*label,{}");
+register_generic_command("lefteqn,{_}");
+register_generic_command("line,");                 # The first argument is (x,y)
+register_generic_command("*linebreak,[]");
+register_generic_command("linethickness,{}");
+register_generic_command("location,{_}");
+register_generic_command("makebox,[][]{_}");       # There's another form in picture environment
+register_generic_command("makelabels,{}");
+register_generic_command("*markboth,[]{_}{_}");
+register_generic_command("*markright,{_}");
+register_generic_command("mathcal,{_}");
+register_generic_command("mathop,{_}");
+register_generic_command("mbox,{_}");
+register_generic_command("multicolumn,{}{}{_}");
+register_generic_command("multiput,");             # The first arguments are (x,y)(dx,dy)
+register_generic_command("name,{_}");
+register_generic_command("*newcommand,{}[][]{_}");
+register_generic_command("*newcounter,{}[]");
+register_generic_command("*newenvironment,{}[]{_}{_}");
+register_generic_command("*newfont,{}{}");
+register_generic_command("*newlength,{}");
+register_generic_command("*newsavebox,{}");
+register_generic_command("*newtheorem,{}{_}");     # Two forms, the optionnal arg is not the first one
+register_generic_command("nocite,{}");
+register_generic_command("nolinebreak,[]");
+register_generic_command("*nopagebreak,[]");
+register_generic_command("opening,{_}");
+register_generic_command("oval,");                 # The first argument is (w,h)
+register_generic_command("overbrace,{_}");
+register_generic_command("overline,{_}");
+register_generic_command("*pagebreak,[]");
+register_generic_command("*pagenumbering,{_}");
+register_generic_command("pageref,{}");
+register_generic_command("*pagestyle,{}");
+register_generic_command("*parbox,[][][]{}{_}");
+register_generic_command("providecommand,{}[][]{_}");
+register_generic_command("put,");                  # The first argument is (x,y)
+register_generic_command("raisebox,{}[][]{_}");
+register_generic_command("ref,{}");
+register_generic_command("*refstepcounter,{}");
+register_generic_command("*renewcommand,{}[][]{_}");
+register_generic_command("*renewenvironment,{}[]{_}{_}");
+register_generic_command("roman,{}");              # another language may not want a roman numbering
+register_generic_command("rule,[]{}{}");
+register_generic_command("savebox,{}");            # Optional arguments in 2nd & 3rd position
+register_generic_command("sbox,{}{_}");
+register_generic_command("*setcounter,{}{}");
+register_generic_command("*setlength,{}{}");
+register_generic_command("*settodepth,{}{_}");
+register_generic_command("*settoheight,{}{_}");
+register_generic_command("*settowidth,{}{_}");
+register_generic_command("shortstack,[]{_}");
+register_generic_command("signature,{_}");
+register_generic_command("sqrt,[_]{_}");
+register_generic_command("stackrel,{_}{_}");
+register_generic_command("stepcounter,{}");
+register_generic_command("*subfigure,[_]{_}");
+register_generic_command("symbol,{_}");
+register_generic_command("telephone,{_}");
+register_generic_command("thanks,{_}");
+register_generic_command("*thispagestyle,{}");
+register_generic_command("*title,{_}");
+register_generic_command("typeout,{_}");
+register_generic_command("typein,[]{_}");
+register_generic_command("twocolumn,[_]");
+register_generic_command("underbrace,{_}");
+register_generic_command("underline,{_}");
+register_generic_command("*usebox,{}");
+register_generic_command("usecounter,{}");
+register_generic_command("*usepackage,[]{}");
+register_generic_command("value,{}");
+register_generic_command("vector,");             # The first argument is (x,y)
+register_generic_command("vphantom,{_}");
+register_generic_command("*vspace,[]{}");
+register_generic_command("*vbox,{}");
+register_generic_command("*vcenter,{}");
 
-register_generic("*part,1,1,1,1");
-register_generic("*chapter,1,1,1,1");
-register_generic("*section,1,1,1,1");
-register_generic("*subsection,1,1,1,1");
-register_generic("*subsubsection,1,1,1,1");
-register_generic("*paragraph,1,1,1,1");
-register_generic("*subparagraph,1,1,1,1");
+register_generic_command("*part,[_]{_}");
+register_generic_command("*chapter,[_]{_}");
+register_generic_command("*section,[_]{_}");
+register_generic_command("*subsection,[_]{_}");
+register_generic_command("*subsubsection,[_]{_}");
+register_generic_command("*paragraph,[_]{_}");
+register_generic_command("*subparagraph,[_]{_}");
 
-register_generic("textrm,0,1,,1");
-register_generic("textit,0,1,,1");
-register_generic("emph,0,1,,1");
-register_generic("textmd,0,1,,1");
-register_generic("textbf,0,1,,1");
-register_generic("textup,0,1,,1");
-register_generic("textsl,0,1,,1");
-register_generic("textsf,0,1,,1");
-register_generic("textsc,0,1,,1");
-register_generic("texttt,0,1,,1");
-register_generic("textnormal,0,1,,1");
-register_generic("mathrm,0,1,,1");
-register_generic("mathsf,0,1,,1");
-register_generic("mathtt,0,1,,1");
-register_generic("mathit,0,1,,1");
-register_generic("mathnormal,0,1,,1");
-register_generic("mathversion,0,1,,");
+register_generic_command("textrm,{_}");
+register_generic_command("textit,{_}");
+register_generic_command("emph,{_}");
+register_generic_command("textmd,{_}");
+register_generic_command("textbf,{_}");
+register_generic_command("textup,{_}");
+register_generic_command("textsl,{_}");
+register_generic_command("textsf,{_}");
+register_generic_command("textsc,{_}");
+register_generic_command("texttt,{_}");
+register_generic_command("textnormal,{_}");
+register_generic_command("mathrm,{_}");
+register_generic_command("mathsf,{_}");
+register_generic_command("mathtt,{_}");
+register_generic_command("mathit,{_}");
+register_generic_command("mathnormal,{_}");
+register_generic_command("mathversion,{}");
 
-register_generic("*contentspage,0,0,,");
-register_generic("*tablelistpage,0,0,,");
-register_generic("*figurepage,0,0,,");
+register_generic_command("*contentspage,");
+register_generic_command("*tablelistpage,");
+register_generic_command("*figurepage,");
 
-register_generic("*PassOptionsToPackage,0,2,,");
+register_generic_command("*PassOptionsToPackage,{}{}");
 
-register_generic("*ifthenelse,0,3,,2 3");
+register_generic_command("*ifthenelse,{}{_}{_}");
 
 # graphics
-register_generic("*includegraphics,1,1,,");
-register_generic("*graphicspath,0,1,,");
-register_generic("*resizebox,0,3,,3");
-register_generic("*scalebox,0,2,,2");
-register_generic("*rotatebox,0,2,,2");
+register_generic_command("*includegraphics,[]{}");
+register_generic_command("*graphicspath,{}");
+register_generic_command("*resizebox,{}{}{_}");
+register_generic_command("*scalebox,{}{_}");
+register_generic_command("*rotatebox,{}{_}");
 
 # url
-register_generic("UrlFont,0,1,,");
-register_generic("*urlstyle,0,1,,");
+register_generic_command("UrlFont,{}");
+register_generic_command("*urlstyle,{}");
 
 # hyperref
-register_generic("href,0,2,0,2");             # 1:URL
-register_generic("url,0,1,,");                # URL
-register_generic("nolinkurl,0,1,,");          # URL
-register_generic("hyperbaseurl,0,1,,");       # URL
-register_generic("hyperimage,0,1,,");         # URL
-register_generic("hyperdef,0,3,,3");          # 1:category, 2:name
-register_generic("hyperref,0,4,,4");          # 1:URL, 2:category, 3:name
-register_generic("hyperlink,0,2,,2");         # 1:name
-register_generic("*hypersetup,0,1,,1");
-register_generic("hypertarget,0,2,,2");       # 1:name
-register_generic("autoref,0,1,,");            # 1:label
+register_generic_command("href,{}{_}");            # 1:URL
+register_generic_command("url,{}");                # URL
+register_generic_command("nolinkurl,{}");          # URL
+register_generic_command("hyperbaseurl,{}");       # URL
+register_generic_command("hyperimage,{}");         # URL
+register_generic_command("hyperdef,{}{}{_}");      # 1:category, 2:name
+register_generic_command("hyperref,{}{}{}{_}");    # 1:URL, 2:category, 3:name
+register_generic_command("hyperlink,{}{_}");       # 1:name
+register_generic_command("*hypersetup,{_}");
+register_generic_command("hypertarget,{}{_}");     # 1:name
+register_generic_command("autoref,{}");            # 1:label
 
-register_generic("*selectlanguage,0,1,,");
+register_generic_command("*selectlanguage,{}");
 
 # color
-register_generic("*definecolor,0,3,,");
-register_generic("*textcolor,0,2,,2");
-register_generic("*colorbox,0,2,,2");
-register_generic("*fcolorbox,0,3,,3");
-register_generic("*pagecolor,0,1,,1");
-register_generic("*color,0,1,,1");
+register_generic_command("*definecolor,{}{}{}");
+register_generic_command("*textcolor,{}{_}");
+register_generic_command("*colorbox,{}{_}");
+register_generic_command("*fcolorbox,{}{}{_}");
+register_generic_command("*pagecolor,{_}");
+register_generic_command("*color,{_}");
 
 # equations/theorems
-register_generic("*qedhere,0,0,,");
-register_generic("*qedsymbol,0,0,,");
-register_generic("*theoremstyle,0,1,,");
-register_generic("*proclaim,0,1,,1");
-register_generic("*endproclaim,0,0,,");
-register_generic("*shoveleft,0,1,,1");
-register_generic("*shoveright,0,1,,1");
+register_generic_command("*qedhere,");
+register_generic_command("*qedsymbol,");
+register_generic_command("*theoremstyle,{}");
+register_generic_command("*proclaim,{_}");
+register_generic_command("*endproclaim,");
+register_generic_command("*shoveleft,{_}");
+register_generic_command("*shoveright,{_}");
 
 # commands without arguments. This is better than untranslated or
 # translate_joined because the number of arguments will be checked.
@@ -330,21 +339,23 @@ foreach (qw(a *appendix *backmatter backslash *baselineskip *baselinestretch bf
             *fboxsep *fboxrule
             *itemi *itemii *itemiii *itemiv
             *theitemi *theitemii *theitemiii *theitemiv)) {
-    register_generic("$_,0,0,,");
+    register_generic_command("$_,");
 }
 
 
-$separated_commands .= " begin end hbox vbox vcenter";
-$command_categories{'translate_joined'} .= " hbox vbox vcenter";
 
 # standard environments.
-foreach (qw(abstract align array cases center description displaymath enumerate
-            eqnarray equation figure flushleft flushright footnotesize itemize
-            letter list lrbox minipage multicols multline picture proof quotation quote
-            sloppypar tabbing table tabular thebibliography theorem titlepage
+# FIXME: All these definition should be re-checked
+foreach (qw(abstract align align* array cases center description displaymath document enumerate
+            eqnarray equation equation* figure flushleft flushright footnotesize itemize
+            letter list lrbox minipage multline multline* picture proof quotation quote
+            sloppypar tabbing table thebibliography theorem titlepage
             trivlist verbatim verse wrapfigure)) {
-    $environments{$_} = \&push_environment;
+    register_generic_environment("$_,");
 }
+register_generic_environment("tabular,{}");
+register_generic_environment("tabular*,{}{}");
+register_generic_environment("multicols,{}");
 
 
 # Commands and environments with separators.
