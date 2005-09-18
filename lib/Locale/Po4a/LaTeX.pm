@@ -69,18 +69,18 @@ $VERSION= $Locale::Po4a::TeX::VERSION;
 @EXPORT= qw();
 
 use Locale::Po4a::TeX;
-use subs qw(&untranslated
+use subs qw(&generic_command
             &parse_definition_file
             &register_generic_command
             &register_generic_environment);
-*untranslated                  = \&Locale::Po4a::TeX::untranslated;
 *parse_definition_file         = \&Locale::Po4a::TeX::parse_definition_file;
+*generic_command               = \&Locale::Po4a::TeX::generic_command;
 *register_generic_command      = \&Locale::Po4a::TeX::register_generic_command;
 *register_generic_environment  = \&Locale::Po4a::TeX::register_generic_environment;
 use vars qw($RE_ESCAPE            $ESCAPE
             $no_wrap_environments $separated_commands
             %commands             %environments
-            %command_categories   %separated
+            %separated
             %command_parameters %environment_parameters
             %env_separators
             @exclude_include);
@@ -90,7 +90,6 @@ use vars qw($RE_ESCAPE            $ESCAPE
 *separated_commands       = \$Locale::Po4a::TeX::separated_commands;
 *commands                 = \%Locale::Po4a::TeX::commands;
 *environments             = \%Locale::Po4a::TeX::environments;
-*command_categories       = \%Locale::Po4a::TeX::command_categories;
 *separated                = \%Locale::Po4a::TeX::separated;
 *env_separators           = \%Locale::Po4a::TeX::env_separators;
 *exclude_include          = \@Locale::Po4a::TeX::exclude_include;
@@ -102,6 +101,9 @@ use vars qw($RE_ESCAPE            $ESCAPE
 # Only read the documentclass in order to find some po4a directives.
 # FIXME: The documentclass could contain translatable strings.
 # Maybe it should be implemented as \include{}.
+register_generic_command("*documentclass,{}");
+# We use register_generic_command to define the number and types of
+# parameters. The function is then overwritten:
 $commands{'documentclass'} = sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
@@ -110,16 +112,13 @@ $commands{'documentclass'} = sub {
     # if it is a standard documentclass.
     parse_definition_file($self, $args->[1].".cls", 1);
 
-    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
+    my ($t,@e) = generic_command($self,$command,$variant,$args,$env);
 
     return ($t, @$env);
 };
-$command_parameters{'documentclass'}{'types'} = ();
-push @{$command_parameters{'documentclass'}{'types'}}, '{';
-$separated{'documentclass'} = 1;
 
 # LaTeX 2
-# I choosed not to translate files, counters, lengths
+# I chose not to translate files, counters, lengths
 register_generic_command("*addcontentsline,{}{}{_}");
 register_generic_command("address,{_}");           # lines are seperated by \\
 register_generic_command("*addtocontents,{}{_}");
@@ -345,7 +344,7 @@ foreach (qw(a *appendix *backmatter backslash *baselineskip *baselinestretch bf
 
 
 # standard environments.
-# FIXME: All these definition should be re-checked
+# FIXME: All these definitions should be re-checked
 foreach (qw(abstract align align* array cases center description displaymath document enumerate
             eqnarray equation equation* figure flushleft flushright footnotesize itemize
             letter list lrbox minipage multline multline* picture proof quotation quote

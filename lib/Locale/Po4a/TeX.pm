@@ -51,7 +51,7 @@ See the section "Writing derivate modules" below, for the process description.
 
 This module can also be customized by lines starting with "% po4a:" in the
 TeX file.
-These customization are described in the B<INLINE CUSTOMIZATION> section.
+These customizations are described in the B<INLINE CUSTOMIZATION> section.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -73,8 +73,8 @@ use vars qw(@ISA @EXPORT);
 @EXPORT = qw(%commands %environments
              $RE_ESCAPE $ESCAPE
              $no_wrap_environments $separated_commands
-             %command_categories %separated
-             &untranslated &translate_joined &push_environment
+             %separated
+             &generic_command
              &register_generic_command
              &register_generic_environment);
 
@@ -108,38 +108,10 @@ our $separated_commands = "";
 # hash with these commands
 our %separated = ();
 
-# Hash of categories and their associated commands.
-# Commands are space separated.
-# There are currently 2 categories:
-# * untranslated
-#   The command is written as is with its arguments.
-# * translate_joined
-#   All arguments are translated and the command is then reassembled
-# FIXME: to be removed
-our %command_categories = (
-    'untranslated'      => "",
-    'translate_joined'  => ""
-);
-
 =item debug
 
 Activate debugging for some internal mechanisms of this module.
 Use the source to see which parts can be debugged.
-
-# FIXME: to be removed
-=item translate
-
-Coma-separated list of commands whose arguments have to be proposed for
-translation.
-This list is appended to the default list containing
-chapter, section, subsection, subsubsection and index.
-
-# FIXME: to be removed
-=item untranslated
-
-Coma-separated list of commands whose arguments shoud not be translated.
-This list is appended to the default list containing
-vspace, hspace and label.
 
 =item no_wrap
 
@@ -153,16 +125,17 @@ There is no command and comments analysis in verbatim blocks.
 Colon-separated list of files that should not be included by \input and
 \include.
 
+=item definitions
+
+The name of a file containing definitions for po4a, as defined in the
+B<INLINE CUSTOMIZATION> section.
+You can use this option if it is not possible to put the definitions in
+the document being translated.
+
 =back
 
 Using these options permits to override the behaviour of the commands defined
 in the default lists.
-
-Note: currently, the behaviour of commands specified in the TeX files (see the
-B<INLINE CUSTOMIZATION> section) cannot be overriden with these options.
-
-If you don't want to translate the chapters and sections, then you can specify:
- -o untranslated=chapter,section
 
 =head1 INLINE CUSTOMIZATION
 
@@ -172,45 +145,54 @@ The following commands are recognized:
 
 =over 4
 
-# FIXME: to be checked: are the parameters copied
 =item % po4a: command I<command1> alias I<command2>
 
 Indicates that the arguments of the I<command1> command should be
 treated as the arguments of the I<command2> command.
 
-# FIXME: for sub-modules only. generic is prefered for LaTeX
-=item % po4a: command I<command1> I<function1>
+=item % po4a: command I<command1> I<parameters>
 
-Indicates that the I<command1> command should be handled by I<function1>.
+This permit to describe in detail the parameters of the I<command1>
+command.
+This information will be used to check the number of arguments and their
+types.
 
-# FIXME: to be removed
-# FIXME: document new format
-=item % po4a: command <command1> x,y,z,t
+You can precede the I<command1> command by an asterisk (*) to indicate
+that po4a must extract this command from paragraphs (if it is located at
+the beginning or the end of a paragraph).
 
-This permits a better control of the translated arguments and some
-verifications of the number of arguments.
+The I<parameters> argument is a set of [] (to indicate an optional
+argument) or {} (to indicate a mandatory argument).
+You can place an underscore (_) between these brackets to indicate that
+the parameter must be translated. For example:
+ % po4a: command *chapter [_]{_}
 
-The meaning of the x, y, z and t is the following:
-  * x is the number of optional arguments (between [])
-      0 - no optional argument
-     -1 - variable
-      n - maximum number of optional arguments
-  * y is the number of arguments
-    maybe x and y are not needed
-  * z indexes of the optional arguments that have to be translated
-     -1 - all optional argument should be translated
-      0 - none
-  1 3 7 - the 1st, 3rd and 7th arguments should be translated
-  * t indexes of the arguments that have to be translated
+This indicates that the chapter command has two parameters: an optional
+(short title) and a mandatory one, which must both be translated.
+To indicate that the href command has two mandatory arguments, and that
+only the text has to be translated (not the URL), but 
+If you want to specify that the href command has two mandatory parameters,
+that you don't want to translate the URL (first parameter), and that you
+don't want this command to be separated from its paragraph (which allow
+the translator to move the link in the sentence), you can use:
+ % po4a: command href {}{_}
 
-It could be useful to define commands without argument as "0,0,,"
-instead of either translated or untranslated.
+In this case, the information indicating which arguments must be
+translated is only used if a paragraph is only composed of this href
+command.
 
-# FIXME: to be removed ?
-# FIXME: document generic
-=item % po4a: environment <env1> <function1>
+=item % po4a: environment <env> <parameters>
 
-Indicates that the I<env1> environment should be handled by I<function1>.
+This permits to define the parameters accepted by the <env> environment.
+This information is latter used to check the number of arguments of the
+\begin command, and permit to specify which one must be translated.
+The syntax of the <parameters> argument is the same as described for the
+commands.
+The first parameter of the \begin command is the name of the environment.
+This parameter must not be specified in the list of parameters. Here are
+some examples:
+ % po4a: environment multicols {}
+ % po4a: environment equation
 
 =item % po4a: separator <env> "<regex>"
 
@@ -231,10 +213,6 @@ This can be used to split on "\\\\" in the first mandatory argument of the
 title command.  In this case, the environment is title{#1}.
 
 =back
-
-# FIXME: to be removed ?
-See the B<INTERNAL FUNCTIONS> section for the list of function which could be
-used for commands or environments.
 
 =cut
 
@@ -406,7 +384,7 @@ is no variant, the field is an empty string.
 =item An array of tuples (type of argument, argument)
 
 The type of argument can be either '{' (for mandatory arguments) or '['
-(for optional arguments)
+(for optional arguments).
 
 =item The remaining buffer
 
@@ -964,8 +942,6 @@ See the INLINE CUSTOMIZATION section for more details.
 
 =cut
 
-# FIXME: To be checked: untranslated do not exist anymore
-#        parameters must be always copied
 sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^\s*%\s*po4a\s*:\s*//;
@@ -979,41 +955,27 @@ sub parse_definition_line {
         if ($line =~ /^alias\s+(\w+)\s*$/) {
             if (defined ($commands{$1})) {
                 $commands{$command} = $commands{$1};
-                if ($commands{$command} eq \&generic_command) {
-                    $command_parameters{$command} = $command_parameters{$1};
-                }
+                $command_parameters{$command} = $command_parameters{$1};
             } else {
                 die wrap_mod("po4a::tex",
                              dgettext("po4a", "Cannot use an alias to the unknown command '%s'"),
                              $2);
             }
         } elsif ($line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/) {
-#FIXME: die for the old format
-            register_generic_command("$command,$1,$2,$3,$4");
+            die wrap_ref_mod($self->{ref},
+                             "po4a::tex",
+                             dgettext("po4a", "You are using the old ".
+                                      "definitions format (%s).  ".
+                                      "Please update this definition line."),
+                             $_[1])
         } elsif ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
             register_generic_command("$command,$1");
-        } elsif ($line =~ /^(\w+)\s*$/) {
-            if (defined &$1) {
-                $commands{$command} = \&$1;
-            } else {
-                die wrap_mod("po4a::tex",
-                             dgettext("po4a", "Unknown function (%s) for '%s'"),
-                             $1, $command);
-            }
         }
     } elsif ($line =~ /^environment\s+(\w+)\s+(.*)$/) {
         my $env = $1;
         $line = $2;
         if ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
             register_generic_environment("$env,$1");
-        } elsif ($line =~ /^(\w+)\s*$/) {
-            if (defined &$1) {
-                $environments{$env} = \&$1;
-            } else {
-                die wrap_mod("po4a::tex",
-                             dgettext("po4a", "Unknown function (%s) for '%s'"),
-                             $1, $env);
-            }
         }
     } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
         my $env = $1; # This is not necessarily an environment.
@@ -1106,7 +1068,7 @@ sub parse {
 } # end of parse
 
 
-=item docheader()
+=item docheader
 
 =back
 
@@ -1127,21 +1089,19 @@ sub docheader {
 Command and environment functions take the following arguments (in
 addition to the $self object):
 
-=over 4
+=over
 
 =item A command name
 
 =item A variant
 
-=item An array of optional arguments
-
-=item An array of mandatory arguments
+=item An array of (type, argument) tupples
 
 =item The current environment
 
 =back
 
-The first 4 arguments are extracted by get_leading_command or
+The first 3 arguments are extracted by get_leading_command or
 get_trailing_command.
 
 Command and environment functions return the translation of the command
@@ -1150,86 +1110,24 @@ with its arguments and a new environment.
 Environment functions are called when a \begin command is found. They are
 called with the \begin command and its arguments.
 
-=head2 Command functions
+The TeX module only proposes one command function and one environment
+function: generic_command and generic_environment.
 
-=over 4
+generic_command uses the information specified by
+register_generic_command or by adding definition to the TeX file:
+ % po4a: command I<command1> I<parameters>
 
-=item translate_joined
+generic_environment uses the information specified by
+register_generic_environment or by adding definition to the TeX file:
+ % po4a: environment I<env> I<parameters>
 
-Every argument of the command is translated separately, and the command is
-reassembled with its arguments in the output document.
-
-=item untranslated
-
-No argument of the command is proposed for translation. The command is
-reassembled with its arguments in the output document.
-
-=back
-
-=head2 Environment functions
-
-=over 4
-
-=item push_environment
-
-This function push the environment name in a stack, and push the \begin command
-untranslated in the output document.
-This stack of environments is then used to change the behaviour of the parser
-(e.g. blocks are not re-wrapped in the verbatim environment).
-The type of PO strings is either set to the last environment of this stack or
-to the name of the command (if the string is part of a command argument).
-
-=back
+Both functions will only translate the parameters that were specified as
+translatable (with a '_').
+generic_environment will append the name of the environment to the
+environment stack and generic_command will append the name of the command
+followed by an identifier of the parameter (like {#7} or [#2]).
 
 =cut
-
-# Rebuild the command with the original arguments.
-# FIXME: This function should be removed
-sub untranslated {
-    my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "untranslated($command,$variant,@$args,@$env)="
-        if ($debug{'commands'});
-
-    my $translated = "$ESCAPE$command$variant";
-    my ($type, $opt);
-    my @targs = @$args;
-    while (@targs) {
-        $type = shift @targs;
-        $opt  = shift @targs;
-        $translated .= $type.$opt.$type_end{$type};
-    }
-
-    print "($translated,@$env)\n"
-        if ($debug{'commands'});
-    return ($translated,@$env);
-}
-
-# Rebuild the command, with all arguments translated.
-# FIXME: This function should be removed
-sub translate_joined {
-    my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "translate_joined($command,$variant,@$args,@$env)="
-        if ($debug{'commands'});
-    my ($t,@e)=("",());
-
-    my $translated = "$ESCAPE$command$variant";
-    my $arg=1;
-    my ($type, $opt);
-    my @targs = @$args;
-    while (@targs) {
-        $type = shift @targs;
-        $opt  = shift @targs;
-        ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$arg.$type_end{$type}));
-        $translated .= $type.$t.$type_end{$type};
-        $arg+=1;
-    }
-
-    print "($translated,@$env)\n"
-        if ($debug{'commands'});
-    return ($translated,@$env);
-}
 
 # definition of environment related commands
 
@@ -1258,6 +1156,9 @@ $commands{'begin'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
     return ($t, @e);
 };
+# Use register_generic to set the type of arguments. The function is then
+# overwritten:
+register_generic_command("*end,{}");
 $commands{'end'}= sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
@@ -1275,16 +1176,13 @@ $commands{'end'}= sub {
         pop @$env;
     }
 
-    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
+    my ($t,@e) = generic_command($self,$command,$variant,$args,$env);
 
     print "($t, @$env)\n"
         if ($debug{'commands'} || $debug{'environments'});
     return ($t, @$env);
 };
 $separated{'begin'} = 1;
-$command_parameters{'end'}{'types'} = ();
-push @{$command_parameters{'end'}{'types'}}, '{';
-$separated{'end'} = 1;
 
 sub generic_command {
     my $self = shift;
@@ -1326,7 +1224,7 @@ sub generic_command {
                 die "optional argument provided, but a mandatory one is expected\n"
             }
         if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".($count+1).$type_end{$type}));
+            ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".($count).$type_end{$type}));
         } else {
             $t = $opt;
         }
@@ -1339,10 +1237,7 @@ sub generic_command {
 }
 
 sub register_generic_command {
-    if ($_[0] =~ m/^.*,(-1|[0-9]),(-1|[0-9]),(-1|[0-9 *])?,(-1|[0-9 ]*)?$/) {
-# FIXME: old format
-        die "You are using an old format '$_[0]'.\n";
-    } elsif ($_[0] =~ m/^(.*),((\{_?\}|\[_?\])*)$/) {
+    if ($_[0] =~ m/^(.*),((\{_?\}|\[_?\])*)$/) {
         my $command = $1;
         my $arg_types = $2;
         if ($command =~ /^\*(.*)$/) {
@@ -1363,30 +1258,13 @@ sub register_generic_command {
         $command_parameters{$command}{'nb_args'} = "";
         $commands{$command} = \&generic_command;
     } else {
-        die "unsupported format: '$_[0]'.\n"
+        die "register_generic_command: unsupported format: '$_[0]'.\n"
     }
 }
 
 ########################################
 #### DEFINITION OF THE ENVIRONMENTS ####
 ########################################
-# push the environment in the environment stack, and do not translate
-# the command
-# FIXME: This function should be removed
-sub push_environment {
-    my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "push_environment($command,$variant,@$args,@$env)="
-        if ($debug{'environments'});
-
-    my ($t,@e) = untranslated($self,$command,$variant,$args,$env);
-    @e = (@$env, $args->[1]);
-
-    print "($t,@e)\n"
-        if ($debug{'environments'});
-    return ($t,@e);
-}
-
 sub generic_environment {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
@@ -1525,8 +1403,7 @@ sub initialize {
     my $self = shift;
     my %options = @_;
 
-    $self->{options}{'translate'}='';
-    $self->{options}{'untranslated'}='';
+    $self->{options}{'definitions_file'}='';
     $self->{options}{'exclude_include'}='';
     $self->{options}{'no_wrap'}='';
     $self->{options}{'debug'}='';
@@ -1563,48 +1440,14 @@ sub initialize {
         }
     }
 
-# FIXME: to be removed ?
-    foreach (split(/ /, $command_categories{'untranslated'})) {
-        if (defined($commands{$_})) {
-            # FIXME: Should we allow to redefine commands
-            #        No die, because this function is called twice during
-            #        gettextization.
-        }
-        $commands{$_} = \&untranslated;
-    }
-
-# FIXME: to be removed ?
-    foreach (split(/ /, $command_categories{'translate_joined'})) {
-        if (defined($commands{$_})) {
-            # FIXME: Should we allow to redefine commands
-            #        No die, because this function is called twice during
-            #        gettextization.
-        }
-        $commands{$_} = \&translate_joined;
-    }
-
-# FIXME: to be removed ?
-    # commands provided on the command line have an higher priority
-    # FIXME: commands defined in the files have an even higher priority
-    if ($options{'translate'}) {
-        foreach (split(/,/, $options{'translate'})) {
-            $commands{$_} = \&translate_joined;
-        }
-    }
-# FIXME: to be removed ?
-    if ($options{'untranslated'}) {
-        foreach (split(/,/, $options{'untranslated'})) {
-            $commands{$_} = \&untranslated;
-        }
-    }
-
-# FIXME: to be removed ?
     # build an hash with keys in $separated_commands to ease searches.
     foreach (split(/ /, $separated_commands)){
         $separated{$_}=1;
     };
-# FIXME: we need a way to give new definition on the command line
-#        (parse_file ?)
+
+    if ($options{'definitions'}) {
+        $self->parse_definition_file($options{'definitions'})
+    }
 }
 
 =head1 STATUS OF THIS MODULE
@@ -1622,6 +1465,12 @@ It was tested on a book and with the Python documentation.
 A verbatim category may be needed to indicate that po4a should not attempt
 to rewrap lines, and that percent signs do not introduce any comment.
 
+=item Automatic detection of new commands
+
+The TeX module could parse the newcommand arguments and try to guess the
+number of arguments, their type and whether or not they should be
+translated.
+
 =item Others
 
 Various other points are tagged TODO in the source.
@@ -1630,18 +1479,13 @@ Various other points are tagged TODO in the source.
 
 =head1 KNOWN BUGS
 
-=over 4
-
-=item Others
-
-Various other points are tagged FIXME in the source.
-
-=back
+Various points are tagged FIXME in the source.
 
 =head1 SEE ALSO
 
 L<po4a(7)|po4a.7>,
-L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>.
+L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>,
+L<Locale::Po4a::LaTeX(3pm)|Locale::Po4a::LaTeX>.
 
 =head1 AUTHORS
 
