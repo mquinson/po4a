@@ -461,7 +461,6 @@ sub get_leading_command {
                 pop @args;
                 pop @args;
             }
-            print "found1: '$temp'\n";
             $buffer = $temp.$buffer;
         }
     }
@@ -542,7 +541,6 @@ sub get_trailing_command {
                 pop @args;
                 pop @args;
             }
-            print "found2: '$temp'\n";
             $buffer .= $temp;
         }
     }
@@ -718,6 +716,7 @@ sub translate_buffer {
     if (@env and defined $env_separators{$env[-1]}) {
         my $re_separator = $env_separators{$env[-1]};
         my $buf_begin = "";
+# FIXME: the separator may have to be translated.
         while ($buffer =~ m/^(.*?)(\s*$re_separator\s*)(.*)$/s) {
             my ($begin, $sep, $end) = ($1, $2, $3);
             $buf_begin .= $begin;
@@ -732,6 +731,7 @@ sub translate_buffer {
             }
             $buffer = $end;
         }
+        $buffer = $buf_begin . $buffer;
     }
 
     # finally, translate
