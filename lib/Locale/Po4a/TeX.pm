@@ -979,7 +979,7 @@ sub parse_definition_line {
         }
     } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
         my $env = $1; # This is not necessarily an environment.
-                      # It can also be smth like 'title[#1]'.
+                      # It can also be smth like 'title{#1}'.
         $env_separators{$env} = $2
     }
 }

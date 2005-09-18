@@ -365,6 +365,6 @@ $env_separators{'tabular'} = "(?:&|\\\\\\\\)";
 
 $env_separators{'enumerate'} = $env_separators{'itemize'} = "\\\\item";
 
-$env_separators{'author[#1]'} = $env_separators{'title[#1]'} = "\\\\\\\\";
+$env_separators{'author{#1}'} = $env_separators{'title{#1}'} = "\\\\\\\\";
 
 1;
