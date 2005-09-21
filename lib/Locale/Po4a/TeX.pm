@@ -1039,7 +1039,7 @@ sub parse_definition_line {
         } elsif ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
             register_generic_command("$command,$1");
         }
-    } elsif ($line =~ /^environment\s+([+]?\w+)\s+(.*)$/) {
+    } elsif ($line =~ /^environment\s+([+]?\w+\*?)\s+(.*)$/) {
         my $env = $1;
         $line = $2;
         if ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
