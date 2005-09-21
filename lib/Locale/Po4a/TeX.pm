@@ -1108,7 +1108,14 @@ sub parse {
 
         my $closed = is_closed($paragraph);
 
-        if ($closed and $line =~ /^\s*$/) {
+#FIXME: what happens if a \begin{verbatim} or \end{verbatim} is in the
+#       middle of a line. (This is only an issue if the verbatim
+#       environment contains an un-closed bracket)
+        if (   ($closed and ($line =~ /^\s*$/ or
+                             $line =~ /^\s*\\begin{verbatim}\s*$/))
+            or (    defined $env[-1]
+                and $env[-1] eq "verbatim"
+                and $line =~ /^\s*\\end{verbatim}\s*$/)) {
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph .= $line."\n";
