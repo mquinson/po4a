@@ -1463,13 +1463,19 @@ It was tested on a book and with the Python documentation.
 =item other categories
 
 A verbatim category may be needed to indicate that po4a should not attempt
-to rewrap lines, and that percent signs do not introduce any comment.
+to rewrap lines, that percent signs do not introduce any comment, and that
+a brackets may not be closed.
 
 =item Automatic detection of new commands
 
 The TeX module could parse the newcommand arguments and try to guess the
 number of arguments, their type and whether or not they should be
 translated.
+
+=item Tranlation of the environment separator
+
+When \item is used as an environment separator, the item argument is
+attached to the following string.
 
 =item Others
 
