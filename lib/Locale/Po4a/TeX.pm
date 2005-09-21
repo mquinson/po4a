@@ -157,9 +157,40 @@ command.
 This information will be used to check the number of arguments and their
 types.
 
-You can precede the I<command1> command by an asterisk (*) to indicate
-that po4a must extract this command from paragraphs (if it is located at
+You can precede the I<command1> command by
+
+=over 4
+
+=item an asterisk (*)
+
+po4a will extract this command from paragraphs (if it is located at
 the beginning or the end of a paragraph).
+The translators will then have to translate the parameters that are marked
+as translatable.
+
+=item a plus (+)
+
+As for an asterisk, the command will be extracted if it appear at an
+extremity of a block, but the parameters won't be translated separately.
+The translator will have to translate the command concatenated to all its
+parameter to form the translated.
+This permits to keep more context, and is usefull for commands with small
+words in parameter, which can have multiple meanings (and translations).
+
+Note: In this case you don't have to specify which parameters are
+translatable, but po4a must know the type and number of parameters.
+
+=item a minus (-)
+
+In this case, the command won't be extracted from any block.
+But if it appear alone on a bloc, then only the parameters marked as
+translatable will be presented to the translator.
+This is usefull for font command.  These commands should generally not be
+separated from their paragraph (to keep the context), but there is no
+reason to annoy the translator with them if a whole string is enclosed in
+such a command.
+
+=back
 
 The I<parameters> argument is a set of [] (to indicate an optional
 argument) or {} (to indicate a mandatory argument).
@@ -193,6 +224,9 @@ This parameter must not be specified in the list of parameters. Here are
 some examples:
  % po4a: environment multicols {}
  % po4a: environment equation
+
+As for the commands, I<env> can be preceded by a plus (+) to indicate
+that the \begin command must be translated with all its arguments.
 
 =item % po4a: separator I<env> "I<regex>"
 
