@@ -763,6 +763,7 @@ sub parse_file {
     # Some values for the parsing
     my @open=(); # opened translation container tags
     my $verb=0;  # can we wrap or not
+    my $verb_last_ref;
     my $seenfootnote=0;
     my $indent=0; # indent level
     my $lastchar = ''; # 
@@ -868,7 +869,13 @@ sub parse_file {
 		    if (scalar @open);
 	    }
 
-	    $verb++ if $verbatim{$event->data->name()};
+	    if ($verbatim{$event->data->name()}) {
+		$verb++;
+		# Keep a reference to the line that openned the verbatim
+		# section. This is needed to check if its data starts on
+		# the same line.
+		$verb_last_ref = $ref;
+	    }
 	    if ($indent{$event->data->name()}) {
 		# push the indenting space only if not in verb before that tag
 		# push trailing "\n" only if not in verbose afterward
@@ -886,6 +893,17 @@ sub parse_file {
 		           : 
 		       '</'.lc($event->data->name()).'>');
 
+	    if ($verb) {
+		# Tag in a verbatim section. Check if it appeared at
+		# the same line than the previous data. If not, it
+		# means that an end of line must be added to the
+		# buffer.
+		if ($ref ne $verb_last_ref) {
+		    # FIXME: Does it work if $verb > 1
+		    $buffer .= "\n";
+		    $verb_last_ref = $ref;
+		}
+	    }
 	    print STDERR "Seen $tag, level=".(scalar @open).", verb=$verb\n"
 		if ($debug{'tag'});
 
@@ -934,7 +952,15 @@ sub parse_file {
 	    $cdata =~ s/{PO4A-amp}/&/g;
             $cdata =~ s/{PO4A-end}/\]\]>/g;
             $cdata =~ s/{PO4A-beg-([^\}]+)}/<!\[$1\[/g;
-            unless ($verb) {
+	    if ($verb) {
+		# Check if this line of data appear on the same line
+		# than the previous tag. If not, append an end of line
+		# to the buffer.
+		if ($ref ne $verb_last_ref) {
+		    $buffer .= "\n";
+		    $verb_last_ref = $ref;
+		}
+	    } else {
               $cdata =~ s/\\t/ /g;
               $cdata =~ s/\s+/ /g;
 	      $cdata =~ s/^\s//s if $lastchar eq ' ';
@@ -953,6 +979,13 @@ sub parse_file {
 
 	elsif ($event->type eq 're') {
 	    if ($verb) {
+		# Check if this line of data appear on the same line
+		# than the previous tag. If not, append an end of line
+		# to the buffer.
+		if ($ref ne $verb_last_ref) {
+		    $buffer .= "\n";
+		    $verb_last_ref = $ref;
+		}
 		$buffer .= "\n";
 	    } elsif ($lastchar ne ' ') {
 		$buffer .= " ";
@@ -999,8 +1032,8 @@ sub end_paragraph {
     $para = $self->translate($para,$ref,$type,
 			     'wrap' => ! $verb,
 			     'wrapcol' => (75 - $indent));
-    $para =~ s/^\n//s;
     unless ($verb) {
+	$para =~ s/^\n//s;
 	my $toadd=" " x ($indent+1);
 	$para =~ s/^/$toadd/mg;
     }
