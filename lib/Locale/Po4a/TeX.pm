@@ -1143,7 +1143,7 @@ $commands{'begin'}= sub {
         $envir = $1;
     }
 
-    if (defined($env) && defined($environments{$envir})) {
+    if (defined($envir) && defined($environments{$envir})) {
         ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
                                             $args,$env);
     } else {
