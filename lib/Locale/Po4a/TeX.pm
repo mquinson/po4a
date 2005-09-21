@@ -72,8 +72,8 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(%commands %environments
              $RE_ESCAPE $ESCAPE
-             $no_wrap_environments $separated_commands
-             %separated
+             $no_wrap_environments
+             %separated_command
              &generic_command
              &register_generic_command
              &register_generic_environment);
@@ -102,11 +102,15 @@ our $ESCAPE    = "\\";
 
 # Space separated list of environments that should not be re-wrapped.
 our $no_wrap_environments = "verbatim";
-# Space separated list of commands that can be handled separately from
-# when they appear at the beginning or end of a paragraph
-our $separated_commands = "";
-# hash with these commands
-our %separated = ();
+# hash with the commands that have to be separated (or have to be joined).
+# 3 modes are currently used:
+#  '*' The command is separated if it appear at an extremity of a
+#      paragraph
+#  '+' The command is separated, but its arguments are joined together
+#      with the command name for the translation
+#  '-' The command is not separated, unless it appear alone on a paragraph
+#      (e.g. \strong)
+our %separated_command = ();
 
 =item debug
 
@@ -405,8 +409,7 @@ This function returns:
 
 If no command is found at the beginning of the given buffer, this string
 will be empty.  Only commands that can be separated are considered.
-The $separated_commands variable contains the space separated list of
-these commands.
+The %separated_command hash contains the list of these commands.
 
 =item A variant
 
@@ -439,7 +442,7 @@ sub get_leading_command {
         if ($debug{'extract_commands'});
 
     if ($buffer =~ m/^$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s
-        && $separated{$1}) {
+        && defined $separated_command{$1}) {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
         $command = $1;
@@ -555,7 +558,7 @@ sub get_trailing_command {
 
     # There should now be a command, maybe followed by an asterisk.
     if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]+)(\*?)\s*$/s
-        && $separated{$2}) {
+        && defined $separated_command{$2}) {
         $buffer = $1;
         $command = $2;
         $variant = $3;
@@ -984,7 +987,7 @@ sub parse_definition_line {
         my $command = $2;
         $line = $3;
         if ($1) {
-            $separated{$command} = 1;
+            $separated_command{$command} = $1;
         }
         if ($line =~ /^alias\s+(\w+)\s*$/) {
             if (defined ($commands{$1})) {
@@ -1216,7 +1219,7 @@ $commands{'end'}= sub {
         if ($debug{'commands'} || $debug{'environments'});
     return ($t, @$env);
 };
-$separated{'begin'} = 1;
+$separated_command{'begin'} = '*';
 
 sub generic_command {
     my $self = shift;
@@ -1276,7 +1279,7 @@ sub register_generic_command {
         my $arg_types = $2;
         if ($command =~ /^\*(.*)$/) {
             $command = $1;
-            $separated{$command}=1;
+            $separated{$command}='*';
         }
         my @types = ();
         my @translated = ();
@@ -1444,7 +1447,7 @@ sub initialize {
     $self->{options}{'verbose'}='';
 
     %debug = ();
-    # FIXME: %commands and %separated should also be restored to their
+    # FIXME: %commands and %separated_command should also be restored to their
     #        default values.
 
     foreach my $opt (keys %options) {
@@ -1473,11 +1476,6 @@ sub initialize {
             $no_wrap_environments .= " $_";
         }
     }
-
-    # build an hash with keys in $separated_commands to ease searches.
-    foreach (split(/ /, $separated_commands)){
-        $separated{$_}=1;
-    };
 
     if ($options{'definitions'}) {
         $self->parse_definition_file($options{'definitions'})
