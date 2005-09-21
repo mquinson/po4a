@@ -977,6 +977,9 @@ sub parse_definition_file {
               defined($ENV{"TEXINPUTS"})?
                   split(/:/, $ENV{"TEXINPUTS"}):
                   ".")) {
+        if ((not defined $_) or (not length $_)) {
+            $_ = ".";
+        }
         if (-r $_."/".$filename) {
             $filename = $_."/".$filename;
             last;
