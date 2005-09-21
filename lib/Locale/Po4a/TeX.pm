@@ -703,8 +703,20 @@ sub translate_buffer {
 #            $buffer = $2; # FIXME: this also remove trailing spaces!!
             $buffer =~ s/^\s*//;
         }
+        my $buffer_save = $buffer;
         ($command, $variant, $args, $buffer) =
             get_leading_command($self,$buffer);
+        if (    (length $command)
+            and (defined $separated_command{$command})
+            and ($separated_command{$command} eq '-')
+            and (   (not (defined($buffer)))
+                 or ($buffer !~ m/^\s*$/s)  )) {
+            # This command can be separated only if alone on a buffer.
+            # We need to remove the trailing commands first, and see if it
+            # will be alone on this buffer.
+            $buffer = $buffer_save;
+            $command = "";
+        }
         if (length($command)) {
             # call the command subroutine.
             # These command subroutines will probably call translate_buffer
@@ -740,8 +752,18 @@ sub translate_buffer {
             $buffer = $1;
             $spaces = $2;
         }
+        my $buffer_save = $buffer;
         ($command, $variant, $args, $buffer) =
             get_trailing_command($self,$buffer);
+        if (    (length $command)
+            and (defined $separated_command{$command})
+            and ($separated_command{$command} eq '-')
+            and (   (not defined $buffer)
+                 or ($buffer !~ m/^\s*$/s))) {
+            # We can extract this command.
+            $command = "";
+            $buffer = $buffer_save;
+        }
         if (length($command)) {
             unshift @trailing_commands, ($command, $variant, $args, $spaces);
         } else {
@@ -985,7 +1007,7 @@ sub parse_definition_line {
     my ($self,$line)=@_;
     $line =~ s/^\s*%\s*po4a\s*:\s*//;
 
-    if ($line =~ /^command\s+(\*?)(\w+)\s+(.*)$/) {
+    if ($line =~ /^command\s+([-*+]?)(\w+)\s+(.*)$/) {
         my $command = $2;
         $line = $3;
         if ($1) {
@@ -1229,11 +1251,16 @@ sub generic_command {
     print "generic_command($command,$variant,@$args,@$env)="
         if ($debug{'commands'} || $debug{'environments'});
     my ($t,@e)=("",());
+    my $translated = "";
 
     # the number of arguments is checked during the extraction of the
     # arguments
 
-    my $translated = "$ESCAPE$command$variant";
+    if (   (not (defined $separated_command{$command}))
+        or $separated_command{$command} ne '+') {
+        # Use the information from %command_parameters to only translate
+        # the needed parameters
+    $translated = "$ESCAPE$command$variant";
     # handle arguments
     my @arg_types = @{$command_parameters{$command}{'types'}};
     my @arg_translated = @{$command_parameters{$command}{'translated'}};
@@ -1269,6 +1296,20 @@ sub generic_command {
         }
         $translated .= $type.$t.$type_end{$type};
     }
+    } else {
+        # Translate the command with all its arguments joined
+        my $tmp = "$ESCAPE$command$variant";
+        my ($type, $opt);
+        while (@$args) {
+            $type = shift @$args;
+            $opt  = shift @$args;
+            $tmp .= $type.$opt.$type_end{$type};
+        }
+        @e = @$env;
+        $translated = $self->translate($tmp,$self->{ref},
+                                       @e?$e[-1]:"Plain text",
+                                       "wrap" => 1);
+    }
 
     print "($translated, @$env)\n"
         if ($debug{'commands'} || $debug{'environments'});
@@ -1279,9 +1320,9 @@ sub register_generic_command {
     if ($_[0] =~ m/^(.*),((\{_?\}|\[_?\])*)$/) {
         my $command = $1;
         my $arg_types = $2;
-        if ($command =~ /^\*(.*)$/) {
-            $command = $1;
-            $separated{$command}='*';
+        if ($command =~ /^([-*+])(.*)$/) {
+            $command = $2;
+            $separated_command{$command}=$1;
         }
         my @types = ();
         my @translated = ();
