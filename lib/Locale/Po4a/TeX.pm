@@ -74,6 +74,7 @@ use vars qw(@ISA @EXPORT);
              $RE_ESCAPE $ESCAPE
              $no_wrap_environments
              %separated_command
+             %separated_environment
              &generic_command
              &register_generic_command
              &register_generic_environment);
@@ -111,6 +112,7 @@ our $no_wrap_environments = "verbatim";
 #  '-' The command is not separated, unless it appear alone on a paragraph
 #      (e.g. \strong)
 our %separated_command = ();
+our %separated_environment = ();
 
 =item debug
 
@@ -1008,7 +1010,7 @@ sub parse_definition_line {
         } elsif ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
             register_generic_command("$command,$1");
         }
-    } elsif ($line =~ /^environment\s+(\w+)\s+(.*)$/) {
+    } elsif ($line =~ /^environment\s+([+]?\w+)\s+(.*)$/) {
         my $env = $1;
         $line = $2;
         if ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
@@ -1308,15 +1310,20 @@ sub generic_environment {
     print "generic_environment($command,$variant,$args,$env)="
         if ($debug{'environments'});
     my ($t,@e)=("",());
+    my $translated = "";
 
     # The first argument (the name of the environment is never translated)
     # For the others, @types and @translated are used.
-    my $translated = "$ESCAPE$command$variant";
+    $translated = "$ESCAPE$command$variant";
     my @targs = @$args;
     my $type = shift @targs;
     my $opt  = shift @targs;
     my $new_env = $opt;
     $translated .= $type.$new_env.$type_end{$type};
+    if (   (not (defined $separated_environment{$new_env}))
+        or $separated_environment{$new_env} ne '+') {
+        # Use the information from %command_parameters to only translate
+        # the needed parameters
     my @arg_types = @{$environment_parameters{$new_env}{'types'}};
     my @arg_translated = @{$environment_parameters{$new_env}{'translated'}};
 
@@ -1349,6 +1356,20 @@ TEST_TYPE:
         }
         $translated .= $type.$t.$type_end{$type};
 
+    }
+    } else {
+        # Translate the \begin command with all its arguments joined
+        my ($type, $opt);
+        my $buf = $translated;
+        while (@targs) {
+            $type = shift @targs;
+            $opt  = shift @targs;
+            $buf .= $type.$opt.$type_end{$type};
+        }
+        @e = @$env;
+        $translated = $self->translate($buf,$self->{ref},
+                                       @e?$e[-1]:"Plain text",
+                                       "wrap" => 1);
     }
     @e = (@$env, $new_env);
 
@@ -1416,6 +1437,10 @@ sub register_generic_environment {
     if ($_[0] =~ m/^(.*),((?:\{_?\}|\[_?\])*)$/) {
         my $env = $1;
         my $arg_types = $2;
+        if ($env =~ /^([+])(.*)$/) {
+            $separated_environment{$2} = $1;
+            $env = $2;
+        }
         my @types = ();
         my @translated = ();
         while (    defined $arg_types
