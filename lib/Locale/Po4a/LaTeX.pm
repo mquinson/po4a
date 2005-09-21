@@ -153,10 +153,10 @@ register_generic_command("*framebox,[][]{_}");     # There is another form in pi
 register_generic_command("*hbox,{}");
 register_generic_command("*hspace,[]{}");
 register_generic_command("*hyphenation,{_}");      # Translators may wish to add/remove words
-register_generic_command("include,{}");
+register_generic_command("*include,{}");
 #register_generic_command("includeonly,{}");       # should not be supported for now
 register_generic_command("*index,{_}");
-register_generic_command("input,{}");
+register_generic_command("*input,{}");
 register_generic_command("*item,[_]");
 register_generic_command("*label,{}");
 register_generic_command("lefteqn,{_}");
@@ -345,26 +345,49 @@ foreach (qw(a *appendix *backmatter backslash *baselineskip *baselinestretch bf
 
 # standard environments.
 # FIXME: All these definitions should be re-checked
-foreach (qw(abstract align align* array cases center description displaymath document enumerate
-            eqnarray equation equation* figure flushleft flushright footnotesize itemize
-            letter list lrbox minipage multline multline* picture proof quotation quote
-            sloppypar tabbing table thebibliography theorem titlepage
-            trivlist verbatim verse wrapfigure)) {
+foreach (qw(abstract align align* cases center description displaymath document enumerate
+            eqnarray eqnarray* equation equation* flushleft flushright footnotesize itemize
+            letter lrbox multline multline* proof quotation quote
+            sloppypar tabbing theorem titlepage
+            trivlist verbatim verbatim* verse wrapfigure)) {
     register_generic_environment("$_,");
 }
-register_generic_environment("tabular,{}");
+register_generic_environment("tabular,[]{}");
 register_generic_environment("tabular*,{}{}");
 register_generic_environment("multicols,{}");
+register_generic_environment("list,{_}{}");
+register_generic_environment("array,[]{}");
+register_generic_environment("figure,[]");
+register_generic_environment("minipage,[]{}");
+register_generic_environment("picture,{}{}");
+register_generic_environment("table,[]");
+register_generic_environment("thebibliography,{_}");
 
 
 # Commands and environments with separators.
 
 # & is the cell separator, \\ is the line separator
 # '\' is escaped twice
-$env_separators{'tabular'} = "(?:&|\\\\\\\\)";
+$env_separators{'array'} =
+  $env_separators{'tabular'} = "(?:&|\\\\\\\\)";
 
-$env_separators{'enumerate'} = $env_separators{'itemize'} = "\\\\item";
+$env_separators{'trivlist'} =
+  $env_separators{'list'} =
+  $env_separators{'description'} =
+  $env_separators{'enumerate'} =
+  $env_separators{'itemize'} = "\\\\item";
 
-$env_separators{'author{#1}'} = $env_separators{'title{#1}'} = "\\\\\\\\";
+$env_separators{'thebibliography'} = "\\\\bibitem";
+
+$env_separators{'displaymath'} =
+  $env_separators{'eqnarray'} =
+  $env_separators{'eqnarray*'} =
+  $env_separators{'flushleft'} =
+  $env_separators{'flushright'} =
+  $env_separators{'center'} =
+  $env_separators{'author{#1}'} =
+  $env_separators{'title{#1}'} = "\\\\\\\\";
+
+# tabbing
 
 1;
