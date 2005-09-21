@@ -1244,9 +1244,9 @@ $commands{'end'}= sub {
     if (!@$env || @$env[-1] ne $args->[1]) {
         # a begin may have been hidden in the middle of a translated
         # buffer. FIXME: Just warn for now.
-        warn wrap_mod("po4a::tex",
-                      dgettext("po4a", "unmatched end of environment '%s'"),
-                      $args->[1]);
+        warn wrap_ref_mod($self->{'ref'}, "po4a::tex",
+                          dgettext("po4a", "unmatched end of environment '%s'"),
+                          $args->[1]);
     } else {
         pop @$env;
     }
@@ -1455,6 +1455,11 @@ sub check_arg_count {
             $check = 0;
         }
         my $env = shift @targs;
+        if (not defined $environment_parameters{$env}) {
+            die wrap_ref_mod($self->{ref},"po4a::tex",
+                             dgettext("po4a", "unknown environment: '%s'"),
+                             $env);
+        }
         @arg_types = @{$environment_parameters{$env}{'types'}};
     } else {
         @arg_types = @{$command_parameters{$command}{'types'}};
