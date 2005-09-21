@@ -889,7 +889,11 @@ sub read_file {
         $linenum++;
         my $ref="$filename:$linenum";
         # TODO: add support for includeonly
-        while ($textline =~ /^(.*)\\(include|input)\{([^\{]*)\}(.*)$/) {
+        # The next regular expression matches \input or \includes that are
+        # not commented (but can be preceded by a \%.
+        while ($textline =~ /^((?:[^%]|(?<!\\)(?:\\\\)*\\%)*)
+                              \\(include|input)
+                              \{([^\{]*)\}(.*)$/x) {
             my ($begin,$newfilename,$end) = ($1,$3,$4);
             my $tag = $2;
             my $include = 1;
