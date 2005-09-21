@@ -181,12 +181,12 @@ In this case, the information indicating which arguments must be
 translated is only used if a paragraph is only composed of this href
 command.
 
-=item % po4a: environment <env> <parameters>
+=item % po4a: environment I<env> I<parameters>
 
-This permits to define the parameters accepted by the <env> environment.
+This permits to define the parameters accepted by the I<env> environment.
 This information is latter used to check the number of arguments of the
 \begin command, and permit to specify which one must be translated.
-The syntax of the <parameters> argument is the same as described for the
+The syntax of the I<parameters> argument is the same as described for the
 commands.
 The first parameter of the \begin command is the name of the environment.
 This parameter must not be specified in the list of parameters. Here are
@@ -194,7 +194,7 @@ some examples:
  % po4a: environment multicols {}
  % po4a: environment equation
 
-=item % po4a: separator <env> "<regex>"
+=item % po4a: separator I<env> "I<regex>"
 
 Indicates that an environment should be split according to the given
 regular expression.
