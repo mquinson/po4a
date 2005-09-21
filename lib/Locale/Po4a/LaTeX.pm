@@ -78,19 +78,19 @@ use subs qw(&generic_command
 *register_generic_command      = \&Locale::Po4a::TeX::register_generic_command;
 *register_generic_environment  = \&Locale::Po4a::TeX::register_generic_environment;
 use vars qw($RE_ESCAPE            $ESCAPE
-            $no_wrap_environments $separated_commands
+            $no_wrap_environments
             %commands             %environments
-            %separated
-            %command_parameters %environment_parameters
+            %separated_command    %separated_environment
+            %command_parameters   %environment_parameters
             %env_separators
             @exclude_include);
 *RE_ESCAPE                = \$Locale::Po4a::TeX::RE_ESCAPE;
 *ESCAPE                   = \$Locale::Po4a::TeX::ESCAPE;
 *no_wrap_environments     = \$Locale::Po4a::TeX::no_wrap_environments;
-*separated_commands       = \$Locale::Po4a::TeX::separated_commands;
 *commands                 = \%Locale::Po4a::TeX::commands;
 *environments             = \%Locale::Po4a::TeX::environments;
-*separated                = \%Locale::Po4a::TeX::separated;
+*separated_command        = \%Locale::Po4a::TeX::separated_command;
+*separated_environment    = \%Locale::Po4a::TeX::separated_environment;
 *env_separators           = \%Locale::Po4a::TeX::env_separators;
 *exclude_include          = \@Locale::Po4a::TeX::exclude_include;
 *command_parameters       = \%Locale::Po4a::TeX::command_parameters;
