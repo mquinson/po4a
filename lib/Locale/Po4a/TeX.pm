@@ -1403,7 +1403,7 @@ sub initialize {
     my $self = shift;
     my %options = @_;
 
-    $self->{options}{'definitions_file'}='';
+    $self->{options}{'definitions'}='';
     $self->{options}{'exclude_include'}='';
     $self->{options}{'no_wrap'}='';
     $self->{options}{'debug'}='';
