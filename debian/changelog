@@ -17,6 +17,8 @@ po4a (0.22-1) UNRELEASED; urgency=low
   * Improve speed 
   * use the nsgmls -wno-valid option to avoid some errors since we include
     all parts conditional inclusion constructs, for example.
+  * fix the spacing of the verbatim blocks.
+    Thanks to Julien Louis (ptitlouis) for reporting.
   * Various other little fixes and improvements
   (Man module)
   * Fix the .ds macro (it arguments must be translated, except the name of the
@@ -33,8 +35,24 @@ po4a (0.22-1) UNRELEASED; urgency=low
   * Add options to deal with new options defined with .de, or options not
     supported by po4a (untranslated, noarg, translate_joined,
     translate_each, no_wrap, inline)
+  (TeX & LaTeX modules)
+  * New syntax for the "% po4a:" line.
+    This alow command to mix optional and mandatory arguments.
+  * remove the old category (untranslated, translate_each, ...) This was
+    problematic when a command is follwed by a block ({...}).
+  * Update the definition of the common LaTeX commands and environments.
+    All these definitions are now in the LaTeX module.
+  * Allow 3 mode of separation for the commands at an extremity of a block
+    (separate and translate the parameters that must be translated
+    separately, separate and translate the command with its parameters, only
+    separate if the command is alone in a block).
+  * Allow to translate the \begin command with all its arguments attached.
   (po4a)
   * document the support for options/aliases in the config files.
+  (translations)
+  * Update French translation
+  * Fix some issues in the French translation of the manpages.
+    Thanks to Julien Louis (ptitlouis).
 
  [François Gouget (fgouget@free.fr)]
 
