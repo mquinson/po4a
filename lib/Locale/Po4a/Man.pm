@@ -118,17 +118,32 @@ Use the source to see which parts can be debugged.
 
 Increase verbosity.
 
-=item B<verbatim_groff_code>
+=item B<groff_code>
 
-With this option, the .de, .ie or .if sections are copied as is from the
-original to the translated document.
+This option permits to change the behavior of the module when it encounter
+a .de, .ie or .if section. It can take the following values:
 
-=item B<translate_groff_code>
+=over
 
-With this option, the .de, .ie or .if sections will be proposed for the
-translation. You should only use this option if a translatable string is
-contained in one of these section. Otherwise, B<verbatim_groff_code>
+=item I<fail>
+
+This is the default value.
+The module will fail when a .de, .ie or .if section is encountered.
+
+=item I<verbatim>
+
+Indicates that the .de, .ie or .if sections must be copied copied as is
+from the original to the translated document.
+
+=item I<translate>
+
+Indicates that the .de, .ie or .if sections will be proposed for the
+translation.
+You should only use this option if a translatable string is
+contained in one of these section. Otherwise, I<verbatim>
 should be preferred.
+
+=back
 
 =item B<untranslated>
 
@@ -374,9 +389,9 @@ my %debug=('splitargs' => 0, # see how macro args are separated
 
 
 ######## CONFIG #########
-# These variables indicate if the associated options were activated.
-my $translate_groff_code;
-my $verbatim_groff_code;
+# This variable indicates the behavior of the module when a .de, .if or
+# .ie is encountered.
+my $groff_code = "fail";
 # %no_wrap_begin and %no_wrap_end are lists of macros that respectively
 # begins and ends a no_wrap paragraph.
 # Any ending macro will end the no_wrap paragraph started by any beginning
@@ -399,8 +414,7 @@ sub initialize {
 
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'}='';
-    $self->{options}{'translate_groff_code'}='';
-    $self->{options}{'verbatim_groff_code'}='';
+    $self->{options}{'groff_code'}='';
     $self->{options}{'untranslated'}='';
     $self->{options}{'noarg'}='';
     $self->{options}{'translate_joined'}='';
@@ -426,15 +440,8 @@ sub initialize {
         }
     }
 
-    if (defined $options{'translate_groff_code'}) {
-        $translate_groff_code = 1;
-    } else {
-        $translate_groff_code = 0;
-    }
-    if (defined $options{'verbatim_groff_code'}) {
-        $verbatim_groff_code = 1;
-    } else {
-        $verbatim_groff_code = 0;
+    if (defined $options{'groff_code'}) {
+        $groff_code = $options{'groff_code'};
     }
 
     if (defined $options{'untranslated'}) {
@@ -1640,7 +1647,7 @@ $macro{'bp'}=\&untranslated;
 $macro{'ad'}=\&untranslated;
 # .de macro Define or redefine macro until .. is encountered.
 $macro{'de'}=sub {
-    if ($verbatim_groff_code or $translate_groff_code) {
+    if ($groff_code ne "fail") {
         my $self = shift;
         my $paragraph = "@_";
         my $end = ".";
@@ -1658,7 +1665,7 @@ $macro{'de'}=sub {
             }
         }
         $paragraph .= "\n";
-        if ($verbatim_groff_code) {
+        if ($groff_code eq "verbatim") {
             $self->pushline($paragraph);
         } else {
             $self->pushline( $self->translate($paragraph,
@@ -1706,7 +1713,7 @@ $macro{'hy'}=$macro{'hym'}=$macro{'hys'}=\&untranslated;
 # .ie cond anything  If cond then anything else goto .el.
 # .if cond anything  If cond then anything; otherwise do nothing.
 $macro{'ie'}=$macro{'if'}=sub {
-    if ($verbatim_groff_code or $translate_groff_code) {
+    if ($groff_code ne "fail") {
         my $self = shift;
         my $m = $_[0];
         my $paragraph = "@_";
@@ -1741,7 +1748,7 @@ $macro{'ie'}=$macro{'if'}=sub {
             $paragraph .= "\n".$paragraph2;
         }
         $paragraph .= "\n";
-        if ($verbatim_groff_code) {
+        if ($groff_code eq "verbatim") {
             $self->pushline($paragraph);
         } else {
             $self->pushline( $self->translate($paragraph,
