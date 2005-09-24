@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.32 2005-09-22 21:51:49 nekral-guest Exp $
+# $Id: po4a,v 1.33 2005-09-24 21:04:07 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -541,7 +541,7 @@ print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
 my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
-	print STDERR wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
+	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
 	if ($po4a_opts{"split"}) {
 	    my ($pot_filename,$po_filename,$bigpo_filename);
@@ -588,7 +588,7 @@ foreach $lang (sort keys %po_filename) {
 	    if $po4a_opts{"verbose"};
 	}
     } else {
-	print STDERR wrap_msg(gettext("Creating %s:"), $po_filename{$lang}) 
+	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang}) 
 	    if $po4a_opts{"verbose"};
 	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
 	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
@@ -631,7 +631,7 @@ foreach $lang (sort keys %po_filename) {
 	my ($percent,$hit,$queries) = $doc->stats();
 
 	if ($percent<$file_opts{"threshold"})  {
-	    print STDERR wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
+	    print wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
 		$document{$master}{$lang}, $percent, $file_opts{"threshold"});
 	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 	    next DOC;
@@ -649,10 +649,10 @@ foreach $lang (sort keys %po_filename) {
 	}
 	if ($file_opts{"verbose"}) {
 	    if ($percent == 100) {
-		print STDERR wrap_msg(gettext("%s is %s%% translated (%s strings)."),
+		print wrap_msg(gettext("%s is %s%% translated (%s strings)."),
 		    $document{$master}{$lang}, $percent, $queries);
 	    } else {
-		print STDERR wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
+		print wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
 		    $document{$master}{$lang}, $percent, $hit, $queries);
 	    }
 	}
