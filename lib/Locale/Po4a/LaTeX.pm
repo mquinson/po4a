@@ -101,7 +101,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
 # Only read the documentclass in order to find some po4a directives.
 # FIXME: The documentclass could contain translatable strings.
 # Maybe it should be implemented as \include{}.
-register_generic_command("*documentclass,{}");
+register_generic_command("*documentclass,[]{}");
 # We use register_generic_command to define the number and types of
 # parameters. The function is then overwritten:
 $commands{'documentclass'} = sub {
@@ -110,7 +110,8 @@ $commands{'documentclass'} = sub {
 
     # Only try to parse the file.  We don't want to fail or parse this file
     # if it is a standard documentclass.
-    parse_definition_file($self, $args->[1].".cls", 1);
+    my $name = ($args->[0] eq '[')? $args->[3]: $args->[1];
+    parse_definition_file($self, $name.".cls", 1);
 
     my ($t,@e) = generic_command($self,$command,$variant,$args,$env);
 
