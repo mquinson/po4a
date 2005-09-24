@@ -1006,11 +1006,11 @@ sub parse_file {
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
-    die wrap_mod("po4a::sgml",
-                 dgettext("po4a","nsgmls is missing or non-functional. ".
-                 "Please make sure that nsgmls is present and does not ".
-                 "produce any error (with the -wno-valid option), ".
-                 "and report a bug otherwise.")) if ($? != 0);
+    warn wrap_mod("po4a::sgml",
+                  dgettext("po4a","Warning: nsgmls is missing or non-".
+                  "functional.  Please make sure that nsgmls is present and ".
+                  "does not produce any error (with the -wno-valid option), ".
+                  "and report a bug otherwise.  Continuing...")) if ($? != 0);
     unlink ($tmpfile) unless $debug{'refs'};
 }
 
