@@ -874,6 +874,7 @@ Transtractor's read.
 
 =cut
 
+# TODO: fix DOS end of lines
 sub read_file {
     my $self=shift;
     my $filename=shift
@@ -1274,18 +1275,18 @@ sub generic_command {
         or $separated_command{$command} ne '+') {
         # Use the information from %command_parameters to only translate
         # the needed parameters
-    $translated = "$ESCAPE$command$variant";
-    # handle arguments
-    my @arg_types = @{$command_parameters{$command}{'types'}};
-    my @arg_translated = @{$command_parameters{$command}{'translated'}};
-    my ($type, $opt);
-    my @targs = @$args;
-    my $count = 0;
-    while (@targs) {
-        $type = shift @targs;
-        $opt  = shift @targs;
-        my $have_to_be_translated = 0;
-        TEST_TYPE:
+        $translated = "$ESCAPE$command$variant";
+        # handle arguments
+        my @arg_types = @{$command_parameters{$command}{'types'}};
+        my @arg_translated = @{$command_parameters{$command}{'translated'}};
+        my ($type, $opt);
+        my @targs = @$args;
+        my $count = 0;
+        while (@targs) {
+            $type = shift @targs;
+            $opt  = shift @targs;
+            my $have_to_be_translated = 0;
+TEST_TYPE:
             if ($count >= scalar @arg_types) {
                 # The number of arguments does not match,
                 # and a variable number of arguments was not specified
@@ -1303,13 +1304,13 @@ sub generic_command {
 #FIXME: msg
                 die "optional argument provided, but a mandatory one is expected\n"
             }
-        if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".($count).$type_end{$type}));
-        } else {
-            $t = $opt;
+            if ($have_to_be_translated) {
+                ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$count.$type_end{$type}));
+            } else {
+                $t = $opt;
+            }
+            $translated .= $type.$t.$type_end{$type};
         }
-        $translated .= $type.$t.$type_end{$type};
-    }
     } else {
         # Translate the command with all its arguments joined
         my $tmp = "$ESCAPE$command$variant";
@@ -1379,39 +1380,39 @@ sub generic_environment {
         or $separated_environment{$new_env} ne '+') {
         # Use the information from %command_parameters to only translate
         # the needed parameters
-    my @arg_types = @{$environment_parameters{$new_env}{'types'}};
-    my @arg_translated = @{$environment_parameters{$new_env}{'translated'}};
+        my @arg_types = @{$environment_parameters{$new_env}{'types'}};
+        my @arg_translated = @{$environment_parameters{$new_env}{'translated'}};
 
-    my $count = 0;
-    while (@targs) {
-        $type = shift @targs;
-        $opt  = shift @targs;
-        my $have_to_be_translated = 0;
+        my $count = 0;
+        while (@targs) {
+            $type = shift @targs;
+            $opt  = shift @targs;
+            my $have_to_be_translated = 0;
 TEST_TYPE:
-        if ($count >= scalar @arg_types) {
+            if ($count >= scalar @arg_types) {
 # FIXME: die msg
-            warn "wrong number of argument. This should have been found ".
-                "earlier.\n'$command'$new_env'@$args'$count'$type'\n";
-        } elsif ($type eq $arg_types[$count]) {
-            $have_to_be_translated = $arg_translated[$count];
-            $count ++;
-        } elsif ($type eq '{' and $arg_types[$count] eq '[') {
-            # an optionnal argument was not provided,
-            # try with the next argument.
-            $count++;
-            goto TEST_TYPE;
-        } else {
-            die "optional argument provided, but a mandatory one is expected\n"
-        }
+                warn "wrong number of argument. This should have been found ".
+                     "earlier.\n'$command'$new_env'@$args'$count'$type'\n";
+            } elsif ($type eq $arg_types[$count]) {
+                $have_to_be_translated = $arg_translated[$count];
+                $count ++;
+            } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+                # an optionnal argument was not provided,
+                # try with the next argument.
+                $count++;
+                goto TEST_TYPE;
+            } else {
+                die "optional argument provided, but a mandatory one is expected\n"
+            }
 
-        if ($have_to_be_translated) {
-            ($t, @e) = translate_buffer($self,$opt,(@$env,$new_env.$type."#".$count.$type_end{$type}));
-        } else {
-            $t = $opt;
-        }
-        $translated .= $type.$t.$type_end{$type};
+            if ($have_to_be_translated) {
+                ($t, @e) = translate_buffer($self,$opt,(@$env,$new_env.$type."#".$count.$type_end{$type}));
+            } else {
+                $t = $opt;
+            }
+            $translated .= $type.$t.$type_end{$type};
 
-    }
+        }
     } else {
         # Translate the \begin command with all its arguments joined
         my ($type, $opt);
