@@ -441,6 +441,10 @@ sub initialize {
     }
 
     if (defined $options{'groff_code'}) {
+        unless ($options{'groff_code'} =~ m/fail|verbatim|translated/) {
+          die wrap_mod("po4a::man", dgettext("po4a",
+               "Invalid 'groff_code' value. Must be one of 'fail', 'verbatim', 'translated'."));
+        }
         $groff_code = $options{'groff_code'};
     }
 
@@ -470,7 +474,7 @@ sub initialize {
                $no_wrap_begin{$1} = 1;
                $no_wrap_end{$2} = 1;
             } else {
-                die "The no_wrap parameters must be a set of comma-separated begin:end couples.\n"
+                die wrap_mod("po4a::man", dgettext("po4a","The no_wrap parameters must be a set of comma-separated begin:end couples.\n"));
             }
         }
     }
