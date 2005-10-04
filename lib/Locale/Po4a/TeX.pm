@@ -485,8 +485,11 @@ sub get_leading_command {
         # verify the number of arguments
         my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
         if (not $check) {
-            die "Error while checking the number of arguments of the ".
-                "'$command' command at ".$self->{ref}.". $reason\n";
+            die wrap_ref_mod($self->{ref}, "po4a::tex",
+                             dgettext("po4a",
+                                 "Error while checking the number of ".
+                                 "arguments of the '%s' command: %s")."\n",
+                             $command, $reason);
         }
 
         if (@$remainder) {
@@ -566,8 +569,11 @@ sub get_trailing_command {
         $variant = $3;
         my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
         if (not $check) {
-            die "Error while checking the number of arguments of the ".
-                "'$command' command at ".$self->{ref}.". $reason\n";
+            die wrap_ref_mod($self->{ref}, "po4a::tex",
+                             dgettext("po4a",
+                                 "Error while checking the number of ".
+                                 "arguments of the '%s' command: %s")."\n",
+                             $command, $reason);
         }
         if (@$remainder) {
             # FIXME: we should also keep the spaces to be idempotent
@@ -1223,7 +1229,7 @@ $commands{'begin'}= sub {
         ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
                                             $args,$env);
     } else {
-        die wrap_mod("po4a::tex",
+        die wrap_ref_mod($self->{ref}, "po4a::tex",
                      dgettext("po4a", "unknown environment: '%s'"),
                      $args->[1]);
     }
@@ -1290,8 +1296,11 @@ TEST_TYPE:
             if ($count >= scalar @arg_types) {
                 # The number of arguments does not match,
                 # and a variable number of arguments was not specified
-#FIXME: die message, this should have been found before => mail
-                die "wrong number of argument '$command'@$args'$count'$type'\n";
+                die wrap_ref_mod($self->{ref}, "po4a::tex",
+                                 dgettext("po4a",
+                                          "Wrong number of arguments for ".
+                                          "the '%s' command.")."\n",
+                                 $command);
             } elsif ($type eq $arg_types[$count]) {
                 $have_to_be_translated = $arg_translated[$count];
                 $count ++;
@@ -1301,8 +1310,12 @@ TEST_TYPE:
                 $count++;
                 goto TEST_TYPE;
             } else {
-#FIXME: msg
-                die "optional argument provided, but a mandatory one is expected\n"
+                die wrap_ref_mod($self->{ref}, "po4a::tex",
+                                 dgettext("po4a",
+                                     "Command '%s': An optional argument ".
+                                     "was provided, but a mandatory one ".
+                                     "is expected.")."\n",
+                                 $command);
             }
             if ($have_to_be_translated) {
                 ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$count.$type_end{$type}));
@@ -1353,7 +1366,11 @@ sub register_generic_command {
         $command_parameters{$command}{'nb_args'} = "";
         $commands{$command} = \&generic_command;
     } else {
-        die "register_generic_command: unsupported format: '$_[0]'.\n"
+        die wrap_mod("po4a::tex",
+                     dgettext("po4a",
+                              "register_generic_command: unsupported ".
+                              "format: '%s'.")."\n",
+                     $_[0]);
     }
 }
 
@@ -1390,9 +1407,11 @@ sub generic_environment {
             my $have_to_be_translated = 0;
 TEST_TYPE:
             if ($count >= scalar @arg_types) {
-# FIXME: die msg
-                warn "wrong number of argument. This should have been found ".
-                     "earlier.\n'$command'$new_env'@$args'$count'$type'\n";
+                die wrap_ref_mod($self->{ref}, "po4a::tex",
+                                 dgettext("po4a",
+                                          "Wrong number of arguments for ".
+                                          "the '%s' command.")."\n",
+                                 $command);
             } elsif ($type eq $arg_types[$count]) {
                 $have_to_be_translated = $arg_translated[$count];
                 $count ++;
@@ -1402,7 +1421,12 @@ TEST_TYPE:
                 $count++;
                 goto TEST_TYPE;
             } else {
-                die "optional argument provided, but a mandatory one is expected\n"
+                die wrap_ref_mod($self->{ref}, "po4a::tex",
+                                 dgettext("po4a",
+                                     "Command '%s': An optional argument ".
+                                     "was provided, but a mandatory one ".
+                                     "is expected.")."\n",
+                                 $command);
             }
 
             if ($have_to_be_translated) {
@@ -1451,8 +1475,8 @@ sub check_arg_count {
         # The name of the environment is mandatory
         if (   (not defined $type)
             or ($type ne '{')) {
-# FIXME: gettext
-            $reason = "The first argument of \\begin is mandatory.";
+            $reason = dgettext("po4a",
+                               "The first argument of \\begin is mandatory.");
             $check = 0;
         }
         my $env = shift @targs;
@@ -1484,8 +1508,9 @@ TEST_TYPE:
             goto TEST_TYPE;
         } else {
             $check = 0;
-# FIXME: gettext
-            $reason = "An optional argument was provided, but a mandatory one is expected.";
+            $reason = dgettext("po4a",
+                               "Command '%s': An optional argument was ".
+                               "provided, but a mandatory one is expected.");
         }
     }
 
