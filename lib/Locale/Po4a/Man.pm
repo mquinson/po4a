@@ -186,7 +186,7 @@ I<begin> command; any ending command stop the no_wrap mode.
 If you have a I<begin> (respectively I<end>) macro that has no I<end>
 (respectively I<begin>), you can specify an existing I<end> (like fi) or
 I<begin> (like nf) as a counterpart.
-These options (and their arguments) wont be translated.
+These macros (and their arguments) wont be translated.
 
 =item inline
 

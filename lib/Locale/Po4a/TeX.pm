@@ -179,7 +179,7 @@ as translatable.
 As for an asterisk, the command will be extracted if it appear at an
 extremity of a block, but the parameters won't be translated separately.
 The translator will have to translate the command concatenated to all its
-parameter to form the translated.
+parameters.
 This permits to keep more context, and is usefull for commands with small
 words in parameter, which can have multiple meanings (and translations).
 
@@ -206,13 +206,11 @@ the parameter must be translated. For example:
 
 This indicates that the chapter command has two parameters: an optional
 (short title) and a mandatory one, which must both be translated.
-To indicate that the href command has two mandatory arguments, and that
-only the text has to be translated (not the URL), but 
 If you want to specify that the href command has two mandatory parameters,
 that you don't want to translate the URL (first parameter), and that you
 don't want this command to be separated from its paragraph (which allow
 the translator to move the link in the sentence), you can use:
- % po4a: command href {}{_}
+ % po4a: command -href {}{_}
 
 In this case, the information indicating which arguments must be
 translated is only used if a paragraph is only composed of this href
