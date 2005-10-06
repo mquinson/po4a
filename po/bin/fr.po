@@ -104,11 +104,15 @@ msgstr "Option « %s » inconnue"
 msgid ""
 "Invalid 'groff_code' value. Must be one of 'fail', 'verbatim', 'translated'."
 msgstr ""
+"Valeur de « groff_code » non valable. Seules « fail », « verbatim » et "
+"« translated » sont autorisées."
 
 #: ../../lib/Locale/Po4a/Man.pm:477
 msgid ""
 "The no_wrap parameters must be a set of comma-separated begin:end couples.\n"
 msgstr ""
+"Le paramètre de no_wrap doit être une liste de couples début:fin séparés par "
+"des virgules.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:535
 msgid ""
@@ -175,6 +179,9 @@ msgid ""
 "either remove the font modifier '%s', or integrate a \\f font modifier in "
 "the following command ('%s')"
 msgstr ""
+"po4a ne supporte pas les commandes de police suivies par une autre commande. "
+"Vous devriez soit retirer la commande « %s », ou intégrer un \\f dans la "
+"commande « %s »."
 
 #: ../../lib/Locale/Po4a/Man.pm:669
 msgid ""
@@ -205,7 +212,7 @@ msgstr ""
 #: ../../lib/Locale/Po4a/Man.pm:875
 #, perl-format
 msgid "Unbalanced '<' and '>' in font modifier. Faulty message: %s"
-msgstr ""
+msgstr "« < » ou « > » non équilibré pour une police. Message fautif : %s"
 
 #: ../../lib/Locale/Po4a/Man.pm:1001
 #, perl-format
@@ -297,6 +304,8 @@ msgid ""
 "Invalid value for option 'porefs' ('%s' is not one of 'full', 'noline' or "
 "'none')"
 msgstr ""
+"Valeur non valable pour l'option « porefs » (« %s » n'est ni « full », ni "
+"« noline » ni « none »)."
 
 #: ../../lib/Locale/Po4a/Po.pm:168
 msgid "Please provide a non-null filename"
@@ -333,6 +342,14 @@ msgid ""
 "existing translation to po4a?\" contains several hints to help you in your "
 "task"
 msgstr ""
+"\n"
+"La gettextisation a échouée (encore une fois). N'abandonnez pas, la "
+"gettextisation est un art subtile, mais elle n'est nécessaire qu'une seule "
+"fois pour convertir un projet à po4a et bénéficier du luxe offert par po4a "
+"aux traducteurs.\n"
+"Veuillez consulter po4a(7), la section « Comment convertir une traduction "
+"pré-existante à ce système ? » contient plusieurs astuces pour vous aider "
+"dans votre tâche."
 
 #: ../../lib/Locale/Po4a/Po.pm:333
 #, perl-format
@@ -421,14 +438,15 @@ msgstr "msgid omis pour aider les traducteurs (contient une entité seule)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:273
 msgid "msgid skipped to help translators (contains only tags)"
-msgstr "msgid omis pour aider les traducteurs (ne contient que des tags)"
+msgstr "msgid omis pour aider les traducteurs (ne contient que des balises)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:281
-#, fuzzy
 msgid ""
 "msgid skipped to help translators (contains only opening or closing tags of "
 "marked sections)"
-msgstr "msgid omis pour aider les traducteurs (ne contient que des tags)"
+msgstr ""
+"msgid omis pour aider les traducteurs (ne contient que des balises ouvrantes "
+"ou fermantes de sections marquées)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:327 ../../lib/Locale/Po4a/TeX.pm:998
 #: ../../po4a:391
@@ -501,14 +519,14 @@ msgid "Unknown tag %s"
 msgstr "Tag inconnu %s"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:813
-#, fuzzy, perl-format
+#, perl-format
 msgid "bad translation '%s' for '%s' in '%s'"
-msgstr "La traduction de %s en %s est redéfinie."
+msgstr "La traduction « %s » de « %s » dans « %s » est mauvaise."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:868 ../../lib/Locale/Po4a/Sgml.pm:933
 #, perl-format
 msgid "Closing tag for a translation container missing before %s"
-msgstr "Tag de fermeture pour un conteneur de traduction manquant avant %s"
+msgstr "Balise de fermeture pour un conteneur de traduction manquant avant %s"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:1001
 #, perl-format
@@ -521,6 +539,9 @@ msgid ""
 "is present and does not produce any error (with the -wno-valid option), and "
 "report a bug otherwise.  Continuing..."
 msgstr ""
+"Avertissement : nsgmls est manquant ou non fonctionnel. Veuillez vous "
+"assurer que nsgmls est présent et ne produit pas d'erreur (avec l'option -"
+"wno-valid), sinon soumettez un rapport de bogue. Poursuite..."
 
 #: ../../lib/Locale/Po4a/TeX.pm:476 ../../lib/Locale/Po4a/TeX.pm:556
 #, perl-format
@@ -528,14 +549,14 @@ msgid "un-balanced %s in '%s'"
 msgstr "%s non équilibré dans '%s'"
 
 #: ../../lib/Locale/Po4a/TeX.pm:490 ../../lib/Locale/Po4a/TeX.pm:574
-#, fuzzy, perl-format
+#, perl-format
 msgid "Error while checking the number of arguments of the '%s' command: %s"
-msgstr "Mauvais nombre d'arguments pour la commande '%s'"
+msgstr "Erreur lors de la vérification des arguments de la commande '%s' : %s"
 
 #: ../../lib/Locale/Po4a/TeX.pm:745 ../../lib/Locale/Po4a/TeX.pm:842
 #, perl-format
 msgid "Unknown command: '%s'"
-msgstr "Commande « %s » inconnue"
+msgstr "Commande inconnue : « %s »"
 
 #: ../../lib/Locale/Po4a/TeX.pm:888 ../../lib/Locale/Po4a/TransTractor.pm:384
 msgid "Can't read from file without having a filename"
@@ -557,6 +578,8 @@ msgid ""
 "You are using the old definitions format (%s).  Please update this "
 "definition line."
 msgstr ""
+"Vous utilisez un ancien format de définition (%s). Veuillez mettre à jour "
+"cette ligne de définition."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1233 ../../lib/Locale/Po4a/TeX.pm:1485
 #, perl-format
@@ -569,7 +592,7 @@ msgid "unmatched end of environment '%s'"
 msgstr "Fin de l'environnement '%s' sans commencement"
 
 #: ../../lib/Locale/Po4a/TeX.pm:1301 ../../lib/Locale/Po4a/TeX.pm:1412
-#, fuzzy, perl-format
+#, perl-format
 msgid "Wrong number of arguments for the '%s' command."
 msgstr "Mauvais nombre d'arguments pour la commande '%s'"
 
@@ -580,15 +603,17 @@ msgid ""
 "Command '%s': An optional argument was provided, but a mandatory one is "
 "expected."
 msgstr ""
+"Commande « %s » : un argument optionnel a été fourni, mais un argument "
+"obligatoire est attendu."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1371
 #, perl-format
 msgid "register_generic_command: unsupported format: '%s'."
-msgstr ""
+msgstr "register_generic_command : format non supporté : « %s »."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1479
 msgid "The first argument of \\begin is mandatory."
-msgstr ""
+msgstr "Le premier argument de \\begin est obligatoire."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:442
 #, perl-format
@@ -683,9 +708,9 @@ msgstr ""
 "spécifier sur la ligne de commande. (caractère non-ascii à %s)"
 
 #: ../../lib/Locale/Po4a/Wml.pm:88
-#, fuzzy, perl-format
+#, perl-format
 msgid "Can't create a temporary xml file: %s"
-msgstr "Impossible de créer le fichier po temporaire : %s"
+msgstr "Impossible de créer un fichier xml temporaire : %s"
 
 #: ../../lib/Locale/Po4a/Xml.pm:289
 #, perl-format
