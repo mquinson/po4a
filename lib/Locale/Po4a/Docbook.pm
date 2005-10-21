@@ -121,6 +121,7 @@ sub initialize {
 		<releaseinfo>
 		<remark>
 		<revnumber>
+		W<screen>
 		<screeninfo>
 		<seg>
 		<segtitle>
