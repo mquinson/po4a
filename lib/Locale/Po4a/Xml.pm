@@ -347,7 +347,7 @@ single string.
 my @tag_types = ( 
 	{	beginning	=> "!--",
 		end		=> "--",
-		breaking	=> 1,
+		breaking	=> 0,
 		f_extract	=> \&tag_extract_comment,
 		f_translate	=> \&tag_trans_comment},
 	{	beginning	=> "?xml",
@@ -468,6 +468,7 @@ sub tag_break_close {
 	my ($self,@tag)=@_;
 	if ($self->tag_in_list($self->get_path."<".
 		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
+print "toto1: ".$self->get_tag_name(@tag)."\n";
 		return 0;
 	} else {
 		return 1;
@@ -830,10 +831,22 @@ sub treat_content {
 
 	while (!$eof and !$self->breaking_tag) {
 		my @text;
-		# Append the found inline tag
-		($eof,@text)=$self->get_string_until('>',{include=>1,remove=>1,unquoted=>1});
-		push @paragraph, @text;
+		my $type = $self->tag_type;
+		my $f_extract = $tag_types[$type]->{'f_extract'};
+		if (    defined($f_extract)
+		    and $f_extract eq \&tag_extract_comment) {
+			# Remove the content of the comments
+			($eof, @text) = $self->extract_tag($type,1);
+		} else {
+			# Append the found inline tag
+			($eof,@text)=$self->get_string_until('>',
+			                                     {include=>1,
+			                                      remove=>1,
+			                                      unquoted=>1});
+			push @paragraph, @text;
+		}
 
+		# Next tag
 		($eof,@text)=$self->get_string_until('<',{remove=>1});
 		if ($#text > 0) {
 			push @paragraph, @text;
