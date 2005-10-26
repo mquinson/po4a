@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.17 2005-05-30 07:15:23 mquinson Exp $
+# $Id: Pod.pm,v 1.18 2005-10-26 10:53:25 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -42,7 +42,7 @@ sub command {
 				    $self->input_file().":$line_num",
 				    "=$command",
 				    "wrap"=>1);
-	$self->pushline("=$command $paragraph\n");
+	$self->pushline("=$command $paragraph\n\n");
     }
 }
 
@@ -87,7 +87,7 @@ sub textblock {
 				'textblock',
 				"wrap"=>1);
     $paragraph=~ s/ +\n/\n/gm;
-    $self->pushline("$paragraph\n");
+    $self->pushline("$paragraph\n\n");
 }
 
 sub end_pod {}
