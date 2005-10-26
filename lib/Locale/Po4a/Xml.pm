@@ -468,7 +468,6 @@ sub tag_break_close {
 	my ($self,@tag)=@_;
 	if ($self->tag_in_list($self->get_path."<".
 		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
-print "toto1: ".$self->get_tag_name(@tag)."\n";
 		return 0;
 	} else {
 		return 1;
