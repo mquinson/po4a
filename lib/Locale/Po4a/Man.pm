@@ -441,9 +441,9 @@ sub initialize {
     }
 
     if (defined $options{'groff_code'}) {
-        unless ($options{'groff_code'} =~ m/fail|verbatim|translated/) {
+        unless ($options{'groff_code'} =~ m/fail|verbatim|translate/) {
           die wrap_mod("po4a::man", dgettext("po4a",
-               "Invalid 'groff_code' value. Must be one of 'fail', 'verbatim', 'translated'."));
+               "Invalid 'groff_code' value. Must be one of 'fail', 'verbatim', 'translate'."));
         }
         $groff_code = $options{'groff_code'};
     }
