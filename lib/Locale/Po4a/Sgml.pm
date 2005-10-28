@@ -1033,9 +1033,10 @@ sub end_paragraph {
 			     'wrap' => ! $verb,
 			     'wrapcol' => (75 - $indent));
     unless ($verb) {
-	$para =~ s/^\n//s;
+	$para =~ s/^\s+//s;
 	my $toadd=" " x ($indent+1);
 	$para =~ s/^/$toadd/mg;
+	$para .= "\n";
     }
 
     $self->pushline( $para );
