@@ -586,9 +586,18 @@ NEW_LINE:
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
-            if ($l2 =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/) {
+            if (   $l2 =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
+                or $l2 =~ /^[.'][\t ]*([BIR])$/) {
                 # another font macro. Forget about the first one
                 $line = $l2;
+                $ref = $r2;
+            } elsif ($l2 =~ /^([.'][\t ]*(?:IP)[\t ]+"?)(.*)$/) {
+                # Install the font modifier into the next line
+                # after a possible quote (")
+                my $macro = $1;
+                my $arg   = $2;
+                $line =~ /^\.([BI])\s*$/;
+                $line = $macro."\\f$1".$arg;
                 $ref = $r2;
             } elsif ($l2 =~ /^[.']/) {
                 die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
