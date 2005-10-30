@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.46 2005-10-26 10:53:25 nekral-guest Exp $
+# $Id: Po.pm,v 1.47 2005-10-30 17:46:14 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -1155,7 +1155,7 @@ sub wrap {
 	$res.="$line\n";
     }
     # Restore the original tariling spaces
-    chop $res;
+    chomp $res;
     if ($text =~ m/(\s+)$/s) {
 	$res .= $1;
     }
