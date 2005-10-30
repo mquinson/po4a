@@ -1023,16 +1023,34 @@ sub end_paragraph {
 		
     return unless defined($para) && length($para);
 
+    if (($para =~ m/^\s*$/s) and (not $verb)) {
+	# In non-verbatim environments, a paragraph with only spaces is
+	# like an empty paragraph
+	return;
+    }
+
     # unprotect &entities;
     $para =~ s/{PO4A-amp}/&/g;
     # remove the name"\|\|" nsgmls added as attributes
     $para =~ s/ name=\"\\\|\\\|\"//g;    
     $para =~ s/ moreinfo=\"none\"//g;
 
+    # Extract the leading and trailing spaces. They will be restored only
+    # in verbatim environments.
+    my ($leading_spaces, $trailing_spaces) = ("", "");
+    if ($para =~ m/^(\s*)(.*?)(\s*)$/s) {
+	$leading_spaces = $1;
+	$para = $2;
+	$trailing_spaces = $3;
+    }
+
     $para = $self->translate($para,$ref,$type,
 			     'wrap' => ! $verb,
 			     'wrapcol' => (75 - $indent));
-    unless ($verb) {
+
+    if ($verb) {
+	$para = $leading_spaces.$para.$trailing_spaces;
+    } else {
 	$para =~ s/^\s+//s;
 	my $toadd=" " x ($indent+1);
 	$para =~ s/^/$toadd/mg;
