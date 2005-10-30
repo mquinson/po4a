@@ -7,7 +7,7 @@ po4a (0.22-1) UNRELEASED; urgency=low
     Thanks to Chris Karakas.
   * Add the DocBook's contrib and epigraph tags
   * Be stricter on the regex matching entities
-  * Escape more chars in CDATA. This fixes #301335
+  * Escape more chars in CDATA. This fixes #301335 (on Alioth)
   * Append the content of a CDATA to the current buffer because it was
     not output at the right position
   * Don't forget some {PO4A-beg/end} in the output document
@@ -53,6 +53,16 @@ po4a (0.22-1) UNRELEASED; urgency=low
   * Update French translation
   * Fix some issues in the French translation of the manpages.
     Thanks to Julien Louis (ptitlouis).
+  (Docbook module)
+  * Add the 'screen' tag, which should not be re-wrapped.
+    Thanks to Thomas Huriaux.
+  (Xml module)
+  * Do not break paragraphs on comments, just remove them.
+  (Po module)
+  * Restore the trailing spaces in Po.pm:wrap().
+    This fix an issue with the lang attribute of an XML file ('en' was
+    normalized into 'en\n').
+    This needed a minor correction of Pod.pm and Sgml.pm.
 
  [François Gouget (fgouget@free.fr)]
 
