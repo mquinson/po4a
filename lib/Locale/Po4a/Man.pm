@@ -132,7 +132,7 @@ The module will fail when a .de, .ie or .if section is encountered.
 
 =item I<verbatim>
 
-Indicates that the .de, .ie or .if sections must be copied copied as is
+Indicates that the .de, .ie or .if sections must be copied as is
 from the original to the translated document.
 
 =item I<translate>
