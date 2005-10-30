@@ -65,6 +65,8 @@ containing other tags, some of them being of category 'translate'.
 
 =item indent
 
+Space separated list of tags which increase the indentation level.
+
 =item verbatim
 
 The layout within those tags should not be changed. The paragraph won't get
