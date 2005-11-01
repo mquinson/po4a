@@ -261,7 +261,7 @@ my $b = $builder->new
       requires => {'Locale::gettext' => '1.01', 'Text::WrapI18N' => 0,
 	  'SGMLS' => 0, 'Term::ReadKey' => 0},
       script_files => ['po4a-gettextize', 'po4a-updatepo',
-	  'po4a-translate', 'po4a-normalize', 'po4a'],
+	  'po4a-translate', 'po4a-normalize', 'po4a', 'msguntypot'],
       add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html',
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
       install_path => {po => $base.'/locale', man => $base.'/man'},
