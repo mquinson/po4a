@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.11 2005-08-10 14:10:59 mquinson Exp $
+# $Id: Common.pm,v 1.12 2005-11-02 00:09:35 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -44,8 +44,9 @@ BEGIN {
         }
         $col=76 if (!defined $col);
         
-        use Text::WrapI18N qw($columns); 
-        $columns = $col;
+        eval ' use Text::WrapI18N qw($columns);
+               $columns = $col;
+             ';
        
         eval ' sub wrapi18n($$$) { Text::WrapI18N::wrap($_[0],$_[1],$_[2]) } '
     } else {
