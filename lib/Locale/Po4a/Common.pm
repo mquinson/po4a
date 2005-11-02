@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.12 2005-11-02 00:09:35 nekral-guest Exp $
+# $Id: Common.pm,v 1.13 2005-11-02 00:15:10 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
 #
@@ -199,7 +199,7 @@ BEGIN {
            sub bindtextdomain($$) { }
            sub textdomain($) { }
            sub gettext($) { shift }
-           sub dgettext($$) { shift $_[1] }
+           sub dgettext($$) { return $_[1] }
        '
     }
 }
