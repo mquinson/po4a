@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.47 2005-10-30 17:46:14 nekral-guest Exp $
+# $Id: Po.pm,v 1.48 2005-11-08 16:32:29 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -1141,6 +1141,11 @@ sub wrap {
 	    my $pos=rindex($line," ",$col);
 	    while (substr($line,$pos-1,1) eq '.' && $pos != -1) {
 		$pos=rindex($line," ",$pos-1);
+	    }
+	    if ($pos == -1) {
+		# There are no spaces in the first $col chars, pick-up the
+		# first space
+		$pos = index($line," ");
 	    }
 	    if ($pos != -1) {
 		my $end=substr($line,$pos+1);
