@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.34 2005-09-22 21:51:49 nekral-guest Exp $
+# $Id: po4a-gettextize,v 1.35 2005-11-13 12:29:20 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -151,15 +151,15 @@ sub show_version {
 }
 
 my ($pofile)=('-');
-my ($masterfile,$locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
+my (@masterfile,@locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
 my ($mastchar,$locchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
 	'help|h'        => \$help,
 	'help-format'   => \$help_fmt,
 
-	'master|m=s'    => \$masterfile,
-	'localized|l=s' => \$locfile,
+	'master|m=s'    => \@masterfile,
+	'localized|l=s' => \@locfile,
 	'po|p=s'        => \$pofile,
 	'format|f=s'    => \$type,
 
@@ -176,8 +176,7 @@ GetOptions(
 # Argument check
 $help && pod2usage (-verbose => 1, -exitval => 0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage () if (scalar @ARGV > 1) || 
-    (!defined($masterfile)) || (!length($masterfile));
+pod2usage () if (scalar @ARGV > 1) || (scalar @masterfile < 1);
 
 my %options = (
     "verbose" => $verbose,
@@ -191,9 +190,8 @@ foreach (@options) {
     }
 }
 # Check file existence
--e $masterfile || die wrap_msg(gettext("File %s does not exist."), $masterfile);
-if (defined $locfile && length($locfile)) {
-    -e $locfile || die wrap_msg(gettext("File %s does not exist."), $locfile);
+foreach my $file (@masterfile, @locfile) {
+    -e $file || die wrap_msg(gettext("File %s does not exist."), $file);
 }
 
 # Declare the TransTractor parsers
@@ -201,19 +199,23 @@ my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%options),
 			 Locale::Po4a::Chooser::new($type,%options));
 
 # Parse master file forcing conversion to utf if it's not in ascii
-$mastertt->read($masterfile);
+foreach my $file (@masterfile) {
+  $mastertt->read($file);
+}
 $mastertt->{TT}{utf_mode} = 1;
 $mastertt->{TT}{file_in_charset} = $mastchar;
 $mastertt->parse;
 
 
-unless (defined ($locfile) && length($locfile)) {
+unless (scalar @locfile >= 1) {
   # Ok, outputing the pot extracted from original is enough
   $mastertt->writepo($pofile);
 } else {
   # We have to merge two transtractor files
 
-  $transtt->read($locfile);
+  foreach my $file (@locfile) {
+    $transtt->read($file);
+  }
   # We force the conversion to utf if the master document wasn't in ascii
   $transtt->{TT}{utf_mode} = !$mastertt->{TT}{ascii_input};
   $transtt->{TT}{file_in_charset} = $locchar;
