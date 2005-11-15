@@ -541,11 +541,10 @@ sub parse_file {
 	    local $/ = undef;
 	    $prologentincl{$key} = <IN>;
 	    close IN;
-	    my @lines = split(/\n/,$prologentincl{$key});
-	    print STDERR "Content of \%$key; is $filename (".(scalar @lines)." lines long)\n"
+	    print STDERR "Content of \%$key; is $filename (".
+	                 ($prologentincl{$key} =~ tr/\n/\n/).
+	                 " lines long)\n"
 	      if ($debug{'entities'});
-	    # leave those damn references in peace by making sure it fits on one line
-	    $prologentincl{$key} = join (" ", @lines);
 	    print STDERR "content: ".$prologentincl{$key}."\n"
 	      if ($debug{'entities'});
 	    $moretodo = 1;
