@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.35 2005-11-16 19:27:15 nekral-guest Exp $
+# $Id: po4a,v 1.36 2005-11-16 19:49:14 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -283,35 +283,35 @@ sub get_options {
     my @options = ();
 
     my %opts = (
-        "help"      => 0,
-        "type"      => "",
-        "debug"     => 0,
-        "verbose"   => 0,
-        "quiet"     => 0,
-        "split"     => 0,
+        "help"            => 0,
+        "type"            => "",
+        "debug"           => 0,
+        "verbose"         => 0,
+        "quiet"           => 0,
+        "split"           => 0,
         "no-translations" => 0,
-        "threshold" => 80,
-        "mastchar"  => "",
-        "locchar"   => "",
-        "addchar"   => "",
-        "options"   => {"verbose" => 0, "debug" => 0}
+        "threshold"       => 80,
+        "mastchar"        => "",
+        "locchar"         => "",
+        "addchar"         => "",
+        "options"         => {"verbose" => 0, "debug" => 0}
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     GetOptions(
-        'help|h'        => \$opts{"help"},
+        'help|h'                => \$opts{"help"},
 
         'master-charset|M=s'    => \$opts{"mastchar"},
         'localized-charset|L=s' => \$opts{"locchar"},
         'addendum-charset|A=s'  => \$opts{"addchar"},
 
-        'verbose|v'     => \@verbose,
-        'debug|d'       => \$opts{"debug"},
-        'quiet|q'       => \$opts{"quiet"},
-        'split|s'       => \$opts{"split"},
-        'keep|k=s'      => \$opts{"threshold"},
+        'verbose|v'             => \@verbose,
+        'debug|d'               => \$opts{"debug"},
+        'quiet|q'               => \$opts{"quiet"},
+        'split|s'               => \$opts{"split"},
+        'keep|k=s'              => \$opts{"threshold"},
         'no-translations'       => \$opts{"no-translations"},
-        'version|V'     => \&show_version,
-        'option|o=s'    => \@options
+        'version|V'             => \&show_version,
+        'option|o=s'            => \@options
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -602,72 +602,72 @@ foreach $lang (sort keys %po_filename) {
 }
 
 if (not $po4a_opts{"no-translations"}) {
-# update all translations
+    # update all translations
 
-foreach $lang (sort keys %po_filename) {
-    DOC: foreach my $master (sort keys %document) {
-	next unless defined $document{$master}{$lang};
+    foreach $lang (sort keys %po_filename) {
+	DOC: foreach my $master (sort keys %document) {
+	    next unless defined $document{$master}{$lang};
     
-	my %file_opts = %po4a_opts;
-	my $options = "";
-	if (defined $document{$master}{"options"}{"global"}) {
-	    $options .= $document{$master}{"options"}{"global"};
-	}
-	# append the language options
-	if (defined $document{$master}{"options"}{$lang}) {
-	    $options .= " ".$document{$master}{"options"}{$lang};
-	}
-	if (defined $options) {
-	    # also use the options provided on the command line
-	    %file_opts = get_options(@ORIGINAL_ARGV,
-	                             split(/ /, $options));
-	}
-	my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
-	                                   %{$file_opts{"options"}});
+	    my %file_opts = %po4a_opts;
+	    my $options = "";
+	    if (defined $document{$master}{"options"}{"global"}) {
+		$options .= $document{$master}{"options"}{"global"};
+	    }
+	    # append the language options
+	    if (defined $document{$master}{"options"}{$lang}) {
+		$options .= " ".$document{$master}{"options"}{$lang};
+	    }
+	    if (defined $options) {
+		# also use the options provided on the command line
+		%file_opts = get_options(@ORIGINAL_ARGV,
+		                         split(/ /, $options));
+	    }
+	    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
+		                               %{$file_opts{"options"}});
 
-	my (@file_in_name,@po_in_name);
-	push @file_in_name, $master;
-	push @po_in_name, $po_filename{$lang};
+	    my (@file_in_name,@po_in_name);
+	    push @file_in_name, $master;
+	    push @po_in_name, $po_filename{$lang};
 
-	$doc->process('file_in_name'  => \@file_in_name,
-	              'file_out_name' => $document{$master}{$lang},
-	              'po_in_name'    => \@po_in_name,
-	              'file_in_charset'  => $file_opts{"mastchar"},
-	              'file_out_charset' => $file_opts{"locchar"},
-	              'addendum_charset' => $file_opts{"addchar"});
+	    $doc->process('file_in_name'  => \@file_in_name,
+	                  'file_out_name' => $document{$master}{$lang},
+	                  'po_in_name'    => \@po_in_name,
+	                  'file_in_charset'  => $file_opts{"mastchar"},
+	                  'file_out_charset' => $file_opts{"locchar"},
+	                  'addendum_charset' => $file_opts{"addchar"});
 
-	my ($percent,$hit,$queries) = $doc->stats();
+	    my ($percent,$hit,$queries) = $doc->stats();
 
-	if ($percent<$file_opts{"threshold"})  {
-	    print wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
-		$document{$master}{$lang}, $percent, $file_opts{"threshold"});
-	    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
-	    next DOC;
-	}
+	    if ($percent<$file_opts{"threshold"})  {
+		print wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
+		    $document{$master}{$lang}, $percent, $file_opts{"threshold"});
+		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+		next DOC;
+	    }
 
-	if (defined ($document{$master}{"add_$lang"})) {
-	    foreach my $add (@{$document{$master}{"add_$lang"}}) {
-		if ( !$doc->addendum($add) ) {
-		    die wrap_msg(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
-			$add, $document{$master}{$lang});
-		    unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
-		    next DOC;
+	    if (defined ($document{$master}{"add_$lang"})) {
+		foreach my $add (@{$document{$master}{"add_$lang"}}) {
+		    if ( !$doc->addendum($add) ) {
+			die wrap_msg(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
+			    $add, $document{$master}{$lang});
+			unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+			next DOC;
+		    }
 		}
 	    }
-	}
-	if ($file_opts{"verbose"}) {
-	    if ($percent == 100) {
-		print wrap_msg(gettext("%s is %s%% translated (%s strings)."),
-		    $document{$master}{$lang}, $percent, $queries);
-	    } else {
-		print wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
-		    $document{$master}{$lang}, $percent, $hit, $queries);
+	    if ($file_opts{"verbose"}) {
+		if ($percent == 100) {
+		    print wrap_msg(gettext("%s is %s%% translated (%s strings)."),
+			$document{$master}{$lang}, $percent, $queries);
+		} else {
+		    print wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
+			$document{$master}{$lang}, $percent, $hit, $queries);
+		}
 	    }
-	}
 
-	$doc->write($document{$master}{$lang});
+	    $doc->write($document{$master}{$lang});
+	}
     }
-}
 }
   
 __END__
