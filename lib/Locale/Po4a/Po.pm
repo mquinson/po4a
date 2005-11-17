@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.48 2005-11-08 16:32:29 nekral-guest Exp $
+# $Id: Po.pm,v 1.49 2005-11-17 21:00:20 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -18,7 +18,7 @@ Locale::Po4a::Po - po file manipulation module
     my $pofile=Locale::Po4a::Po->new();
 
     # Read po file
-    $pofile->load('file.po');
+    $pofile->read('file.po');
 
     # Add an entry
     $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour', 
@@ -76,7 +76,7 @@ use warnings;
 use subs qw(makespace);
 use vars qw(@ISA @EXPORT);
 @ISA = ();
-@EXPORT = qw(load write gettext);
+@EXPORT = qw(read write gettext);
 
 use Carp qw(croak);
 use File::Path; # mkdir before write
@@ -438,7 +438,7 @@ sub filter {
 
     sub gloups {
 	my $fmt=shift;
-	my $space;
+	my $space = "";
 	for (1..$pos){
 	    $space .= ' ';
 	}
