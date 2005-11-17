@@ -88,7 +88,9 @@ sub initialize {
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'wrap'}=1;
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
-	$self->{options}{'tags'}.='
+	my ($additional_tags, $additional_inline) = ("", "");
+	my $tag;
+	foreach $tag qw(
 		<abbrev>
 		<acronym>
 		<arg>
@@ -120,6 +122,7 @@ sub initialize {
 		<refpurpose>
 		<releaseinfo>
 		<remark>
+		<replaceable>
 		<revnumber>
 		W<screen>
 		<screeninfo>
@@ -130,8 +133,12 @@ sub initialize {
 		<synopfragmentref>
 		<term>
 		<title>
-		<titleabbrev>';
-	$self->{options}{'inline'}.='
+		<titleabbrev>) {
+		if ($self->{options}{'inline'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
+			$additional_tags .= " $tag";
+		}
+	}
+	foreach $tag qw(
 		<action>
 		<affiliation>
 		<anchor>
@@ -207,7 +214,6 @@ sub initialize {
 		<property>
 		<quote>
 		<remark>
-		<replaceable>
 		<returnvalue>
 		<revhistory>
 		<sgmltag>
@@ -227,7 +233,13 @@ sub initialize {
 		<varname>
 		<wordasword>
 		<xref>
-		<year>';
+		<year>) {
+		if ($self->{options}{'tags'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
+			$additional_inline .= " $tag";
+		}
+	}
+	$self->{options}{'tags'} .= $additional_tags;
+	$self->{options}{'inline'} .= $additional_inline;
 	$self->{options}{'attributes'}.='
 		lang';
 	$self->treat_options;
