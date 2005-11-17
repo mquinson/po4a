@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.36 2005-11-16 19:49:14 nekral-guest Exp $
+# $Id: po4a,v 1.37 2005-11-17 19:27:31 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -508,15 +508,24 @@ die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and p
   unless (length $pot_filename);
 
 # make a big pot
+my $update_pot_file = 0;
 if (-e $pot_filename) {
-    print wrap_msg(gettext("Updating %s:"), $pot_filename)
-	if $po4a_opts{"verbose"};
+    foreach my $master (keys %document) {
+        if (-M $master < -M $pot_filename) {
+            $update_pot_file = 1;
+            print wrap_msg(gettext("Updating %s:"), $pot_filename)
+                if $po4a_opts{"verbose"};
+            last;
+        }
+    }
 } else {
     print wrap_msg(gettext("Creating %s:"), $pot_filename)
 	if $po4a_opts{"verbose"};
+    $update_pot_file = 1;
 }
 
 my $potfile=Locale::Po4a::Po->new();
+if ($update_pot_file) {
 foreach my $master (keys %document) {
     my %file_opts = %po4a_opts;
     my $options = $document{$master}{"options"}{"global"};
@@ -542,6 +551,7 @@ foreach my $master (keys %document) {
 $potfile->write($pot_filename);
 
 print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
+}
 
 # update all po files
 my $lang;
