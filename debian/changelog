@@ -10,6 +10,8 @@ po4a (0.23-1) UNRELEASED; urgency=low
   * If a line could not be wrapped (e.g. because of a more than xx chars
     link), the rest of the paragraph was not rewrapped.
     Thanks to Thomas Huriaux.
+  * Add a write_if_needed subroutine to check if an update is needed.
+    see #339459.
   (Text.pm)
   * A new very simple module for text documents. Closes: #243753
   (po4a-gettextize)
@@ -19,6 +21,9 @@ po4a (0.23-1) UNRELEASED; urgency=low
   (po4a)
   * Add a --no-translations that could be useful in the clean rules
   * Add a --force option that force the re-generation of the POT and PO files.
+  * If the POT is updated (see Thomas change above), check that this update is
+    really needed (avoids changing only the POT-Creation-Date field).
+    see #339459.
 
  -- Martin Quinson <mquinson@debian.org>  Tue,  8 Nov 2005 17:05:32 +0100
 

@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.49 2005-11-17 21:00:20 nekral-guest Exp $
+# $Id: Po.pm,v 1.50 2005-11-17 23:33:14 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -76,7 +76,7 @@ use warnings;
 use subs qw(makespace);
 use vars qw(@ISA @EXPORT);
 @ISA = ();
-@EXPORT = qw(read write gettext);
+@EXPORT = qw(read write write_if_needed gettext);
 
 use Carp qw(croak);
 use File::Path; # mkdir before write
@@ -301,6 +301,45 @@ sub write{
 #    if ($filename ne '-') {
 #	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s\n"),$filename,$!));
 #    }
+}
+
+=item write_if_needed($$)
+
+Like write, but if the PO or POT file already exists, the object will be
+written in a temporary file which will be compared with the existing file
+to check that the update is needed (this avoids to change a POT just to
+update a line reference or the POT-Creation-Date field).
+
+=cut
+
+sub write_if_needed {
+    my $self=shift;
+    my $filename=shift 
+	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
+
+    if (-e $filename) {
+        my ($tmp_filename, $diff);
+        (undef,$tmp_filename)=File::Temp->tempfile($filename."XXXX",
+                                                   DIR    => "/tmp",
+                                                   OPEN   => 0,
+                                                   UNLINK => 0);
+        $self->write($tmp_filename);
+        $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $filename $tmp_filename);
+        if ( $diff eq "" ) {
+            unlink $tmp_filename ||
+                die wrap_msg(dgettext("po4a","Can't unlink %s."),
+                             $tmp_filename);
+            # touch it
+            my ($atime, $mtime) = (time,time);
+            utime $atime, $mtime, $filename;
+        } else {
+            rename $tmp_filename, $filename ||
+                die wrap_msg(dgettext("po4a","Can't rename %s to %s."),
+                             $tmp_filename, $filename);
+        }
+    } else {
+        $self->write($filename);
+    }
 }
 
 =item gettextize($$)

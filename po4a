@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.41 2005-11-17 21:27:04 nekral-guest Exp $
+# $Id: po4a,v 1.42 2005-11-17 23:33:13 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -572,7 +572,11 @@ foreach my $master (keys %document) {
                   'file_in_charset'  => $file_opts{"mastchar"});
     $potfile = $doc->getpoout();
 }
-$potfile->write($pot_filename);
+if ($po4a_opts{"force"}) {
+    $potfile->write($pot_filename);
+} else {
+    $potfile->write_if_needed($pot_filename);
+}
 
 print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
 } else {
