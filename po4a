@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.40 2005-11-17 21:15:12 nekral-guest Exp $
+# $Id: po4a,v 1.41 2005-11-17 21:27:04 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -203,6 +203,25 @@ Decrease the verbosity of the program.
 
 Output some debugging information.
 
+=item -f, --force
+
+Always generate the POT and PO files, even if po4a considers it is
+not necessary.
+
+The default behavior (when --force is not specified) is the following:
+
+=over
+
+If the POT file already exists, it is regenerated if a master document is
+more recent.
+The POT file is also written in a temporary document and po4a verifies
+that the changes are really needed.
+
+The PO files are re-generated based on the POT-Creation-Date of the POT
+and PO files.
+
+=back
+
 =item --no-translations
 
 Do not generate the translated documents, only update the POT and PO files.
@@ -306,6 +325,7 @@ sub get_options {
 
         'verbose|v'             => \@verbose,
         'debug|d'               => \$opts{"debug"},
+        'force|f'               => \$opts{"force"},
         'quiet|q'               => \$opts{"quiet"},
         'split|s'               => \$opts{"split"},
         'keep|k=s'              => \$opts{"threshold"},
@@ -514,7 +534,8 @@ if (-e $pot_filename) {
     # The POT needs to be re-generated if a master document is more recent
     # than the POT.
     foreach my $master (keys %document) {
-        if ((stat $master)[9] > $modtime) {
+        if (   ($po4a_opts{"force"})
+            or ((stat $master)[9] > $modtime) ) {
             $update_pot_file = 1;
             print wrap_msg(gettext("Updating %s:"), $pot_filename)
                 if $po4a_opts{"verbose"};
