@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.37 2005-11-17 19:27:31 nekral-guest Exp $
+# $Id: po4a,v 1.38 2005-11-17 20:03:56 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -510,8 +510,11 @@ die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and p
 # make a big pot
 my $update_pot_file = 0;
 if (-e $pot_filename) {
+    my $modtime = (stat $pot_filename)[9];
+    # The POT needs to be re-generated if a master document is more recent
+    # than the POT.
     foreach my $master (keys %document) {
-        if (-M $master < -M $pot_filename) {
+        if ((stat $master)[9] > $modtime) {
             $update_pot_file = 1;
             print wrap_msg(gettext("Updating %s:"), $pot_filename)
                 if $po4a_opts{"verbose"};
