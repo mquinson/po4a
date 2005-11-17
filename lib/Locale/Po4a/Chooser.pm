@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.27 2005-05-30 07:05:22 mquinson Exp $
+# $Id: Chooser.pm,v 1.28 2005-11-17 23:44:33 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -34,6 +34,8 @@ sub new {
         $modname = 'NewsDebian';
     } elsif ($module eq 'latex') {
         $modname = 'LaTeX';
+    } elsif ($module eq 'text') {
+        $modname = 'Text';
     } else {
         $modname = ucfirst($module);
     }
