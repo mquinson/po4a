@@ -116,7 +116,6 @@ sub initialize {
 		<primary>
 		<refclass>
 		<refdescriptor>
-		<refentrytitle>
 		<refmiscinfo>
 		<refname>
 		<refpurpose>
@@ -213,6 +212,7 @@ sub initialize {
 		<prompt>
 		<property>
 		<quote>
+		<refentrytitle>
 		<remark>
 		<returnvalue>
 		<revhistory>
