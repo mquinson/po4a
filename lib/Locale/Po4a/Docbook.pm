@@ -121,7 +121,6 @@ sub initialize {
 		<refpurpose>
 		<releaseinfo>
 		<remark>
-		<replaceable>
 		<revnumber>
 		W<screen>
 		<screeninfo>
@@ -213,6 +212,7 @@ sub initialize {
 		<property>
 		<quote>
 		<refentrytitle>
+		<replaceable>
 		<remark>
 		<returnvalue>
 		<revhistory>
