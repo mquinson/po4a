@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.43 2005-11-19 18:27:53 nekral-guest Exp $
+# $Id: po4a,v 1.44 2005-11-19 21:27:50 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -642,8 +642,34 @@ foreach $lang (sort keys %po_filename) {
 
 		$pot->write($pot_filename);
 		$po->write($po_filename);
-		system ("msgmerge -U $po_filename $pot_filename --backup=none")
-		    && die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
+
+		my $cmd;
+		$cmd = "msgmerge -U $po_filename $pot_filename --backup=none";
+		my $out = qx/$cmd 2>&1/;
+		print $out if ($po4a_opts{"verbose"});
+		unless ($? == 0) {
+		    my $err = "";
+		    if ($? == -1) {
+			$err = sprintf(gettext("failed to execute '%s': %s."),
+			               $cmd, $!);
+		    } elsif ($? & 127) {
+			if ($? & 128) {
+			    $err = sprintf(gettext("'%s' died with signal %d, ".
+			                           "with coredump."),
+			                   $cmd, $? & 127);
+			} else {
+			    $err = sprintf(gettext("'%s' died with signal %d, ".
+			                           "without coredump."),
+			                   $cmd, $? & 127);
+			}
+		    } else {
+			$err = sprintf(gettext("'%s' exited with value %d."),
+			               $cmd, $? >> 8);
+		    }
+
+		    die wrap_msg(gettext("Error while running msgmerge: %s"),
+		                 $err);
+		}
 		$pores->read($po_filename);
 	    }
 	    $pores->write($po_filename{$lang}.".new");
@@ -651,15 +677,38 @@ foreach $lang (sort keys %po_filename) {
 	    unlink($po_filename) if -e $po_filename;
 
 	} else {
-	    system ("msgmerge -U ".$po_filename{$lang}." $pot_filename".
-	            ($po4a_opts{"no-backups"}?" --backup=none":"").
-	            ($po4a_opts{"verbose"}?"":" >/dev/null 2>/dev/null"))
-		&& die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
-	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang} 
-	    if $po4a_opts{"verbose"};
+	    my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename".
+	              ($po4a_opts{"no-backups"}?" --backup=none":"");
+	    my $out = qx/$cmd 2>&1/;
+	    print $out if ($po4a_opts{"verbose"});
+	    unless ($? == 0) {
+		my $err = "";
+		if ($? == -1) {
+		    $err = sprintf(gettext("failed to execute '%s': %s."),
+		                   $cmd, $!);
+		} elsif ($? & 127) {
+		    if ($? & 128) {
+			$err = sprintf(gettext("'%s' died with signal %d, ".
+		                               "with coredump."),
+			               $cmd, $? & 127);
+		    } else {
+			$err = sprintf(gettext("'%s' died with signal %d, ".
+			                       "without coredump."),
+			               $cmd, $? & 127);
+		    }
+		} else {
+		    $err = sprintf(gettext("'%s' exited with value %d."),
+		                   $cmd, $? >> 8);
+		}
+
+		die wrap_msg(gettext("Error while running msgmerge: %s"),
+		             $err);
+	    }
+	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang}
+		if $po4a_opts{"verbose"};
 	}
     } else {
-	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang}) 
+	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
 	    if $po4a_opts{"verbose"};
 	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
 	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
@@ -754,5 +803,5 @@ if ($po4a_opts{"rm-translations"}) {
     }
 }
 
-  
+
 __END__
