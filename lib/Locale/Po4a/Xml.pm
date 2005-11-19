@@ -826,9 +826,25 @@ sub treat_attributes {
 sub treat_content {
 	my $self = shift;
 	my $blank="";
+	# Indicates if the paragraph will have to be translated
+	my $translate = 0;
+
 	my ($eof,@paragraph)=$self->get_string_until('<',{remove=>1});
 
+	# Check if this has to be translated
+	if ($self->join_lines(@paragraph) !~ /^\s*$/s) {
+		my $struc = $self->get_path;
+		my $inlist = 0;
+		if ($self->tag_in_list($struc,@{$self->{tags}})) {
+			$inlist = 1;
+		}
+		if ($self->{options}{'tagsonly'} eq $inlist) {
+			$translate = 1;
+		}
+	}
+
 	while (!$eof and !$self->breaking_tag) {
+	NEXT_TAG:
 		my @text;
 		my $type = $self->tag_type;
 		my $f_extract = $tag_types[$type]->{'f_extract'};
@@ -837,18 +853,66 @@ sub treat_content {
 			# Remove the content of the comments
 			($eof, @text) = $self->extract_tag($type,1);
 		} else {
+			my ($tmpeof, @tag) = $self->extract_tag($type,0);
 			# Append the found inline tag
 			($eof,@text)=$self->get_string_until('>',
 			                                     {include=>1,
 			                                      remove=>1,
 			                                      unquoted=>1});
+			# Append or remove the opening/closing tag from
+			# the tag path
+			if ($tag_types[$type]->{'end'} eq "") {
+				if ($tag_types[$type]->{'beginning'} eq "") {
+					push @path, $self->get_tag_name(@tag);
+				} elsif ($tag_types[$type]->{'beginning'} eq "/") {
+					my $test = pop @path;
+					if (!defined($test) ||
+					    $test ne $tag[0] ) {
+						die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
+					}
+				}
+			}
 			push @paragraph, @text;
 		}
 
 		# Next tag
 		($eof,@text)=$self->get_string_until('<',{remove=>1});
 		if ($#text > 0) {
+			# Check if text (extracted after the inline tag)
+			# has to be translated
+			if ($self->join_lines(@text) !~ /^\s*$/s) {
+				my $struc = $self->get_path;
+				my $inlist = 0;
+				if ($self->tag_in_list($struc,
+				                       @{$self->{tags}})) {
+					$inlist = 1;
+				}
+				if ($self->{options}{'tagsonly'} eq $inlist) {
+					$translate = 1;
+				}
+			}
 			push @paragraph, @text;
+		}
+
+		# If the next tag closes the last inline tag, we loop again
+		# (In the case of <foo><bar> being the inline tag, we can't
+		# loop back with the "while" because breaking_tag will check
+		# for <foo><bar><bar>, hence the goto)
+		$type = $self->tag_type;
+		if (    ($tag_types[$type]->{'end'} eq "")
+		    and ($tag_types[$type]->{'beginning'} eq "/") ) {
+			my ($tmpeof, @tag) = $self->extract_tag($type,0);
+			if ($self->get_tag_name(@tag) eq $path[$#path]) {
+				# The next tag closes the last inline tag.
+				# We nned to temporarily remove the tag from
+				# the path before calling breaking_tag
+				my $t = pop @path;
+				if (!$tmpeof and !$self->breaking_tag) {
+					push @path, $t;
+					goto NEXT_TAG;
+				}
+				push @path, $t;
+			}
 		}
 	}
 
@@ -899,17 +963,8 @@ sub treat_content {
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
 		my $options = $self->tag_in_list($struc,@{$self->{tags}});
-		my $inlist;
-		if ($options eq 0) {
-			$inlist = 0;
-			$options = "";
-		} elsif ($options eq 1) {
-			$inlist = 1;
-			$options = "";
-		} else {
-			$inlist = 1;
-		}
-		if ( $self->{options}{'tagsonly'} eq $inlist ) {
+		$options = "" if ($options eq 0 or $options eq 1);
+		if ($translate) {
 			# This tag should be translated
 			$self->pushline($self->found_string(
 				$self->join_lines(@paragraph),
