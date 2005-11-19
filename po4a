@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.44 2005-11-19 21:27:50 nekral-guest Exp $
+# $Id: po4a,v 1.45 2005-11-19 21:51:34 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -25,7 +25,7 @@ interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
 The C<po4a> program is in charge of updating both the po files (to sync
-them to the original documents) and the translated documents (to sync 
+them to the original documents) and the translated documents (to sync
 them to the po files). The main point is to make the use of po4a easier
 without having to remember of the command line options.
 
@@ -33,7 +33,7 @@ It also allows you to mix documents having different formats into the same
 pot file so that you can have only one such file per project.
 
 This behaviour can be mimicked by the other tools of the po4a suite (for
-example with makefiles), but it is rather difficult to do, and exhausting to 
+example with makefiles), but it is rather difficult to do, and exhausting to
 redo the same complicated makefiles for each project using po4a.
 
 The dataflow can be summarized as follow. Any changes to the master document
@@ -47,16 +47,16 @@ The dataflow cannot be inversed in this tool, and changes in translations
 are overwritten by the content of the po files. As a matter of fact, this
 tool cannot be used to convert existing translations to the po4a system. For
 that task, please refer to L<po4a-gettextize(1)>.
- 
+
 =head1 CONFIGURATION FILE SYNTAX
 
-The (mandatory) argument is the path to the configuration file to use. 
-Its syntax aims at being simple and close to the configuration files used 
+The (mandatory) argument is the path to the configuration file to use.
+Its syntax aims at being simple and close to the configuration files used
 by the intl-tools projects.
 
-Comments in this files are noted by the char '#'. It comments everything 
+Comments in this files are noted by the char '#'. It comments everything
 until the end of the line. Lines can be continued by escaping the end of line.
-All non blank lines must begin with a [] command, followed by its arguments. 
+All non blank lines must begin with a [] command, followed by its arguments.
 (sound difficult said that way, but it is rather easy, I hope ;)
 
 =head2 Specifying the template languages
@@ -72,13 +72,13 @@ of the config file.
 
 =head2 Specifying the paths to translator inputs
 
-First, you have to specify where the translator input files (ie, the files 
+First, you have to specify where the translator input files (ie, the files
 used by translators to do their job) are located. It can be done by such a line:
 
  [po4a_paths] doc/l10n/project.doc.pot fr:doc/l10n/fr.po de:doc/l10n/de.po
 
-The command is thus 'po4a_paths'. The first argument is the path to the pot 
-file to use. All subsequent arguments are of the self-explanationary form: 
+The command is thus 'po4a_paths'. The first argument is the path to the pot
+file to use. All subsequent arguments are of the self-explanationary form:
 
     <lang>:<path to the po file for this lang>
 
@@ -89,7 +89,7 @@ way:
 
 =head2 Specifying the documents to translate
 
-You now naturally have to specify which documents are translated, their 
+You now naturally have to specify which documents are translated, their
 format, and where to put the translations. It can be made by such lines:
 
  [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \
@@ -97,11 +97,11 @@ format, and where to put the translations. It can be made by such lines:
  [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \
              add_fr:doc/l10n/script.fr.add
 
-This should be rather self-explanatory also. Note that in the second case, 
+This should be rather self-explanatory also. Note that in the second case,
 doc/l10n/script.fr.add is an addendum to add to the French version of this document.
 Please refer to po4a(7) for more information about the addenda.
 
-More formally, the format is: 
+More formally, the format is:
 
  [type: <format>] <master_doc> <lang>:<localized_doc>* add_<lang>:<addendum>*
 
@@ -441,7 +441,7 @@ open CONFIG,"$config_file" || die wrap_msg(gettext("Can't open %s: %s"), $config
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
     $nb++;
-    s/#.*//; 
+    s/#.*//;
     $line.=$_;
     $line =~ s/\t/ /g;
     $line =~ s/ +/ /g;
@@ -573,35 +573,35 @@ if (-e $pot_filename) {
 
 my $potfile=Locale::Po4a::Po->new();
 if ($update_pot_file) {
-foreach my $master (keys %document) {
-    my %file_opts = %po4a_opts;
-    my $options = $document{$master}{"options"}{"global"};
-    if (defined $options) {
-        %file_opts = get_options(@ORIGINAL_ARGV,
-                                 split(/ /, $options));
+    foreach my $master (keys %document) {
+        my %file_opts = %po4a_opts;
+        my $options = $document{$master}{"options"}{"global"};
+        if (defined $options) {
+            %file_opts = get_options(@ORIGINAL_ARGV,
+                                     split(/ /, $options));
+        }
+        my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
+                                           %{$file_opts{"options"}});
+
+
+        # We ensure that the generated po will be in utf-8 if the input document
+        # isn't entirely in ascii
+        $doc->{TT}{utf_mode} = 1;
+
+        $doc->setpoout($potfile);
+        my @file_in_name;
+        push @file_in_name, $master;
+        $doc->process('file_in_name'     => \@file_in_name,
+                      'file_in_charset'  => $file_opts{"mastchar"});
+        $potfile = $doc->getpoout();
     }
-    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
-                                       %{$file_opts{"options"}});
+    if ($po4a_opts{"force"}) {
+        $potfile->write($pot_filename);
+    } else {
+        $potfile->write_if_needed($pot_filename);
+    }
 
-
-    # We ensure that the generated po will be in utf-8 if the input document
-    # isn't entirely in ascii
-    $doc->{TT}{utf_mode} = 1;
-
-    $doc->setpoout($potfile);
-    my @file_in_name;
-    push @file_in_name, $master;
-    $doc->process('file_in_name'     => \@file_in_name,
-                  'file_in_charset'  => $file_opts{"mastchar"});
-    $potfile = $doc->getpoout();
-}
-if ($po4a_opts{"force"}) {
-    $potfile->write($pot_filename);
-} else {
-    $potfile->write_if_needed($pot_filename);
-}
-
-print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
+    print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
 } else {
     $potfile->read($pot_filename);
 }
@@ -731,7 +731,7 @@ if (not $po4a_opts{"no-translations"}) {
     foreach $lang (sort keys %po_filename) {
 	DOC: foreach my $master (sort keys %document) {
 	    next unless defined $document{$master}{$lang};
-    
+
 	    my %file_opts = %po4a_opts;
 	    my $options = "";
 	    if (defined $document{$master}{"options"}{"global"}) {
