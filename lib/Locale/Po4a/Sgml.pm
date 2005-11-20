@@ -529,11 +529,15 @@ sub parse_file {
 	    # Preload the content of the entity.
 	    my $key = $2;
 	    my $filename=$3;
+	    my $origfilename = $filename;
 	    $prolog = $1.$4;
 	    if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	        my $dir=$mastername;
 	        $dir =~ s%/[^/]*$%%;
 	        $filename="$dir/$filename";
+	        # origfile also needs to be fixed otherwise nsgmls won't
+	        # find the file.
+	        $origfile =~ s/(<!ENTITY\s*%\s*\Q$key\E\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	    }
 	    (-e $filename && open IN,"<$filename")  ||
 	      die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s (content of entity %s%s;): %s"),
@@ -596,11 +600,15 @@ sub parse_file {
 	  if ($debug{'entities'});
 	my $key = $2;
 	my $filename = $3;
+	my $origfilename = $filename;
 	$searchprolog = $1.$4;
 	if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	    my $dir=$mastername;
 	    $dir =~ s%/[^/]*$%%;
 	    $filename="$dir/$filename";
+	    # origfile also needs to be fixed otherwise nsgmls won't find
+	    # the file.
+	    $origfile =~ s/(<!ENTITY\s+$key\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	}
 	$entincl{$key}{'filename'}=$filename;
 	# Preload the content of the entity
