@@ -618,8 +618,11 @@ sub parse_file {
 
     #   Change the entities including files in the document
     foreach my $key (keys %entincl) {
-        while ($origfile =~/^(.*?)&$key;(.*)$/s) {
+        # The external entity can be referenced as &key; or &key
+        # In the second case, we must differentiate &key and &key2
+        while ($origfile =~/^(.*?)&$key(?:;(.*)$|([^-_:.A-Za-z0-9].*)$|$)/s) {
 	    my ($begin,$end)=($1,$2);
+	    $end = "" unless (defined $end);
 
 	    # add the refs
 	    my $len  = $entincl{$key}{'length'}; # number added by the inclusion
