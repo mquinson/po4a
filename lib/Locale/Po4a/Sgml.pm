@@ -523,7 +523,7 @@ sub parse_file {
 	$prolog =~ s/{PO4A-percent}/%/sg;
         print STDERR "prolog=>>>>$prolog<<<<\n"
 	      if ($debug{'entities'});
-	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {  #})"{ (Stupid editor)
+	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*SYSTEM\s*"([^>"]*)"\s*>(.*)$/is) {  #})"{ (Stupid editor)
 	    print STDERR "Seen the definition entity of prolog inclusion '$2' (=$3)\n"
 	      if ($debug{'entities'});
 	    # Preload the content of the entity.
@@ -550,7 +550,7 @@ sub parse_file {
 	    $moretodo = 1;
 	    next PROLOGENTITY;
 	}
-	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)">(.*)$/is) {  #})"{ (Stupid editor)
+	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)"\s>(.*)$/is) {  #})"{ (Stupid editor)
 	    print STDERR "Seen the definition entity of prolog definition '$2' (=$3)\n"
 	      if ($debug{'entities'});
 	    # Preload the content of the entity.
@@ -591,7 +591,7 @@ sub parse_file {
     #   search the file inclusion entities
     my %entincl;
     my $searchprolog=$prolog;
-    while ($searchprolog =~ /(.*?)<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)">(.*)$/is) {  #})"{
+    while ($searchprolog =~ /(.*?)<!ENTITY\s(\S*)\s*SYSTEM\s*"([^>"]*)"\s*>(.*)$/is) {  #})"{
 	print STDERR "Seen the entity of inclusion $2 (=$3)\n"
 	  if ($debug{'entities'});
 	my $key = $2;
@@ -752,7 +752,7 @@ sub parse_file {
         $self->pushline($1."\n") if (length($1));
         $prolog=$2;					       
         my ($post) = $3;			
-        while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)">(.*)$/is) { #" ){ 
+        while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)"\s*>(.*)$/is) { #" ){ 
 	   $self->pushline($1) if length($1);
 	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
 	   warn "Seen text entity $2\n" if ($debug{'entities'});
