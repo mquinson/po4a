@@ -385,7 +385,7 @@ sub parse_file {
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
 					    "name email footnote ".
-			                    "strong ftpsite ftppath",
+			                    "strong ftpsite ftppath qref",
 			     "indent"    => "appendix ".
 	                                    "book ".
 	                                    "chapt copyright ".
