@@ -624,6 +624,12 @@ sub parse_file {
 	    my ($begin,$end)=($1,$2);
 	    $end = "" unless (defined $end);
 
+	    if ($begin =~ m/.*<!--(.*?)$/s and $1 !~ m/-->/s) {
+		# This entity is commented. Just remove it.
+		$origfile = $begin.$end;
+		next;
+	    }
+
 	    # add the refs
 	    my $len  = $entincl{$key}{'length'}; # number added by the inclusion
 	    my $pre  = ($begin =~ tr/\n/\n/); # number of \n
