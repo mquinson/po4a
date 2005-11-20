@@ -1007,6 +1007,11 @@ sub parse_file {
 	    
 	}
 
+	elsif ($event->type eq 'pi') {
+	    my $pi = $event->data;
+	    $buffer .= "<?$pi>";
+	}
+
 	else {
 	    die wrap_ref_mod($refs[$parse->line], "po4a::sgml", dgettext("po4a","Unknown SGML event type: %s"), $event->type);
 
