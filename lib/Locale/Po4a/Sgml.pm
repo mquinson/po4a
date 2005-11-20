@@ -530,7 +530,7 @@ sub parse_file {
 	    my $key = $2;
 	    my $filename=$3;
 	    $prolog = $1.$4;
-	    if ($filename !~ m%/% && $mastername =~ m%/%) {
+	    if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	        my $dir=$mastername;
 	        $dir =~ s%/[^/]*$%%;
 	        $filename="$dir/$filename";
@@ -597,7 +597,7 @@ sub parse_file {
 	my $key = $2;
 	my $filename = $3;
 	$searchprolog = $1.$4;
-	if ($filename !~ m%/% && $mastername =~ m%/%) {
+	if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	    my $dir=$mastername;
 	    $dir =~ s%/[^/]*$%%;
 	    $filename="$dir/$filename";
