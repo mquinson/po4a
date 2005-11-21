@@ -470,9 +470,9 @@ sub parse_file {
 
     # Prepare the reference indirection stuff
     my @refs;
-    my @lines = split(/\n/, $origfile);
+    my $length = ($origfile =~ tr/\n/\n/);
     print "XX Prepare reference indirection stuff\n" if $debug{'refs'};
-    for (my $i=1; $i<=scalar @lines; $i++) {
+    for (my $i=1; $i<=$length; $i++) {
 	push @refs,"$mastername:$i";
 	print "$mastername:$i\n" if $debug{'refs'};
     }
@@ -618,8 +618,7 @@ sub parse_file {
 	local $/ = undef;
 	$entincl{$key}{'content'} = <IN>;
 	close IN;
-	@lines= split(/\n/,$entincl{$key}{'content'});
-	$entincl{$key}{'length'} = scalar @lines;
+	$entincl{$key}{'length'} = ($entincl{$key}{'content'} =~ tr/\n/\n/);
 	print STDERR "read $filename (content of \&$key;, $entincl{$key}{'length'} lines long)\n" 
 	  if ($debug{'entities'});
     }
@@ -652,7 +651,7 @@ sub parse_file {
 	    # Add the references of the added lines
 	    my $i;
 	    for ($i=0; $i<$len; $i++) {
-		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+1);
+		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i);
 	    }
 
 	    if ($begin !~ m/\n[ \t]*$/s) {
