@@ -133,7 +133,11 @@ my $builder = Module::Build->subclass
 	    $self->depends_on('manpo');
 	    use Pod::Man;
 
-	    my $options = "-v -f pod -M utf-8 -L iso8859-1";
+	    my %charsets = ( 'default' => 'iso8859-1',
+	                     'pl'      => 'iso8859-2'
+			   );
+
+	    my $options = "-v -f pod -M utf-8";
 
 	    #get the languages
 	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
@@ -152,9 +156,10 @@ my $builder = Module::Build->subclass
 		center => "Po4a Tools", section => "1p");
 
 	    foreach $lang (@langs) {
+	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
 		print ("X Translate binary manpages to $lang\n");
 		foreach $file (keys(%{$self->script_files()})) {
-		    system("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
+		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$file") {
 			system("mkdir -p blib/man/$lang/man1") && die;
@@ -170,11 +175,12 @@ my $builder = Module::Build->subclass
 		center => "Po4a Tools", section => "3pm");
 
 	    foreach $lang (@langs) {
+	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
 		print ("X Translate module manpages to $lang\n");
 		foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
 		    $file =~ /.*\/(.*)\.pm$/;
 		    my $filename = $1;
-		    system("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
+		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			system ("mkdir -p blib/man/$lang/man3") && die;
@@ -199,8 +205,9 @@ my $builder = Module::Build->subclass
 		$parser->parse_from_file ($file, "blib/man/man7/$filename");
 		system ("gzip -9 -f blib/man/man7/$filename") && die;
 		foreach $lang (@langs) {
+	            my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
 		    print "X Translate $file to $lang\n";
-		    system ("PERL5LIB=lib perl po4a-translate $options -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
+		    system ("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
 		      && die;
 		    if (-e "blib/man/$filename") {
 			`mkdir -p blib/man/$lang/man7`;
