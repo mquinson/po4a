@@ -381,6 +381,13 @@ sub parse_file {
 	    $pos++;
 	}
     }
+
+    # Add the definition of new tags that will be used for the
+    # conditionnal inclusions
+    if ($origfile =~ /^.*<!DOCTYPE[^[]*\[/is) {
+        $origfile =~ s/^(.*<!DOCTYPE[^[]*\[)/$1 <!ELEMENT PO4ABEG - o empty> <!ATTLIST PO4ABEG name CDATA #REQUIRED> <!ELEMENT PO4AEND - o empty>/is;
+    }
+
     print STDERR "PROLOG=$prolog\n------------\n" if ($debug{'generic'});
 
     # Configure the tags for this dtd
@@ -391,7 +398,7 @@ sub parse_file {
 			     "empty"     => "date ref manref url toc",
 			     "verbatim"  => "example",
 			     "ignore"    => "package prgn file tt em var ".
-					    "name email footnote ".
+					    "name email footnote po4aend po4abeg ".
 			                    "strong ftpsite ftppath qref",
 			     "indent"    => "appendix ".
 	                                    "book ".
@@ -442,7 +449,7 @@ sub parse_file {
 	                                    "refentrytitle refname refpurpose screen title",
 			     "ignore"    => "action affiliation anchor application author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
-	                                    "database ".
+	                                    "database po4abeg po4aend ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
 	                                    "filename firstname firstterm footnote footnoteref foreignphrase function ".
 	                                    "glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu ".
@@ -491,13 +498,16 @@ sub parse_file {
     }
 
     # protect the conditional inclusions in the file
-    $origfile =~ s/<!\[(\s*[^\[]+)\[/{PO4A-beg-$1}/g; # cond. incl. starts
-    $origfile =~ s/\]\]>/{PO4A-end}/g;                # cond. incl. end
+    $origfile =~ s/<!\[\s*IGNORE\s*\[/{PO4A-beg-IGNORE}/g; # cond. incl. starts
+    $origfile =~ s/<!\[\s*CDATA\s*\[/{PO4A-beg-CDATA}/g; # cond. incl. starts
+    $origfile =~ s/<!\[\s*RCDATA\s*\[/{PO4A-beg-RCDATA}/g; # cond. incl. starts
+    $origfile =~ s/<!\[\s*([^\[\s]+)\s*\[/<po4abeg name="$1">/g; # cond. incl. starts
+    $origfile =~ s/\]\]>/<po4aend>/g;                # cond. incl. end
 
     # Remove <![ IGNORE [ sections
     # FIXME: we don't support included PO4A-beg-
     my $tmp1 = $origfile;
-    while ($tmp1 =~ m/^(.*?)({PO4A-beg-\s*IGNORE\s*}(?:.+?){PO4A-end})(.*)$/s)
+    while ($tmp1 =~ m/^(.*?)({PO4A-beg-\s*IGNORE\s*}(?:.+?)<po4aend>)(.*)$/s)
     {
         my ($begin,$ignored,$end) = ($1, $2, $3);
         my @begin   = split(/\n/, $begin);
@@ -516,7 +526,7 @@ sub parse_file {
     # correspond to tags or entities delimiters.
     $tmp1 = $origfile;
     $origfile = "";
-    while ($tmp1 =~ m/^(.*?{PO4A-beg-\s*(?:CDATA|RCDATA)\s*})(.+?)({PO4A-end}.*)$/s) {
+    while ($tmp1 =~ m/^(.*?{PO4A-beg-\s*(?:CDATA|RCDATA)\s*})(.+?)(<po4aend>.*)$/s) {
         my ($begin, $tmp) = ($1, $2);
         $tmp1 = $3;
         $tmp =~ s/</{PO4A-lt}/gs;
@@ -923,6 +933,8 @@ sub parse_file {
 		$self->pushline( ($verb>1?"": (" " x $indent)).$tag.($verb?"":"\n"));
 		$indent ++ unless $empty{$event->data->name()} ;
 	    }  else {
+		$tag =~ s/<po4abeg name="([^"]+)">/<![ $1 [/;
+		$tag =~ s/<po4aend>/]]>/;
 		$buffer .= $tag;
 	    }
 	} # end of type eq 'start_element'
@@ -975,6 +987,7 @@ sub parse_file {
 		    if (scalar @open);
 	    }
 
+	    unless ($event->data->name() =~ m/^(PO4ABEG|PO4AEND)$/si) {
 	    if ($indent{$event->data->name()}) {
 		$indent -- ;
 		# add indenting space only when not in verbatim
@@ -984,6 +997,7 @@ sub parse_file {
 		$buffer .= $tag;
 	    }	    
 	    $verb-- if $verbatim{$event->data->name()};
+	    }
 	} # end of type eq 'end_element'
 	
 	elsif ($event->type eq 'cdata') {
