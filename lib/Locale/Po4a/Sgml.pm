@@ -113,6 +113,12 @@ for the translator comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
 "<title>&Aacute;</title>", even if I doubt such things to ever happen...
 
+=item ignore-inclusion
+
+Space separated list of entities that won't be inlined.
+Use this option with caution: it may cause nsgmls (used internally) to add
+tags and render the output document invalid.
+
 =back
 
 =head1 STATUS OF THIS MODULE
@@ -221,6 +227,7 @@ sub initialize {
     $self->{options}{'empty'}='';
     $self->{options}{'verbatim'}='';
     $self->{options}{'ignore'}='';
+    $self->{options}{'ignore-inclusion'}='';
 
     $self->{options}{'include-all'}='';
 
@@ -468,6 +475,12 @@ sub parse_file {
 	}
     }
 
+    # Hash of the file entities that won't be included
+    my %ignored_inclusion = ();
+    foreach (split / /,$self->{options}{'ignore-inclusion'}) {
+        $ignored_inclusion{$_} = 1;
+    }
+
     # Prepare the reference indirection stuff
     my @refs;
     my $length = ($origfile =~ tr/\n/\n/);
@@ -530,7 +543,7 @@ sub parse_file {
 	    my $key = $2;
 	    my $filename=$3;
 	    my $origfilename = $filename;
-	    $prolog = $1.$4;
+	    my ($begin, $end) = ($1, $4);
 	    if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	        my $dir=$mastername;
 	        $dir =~ s%/[^/]*$%%;
@@ -539,6 +552,13 @@ sub parse_file {
 	        # find the file.
 	        $origfile =~ s/(<!ENTITY\s*%\s*\Q$key\E\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	    }
+	    if (defined $ignored_inclusion{$key}) {
+		# We won't expand this entity.
+		# And we avoid nsgmls to do so.
+		$prolog = "$begin<!--{PO4A-ent-beg-$key}$filename".
+		          "{PO4A-ent-end}-->$end";
+	    } else {
+	    $prolog = $begin.$end;
 	    (-e $filename && open IN,"<$filename")  ||
 	      die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s (content of entity %s%s;): %s"),
 		  $filename, '%', $key, $!);
@@ -553,6 +573,7 @@ sub parse_file {
 	      if ($debug{'entities'});
 	    $moretodo = 1;
 	    next PROLOGENTITY;
+	    }
 	}
 	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)"\s>(.*)$/is) {  #})"{ (Stupid editor)
 	    print STDERR "Seen the definition entity of prolog definition '$2' (=$3)\n"
@@ -586,10 +607,11 @@ sub parse_file {
 	    }
 	}
     }
+    $prolog =~ s/<!--{PO4A-ent-beg-(.*?)}(.*?){PO4A-ent-end}-->/<!ENTITY % $1 SYSTEM "$2">/g;
     # Unprotect undefined inclusions, and die of them
     $prolog =~ s/{PO4A-percent}/%/sg;
     if ($prolog =~ /%([^;\s]*);/) {
-       die wrap_mod("po4a::sgml", dgettext("po4a","unrecognized prolog inclusion entity: %%%s;"), $1);
+       die wrap_mod("po4a::sgml", dgettext("po4a","unrecognized prolog inclusion entity: %%%s;"), $1) unless ($ignored_inclusion{$1});
     }
     # Protect &entities; (all but the ones asking for a file inclusion)
     #   search the file inclusion entities
@@ -601,7 +623,7 @@ sub parse_file {
 	my $key = $2;
 	my $filename = $3;
 	my $origfilename = $filename;
-	$searchprolog = $1.$4;
+	$searchprolog = $4;
 	if ($filename !~ m%^/% && $mastername =~ m%/%) {
 	    my $dir=$mastername;
 	    $dir =~ s%/[^/]*$%%;
@@ -610,6 +632,7 @@ sub parse_file {
 	    # the file.
 	    $origfile =~ s/(<!ENTITY\s+$key\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	}
+	if (not defined $ignored_inclusion{$2}) {
 	$entincl{$key}{'filename'}=$filename;
 	# Preload the content of the entity
 	(-e $filename && open IN,"<$filename")  ||
@@ -621,6 +644,7 @@ sub parse_file {
 	$entincl{$key}{'length'} = ($entincl{$key}{'content'} =~ tr/\n/\n/);
 	print STDERR "read $filename (content of \&$key;, $entincl{$key}{'length'} lines long)\n" 
 	  if ($debug{'entities'});
+	}
     }
 
     #   Change the entities including files in the document
