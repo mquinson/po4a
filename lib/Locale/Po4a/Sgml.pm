@@ -384,8 +384,8 @@ sub parse_file {
 
     # Add the definition of new tags that will be used for the
     # conditionnal inclusions
-    if ($origfile =~ /^.*<!DOCTYPE[^[]*\[/is) {
-        $origfile =~ s/^(.*<!DOCTYPE[^[]*\[)/$1 <!ELEMENT PO4ABEG - o empty> <!ATTLIST PO4ABEG name CDATA #REQUIRED> <!ELEMENT PO4AEND - o empty>/is;
+    if ($origfile =~ /^.*<!DOCTYPE[^[>]*\[/is) {
+        $origfile =~ s/^(.*<!DOCTYPE[^[>]*\[)/$1 <!ELEMENT PO4ABEG - o empty> <!ATTLIST PO4ABEG name CDATA #REQUIRED> <!ELEMENT PO4AEND - o empty>/is;
     }
 
     print STDERR "PROLOG=$prolog\n------------\n" if ($debug{'generic'});
