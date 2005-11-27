@@ -661,9 +661,10 @@ sub parse_file {
     foreach my $key (keys %entincl) {
         # The external entity can be referenced as &key; or &key
         # In the second case, we must differentiate &key and &key2
-        while ($origfile =~/^(.*?)&$key(?:;(.*)$|([^-_:.A-Za-z0-9].*)$|$)/s) {
+        while ($origfile =~/^(.*?)&$key(;.*$|[^-_:.A-Za-z0-9].*$|$)/s) {
 	    my ($begin,$end)=($1,$2);
 	    $end = "" unless (defined $end);
+	    $end =~ s/^;//s;
 
 	    if ($begin =~ m/.*<!--(.*?)$/s and $1 !~ m/-->/s) {
 		# This entity is commented. Just remove it.
