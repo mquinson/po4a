@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.45 2005-11-19 21:51:34 nekral-guest Exp $
+# $Id: po4a,v 1.46 2005-11-27 15:59:28 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -238,6 +238,12 @@ Do not generate the .po~ backup files.
 
 Remove the .po~ backup files (implies --no-backups).
 
+=item --variable I<var>=I<value>
+
+Define a variable that will be expanded in the po4a configuration file.
+Every occurrence of I<$(var)> will be replaced by I<value>.
+This option can be used multiple times.
+
 =back
 
 =head1 SHORTCOMINGS
@@ -312,6 +318,7 @@ sub get_options {
     # temporary array for GetOptions
     my @verbose = ();
     my @options = ();
+    my @variables = ();
 
     my %opts = (
         "help"            => 0,
@@ -328,7 +335,8 @@ sub get_options {
         "mastchar"        => "",
         "locchar"         => "",
         "addchar"         => "",
-        "options"         => {"verbose" => 0, "debug" => 0}
+        "options"         => {"verbose" => 0, "debug" => 0},
+        "variables"       => {}
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     GetOptions(
@@ -349,7 +357,8 @@ sub get_options {
         'no-backups'            => \$opts{"no-backups"},
         'rm-backups'            => \$opts{"rm-backups"},
         'version|V'             => \&show_version,
-        'option|o=s'            => \@options
+        'option|o=s'            => \@options,
+        'variable=s'            => \@variables
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -366,6 +375,12 @@ sub get_options {
             $opts{"options"}{$1}="$2";
         } else {
             $opts{"options"}{$_}=1;
+        }
+    }
+
+    foreach (@variables) {
+        if (m/^([^=]*)=(.*)$/) {
+            $opts{"variables"}{$1}="$2";
         }
     }
 
@@ -445,6 +460,14 @@ while (<CONFIG>) {
     $line.=$_;
     $line =~ s/\t/ /g;
     $line =~ s/ +/ /g;
+    while ($line =~ m/\$\((\w+)\)/) {
+        if (defined $po4a_opts{"variables"}{$1}) {
+            $line =~ s/\$\((\Q$1\E)\)/$po4a_opts{"variables"}{$1}/g;
+        } else {
+           die wrap_ref_mod("$config_file:$nb", "",
+                            gettext("Unknown variable: %s"), $1);
+        }
+    }
     $line =~ s/^ //;
     $line =~ s/ $//;
     chomp($line);
