@@ -401,7 +401,11 @@ sub tag_trans_xmlhead {
 	if (defined $in_charset) {
 		$tag =~ s/$in_charset/$out_charset/;
 	} else {
-		$tag.= " encoding=\"$out_charset\"";
+		if ($tag =~ m/standalone/) {
+			$tag =~ s/(standalone)/encoding="$out_charset" $1/;
+		} else {
+			$tag.= " encoding=\"$out_charset\"";
+		}
 	}
 
 	return $tag;
