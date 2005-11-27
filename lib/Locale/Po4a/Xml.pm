@@ -439,7 +439,9 @@ sub tag_trans_doctype {
 	}
 	my $i = 0;
 	while ( $i < $#tag ) {
-		if ( $tag[$i] =~ /^(<!ENTITY\s+)(.*)$/is ) {
+		my $t = $tag[$i];
+		my $ref = $tag[$i+1];
+		if ( $t =~ /^(\s*<!ENTITY\s+)(.*)$/is ) {
 			my $part1 = $1;
 			my $part2 = $2;
 			my $includenow = 0;
@@ -459,11 +461,24 @@ sub tag_trans_doctype {
 				$part2 = $2;
 				$file = 1;
 			}
+			if ((not $file) and (not $includenow)) {
+			    if ($part2 =~ m/"(.*)"(\s*>\s*)/) {
+				my $comment = "Content of the $name entity";
+				my $text = $1;
+				$part2 = $2;
+				$text = $self->translate($text,
+				                         $ref,
+				                         $comment,
+				                         'wrap'=>1);
+				$t = $part1."\"$text\"$part2";
+			    }
+			}
 #			print $part1."\n";
 #			print $name."\n";
 #			print $part2."\n";
 		}
-		$i++;
+		$tag[$i] = $t;
+		$i += 2;
 	}
 	return $self->join_lines(@tag);
 }
@@ -1176,6 +1191,11 @@ The writing of derivate modules is rather limited.
 =head1 TODO LIST
 
 DOCTYPE (ENTITIES)
+
+There is a minimal support for the translation of entities. They are
+translated as a whole, and tags are not taken into account. Multilines
+entities are not supported and entities are always rewrapped during the
+translation.
 
 INCLUDED FILES
 
