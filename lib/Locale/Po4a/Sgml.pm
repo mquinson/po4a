@@ -933,11 +933,11 @@ sub parse_file {
 		$self->pushline( ($verb>1?"": (" " x $indent)).$tag.($verb?"":"\n"));
 		$indent ++ unless $empty{$event->data->name()} ;
 	    }  else {
-		$tag =~ s/<po4abeg name="([^"]+)">/<![ $1 [/;
+		$tag =~ s/<po4abeg name="([^"]+)">/<![ $1 [/; #"; Stupid emacs
 		$tag =~ s/<po4aend>/]]>/;
 		$buffer .= $tag;
 	    }
-	} # end of type eq 'start_element'
+	} # end of type eq 'start_element' 
 	
 	elsif ($event->type eq 'end_element') {
 	    my $tag = ($empty{$event->data->name()} 
@@ -988,15 +988,15 @@ sub parse_file {
 	    }
 
 	    unless ($event->data->name() =~ m/^(PO4ABEG|PO4AEND)$/si) {
-	    if ($indent{$event->data->name()}) {
-		$indent -- ;
-		# add indenting space only when not in verbatim
-		# add the tailing \n only if out of verbatim after that tag
-		$self->pushline(($verb?"":(" " x $indent)).$tag.($verb>1?"":"\n"));
-	    }  else {
-		$buffer .= $tag;
-	    }	    
-	    $verb-- if $verbatim{$event->data->name()};
+		if ($indent{$event->data->name()}) {
+		    $indent -- ;
+		    # add indenting space only when not in verbatim
+		    # add the tailing \n only if out of verbatim after that tag
+		    $self->pushline(($verb?"":(" " x $indent)).$tag.($verb>1?"":"\n"));
+		}  else {
+    		    $buffer .= $tag;
+	    	}	    
+		$verb-- if $verbatim{$event->data->name()};
 	    }
 	} # end of type eq 'end_element'
 	
