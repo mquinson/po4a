@@ -562,7 +562,7 @@ sub parse_file {
 	        # find the file.
 	        $origfile =~ s/(<!ENTITY\s*%\s*\Q$key\E\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	    }
-	    if (defined $ignored_inclusion{$key}) {
+	    if (defined $ignored_inclusion{$key} || !-e $filename) {
 		# We won't expand this entity.
 		# And we avoid nsgmls to do so.
 		$prolog = "$begin<!--{PO4A-ent-beg-$key}$filename".
@@ -642,7 +642,7 @@ sub parse_file {
 	    # the file.
 	    $origfile =~ s/(<!ENTITY\s+$key\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	}
-	if (not defined $ignored_inclusion{$2}) {
+	if ((not defined $ignored_inclusion{$2}) and (-e $filename)) {
 	$entincl{$key}{'filename'}=$filename;
 	# Preload the content of the entity
 	(-e $filename && open IN,"<$filename")  ||
