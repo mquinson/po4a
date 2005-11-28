@@ -800,7 +800,8 @@ sub parse_file {
 	   warn "Seen text entity $2\n" if ($debug{'entities'});
 	   $prolog = $4;
 	}
-        $self->pushline($post."\n") if (length($post));
+	$prolog .= $post;
+	$self->pushline($prolog."\n") if (length($prolog));
     } else {
 	warn "No entity declaration detected in ~~$prolog~~...\n" if ($debug{'entities'});
 	$self->pushline($prolog) if length($prolog);
