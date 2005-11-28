@@ -735,7 +735,8 @@ sub parse_file {
 	}
     }
 
-    my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4asgml-XXXX",
+    my ($tmpfh,$tmpfile)=File::Temp::tempfile("po4a-XXXX",
+                                              SUFFIX => ".sgml",
                                               DIR    => "/tmp",
                                               UNLINK => 0);
     print $tmpfh $origfile;
