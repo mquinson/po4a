@@ -210,10 +210,11 @@ if ($@) {
 
 use File::Temp;
 
-my %debug=('tag' => 0,
-	   'generic' => 0,
+my %debug=('tag'      => 0,
+	   'generic'  => 0,
 	   'entities' => 0,
-	   'refs'   => 0);
+	   'refs'     => 0,
+	   'nsgmls'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
 
@@ -740,8 +741,9 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
 
-    my $cmd="nsgmls -l -E 0 -wno-valid <$tmpfile 2>/dev/null|";
-    print STDERR "CMD=$cmd\n" if ($debug{'generic'});
+    my $cmd="nsgmls -l -E 0 -wno-valid < $tmpfile".
+            ($debug{'nsgmls'}?"":" 2>/dev/null")." |";
+    print STDERR "CMD=$cmd\n" if ($debug{'generic'} or $debug{'nsgmls'});
 
     open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run nsgmls: %s"), $!);
 
@@ -1083,7 +1085,7 @@ sub parse_file {
                   "functional.  Please make sure that nsgmls is present and ".
                   "does not produce any error (with the -wno-valid option), ".
                   "and report a bug otherwise.  Continuing...")) if ($? != 0);
-    unlink ($tmpfile) unless $debug{'refs'};
+    unlink ($tmpfile) unless ($debug{'refs'} or $debug{'nsgmls'});
 }
 
 sub end_paragraph {
