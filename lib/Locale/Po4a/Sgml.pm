@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-# Po4a::Sgml.pm 
-# 
+# Po4a::Sgml.pm
+#
 # extract and translate translatable strings from an sgml based document.
-# 
+#
 # This code is an adapted version of sgmlspl (SGML postprocessor for the
 #   SGMLS and NSGMLS parsers) which was:
 #
 # Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
-# 
+#
 # The adaptation for po4a was done by Denis Barbier <barbier@linuxfr.org>,
 # Martin Quinson (mquinson#debian.org) and others.
 #
@@ -128,7 +128,7 @@ same. But there are still some problems:
 
 =over 2
 
-=item * 
+=item *
 
 the error output of nsgmls is redirected to /dev/null, which is clearly
 bad. I don't know how to avoid that.
@@ -137,7 +137,7 @@ The problem is that I have to "protect" the conditional inclusions (ie, the
 C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise
 nsgmls eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
-C<{PO4A-end}>. 
+C<{PO4A-end}>.
 
 The problem with this is that the C<{PO4A-end}> and such I add are valid in
 the document (not in a E<lt>pE<gt> tag or so).
@@ -164,14 +164,14 @@ above, fixing that should be quite easy.
 
 I did test docbook against the SAG (System Administrator Guide) only, but
 this document is quite big, and should use most of the docbook
-specificities. 
+specificities.
 
 For debiandoc, I tested some of the manuals from the DDP, but not all yet.
 
-=item * 
+=item *
 
 In case of file inclusion, string reference of messages in po files (ie,
-lines like C<#: en/titletoc.sgml:9460>) will be wrong. 
+lines like C<#: en/titletoc.sgml:9460>) will be wrong.
 
 This is because I preprocess the file to protect the conditional inclusion
 (ie, the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
@@ -210,17 +210,17 @@ if ($@) {
 
 use File::Temp;
 
-my %debug=('tag' => 0, 
+my %debug=('tag' => 0,
 	   'generic' => 0,
 	   'entities' => 0,
-           'refs'   => 0);
+	   'refs'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
 
 sub initialize {
     my $self = shift;
     my %options = @_;
-    
+
     $self->{options}{'translate'}='';
     $self->{options}{'section'}='';
     $self->{options}{'indent'}='';
@@ -235,7 +235,7 @@ sub initialize {
 
     $self->{options}{'verbose'}='';
     $self->{options}{'debug'}='';
-    
+
     foreach my $opt (keys %options) {
 	if ($options{$opt}) {
 	    die wrap_mod("po4a::sgml", dgettext ("po4a", "Unknown option: %s"), $opt) unless exists $self->{options}{$opt};
@@ -268,7 +268,7 @@ sub translate {
     my ($self)=(shift);
     my ($string,$ref,$type)=(shift,shift,shift);
     my (%options)=@_;
- 
+
     # don't translate entries composed of one entity
     if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
 	 && !($self->{options}{'include-all'}) ){
@@ -313,13 +313,13 @@ sub set_tags_kind {
     foreach (qw(translate empty section verbatim ignore attributes qualify)) {
 	$self->{SGML}->{k}{$_} = $self->{options}{$_} ? $self->{options}{$_}.' ' : '';
     }
-    
+
     foreach (keys %kinds) {
 	die "po4a::sgml: internal error: set_tags_kind called with unrecognized arg $_"
 	    if ($_ !~ /^(translate|empty|verbatim|ignore|indent|attributes|qualify)$/);
-	
+
 	$self->{SGML}->{k}{$_} .= $kinds{$_};
-    }    
+    }
 }
 
 #
@@ -352,10 +352,10 @@ sub parse_file {
 	$prolog=$origfile;
 	my $lvl;    # number of '<' seen without matching '>'
 	my $pos = 0;  # where in the document (in chars) while detecting prolog boundaries
-	
+
 	unless ($prolog =~ s/^(.*<!DOCTYPE).*$/$1/is) {
 	    die wrap_mod("po4a::sgml", dgettext("po4a",
-	    	"This file is not a master SGML document (no DOCTYPE). ".
+		"This file is not a master SGML document (no DOCTYPE). ".
 		"It may be a file to be included by another one, in which case it should not be passed to po4a directly. Text from included files is extracted/translated when handling the master file including them."));
 	}
 	$pos += length($prolog);
@@ -419,13 +419,13 @@ sub parse_file {
 	                                    "holder ".
 	                                    "member msgaud msglevel msgorig ".
 	                                    "option orgname othername ".
-	                                    "para phrase pubdate publishername primary ". 
+	                                    "para phrase pubdate publishername primary ".
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
 	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref synopsis ".
 	                                    "term tertiary title titleabbrev ".
 	                                    "contrib epigraph",
-			     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
-			     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
+	                     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
+	                     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
 	                                    "dedication ".
@@ -445,9 +445,9 @@ sub parse_file {
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
-			     "verbatim"  => "address holder literallayout option programlisting ".
+	                     "verbatim"  => "address holder literallayout option programlisting ".
 	                                    "refentrytitle refname refpurpose screen title",
-			     "ignore"    => "action affiliation anchor application author authorinitials ".
+	                     "ignore"    => "action affiliation anchor application author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database po4abeg po4aend ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
@@ -469,8 +469,8 @@ sub parse_file {
 	                                    "varname ".
 	                                    "wordasword ".
 	                                    "xref ".
-                                            "year",
-                             "attributes" =>"<(article|book)>lang");
+	                                    "year",
+	                     "attributes" =>"<(article|book)>lang");
 
     } else {
 	if ($self->{options}{'force'}) {
@@ -570,8 +570,10 @@ sub parse_file {
 	    } else {
 	    $prolog = $begin.$end;
 	    (-e $filename && open IN,"<$filename")  ||
-	      die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s (content of entity %s%s;): %s"),
-		  $filename, '%', $key, $!);
+	      die wrap_mod("po4a::sgml",
+	                   dgettext("po4a",
+	                       "Can't open %s (content of entity %s%s;): %s"),
+	                   $filename, '%', $key, $!);
 	    local $/ = undef;
 	    $prologentincl{$key} = <IN>;
 	    close IN;
@@ -621,7 +623,11 @@ sub parse_file {
     # Unprotect undefined inclusions, and die of them
     $prolog =~ s/{PO4A-percent}/%/sg;
     if ($prolog =~ /%([^;\s]*);/) {
-       die wrap_mod("po4a::sgml", dgettext("po4a","unrecognized prolog inclusion entity: %%%s;"), $1) unless ($ignored_inclusion{$1});
+        die wrap_mod("po4a::sgml",
+                     dgettext("po4a",
+                              "unrecognized prolog inclusion entity: %%%s;"),
+                     $1)
+           unless ($ignored_inclusion{$1});
     }
     # Protect &entities; (all but the ones asking for a file inclusion)
     #   search the file inclusion entities
@@ -643,17 +649,19 @@ sub parse_file {
 	    $origfile =~ s/(<!ENTITY\s+$key\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	}
 	if ((not defined $ignored_inclusion{$2}) and (-e $filename)) {
-	$entincl{$key}{'filename'}=$filename;
-	# Preload the content of the entity
-	(-e $filename && open IN,"<$filename")  ||
-	  die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s (content of entity %s%s;): %s"),
-	      $filename, '&', $key, $!);
-	local $/ = undef;
-	$entincl{$key}{'content'} = <IN>;
-	close IN;
-	$entincl{$key}{'length'} = ($entincl{$key}{'content'} =~ tr/\n/\n/);
-	print STDERR "read $filename (content of \&$key;, $entincl{$key}{'length'} lines long)\n" 
-	  if ($debug{'entities'});
+	    $entincl{$key}{'filename'}=$filename;
+	    # Preload the content of the entity
+	    (-e $filename && open IN,"<$filename")  ||
+		die wrap_mod("po4a::sgml",
+		       dgettext("po4a",
+		                "Can't open %s (content of entity %s%s;): %s"),
+		                $filename, '&', $key, $!);
+	    local $/ = undef;
+	    $entincl{$key}{'content'} = <IN>;
+	    close IN;
+	    $entincl{$key}{'length'} = ($entincl{$key}{'content'} =~ tr/\n/\n/);
+	    print STDERR "read $filename (content of \&$key;, $entincl{$key}{'length'} lines long)\n"
+		if ($debug{'entities'});
 	}
     }
 
@@ -677,7 +685,8 @@ sub parse_file {
 	    my $pre  = ($begin =~ tr/\n/\n/); # number of \n
 	    my $post = ($end =~ tr/\n/\n/);
 	    print "XX Add a ref. pre=$pre; len=$len; post=$post\n" if $debug{'refs'};
-	    my $main = $refs[$pre]; # Keep a reference of inclusion position in main file
+	    # Keep a reference of inclusion position in main file
+	    my $main = $refs[$pre];
 
 	    # Remove the references for the lines after the inclusion
 	    # point.
@@ -724,10 +733,10 @@ sub parse_file {
 	    print "$mastername:".($i+1)." -> $refs[$i]\n";
 	}
     }
-    
+
     my ($tmpfh,$tmpfile)=File::Temp->tempfile("po4asgml-XXXX",
-					      DIR    => "/tmp",
-					      UNLINK => 0);
+                                              DIR    => "/tmp",
+                                              UNLINK => 0);
     print $tmpfh $origfile;
     close $tmpfh || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
 
@@ -791,10 +800,10 @@ sub parse_file {
     # and push("<!ENTITY myentity \"".$self->translate("definition_of_my_entity")
     if ($prolog =~ m/(.*?\[)(.*)(\]>)/s) {
 	warn "Pre=~~$1~~;Post=~~$3~~\n" if ($debug{'entities'});
-        $self->pushline($1."\n") if (length($1));
-        $prolog=$2;					       
-        my ($post) = $3;			
-        while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)"\s*>(.*)$/is) { #" ){ 
+	$self->pushline($1."\n") if (length($1));
+	$prolog=$2;
+	my ($post) = $3;
+	while ($prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)"\s*>(.*)$/is) { #" ){
 	   $self->pushline($1) if length($1);
 	   $self->pushline("<!ENTITY $2 \"".$self->translate($3,"","definition of entity \&$2;")."\">");
 	   warn "Seen text entity $2\n" if ($debug{'entities'});
@@ -805,7 +814,7 @@ sub parse_file {
     } else {
 	warn "No entity declaration detected in ~~$prolog~~...\n" if ($debug{'entities'});
 	$self->pushline($prolog) if length($prolog);
-    } 
+    }
 
     # The parse object.
     # Damn SGMLS. It makes me do crude things.
@@ -819,7 +828,7 @@ sub parse_file {
     my $verb_last_ref;
     my $seenfootnote=0;
     my $indent=0; # indent level
-    my $lastchar = ''; # 
+    my $lastchar = ''; #
     my $buffer= ""; # what we will soon handle
 
     # run the appropriate handler for each event
@@ -827,12 +836,13 @@ sub parse_file {
 	# to build po entries
 	my $ref=$refs[$parse->line-1];
 	my $type;
-	
+
 	if ($event->type eq 'start_element') {
-	    die wrap_ref_mod($ref, "po4a::sgml", dgettext("po4a", "Unknown tag %s"),
-			$event->data->name)
+	    die wrap_ref_mod($ref, "po4a::sgml",
+	                     dgettext("po4a", "Unknown tag %s"),
+	                     $event->data->name)
 		unless $exist{$event->data->name};
-	    
+
 	    $lastchar = ">";
 
 	    # Which tag did we see?
@@ -894,11 +904,11 @@ sub parse_file {
 		# we want to put the <para> inside the <footnote> in the same msgid
 		$seenfootnote = 1;
 	    }
-	    
+
 	    if ($seenfootnote) {
 		$buffer .= $tag;
 		next EVENT;
-	    } 
+	    }
 	    if ($translate{$event->data->name()}) {
 		# Build the type
 		if (scalar @open > 0) {
@@ -939,13 +949,13 @@ sub parse_file {
 		$tag =~ s/<po4aend>/]]>/;
 		$buffer .= $tag;
 	    }
-	} # end of type eq 'start_element' 
-	
+	} # end of type eq 'start_element'
+
 	elsif ($event->type eq 'end_element') {
-	    my $tag = ($empty{$event->data->name()} 
-		           ? 
-		       '' 
-		           : 
+	    my $tag = ($empty{$event->data->name()}
+		           ?
+		       ''
+		           :
 		       '</'.lc($event->data->name()).'>');
 
 	    if ($verb) {
@@ -963,20 +973,19 @@ sub parse_file {
 		if ($debug{'tag'});
 
 	    $lastchar = ">";
-	    
+
 	    if ($event->data->name() eq 'FOOTNOTE') {
 		# we want to put the <para> inside the <footnote> in the same msgid
 		$seenfootnote = 0;
 	    }
-	    
+
 	    if ($seenfootnote) {
 		$buffer .= $tag;
 		next EVENT;
-	    } 
+	    }
 	    if ($translate{$event->data->name()}) {
 		$type = $open[$#open] . $tag;
-		$self->end_paragraph($buffer,$ref,$type,$verb,$indent,
-				     @open);
+		$self->end_paragraph($buffer,$ref,$type,$verb,$indent,@open);
 		$buffer = "";
 		pop @open;
 		if (@open > 0) {
@@ -996,12 +1005,12 @@ sub parse_file {
 		    # add the tailing \n only if out of verbatim after that tag
 		    $self->pushline(($verb?"":(" " x $indent)).$tag.($verb>1?"":"\n"));
 		}  else {
-    		    $buffer .= $tag;
-	    	}	    
+		    $buffer .= $tag;
+		}
 		$verb-- if $verbatim{$event->data->name()};
 	    }
 	} # end of type eq 'end_element'
-	
+
 	elsif ($event->type eq 'cdata') {
 	    my $cdata = $event->data;
 	    $cdata =~ s/{PO4A-lt}/</g;
@@ -1018,9 +1027,9 @@ sub parse_file {
 		    $verb_last_ref = $ref;
 		}
 	    } else {
-              $cdata =~ s/\\t/ /g;
-              $cdata =~ s/\s+/ /g;
-	      $cdata =~ s/^\s//s if $lastchar eq ' ';
+		$cdata =~ s/\\t/ /g;
+		$cdata =~ s/\s+/ /g;
+		$cdata =~ s/^\s//s if $lastchar eq ' ';
 	    }
 	    $lastchar = substr($cdata, -1, 1);
 	    $buffer .= $cdata;
@@ -1051,7 +1060,7 @@ sub parse_file {
 	} #end of type eq 're'
 
 	elsif ($event->type eq 'conforming') {
-	    
+
 	}
 
 	elsif ($event->type eq 'pi') {
@@ -1060,11 +1069,12 @@ sub parse_file {
 	}
 
 	else {
-	    die wrap_ref_mod($refs[$parse->line], "po4a::sgml", dgettext("po4a","Unknown SGML event type: %s"), $event->type);
-
+	    die wrap_ref_mod($refs[$parse->line], "po4a::sgml",
+	                     dgettext("po4a","Unknown SGML event type: %s"),
+	                     $event->type);
 	}
     }
-				
+
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
@@ -1080,9 +1090,9 @@ sub end_paragraph {
     my ($self, $para,$ref, $type,$verb,$indent)=
 	(shift,shift,shift,shift,shift,shift);
     my (@open)=@_;
-    die "Internal error: no paragraph to end here!!" 
+    die "Internal error: no paragraph to end here!!"
 	unless scalar @open;
-		
+
     return unless defined($para) && length($para);
 
     if (($para =~ m/^\s*$/s) and (not $verb)) {
@@ -1094,7 +1104,7 @@ sub end_paragraph {
     # unprotect &entities;
     $para =~ s/{PO4A-amp}/&/g;
     # remove the name"\|\|" nsgmls added as attributes
-    $para =~ s/ name=\"\\\|\\\|\"//g;    
+    $para =~ s/ name=\"\\\|\\\|\"//g;
     $para =~ s/ moreinfo=\"none\"//g;
 
     # Extract the leading and trailing spaces. They will be restored only
@@ -1107,8 +1117,8 @@ sub end_paragraph {
     }
 
     $para = $self->translate($para,$ref,$type,
-			     'wrap' => ! $verb,
-			     'wrapcol' => (75 - $indent));
+                             'wrap' => ! $verb,
+                             'wrapcol' => (75 - $indent));
 
     if ($verb) {
 	$para = $leading_spaces.$para.$trailing_spaces;
@@ -1130,7 +1140,7 @@ This module is an adapted version of sgmlspl (SGML postprocessor for the
 SGMLS and NSGMLS parsers) which was:
 
  Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
- 
+
 The adaptation for po4a was done by:
 
  Denis Barbier <barbier@linuxfr.org>
