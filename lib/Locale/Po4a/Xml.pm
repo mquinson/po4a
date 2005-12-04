@@ -471,10 +471,10 @@ sub tag_trans_doctype {
 				$file = 1;
 			}
 			if ((not $file) and (not $includenow)) {
-			    if ($part2 =~ m/"(.*)"(\s*>\s*)/) {
+			    if ($part2 =~ m/^\s*(["'])(.*)\1(\s*>.*)$/s) {
 				my $comment = "Content of the $name entity";
-				my $text = $1;
-				$part2 = $2;
+				my $text = $2;
+				$part2 = $3;
 				$text = $self->translate($text,
 				                         $ref,
 				                         $comment,
