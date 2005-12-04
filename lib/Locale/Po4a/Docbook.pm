@@ -234,7 +234,7 @@ sub initialize {
 		<wordasword>
 		<xref>
 		<year>) {
-		if ($self->{options}{'inline'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
+		if (not defined $self->{nodefault}{$tag}) {
 			$additional_inline .= " $tag";
 		}
 	}
