@@ -1113,10 +1113,21 @@ sub end_paragraph {
     # Extract the leading and trailing spaces. They will be restored only
     # in verbatim environments.
     my ($leading_spaces, $trailing_spaces) = ("", "");
-    if ($para =~ m/^(\s*)(.*?)(\s*)$/s) {
-	$leading_spaces = $1;
-	$para = $2;
-	$trailing_spaces = $3;
+    if ($verb) {
+	# In the verbatim mode, we can ignore empty lines, but not the
+	# leading spaces or tabulations. Otherwise, the PO will look
+	# weird.
+	if ($para =~ m/^(\s*\n)(.*?)(\s*)$/s) {
+	    $leading_spaces = $1;
+	    $para = $2;
+	    $trailing_spaces = $3;
+	}
+    } else {
+	if ($para =~ m/^(\s*)(.*?)(\s*)$/s) {
+	    $leading_spaces = $1;
+	    $para = $2;
+	    $trailing_spaces = $3;
+	}
     }
 
     $para = $self->translate($para,$ref,$type,
