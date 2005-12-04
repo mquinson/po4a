@@ -473,13 +473,14 @@ sub tag_trans_doctype {
 			if ((not $file) and (not $includenow)) {
 			    if ($part2 =~ m/^\s*(["'])(.*)\1(\s*>.*)$/s) {
 				my $comment = "Content of the $name entity";
+				my $quote = $1;
 				my $text = $2;
 				$part2 = $3;
 				$text = $self->translate($text,
 				                         $ref,
 				                         $comment,
 				                         'wrap'=>1);
-				$t = $part1."\"$text\"$part2";
+				$t = $part1."$quote$text$quote$part2";
 			    }
 			}
 #			print $part1."\n";
