@@ -131,7 +131,7 @@ way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang a
 
 =item tagsonly
 
-Extracts only the specified tags in the "translate" option.  Otherwise, it
+Extracts only the specified tags in the "tags" option.  Otherwise, it
 will extract all the tags except the ones specified.
 
 =item doctype
