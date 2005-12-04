@@ -96,6 +96,8 @@ sub initialize {
 		<arg>
 		<artheader>
 		<attribution>
+		<citetitle>
+		<computeroutput>
 		<date>
 		<entry>
 		<figure>
@@ -114,6 +116,7 @@ sub initialize {
 		<pubdate>
 		<publishername>
 		<primary>
+		<prompt>
 		<refclass>
 		<refdescriptor>
 		<refmiscinfo>
@@ -121,6 +124,7 @@ sub initialize {
 		<refpurpose>
 		<releaseinfo>
 		<remark>
+		<replaceable>
 		<revnumber>
 		W<screen>
 		<screeninfo>
@@ -131,7 +135,8 @@ sub initialize {
 		<synopfragmentref>
 		<term>
 		<title>
-		<titleabbrev>) {
+		<titleabbrev>
+		<userinput>) {
 		if (not defined $self->{nodefault}{$tag}) {
 			$additional_tags .= " $tag";
 		}
@@ -141,6 +146,7 @@ sub initialize {
 		<affiliation>
 		<anchor>
 		<application>
+		<arg>
 		<author>
 		<authorinitials>
 		<command>
