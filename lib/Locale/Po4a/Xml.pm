@@ -167,6 +167,11 @@ E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
 Space-separated list of the tags you want to treat as inline.  By default,
 all tags break the sequence.  This follows the same syntax as the tags option.
 
+=item nodefault
+
+Space separated list of tags that the module should not try to set by
+default in the "tags" or "inline" category.
+
 =back
 
 =cut
@@ -183,6 +188,7 @@ sub initialize {
 	$self->{options}{'attributes'}='';
 	$self->{options}{'inline'}='';
 	$self->{options}{'doctype'}='';
+	$self->{options}{'nodefault'}='';
 
 	$self->{options}{'verbose'}='';
 	$self->{options}{'debug'}='';
@@ -202,6 +208,9 @@ sub initialize {
 	$self->{attributes}=();
 	#It will maintain the list of the inline tags
 	$self->{inline}=();
+	#list of the tags that must not be set in the tags or inline category
+	#by this module or sub-module (unless specified in an option)
+	$self->{nodefault}=();
 
 	$self->treat_options;
 }
@@ -1038,6 +1047,13 @@ sub treat_options {
 	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
 	my @list_inline = split(/\s+/s,$1);
 	$self->{inline} = \@list_inline;
+        
+	$self->{options}{'nodefault'} =~ /\s*(.*)\s*/s;
+	my %list_nodefault;
+	foreach (split(/\s+/s,$1)) {
+	    $list_nodefault{$_} = 1;
+	}
+	$self->{nodefault} = \%list_nodefault;
 }
 
 =head2 GETTING TEXT FROM THE INPUT DOCUMENT

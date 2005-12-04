@@ -132,7 +132,7 @@ sub initialize {
 		<term>
 		<title>
 		<titleabbrev>) {
-		if ($self->{options}{'inline'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
+		if (not defined $self->{nodefault}{$tag}) {
 			$additional_tags .= " $tag";
 		}
 	}
@@ -234,7 +234,7 @@ sub initialize {
 		<wordasword>
 		<xref>
 		<year>) {
-		if ($self->{options}{'tags'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
+		if ($self->{options}{'inline'} !~ /(^|\s+)\Q$tag\E(?:\s+|$)/) {
 			$additional_inline .= " $tag";
 		}
 	}
