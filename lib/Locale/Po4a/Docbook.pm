@@ -117,6 +117,7 @@ sub initialize {
 		<publishername>
 		<primary>
 		<prompt>
+		<quote>
 		<refclass>
 		<refdescriptor>
 		<refmiscinfo>
