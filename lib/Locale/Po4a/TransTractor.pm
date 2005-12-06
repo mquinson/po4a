@@ -1023,7 +1023,7 @@ Will see if it's enough ;)
 
  Denis Barbier <barbier@linuxfr.org>
  Martin Quinson (mquinson#debian.org)
- Jordi Vilalta <jvprat@wanadoo.es>
+ Jordi Vilalta <jvprat@gmail.com>
 
 =cut
 

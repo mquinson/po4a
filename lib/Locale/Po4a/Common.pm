@@ -1,7 +1,7 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.13 2005-11-02 00:15:10 nekral-guest Exp $
+# $Id: Common.pm,v 1.14 2005-12-06 16:32:06 jvprat-guest Exp $
 #
-# Copyright 2005 by Jordi Vilalta <jvprat@wanadoo.es>
+# Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -212,7 +212,7 @@ __END__
 
 =head1 AUTHORS
 
- Jordi Vilalta <jvprat@wanadoo.es>
+ Jordi Vilalta <jvprat@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -7,7 +7,7 @@
 # This code extracts plain text from tags and attributes on Guide XML
 # documents.
 #
-# Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
+# Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,11 +55,11 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 
 =head1 AUTHORS
 
- Jordi Vilalta <jvprat@wanadoo.es>
+ Jordi Vilalta <jvprat@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2004 by Jordi Vilalta  <jvprat@wanadoo.es>
+Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
