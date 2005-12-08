@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.47 2005-11-27 16:17:20 nekral-guest Exp $
+# $Id: po4a,v 1.48 2005-12-08 21:04:27 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -358,8 +358,8 @@ sub get_options {
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
-    $opts{"verbose"} =  1 if $opts{"debug"};
-    $opts{"verbose"} = -1 if $opts{"quiet"};
+    $opts{"verbose"} = 0 if $opts{"quiet"};
+    $opts{"verbose"} ||= 1 if $opts{"debug"};
 
     # options to transmit to the modules
     %{$opts{"options"}} = (
@@ -620,7 +620,8 @@ if ($update_pot_file) {
         $potfile->write_if_needed($pot_filename);
     }
 
-    print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries());
+    print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
+        unless ($po4a_opts{"quiet"});
 } else {
     $potfile->read($pot_filename);
 }
@@ -651,10 +652,10 @@ foreach $lang (sort keys %po_filename) {
 	    foreach my $master (sort keys %document) {
 		my $pot=Locale::Po4a::Po->new();
 		my $po=Locale::Po4a::Po->new();
-		print "  $master:";
-		print "(pot)";
+		print "  $master:" unless ($po4a_opts{"quiet"});
+		print "(pot)" unless ($po4a_opts{"quiet"});
 		$pot=$potfile->filter("(reference=$master:)");
-		print "(po) ";
+		print "(po) " unless ($po4a_opts{"quiet"});
 		$po=$poorig->filter("(reference=$master:)");
 		unlink($pot_filename) if -e $pot_filename;
 		unlink($po_filename) if -e $po_filename;
