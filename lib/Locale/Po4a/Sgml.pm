@@ -726,7 +726,7 @@ sub parse_file {
 	    print STDERR "substitute $2\n" if ($debug{'entities'});
         }
     }
-    $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+);/$1\{PO4A-amp\}$2;/gs;
+    $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+)\b/$1\{PO4A-amp\}$2/gs;
 
     if ($debug{'refs'}) {
 	print "XX Resulting shifts\n";
