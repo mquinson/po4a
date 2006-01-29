@@ -429,7 +429,7 @@ sub parse_file {
 	                     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
 	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
-	                                    "dedication ".
+	                                    "dedication docinfo ".
 	                                    "entry ".
 	                                    "formalpara ".
 	                                    "glossary glossdef glossdiv glossentry glosslist group ".
