@@ -47,37 +47,36 @@ teams when they try to detect the POTs that need to be updated.
 
 Thus we recommend the following architecture:
 
-  root
-   |
-   |-- doc, man, ...
-   |    |
-   |    |-- en
-   |    |    |
-   |    |    \-- original documents
-   |    |
-   |    |-- po4a
-   |    |    |
-   |    |    |-- po
-   |    |    |    |
-   |    |    |    |-- <package>.pot
-   |    |    |    |-- <lang1>.po
-   |    |    |    \-- ...
-   |    |    |
-   |    |    |-- add_<lang>
-   |    |    |    |
-   |    |    |    |-- <translator1>.add
-   |    |    |    \-- ...
-   |    |    |
-   |    |    \-- <package>.cfg
-   |    |
-   |    |-- <lang1>
-   |    |     |
-   |    |     \-- generated translations
-   |    |
-   |    \-- ...
+  /
+  /doc/
+  /doc/en/
+  /doc/en/
+  /doc/po4a/
+  /doc/po4a/add_<ll>/
+  /doc/po4a/po4a.cfg
+  /doc/po4a/po/
+  /doc/po4a/po/<pkg>.pot
+  /doc/po4a/po/<ll>.po
+  /doc/<ll>/
+
+Or, if you want to avoid a big POT and split it according to the packages,
+documents, formats, or subjects, you can use the following architecture:
+
+  /
+  /doc/
+  /doc/en/
+  /doc/en/
+  /doc/po4a/
+  /doc/po4a/add_<ll>/
+  /doc/po4a/<pkg1>/po4a.cfg
+  /doc/po4a/<pkg1>/po/
+  /doc/po4a/<pkg1>/po/<pkg1>.pot
+  /doc/po4a/<pkg1>/po/<ll>.po
+  /doc/<ll>/
+
 
 We recommend to use a configuration file for po4a that does not require
-any option (put the options in the configuration file).
+any module option (put the options in the configuration file).
 This permits to easily check if the POT is up-to-date with the
 documentation and that the 
 
