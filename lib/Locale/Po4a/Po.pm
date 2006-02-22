@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.51 2005-12-04 20:25:52 nekral-guest Exp $
+# $Id: Po.pm,v 1.52 2006-02-22 18:10:50 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -80,6 +80,7 @@ use vars qw(@ISA @EXPORT);
 
 use Carp qw(croak);
 use File::Path; # mkdir before write
+use File::Copy; # move
 
 use Encode;
 
@@ -333,7 +334,7 @@ sub write_if_needed {
             my ($atime, $mtime) = (time,time);
             utime $atime, $mtime, $filename;
         } else {
-            rename $tmp_filename, $filename ||
+            move $tmp_filename, $filename ||
                 die wrap_msg(dgettext("po4a","Can't rename %s to %s."),
                              $tmp_filename, $filename);
         }
