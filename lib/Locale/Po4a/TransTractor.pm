@@ -432,14 +432,14 @@ sub write {
 	      if (length ($dir) && ! -e $dir);
 	}
 	open $fh,">$filename"
-	    || croak wrap_msg(dgettext("po4a", "Can't write to %s: %s"), $filename, $!);
+	    or croak wrap_msg(dgettext("po4a", "Can't write to %s: %s"), $filename, $!);
     }
     
     map { print $fh $_ } $self->docheader();
     map { print $fh $_ } @{$self->{TT}{doc_out}};
 
     if ($filename ne '-') {
-	close $fh || croak wrap_msg(dgettext("po4a", "Can't close %s after writing: %s"), $filename, $!);
+	close $fh or croak wrap_msg(dgettext("po4a", "Can't close %s after writing: %s"), $filename, $!);
     }
 
 }

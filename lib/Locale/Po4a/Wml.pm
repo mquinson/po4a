@@ -89,7 +89,7 @@ sub parse {
     foreach my $filename (@{$self->{DOCWML}{infile}}) {
 #      print STDERR "TMP: $tmp_filename\n";
       my $file;
-      open FILEIN,"$filename" || die "Cannot read $filename: $!\n";
+      open FILEIN,"$filename" or die "Cannot read $filename: $!\n";
       {
         $/ = undef; 
         $file=<FILEIN>;
@@ -116,7 +116,7 @@ sub parse {
       open OUTFILE,">$tmp_filename";
       print OUTFILE $file;
       close INFILE;
-      close OUTFILE || die "Cannot write $tmp_filename: $!\n";
+      close OUTFILE or die "Cannot write $tmp_filename: $!\n";
       
       # Build the XML TransTractor which will do the job for us
       my $xmlizer = Locale::Po4a::Chooser::new("xhtml");

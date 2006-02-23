@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.52 2006-02-22 18:10:50 nekral-guest Exp $
+# $Id: Po.pm,v 1.53 2006-02-23 16:10:41 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -327,14 +327,14 @@ sub write_if_needed {
         $self->write($tmp_filename);
         $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $filename $tmp_filename);
         if ( $diff eq "" ) {
-            unlink $tmp_filename ||
+            unlink $tmp_filename or
                 die wrap_msg(dgettext("po4a","Can't unlink %s."),
                              $tmp_filename);
             # touch it
             my ($atime, $mtime) = (time,time);
             utime $atime, $mtime, $filename;
         } else {
-            move $tmp_filename, $filename ||
+            move $tmp_filename, $filename or
                 die wrap_msg(dgettext("po4a","Can't rename %s to %s."),
                              $tmp_filename, $filename);
         }

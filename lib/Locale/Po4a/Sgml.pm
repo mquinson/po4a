@@ -339,7 +339,7 @@ sub parse_file {
     while (<IN>) {
 	$origfile .= $_;
     }
-    close IN || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close %s: %s"), $mastername, $!);
+    close IN or die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close %s: %s"), $mastername, $!);
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a",
@@ -563,7 +563,7 @@ sub parse_file {
 	        # find the file.
 	        $origfile =~ s/(<!ENTITY\s*%\s*\Q$key\E\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
 	    }
-	    if (defined $ignored_inclusion{$key} || !-e $filename) {
+	    if (defined $ignored_inclusion{$key} or !-e $filename) {
 		# We won't expand this entity.
 		# And we avoid nsgmls to do so.
 		$prolog = "$begin<!--{PO4A-ent-beg-$key}$filename".
@@ -740,7 +740,7 @@ sub parse_file {
                                               DIR    => "/tmp",
                                               UNLINK => 0);
     print $tmpfh $origfile;
-    close $tmpfh || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
+    close $tmpfh or die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
 
     my $cmd="nsgmls -l -E 0 -wno-valid < $tmpfile".
             ($debug{'nsgmls'}?"":" 2>/dev/null")." |";
