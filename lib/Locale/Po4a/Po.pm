@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.53 2006-02-23 16:10:41 nekral-guest Exp $
+# $Id: Po.pm,v 1.54 2006-02-24 18:22:45 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -90,7 +90,7 @@ my %debug=('canonize'	=> 0,
            'quote'	=> 0,
            'escape'	=> 0,
            'encoding'   => 0,
-           'filter'     => 1);
+           'filter'     => 0);
 
 =head1 Functions about whole message catalogs
 
@@ -496,7 +496,8 @@ sub filter {
     
     # I dream of a lex in perl :-/
     sub parse_expression {
-	showmethecode("Begin expression");
+	showmethecode("Begin expression")
+	    if $debug{'filter'};
 
 	gloups("Begin of expression expected, got '%s'",$filter[$pos])
 	  unless ($filter[$pos] eq '(');
@@ -504,7 +505,8 @@ sub filter {
 	if ($filter[$pos] eq '&') {
 	    # AND
 	    $pos++;
-	    showmethecode("Begin of AND");
+	    showmethecode("Begin of AND")
+		if $debug{'filter'};
 	    $code .= "(";
 	    while (1) {
 		gloups ("Unfinished AND statement.") 
@@ -570,7 +572,8 @@ sub filter {
 		$pos++;
 		$quoted = 1;
 	    }
-	    showmethecode(($quoted?"Quoted":"Unquoted")." argument of field '$field'");
+	    showmethecode(($quoted?"Quoted":"Unquoted")." argument of field '$field'")
+		if $debug{'filter'};
 
 	    while (!$done) {
 		gloups("Unfinished EQ argument.")
@@ -612,7 +615,8 @@ sub filter {
 	    $code .= "(\$_[$fieldpos] =~ m/$arg/)";
 	    
 	}
-	showmethecode("End of expression");
+	showmethecode("End of expression")
+	    if $debug{'filter'};
         gloups("Unfinished statement.")
 	  if ($pos == $length);
 	gloups("End of expression expected, got '%s'",$filter[$pos])
@@ -625,7 +629,8 @@ sub filter {
     gloups("Garbage at the end of the expression")
       if ($pos != $length);
     $code .= "; }";
-    print STDERR "CODE = $code\n";
+    print STDERR "CODE = $code\n"
+	if $debug{'filter'};
     eval $code;
     die wrap_mod("po4a::po", dgettext("po4a", "Eval failure: %s"), $@)
       if $@;
