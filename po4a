@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.48 2005-12-08 21:04:27 nekral-guest Exp $
+# $Id: po4a,v 1.49 2006-02-24 19:34:15 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -654,9 +654,9 @@ foreach $lang (sort keys %po_filename) {
 		my $po=Locale::Po4a::Po->new();
 		print "  $master:" unless ($po4a_opts{"quiet"});
 		print "(pot)" unless ($po4a_opts{"quiet"});
-		$pot=$potfile->filter("(reference=$master:)");
+		$pot=$potfile->filter("(reference='\Q$master:\E')");
 		print "(po) " unless ($po4a_opts{"quiet"});
-		$po=$poorig->filter("(reference=$master:)");
+		$po=$poorig->filter("(reference='\Q$master:\E')");
 		unlink($pot_filename) if -e $pot_filename;
 		unlink($po_filename) if -e $po_filename;
 
