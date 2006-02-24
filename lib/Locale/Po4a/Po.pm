@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.54 2006-02-24 18:22:45 nekral-guest Exp $
+# $Id: Po.pm,v 1.55 2006-02-24 18:25:05 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -659,6 +659,9 @@ sub filter {
 		       'automatic' => $automatic)
 	       if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic)); # DO NOT CHANGE THE ORDER
     }
+    # delete the apply subroutine
+    # otherwise it will be redefined.
+    undef &apply
     return $res;
 }
 
