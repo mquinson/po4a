@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.38 2005-09-22 21:51:49 nekral-guest Exp $
+# $Id: po4a-updatepo,v 1.39 2006-02-25 22:59:21 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -203,15 +203,15 @@ while (my $po_filename=shift @pofiles) {
     if (-e $po_filename) {
 	print STDERR wrap_msg(gettext("Updating %s:"), $po_filename)
 	    if $verbose;
-	system ("msgmerge","-U",$po_filename,$pot_filename) == 0 ||
-	    die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
+	system ("msgmerge","-U",$po_filename,$pot_filename) == 0
+	    or die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
 	system "msgfmt --statistics -v -o /dev/null $po_filename"
 	  if $verbose;
     } else {
 	print STDERR wrap_msg(gettext("Creating %s:"), $po_filename)
 	    if $verbose;
-	system ("cp",$pot_filename,$po_filename) == 0 ||
-	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
+	system ("cp",$pot_filename,$po_filename) == 0
+	    or die wrap_msg(gettext("Error while copying the po file: %s"), $!);
     }
 }
 

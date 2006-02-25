@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.49 2006-02-24 19:34:15 nekral-guest Exp $
+# $Id: po4a,v 1.50 2006-02-25 22:59:20 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -448,7 +448,7 @@ my (%aliases); # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
-open CONFIG,"$config_file" || die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
+open CONFIG,"$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
     $nb++;
@@ -730,8 +730,8 @@ foreach $lang (sort keys %po_filename) {
     } else {
 	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
 	    if $po4a_opts{"verbose"};
-	system ("cp",$pot_filename,$po_filename{$lang}) == 0 ||
-	    die wrap_msg(gettext("Error while copying the po file: %s"), $!);
+	system ("cp",$pot_filename,$po_filename{$lang}) == 0
+	    or die wrap_msg(gettext("Error while copying the po file: %s"), $!);
     }
 }
 
