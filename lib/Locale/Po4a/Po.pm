@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.56 2006-02-24 18:29:04 nekral-guest Exp $
+# $Id: Po.pm,v 1.57 2006-02-25 15:20:05 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -325,7 +325,7 @@ sub write_if_needed {
                                                    OPEN   => 0,
                                                    UNLINK => 0);
         $self->write($tmp_filename);
-        $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $filename $tmp_filename);
+        $diff = qx(diff -q -I'^#:' -I'^"POT-Creation-Date:' -I'^"PO-Revision-Date:' $filename $tmp_filename);
         if ( $diff eq "" ) {
             unlink $tmp_filename or
                 die wrap_msg(dgettext("po4a","Can't unlink %s."),
