@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.50 2006-02-25 22:59:20 nekral-guest Exp $
+# $Id: po4a,v 1.51 2006-02-26 20:14:08 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -576,14 +576,24 @@ if (-e $pot_filename) {
     # The POT needs to be re-generated if a master document is more recent
     # than the POT.
     foreach my $master (keys %document) {
-        if (   ($po4a_opts{"force"})
-            or ((stat $master)[9] > $modtime) ) {
+        if ((stat $master)[9] >= $modtime) {
             $update_pot_file = 1;
-            print wrap_msg(gettext("Updating %s:"), $pot_filename)
-                if $po4a_opts{"verbose"};
             last;
         }
     }
+
+    if ((stat $config_file)[9] > $modtime) {
+        # The configuration file was modified after the POT.
+        # Maybe a new document, or new options
+        $update_pot_file = 1;
+    }
+
+    if ($po4a_opts{"force"}) {
+        $update_pot_file = 1;
+    }
+
+    print wrap_msg(gettext("Updating %s:"), $pot_filename)
+        if ($update_pot_file and $po4a_opts{"verbose"});
 } else {
     print wrap_msg(gettext("Creating %s:"), $pot_filename)
 	if $po4a_opts{"verbose"};
