@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.51 2006-02-26 20:14:08 nekral-guest Exp $
+# $Id: po4a,v 1.52 2006-02-26 20:19:44 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -289,6 +289,7 @@ use Locale::Po4a::Common;
 use Pod::Usage qw(pod2usage);
 
 use File::Temp;
+use File::Copy;
 
 Locale::Po4a::Common::textdomain('po4a');
 
@@ -740,7 +741,7 @@ foreach $lang (sort keys %po_filename) {
     } else {
 	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
 	    if $po4a_opts{"verbose"};
-	system ("cp",$pot_filename,$po_filename{$lang}) == 0
+	copy($pot_filename,$po_filename{$lang})
 	    or die wrap_msg(gettext("Error while copying the po file: %s"), $!);
     }
 }
