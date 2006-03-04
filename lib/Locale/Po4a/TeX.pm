@@ -574,17 +574,9 @@ sub get_trailing_command {
                              $command, $reason);
         }
         if (@$remainder) {
-            # FIXME: we should also keep the spaces to be idempotent
-            my ($temp,$type,$arg);
-            while (@$remainder) {
-                $type = shift @$remainder;
-                $arg  = shift @$remainder;
-                $temp .= $type.$arg.$type_end{$type};
-                # And remove the same number of arguments from @args
-                pop @args;
-                pop @args;
-            }
-            $buffer .= $temp;
+            # There are some arguments after the command.
+            # We can't extract this comand.
+            $command = "";
         }
     }
 
