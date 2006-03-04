@@ -71,8 +71,9 @@ require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(%commands %environments
-             $RE_ESCAPE $ESCAPE
+             $RE_ESCAPE $ESCAPE $RE_VERBATIM
              $no_wrap_environments
+             $verbatim_environments
              %separated_command
              %separated_environment
              &generic_command
@@ -100,9 +101,12 @@ our %env_separators =();
 # The escape character used to introduce commands.
 our $RE_ESCAPE = "\\\\";
 our $ESCAPE    = "\\";
+# match the beginning of a verbatim block
+our $RE_VERBATIM = "\\\\begin\\{(?:verbatim)\\*?\\}";
 
 # Space separated list of environments that should not be re-wrapped.
 our $no_wrap_environments = "verbatim";
+our $verbatim_environments = "verbatim";
 # hash with the commands that have to be separated (or have to be joined).
 # 3 modes are currently used:
 #  '*' The command is separated if it appear at an extremity of a
@@ -137,6 +141,10 @@ The name of a file containing definitions for po4a, as defined in the
 B<INLINE CUSTOMIZATION> section.
 You can use this option if it is not possible to put the definitions in
 the document being translated.
+
+=item verbatim
+
+Coma-separated list of environments which should be taken as verbatim.
 
 =back
 
@@ -617,8 +625,8 @@ sub translate_buffer {
     }
     # verbatim blocks.
     # Buffers starting by \end{verbatim} are handled after.
-    if (@env and $env[-1] eq "verbatim" and $buffer !~ m/^\n?\\end\{verbatim\*?\}/) {
-        if($buffer =~ m/^(.*?)(\n?\\end\{verbatim\*?\}.*)$/s) {
+    if (in_verbatim(@env) and $buffer !~ m/^\n?\\end\{$env[-1]\*?\}/) {
+        if($buffer =~ m/^(.*?)(\n?\\end\{$env[-1]\*?\}.*)$/s) {
             # end of a verbatim block
             my ($begin, $end) = ($1?$1:"", $2);
             my ($t1, $t2) = ("", "");
@@ -641,7 +649,7 @@ sub translate_buffer {
         }
     }
     # early detection of verbatim environment
-    if ($buffer =~ /^(\\begin\{verbatim\*?\}\n?)(.*)$/s and length $2) {
+    if ($buffer =~ /^($RE_VERBATIM\n?)(.*)$/s and length $2) {
         my ($begin, $end) = ($1, $2);
         my ($t1, $t2) = ("", "");
         ($t1, @env) = translate_buffer($self, $begin, @env);
@@ -1045,7 +1053,9 @@ sub parse_definition_line {
     } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
         my $env = $1; # This is not necessarily an environment.
                       # It can also be smth like 'title{#1}'.
-        $env_separators{$env} = $2
+        $env_separators{$env} = $2;
+    } elsif ($line =~ /^verbatim\s+environment\s+(\w+)\s+$/) {
+        register_verbatim_environment($1);
     }
 }
 
@@ -1074,6 +1084,18 @@ sub is_closed {
         $tmp = $1;
     }
     return $opening eq $closing;
+}
+
+sub in_verbatim {
+    foreach my $e1 (@_) {
+        foreach my $e2 (split(' ', $verbatim_environments)) {
+            if ($e1 eq $e2) {
+                return 1;
+            }
+        }
+    }
+
+    return 0;
 }
 
 #############################
@@ -1109,10 +1131,9 @@ sub parse {
 #       middle of a line. (This is only an issue if the verbatim
 #       environment contains an un-closed bracket)
         if (   ($closed and ($line =~ /^\s*$/ or
-                             $line =~ /^\s*\\begin{verbatim}\s*$/))
-            or (    defined $env[-1]
-                and $env[-1] eq "verbatim"
-                and $line =~ /^\s*\\end{verbatim}\s*$/)) {
+                             $line =~ /^\s*$RE_VERBATIM\s*$/))
+            or (in_verbatim(@env) and $line =~ /^\s*\\end{$env[-1]}\s*$/)
+           ) {
             # An empty line. This indicates the end of the current
             # paragraph.
             $paragraph .= $line."\n";
@@ -1138,7 +1159,6 @@ sub parse {
         $paragraph="";
     }
 } # end of parse
-
 
 =item docheader
 
@@ -1534,6 +1554,15 @@ sub register_generic_environment {
     }
 }
 
+sub register_verbatim_environment {
+    my $env = shift;
+    $no_wrap_environments .= " $env";
+    $verbatim_environments .= " $env";
+    $RE_VERBATIM = "\\\\begin\\{(?:".
+                   join("|", split(/ /, $verbatim_environments)).
+                   ")\\*?\\}";
+}
+
 ####################################
 ### INITIALIZATION OF THE PARSER ###
 ####################################
@@ -1544,6 +1573,7 @@ sub initialize {
     $self->{options}{'definitions'}='';
     $self->{options}{'exclude_include'}='';
     $self->{options}{'no_wrap'}='';
+    $self->{options}{'verbatim'}='';
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'}='';
 
@@ -1578,6 +1608,12 @@ sub initialize {
         }
     }
 
+    if ($options{'verbatim'}) {
+        foreach (split(/,/, $options{'verbatim'})) {
+            register_verbatim_environment($_);
+        }
+    }
+
     if ($options{'definitions'}) {
         $self->parse_definition_file($options{'definitions'})
     }
@@ -1593,12 +1629,6 @@ It was tested on a book and with the Python documentation.
 
 =over 4
 
-=item other categories
-
-A verbatim category may be needed to indicate that po4a should not attempt
-to rewrap lines, that percent signs do not introduce any comment, and that
-a brackets may not be closed.
-
 =item Automatic detection of new commands
 
 The TeX module could parse the newcommand arguments and try to guess the
@@ -1609,6 +1639,12 @@ translated.
 
 When \item is used as an environment separator, the item argument is
 attached to the following string.
+
+=item Some commands should be added to the environment
+
+The commands should be specified by couples.
+This could allow to specify commands beginning or ending a verbatim
+environment.
 
 =item Others
 
