@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.57 2006-02-25 15:20:05 nekral-guest Exp $
+# $Id: Po.pm,v 1.58 2006-03-04 19:04:53 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -313,31 +313,44 @@ update a line reference or the POT-Creation-Date field).
 
 =cut
 
+sub move_po_if_needed {
+    my ($new_po, $old_po) = (shift, shift);
+    my $diff;
+
+    if (-e $old_po) {
+        $diff = qx(diff -q -I'^#:' -I'^"POT-Creation-Date:' -I'^"PO-Revision-Date:' $old_po $new_po);
+        if ( $diff eq "" ) {
+            unlink $new_po
+                or die wrap_msg(dgettext("po4a","Can't unlink %s."),
+                                $new_po);
+            # touch the old PO
+            my ($atime, $mtime) = (time,time);
+            utime $atime, $mtime, $old_po;
+        } else {
+            move $new_po, $old_po
+                or die wrap_msg(dgettext("po4a","Can't move %s to %s."),
+                                $new_po, $old_po);
+        }
+    } else {
+        move $new_po, $old_po
+            or die wrap_msg(dgettext("po4a","Can't move %s to %s."),
+                            $new_po, $old_po);
+    }
+}
+
 sub write_if_needed {
     my $self=shift;
     my $filename=shift 
 	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
 
     if (-e $filename) {
-        my ($tmp_filename, $diff);
+        my ($tmp_filename);
         (undef,$tmp_filename)=File::Temp->tempfile($filename."XXXX",
                                                    DIR    => "/tmp",
                                                    OPEN   => 0,
                                                    UNLINK => 0);
         $self->write($tmp_filename);
-        $diff = qx(diff -q -I'^#:' -I'^"POT-Creation-Date:' -I'^"PO-Revision-Date:' $filename $tmp_filename);
-        if ( $diff eq "" ) {
-            unlink $tmp_filename or
-                die wrap_msg(dgettext("po4a","Can't unlink %s."),
-                             $tmp_filename);
-            # touch it
-            my ($atime, $mtime) = (time,time);
-            utime $atime, $mtime, $filename;
-        } else {
-            move $tmp_filename, $filename or
-                die wrap_msg(dgettext("po4a","Can't rename %s to %s."),
-                             $tmp_filename, $filename);
-        }
+        move_po_if_needed($tmp_filename, $filename);
     } else {
         $self->write($filename);
     }

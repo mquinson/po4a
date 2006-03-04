@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.52 2006-02-26 20:19:44 nekral-guest Exp $
+# $Id: po4a,v 1.53 2006-03-04 19:04:53 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -289,6 +289,7 @@ use Locale::Po4a::Common;
 use Pod::Usage qw(pod2usage);
 
 use File::Temp;
+use File::Basename;
 use File::Copy;
 
 Locale::Po4a::Common::textdomain('po4a');
@@ -323,7 +324,6 @@ sub get_options {
         "debug"           => 0,
         "verbose"         => 0,
         "quiet"           => 0,
-        "split"           => 0,
         "no-translations" => 0,
         "rm-translations" => 0,
         "no-backups"      => 0,
@@ -347,7 +347,6 @@ sub get_options {
         'debug|d'               => \$opts{"debug"},
         'force|f'               => \$opts{"force"},
         'quiet|q'               => \$opts{"quiet"},
-        'split|s'               => \$opts{"split"},
         'keep|k=s'              => \$opts{"threshold"},
         'no-translations'       => \$opts{"no-translations"},
         'rm-translations'       => \$opts{"rm-translations"},
@@ -438,6 +437,36 @@ sub parse_config_options {
 my %po4a_opts = get_options(@ARGV);
 # Argument check
 $po4a_opts{"help"} && pod2usage (-verbose => 1, -exitval => 0);
+
+sub run_cmd {
+    my $cmd = shift;
+    print $cmd."\n" if $po4a_opts{"debug"};
+
+    my $out = qx/$cmd 2>&1/;
+    print $out if ($po4a_opts{"verbose"});
+    unless ($? == 0) {
+        my $err = "";
+        if ($? == -1) {
+            $err = sprintf(gettext("failed to execute '%s': %s."),
+                           $cmd, $!);
+        } elsif ($? & 127) {
+            if ($? & 128) {
+                $err = sprintf(gettext("'%s' died with signal %d, ".
+                                       "with coredump."),
+                               $cmd, $? & 127);
+            } else {
+                $err = sprintf(gettext("'%s' died with signal %d, ".
+                                       "without coredump."),
+                               $cmd, $? & 127);
+            }
+        } else {
+            $err = sprintf(gettext("'%s' exited with value %d."),
+                           $cmd, $? >> 8);
+        }
+
+        die wrap_msg(gettext("Error: %s"), $err);
+    }
+}
 
 my $config_file= shift(@ARGV) || pod2usage();
 # Check file existence
@@ -570,8 +599,24 @@ close CONFIG; # don't care about error here
 die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and po files"))
   unless (length $pot_filename);
 
+my %splitted_po; # po_files: '$lang','$master' => '$path'
+my %splitted_pot; # pot_files: '$master' => '$path'
+
 # make a big pot
 my $update_pot_file = 0;
+if ($pot_filename =~ m/\$master/) {
+    print "Splitted mode, creating a temporary POT.\n"
+        if $po4a_opts{"verbose"};
+    foreach my $master (keys %document) {
+        my $m = basename $master;
+        my $master_pot = $pot_filename;
+        $master_pot =~ s/\$master/$m/g;
+        $splitted_pot{$master} = $master_pot;
+    }
+    # The POT needs to be generated anyway.
+    $update_pot_file = 1;
+    $po4a_opts{"split"} = 1;
+} else {
 if (-e $pot_filename) {
     my $modtime = (stat $pot_filename)[9];
     # The POT needs to be re-generated if a master document is more recent
@@ -600,6 +645,7 @@ if (-e $pot_filename) {
 	if $po4a_opts{"verbose"};
     $update_pot_file = 1;
 }
+}
 
 my $potfile=Locale::Po4a::Po->new();
 if ($update_pot_file) {
@@ -625,10 +671,21 @@ if ($update_pot_file) {
                       'file_in_charset'  => $file_opts{"mastchar"});
         $potfile = $doc->getpoout();
     }
+    if ($po4a_opts{"split"}) {
+        (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
+                                                   DIR    => "/tmp",
+                                                   SUFFIX => ".pot",
+                                                   OPEN   => 0,
+                                                   UNLINK => 0)
+            or die wrap_msg(gettext("Can't create a temporary pot file: %s"),
+                            $!);
+        $potfile->write($pot_filename);
+    } else {
     if ($po4a_opts{"force"}) {
         $potfile->write($pot_filename);
     } else {
         $potfile->write_if_needed($pot_filename);
+    }
     }
 
     print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
@@ -637,107 +694,73 @@ if ($update_pot_file) {
     $potfile->read($pot_filename);
 }
 
+if ($po4a_opts{"split"}) {
+    # Generate a .pot for each document
+    foreach my $master (keys %document) {
+        my $tmp_file;
+        # Create a temporary POT, and check if the old one needs to be
+        # updated (unless --force was specified).
+        unless ($po4a_opts{"force"}) {
+            (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
+                                                   DIR    => "/tmp",
+                                                   SUFFIX => ".pot",
+                                                   OPEN   => 0,
+                                                   UNLINK => 0)
+                or die wrap_msg(gettext("Can't create a temporary pot file: %s"),
+                                $!);
+        }
+
+        my $cmd = "msggrep -N '$master' -o ".
+                  ($po4a_opts{"force"}?$splitted_pot{$master}:$tmp_file).
+                  " $pot_filename";
+        run_cmd($cmd);
+
+        unless ($po4a_opts{"force"}) {
+            Locale::Po4a::Po::move_po_if_needed($tmp_file,
+                                                $splitted_pot{$master});
+        }
+    }
+    # Generate a complete .po
+    foreach my $lang (sort keys %po_filename) {
+        my $tmp_bigpo;
+        (undef,$tmp_bigpo)=File::Temp->tempfile("po4aXXXX",
+                                                DIR    => "/tmp",
+                                                SUFFIX => "-$lang.po",
+                                                OPEN   => 0,
+                                                UNLINK => 0)
+            or die wrap_msg(gettext("Can't create a temporary po file: %s"),
+                            $!);
+        my $cmd_cat = "";
+        foreach my $master (keys %document) {
+            my $m = basename $master;
+            my $master_po = $po_filename{$lang};
+            $master_po =~ s/\$master/$m/g;
+            if (-e "$master_po") {
+                $cmd_cat .= " $master_po";
+            }
+            $splitted_po{$lang}{$master} = $master_po;
+        }
+        if (length $cmd_cat) {
+            $cmd_cat = "msgcat -o $tmp_bigpo $cmd_cat";
+            run_cmd($cmd_cat);
+        }
+        # We do not need to keep the original name with $master
+        $po_filename{$lang} = $tmp_bigpo;
+    }
+}
+
 # update all po files
 my $lang;
 foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
-	if ($po4a_opts{"split"}) {
-	    my ($pot_filename,$po_filename,$bigpo_filename);
-	    (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
-						       DIR    => "/tmp",
-						       SUFFIX => ".pot",
-						       OPEN   => 0,
-						       UNLINK => 0)
-		or die wrap_msg(gettext("Can't create a temporary pot file: %s"), $!);
-	    (undef,$po_filename)=File::Temp->tempfile("po4aXXXX",
-						      DIR    => "/tmp",
-						      SUFFIX => ".po",
-						      OPEN   => 0,
-						      UNLINK => 0)
-		or die wrap_msg(gettext("Can't create a temporary po file: %s"), $!);
-	    my ($poorig,$pores)=(Locale::Po4a::Po->new(),Locale::Po4a::Po->new());
-	    $poorig->read($po_filename{$lang});
-
-	    foreach my $master (sort keys %document) {
-		my $pot=Locale::Po4a::Po->new();
-		my $po=Locale::Po4a::Po->new();
-		print "  $master:" unless ($po4a_opts{"quiet"});
-		print "(pot)" unless ($po4a_opts{"quiet"});
-		$pot=$potfile->filter("(reference='\Q$master:\E')");
-		print "(po) " unless ($po4a_opts{"quiet"});
-		$po=$poorig->filter("(reference='\Q$master:\E')");
-		unlink($pot_filename) if -e $pot_filename;
-		unlink($po_filename) if -e $po_filename;
-
-		$pot->write($pot_filename);
-		$po->write($po_filename);
-
-		my $cmd;
-		$cmd = "msgmerge -U $po_filename $pot_filename --backup=none";
-		my $out = qx/$cmd 2>&1/;
-		print $out if ($po4a_opts{"verbose"});
-		unless ($? == 0) {
-		    my $err = "";
-		    if ($? == -1) {
-			$err = sprintf(gettext("failed to execute '%s': %s."),
-			               $cmd, $!);
-		    } elsif ($? & 127) {
-			if ($? & 128) {
-			    $err = sprintf(gettext("'%s' died with signal %d, ".
-			                           "with coredump."),
-			                   $cmd, $? & 127);
-			} else {
-			    $err = sprintf(gettext("'%s' died with signal %d, ".
-			                           "without coredump."),
-			                   $cmd, $? & 127);
-			}
-		    } else {
-			$err = sprintf(gettext("'%s' exited with value %d."),
-			               $cmd, $? >> 8);
-		    }
-
-		    die wrap_msg(gettext("Error while running msgmerge: %s"),
-		                 $err);
-		}
-		$pores->read($po_filename);
-	    }
-	    $pores->write($po_filename{$lang}.".new");
-	    unlink($pot_filename) if -e $pot_filename;
-	    unlink($po_filename) if -e $po_filename;
-
-	} else {
-	    my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename".
-	              ($po4a_opts{"no-backups"}?" --backup=none":"");
-	    my $out = qx/$cmd 2>&1/;
-	    print $out if ($po4a_opts{"verbose"});
-	    unless ($? == 0) {
-		my $err = "";
-		if ($? == -1) {
-		    $err = sprintf(gettext("failed to execute '%s': %s."),
-		                   $cmd, $!);
-		} elsif ($? & 127) {
-		    if ($? & 128) {
-			$err = sprintf(gettext("'%s' died with signal %d, ".
-		                               "with coredump."),
-			               $cmd, $? & 127);
-		    } else {
-			$err = sprintf(gettext("'%s' died with signal %d, ".
-			                       "without coredump."),
-			               $cmd, $? & 127);
-		    }
-		} else {
-		    $err = sprintf(gettext("'%s' exited with value %d."),
-		                   $cmd, $? >> 8);
-		}
-
-		die wrap_msg(gettext("Error while running msgmerge: %s"),
-		             $err);
-	    }
-	    system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang}
-		if $po4a_opts{"verbose"};
-	}
+	my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename".
+	          (($po4a_opts{"no-backups"}||$po4a_opts{"split"})?
+	           " --backup=none":"");
+	run_cmd($cmd);
+	system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang}
+	    if $po4a_opts{"verbose"};
     } else {
 	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
 	    if $po4a_opts{"verbose"};
@@ -746,14 +769,45 @@ foreach $lang (sort keys %po_filename) {
     }
 }
 
+if ($po4a_opts{"split"}) {
+    # We don't need the tmp big POT anymore
+    unlink($pot_filename);
+
+    # Split the complete PO in multiple POs
+    foreach $lang (sort keys %po_filename) {
+        foreach my $master (keys %document) {
+            my $tmp_file;
+            # Create a temporary PO, and check if the old one needs to be
+            # updated (unless --force was specified).
+            unless ($po4a_opts{"force"}) {
+                (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
+                                                       DIR    => "/tmp",
+                                                       SUFFIX => ".po",
+                                                       OPEN   => 0,
+                                                       UNLINK => 0)
+                    or die wrap_msg(
+                        gettext("Can't create a temporary pot file: %s"), $!);
+            }
+
+            my $cmd = "msggrep -N '$master' -o ".
+                      ($po4a_opts{"force"}?$splitted_po{$lang}{$master}:
+                                           $tmp_file).
+                      " $po_filename{$lang}";
+            run_cmd($cmd);
+
+            Locale::Po4a::Po::move_po_if_needed($tmp_file,
+                                                $splitted_po{$lang}{$master})
+                unless ($po4a_opts{"force"});
+        }
+    }
+}
+
 if ($po4a_opts{"rm-backups"}) {
     # Delete the .po~ backup files generated by msgmerge
 
-    unless ($po4a_opts{"split"}) {
 	foreach $lang (sort keys %po_filename) {
 	    unlink $po_filename{$lang}."~";
 	}
-    }
 }
 
 if (not $po4a_opts{"no-translations"}) {
@@ -822,6 +876,13 @@ if (not $po4a_opts{"no-translations"}) {
 
 	    $doc->write($document{$master}{$lang});
 	}
+    }
+}
+
+if ($po4a_opts{"split"}) {
+    # We don't need the tmp big POs anymore
+    foreach $lang (sort keys %po_filename) {
+        unlink $po_filename{$lang};
     }
 }
 
