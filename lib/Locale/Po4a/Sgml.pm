@@ -295,7 +295,23 @@ sub translate {
         return $string.($options{'wrap'}?"\n":"");
     }
 
-    return $self->SUPER::translate($string,$ref,$type,%options);
+    $string = $self->SUPER::translate($string,$ref,$type,%options);
+
+    $string = $self->post_trans($string,$ref,$type);
+
+    return $string;
+}
+
+sub post_trans {
+    my ($self,$str,$ref,$type)=@_;
+
+    # Change ascii non-breaking space to an &nbsp;
+    my $nbs_out = "\xA0";
+    my $enc_length = Encode::from_to($nbs_out, "latin1",
+                                               $self->get_out_charset);
+    $str =~ s/\Q$nbs_out/&nbsp;/g if defined $enc_length;
+
+    return $str;
 }
 
 #

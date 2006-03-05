@@ -6,6 +6,8 @@ po4a (0.24-1) UNRELEASED; urgency=low
     semi-colon, but they were expended in entities not terminated by a
     semi-colon (e.g. id="&url-debian-volatile").
   * Add the docbook docinfo tag, and remove duplicate refsect1 tag.
+  * Add a post-translation filter, which converts non breaking spa¢es (0xA0 in
+    latin1) to the &nbsp; entity.
   (Po.pm)
   * use File::Copy::move instead of rename (the POT/POs were not written when
     /tmp and the file were not in the same device.
@@ -28,6 +30,11 @@ po4a (0.24-1) UNRELEASED; urgency=low
   (general)
   * replace some `||' by `or'. || has an higher priority and some warnings
     were masked.
+  (Pod.pm)
+  * Overload the TransTractor's translate() in order to add pre- and
+    post-translation filters.
+  * Change the latin1 0xA0 (non-breaking spaces) to the pod S<...> equivalent.
+    This should help projects with multiple formats.
 
   [Yuri Kozlov]
   * Updated russian translation (po/bin/ru.po) (Closes: #350300)
