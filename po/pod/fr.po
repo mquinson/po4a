@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "POT-Creation-Date: 2006-03-07  0:06+0100\n"
-"PO-Revision-Date: 2004-11-10 14:11-0700\n"
+"PO-Revision-Date: 2006-03-07  0:18+0100\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -3766,14 +3766,13 @@ msgstr "espaces insécables"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:87
-#, fuzzy
 msgid ""
 "Translators can use non-breaking spaces in their translations.  These non-"
 "breaking spaces (0xA0 in latin1) will be transliterated into a roff non-"
 "breaking space ('\\ ')."
 msgstr ""
 "Les traducteurs peuvent utiliser des espaces insécables dans leurs "
-"traductions. Ces espaces insécables (0xA0) seront modifiés en un espace "
+"traductions. Ces espaces insécables (0xA0 en latin1) seront modifiés en un espace "
 "insécable roff ('\\ ')."
 
 #: ../../lib/Locale/Po4a/Man.pm:91
@@ -5823,11 +5822,10 @@ msgstr ""
 
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:147
-#, fuzzy
 msgid "Coma-separated list of environments which should be taken as verbatim."
 msgstr ""
-"Liste d'environnements, séparés par des virgules, dont les retours à la "
-"ligne ne doivent pas être modifiés."
+"Liste d'environnements, séparés par des virgules, qui doivent être "
+"considérés comme verbatim."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:151
@@ -6444,6 +6442,7 @@ msgstr ""
 #: ../../lib/Locale/Po4a/TeX.pm:1643
 msgid "Some commands should be added to the environment stack"
 msgstr ""
+"Certaines commandes devraient être ajoutée à la pile des environnements"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/TeX.pm:1645
@@ -6451,6 +6450,8 @@ msgid ""
 "These commands should be specified by couples.  This could allow to specify "
 "commands beginning or ending a verbatim environment."
 msgstr ""
+"Ces commandes devraient être forunies par paires. Ceci permettrait de "
+"définir des commandes qui débutent ou terminent un environnement verbatim."
 
 # type: =head3
 #: ../../lib/Locale/Po4a/TeX.pm:1649
@@ -8755,15 +8756,19 @@ msgid ""
 "be created for each document specified in the po4a configuration file.  See "
 "the B<Splitted mode> section."
 msgstr ""
+"Vous pouvez également utiliser $master pour faire référence au nom (sans "
+"le chemein) du document. Dans ce cas, po4a utilisera un mode réparti : un "
+"POT et un PO (par langue) sera créé pour chaque document présent dans le "
+"fichier de configuration de po4a. Consultez la section B<Mode réparti>."
 
 # type: verbatim
 #: ../../po4a:95
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 " [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
 "\n"
 msgstr ""
-" [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po\n"
+" [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
 "\n"
 
 #: ../../po4a:97
@@ -8964,13 +8969,15 @@ msgstr "Notez que vous pouvez encore ajouter des options fichier par fichier."
 # type: =head2
 #: ../../po4a:166
 msgid "Splitted mode"
-msgstr ""
+msgstr "Mode réparti"
 
 # type: textblock
 #: ../../po4a:168
 msgid ""
 "The splitted mode is used when $master is used in the [po4a_paths] line."
 msgstr ""
+"Le mode réparti est utilisé quand $master est utilisé dans la ligne "
+"[po4a_paths]."
 
 # type: textblock
 #: ../../po4a:170
@@ -8978,6 +8985,9 @@ msgid ""
 "When the splitted mode is used, a temporary big POT and temporary big POs "
 "are used. This permits to share the translations between all the POs."
 msgstr ""
+"Quand le mode réparti est utilisé, une gros POT et de gros POs sont créé "
+"temporairement. Ceci permet de partager les traductions entre tous les "
+"POs."
 
 # type: textblock
 #: ../../po4a:173
@@ -8988,6 +8998,12 @@ msgid ""
 "removes the fuzzy tag in one PO, the translation of this string will be "
 "updated in every POs automatically."
 msgstr ""
+"Si deux POs ont deux traductions différentes pour la même chaîne, po4a "
+"marquera cette chaîne comme étant fuzzy et proposera les deux traductions "
+"dans tous les POs qui contiennent cette chaîne. Ensuite, lorsqu'un "
+"traducteur mettra à jour la chaîne dans un PO et retirera l'étiquette "
+"fuzzy, la traduction de cette chaîne sera mise à jour dans tous les POs "
+"automatiquement."
 
 #: ../../po4a:179 ../../po4a-gettextize:57 ../../po4a-normalize:35
 #: ../../po4a-translate:34
