@@ -1883,7 +1883,7 @@ $macro{'TS'}=sub {
 
 ## Builtin register, of course they do not need to be translated
 
-$macro{'F'}=$macro{'H'}=$macro{'V'}=$macro{'A'}=$macro{'P'}=$macro{'T'}=\&untranslated;
+$macro{'F'}=$macro{'H'}=$macro{'V'}=$macro{'A'}=$macro{'T'}=\&untranslated;
 
 ## ms package
 ##
