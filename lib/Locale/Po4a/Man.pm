@@ -587,7 +587,7 @@ NEW_LINE:
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
             if (   $l2 =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
-                or $l2 =~ /^[.'][\t ]*([BI]|P|PP|TP)\s*$/) {
+                or $l2 =~ /^[.'][\t ]*([BI]|P|PP|LP|TP)\s*$/) {
                 my $font = $line;
                 $font =~ s/^\.([BI])\s*$/$1/;
                 # Register the new current font.
