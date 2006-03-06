@@ -632,7 +632,7 @@ NEW_LINE:
         my $macro = $1;
         my $arguments = $2;
         my @args = splitargs($ref,$arguments);
-        if ($macro eq 'B' || $macro eq 'I' || $macro eq 'R') {
+        if ($macro eq 'B' || $macro eq 'I') {
             my $arg=join(" ",@args);
             $arg =~ s/^ +//;
             this_macro_needs_args($macro,$ref,$arg);
