@@ -85,7 +85,7 @@ translations.
 =item non-breaking spaces
 
 Translators can use non-breaking spaces in their translations.  These
-non-breaking spaces (0xA0) will be transliterated into a roff
+non-breaking spaces (0xA0 in latin1) will be transliterated into a roff
 non-breaking space ('\ ').
 
 =item quotes transliterations
