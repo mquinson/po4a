@@ -1091,12 +1091,12 @@ sub parse{
 		    "Unknown macro '%s'. Remove it from the document, or provide a patch to the po4a team."), $line);
 	    }
 
-	} elsif ($line =~ /^( +)([^. ].*)/) {
+	} elsif ($line =~ /^ +[^. ]/) {
 	    # (Lines containing only spaces are handled as empty lines)
 	    # Not a macro, but not a wrapped paragraph either
 	    $wrapped_mode = $wrapped_mode eq 'YES' ? 'NO' : $wrapped_mode;
 	    $paragraph .= $line."\n";
-	} elsif ($line =~ /^([^.].*)/ && $line !~ /^ *$/) {
+	} elsif ($line =~ /^[^.].*/ && $line !~ /^ *$/) {
 	    # (Lines containing only spaces are handled latter as empty lines)
 	    if ($line =~ /^\\"/) {
 		# special case: the line is entirely a comment, keep the
