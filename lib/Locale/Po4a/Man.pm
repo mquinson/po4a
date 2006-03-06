@@ -627,6 +627,10 @@ NEW_LINE:
     }
     $line .= "\n";
 
+    # Detect non-wrapped paragraphs
+    # This must be done before handling the .B, .RI ... font requests
+    $line =~ s/^($FONT_RE)(\s+)/$2$1/;
+
     # Handle font requests here
     if ($line =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI)(?:(?: +|\t)(.*)|)$/) {
         my $macro = $1;
