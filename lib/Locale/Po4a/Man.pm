@@ -586,8 +586,8 @@ NEW_LINE:
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
-            if (   $l2 =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
-                or $l2 =~ /^[.'][\t ]*([BIR])$/) {
+            if (   $l2 =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
+                or $l2 =~ /^[.'][\t ]*([BI])$/) {
                 # another font macro. Forget about the first one
                 $line = $l2;
                 $ref = $r2;
@@ -624,7 +624,7 @@ NEW_LINE:
     $line .= "\n";
 
     # Handle font requests here
-    if ($line =~ /^[.'][\t ]*([BIR]|BI|BR|IB|IR|RB|RI)(?:(?: +|\t)(.*)|)$/) {
+    if ($line =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI)(?:(?: +|\t)(.*)|)$/) {
         my $macro = $1;
         my $arguments = $2;
         my @args = splitargs($ref,$arguments);
