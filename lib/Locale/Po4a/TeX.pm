@@ -1640,9 +1640,9 @@ translated.
 When \item is used as an environment separator, the item argument is
 attached to the following string.
 
-=item Some commands should be added to the environment
+=item Some commands should be added to the environment stack
 
-The commands should be specified by couples.
+These commands should be specified by couples.
 This could allow to specify commands beginning or ending a verbatim
 environment.
 
