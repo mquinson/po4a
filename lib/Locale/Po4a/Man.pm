@@ -588,7 +588,11 @@ NEW_LINE:
         if ($line =~ /^(\.[BI])\s*$/) {
             if (   $l2 =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
                 or $l2 =~ /^[.'][\t ]*([BI])$/) {
-                # another font macro. Forget about the first one
+                my $font = $line;
+                $font =~ s/^\.([BI])\s*$/$1/;
+                # Register the new current font.
+                set_font($font);
+                # Now we can forget about the first one
                 $line = $l2;
                 $ref = $r2;
             } elsif ($l2 =~ /^([.'][\t ]*(?:IP)[\t ]+"?)(.*)$/) {
