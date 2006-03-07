@@ -29,7 +29,7 @@ POTs.
     documents and update the POs according to these up-to-date POTs when they
     distribute an archive.
 
- 2. If the switch to po4a has been done in a distribution, the source package
+ 2. If the switch to po4a was done in a distribution, the source package
     should also contain up-to-date translation materials.
 
  3. If the documentation is patched by the distribution, the maintainer
@@ -75,12 +75,6 @@ documents, formats, or subjects, you can use the following architecture:
   /doc/<ll>/
 
 
-We recommend to use a configuration file for po4a that does not require
-any module option (put the options in the configuration file).
-This permits to easily check if the POT is up-to-date with the
-documentation and that the 
-
-
 It is important to avoid a build failure if a generated
 translation cannot be generated (the PO is too outdated, an addendum
 cannot be applied, ...). You should therefore use wildcards or test if the file
@@ -109,7 +103,7 @@ dist:
 	po4a --rm-backups <package>.cfg
 	...
 
-If automake is used, The following could also be used.
+If automake is used, the following could also be used.
 
 dist-hook:
 	po4a --rm-backups <package>.cfg
@@ -120,9 +114,9 @@ Using po4a in a distribution
 ----------------------------
 (Debian packaging is taken as an example, you will have to adapt this to
 your distribution)
-In a Debian package, to ensure that the source package is released with
-all the POT and POs are up-to-date, you should run po4a in the 'clean' rule
-of debain/rules. The translated documents can be generated in the 'build'
+To ensure that the source of a Debian package contains only up-to-date POT
+and POs, you should run po4a in the 'clean' rule
+of debian/rules. The translated documents can be generated in the 'build'
 (or 'build-indep') rule:
 
 clean:
@@ -133,5 +127,5 @@ build:
 	# Generate the translations
 	cd <...>/po4a && po4a --rm-backups <package>.cfg
 
-You should try to avoid distribution-specific build systems, to ensure the
-portability of your software.
+However, you should try to avoid distribution-specific build systems, to
+ensure the portability of your software.
