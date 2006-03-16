@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.54 2006-03-04 19:32:13 nekral-guest Exp $
+# $Id: po4a,v 1.55 2006-03-16 20:16:41 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -564,8 +564,17 @@ while (<CONFIG>) {
 	@langs = split(/ /,$main." ".$args);
 
     } elsif ($cmd =~ m/type: *(.*)/) {
+	if (defined $document{$main}{'format'}) {
+	    warn wrap_ref_mod("$config_file:$nb", "",
+		gettext("The '%s' master file was specified earlier in the ".
+		        "configuration file.  This may cause problems with ".
+		        "options."), $main)
+		unless ($po4a_opts{"quiet"});
+	}
 	$document{$main}{'format'} = $1;
 	my %options;
+	%options = %{$document{$main}{'options'}}
+	  if defined %{$document{$main}{'options'}};
 	if (defined $aliases{$1}) {
 	    $document{$main}{'format'} = $aliases{$1}{"module"};
 	    if (defined %{$aliases{$1}{"options"}}) {
