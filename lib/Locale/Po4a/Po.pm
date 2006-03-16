@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.58 2006-03-04 19:04:53 nekral-guest Exp $
+# $Id: Po.pm,v 1.59 2006-03-16 19:45:07 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -56,6 +56,7 @@ This specifies the reference format. It can be one of 'none' to not produce
 any reference, 'noline' to not specify the line number, and 'full' to
 include complete references.
 
+=back
 
 =cut
 
