@@ -285,48 +285,34 @@ with a fix when possible...
 
 =head1 STATUS OF THIS MODULE
 
-I think that this module is still beta, but could be used for most of the
-existing man pages. I ran some test, processing all pages of my box and
-diff'ing between the original and the version processed trough po4a. The
-results are the following:
+This module can be used for most of the existing man pages.
 
- # of pages         : 5060
+Some tests are regularly run on Linux boxes:
 
- Ignored pages      : 1742 (34%)
- parser fails       :  530 (12% of all; 18% of unignored)
+=over 4
 
- works perfectly    : 1947 (39% of all; 59% of unignored; 70% of processed)
- change wrapping    :  409 ( 8% of all; 12% of unignored; 15% of processed)
- change wrapping
- and/or font        :  364 ( 7% of all; 11% of unignored; 13% of processed)
+=item *
 
- undetected problems:   68 ( 1% of all;  2% of unignored;  2% of processed)
+one third of the pages are refused because they were generated from
+another format suported by po4a (e.g. pod or SGML).
 
-Ignored pages are so, because they are not the source files. They are for
-example generated from POD or SGML. In that case, you should translate the
-[real] source file with the relevant po4a module instead of the generated
-man page.
+=item *
 
-Parser fails on pages based on mdoc(7), pages using conditionals with .if,
-defining new macros with .de, using non standard fonts, and more generally,
-not following the advices of the previous section.
+10% of the remaining pages are rejected with an error (e.g. mdoc pages,
+groff macro not supported).
 
-Pages with undetected problems are processed without complain by po4a::man,
-but the generated output is different from the original one (some strings
-are present in the original page and not in the one normalized by po4a, or
-the contrary). All of them are bugs, but most of the time this exhibit
-issues in the original page.
+=item *
 
-Most of the pages in the "change wrapping and/or font" category will only
-have their wrapping changed (but it was too difficult to figure this out
-automatically), or have other more serious formatting change (ie, which
-chars are italics, which ones are bold, etc.).
+Then, less than 1% of the pages are accepted silently by po4a, but with
+significant issues (i.e. missing words, or new words inserted)
 
-So, it seems like since ignored pages are translatable with po4a::pod and
-since wrapping changes are acceptable in most cases, the current version
-of po4a can translate 80% of the man pages on my machine. Moreover, most of
-the untranslatable pages could be fixed with some simple tricks given
-above. Isn't that coooool?
+=item *
+
+The other pages are usually handled without differences more important
+than spacing differences or line rewrapped (font issues in less than 10% of
+the processed pages).
+
+=back
 
 =head1 SEE ALSO
 
