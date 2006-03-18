@@ -568,26 +568,36 @@ NEW_LINE:
         push @comments, @next_comments;
         @next_comments = ();
     }
+
+    # A .I or .B request chnage the current font
+    # and on exit, switch the font to Roman
+    # When one of these request doesn't have its argument on its line
+    # (and when we support this usage), we must keep this font request to
+    # insert it later.
+    # It is a stack of fonts to be inserted (in case a .I is followed by
+    # a .B and then followed bysome text; note that in this case,
+    # only one \fR must be inserted at the end of the text)
+    my $insert_font = "";
     while ($line =~ /\\$/ || $line =~ /^(\.[BI])\s*$/) {
         my ($l2,$r2)=$self->SUPER::shiftline();
         chomp($l2);
         if ($line =~ /^(\.[BI])\s*$/) {
-            if (   $l2 =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI|SH|TP)[\t ]/
-                or $l2 =~ /^[.'][\t ]*([BI]|P|PP|LP|TP)\s*$/) {
+            if ($l2 =~ /^[.'][\t ]*([BI]|BI|BR|IB|IR|RB|RI)(?:[\t ]|\s*$)/) {
                 my $font = $line;
                 $font =~ s/^\.([BI])\s*$/$1/;
-                # Register the new current font.
-                set_font($font);
-                # Now we can forget about the first one
+                $insert_font = "\\f$font$insert_font";
                 $line = $l2;
                 $ref = $r2;
+            } elsif ($l2 =~ /^[.'][\t ]*(SH|TP|P|PP|LP)(?:[\t ]|\s*$)/) {
+                $line =~ s/^\.([BI])\s*$/$insert_font\\f$1/;
+                $self->SUPER::unshiftline($l2,$r2);
             } elsif ($l2 =~ /^([.'][\t ]*(?:IP)[\t ]+"?)(.*)$/) {
                 # Install the font modifier into the next line
                 # after a possible quote (")
                 my $macro = $1;
                 my $arg   = $2;
                 $line =~ /^\.([BI])\s*$/;
-                $line = $macro."\\f$1".$arg;
+                $line = $macro."$insert_font\\f$1".$arg;
                 $ref = $r2;
             } elsif ($l2 =~ /^[.']/) {
                 die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
@@ -626,7 +636,8 @@ NEW_LINE:
             my $arg=join(" ",@args);
             $arg =~ s/^ +//;
             this_macro_needs_args($macro,$ref,$arg);
-            $line = "\\f$macro".$arg."\\fR\n";
+            $line = "$insert_font\\f$macro".$arg."\\fR\n";
+            $insert_font = "";
         }
         # .BI bold alternating with italic
         # .BR bold/roman
@@ -642,6 +653,16 @@ NEW_LINE:
                                     "\\f$b$_" :
                                     "\\f$a$_"
                                  } @args)."\\fR\n";
+            if ($i eq 0) {
+                # If a .BI is used without argument, we must insert a
+                # \fI\fR. The \fR was inserted previously.
+                $line = "\\f$b$line";
+            }
+        }
+
+        if (length $insert_font) {
+            $line =~ s/\n$//;
+            $line = "$insert_font$line\\fR\n";
         }
     }
 

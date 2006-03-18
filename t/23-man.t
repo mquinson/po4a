@@ -100,7 +100,18 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 36; # $formats * $tests * 2 
+# Fonts
+push @tests, {
+  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/fonts -p tmp/fonts.pot 2>/dev/null",
+  'test' => "diff -u $diff_po_flags  data-23/fonts.pot tmp/fonts.pot",
+  'doc'  => "gettextize well fonts",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/fonts -p data-23/fonts.en.po -l tmp/fonts.en",
+  'test' => "diff -u $diff_pod_flags data-23/fonts.en tmp/fonts.en",
+  'doc'  => "translate this document",
+};
+
+use Test::More tests => 40; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
