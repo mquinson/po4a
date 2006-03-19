@@ -854,8 +854,9 @@ sub post_trans {
         $str = $tmp.$str;
     }
     }
-# FIXME: not inside a E<...>
-    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1 $2/g;
+
+    # There must not be an end of line inside an inline macro
+    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1 $2/gs;
 
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
@@ -1094,13 +1095,6 @@ sub parse{
 		$wrapped_mode='YES';
 	    }
 	    
-#	    # Special case:
-#	    #  .Dd => Indicates that this is a mdoc page
-#	    if ($macro eq 'Dd') {
-#		die wrap_mod("po4a::man", dgettext("po4a",
-#		    "This page seems to be a mdoc(7) formatted one. This is not supported (yet)."));
-#	    }
-		
 	    unshift @args,$self;
 	    # Apply macro
 	    $self->{type}=$macro;
