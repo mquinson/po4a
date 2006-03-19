@@ -364,6 +364,9 @@ my $FONT_RE = "\\\\f(?:\\[[^\\]]*\\]|\\(..|[^\\(\\[])";
 # into the groff non-breaking space.
 my $nbs;
 
+# Indicate if the page uses the mdoc macros
+my $mdoc_mode = 0;
+
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -789,6 +792,7 @@ sub pre_trans {
         $str = $2;
     }
 
+    unless ($mdoc_mode) {
     # Kill minus sign/hyphen difference.
     # Aestetic of printed man pages may suffer, but:
     #  * they are translator-unfriendly
@@ -801,6 +805,7 @@ sub pre_trans {
     $str =~ s/\\\*\(lq/``/sg;
     $str =~ s/\\\*\(rq/''/sg;
     $str =~ s/\\\(dq/"/sg;
+    }
     
     # non-breaking spaces
     # some non-breaking spaces may have been added during the parsing
@@ -822,6 +827,7 @@ sub post_trans {
         return $str;
     }
 
+    unless ($mdoc_mode) {
     # Post formatting, so that groff see the strange chars
     $str =~ s|\\-|-|sg; # in case the translator added some of them manually
     # change hyphens to minus signs
@@ -847,6 +853,9 @@ sub post_trans {
         }
         $str = $tmp.$str;
     }
+    }
+# FIXME: not inside a E<...>
+    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1 $2/g;
 
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
@@ -928,8 +937,10 @@ sub post_trans {
     # Don't do that, because we'll go into trouble if previous line was .TP
     # $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
     
+    unless ($mdoc_mode) {
     $str =~ s/``/\\\*\(lq/sg;
     $str =~ s/''/\\\*\(rq/sg;
+    }
 
     print STDERR "$str\n" if ($debug{'postrans'});
     return $str;
@@ -1083,12 +1094,12 @@ sub parse{
 		$wrapped_mode='YES';
 	    }
 	    
-	    # Special case:
-	    #  .Dd => Indicates that this is a mdoc page
-	    if ($macro eq 'Dd') {
-		die wrap_mod("po4a::man", dgettext("po4a",
-		    "This page seems to be a mdoc(7) formatted one. This is not supported (yet)."));
-	    }
+#	    # Special case:
+#	    #  .Dd => Indicates that this is a mdoc page
+#	    if ($macro eq 'Dd') {
+#		die wrap_mod("po4a::man", dgettext("po4a",
+#		    "This page seems to be a mdoc(7) formatted one. This is not supported (yet)."));
+#	    }
 		
 	    unshift @args,$self;
 	    # Apply macro
@@ -1978,3 +1989,134 @@ $macro{'UC'}=$macro{'AT'}=\&untranslated;
 #   If the english page needs to specify how a word must be hyphanted, the
 #   translated page may also have this need.
 $macro{'hw'}=\&translate_each;
+
+
+#############################################################################
+#
+# mdoc macros
+#
+# The macros are defined in mdoc(7) and groff_mdoc(7)
+#
+# TBC: Should the font processing be disabled in the mdoc mode?
+#############################################################################
+# FIXME: Maybe we should verify that the page is an mdoc page
+#        (add a flag in Dd, and always check that this flag is set in the
+#        other mdoc macros)
+sub translate_mdoc {
+    my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
+
+    $self->pushline("$macroname ".$self->t($macroarg)."\n");
+}
+#
+# Title Macros
+# ============
+# .Dd   Month day, year                       Document date.
+$macro{'Dd'}=sub {
+    my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
+
+    $mdoc_mode = 1;
+    # Erase the current macro definitions
+    %macro=();
+    %inline=();
+    %no_wrap_begin=();
+    %no_wrap_end=();
+    # Use the mdoc macros
+    define_mdoc_macros();
+
+    $self->translate_mdoc($macroname,$macroarg);
+};
+
+sub define_mdoc_macros {
+    # .Dt   DOCUMENT_TITLE [section] [volume]     Title, in upper case.
+    $macro{'Dt'}=\&translate_mdoc;
+    # .Os   OPERATING_SYSTEM [version/release]    Operating system (BSD).
+    $macro{'Os'}=\&translate_each;
+    # Keep the quotes e.g. finger.1
+    # Don't add quotes e.g. logger.1
+
+    # Page Layout Macros
+    # ==================
+    # .Sh   Section Headers.
+    # (man mdoc indicates only a limited set of valid headers,
+    # but it should be OK to translate the header)
+    $macro{'Sh'}=\&translate_mdoc;
+    # .Ss   Subsection Headers.
+    $macro{'Ss'}=\&translate_mdoc;
+    # .Pp   Paragraph Break.  Vertical space (one line).
+    $macro{'Pp'}=\&noarg;
+    # .D1   (D-one) Display-one Indent and display one text line.
+    $macro{'D1'}=\&translate_mdoc;
+    # .Dl   (D-ell) Display-one literal.
+    #       Indent and display one line of literal text
+    $macro{'Dl'}=\&translate_mdoc;
+    # .Bd   Begin-display block.
+    # FIXME: Note: there are some options, some of the options argument
+    #        may be translatable (-file <name>, -offset <string>)
+    $no_wrap_begin{'Bd'} = 1;
+    # .Ed   End-display (matches .Bd).
+    $no_wrap_end{'Ed'} = 1;
+    # .Bl   Begin-list.  Create lists or columns.
+    # FIXME: As for .Bd, there are some options
+    $macro{'Bl'}=\&untranslated;
+    # .El   End-list.
+    $macro{'El'}=\&noarg;
+    # .It   List item.
+    # FIXME: Maybe we could extract other modifiers
+    #        as in .It Fl l Ar num
+    $macro{'It'}=\&translate_mdoc;
+
+    # Manual Domain Macros
+    # ====================
+    # FIXME: I think most Manual and General text domain are in the inline category
+    foreach (qw(Ad An Ar Cd Cm Dv Er Ev Fa Fd Fn Ic Li Nm Op Ot Pa St Va Vt Xr)) {
+        $inline{$_} = 1;
+    }
+    # FIXME: some of thes macro introduce a line in bold.
+    #        Using \fP in these line is not supported.
+    #        do_fonts should be called for every inline line
+
+    # General Text Domain
+    # ===================
+    foreach (qw(%A %B %C %D %J %N %O %P %R %T %V
+                Ac Ao Ap Aq At Bc Bf Bo Bq Bx Db Dc Do Dq Ec Ef Em Eo Fx No Ns
+                Pc Pf Po Pq Qc Ql Qo Qq Re Rs Rv Sc So Sq Sm Sx Sy Tn Ux Xc Xo)) {
+        $inline{$_} = 1;
+    }
+
+    # FIXME: Maybe it should be joined with the preceding .Nm
+    $macro{'Nd'}=\&translate_mdoc;
+
+    # Command line flags
+    $inline{'Fl'} = 1;
+    # Exit status
+    $inline{'Ex'} = 1;
+    # Opening option bracket
+    $inline{'Oo'} = 1;
+    # Closing option bracket
+    $inline{'Oc'} = 1;
+    # Begin keep (keep words in the same line)
+    $inline{'Bk'} = 1;
+    # End keep
+    $inline{'Ek'} = 1;
+    # Library Names
+    $inline{'Lb'} = 1;
+    # Function Types
+    $inline{'Ft'} = 1;
+    # Function open (for functions with many arguments)
+    $inline{'Fo'} = 1;
+    # Function close
+    $inline{'Fc'} = 1;
+    # OpenBSD macro
+    $inline{'Ox'} = 1;
+    # BSD/OS Macro
+    $inline{'Bsx'} = 1;
+    # #include statements
+    $macro{'In'} = \&translate_mdoc;
+    # NetBSD Macro
+    $inline{'Nx'} = 1;
+
+    # This macro is a groff macro. I don't know if ot is valid in an mdoc page.
+    # But this is used in some pages and seems to work
+    $macro{'br'}=\&noarg;
+
+} # end of define_mdoc_macros
