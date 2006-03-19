@@ -768,6 +768,17 @@ sub pre_trans {
     while ($str =~ m/^(.*)PO4A-INLINE:(.*?):PO4A-INLINE(.*)$/s) {
         my ($t1,$t2, $t3) = ($1, $2, $3);
         $str = "$1E<$2>";
+        if ($mdoc_mode) {
+            # When a punctuation sign must be joined to an argument, mdoc
+            # permits to use such a construct:
+            # .Ar file1 , file2 , file3 ) .
+            # Here, we move the punctuation out of the E<...> tag.
+            # This is reverted in post_trans.
+            # FIXME: To be checked with the French punctuation
+            while ($str =~ m/ +([.,;:\)\]]) *>/s) {
+                $str =~ s/ +([.,;:\)\]]) *>/>$1/s;
+            }
+        }
         if (defined $t3 and length $t3) {
             $t3 =~ s/^\n//s;
             $str .= "\n$t3";
@@ -917,6 +928,14 @@ sub post_trans {
         my ($t1, $t2, $t3) = ($1,$2,$3);
         $t1 =~ s/ +$//s;
         $t2 =~ s/\n/ /gs;
+        if ($mdoc_mode) {
+            # restore the punctuaction inside the line (see pre_trans)
+            if ($t3 =~ s/^([.,;:\)\]]+)(?: +|$)//s) {
+                my $punctuation = $1;
+                $punctuation =~ s/([.,;:\)\]])/$1 /;
+                $t2 .= " $punctuation";
+            }
+        }
         $t3 =~ s/^ +//s;
         if ($wrap) {
         # The no-wrap case should be checked
