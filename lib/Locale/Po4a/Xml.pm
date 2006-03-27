@@ -74,6 +74,43 @@ sub parse {
 	map {$self->parse_file($_)} @{$self->{DOCPOD}{infile}};
 }
 
+# @save_holders is a stack of references to ('paragraph', 'translation',
+# 'sub_transmlations') hashes, where:
+# paragraph is a reference to an array (see paragraph in the
+#           treat_content() subroutine) of strings followed by references.
+#           It contains the @paragraph array as it was before the
+#           processing was interrupted by a tag instroducing a
+#           placeholder.
+# translation is the translation of this level up to now
+# sub_translations is a reference to an array of strings containing the
+#                  translations which must replace the placeholders.
+#
+# If @save_holders only has 1 holder, then we are not processing the
+# content of an holder, we are translating the document.
+my @save_holders;
+
+
+# If we are at the bottom of the stack and there is no <placeholder\d+> in
+# the current translation, we can push the translation in the translated
+# document.
+# Otherwise, we keep the translation in the current holder.
+sub pushline {
+	my ($self, $line) = (shift, shift);
+
+	my $holder_ref = pop @save_holders;
+	my %holder = %$holder_ref;
+	my $translation = $holder{'translation'};
+	$translation .= $line;
+	if (   (scalar @save_holders)
+	    or ($translation =~ m/<placeholder\d+>/s)) {
+		$holder{'translation'} = $translation;
+	} else {
+		$self->SUPER::pushline($translation);
+		$holder{'translation'} = '';
+	}
+	push @save_holders, \%holder;
+}
+
 =head1 TRANSLATING WITH PO4A::XML
 
 This module can be used directly to handle generic XML documents.  This will
@@ -180,6 +217,14 @@ sub initialize {
 	my $self = shift;
 	my %options = @_;
 
+	# Initialize the stack of holders
+	my @paragraph = ();
+	my @sub_translations = ();
+	my %holder = ('paragraph' => \@paragraph,
+	              'translation' => "",
+	              'sub_translations' => \@sub_translations);
+	@save_holders = (\%holder);
+
 	$self->{options}{'nostrip'}=0;
 	$self->{options}{'wrap'}=0;
 	$self->{options}{'caseinsensitive'}=0;
@@ -187,6 +232,7 @@ sub initialize {
 	$self->{options}{'tags'}='';
 	$self->{options}{'attributes'}='';
 	$self->{options}{'inline'}='';
+	$self->{options}{'placeholder'}='';
 	$self->{options}{'doctype'}='';
 	$self->{options}{'nodefault'}='';
 
@@ -208,6 +254,7 @@ sub initialize {
 	$self->{attributes}=();
 	#It will maintain the list of the inline tags
 	$self->{inline}=();
+	$self->{placeholder}=();
 	#list of the tags that must not be set in the tags or inline category
 	#by this module or sub-module (unless specified in an option)
 	$self->{nodefault}=();
@@ -892,12 +939,81 @@ sub treat_content {
 			# the tag path
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
+					# Opening inline tag
+					if ($self->get_tag_name(@tag) =~ m/(footnote|quote)/) { # FIXME
+						# We enter a new holder.
+						# Append a <placeholder#> tag to the current
+						# paragraph, and save the @paragraph in the
+						# current holder.
+						my $holder_ref = pop @save_holders;
+						my %old_holder = %$holder_ref;
+						my $sub_translations_ref = $old_holder{'sub_translations'};
+						my @sub_translations = @$sub_translations_ref;
+
+						push @paragraph, ("<placeholder".($#sub_translations+1).">", $text[1]);
+						my @saved_paragraph = @paragraph;
+
+						$old_holder{'paragraph'} = \@saved_paragraph;
+						push @save_holders, \%old_holder;
+
+						# Then we must push a new holder
+						my @new_paragraph = ();
+						my @sub_translations = ();
+						my %new_holder = ('paragraph' => \@new_paragraph,
+						                  'translation' => "",
+						                  'sub_translations' => \@sub_translations);
+						push @save_holders, \%new_holder;
+
+						# The current @paragraph
+						# (for the current holder)
+						# is empty.
+						@paragraph = ();
+					}
 					push @path, $self->get_tag_name(@tag);
 				} elsif ($tag_types[$type]->{'beginning'} eq "/") {
+					# Closing inline tag
+
+					# Check if this is closing the
+					# last opening tag we detected.
 					my $test = pop @path;
 					if (!defined($test) ||
 					    $test ne $tag[0] ) {
 						die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
+					}
+
+					if ($self->get_tag_name(@tag) =~ m/(footnote|quote)/) {
+						# This closes the current holder.
+
+						# We keep the closing tag in the holder paragraph.
+						push @paragraph, @text;
+						@text = ();
+
+						# Now translate this paragraph if needed.
+						# This will call pushline and append the
+						# translation to the current holder's translation.
+						$self->translate_paragraph($translate, @paragraph);
+
+						# Now that this holder is closed, we can remove
+						# the holder from the stack.
+						my $holder_ref = pop @save_holders;
+						# We need to keep the translation of this holder
+						my %holder = %$holder_ref;
+						my $translation = $holder{'translation'};
+						# Then we store the translation in the previous
+						# holder's sub_translations array
+						my $old_holder_ref = pop @save_holders;
+						my %old_holder = %$old_holder_ref;
+						my $sub_translations_ref = $old_holder{'sub_translations'};
+						my @sub_translations = @$sub_translations_ref;
+						push @sub_translations, $translation;
+						# We also need to restore the @paragraph array, as
+						# it was before we encountered the holder.
+						my $paragraph_ref = $old_holder{'paragraph'};
+						@paragraph = @$paragraph_ref;
+
+						# restore the holder in the stack
+						$old_holder{'sub_translations'} = \@sub_translations;
+						push @save_holders, \%old_holder;
 					}
 				}
 			}
@@ -933,7 +1049,7 @@ sub treat_content {
 			my ($tmpeof, @tag) = $self->extract_tag($type,0);
 			if ($self->get_tag_name(@tag) eq $path[$#path]) {
 				# The next tag closes the last inline tag.
-				# We nned to temporarily remove the tag from
+				# We need to temporarily remove the tag from
 				# the path before calling breaking_tag
 				my $t = pop @path;
 				if (!$tmpeof and !$self->breaking_tag) {
@@ -989,6 +1105,67 @@ sub treat_content {
 	}
 
 	# Translate the string when needed
+	# This will either push the translation in the translated document or
+	# in the current holder translation.
+	$self->translate_paragraph($translate, @paragraph);
+
+	# Now the paragraph is fully translated.
+	# If we have all the holders' translation, we can replace the
+	# placeholders by their translations.
+	# We must wait to have all the translations because the holders are
+	# numbered.
+	if (scalar @save_holders) {
+		my $holder_ref = pop @save_holders;
+		my %holder = %$holder_ref;
+		my $sub_translations_ref = $holder{'sub_translations'};
+		my $translation = $holder{'translation'};
+		my @sub_translations = @$sub_translations_ref;
+
+		# Count the number of <placeholder\d+> in $translation
+		my $count = 0;
+		my $str = $translation;
+		while ($str =~ m/^.*?<placeholder\d+>(.*)$/s) {
+			$count += 1;
+			$str = $1;
+		}
+
+		if (scalar(@sub_translations) == $count) {
+			# OK, all the holders of the current paragraph are
+			# closed (and translated).
+			# Replace them by their translation.
+			while ($translation =~ m/^(.*?)<placeholder(\d+)>(.*)$/s) {
+				# FIXME: we could also check that
+				#          * the holder exists
+				#          * all the holders are used
+				$translation = $1.$sub_translations[$2].$3;
+			}
+			# We have our translation
+			$holder{'translation'} = $translation;
+			# And there is no need for any holder in it.
+			@sub_translations = ();
+			$holder{'sub_translations'} = \@sub_translations;
+# FIXME: is it alright if a document ends by a placeholder?
+		}
+		# Either we don't have all the holders, either we have the
+		# final translation.
+		# We must keep the current holder at the top of the stack.
+		push @save_holders, \%holder;
+	}
+
+	# Push the trailing blanks
+	if ($blank ne "") {
+		$self->pushline($blank);
+	}
+	return $eof;
+}
+
+# Translate a @paragraph array of (string, reference).
+# The $translate argument indicates if the strings must be translated or
+# just pushed
+sub translate_paragraph {
+	my ($self, $translate) = (shift, shift);
+	my @paragraph = @_;
+
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
 		my $options = $self->tag_in_list($struc,@{$self->{tags}});
@@ -1008,15 +1185,7 @@ sub treat_content {
 			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
 		}
 	}
-
-	# Push the trailing blanks
-	if ($blank ne "") {
-		$self->pushline($blank);
-	}
-	return $eof;
 }
-
-
 
 
 
