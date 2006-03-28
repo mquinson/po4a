@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.59 2006-03-16 19:45:07 nekral-guest Exp $
+# $Id: Po.pm,v 1.60 2006-03-28 17:29:12 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -1097,7 +1097,7 @@ sub unescape_text {
               /$1\n/sgx;   # single string, match globally, allow comments
     # unescape tabulations
     $text =~ s/(          # $1:
-                (^|[^\\]) #    beginning of the line or any char
+                (\G|[^\\])#    beginning of the line or any char
                           #    different from '\'
                 (\\\\)*   #    followed by any even number of '\'
                )\\t       # and followed by an escaped tabulation
