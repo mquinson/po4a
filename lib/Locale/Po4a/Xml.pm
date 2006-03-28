@@ -940,7 +940,7 @@ sub treat_content {
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
-					if ($self->get_tag_name(@tag) =~ m/(footnote|quote)/) { # FIXME
+					if ($self->get_tag_name(@tag) =~ m/(footnote)/) { # FIXME
 						# We enter a new holder.
 						# Append a <placeholder#> tag to the current
 						# paragraph, and save the @paragraph in the
@@ -958,7 +958,7 @@ sub treat_content {
 
 						# Then we must push a new holder
 						my @new_paragraph = ();
-						my @sub_translations = ();
+						@sub_translations = ();
 						my %new_holder = ('paragraph' => \@new_paragraph,
 						                  'translation' => "",
 						                  'sub_translations' => \@sub_translations);
@@ -981,7 +981,7 @@ sub treat_content {
 						die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
 					}
 
-					if ($self->get_tag_name(@tag) =~ m/(footnote|quote)/) {
+					if ($self->get_tag_name(@tag) =~ m/(footnote)/) {
 						# This closes the current holder.
 
 						# We keep the closing tag in the holder paragraph.
