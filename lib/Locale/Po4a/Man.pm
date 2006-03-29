@@ -1183,10 +1183,25 @@ sub parse{
     }
 } # end of main
 
-
+# We can't push the header in the first line of the document, as in the
+# other module, because the first line may contain indications on how the
+# man page must be processed.
 sub docheader {
-    return ".\\\" This file was generated with po4a. Translate the source file.\n".
-           ".\\\" \n";
+    return "";
+}
+
+# The header is pushed just before the .TH macro (this macro is mandatory
+# and must be specified at the begining (there may be macro definitions
+# before).
+sub push_docheader {
+    my $self = shift;
+    $self->pushline(
+".\\\"*******************************************************************\n".
+".\\\"\n".
+".\\\" This file was generated with po4a. Translate the source file.\n".
+".\\\"\n".
+".\\\"*******************************************************************\n"
+    );
 }
 
 # Split request's arguments.
@@ -1510,6 +1525,7 @@ $macro{'TH'}= sub {
     my ($th,$title,$section,$date,$source,$manual)=@_;
     #Preamble#.TH      title     section   date     source   manual
 #    print STDERR "TH=$th;titre=$title;sec=$section;date=$date;source=$source;manual=$manual\n";
+    $self->push_docheader();
     $self->pushmacro($th,
 		     $self->t($title),
 		     $section,
