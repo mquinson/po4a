@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.60 2006-03-28 17:29:12 nekral-guest Exp $
+# $Id: Po.pm,v 1.61 2006-04-02 19:10:53 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -135,7 +135,10 @@ sub initialize {
                      $self->{options}{'porefs'});
 
     $self->{po}=();
-    $self->{count}=0;
+    $self->{count}=0;  # number of msgids in the PO
+    # count_doc: number of strings in the document
+    # (duplicate strings counted multiple times)
+    $self->{count_doc}=0;
     $self->{header_comment}=
 	escape_text( " SOME DESCRIPTIVE TITLE\n"
 		    ." Copyright (C) YEAR Free Software Foundation, Inc.\n"
@@ -382,19 +385,19 @@ sub gettextize {
 
     # Don't fail right now when the entry count does not match. Instead, give it a try so that the user
     # can see where we fail (which is probably where the problem is).
-    if ($poorig->count_entries() > $potrans->count_entries()) {
+    if ($poorig->count_entries_doc() > $potrans->count_entries_doc()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
 	    "Original has more strings than the translation (%d>%d). ".
 	    "Please fix it by editing the translated version to add some dummy entry."),
-		$poorig->count_entries() , $potrans->count_entries());
+		$poorig->count_entries_doc() , $potrans->count_entries_doc());
         $please_fail = 1;      
-    } elsif ($poorig->count_entries() < $potrans->count_entries()) {
+    } elsif ($poorig->count_entries_doc() < $potrans->count_entries_doc()) {
 	warn wrap_mod("po4a gettextize", dgettext("po4a",
 	    "Original has less strings than the translation (%d<%d). ".
 	    "Please fix it by removing the extra entry from the translated file. ".
 	    "You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization. ".
 	    "A possible cause is that a text duplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
-               $poorig->count_entries(), $potrans->count_entries());
+               $poorig->count_entries_doc(), $potrans->count_entries_doc());
         $please_fail = 1;
     }
 
@@ -415,12 +418,12 @@ sub gettextize {
 	    if $debug{'encoding'};
 
     for (my ($o,$t)=(0,0) ;
-	 $o<$poorig->count_entries() && $t<$potrans->count_entries();
+	 $o<$poorig->count_entries_doc() && $t<$potrans->count_entries_doc();
 	 $o++,$t++) {
 	#
 	# Extract some informations
 	#
-	my ($orig,$trans)=($poorig->msgid($o),$potrans->msgid($t));
+	my ($orig,$trans)=($poorig->msgid_doc($o),$potrans->msgid_doc($t));
 #	print STDERR "Matches [[$orig]]<<$trans>>\n";
 
 	my ($reforig,$reftrans)=($poorig->{po}{$orig}{'reference'},
@@ -458,7 +461,8 @@ sub gettextize {
 	$pores->push_raw('msgid' => $orig, 'msgstr' => $trans, 
 			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"")." fuzzy",
 	                 'type'  => $typeorig,
-			 'reference' => $reforig);
+			 'reference' => $reforig,
+			 'conflict' => 1);
     }
     die "$toobad\n" if $please_fail; # make sure we return a useful error message when entry count differ
     return $pores;
@@ -931,6 +935,7 @@ sub push_raw {
 	($entry{'msgid'},$entry{'msgstr'},
 	 $entry{'reference'},$entry{'comment'},$entry{'automatic'},
 	 $entry{'flags'},$entry{'type'});
+    my $keep_conflict = $entry{'conflict'};
 
 #    print STDERR "Push_raw\n";
 #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
@@ -967,6 +972,14 @@ sub push_raw {
 		 format_comment(". ",$reference).
 		 quote_text($msgstr));
 
+	    if ($keep_conflict) {
+		$msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".
+		          $self->{po}{$msgid}{'msgstr'}."\\n".
+		          "#-#-#-#-#  choice  #-#-#-#-#\\n".
+		          "$msgstr";
+		$msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".$msgstr
+		    unless ($msgstr =~ m/^#-#-#-#-#  choice  #-#-#-#-#\\n/s);
+	    } else {
 	    warn wrap_msg(dgettext("po4a",
 	    	"Translations don't match for:\n".
 		"%s\n".
@@ -975,6 +988,7 @@ sub push_raw {
 		" Second translation:\n".
 		"%s\n".
 		" Old translation discarded."),$txt,$first,$second);
+	    }
 	}
     }
     $self->{po}{$msgid}{'reference'} = (defined($self->{po}{$msgid}{'reference'}) ? 
@@ -984,6 +998,11 @@ sub push_raw {
     $self->{po}{$msgid}{'msgstr'} = $msgstr;
     $self->{po}{$msgid}{'comment'} = $comment;
     $self->{po}{$msgid}{'automatic'} = $automatic;
+    if (defined($self->{po}{$msgid}{'pos_doc'})) {
+        $self->{po}{$msgid}{'pos_doc'} .= " ".$self->{count_doc}++;
+    } else {
+        $self->{po}{$msgid}{'pos_doc'}  = $self->{count_doc}++;
+    }
     unless (defined($self->{po}{$msgid}{'pos'})) {
       $self->{po}{$msgid}{'pos'} = $self->{count}++;
     }
@@ -1022,6 +1041,18 @@ sub count_entries($) {
     return $self->{count};
 }
 
+=item count_entries_doc()
+
+Returns the number of entries in document. If a string appears multiple times
+in the document, it will be counted multiple times
+
+=cut
+
+sub count_entries_doc($) {
+    my $self=shift;
+    return $self->{count_doc};
+}
+
 =item msgid($)
 
 Returns the msgid of the given number.
@@ -1034,6 +1065,24 @@ sub msgid($$) {
     
     foreach my $msgid ( keys %{$self->{po}} ) {
 	return $msgid if ($self->{po}{$msgid}{'pos'} eq $num);
+    }
+    return undef;
+}
+
+=item msgid_doc($)
+
+Returns the msgid with the given position in the document.
+
+=cut
+
+sub msgid_doc($$) {
+    my $self=shift;
+    my $num=shift;
+    
+    foreach my $msgid ( keys %{$self->{po}} ) {
+        foreach my $pos (split / /, $self->{po}{$msgid}{'pos_doc'}) {
+            return $msgid if ($pos eq $num);
+        }
     }
     return undef;
 }

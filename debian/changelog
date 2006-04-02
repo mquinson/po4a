@@ -5,6 +5,12 @@ po4a (0.25-1) unstable; urgency=low
   * Missing =back in the pod part.
   * consecutive escaped tabulations in the PO: only the first one was
     un-escaped. Closes: #359352
+  * gettextize: do not associate the strings by their order in the POs, but by
+    their order in the documents. This permits to gettextize documents
+    which have the same structure, but where a string have
+    multiple translations, or when different strings have the same translation.
+    If multiple translations appear for a string, both strings are proposed in
+    the PO. Closes: #326670
   (po4a)
   * When a master document is specified twice in a configuration file:
     - do not ignore the options specified in the first line;
