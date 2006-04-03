@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.61 2006-04-02 19:10:53 nekral-guest Exp $
+# $Id: Po.pm,v 1.62 2006-04-03 22:03:53 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -462,7 +462,11 @@ sub gettextize {
 			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"")." fuzzy",
 	                 'type'  => $typeorig,
 			 'reference' => $reforig,
-			 'conflict' => 1);
+			 'conflict' => 1)
+	    unless (defined($pores->{po}{$orig})
+	            and ($pores->{po}{$orig}{'msgstr'} eq $trans))
+	# FIXME: maybe we should be smarter about what reference should be
+	#        sent to push_raw.
     }
     die "$toobad\n" if $please_fail; # make sure we return a useful error message when entry count differ
     return $pores;
