@@ -1,9 +1,14 @@
 #!/bin/sh
+#
+# po4aman-display-po permits to see how a manpage translated with po4a
+# will be displayed, without needing to uncompress the original manpage
+# and call po4a-translate.
+#
 
 OPTIONS="";
 
 function usage() {
-  echo "Usage: $0 -m MASTER_FILE -p PO_FILE [-o PO4A_OPT]";
+  echo "Usage: $0 -p PO_FILE [-m MASTER_FILE] [-o PO4A_OPT]";
   return 0;
 }
 
@@ -29,6 +34,40 @@ do
       ;;
   esac
 done
+
+if [ -z "$MASTER" ] && [ -n "$PO" ]
+then
+  echo "No manpage specified."
+  echo "Trying to find the manpage according to a line reference in the PO."
+  file=$(grep -m 1 "^#:" $PO | sed -e 's/^.* \(.*\):.*$/\1/')
+  file=$(basename $file)
+  ext=""
+  echo Looking for manpage: $file
+  MASTER=$(man -w $file)
+  if [ $? != "0" ]
+  then
+    ext=$(echo $file | sed -e 's/^.*\.\([1-9].*\)$/\1/' -e 's/\..*//')
+    file=$(echo $file | sed -e 's/\.[1-9].*//')
+    echo looking for manpage $file in section $ext
+    MASTER=$(man -w $ext $file)
+    if [ $? != "0" ]
+    then
+      file=$(echo $file | sed -e 's/\..*//')
+      echo looking for manpage $file in section $ext
+      MASTER=$(man -w $ext $file)
+      if [ $? != "0" ]
+      then
+        echo No manpage found for $PO
+        echo you must provide the manpage with the -m option
+        MASTER=""
+      fi
+    fi
+  fi
+  if [ -n "$MASTER" ]
+  then
+    echo Using: $MASTER as the original manpage
+  fi
+fi
 
 # checking mandatory options
 if [ -z $MASTER ];
