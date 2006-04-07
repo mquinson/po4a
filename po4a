@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.55 2006-03-16 20:16:41 nekral-guest Exp $
+# $Id: po4a,v 1.56 2006-04-07 19:41:41 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -237,10 +237,9 @@ more recent.
 The POT file is also written in a temporary document and po4a verifies
 that the changes are really needed.
 
-The PO files are re-generated based on the POT-Creation-Date of the POT
-and PO files.
-
 =back
+
+The PO files are always re-generated based on the POT with B<msgmerge -U>.
 
 =item --no-translations
 
