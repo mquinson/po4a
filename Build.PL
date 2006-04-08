@@ -132,6 +132,7 @@ my $builder = Module::Build->subclass
 
 	    $self->depends_on('manpo');
 	    use Pod::Man;
+	    use File::Basename;
 
 	    my %charsets = ( 'default' => 'iso8859-1',
 	                     'pl'      => 'iso8859-2'
@@ -159,13 +160,14 @@ my $builder = Module::Build->subclass
 	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
 		print ("X Translate binary manpages to $lang\n");
 		foreach $file (keys(%{$self->script_files()})) {
-		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$file -a doc/addendum.$lang")
+		    my $man = basename $file;
+		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$man -a doc/addendum.$lang")
 		      && die;
-		    if (-e "blib/man/$file") {
+		    if (-e "blib/man/$man") {
 			system("mkdir -p blib/man/$lang/man1") && die;
-			$parser->parse_from_file ("blib/man/$file", "blib/man/$lang/man1/$file.1p");
-			system("gzip -9 blib/man/$lang/man1/$file.1p") && die;
-			system("rm -f blib/man/$file")&& die;
+			$parser->parse_from_file ("blib/man/$man", "blib/man/$lang/man1/$man.1p");
+			system("gzip -9 blib/man/$lang/man1/$man.1p") && die;
+			system("rm -f blib/man/$man")&& die;
 		    }
 		}
 	    }
