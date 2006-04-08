@@ -16,6 +16,10 @@ my $builder = Module::Build->subclass
 	    $self->depends_on('man');
 	    $self->depends_on('postats');
 	}
+	sub perl_scripts {
+	    return ('po4a-gettextize', 'po4a-updatepo', 'po4a-translate',
+	            'po4a-normalize', 'po4a', 'scripts/msguntypot');
+	}
 	sub ACTION_install {
 	    my $self = shift;
 
@@ -27,7 +31,7 @@ my $builder = Module::Build->subclass
 	sub ACTION_binpo {
 	    my $self = shift;
 
-	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}));
+	    my @files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}));
 
 	    unless ($self->up_to_date(\@files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a.pot\n";
@@ -86,7 +90,7 @@ my $builder = Module::Build->subclass
 	    my $self = shift;
 
 	    # update pot
-	    my @files = sort((keys(%{$self->script_files()}), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})}));
+	    my @files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})}));
 	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
 		my $podfiles = join ("", map {" -m ../../".$_ } @files);
 		print "XX Update documentation pot files: ";
@@ -159,7 +163,7 @@ my $builder = Module::Build->subclass
 	    foreach $lang (@langs) {
 	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
 		print ("X Translate binary manpages to $lang\n");
-		foreach $file (keys(%{$self->script_files()})) {
+		foreach $file (perl_scripts()) {
 		    my $man = basename $file;
 		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$man -a doc/addendum.$lang")
 		      && die;
