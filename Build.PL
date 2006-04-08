@@ -217,6 +217,11 @@ my $builder = Module::Build->subclass
 		    }
 		}
 	    }
+
+	    # Install the manpages of the Shell scripts
+	    system ("mkdir -p blib/man/man1") && die;
+	    system ("cp scripts/po4aman-display-po.1 blib/man/man1/") && die;
+	    system ("gzip -9 -f blib/man/man1/po4aman-display-po.1") && die;
 	}
 	sub ACTION_dist {
 	    my ($self) = @_;
