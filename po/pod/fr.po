@@ -1750,7 +1750,7 @@ msgstr ""
 
 # type: verbatim
 #: ../../doc/po4a.7.pod:697
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 " |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^=head\n"
 " |\n"
@@ -1759,7 +1759,7 @@ msgid ""
 " |moi\n"
 "\n"
 msgstr ""
-" |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^head\n"
+" |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^=head\n"
 " |\n"
 " |=head1 TRADUCTEUR\n"
 " |\n"
@@ -1776,24 +1776,23 @@ msgstr ""
 
 # type: verbatim
 #: ../../doc/po4a.7.pod:705
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 " PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1\n"
 "\n"
 msgstr ""
-" PO4A-HEADER:mode=after;position=NOM;beginboundary=^head1\n"
+" PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1\n"
 "\n"
 
 # type: textblock
 #: ../../doc/po4a.7.pod:707
-#, fuzzy
 msgid ""
 "This works because the next line matching the beginboundary /^=head1/ after "
 "the section \"NAME\" (translated to \"NOM\" in French), is the one declaring "
 "the authors. So, the addendum will be put between both sections."
 msgstr ""
 "Ceci fonctionne parce que la première ligne correspondant à l'expression "
-"rationnelle donnée dans le champ beginboundary (/^head1/) après la section "
+"rationnelle donnée dans le champ beginboundary (/^=head1/) après la section "
 "S<« NOM »> (correspondant à la section S<« NAME »> dans le document "
 "original), est celle indiquant les auteurs. De cette façon, l'addendum est "
 "placé entre les deux sections."
@@ -4248,11 +4247,13 @@ msgstr ""
 #: ../../lib/Locale/Po4a/Man.pm:288
 msgid "This module can be used for most of the existing man pages."
 msgstr ""
+"Ce module peut être utilisé avec presque toutes les pages de manuel "
+"existantes"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:290
 msgid "Some tests are regularly run on Linux boxes:"
-msgstr ""
+msgstr "Des tests sont régulièrement effectués sur une machine Linux :"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:296
@@ -4260,6 +4261,8 @@ msgid ""
 "one third of the pages are refused because they were generated from another "
 "format suported by po4a (e.g. pod or SGML)."
 msgstr ""
+"un tiers des pages sont refusés parce qu'elle ont été générée à partir "
+"d'un autre format suporté par po4a (par exemple pod our SGML)."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:301
@@ -4267,6 +4270,8 @@ msgid ""
 "10% of the remaining pages are rejected with an error (e.g. mdoc pages, "
 "groff macro not supported)."
 msgstr ""
+"10% des pages restantes sont rejetées avec une erreur (par exemple les "
+"pages mdoc, ou lorsqu'une macro groff n'est pas supportée)."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:306
@@ -4274,6 +4279,9 @@ msgid ""
 "Then, less than 1% of the pages are accepted silently by po4a, but with "
 "significant issues (i.e. missing words, or new words inserted)"
 msgstr ""
+"Ensuite, moins d'1% des pages sont acceptés par po4a, mais présentent de "
+"erreurs significatives (c'est-à-dire certains mots disparaissent ou des "
+"mots sont ajoutés)."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:311
@@ -4282,6 +4290,10 @@ msgid ""
 "spacing differences or line rewrapped (font issues in less than 10% of the "
 "processed pages)."
 msgstr ""
+"Les autres pages sont généralement supportées sans problème plus "
+"important que des différences d'espacement ou de remise en forme des "
+"lignes (également des problèmes de police dans moins de 10% des pages sur "
+"lesquelles po4a opère)."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:319
@@ -4884,9 +4896,8 @@ msgstr ""
 "Retourne le nombre d'entrées dans le catalogue (sans compter l'en-tête)."
 
 #: ../../lib/Locale/Po4a/Po.pm:1048
-#, fuzzy
 msgid "count_entries_doc()"
-msgstr "count_entries()"
+msgstr "count_entries_doc()"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Po.pm:1050
@@ -4894,6 +4905,8 @@ msgid ""
 "Returns the number of entries in document. If a string appears multiple "
 "times in the document, it will be counted multiple times"
 msgstr ""
+"Retourne le nombre d'entrées dans le document. Si une chaîne apparaît "
+"plusieurs fois dans le document, elle sera comptée plusieurs fois."
 
 #: ../../lib/Locale/Po4a/Po.pm:1060
 msgid "msgid($)"
@@ -4904,14 +4917,12 @@ msgid "Returns the msgid of the given number."
 msgstr "Retourne le msgid du numéro fourni."
 
 #: ../../lib/Locale/Po4a/Po.pm:1076
-#, fuzzy
 msgid "msgid_doc($)"
-msgstr "msgid($)"
+msgstr "msgid_doc($)"
 
 #: ../../lib/Locale/Po4a/Po.pm:1078
-#, fuzzy
 msgid "Returns the msgid with the given position in the document."
-msgstr "Retourne le msgid du numéro fourni."
+msgstr "Retourne le msgid qui a la position donnée dans le document.
 
 #: ../../lib/Locale/Po4a/Po.pm:1094
 msgid "get_charset()"
@@ -8850,12 +8861,11 @@ msgstr ""
 
 # type: textblock
 #: ../../po4a:242
-#, fuzzy
 msgid ""
 "The PO files are always re-generated based on the POT with B<msgmerge -U>."
 msgstr ""
-"Les fichiers PO sont regénéré en fonction du champ POT-Creation-Date du POT "
-"et des fichier PO."
+"Les fichiers PO sont toujours regénéré en fonction du POT avec B<msgmerge "
+"-U>."
 
 #: ../../po4a:244
 msgid "--no-translations"
