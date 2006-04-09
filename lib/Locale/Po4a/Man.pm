@@ -298,8 +298,8 @@ another format suported by po4a (e.g. pod or SGML).
 
 =item *
 
-10% of the remaining pages are rejected with an error (e.g. mdoc pages,
-groff macro not supported).
+10% of the remaining pages are rejected with an error (e.g. a
+groff macro is not supported).
 
 =item *
 
