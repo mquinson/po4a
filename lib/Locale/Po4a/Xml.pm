@@ -972,7 +972,9 @@ sub treat_content {
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
-					if ($self->get_tag_name(@tag) =~ m/(footnote)/) { # FIXME
+					my $placeholder_regex = join("|", @{$self->{placeholder}});
+					if (length($placeholder_regex) and
+					    $self->get_tag_name(@tag) =~ m/($placeholder_regex)/) { # FIXME
 						# We enter a new holder.
 						# Append a <placeholder#> tag to the current
 						# paragraph, and save the @paragraph in the
@@ -1013,7 +1015,9 @@ sub treat_content {
 						die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
 					}
 
-					if ($self->get_tag_name(@tag) =~ m/(footnote)/) {
+					my $placeholder_regex = join("|", @{$self->{placeholder}});
+					if (length($placeholder_regex) and
+					    $self->get_tag_name(@tag) =~ m/($placeholder_regex)/) {
 						# This closes the current holder.
 
 						# We keep the closing tag in the holder paragraph.
@@ -1249,6 +1253,10 @@ sub treat_options {
 	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
 	my @list_inline = split(/\s+/s,$1);
 	$self->{inline} = \@list_inline;
+
+	$self->{options}{'placeholder'} =~ /\s*(.*)\s*/s;
+	my @list_placeholder = split(/\s+/s,$1);
+	$self->{placeholder} = \@list_placeholder;
         
 	$self->{options}{'nodefault'} =~ /\s*(.*)\s*/s;
 	my %list_nodefault;
