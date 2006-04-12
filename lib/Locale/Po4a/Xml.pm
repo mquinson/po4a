@@ -489,7 +489,7 @@ sub tag_extract_doctype {
 	if (not $found) {
 		($eof,@tag)=$self->get_string_until('>',{include=>1,remove=>$remove,unquoted=>1});
 	} else {
-		($eof,@tag)=$self->get_string_until(']>',{include=>1,remove=>$remove,unquoted=>1});
+		($eof,@tag)=$self->get_string_until(']\s*>',{include=>1,remove=>$remove,unquoted=>1,regex=>1});
 	}
 	return ($eof,@tag);
 }
@@ -1269,25 +1269,27 @@ This ensures that the searched text is outside any quotes
 sub get_string_until {
 	my ($self,$search) = (shift,shift);
 	my $options = shift;
-	my ($include,$remove,$unquoted) = (0,0,0);
+	my ($include,$remove,$unquoted, $regex) = (0,0,0,0);
 
 	if (defined($options->{include})) { $include = $options->{include}; }
 	if (defined($options->{remove})) { $remove = $options->{remove}; }
 	if (defined($options->{unquoted})) { $unquoted = $options->{unquoted}; }
+	if (defined($options->{regex})) { $regex = $options->{regex}; }
 
 	my ($line,$ref) = $self->shiftline();
 	my (@text,$paragraph);
 	my ($eof,$found) = (0,0);
 
+	$search = "\Q$search\E" unless $regex;
 	while (defined($line) and !$found) {
 		push @text, ($line,$ref);
 		$paragraph .= $line;
 		if ($unquoted) {
-			if ( $paragraph =~ /^((\".*?\")|(\'.*?\')|[^\"\'])*\Q$search\E.*/s ) {
+			if ( $paragraph =~ /^((\".*?\")|(\'.*?\')|[^\"\'])*$search.*/s ) {
 				$found = 1;
 			}
 		} else {
-			if ( $paragraph =~ /.*\Q$search\E.*/s ) {
+			if ( $paragraph =~ /.*$search.*/s ) {
 				$found = 1;
 			}
 		}
@@ -1301,16 +1303,16 @@ sub get_string_until {
 	if ( $found ) {
 		$line = "";
 		if($unquoted) {
-			$text[$#text-1] =~ /^(((\".*?\")|(\'.*?\')|[^\"\'])*?\Q$search\E)(.*)/s;
+			$text[$#text-1] =~ /^(((\".*?\")|(\'.*?\')|[^\"\'])*?$search)(.*)/s;
 			$text[$#text-1] = $1;
 			$line = $5;
 		} else {
-			$text[$#text-1] =~ /(.*?\Q$search\E)(.*)/s;
+			$text[$#text-1] =~ /(.*?$search)(.*)/s;
 			$text[$#text-1] = $1;
 			$line = $2;
 		}
 		if(!$include) {
-			$text[$#text-1] =~ /(.*)(\Q$search\E.*)/s;
+			$text[$#text-1] =~ /(.*)($search.*)/s;
 			$text[$#text-1] = $1;
 			$line = $2.$line;
 		}
