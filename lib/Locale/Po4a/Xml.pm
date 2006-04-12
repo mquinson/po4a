@@ -75,7 +75,7 @@ sub parse {
 }
 
 # @save_holders is a stack of references to ('paragraph', 'translation',
-# 'sub_transmlations') hashes, where:
+# 'sub_translations') hashes, where:
 # paragraph is a reference to an array (see paragraph in the
 #           treat_content() subroutine) of strings followed by references.
 #           It contains the @paragraph array as it was before the
