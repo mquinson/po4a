@@ -475,8 +475,18 @@ sub tag_trans_procins {
 sub tag_extract_doctype {
 #TODO
 	my ($self,$remove)=(shift,shift);
-	my ($eof,@tag)=$self->get_string_until(']>',{include=>1,unquoted=>1});
-	if ($eof) {
+
+	# Check if there is an internal subset (between []).
+	my ($eof,@tag)=$self->get_string_until('>',{include=>1,unquoted=>1});
+	my $parity = 0;
+	my $paragraph = "";
+	map { $parity = 1 - $parity; $paragraph.= $parity?$_:""; } @tag;
+	my $found = 0;
+	if ($paragraph =~ m/<.*\[.*</s) {
+		$found = 1
+	}
+
+	if (not $found) {
 		($eof,@tag)=$self->get_string_until('>',{include=>1,remove=>$remove,unquoted=>1});
 	} else {
 		($eof,@tag)=$self->get_string_until(']>',{include=>1,remove=>$remove,unquoted=>1});
