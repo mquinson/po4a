@@ -1303,13 +1303,13 @@ sub get_string_until {
 	if ( $found ) {
 		$line = "";
 		if($unquoted) {
-			$text[$#text-1] =~ /^(((\".*?\")|(\'.*?\')|[^\"\'])*?$search)(.*)/s;
-			$text[$#text-1] = $1;
-			$line = $5;
+			$paragraph =~ /^(?:(?:\".*?\")|(?:\'.*?\')|[^\"\'])*?$search(.*)$/s;
+			$line = $1;
+			$text[$#text-1] =~ s/\Q$line\E$//s;
 		} else {
-			$text[$#text-1] =~ /(.*?$search)(.*)/s;
-			$text[$#text-1] = $1;
-			$line = $2;
+			$paragraph =~ /$search(.*)$/s;
+			$line = $1;
+			$text[$#text-1] =~ s/\Q$line\E$//s;
 		}
 		if(!$include) {
 			$text[$#text-1] =~ /(.*)($search.*)/s;
