@@ -341,6 +341,9 @@ sub found_string {
 		}
 	} elsif ($options->{'type'} eq "attribute") {
 		$comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
+	} elsif ($options->{'type'} eq "CDATA") {
+		$comment = "CDATA";
+		$wrap = 0;
 	} else {
 		die wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Internal error: unknown type identifier '%s'."), $options->{'type'});
 	}
@@ -419,6 +422,11 @@ my @tag_types = (
 		breaking	=> 1,
 		f_extract	=> \&tag_extract_doctype,
 		f_translate	=> \&tag_trans_doctype},
+	{	beginning	=> "![CDATA[",
+		end		=> "",
+		breaking	=> 1,
+		f_extract	=> \&CDATA_extract,
+		f_translate	=> \&CDATA_trans},
 	{	beginning	=> "/",
 		end		=> "",
 		f_breaking	=> \&tag_break_close,
@@ -569,6 +577,20 @@ sub tag_trans_close {
 		die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
 	}
 	return $self->join_lines(@tag);
+}
+
+sub CDATA_extract {
+	my ($self,$remove)=(shift,shift);
+        my ($eof, @tag) = $self->get_string_until(']]>',{include=>1,unquoted=>1,remove=>$remove});
+
+	return ($eof, @tag);
+}
+
+sub CDATA_trans {
+	my ($self,@tag)=@_;
+	return $self->found_string($self->join_lines(@tag),
+	                           $tag[1],
+	                           {'type' => "CDATA"});
 }
 
 sub tag_break_alone {
