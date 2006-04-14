@@ -2045,6 +2045,7 @@ $macro{'Dd'}=sub {
     my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
 
     $mdoc_mode = 1;
+    $self->push_docheader();
 
 # FIXME: It would be nice if we could switch from one set of macros to the
 # other.
