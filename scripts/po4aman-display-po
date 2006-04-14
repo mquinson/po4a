@@ -43,18 +43,18 @@ then
   file=$(basename $file)
   ext=""
   echo Looking for manpage: $file
-  MASTER=$(man -w $file)
+  MASTER=$(man -w -L C $file)
   if [ $? != "0" ]
   then
     ext=$(echo $file | sed -e 's/^.*\.\([1-9].*\)$/\1/' -e 's/\..*//')
     file=$(echo $file | sed -e 's/\.[1-9].*//')
     echo looking for manpage $file in section $ext
-    MASTER=$(man -w $ext $file)
+    MASTER=$(man -w -L C $ext $file)
     if [ $? != "0" ]
     then
       file=$(echo $file | sed -e 's/\..*//')
       echo looking for manpage $file in section $ext
-      MASTER=$(man -w $ext $file)
+      MASTER=$(man -w -L C $ext $file)
       if [ $? != "0" ]
       then
         echo No manpage found for $PO
