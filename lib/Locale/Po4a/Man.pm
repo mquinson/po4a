@@ -1525,6 +1525,7 @@ $macro{'TH'}= sub {
     my ($th,$title,$section,$date,$source,$manual)=@_;
     #Preamble#.TH      title     section   date     source   manual
 #    print STDERR "TH=$th;titre=$title;sec=$section;date=$date;source=$source;manual=$manual\n";
+    $mdoc_mode = 0;
     $self->push_docheader();
     $self->pushmacro($th,
 		     $self->t($title),
@@ -2044,11 +2045,18 @@ $macro{'Dd'}=sub {
     my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
 
     $mdoc_mode = 1;
-    # Erase the current macro definitions
-    %macro=();
-    %inline=();
-    %no_wrap_begin=();
-    %no_wrap_end=();
+
+# FIXME: It would be nice if we could switch from one set of macros to the
+# other.
+#
+# This does not work at this time. If we erase the current set of macros,
+# po4a fails when a configuration file uses both mdoc and groff pages.
+#
+#    # Erase the current macro definitions
+#    %macro=();
+#    %inline=();
+#    %no_wrap_begin=();
+#    %no_wrap_end=();
     # Use the mdoc macros
     define_mdoc_macros();
 
