@@ -12,6 +12,11 @@ function usage() {
   return 0
 }
 
+function error () {
+  echo "Error: $1" 1>&2
+  exit 1
+}
+
 while getopts m:p:ho: option
 do
   case $option in
@@ -35,7 +40,13 @@ do
   esac
 done
 
-if [ -z "$MASTER" ] && [ -n "$PO" ]
+if [ -z $PO ]
+then
+  usage 1>&2
+  exit 1
+fi
+
+if [ -z "$MASTER" ]
 then
   echo "No manpage specified."
   echo "Trying to find the manpage according to a line reference in the PO."
@@ -75,22 +86,15 @@ then
   usage 1>&2
   exit 1
 fi
-if [ -z $PO ]
-then
-  usage 1>&2
-  exit 1
-fi
 
 # checking files
 if [ ! -e $MASTER ]
 then
-  echo "Error: could not find master file: $MASTER" 1>&2
-  exit 1
+  error "could not find master file: $MASTER"
 fi
 if [ ! -e $PO ]
 then
-  echo "Error: could not find po file: $PO" 1>&2
-  exit 1
+  error "could not find po file: $PO"
 fi
 
 
