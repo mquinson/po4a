@@ -57,7 +57,7 @@ then
   MASTER=$(man -w -L C $file)
   if [ $? != "0" ]
   then
-    ext=$(echo $file | sed -e 's/^.*\.\([1-9].*\)$/\1/' -e 's/\..*//')
+    ext=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/p' -e 's/\..*//')
     file=$(echo $file | sed -e 's/\.[1-9].*//')
     echo looking for manpage $file in section $ext
     MASTER=$(man -w -L C $ext $file)
