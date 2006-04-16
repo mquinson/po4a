@@ -52,20 +52,20 @@ then
   echo "Trying to find the manpage according to a line reference in the PO."
   file=$(grep -m 1 "^#:" $PO | sed -e 's/^.* \(.*\):.*$/\1/')
   file=$(basename $file)
-  ext=""
+  section=""
   echo Looking for manpage: $file
   MASTER=$(man -w -L C $file)
   if [ $? != "0" ]
   then
-    ext=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/p' -e 's/\..*//')
+    section=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/p' -e 's/\..*//')
     file=$(echo $file | sed -e 's/\.[1-9].*//')
-    echo looking for manpage $file in section $ext
-    MASTER=$(man -w -L C $ext $file)
+    echo looking for manpage $file in section $section
+    MASTER=$(man -w -L C $section $file)
     if [ $? != "0" ]
     then
       file=$(echo $file | sed -e 's/\..*//')
-      echo looking for manpage $file in section $ext
-      MASTER=$(man -w -L C $ext $file)
+      echo looking for manpage $file in section $section
+      MASTER=$(man -w -L C $section $file)
       if [ $? != "0" ]
       then
         echo No manpage found for $PO
