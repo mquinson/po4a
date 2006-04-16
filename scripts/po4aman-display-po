@@ -5,32 +5,32 @@
 # and call po4a-translate.
 #
 
-OPTIONS="";
+OPTIONS=""
 
 function usage() {
-  echo "Usage: $0 -p PO_FILE [-m MASTER_FILE] [-o PO4A_OPT]";
-  return 0;
+  echo "Usage: $0 -p PO_FILE [-m MASTER_FILE] [-o PO4A_OPT]"
+  return 0
 }
 
 while getopts m:p:ho: option
 do
   case $option in
     m)
-      MASTER=$OPTARG;
+      MASTER=$OPTARG
       ;;
     p)
-      PO=$OPTARG;
+      PO=$OPTARG
       ;;
     o)
-      OPTIONS="-o $OPTARG $OPTIONS";
+      OPTIONS="-o $OPTARG $OPTIONS"
       ;;
     h)
-      usage;
-      exit 0;
+      usage
+      exit 0
       ;;
     [?])
-      usage 1>&2;
-      exit 1;
+      usage 1>&2
+      exit 1
       ;;
   esac
 done
@@ -70,41 +70,41 @@ then
 fi
 
 # checking mandatory options
-if [ -z $MASTER ];
+if [ -z $MASTER ]
 then
-  usage 1>&2;
-  exit 1;
-fi;
-if [ -z $PO ];
+  usage 1>&2
+  exit 1
+fi
+if [ -z $PO ]
 then
-  usage 1>&2;
-  exit 1;
-fi;
+  usage 1>&2
+  exit 1
+fi
 
 # checking files
-if [ ! -e $MASTER ];
+if [ ! -e $MASTER ]
 then
-  echo "Error: could not find master file: $MASTER" 1>&2;
-  exit 1;
-fi;
-if [ ! -e $PO ];
+  echo "Error: could not find master file: $MASTER" 1>&2
+  exit 1
+fi
+if [ ! -e $PO ]
 then
-  echo "Error: could not find po file: $PO" 1>&2;
-  exit 1;
-fi;
+  echo "Error: could not find po file: $PO" 1>&2
+  exit 1
+fi
 
 
-if [ "${MASTER%.gz}" = "$MASTER" ];
+if [ "${MASTER%.gz}" = "$MASTER" ]
 then
-  MAINNAME=$MASTER;
+  MAINNAME=$MASTER
 else
-  MAINNAME=`mktemp`;
-  trap "rm $MAINNAME" EXIT SIGINT;
-  gunzip -c $MASTER > $MAINNAME;
-fi;
+  MAINNAME=`mktemp`
+  trap "rm $MAINNAME" EXIT SIGINT
+  gunzip -c $MASTER > $MAINNAME
+fi
 
-CHARSET_MASTER=`file -i $MAINNAME | cut -d "=" -f 2`;
-CHARSET_PO=`file -i $PO | cut -d "=" -f 2`;
+CHARSET_MASTER=`file -i $MAINNAME | cut -d "=" -f 2`
+CHARSET_PO=`file -i $PO | cut -d "=" -f 2`
 
 po4a-translate -f man -k 0 -m $MAINNAME -M $CHARSET_MASTER \
   -p $PO $OPTIONS| iconv -f $CHARSET_PO -t // | man -l -
