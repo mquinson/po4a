@@ -46,30 +46,58 @@ then
   exit 1
 fi
 
+if [ ! -f $PO ]
+then
+  error "could not find po file: $PO"
+fi
+
 if [ -z "$MASTER" ]
 then
   echo "No manpage specified."
   echo "Trying to find the manpage according to a line reference in the PO."
-  file=$(grep -m 1 "^#:" $PO | sed -e 's/^.* \(.*\):.*$/\1/')
-  file=$(basename $file)
-  section=""
-  echo Looking for manpage: $file
-  MASTER=$(man -w -L C $file)
-  if [ $? != "0" ]
+  MASTER=$(grep -m 1 "^#:" $PO | sed -e 's/^.* \(.*\):.*$/\1/')
+fi
+
+find_man()
+{
+  section=$1
+  man=$2
+  echo -n "Looking for manpage $file"
+  [ -n "$section" ] && echo " in section $section" || echo ""
+  MAN_NUMBER=`man --all --where --locale=C $section "$man" 2> /dev/null | wc -l`
+
+  if [ $MAN_NUMBER = "0" ]
   then
-    section=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/p' -e 's/\..*//')
+    return 1
+  elif [ $MAN_NUMBER != "1" ]; then
+    error "Too many possible manpages: $(man -aw -L C $section "$man"), you must specify the manpage or the section"
+  else
+    MASTER=`man --where --locale=C $section "$man"`
+  fi
+
+  return 0
+}
+
+if [ ! -f "$MASTER" ]
+then
+  echo "Can't find the master man page $MASTER"
+  file=$(basename "$MASTER")
+  MASTER=""
+  section=""
+  if ! find_man "" "$file"
+  then
+    # Maybe $file contains a section
+    # (in the form of file.section.extension)
+    section=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/; s/\..*//; p')
     file=$(echo $file | sed -e 's/\.[1-9].*//')
-    echo looking for manpage $file in section $section
-    MASTER=$(man -w -L C $section $file)
-    if [ $? != "0" ]
+    if ! find_man "$section" "$file"
     then
+      # Maybe there is an extension at the end of the manpage (e.g. .man)
       file=$(echo $file | sed -e 's/\..*//')
-      echo looking for manpage $file in section $section
-      MASTER=$(man -w -L C $section $file)
-      if [ $? != "0" ]
+      if ! find_man "$section" "$file"
       then
-        echo No manpage found for $PO
-        echo you must provide the manpage with the -m option
+        echo No manpage found
+        echo You must provide the manpage with the -m option
         MASTER=""
       fi
     fi
@@ -91,10 +119,6 @@ fi
 if [ ! -e $MASTER ]
 then
   error "could not find master file: $MASTER"
-fi
-if [ ! -e $PO ]
-then
-  error "could not find po file: $PO"
 fi
 
 
