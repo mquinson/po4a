@@ -1554,7 +1554,12 @@ $macro{'SS'}=$macro{'SH'}=sub {
     }
 };
 
-$macro{'SM'}=\&translate_joined;
+# Macro: .SM [text]
+#     Set the text on the same line or the text on the next line in a
+#     font that is one point size smaller than the default font.
+# FIXME: Maybe we should find a better way to represent this (inline is
+#        not really nice in the PO).
+$inline{'SM'}=1;
 
 # .SP n     Skip n lines (I think)
 $macro{'SP'}=\&untranslated;	
