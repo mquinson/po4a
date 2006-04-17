@@ -516,8 +516,8 @@ NEW_LINE:
     $line =~ s/\\\././g;
 
     chomp $line;
-    if ($line =~ m/^(.*?)(?:(?<!\\)\\"(.*))$/) {
-        my ($l, $c) = ($1, $2);
+    if ($line =~ m/^(.*?)(?:(?<!\\)\\(["#])(.*))$/) {
+        my ($l, $t, $c) = ($1, $2, $3);
         $line = $l;
         # Check for comments indicating that the file was generated.
         if ($c =~ /Pod::Man/) {
@@ -560,6 +560,10 @@ NEW_LINE:
             if ($line =~ m/^[.']+$/) {
                 # those lines are ignored
                 # (empty lines are a little bit different)
+                goto NEW_LINE;
+            }
+            if ($line =~ m/^\s*$/ and $t eq "#") {
+                # Groff comments
                 goto NEW_LINE;
             }
         } else {
@@ -1054,7 +1058,7 @@ sub parse{
 
 	if ($line =~ /^[.']/) {
 	    die wrap_mod("po4a::man", dgettext("po4a", "Unparsable line: %s"), $line)
-		unless ($line =~ /^([.']+\\*?)(\\\")(.*)/ ||
+		unless ($line =~ /^([.']+\\*?)(\\["#])(.*)/ ||
 			$line =~ /^([.'])(\S*)(.*)/);
 	    my $arg1=$1;
 	    $arg1 .= $2;
@@ -1087,12 +1091,13 @@ sub parse{
 
 	    # Special case: Don't change these lines
 	    #  .\"  => comments
+	    #  .\#  => comments
 	    #  ."   => comments
 	    #  .    => empty point on the line
 	    #  .tr abcd...
 	    #       => substitution like Perl's tr/ac/bd/ on output.
-	    if ($macro eq '\"' || $macro eq '' || $macro eq 'tr' ||
-                $macro eq '"') {
+	    if ($macro eq '\\"' || $macro eq '' || $macro eq 'tr' ||
+	        $macro eq '"'   || $macro eq '\\#') {
 		$self->pushline($line."\n");
 		goto LINE;
 	    }
@@ -1142,7 +1147,10 @@ sub parse{
 		# input line is ignored.
 		$self->pushline($line."\n");
 		goto LINE;
-            } else {
+	    } elsif ($line =~ /^\\#/) {
+		# Special groff comment. Do not keep the new line
+		goto LINE;
+	    } else {
 		# Not a macro
 		# * first, try to handle some "output line continuation" (\c)
 		$paragraph =~ s/\\c *(($FONT_RE)?)\n?$/$1/s;
