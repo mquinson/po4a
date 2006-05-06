@@ -430,7 +430,7 @@ sub parse_file {
     } elsif ($prolog =~ /docbook/i) {
 	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution ".
 	                                    "date ".
-	                                    "editor entry ".
+	                                    "edition editor entry ".
 	                                    "figure ".
 	                                    "glosssee glossseealso glossterm ".
 	                                    "holder ".
