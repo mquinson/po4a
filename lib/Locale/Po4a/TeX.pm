@@ -625,8 +625,8 @@ sub translate_buffer {
     }
     # verbatim blocks.
     # Buffers starting by \end{verbatim} are handled after.
-    if (in_verbatim(@env) and $buffer !~ m/^\n?\\end\{$env[-1]\*?\}/) {
-        if($buffer =~ m/^(.*?)(\n?\\end\{$env[-1]\*?\}.*)$/s) {
+    if (in_verbatim(@env) and $buffer !~ m/^\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}/) {
+        if($buffer =~ m/^(.*?)(\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}.*)$/s) {
             # end of a verbatim block
             my ($begin, $end) = ($1?$1:"", $2);
             my ($t1, $t2) = ("", "");
@@ -1132,7 +1132,7 @@ sub parse {
 #       environment contains an un-closed bracket)
         if (   ($closed and ($line =~ /^\s*$/ or
                              $line =~ /^\s*$RE_VERBATIM\s*$/))
-            or (in_verbatim(@env) and $line =~ /^\s*\\end{$env[-1]}\s*$/)
+            or (in_verbatim(@env) and $line =~ /^\s*\Q$ESCAPE\Eend{$env[-1]}\s*$/)
            ) {
             # An empty line. This indicates the end of the current
             # paragraph.
