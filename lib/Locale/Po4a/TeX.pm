@@ -1324,12 +1324,13 @@ TEST_TYPE:
                 $count++;
                 goto TEST_TYPE;
             } else {
+                my $reason = dgettext("po4a",
+                                      "An optional argument ".
+                                      "was provided, but a mandatory one ".
+                                      "is expected.");
                 die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a",
-                                     "Command '%s': An optional argument ".
-                                     "was provided, but a mandatory one ".
-                                     "is expected.")."\n",
-                                 $command);
+                                 dgettext("po4a", "Command '%s': %s")."\n",
+                                 $command, $reason);
             }
             if ($have_to_be_translated) {
                 ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$count.$type_end{$type}));
@@ -1435,12 +1436,13 @@ TEST_TYPE:
                 $count++;
                 goto TEST_TYPE;
             } else {
+                my $reason = dgettext("po4a",
+                                      "An optional argument ".
+                                      "was provided, but a mandatory one ".
+                                      "is expected.");
                 die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a",
-                                     "Command '%s': An optional argument ".
-                                     "was provided, but a mandatory one ".
-                                     "is expected.")."\n",
-                                 $command);
+                                 dgettext("po4a", "Command '%s': %s")."\n",
+                                 $command, $reason);
             }
 
             if ($have_to_be_translated) {
@@ -1523,7 +1525,7 @@ TEST_TYPE:
         } else {
             $check = 0;
             $reason = dgettext("po4a",
-                               "Command '%s': An optional argument was ".
+                               "An optional argument was ".
                                "provided, but a mandatory one is expected.");
         }
     }
