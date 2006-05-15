@@ -103,6 +103,10 @@ our $RE_ESCAPE = "\\\\";
 our $ESCAPE    = "\\";
 # match the beginning of a verbatim block
 our $RE_VERBATIM = "\\\\begin\\{(?:verbatim)\\*?\\}";
+# match the beginning of a comment.
+# NOTE: It must contain a group, with chars preceding the comment
+our $RE_PRE_COMMENT= "(?<!\\\\)(?:\\\\\\\\)*";
+our $RE_COMMENT= "\\\%";
 
 # Space separated list of environments that should not be re-wrapped.
 our $no_wrap_environments = "verbatim";
@@ -681,10 +685,10 @@ sub translate_buffer {
 
     # remove comments from the buffer.
     # Comments are stored in an array and shown as comments in the PO.
-    while ($buffer =~ m/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)(.*)$/s) {
+    while ($buffer =~ m/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)(.*)$/s) {
         my $comment = $2;
         my $end = "";
-        if ($4 =~ m/^\n/s and $buffer !~ m/^%/s) {
+        if ($4 =~ m/^\n/s and $buffer !~ m/^$RE_COMMENT/s) {
             # a line with comments, followed by an empty line.
             # Keep the empty line, but remove the comment.
             # This is an empirical heuristic, but seems to work;)
@@ -693,7 +697,7 @@ sub translate_buffer {
         if (defined $comment and $comment !~ /^\s*$/s) {
             push @comments, $comment;
         }
-        $buffer =~ s/((?<!\\)(?:\\\\)*)%([^\n]*)(\n[ \t]*)/$1$end/s;
+        $buffer =~ s/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)/$1$end/s;
     }
     
 
@@ -1071,14 +1075,14 @@ sub is_closed {
     my $opening = 0;
     # FIXME: { and } should not be counted in verbatim blocks
     # Remove comments
-    $tmp =~ s/(?<!\\)(?:\\\\)*%.*//mg;
+    $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
     while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\{(.*)$/s) {
         $opening += 1;
         $tmp = $1;
     }
     $tmp = $paragraph;
     # Remove comments
-    $tmp =~ s/(?<!\\)(?:\\\\)*%.*//mg;
+    $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
     while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\}(.*)$/s) {
         $closing += 1;
         $tmp = $1;
