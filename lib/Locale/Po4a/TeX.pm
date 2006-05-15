@@ -275,7 +275,7 @@ my $my_dirname;
 # See read_file.
 our @exclude_include;
 
-my %type_end=('{'=>'}', '['=>']');
+my %type_end=('{'=>'}', '['=>']', ' '=>'');
 
 #########################
 #### DEBUGGING STUFF ####
@@ -1360,7 +1360,7 @@ TEST_TYPE:
 }
 
 sub register_generic_command {
-    if ($_[0] =~ m/^(.*),((\{_?\}|\[_?\])*)$/) {
+    if ($_[0] =~ m/^(.*),((\{_?\}|\[_?\]| _? )*)$/) {
         my $command = $1;
         my $arg_types = $2;
         if ($command =~ /^([-*+])(.*)$/) {
@@ -1371,7 +1371,7 @@ sub register_generic_command {
         my @translated = ();
         while (    defined $arg_types
                and length $arg_types
-               and $arg_types =~ m/^(?:([\{\[])(_?)[\}\]])(.*)$/) {
+               and $arg_types =~ m/^(?:([\{\[ ])(_?)[\}\] ])(.*)$/) {
             push @types, $1;
             push @translated, ($2 eq "_")?1:0;
             $arg_types = $3;
