@@ -36,6 +36,11 @@ other [human] languages.
 This module contains the definitions of common Texinfo commands and
 environments.
 
+=head1 STATUS OF THIS MODULE
+
+This module is still beta.
+Please send feedback and feature requests.
+
 =head1 SEE ALSO
 
 L<po4a(7)|po4a.7>,
