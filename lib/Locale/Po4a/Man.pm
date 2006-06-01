@@ -793,7 +793,7 @@ sub pre_trans {
     if (defined $self->{type} && $self->{type} =~ m/^(SH|SS)$/) {
         set_regular("B");
     }
-    $str = do_fonts($str);
+    $str = do_fonts($str, $ref);
     if (defined $self->{type} && $self->{type} =~ m/^(SH|SS)$/) {
         set_regular("R");
     }
@@ -1358,8 +1358,8 @@ sub splitargs {
 
     sub do_fonts {
         # one argument: a string
-        my $str = $_[0];
-        print STDERR "do_fonts('$str')="
+        my ($str, $ref) = (shift, shift);
+        print STDERR "do_fonts('$str', '$ref')="
             if ($debug{'fonts'});
 
         # restore the font stack
@@ -1408,7 +1408,11 @@ sub splitargs {
                     $str .= "\\f".$elem;
                 }
             } else {
-                die wrap_mod("po4a::man", dgettext("po4a", "Unsupported font in: '%s'."), $elem);
+                die wrap_ref_mod($ref,
+                                 "po4a::man",
+                                 dgettext("po4a",
+                                          "Unsupported font in: '%s'."),
+                                 $elem);
             }
         }
         # Do some simplification (they don't change the font stack)
