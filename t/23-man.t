@@ -111,7 +111,17 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 40; # $formats * $tests * 2 
+push @tests, {
+    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/mdoc.1 -p tmp/mdoc.pot 2>/dev/null",
+    'test' => "diff -u $diff_po_flags  data-23/mdoc.pot tmp/mdoc.pot",
+    'doc'  => "gettextize well mdoc",
+}, {
+    'run'  => "perl ../po4a-translate -f #format# -m data-23/mdoc.1 -p data-23/mdoc.fr.po -l tmp/mdoc.fr -L ISO-8859-1",
+    'test' => "diff -u $diff_pod_flags data-23/mdoc.fr tmp/mdoc.fr",
+    'doc'  => "translate this document",
+};
+
+use Test::More tests => 44; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
