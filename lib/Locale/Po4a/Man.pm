@@ -866,13 +866,16 @@ sub post_trans {
             my $begin = $1;
             $str = $2;
             my $tmp2 = $tmp.$begin;
-            if (   ($begin =~ m/\\s$/s)
-                or ($begin =~ m/\\\((.|E<[gl]t>)$/s)
-                or ($tmp2 =~ m/\\h'([^']|\\')*$/)) {
+            if (   ($begin =~ m/(?<!\\)(\\\\)*\\s$/s)
+                or ($begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)$/s)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[hC]'([^']|(?<!\\)(\\\\)*\\')*$/)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)) {
                 # Do not change - to \- for
                 #  * \s-n (reduce font size)
                 #  * \(.- (a character named '.-', e.g. '<-')
                 #  * inside a \h'...'
+                #  * inside a \C'...'
+                #  * inside a \[...]
                 $tmp = $tmp2."-";
             } else {
                 $tmp = $tmp2."\\-";
