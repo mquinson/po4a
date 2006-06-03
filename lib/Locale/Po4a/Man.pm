@@ -671,6 +671,18 @@ NEW_LINE:
             $line =~ s/\n$//;
             $line = "$insert_font$line\\fR\n";
         }
+
+        if ($line =~ /^(.*)\\c\s*\\fR\n/) {
+            my $begin = $1;
+
+            my ($l2,$r2)=$self->SUPER::shiftline();
+            if ($l2 =~ /^[.' ]/) {
+                $self->SUPER::unshiftline($l2,$r2);
+            } else {
+                $l2 =~ s/\s*$//s;
+                $line = "$begin\\fR$l2\n";
+            }
+        }
     }
 
     return ($line,$ref);
