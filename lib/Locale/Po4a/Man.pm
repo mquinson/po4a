@@ -195,6 +195,13 @@ not split the current paragraph. The string to translate will then contain
 I<foo E<lt>.bar baz quxE<gt> quux>, where I<foo> is the command that
 should be inlined.
 
+=item generated
+
+This option specifies that the file was generated, and that po4a should not
+try to detect if the man pages was generated from another format.
+This permits to use po4a on generated man pages.
+This option does not take any argument.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
@@ -397,6 +404,9 @@ my %no_wrap_end = (
 );
 my %inline = (
 );
+# This variable indicates whether po4a should try to detect the generated
+# files.
+my $allow_generated = 0;
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -410,6 +420,7 @@ sub initialize {
     $self->{options}{'translate_each'}='';
     $self->{options}{'no_wrap'}='';
     $self->{options}{'inline'}='';
+    $self->{options}{'generated'}='';
 
     # reset the debug options
     %debug = ();
@@ -472,6 +483,9 @@ sub initialize {
             $inline{$_} = 1;
         }
     }
+    if (defined $options{'generated'}) {
+        $allow_generated = 1;
+    }
 }
 
 my @comments = ();
@@ -519,6 +533,7 @@ NEW_LINE:
     if ($line =~ m/^(.*?)(?:(?<!\\)\\(["#])(.*))$/) {
         my ($l, $t, $c) = ($1, $2, $3);
         $line = $l;
+        unless ($allow_generated) {
         # Check for comments indicating that the file was generated.
         if ($c =~ /Pod::Man/) {
             warn wrap_mod("po4a::man", dgettext("po4a", "This file was generated with Pod::Man. Translate the pod file with the pod module of po4a."));
@@ -550,6 +565,7 @@ NEW_LINE:
                 "This file contains the line '%s'. ".
                 "You should translate the source file, but continuing anyway."
                 ),$l."\\\"".$c);
+        }
         }
 
         if ($line =~ m/^[.']*$/) {
