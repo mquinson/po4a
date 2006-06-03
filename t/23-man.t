@@ -111,6 +111,7 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
+# mdoc format
 push @tests, {
     'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/mdoc.1 -p tmp/mdoc.pot 2>/dev/null",
     'test' => "diff -u $diff_po_flags  data-23/mdoc.pot tmp/mdoc.pot",
@@ -121,7 +122,19 @@ push @tests, {
     'doc'  => "translate this document",
 };
 
-use Test::More tests => 44; # $formats * $tests * 2 
+# Mixed mdoc and roff format
+push @tests, {
+    'run'  => "cp data-23/mixed.fr.po tmp/ && LC_ALL=C perl ../po4a data-23/mixed.cfg",
+    'test' => "diff -u $diff_po_flags  data-23/mixed.pot tmp/mixed.pot &&".
+              "diff -u $diff_po_flags  data-23/mixed.fr.po tmp/mixed.fr.po &&".
+              "diff -u $diff_po_flags  data-23/null.fr tmp/mixed_null.fr.1 &&".
+              "diff -u $diff_po_flags  data-23/mdoc.fr tmp/mixed_mdoc.fr.1 &&".
+              "diff -u $diff_po_flags  data-23/escapes1.fr.1 tmp/mixed_escapes1.fr.1 &&".
+              "diff -u $diff_po_flags  data-23/quotes.fr tmp/mixed_quotes.fr.1",
+    'doc'  => "mixed config with roff and mdoc"
+};
+
+use Test::More tests => 46; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
