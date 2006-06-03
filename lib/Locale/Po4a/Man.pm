@@ -1207,6 +1207,11 @@ sub parse{
 # other module, because the first line may contain indications on how the
 # man page must be processed.
 sub docheader {
+    @comments = ();
+    @next_comments = ();
+    set_regular("R");
+    set_font("R");
+    set_font("R");
     return "";
 }
 
