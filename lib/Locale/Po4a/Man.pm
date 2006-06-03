@@ -1408,7 +1408,7 @@ sub splitargs {
                 $elem =~ s/^3/B/;
                 $elem =~ s/^4/(BI/;
 
-            if ($elem =~ /^([1-4]|B|I|R|\(CW|\[\]|\[P\])(.*)$/s) {
+            if ($elem =~ /^([1-4]|B|I|R|\(CW|\[\]|\[P\]|L)(.*)$/s) {
                 # Each element should now start by a recognized font modifier
                 my $new_font = $1;
                 my $arg = $2;
@@ -1731,12 +1731,9 @@ $macro{'UN'}=\&translate_joined;
 $macro{'DT'}=\&noarg;
 $macro{'PD'}=\&untranslated;
 
-#Index. Where's the definition?
-#.IX type content
-$macro{'IX'}=sub {
-    my $self=shift;
-    $self->pushmacro($_[0],$_[1],$self->t($_[2]));
-};
+# Indexing term (printed on standard error).
+# (ms macros)
+$macro{'IX'}=\&translate_each;
 
 ###
 ### groff macros
