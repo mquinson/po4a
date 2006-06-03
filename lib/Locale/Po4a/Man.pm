@@ -928,13 +928,13 @@ sub post_trans {
 	$str=$done;
     }
 
-    while ($str =~ m/^(.*?)E<([.'][\t ]*.*?)(?<!E<[gl]t)>(.*)$/s) {
+    while ($str =~ m/^(.*?)E<([.'][\t ]*.*?(?<!E<[gl]t))>(.*)$/s) {
         my ($t1, $t2, $t3) = ($1,$2,$3);
         $t1 =~ s/ +$//s;
         $t2 =~ s/\n/ /gs;
         if ($mdoc_mode) {
             # restore the punctuaction inside the line (see pre_trans)
-            if ($t3 =~ s/^([.,;:\)\]]+)(?: +|$)//s) {
+            if ($t3 =~ s/^([.,;:\)\]]+)//s) {
                 my $punctuation = $1;
                 $punctuation =~ s/([.,;:\)\]])/$1 /;
                 $t2 .= " $punctuation";
