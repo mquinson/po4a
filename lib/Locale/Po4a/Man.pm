@@ -692,7 +692,7 @@ NEW_LINE:
             my $begin = $1;
 
             my ($l2,$r2)=$self->SUPER::shiftline();
-            if ($l2 =~ /^[.' ]/) {
+            if ($l2 =~ /^[.']/) {
                 $self->SUPER::unshiftline($l2,$r2);
             } else {
                 $l2 =~ s/\s*$//s;
@@ -791,11 +791,10 @@ sub pre_trans {
 
     # Note: if you want to implement \c support, the gdb man page is your playground
     if (    not defined $self->{type}) {
-        $str =~ s/^((?:.*)\n|)     #
-                   ([ \t]*[^.'][^\n]*(?<!\\)(?:\\\\)*) # a new line
-                   \\c[ \t]*\n     # ending by \c and followed by a line
-                   ([ \t]*[^.']    # which doesn't start by . or '
-                    (?:.*))$/$1$2$3/sgx;
+        $str =~ s/(\G|^(?:.*?)\n|^)        # Last position, or begin of a line
+                   ([ \t]*[^.'][^\n]*(?<!\\)(?:\\\\)*) # the new line, which
+                   \\c[ \t]*\n             # ends by \c and followed by a line
+                   (?![ \t]*[.'])/$1$2/sgx;# not followed by a command (.')
     }
     die wrap_ref_mod($ref, "po4a::man", dgettext("po4a","Escape sequence \\c encountered. This is not completely handled yet."))
 	if ($str =~ /\\c/);
