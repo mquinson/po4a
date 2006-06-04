@@ -1228,15 +1228,21 @@ sub parse{
     }
 } # end of main
 
-# We can't push the header in the first line of the document, as in the
-# other module, because the first line may contain indications on how the
-# man page must be processed.
-sub docheader {
+# Clear all the memories.
+# This should be called between all documents.
+sub re_init {
     @comments = ();
     @next_comments = ();
     set_regular("R");
     set_font("R");
     set_font("R");
+    $mdoc_mode = 0;
+}
+# We can't push the header in the first line of the document, as in the
+# other module, because the first line may contain indications on how the
+# man page must be processed.
+sub docheader {
+    re_init();
     return "";
 }
 
@@ -1579,8 +1585,11 @@ $macro{'TH'}= sub {
     my ($th,$title,$section,$date,$source,$manual)=@_;
     #Preamble#.TH      title     section   date     source   manual
 #    print STDERR "TH=$th;titre=$title;sec=$section;date=$date;source=$source;manual=$manual\n";
-    $mdoc_mode = 0;
+
+    # Reset the memories
+    re_init();
     $self->push_docheader();
+
     $self->pushmacro($th,
 		     $self->t($title),
 		     $section,
@@ -2100,6 +2109,7 @@ sub translate_mdoc {
 $macro{'Dd'}=sub {
     my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
 
+    re_init();
     $mdoc_mode = 1;
     $self->push_docheader();
 
