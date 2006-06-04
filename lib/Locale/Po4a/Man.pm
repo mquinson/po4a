@@ -688,7 +688,7 @@ NEW_LINE:
             $line = "$insert_font$line\\fR\n";
         }
 
-        if ($line =~ /^(.*)\\c\s*\\fR\n/) {
+        if ($line =~ /^(.*)\\c(\\f.)?\s*\\fR\n/) {
             my $begin = $1;
 
             my ($l2,$r2)=$self->SUPER::shiftline();
@@ -790,6 +790,13 @@ sub pre_trans {
     }
 
     # Note: if you want to implement \c support, the gdb man page is your playground
+    if (    not defined $self->{type}) {
+        $str =~ s/^((?:.*)\n|)     #
+                   ([ \t]*[^.'][^\n]*(?<!\\)(?:\\\\)*) # a new line
+                   \\c[ \t]*\n     # ending by \c and followed by a line
+                   ([ \t]*[^.']    # which doesn't start by . or '
+                    (?:.*))$/$1$2$3/sgx;
+    }
     die wrap_ref_mod($ref, "po4a::man", dgettext("po4a","Escape sequence \\c encountered. This is not completely handled yet."))
 	if ($str =~ /\\c/);
 
