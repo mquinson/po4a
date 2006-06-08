@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.56 2006-04-07 19:41:41 nekral-guest Exp $
+# $Id: po4a,v 1.57 2006-06-08 20:13:28 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -497,6 +497,7 @@ my (%aliases); # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
+my $doc_count = 0;
 open CONFIG,"$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
@@ -571,6 +572,8 @@ while (<CONFIG>) {
 		unless ($po4a_opts{"quiet"});
 	}
 	$document{$main}{'format'} = $1;
+	$document{$main}{'pos'} = $doc_count;
+	$doc_count++;
 	my %options;
 	%options = %{$document{$main}{'options'}}
 	  if defined %{$document{$main}{'options'}};
@@ -677,7 +680,9 @@ if (-e $pot_filename) {
 
 my $potfile=Locale::Po4a::Po->new();
 if ($update_pot_file) {
-    foreach my $master (keys %document) {
+    foreach my $master (sort {
+                               $document{$a}{'pos'} <=> $document{$b}{'pos'}
+                             } keys %document) {
         my %file_opts = %po4a_opts;
         my $options = $document{$master}{"options"}{"global"};
         if (defined $options) {
@@ -842,7 +847,8 @@ if (not $po4a_opts{"no-translations"}) {
     # update all translations
 
     foreach $lang (sort keys %po_filename) {
-	DOC: foreach my $master (sort keys %document) {
+	DOC: foreach my $master (sort { $document{$a}{'pos'} <=>
+	                                $document{$b}{'pos'} } keys %document) {
 	    next unless defined $document{$master}{$lang};
 
 	    my %file_opts = %po4a_opts;
@@ -909,15 +915,15 @@ if (not $po4a_opts{"no-translations"}) {
 
 if ($po4a_opts{"split"}) {
     # We don't need the tmp big POs anymore
-    foreach $lang (sort keys %po_filename) {
+    foreach $lang (keys %po_filename) {
         unlink $po_filename{$lang};
     }
 }
 
 if ($po4a_opts{"rm-translations"}) {
     # Delete the translated documents
-    foreach $lang (sort keys %po_filename) {
-	foreach my $master (sort keys %document) {
+    foreach $lang (keys %po_filename) {
+	foreach my $master (keys %document) {
 	    unlink $document{$master}{$lang};
 	}
     }
