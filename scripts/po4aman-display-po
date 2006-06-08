@@ -21,10 +21,10 @@ while getopts m:p:ho: option
 do
   case $option in
     m)
-      MASTER=$OPTARG
+      MASTER="$OPTARG"
       ;;
     p)
-      PO=$OPTARG
+      PO="$OPTARG"
       ;;
     o)
       OPTIONS="-o $OPTARG $OPTIONS"
@@ -40,13 +40,13 @@ do
   esac
 done
 
-if [ -z $PO ]
+if [ -z "$PO" ]
 then
   usage 1>&2
   exit 1
 fi
 
-if [ ! -f $PO ]
+if [ ! -f "$PO" ]
 then
   error "could not find po file: $PO"
 fi
@@ -60,19 +60,19 @@ fi
 
 find_man()
 {
-  section=$1
-  man=$2
+  section="$1"
+  man="$2"
   echo -n "Looking for manpage $file"
   [ -n "$section" ] && echo " in section $section" || echo ""
   MAN_NUMBER=`man --all --where --locale=C $section "$man" 2> /dev/null | wc -l`
 
-  if [ $MAN_NUMBER = "0" ]
+  if [ "$MAN_NUMBER" = "0" ]
   then
     return 1
-  elif [ $MAN_NUMBER != "1" ]; then
+  elif [ "$MAN_NUMBER" != "1" ]; then
     error "Too many possible manpages: $(man -aw -L C $section "$man"), you must specify the manpage or the section"
   else
-    MASTER=`man --where --locale=C $section "$man"`
+    MASTER=`man --where --locale=C "$section" "$man"`
   fi
 
   return 0
@@ -88,35 +88,35 @@ then
   then
     # Maybe $file contains a section
     # (in the form of file.section.extension)
-    section=$(echo $file | sed -ne 's/^.*\.\([1-9].*\)$/\1/; s/\..*//; p')
-    file=$(echo $file | sed -e 's/\.[1-9].*//')
+    section=$(echo "$file" | sed -ne 's/^.*\.\([1-9].*\)$/\1/; s/\..*//; p')
+    file=$(echo "$file" | sed -e 's/\.[1-9].*//')
     if ! find_man "$section" "$file"
     then
       # Maybe there is an extension at the end of the manpage (e.g. .man)
-      file=$(echo $file | sed -e 's/\..*//')
+      file=$(echo "$file" | sed -e 's/\..*//')
       if ! find_man "$section" "$file"
       then
-        echo No manpage found
-        echo You must provide the manpage with the -m option
+        echo "No manpage found"
+        echo "You must provide the manpage with the -m option"
         MASTER=""
       fi
     fi
   fi
   if [ -n "$MASTER" ]
   then
-    echo Using: $MASTER as the original manpage
+    echo "Using: $MASTER as the original manpage"
   fi
 fi
 
 # checking mandatory options
-if [ -z $MASTER ]
+if [ -z "$MASTER" ]
 then
   usage 1>&2
   exit 1
 fi
 
 # checking files
-if [ ! -e $MASTER ]
+if [ ! -e "$MASTER" ]
 then
   error "could not find master file: $MASTER"
 fi
@@ -124,15 +124,15 @@ fi
 
 if [ "${MASTER%.gz}" = "$MASTER" ]
 then
-  MAINNAME=$MASTER
+  MAINNAME="$MASTER"
 else
   MAINNAME=`mktemp`
-  trap "rm $MAINNAME" EXIT SIGINT
-  gunzip -c $MASTER > $MAINNAME
+  trap "rm \"$MAINNAME\"" EXIT INT
+  gunzip -c "$MASTER" > "$MAINNAME"
 fi
 
-CHARSET_MASTER=`file -i $MAINNAME | cut -d "=" -f 2`
-CHARSET_PO=`file -i $PO | cut -d "=" -f 2`
+CHARSET_MASTER=`file -i "$MAINNAME" | cut -d "=" -f 2`
+CHARSET_PO=`file -i "$PO" | cut -d "=" -f 2`
 
-po4a-translate -f man -k 0 -m $MAINNAME -M $CHARSET_MASTER \
-  -p $PO $OPTIONS| iconv -f $CHARSET_PO -t // | man -l -
+po4a-translate -f man -k 0 -m "$MAINNAME" -M "$CHARSET_MASTER" \
+  -p "$PO" $OPTIONS| iconv -f "$CHARSET_PO" -t // | man -l -
