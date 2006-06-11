@@ -40,10 +40,6 @@ Locale::Po4a::Xml is a module to help the translation of XML documents into
 other [human] languages. It can also be used as a base to build modules for
 XML-based documents.
 
-Please note that this module is still under heavy development, and not
-distributed in official po4a release since we don't feel it to be mature
-enough. If you insist on trying, check the CVS out.
-
 =cut
 
 package Locale::Po4a::Xml;

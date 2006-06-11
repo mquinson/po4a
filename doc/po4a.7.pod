@@ -156,6 +156,8 @@ of text formatting formats:
 The good old manual pages' format, used by so much programs out there. The
 po4a support is very welcome here since this format is somewhat difficult to
 use and not really friendly to the newbies.
+The L<Locale::Po4a::Man(3pm)|Man> module also supports the mdoc format,
+used by the BSD man pages (they are also quite common on Linux).
 
 =head3 pod
 
@@ -179,6 +181,27 @@ support to a new one is really easy. It is even possible to use po4a on an
 unknown sgml dtd without changing the code by providing the needed
 information on the command line. See L<Locale::Po4a::Sgml(3pm)> for details.
 
+=head3 TeX / LaTeX
+
+The LaTeX format is a major documentation format used in the Free Software
+world and for publications.
+The L<Locale::Po4a::LaTeX(3pm)|LaTeX> module was tested with the Python
+documentation, a book and some presentations.
+
+=head3 texinfo
+
+All the GNU documentation is written in this format (that's even one of
+the requirement to become an official GNU project).  The support for
+L<Locale::Po4a::Texinfo(3pm)|Texinfo> in po4a is still at the beginning.
+Please report bugs and feature requests.
+
+=head3 xml
+
+The XML format is a base format for many documentation formats.
+
+Currently, the docbook DTD is supported by po4a. See
+L<Locale::Po4a::Docbook(3pm)> for details.
+
 =head3 others
 
 Po4a can also handle some more rare or specialized formats, such as the
@@ -191,22 +214,10 @@ L<Locale::Po4a::TransTractor(3pm)> for more information about this.
 
 Unfortunately, po4a still lacks support for several documentation formats.
 
-The mdoc format, used by the BSD man pages (they are also quite common on
-Linux), is still not supported, which can prevent you from translating all
-your man pages with po4a.
-
-TeXinfo is the other big miss of po4a at that time. All the GNU documentation
-is written in this format (that's even one of the requirement to become an
-official GNU project). The lack of support in po4a thus leave all pure GNU
-translators on their own against the adversity of the world. We would like to
-come up with a solution here, but this format is so powerful/complex that it
-does not goes as fast as we would like. If you want to help, your help is
-naturally welcome ;)
-
-Beside of these two major formats, there is a whole bunch of other formats
+There is a whole bunch of other formats
 we would like to support in po4a, and not only documentation ones. Indeed,
 we aim at plugging all "market holes" left by the classical gettext tools.
-It encompass python documentation, package descriptions (deb and rpm),
+It encompass package descriptions (deb and rpm),
 package installation scripts questions, package changelogs, and all
 specialized file formats used by the programs such as game scenarios or
 wine resource files.
