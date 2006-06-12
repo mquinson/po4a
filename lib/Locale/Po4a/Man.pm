@@ -219,27 +219,12 @@ not really inclined to correct, and which will constitute some pitfalls
 you'll have to avoid if you want to see translators taking care of your
 documentation.
 
-=head2 Don't use the mdoc macro set
-
-The macro set described in mdoc(7) (and widely used under BSD, IIRC) isn't
-supported at all by po4a, and won't be. It would need a completely separate
-parser for this, and I'm not inclined to do so. On my machine, there are
-only 63 pages based on mdoc, from 4323 pages. If someone implements the mdoc
-support, I'll happily include this, though.
-
 =head2 Don't program in nroff
 
 nroff is a complete programming language, with macro definition,
 conditionals and so on. Since this parser isn't a fully featured nroff
 interpreter, it will fail on pages using these facilities (There are about
 200 such pages on my box).
-
-=head2 Avoid file inclusion when possible
-
-The '.so' groff macro used to include another file in the current one is
-supported, but from my own experience, it makes harder to manipulate
-the man page, since all files have to be installed in the right location so
-that you can see the result (ie, it breaks somehow the '-l' option of man).
 
 =head2 Use the plain macro set
 
@@ -334,7 +319,7 @@ L<Locale::Po4a::Pod(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003, 2004, 2005 by SPI, inc.
+Copyright 2002, 2003, 2004, 2005, 2006 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
