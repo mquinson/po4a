@@ -1932,8 +1932,10 @@ $macro{'ps'}=\&untranslated;
 # .so filename Include source file.
 # .mso groff variant of .so (other search path)
 $macro{'so'}= $macro{'mso'} = sub {
-    die wrap_mod("po4a::man", dgettext("po4a",
-	"This page includes another file with '%s'. This is not supported yet, but will soon."), $_[1]);
+    warn wrap_mod("po4a::man", dgettext("po4a",
+	"This page includes another file with '%s'. Do not forget to translate this file ('%s')."), $_[1], $_[2]);
+    my $self = shift;
+    $self->pushmacro(@_);
 };
 # .sp     Skip one line vertically.
 # .sp N   Space  vertical distance N
