@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.30 2006-05-15 22:14:48 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.31 2006-06-12 18:30:55 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -112,7 +112,9 @@ L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
 L<Locale::Po4a::Html(3pm)>,
 L<Locale::Po4a::Dia(3pm)>,
-L<Locale::Po4a::LaTeX(3pm)>.
+L<Locale::Po4a::LaTeX(3pm)>,
+L<Locale::Po4a::Texinfo(3pm)>,
+L<Locale::Po4a::Text(3pm)>,
 L<Locale::Po4a::Xml(3pm)>.
 
 =back
