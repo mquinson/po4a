@@ -396,7 +396,6 @@ msgstr "nroff"
 
 # type: textblock
 #: ../../doc/po4a.7.pod:156
-#, fuzzy
 msgid ""
 "The good old manual pages' format, used by so much programs out there. The "
 "po4a support is very welcome here since this format is somewhat difficult to "
@@ -406,7 +405,10 @@ msgid ""
 msgstr ""
 "Le bon vieux format des pages de manuel, utilisé par beaucoup de programmes. "
 "Le support de po4a pour ce format est très utile parce que ce format est "
-"assez compliqué, surtout pour les débutants."
+"assez compliqué, surtout pour les débutants. Le module "
+"L<Locale::Po4a::Man(3pm)|Man> supporte également le format mdoc, utilisé "
+"par les pages de manuel BSD (elles sont également assez fréquentes sous "
+"Linux)."
 
 #: ../../doc/po4a.7.pod:162
 msgid "pod"
@@ -467,7 +469,7 @@ msgstr ""
 # type: =head3
 #: ../../doc/po4a.7.pod:184
 msgid "TeX / LaTeX"
-msgstr ""
+msgstr "TeX / LaTeX"
 
 # type: textblock
 #: ../../doc/po4a.7.pod:186
@@ -476,11 +478,15 @@ msgid ""
 "world and for publications.  The L<Locale::Po4a::LaTeX(3pm)|LaTeX> module "
 "was tested with the Python documentation, a book and some presentations."
 msgstr ""
+"Le format LaTeX est un format majeur utilisé pour les documentations dans "
+"le monde du logiciel libre ou pour des publications. Le module "
+"L<Locale::Po4a::LaTeX(3pm)|LaTeX> a été testé avec la documentation "
+"de Python, un livre et avec quelques présentations."
 
 # type: =head3
 #: ../../doc/po4a.7.pod:191
 msgid "texinfo"
-msgstr ""
+msgstr "texinfo"
 
 # type: textblock
 #: ../../doc/po4a.7.pod:193
@@ -490,20 +496,22 @@ msgid ""
 "Po4a::Texinfo(3pm)|Texinfo> in po4a is still at the beginning.  Please "
 "report bugs and feature requests."
 msgstr ""
+"Toutes les documentations du projet GNU sont écrites dans ce format "
+"(c'est même une des exigences pour devenir un projet officiel du projet "
+"GNU). Le support pour L<Locale::Po4a::Texinfo(3pm)|Texinfo> dans po4a en "
+"est encore à ses début. Veuillez nous envoyer des rapports de bug ou des "
+"demandes de nouvelle fonctionnalité."
 
 # type: =item
 #: ../../doc/po4a.7.pod:198
-#, fuzzy
 msgid "xml"
-msgstr "poxml"
+msgstr "xml"
 
 # type: textblock
 #: ../../doc/po4a.7.pod:200
-#, fuzzy
 msgid "The XML format is a base format for many documentation formats."
 msgstr ""
-"Malheureusement, po4a ne supporte pas encore certains formats utilisés pour "
-"les documentations."
+"Le format XML est à la base de beaucoup de formats pour la documentation."
 
 # type: textblock
 #: ../../doc/po4a.7.pod:202
@@ -511,6 +519,8 @@ msgid ""
 "Currently, the docbook DTD is supported by po4a. See L<Locale::Po4a::Docbook"
 "(3pm)> for details."
 msgstr ""
+"À ce jour, la DTD docbook est supportée par po4a. Veuillez consulter "
+"L<Locale::Po4a::Docbook(3pm)> pour plus de détails."
 
 # type: =head3
 #: ../../doc/po4a.7.pod:205
@@ -548,7 +558,6 @@ msgstr ""
 
 # type: textblock
 #: ../../doc/po4a.7.pod:217
-#, fuzzy
 msgid ""
 "There is a whole bunch of other formats we would like to support in po4a, "
 "and not only documentation ones. Indeed, we aim at plugging all \"market "
@@ -557,12 +566,12 @@ msgid ""
 "changelogs, and all specialized file formats used by the programs such as "
 "game scenarios or wine resource files."
 msgstr ""
-"En plus de ces deux formats majeurs, il y a une quantité d'autres formats "
+"Il y a une quantité d'autres formats "
 "que nous aimerions supporter avec po4a, et pas seulement des formats de "
 "documentation. En fait, nous visons toutes les S<« niches »> laissées par "
 "les outils gettext classiques. Cela va de la traduction de la documentation "
-"Python, aux descriptions des paquets Debian et paquetages rpm, en passant "
-"par les questions posées par les scripts d'installation, des fichiers "
+"des descriptions des paquets Debian et paquetages rpm, "
+"aux les questions posées par les scripts d'installation, ex passant par les fichiers "
 "changelog, et de tous les formats spécifiques tels que les scénarios de jeux "
 "ou les fichiers de ressource pour wine."
 
@@ -2985,7 +2994,6 @@ msgstr "À propos des S<modules :>"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Chooser.pm:109
-#, fuzzy
 msgid ""
 "L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::"
 "Pod(3pm)>, L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::Html(3pm)>, L<Locale::"
@@ -2993,7 +3001,7 @@ msgid ""
 msgstr ""
 "L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::"
 "Pod(3pm)>, L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::Html(3pm)>, L<Locale::"
-"Po4a::Dia(3pm)>, L<Locale::Po4a::LateX(3pm)>."
+"Po4a::Dia(3pm)>, L<Locale::Po4a::LateX(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 
 #: ../../lib/Locale/Po4a/Chooser.pm:122
 #: ../../lib/Locale/Po4a/KernelHelp.pm:162 ../../lib/Locale/Po4a/Po.pm:1304
@@ -4056,7 +4064,7 @@ msgstr ""
 # type: =item
 #: ../../lib/Locale/Po4a/Man.pm:198
 msgid "generated"
-msgstr ""
+msgstr "generated"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:200
@@ -4066,6 +4074,10 @@ msgid ""
 "permits to use po4a on generated man pages.  This option does not take any "
 "argument."
 msgstr ""
+"Cette option spécifie que le fichier a été généré, et que po4a ne doit "
+"pas chercher à détecter si la page de manuel à été généré depuis un autre "
+"format. Elle permet d'utiliser po4a sur des pages de manuel générées. "
+"Cette option ne prend aucun paramètre."
 
 #: ../../lib/Locale/Po4a/Man.pm:207
 msgid "AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN"
@@ -6461,38 +6473,37 @@ msgstr ""
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Texinfo.pm:25
-#, fuzzy
 msgid ""
 "Locale::Po4a::Texinfo - Convert Texinfo documents and derivates from/to PO "
 "files"
 msgstr ""
-"Locale::Po4a::TeX - convertit les documents TeX (ou dérivés) depuis/vers des "
+"Locale::Po4a::Texinfo - convertit les documents Texinfo (ou dérivés) depuis/vers des "
 "fichiers PO"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Texinfo.pm:33
-#, fuzzy
 msgid ""
 "Locale::Po4a::Texinfo is a module to help the translation of Texinfo "
 "documents into other [human] languages."
 msgstr ""
-"Locale::Po4a::Text est un module permettant d'aider la traduction de "
-"documents texte dans d'autres langues."
+"Locale::Po4a::Texinfo est un module permettant d'aider la traduction de "
+"documents Texinfo dans d'autres langues."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Texinfo.pm:36
-#, fuzzy
 msgid ""
 "This module contains the definitions of common Texinfo commands and "
 "environments."
 msgstr ""
 "Ce module contient les définitions de commandes et environnements couramment "
-"rencontrés dans des documents LaTeX."
+"rencontrés dans des documents Texinfo."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Texinfo.pm:41
 msgid "This module is still beta.  Please send feedback and feature requests."
 msgstr ""
+"Ce module est encore à l'état béta. Nous sommes intéressé par tout retour "
+"ou par des demandes de nouvelles fonctionnalités."
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Text.pm:25
