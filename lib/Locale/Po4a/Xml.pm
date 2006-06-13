@@ -400,6 +400,9 @@ single string.
 ##### Generic XML tag types #####' 
 
 my @tag_types = ( 
+	{	beginning	=> "!--#",
+		end		=> "--",
+		breaking	=> 0},
 	{	beginning	=> "!--",
 		end		=> "--",
 		breaking	=> 0,
