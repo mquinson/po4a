@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.19 2006-03-05 13:25:07 nekral-guest Exp $
+# $Id: Pod.pm,v 1.20 2006-06-13 19:36:24 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -53,10 +53,10 @@ sub post_trans {
     my $enc_length = Encode::from_to($nbs_out, "latin1",
                                                $self->get_out_charset);
     if (defined $enc_length) {
-        while ($str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/) {
-            $str  = $1||"";
+        while ($str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s) {
+            $str  = (defined $1)?$1:"";
             $str .= "S<$2 $3>";
-            $str .= $4||"";
+            $str .= (defined $4)?$4:"";
         }
     }
 
