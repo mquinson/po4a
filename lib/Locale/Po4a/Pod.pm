@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.20 2006-06-13 19:36:24 nekral-guest Exp $
+# $Id: Pod.pm,v 1.21 2006-06-13 19:57:17 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -54,9 +54,13 @@ sub post_trans {
                                                $self->get_out_charset);
     if (defined $enc_length) {
         while ($str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s) {
-            $str  = (defined $1)?$1:"";
-            $str .= "S<$2 $3>";
-            $str .= (defined $4)?$4:"";
+            my ($begin, $m1, $m2, $end) = ($1, $2, $3, $4);
+            $str  = (defined $begin)?$begin:"";
+            # Remove the non-breaking spaces in the string that will be
+            # between S<...>
+            $m2 =~ s/\Q$nbs_out\E/ /g;
+            $str .= "S<$m1 $m2>";
+            $str .= (defined $end)?$end:"";
         }
     }
 
