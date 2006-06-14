@@ -1097,12 +1097,12 @@ sub parse{
 	    my @args=();
 	    $line =~ s/\\ /$nbs/g; # This is probably not needed
 	    push @args,$arg1;
-	    if ($macro =~ /^(?:ta|TP)$/) {
+	    if ($macro =~ /^(?:ta|TP|ie|if|de)$/) {
 		# The number of spaces may be critical for the 'ta' macro,
 		# and there is no need to split the arguments.
 		push @args, $arguments;
 	    } else {
-		push @args, splitargs($ref,$arguments)
+		push @args, splitargs($ref,$arguments);
 	    }
 
 
