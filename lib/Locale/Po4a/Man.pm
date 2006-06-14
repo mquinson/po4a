@@ -1865,7 +1865,7 @@ $macro{'ie'}=$macro{'if'}=sub {
         if ($m eq '.ie') {
             ($line,$ref)=$self->SUPER::shiftline();
             chomp $line;
-            if ($line !~ m/^\.[ \t]*el\s/) {
+            if ($line !~ m/^[.'][ \t]*el\s/) {
                 die ".ie without .el\n"
             }
             my $paragraph2 = $line;
