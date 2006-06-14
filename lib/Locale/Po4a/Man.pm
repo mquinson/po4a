@@ -1301,7 +1301,21 @@ sub splitargs {
                 push @args,$buffer;
                 $buffer = "";
                 $escaped = 0;
+            } else {
+                print STDERR "Quotes: Oops\n"
+                    if ($debug{'splitargs'});
             }
+        } elsif ($elem =~ m/^"(.*?(?<!")(?:"")*)"(?!")(.+)$/) {
+            print STDERR "Quoted: quote without space\n"
+                if ($debug{'splitargs'});
+            my $a = $1;
+            my $b = $2;
+            $a =~ s/""/\\(dq/g;
+            $a =~ s/\Q$nbs/\\ /g;
+            $b =~ s/""/\\(dq/g;
+            $b =~ s/\Q$nbs/\\ /g;
+            push @args,$a;
+            push @args,$b;
         } elsif ($elem =~ m/^"(.*)"$/) {
             print STDERR "Quoted, no space\n"
                 if ($debug{'splitargs'});
