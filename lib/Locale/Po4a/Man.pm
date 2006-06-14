@@ -875,7 +875,7 @@ sub post_trans {
             my $tmp2 = $tmp.$begin;
             if (   ($begin =~ m/(?<!\\)(\\\\)*\\s$/s)
                 or ($begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)$/s)
-                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[hC]'([^']|(?<!\\)(\\\\)*\\')*$/)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[hCv]'([^']|(?<!\\)(\\\\)*\\')*$/)
                 or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)) {
                 # Do not change - to \- for
                 #  * \s-n (reduce font size)
@@ -883,6 +883,7 @@ sub post_trans {
                 #  * inside a \h'...'
                 #  * inside a \C'...'
                 #  * inside a \[...]
+                #  * inside a \v'...'
                 $tmp = $tmp2."-";
             } else {
                 $tmp = $tmp2."\\-";
