@@ -90,7 +90,15 @@ for fich in `cat LISTE.TOTAL` ; do
 	
   echo "####### $fich"; 
   rm -f po4a-normalize.*
-  if PERLLIB=../lib ../po4a-normalize -f $module -M iso-8859-1 $tmp/$newfich 2>&1 ; then
+  if PERLLIB=../lib ../po4a-normalize -f $module -M iso-8859-1 $tmp/$newfich \
+                    -o groff_code=translate \
+                    -o noarg=ny0,Sp,Pp,BS,BE,VE,ES \
+                    -o translate_each=TA,IN,hN,AS,OP,Tp,Ip,TQ \
+                    -o no_wrap=Ds:De,Ex:Ee,CS:CE,Vb:Ve \
+                    -o untranslated=Id,VS,rm \
+                    -o translate_joined=FN,Sh,iX \
+                    -o inline=ZN,Pn \
+                    -o generated 2>&1 ; then
       mv po4a-normalize.output $tmp/po4a-normalize.output
       $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
       $cmdtotxt $tmp/$newfich $tmp/$newfich;
