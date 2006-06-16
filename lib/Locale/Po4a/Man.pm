@@ -1338,6 +1338,7 @@ sub splitargs {
         } else {
             print STDERR "Unquoted arg, nothing to declare\n"
                 if ($debug{'splitargs'});
+            $elem =~ s/\Q$nbs/\\ /g;
             push @args,$elem;
             $buffer="";
         }
