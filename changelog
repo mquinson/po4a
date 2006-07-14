@@ -6,6 +6,13 @@ po4a (0.27-1)
     commented)
   (Text.pm)
   * Fix missing empty lines between paragraphs.
+  (Man.pm)
+  * Sometimes, the .B or .I macros are followed by an argument which only
+    consist in a space. As the .B or .I macro is replaced by \fB or \fI,
+    the quotes are removed, and some \& must be used to keep the space
+    (otherwise the line will be considered empty by groff.
+    Add these \&, and do not force the translators to translate them if
+    the line only consists in \&, spaces and font modifiers.
 
  -- Sun,  9 Jul 2006 01:19:52 +0200
 

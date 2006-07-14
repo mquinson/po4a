@@ -641,7 +641,10 @@ NEW_LINE:
         my $arguments = $2;
         my @args = splitargs($ref,$arguments);
         if ($macro eq 'B' || $macro eq 'I') {
+            # To keep the space(s), we must introduce some \&
+            @args = map { $_ =~ s/^(\s*)$/\\&$1\\&/s; $_ } @args;
             my $arg=join(" ",@args);
+            $arg =~ s/(\\&|\s)+$//;
             $arg =~ s/^ +//;
             this_macro_needs_args($macro,$ref,$arg);
             $line = "$insert_font\\f$macro".$arg."\\fR\n";
@@ -999,6 +1002,9 @@ sub translate {
     
     return $str unless (defined $str) && length($str);
     return $str if ($str eq "\n");
+    # Do not translate the strings that only consist of fonts, spaces and
+    # \&. This is usefull because we introduced \& in shiftline.
+    return $str if ($str =~ m/^($FONT_RE|\s|\\&)*$/);
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
     $options{'comment'} .= join('\n', @comments);
