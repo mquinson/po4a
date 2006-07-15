@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.57 2006-06-08 20:13:28 nekral-guest Exp $
+# $Id: po4a,v 1.58 2006-07-15 22:00:37 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -882,8 +882,9 @@ if (not $po4a_opts{"no-translations"}) {
 	    my ($percent,$hit,$queries) = $doc->stats();
 
 	    if ($percent<$file_opts{"threshold"})  {
-		print wrap_msg(gettext("Discard %s (only %s%% translated; need %s%%)."),
-		    $document{$master}{$lang}, $percent, $file_opts{"threshold"});
+		print wrap_msg(gettext("Discard %s (%s of %s strings; only %s%% translated; need %s%%)."),
+		    $document{$master}{$lang}, $hit, $queries,
+		    $percent, $file_opts{"threshold"});
 		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		next DOC;
 	    }
