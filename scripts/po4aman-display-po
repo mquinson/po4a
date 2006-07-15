@@ -136,3 +136,7 @@ CHARSET_PO=`file -i "$PO" | cut -d "=" -f 2`
 
 po4a-translate -f man -k 0 -m "$MAINNAME" -M "$CHARSET_MASTER" \
   -p "$PO" $OPTIONS| iconv -f "$CHARSET_PO" -t // | man -l -
+
+# TODO: man may need some options (e.g. -L)
+#       as we cannot detect what options are needed, they will have to be
+#       specified on the po4aman-display-po command line.
