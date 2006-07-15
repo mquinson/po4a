@@ -608,12 +608,14 @@ NEW_LINE:
                 $line = $macro."$insert_font\\f$1".$arg;
                 $ref = $r2;
             } elsif ($l2 =~ /^[.']/) {
-                die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
-                        "po4a does not support font modifiers followed by a ".
-                        "command.  You should either remove the font modifier ".
-                        "'%s', or integrate a \\f font modifier in the ".
-                        "following command ('%s')"
-                        ), $line, $l2);
+                warn wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
+                         "Font modifiers followed by a command may disturb ".
+                         "po4a.  You should either remove the font modifier ".
+                         "'%s', or integrate a \\f font modifier in the ".
+                         "following command ('%s'), but continuing anyway."
+                         ), $line, $l2);
+                $line = "PO4A-INLINE:$line:PO4A-INLINE";
+                $self->SUPER::unshiftline($l2,$r2);
             } else {
                 # convert " to the groff's double quote glyph; it will be
                 # converted back to " in pre_trans. It is needed because
