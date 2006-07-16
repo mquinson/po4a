@@ -2026,6 +2026,7 @@ $macro{'DS'}=$macro{'LD'}=$macro{'DE'}=\&untranslated;
 $macro{'ID'}=$macro{'BD'}=$macro{'CD'}=\&untranslated;
 $macro{'RD'}=$macro{'KS'}=$macro{'KE'}=\&untranslated;
 $macro{'KF'}=$macro{'B1'}=$macro{'B2'}=\&untranslated;
+$macro{'DA'}=\&translate_joined;
 
 # .pc c  Change page number character
 $macro{'pc'}=\&translate_joined;
