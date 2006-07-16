@@ -1883,7 +1883,8 @@ $macro{'ie'}=$macro{'if'}=sub {
             }
 
             if ($line !~ m/^[.'][ \t]*el(\s|\\\{)/) {
-                die ".ie without .el\n"
+                die wrap_ref_mod($self->{ref}, "po4a::man", dgettext("po4a",
+                            "The .ie macro must be followed by a .el macro."));
             }
             my $paragraph2 = $line;
             $count = 0;
