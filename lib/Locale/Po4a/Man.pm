@@ -881,13 +881,15 @@ sub post_trans {
             if (   ($begin =~ m/(?<!\\)(\\\\)*\\s$/s)
                 or ($begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)$/s)
                 or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[hCv]'([^']|(?<!\\)(\\\\)*\\')*$/)
-                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)) {
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\*\(.?$/)) {
                 # Do not change - to \- for
                 #  * \s-n (reduce font size)
                 #  * \(.- (a character named '.-', e.g. '<-')
                 #  * inside a \h'...'
                 #  * inside a \C'...'
                 #  * inside a \[...]
+                #  * inside a \*(..
                 #  * inside a \v'...'
                 $tmp = $tmp2."-";
             } else {
