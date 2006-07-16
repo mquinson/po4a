@@ -2132,6 +2132,11 @@ sub translate_mdoc {
 
     $self->pushline("$macroname ".$self->t($macroarg)."\n");
 }
+sub translate_mdoc_no_quotes {
+    my ($self,$macroname, $macroarg)=(shift,shift, join(" ", @_));
+
+    $self->pushline("$macroname ".$self->t($macroarg)."\n");
+}
 #
 # Title Macros
 # ============
@@ -2157,7 +2162,7 @@ $macro{'Dd'}=sub {
     # Use the mdoc macros
     define_mdoc_macros();
 
-    $self->translate_mdoc($macroname,$macroarg);
+    $self->translate_mdoc_no_quotes($macroname,$macroarg);
 };
 
 sub define_mdoc_macros {
