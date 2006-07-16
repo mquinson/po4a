@@ -1273,6 +1273,7 @@ sub splitargs {
     # anymore. Let's play safe.
     $arguments =~ s/\\ /$nbs/g;
     $arguments =~ s/^ +//;
+    $arguments =~ s/\\&"/\\(dq/g;
     foreach my $elem (split (/ +/,$arguments)) {
         print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
             if ($debug{'splitargs'});
