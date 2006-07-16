@@ -1871,8 +1871,15 @@ $macro{'ie'}=$macro{'if'}=sub {
             $count -= 1 if ($line =~ m/(?<!\\)\\\}/s);
         }
         if ($m eq '.ie') {
+            # The .el line may be preceded by comments
             ($line,$ref)=$self->SUPER::shiftline();
             chomp $line;
+            while ($line =~ m/^[.']\\"/) {
+                $paragraph .= "\n".$line;
+                ($line,$ref)=$self->SUPER::shiftline();
+                chomp $line;
+            }
+
             if ($line !~ m/^[.'][ \t]*el(\s|\\\{)/) {
                 die ".ie without .el\n"
             }
