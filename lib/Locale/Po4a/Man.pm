@@ -2116,7 +2116,16 @@ $macro{'hw'}=\&translate_each;
 #        (add a flag in Dd, and always check that this flag is set in the
 #        other mdoc macros)
 sub translate_mdoc {
-    my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
+    my ($self,$macroname)=(shift,shift);
+    my $macroarg = "";
+    foreach (@_) {
+        $macroarg.=" " if (length $macroarg);
+        if ($_ =~ m/\s/) {
+            $macroarg.="\"$_\"";
+        } else {
+            $macroarg.=$_;
+        }
+    }
 
     $self->pushline("$macroname ".$self->t($macroarg)."\n");
 }
