@@ -1857,8 +1857,8 @@ $macro{'hy'}=$macro{'hym'}=$macro{'hys'}=\&untranslated;
 # .ie cond anything  If cond then anything else goto .el.
 # .if cond anything  If cond then anything; otherwise do nothing.
 $macro{'ie'}=$macro{'if'}=sub {
+    my $self = shift;
     if ($groff_code ne "fail") {
-        my $self = shift;
         my $m = $_[0];
         my $paragraph = "@_";
         my ($line,$ref);
@@ -1908,8 +1908,8 @@ $macro{'ie'}=$macro{'if'}=sub {
                                               "wrap" => 0) );
         }
     } else {
-        die wrap_mod("po4a::man", dgettext("po4a",
-            "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported."), $_[1]);
+        die wrap_ref_mod($self->{ref}, "po4a::man", dgettext("po4a",
+            "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported."), $_[0]);
     }
 };
 # .in  N    Change indent according to N (default scaling indicator m).
