@@ -1009,6 +1009,16 @@ sub translate {
     # \&. This is usefull because we introduced \& in shiftline.
     return $str if ($str =~ m/^($FONT_RE|\s|\\&)*$/);
 
+    # If a string is quoted, only translate the argument between the
+    # quotes.
+    if ($options{'wrap'} or $str !~ m/\n/s) {
+        if ($str =~ m/^\"(.*)\"$/s and $1 !~ m/(?<!\\)\"/) {
+            $str = '"'.$self->translate($1, $ref, $type, %options).'"';
+            $str =~ s/\n"$/"\n/s;
+            return $str;
+        }
+    }
+
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
     $options{'comment'} .= join('\n', @comments);
     # Translate this
