@@ -646,7 +646,6 @@ NEW_LINE:
             # To keep the space(s), we must introduce some \&
             @args = map { $_ =~ s/^(\s*)$/\\&$1\\&/s; $_ } @args;
             my $arg=join(" ",@args);
-            $arg =~ s/(\\&|(?<!\\) )+$//;
             $arg =~ s/^ +//;
             this_macro_needs_args($macro,$ref,$arg);
             $line = "$insert_font\\f$macro".$arg."\\fR\n";
