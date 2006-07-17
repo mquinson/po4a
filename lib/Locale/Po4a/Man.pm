@@ -999,7 +999,7 @@ sub post_trans {
     return $str;
 }
 sub translate {
-    my ($self,$str,$ref,$type) = @_;
+    my ($self,$str,$ref,$type) = (shift, shift, shift,shift);
     my (%options)=@_;
     my $origstr=$str;
     
