@@ -1445,6 +1445,16 @@ sub splitargs {
         my $last_font=$regular_font;
 
         foreach my $elem (@array1) {
+            # Do not touch the fonts in the inline macros
+            # These inline macros may have their argument in bold or italic,
+            # we can't know.
+            if ($str =~ m/E<\.[^>]/s) {
+                # We can't use \\f here, otherwise the font simplifier regexp
+                # will use the fonts of the inline macros.
+                $str .= "PO4A-FAKE-FONT".$elem;
+                next;
+            }
+
             # Replace \fP by the exact font (because some font modifiers will
             # be removed or added, which will break groff's font stack)
             $elem =~ s/^(P|\[\]|\[P\])/$previous_font/s;
@@ -1547,6 +1557,7 @@ sub splitargs {
             }
         }
         $str =~ s/\(CW</CW</sg;
+        $str =~ s/PO4A-FAKE-FONT/\\f/sg;
 
         print STDERR "'$str'\n" if ($debug{'fonts'});
         return $str;
