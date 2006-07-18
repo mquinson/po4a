@@ -1490,7 +1490,7 @@ sub splitargs {
                                  "po4a::man",
                                  dgettext("po4a",
                                           "Unsupported font in: '%s'."),
-                                 $elem);
+                                 "\\f".$elem);
             }
         }
         # Do some simplification (they don't change the font stack)
