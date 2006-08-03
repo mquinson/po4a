@@ -1191,7 +1191,7 @@ addition to the $self object):
 
 =item A variant
 
-=item An array of (type, argument) tupples
+=item An array of (type, argument) tuples
 
 =item The current environment
 

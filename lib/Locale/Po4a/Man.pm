@@ -286,7 +286,7 @@ Some tests are regularly run on Linux boxes:
 =item *
 
 one third of the pages are refused because they were generated from
-another format suported by po4a (e.g. pod or SGML).
+another format supported by po4a (e.g. pod or SGML).
 
 =item *
 
@@ -1169,7 +1169,7 @@ sub parse{
 	    } else {
 		$self->pushline($line."\n");
 		die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
-		    "Unknown macro '%s'. Remove it from the document, or provide a patch to the po4a team."), $line);
+		    "Unknown macro '%s'. Remove it from the document, or refer to the Locale::Po4a::Man manpage to see how po4a can handle new macros."), $line);
 	    }
 
 	} elsif ($line =~ /^ +[^. ]/) {
