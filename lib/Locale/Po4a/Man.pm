@@ -1007,7 +1007,9 @@ sub translate {
     return $str if ($str eq "\n");
     # Do not translate the strings that only consist of fonts, spaces and
     # \&. This is usefull because we introduced \& in shiftline.
-    return $str if ($str =~ m/^($FONT_RE|\s|\\&)*$/);
+    if ($str =~ m/^($FONT_RE|\s|\\&)*$/) {
+        return do_fonts($str, $ref);
+    }
 
     # If a string is quoted, only translate the argument between the
     # quotes.
