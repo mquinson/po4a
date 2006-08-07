@@ -70,7 +70,15 @@ find_man()
   then
     return 1
   elif [ "$MAN_NUMBER" != "1" ]; then
-    error "Too many possible manpages: $(man -aw -L C $section "$man"), you must specify the manpage or the section"
+    MAN_NUMBER=`man --all --where --locale=C $section "$man" 2> /dev/null | \
+                grep "\/$man\.$section\(.gz\)\?$" | wc -l`
+    if [ "$MAN_NUMBER" = "1" ]
+    then
+      MASTER=`man --where --locale=C "$section" "$man" | grep "\/$man\.$section\(.gz\)\?$"`
+      echo "Multiple manpages in section $section: $(man -aw -L C $section "$man"), only one exactly matches the section."
+    else
+      error "Too many possible manpages: $(man -aw -L C $section "$man"), you must specify the manpage or the section"
+    fi
   else
     MASTER=`man --where --locale=C "$section" "$man"`
   fi
