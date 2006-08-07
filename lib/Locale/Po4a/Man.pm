@@ -1007,7 +1007,7 @@ sub translate {
     return $str if ($str eq "\n");
     # Do not translate the strings that only consist of fonts, spaces and
     # \&. This is usefull because we introduced \& in shiftline.
-    if ($str =~ m/^($FONT_RE|\s|\\&)*$/) {
+    if ($str =~ m/^($FONT_RE|\s|\\&)*$/s) {
         return do_fonts($str, $ref);
     }
 
@@ -1450,7 +1450,7 @@ sub splitargs {
             # Do not touch the fonts in the inline macros
             # These inline macros may have their argument in bold or italic,
             # we can't know.
-            if ($str =~ m/E<\.[^>]/s) {
+            if ($str =~ m/E<\.[^>]$/s) {
                 # We can't use \\f here, otherwise the font simplifier regexp
                 # will use the fonts of the inline macros.
                 $str .= "PO4A-FAKE-FONT".$elem;

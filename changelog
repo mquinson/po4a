@@ -3,6 +3,14 @@
 	* scripts/po4aman-display-po: If man -aw find multiple manpages
 	(e.g. ls.1 and ls.1posix), but only one exactly matches the given
 	section, use this page. Thanks to Florentin Duneau for reporting.
+	* lib/Locale/Po4a/Man.pm: The "do not force the translators to
+	translate them if the line only consists in \&, spaces and font
+	modifiers." patch was wrong. Some strings could be untranslated if
+	a (multi-line) string contained a line with only font modifiers,
+	\& and spaces..
+	* lib/Locale/Po4a/Man.pm: Last patch fixing "Keep the \\f font
+	modifiers with the inline macros' arguments (E<...>)." was wrong.
+	Add missing $ at the end of the regex.
 
 po4a (0.27.1-1)
 
