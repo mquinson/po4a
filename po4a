@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.58 2006-07-15 22:00:37 nekral-guest Exp $
+# $Id: po4a,v 1.59 2006-08-16 21:57:22 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -847,6 +847,10 @@ if (not $po4a_opts{"no-translations"}) {
     # update all translations
 
     foreach $lang (sort keys %po_filename) {
+	# Read the $lang PO once
+	my $po = Locale::Po4a::Po->new();
+	$po->read($po_filename{$lang});
+
 	DOC: foreach my $master (sort { $document{$a}{'pos'} <=>
 	                                $document{$b}{'pos'} } keys %document) {
 	    next unless defined $document{$master}{$lang};
@@ -868,13 +872,16 @@ if (not $po4a_opts{"no-translations"}) {
 	    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
 		                               %{$file_opts{"options"}});
 
-	    my (@file_in_name,@po_in_name);
+	    my @file_in_name;
 	    push @file_in_name, $master;
-	    push @po_in_name, $po_filename{$lang};
+
+	    # Reuse the already parsed PO, do not use the po_in_name
+            # option of process.
+	    $doc->{TT}{po_in} = $po;
+	    $doc->{TT}{po_in}->stats_clear();
 
 	    $doc->process('file_in_name'  => \@file_in_name,
 	                  'file_out_name' => $document{$master}{$lang},
-	                  'po_in_name'    => \@po_in_name,
 	                  'file_in_charset'  => $file_opts{"mastchar"},
 	                  'file_out_charset' => $file_opts{"locchar"},
 	                  'addendum_charset' => $file_opts{"addchar"});
