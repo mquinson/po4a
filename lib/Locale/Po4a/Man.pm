@@ -1006,7 +1006,7 @@ sub translate {
     return $str unless (defined $str) && length($str);
     return $str if ($str eq "\n");
     # Do not translate the strings that only consist of fonts, spaces and
-    # \&. This is usefull because we introduced \& in shiftline.
+    # \&. This is useful because we introduced \& in shiftline.
     if ($str =~ m/^($FONT_RE|\s|\\&)*$/s) {
         return do_fonts($str, $ref);
     }
