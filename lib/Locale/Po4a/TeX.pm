@@ -135,7 +135,7 @@ Note that there is a difference between verbatim and no_wrap environments.
 There is no command and comments analysis in verbatim blocks.
 
 If this environment was not already registered, po4a will consider that
-this environment does not take any arguments.
+this environment does not take any parameters.
 
 =item exclude_include
 
@@ -154,7 +154,7 @@ the document being translated.
 Coma-separated list of environments which should be taken as verbatim.
 
 If this environment was not already registered, po4a will consider that
-this environment does not take any arguments.
+this environment does not take any parameters.
 
 =back
 
@@ -267,6 +267,14 @@ cells by '&').
 The notion of environment is expended to the type displayed in the PO file.
 This can be used to split on "\\\\" in the first mandatory argument of the
 title command.  In this case, the environment is title{#1}.
+
+=item % po4a: verbatim environment I<env>
+
+Indicate that I<env> is a verbatim environment.
+Comments and commands will be ignored in this environment.
+
+If this environment was not already registered, po4a will consider that
+this environment does not take any parameters.
 
 =back
 
