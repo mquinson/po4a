@@ -134,6 +134,9 @@ Coma-separated list of environments which should not be re-wrapped.
 Note that there is a difference between verbatim and no_wrap environments.
 There is no command and comments analysis in verbatim blocks.
 
+If this environment was not already registered, po4a will consider that
+this environment does not take any arguments.
+
 =item exclude_include
 
 Colon-separated list of files that should not be included by \input and
@@ -149,6 +152,9 @@ the document being translated.
 =item verbatim
 
 Coma-separated list of environments which should be taken as verbatim.
+
+If this environment was not already registered, po4a will consider that
+this environment does not take any arguments.
 
 =back
 
@@ -1567,6 +1573,8 @@ sub register_verbatim_environment {
     $RE_VERBATIM = "\\\\begin\\{(?:".
                    join("|", split(/ /, $verbatim_environments)).
                    ")\\*?\\}";
+    register_generic_environment("$env,")
+        unless (defined $environments{$env});
 }
 
 ####################################
@@ -1611,6 +1619,8 @@ sub initialize {
     if ($options{'no_wrap'}) {
         foreach (split(/,/, $options{'no_wrap'})) {
             $no_wrap_environments .= " $_";
+            register_generic_environment("$env,")
+                unless (defined $environments{$env});
         }
     }
 
