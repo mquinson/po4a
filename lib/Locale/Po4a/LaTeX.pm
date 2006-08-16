@@ -37,6 +37,9 @@ LaTeX-based documents.
 This module contains the definitions of common LaTeX commands and
 environments.
 
+See the L<Locale::Po4a::TeX(3pm)|Locale::Po4a::TeX> manpage for the list
+of recognized options.
+
 =head1 SEE ALSO
 
 L<po4a(7)|po4a.7>,
