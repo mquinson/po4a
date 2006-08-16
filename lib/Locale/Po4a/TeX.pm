@@ -1627,8 +1627,8 @@ sub initialize {
     if ($options{'no_wrap'}) {
         foreach (split(/,/, $options{'no_wrap'})) {
             $no_wrap_environments .= " $_";
-            register_generic_environment("$env,")
-                unless (defined $environments{$env});
+            register_generic_environment("$_,")
+                unless (defined $environments{$_});
         }
     }
 
