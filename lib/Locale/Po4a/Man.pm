@@ -991,8 +991,29 @@ sub post_trans {
     # $str =~ s/^\\f([BI])(.*?)\\f[RP]$/\.$1 $2/mg;
     
     unless ($mdoc_mode) {
-    $str =~ s/``/\\\*\(lq/sg;
-    $str =~ s/''/\\\*\(rq/sg;
+        my $tmp = "";
+        while ($str =~ m/^(.*?)(``|'')(.*)$/s) {
+            $tmp .= $1;
+            my $q = $2;
+            $str = $3;
+            # There are probably many more exceptions, here are those I could
+            # detect in my manpages.
+            # \*(.'  \*(.`
+            # \*'    \*`
+            if ($tmp =~ m/(?<!\\)(?:\\\\)*\\\*\($/s) {
+                $tmp .= $q;
+            } elsif (   $tmp =~ m/(?<!\\)(?:\\\\)*\\\*\(.$/s
+                     or $tmp =~ m/(?<!\\)(?:\\\\)*\\\*$/s) {
+                $q =~ m/(.)(.)/;
+                $tmp .= $1;
+                $str = $2.$str;
+            } else {
+                $q =~ s/``/\\\*\(lq/;
+                $q =~ s/''/\\\*\(rq/;
+                $tmp .= $q;
+            }
+        }
+        $str = $tmp.$str;
     }
 
     print STDERR "$str\n" if ($debug{'postrans'});
