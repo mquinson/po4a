@@ -802,8 +802,8 @@ sub pre_trans {
             # Here, we move the punctuation out of the E<...> tag.
             # This is reverted in post_trans.
             # FIXME: To be checked with the French punctuation
-            while ($str =~ m/ +([.,;:\)\]]) *>/s) {
-                $str =~ s/ +([.,;:\)\]]) *>/>$1/s;
+            while ($str =~ m/(?<!\\) +([.,;:\)\]]) *>/s) {
+                $str =~ s/(?<!\\) +([.,;:\)\]]) *>/>$1/s;
             }
         }
         if (defined $t3 and length $t3) {
