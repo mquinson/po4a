@@ -1642,7 +1642,6 @@ $macro{'TH'}= sub {
 #    print STDERR "TH=$th;titre=$title;sec=$section;date=$date;source=$source;manual=$manual\n";
 
     # Reset the memories
-    re_init();
     $self->push_docheader();
 
     $self->pushmacro($th,
@@ -2189,7 +2188,6 @@ sub translate_mdoc_no_quotes {
 $macro{'Dd'}=sub {
     my ($self,$macroname,$macroarg)=(shift,shift,join(" ",@_));
 
-    re_init();
     $mdoc_mode = 1;
     $self->push_docheader();
 
