@@ -1,5 +1,5 @@
 # Locale::Po4a::Ini -- Convert ini files to PO file, for translation.
-# $Id: Ini.pm,v 1.1 2006-08-21 18:08:43 nekral-guest Exp $
+# $Id: Ini.pm,v 1.2 2006-08-23 19:30:30 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -9,7 +9,6 @@
 # Modules and declarations
 ############################################################################
 
-use Pod::Parser;
 use Locale::Po4a::TransTractor qw(process new);
 use Locale::Po4a::Common;
 
@@ -102,8 +101,7 @@ NOTE: If the text is not quoted, it will be ignored.
 
 =head1 SEE ALSO
 
-L<Pod::Parser>, L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>,
-L<Locale::Po4a::Man(3pm)>,
+L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>.
 
 =head1 AUTHORS
 
