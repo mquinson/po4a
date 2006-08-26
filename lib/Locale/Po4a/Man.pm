@@ -145,16 +145,17 @@ should be preferred.
 
 =back
 
-=item B<untranslated>
+=item B<generated>
 
-=item B<noarg>
+This option specifies that the file was generated, and that po4a should not
+try to detect if the man pages was generated from another format.
+This permits to use po4a on generated man pages.
+This option does not take any argument.
 
-=item B<translate_joined>
+=back
 
-=item B<translate_each>
-
-These options permit to specify the behavior of a new macro (defined with
-a .de request), or of a macro not supported by po4a.
+The following options permit to specify the behavior of a new macro
+(defined with a .de request), or of a macro not supported by po4a.
 They take in argument a coma separated list of macros.
 For example:
 
@@ -163,14 +164,24 @@ For example:
 Note: if a macro is not supported by po4a and if you consider that it is a
 standard roff macro, you should submit it to the po4a development team.
 
+=over
+
+=item B<untranslated>
+
 B<untranslated> indicates that this macro (at its arguments) don't have to
 be translated.
+
+=item B<noarg>
 
 B<noarg> is like B<untranslated>, except that po4a will verify that no
 argument is added to this macro.
 
+=item B<translate_joined>
+
 B<translate_joined> indicates that po4a must propose to translate the
 arguments of the macro.
+
+=item B<translate_each>
 
 With B<translate_each>, the arguments will also be proposed for the
 translation, except that each one will be translated separately.
@@ -188,19 +199,12 @@ If you have a I<begin> (respectively I<end>) macro that has no I<end>
 I<begin> (like nf) as a counterpart.
 These macros (and their arguments) wont be translated.
 
-=item inline
+=item B<inline>
 
-This option permits to specify a list of coma-separated macros that must
+This option specifies a list of coma-separated macros that must
 not split the current paragraph. The string to translate will then contain
-I<foo E<lt>.bar baz quxE<gt> quux>, where I<foo> is the command that
-should be inlined.
-
-=item generated
-
-This option specifies that the file was generated, and that po4a should not
-try to detect if the man pages was generated from another format.
-This permits to use po4a on generated man pages.
-This option does not take any argument.
+I<foo E<lt>.bar baz quxE<gt> quux>, where I<bar> is the command that
+should be inlined, and I<baz qux> its arguments.
 
 =back
 
