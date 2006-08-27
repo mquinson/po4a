@@ -1258,23 +1258,19 @@ sub parse{
     for my $c (@next_comments) {
 	$self->pushline(".\\\"$c\n");
     }
-} # end of main
 
-# Clear all the memories.
-# This should be called between all documents.
-sub re_init {
-    @comments = ();
+    # reinitialize the module
     @next_comments = ();
     set_regular("R");
     set_font("R");
     set_font("R");
     $mdoc_mode = 0;
-}
+} # end of main
+
 # We can't push the header in the first line of the document, as in the
 # other module, because the first line may contain indications on how the
 # man page must be processed.
 sub docheader {
-    re_init();
     return "";
 }
 
