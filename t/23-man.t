@@ -127,10 +127,10 @@ push @tests, {
     'run'  => "cp data-23/mixed.fr.po tmp/ && LC_ALL=C perl ../po4a data-23/mixed.cfg",
     'test' => "diff -u $diff_po_flags  data-23/mixed.pot tmp/mixed.pot &&".
               "diff -u $diff_po_flags  data-23/mixed.fr.po tmp/mixed.fr.po &&".
-              "diff -u $diff_po_flags  data-23/null.fr tmp/mixed_null.fr.1 &&".
-              "diff -u $diff_po_flags  data-23/mdoc.fr tmp/mixed_mdoc.fr.1 &&".
-              "diff -u $diff_po_flags  data-23/escapes1.fr.1 tmp/mixed_escapes1.fr.1 &&".
-              "diff -u $diff_po_flags  data-23/quotes.fr tmp/mixed_quotes.fr.1",
+              "diff -u $diff_po_flags  data-23/mixed1.fr tmp/mixed1.fr &&".
+              "diff -u $diff_po_flags  data-23/mixed2.fr tmp/mixed2.fr &&".
+              "diff -u $diff_po_flags  data-23/mixed3.fr tmp/mixed3.fr &&".
+              "diff -u $diff_po_flags  data-23/mixed4.fr tmp/mixed4.fr",
     'doc'  => "mixed config with roff and mdoc"
 };
 
