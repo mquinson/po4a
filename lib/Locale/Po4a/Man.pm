@@ -558,7 +558,7 @@ NEW_LINE:
         }
 
         if ($line =~ m/^[.']*$/) {
-            if ($c !~ m/^\s*$/) {
+            if ($c !~ m/^\s+$/) {
                 # This commentted line may be comment for the next paragraph
                 push @next_comments, $c;
             }
@@ -1018,6 +1018,9 @@ sub post_trans {
             }
         }
         $str = $tmp.$str;
+    }
+    if (not defined $self->{type}) {
+        $str =~ s/ $//mg;
     }
 
     print STDERR "$str\n" if ($debug{'postrans'});
