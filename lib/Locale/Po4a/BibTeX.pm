@@ -79,7 +79,7 @@ sub parse {
             $self->pushline( $line."\n" );
         } elsif (    $id ne ""
                  and $field eq ""
-                 and $line =~ m/^((.*?)\s*=\s*)([^{]*?)(\s*,?\s*)$/) {
+                 and $line =~ m/^((.*?)\s*=\s*)([^ "{].*?)(\s*,?\s*)$/) {
             my $end=(defined $4)?$4:"";
             $self->pushline( $1.$self->translate($3,
                                                  $self->{ref},
