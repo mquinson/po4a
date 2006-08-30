@@ -83,7 +83,7 @@ sub parse {
             my $end=(defined $4)?$4:"";
             $self->pushline( $1.$self->translate($3,
                                                  $self->{ref},
-                                                 "$id: $2",
+                                                 "$2 ($id)",
                                                  "wrap" => 1).$end."\n" );
             $field = "";
             $paragraph = "";
@@ -108,7 +108,7 @@ sub parse {
             or $paragraph =~ m/^(\s*)([^ "{].*)(\s*,?\s*)$/s) {
             $self->pushline( $1.$self->translate($2,
                                                  $self->{ref},
-                                                 "$id: $field",
+                                                 "$field ($id)",
                                                  "wrap" => 1).$3);
             $field="";
             $paragraph="";
@@ -120,7 +120,7 @@ sub parse {
             or $paragraph =~ m/^(\s*)(.*)(\s*,?\s*)$/s) {
             $self->pushline( $self->translate($1,
                                               $self->{ref},
-                                              "$id: $field",
+                                              "$field ($id)",
                                               "wrap" => 1).$2);
             $field="";
             $paragraph="";
