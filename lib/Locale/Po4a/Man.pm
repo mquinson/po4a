@@ -931,8 +931,10 @@ sub post_trans {
 
     # Change ascii non-breaking space to groff one
     my $nbs_out = "\xA0";
-    my $enc_length = Encode::from_to($nbs_out, "latin1",
-                                               $self->get_out_charset);
+    my $enc_length;
+    eval("\$enc_length = Encode::from_to(\$nbs_out, \"latin1\",
+                                         \$self->get_out_charset,
+                                         1)");
     $str =~ s/\Q$nbs_out/\\ /sg if defined $enc_length;
     # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
     # an extra space
@@ -1111,8 +1113,9 @@ sub parse{
     if (defined $self->{TT}{'file_in_charset'} and
         length $self->{TT}{'file_in_charset'})
     {
-        $enc_length = Encode::from_to($nbs, "latin-1",
-                                           $self->{TT}{'file_in_charset'});
+        eval ("\$enc_length = Encode::from_to(\$nbs, \"latin-1\",
+                                              \$self->{TT}{'file_in_charset'},
+                                              1)");
     }
     # fall back solution
     $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES"
