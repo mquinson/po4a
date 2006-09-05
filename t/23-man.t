@@ -134,7 +134,39 @@ push @tests, {
     'doc'  => "mixed config with roff and mdoc"
 };
 
-use Test::More tests => 46; # $formats * $tests * 2 
+# iNon breaking spaces (7 tests)
+push @tests, {
+  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/spaces -p tmp/spaces.pot 2>/dev/null",
+  'test' => "diff -u $diff_po_flags  data-23/spaces.pot tmp/spaces.pot",
+  'doc'  => "gettextize well non breaking spaces",
+}, {
+  'run'  => "cp data-23/spaces.fr_latin1.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_latin1.po >/dev/null 2>&1 ",
+  'test' => "diff -u $diff_po_flags  data-23/spaces.fr_latin1.po tmp/spaces.fr_latin1.po",
+  'doc'  => "updatepo for this document (fr ISO-8859-1)",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/spaces -p data-23/spaces.fr_latin1.po -l tmp/spaces.fr_latin1",
+  'test' => "diff -u $diff_pod_flags data-23/spaces.fr_latin1 tmp/spaces.fr_latin1",
+  'doc'  => "translate this document (fr ISO-8859-1)",
+}, {
+  'run'  => "cp data-23/spaces.fr_utf8.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_utf8.po >/dev/null 2>&1 ",
+  'test' => "diff -u $diff_po_flags  data-23/spaces.fr_utf8.po tmp/spaces.fr_utf8.po",
+  'doc'  => "updatepo for this document (fr UTF-8)",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/spaces -p data-23/spaces.fr_utf8.po -l tmp/spaces.fr_utf8",
+  'test' => "diff -u $diff_pod_flags data-23/spaces.fr_utf8 tmp/spaces.fr_utf8",
+  'doc'  => "translate this document (fr UTF-8)",
+}, {
+  'run'  => "cp data-23/spaces.ja.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.ja.po >/dev/null 2>&1 ",
+  'test' => "diff -u $diff_po_flags  data-23/spaces.ja.po tmp/spaces.ja.po",
+  'doc'  => "updatepo for this document (ja EUC-JP)",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/spaces -p data-23/spaces.ja.po -l tmp/spaces.ja",
+  'test' => "diff -u $diff_pod_flags data-23/spaces.ja tmp/spaces.ja",
+  'doc'  => "translate this document (ja EUC-JP)",
+};
+
+
+use Test::More tests => 60; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
