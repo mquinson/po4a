@@ -428,14 +428,14 @@ sub parse_file {
 			                    "tag taglist titlepag toc");
 
     } elsif ($prolog =~ /docbook/i) {
-	$self->set_tags_kind("translate" => "abbrev acronym arg artheader attribution ".
+	$self->set_tags_kind("translate" => "abbrev acronym artheader attribution ".
 	                                    "date ".
 	                                    "edition editor entry ".
 	                                    "figure ".
 	                                    "glosssee glossseealso glossterm ".
 	                                    "holder ".
 	                                    "member msgaud msglevel msgorig ".
-	                                    "option orgname othername ".
+	                                    "orgname othername ".
 	                                    "para phrase pubdate publishername primary ".
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
 	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref synopsis ".
@@ -444,7 +444,7 @@ sub parse_file {
 	                     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
 	                     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
-	                                    "callout calloutlist caption caution chapter cmdsynopsis copyright ".
+	                                    "callout calloutlist caption caution chapter copyright ".
 	                                    "dedication docinfo ".
 	                                    "entry ".
 	                                    "formalpara ".
@@ -462,9 +462,9 @@ sub parse_file {
 	                                    "table tbody textobject tgroup thead tip toc ".
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
-	                     "verbatim"  => "address holder literallayout option programlisting ".
+	                     "verbatim"  => "address cmdsynopsis holder literallayout programlisting ".
 	                                    "refentrytitle refname refpurpose screen title",
-	                     "ignore"    => "action affiliation anchor application author authorinitials ".
+	                     "ignore"    => "action affiliation anchor application arg author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database po4abeg po4aend ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
@@ -476,7 +476,7 @@ sub parse_file {
 	                                    "link literal ".
 	                                    "manvolnum markup medialabel menuchoice methodname modespec mousebutton ".
 	                                    "nonterminal ".
-	                                    "olink ooclass ooexception oointerface optional othercredit ".
+	                                    "olink ooclass ooexception oointerface option optional othercredit ".
 	                                    "parameter personname phrase productname productnumber prompt property ".
 	                                    "quote ".
 	                                    "remark replaceable returnvalue revhistory ".
@@ -958,6 +958,18 @@ sub parse_file {
 		# the same line.
 		$verb_last_ref = $ref;
 	    }
+	    if ($verb) {
+		# Tag in a verbatim section. Check if it appeared at
+		# the same line than the previous data. If not, it
+		# means that an end of line must be added to the
+		# buffer.
+		if ($ref ne $verb_last_ref) {
+		    # FIXME: Does it work if $verb > 1
+		    $buffer .= "\n";
+		    $verb_last_ref = $ref;
+		}
+	    }
+
 	    if ($indent{$event->data->name()}) {
 		# push the indenting space only if not in verb before that tag
 		# push trailing "\n" only if not in verbose afterward
