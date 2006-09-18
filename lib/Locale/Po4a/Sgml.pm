@@ -349,13 +349,12 @@ sub parse_file {
     # Rewrite the file to:
     #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
     #   - protect entities from expansion (ie "&release;")
-    open (IN,"<$mastername")
-	|| die wrap_mod("po4a::sgml", dgettext("po4a", "Can't open %s: %s"), $mastername, $!);
     my $origfile="";
-    while (<IN>) {
-	$origfile .= $_;
+    my $i=0;
+    while ($i < @{$self->{TT}{doc_in}}) {
+        $origfile .= ${$self->{TT}{doc_in}}[$i];
+        $i+=2;
     }
-    close IN or die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close %s: %s"), $mastername, $!);
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a",
