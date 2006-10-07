@@ -462,7 +462,7 @@ sub parse_file {
 	                                    "variablelist varlistentry videoobject ".
 	                                    "warning",
 	                     "verbatim"  => "address cmdsynopsis holder literallayout programlisting ".
-	                                    "refentrytitle refname refpurpose screen title",
+	                                    "refentrytitle refname refpurpose screen term title",
 	                     "ignore"    => "action affiliation anchor application arg author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database po4abeg po4aend ".
