@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.64 2006-10-07 19:43:35 nekral-guest Exp $
+# $Id: Po.pm,v 1.65 2006-10-07 20:33:28 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -298,8 +298,15 @@ sub write{
 	    if    defined($self->{po}{$msgid}{'flags'})
 	       && length ($self->{po}{$msgid}{'flags'});
 
-	$output .= "msgid ".quote_text($msgid)."\n";
-	$output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+	if ($self->get_charset =~ /^utf-8$/i) {
+	    my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
+	    $msgid = Encode::decode_utf8($msgid);
+	    $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
+	    $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
+	} else {
+	    $output .= "msgid ".quote_text($msgid)."\n";
+	    $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+	}
 	print $fh $output;
     }   
 #    print STDERR "$fh";
