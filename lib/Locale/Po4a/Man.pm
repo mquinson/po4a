@@ -904,7 +904,7 @@ sub post_trans {
     }
 
     # There must not be an end of line inside an inline macro
-    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1 $2/gs;
+    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1$2/gs;
 
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
