@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.63 2006-05-05 22:01:44 nekral-guest Exp $
+# $Id: Po.pm,v 1.64 2006-10-07 19:43:35 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -776,7 +776,13 @@ sub gettext {
     }
 
     if ($opt{'wrap'}) {
-	$res=wrap ($res, $opt{'wrapcol'} || 76);
+        if ($self->get_charset =~ /^utf-8$/i) {
+            $res=Encode::decode_utf8($res);
+            $res=wrap ($res, $opt{'wrapcol'} || 76);
+            $res=Encode::encode_utf8($res);
+        } else {
+            $res=wrap ($res, $opt{'wrapcol'} || 76);
+        }
     }
 #    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
     return $res;
