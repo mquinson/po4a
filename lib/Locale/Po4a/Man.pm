@@ -152,6 +152,26 @@ try to detect if the man pages was generated from another format.
 This permits to use po4a on generated man pages.
 This option does not take any argument.
 
+=item B<mdoc>
+
+This option is only useful for mdoc pages.
+
+It selects a stricter support of the mdoc format by telling po4a not to
+translate the 'NAME' section.
+mdoc pages whose 'NAME' section is translated won't generate any header of
+footer.
+
+According to the groff_mdoc page, the NAME, SYNOPSIS and DESCRIPTION
+sections are mandatory.
+There are no known issues with translated SYNOPSIS or DESCRIPTION section,
+but you can also specify these sections this way:
+ -o mdoc=NAME,SYNOPSIS,DESCRIPTION
+
+This mdoc issue can also be solved with an addendum like this one:
+ PO4A-HEADER:mode=before;position=^.Dd
+ .TH DOCUMENT_TITLE 1 "Month day, year" OS "Section Name"
+
+
 =back
 
 The following options permit to specify the behavior of a new macro
@@ -396,6 +416,13 @@ my %inline = (
 # This variable indicates whether po4a should try to detect the generated
 # files.
 my $allow_generated = 0;
+# This hash indicates section name that should not be translated in mdoc
+# mode.
+# The groff's mdoc processor requires the NAME section, otherwise headers
+# and footers of the pages are not generated.
+# The mdoc_groff man page indicates that NAME, SYNOPSIS and DESCRIPTION
+# are mandatory.
+my %mdoc = ();
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -410,6 +437,7 @@ sub initialize {
     $self->{options}{'no_wrap'}='';
     $self->{options}{'inline'}='';
     $self->{options}{'generated'}='';
+    $self->{options}{'mdoc'}='';
 
     # reset the debug options
     %debug = ();
@@ -474,6 +502,15 @@ sub initialize {
     }
     if (defined $options{'generated'}) {
         $allow_generated = 1;
+    }
+    if (defined $options{'mdoc'}) {
+        if ($options{'mdoc'} eq 1) {
+            $mdoc{"NAME"} = 1;
+        } else {
+            foreach (split(/,/, $options{'mdoc'})) {
+                $mdoc{$_} = 1;
+            }
+        }
     }
 }
 
@@ -2230,7 +2267,23 @@ sub define_mdoc_macros {
     # .Sh   Section Headers.
     # (man mdoc indicates only a limited set of valid headers,
     # but it should be OK to translate the header)
-    $macro{'Sh'}=\&translate_mdoc;
+    $macro{'Sh'}= sub {
+        my ($self,$macroname)=(shift,shift);
+        my $macroarg = "";
+        foreach (@_) {
+            $macroarg.=" " if (length $macroarg);
+            if ($_ =~ m/((?<!\\) |\t)/) {
+                $macroarg.="\"$_\"";
+            } else {
+                $macroarg.=$_;
+            }
+        }
+        if ($mdoc{$macroarg}) {
+            $self->pushline("$macroname ".$macroarg."\n");
+        } else {
+            $self->pushline("$macroname ".$self->t($macroarg)."\n");
+        }
+    };
     # .Ss   Subsection Headers.
     $macro{'Ss'}=\&translate_mdoc;
     # .Pp   Paragraph Break.  Vertical space (one line).
