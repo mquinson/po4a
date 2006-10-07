@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.28 2005-09-22 21:51:49 nekral-guest Exp $
+# $Id: po4a-normalize,v 1.29 2006-10-07 21:15:10 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -137,7 +137,7 @@ foreach (@options) {
 my $parser=Locale::Po4a::Chooser::new($type,%options);
 
 my $filename = shift || pod2usage(1);
--e $filename || die wrap_msg(gettext("File %s does not exist."), $filename);
+$filename eq '-' || -e $filename || die wrap_msg(gettext("File %s does not exist."), $filename);
 
 $parser->read($filename);
 $parser->{TT}{utf_mode} = 1;

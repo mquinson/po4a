@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.36 2005-11-13 12:44:57 nekral-guest Exp $
+# $Id: po4a-gettextize,v 1.37 2006-10-07 21:15:10 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -194,7 +194,7 @@ foreach (@options) {
 }
 # Check file existence
 foreach my $file (@masterfile, @locfile) {
-    -e $file || die wrap_msg(gettext("File %s does not exist."), $file);
+    $file eq '-' || -e $file || die wrap_msg(gettext("File %s does not exist."), $file);
 }
 
 # Declare the TransTractor parsers
