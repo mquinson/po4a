@@ -153,14 +153,14 @@ TEST_BULLET:
                 $bullet_regex =~ s/\./\\\./;
                 $bullet_regex =~ s/[0-9]+/\\d\+/;
                 if ($para eq '' or $para =~ m/^$bullet_regex\S/s) {
-                my $trans = $self->translate($text,
-                                             $self->{ref},
-                                             "Bullet: '$indent1$bullet'",
-                                             "wrap" => 1,
-                                             "wrapcol" => - (length $indent2));
-                $trans =~ s/^/$indent1$bullet/s;
-                $trans =~ s/\n(.)/\n$indent2$1/sg;
-                $self->pushline( $trans."\n" );
+                    my $trans = $self->translate($text,
+                                                 $self->{ref},
+                                                 "Bullet: '$indent1$bullet'",
+                                                 "wrap" => 1,
+                                                 "wrapcol" => - (length $indent2));
+                    $trans =~ s/^/$indent1$bullet/s;
+                    $trans =~ s/\n(.)/\n$indent2$1/sg;
+                    $self->pushline( $trans."\n" );
                     if ($para eq '') {
                         return;
                     } else {
