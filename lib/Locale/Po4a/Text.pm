@@ -82,6 +82,14 @@ sub parse {
             $paragraph="";
             $wrapped_mode = 1;
             $self->pushline($line."\n");
+        } elsif (   $line =~ /^=*$/
+                 or $line =~ /^_*$/
+                 or $line =~ /^-*$/) {
+            $wrapped_mode = 0;
+            $paragraph .= $line."\n";
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
         } else {
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
