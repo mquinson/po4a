@@ -77,7 +77,8 @@ sub parse {
         if ($line =~ /^\s*$/) {
             # Break paragraphs on lines containing only spaces
             do_paragraph($self,$paragraph,$wrapped_mode);
-            $self->pushline("\n") unless ($wrapped_mode == 0);
+            $self->pushline("\n") unless (   $wrapped_mode == 0
+                                          or $paragraph eq "");
             $paragraph="";
             $wrapped_mode = 1;
             $self->pushline($line."\n");
@@ -98,6 +99,7 @@ sub parse {
 
 sub do_paragraph {
     my ($self, $paragraph, $wrap) = (shift, shift, shift);
+    return if ($paragraph eq "");
     $self->pushline( $self->translate($paragraph,
                                       $self->{ref},
                                       "Plain text",
