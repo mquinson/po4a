@@ -832,6 +832,10 @@ sub translate {
 	Encode::from_to($string, $in_charset, $self->{TT}{po_in}->get_charset);
     }
 
+    if (defined $options{'wrapcol'} && $options{'wrapcol'} < 0) {
+# FIXME: should be the parameter given with --width
+        $options{'wrapcol'} = 76 + $options{'wrapcol'};
+    }
     my $transstring = $self->{TT}{po_in}->gettext($string,
 					'wrap'      => $options{'wrap'}||0,
 					'wrapcol'   => $options{'wrapcol'});

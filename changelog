@@ -11,6 +11,13 @@
 	* lib/Locale/Po4a/Text.pm: Consider paragraphs starting by a
 	bullet ('*') or numberred paragraphs ('1)' or '2.') as non-wrapped
 	paragraphs.
+	* lib/Locale/Po4a/TransTractor.pm (translate): When the wrapcol
+	argument is negative, add the default wrapcol value.  NOTE: It
+	does not take into account the argument of the po4a-translate's
+	--width option.
+	* lib/Locale/Po4a/Text.pm: Support for bulleted paragraphs:
+	extract the bullet's text, and wrap/reindent after translation.
+	A -o nobullets option was added to revert this behavior.
 
 2006-10-08  Nicolas François  <nicolas.francois@centraliens.net>
 

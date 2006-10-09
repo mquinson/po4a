@@ -63,7 +63,17 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
-sub initialize {}
+my $bullets = 1;
+sub initialize {
+    my $self = shift;
+    my %options = @_;
+
+    $self->{options}{'nobullets'}='';
+
+    if (defined $options{'nobullets'}) {
+        $bullets = 0;
+    }
+}
 
 sub parse {
     my $self = shift;
@@ -114,6 +124,42 @@ sub parse {
 sub do_paragraph {
     my ($self, $paragraph, $wrap) = (shift, shift, shift);
     return if ($paragraph eq "");
+
+    if ($bullets) {
+        # Detect bullets
+        # |        * blah blah
+        # |<spaces>  blah
+        # |          ^-- aligned
+        # <empty line>
+        #
+        # Other bullets supported:
+        # - blah         o blah         + blah
+        # 1. blah       1) blah       (1) blah
+        if ($paragraph =~ m/^(\s*)((?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+)([^\n]*\n)(.*)$/s) {
+            my $para = $5;
+            my $bullet = $2;
+            my $indent1 = $1;
+            my $indent2 = "$1".(' ' x length $bullet);
+            my $text = $4;
+            while ($para =~ s/^$indent2(\S[^\n]*\n)//s) {
+                $text .= $1;
+            }
+            # TODO: detect if a line starts with the same bullet
+            if ($para eq '' and $text !~ m/\S[ \t][ \t][ \t]+\S/s) {
+                my $trans = $self->translate($text,
+                                             $self->{ref},
+                                             "Bullet: '$bullet'",
+                                             "wrap" => 1,
+                                             "wrapcol" => - (length $indent2));
+                $trans =~ s/^/$indent1$bullet/s;
+                $trans =~ s/\n(.)/\n$indent2$1/sg;
+                $self->pushline( $trans."\n" );
+                return;
+            }
+        }
+    }
+    # TODO: detect indented paragraphs
+
     $self->pushline( $self->translate($paragraph,
                                       $self->{ref},
                                       "Plain text",
