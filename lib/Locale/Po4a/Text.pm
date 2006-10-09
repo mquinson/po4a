@@ -135,6 +135,7 @@ sub do_paragraph {
         # Other bullets supported:
         # - blah         o blah         + blah
         # 1. blah       1) blah       (1) blah
+TEST_BULLET:
         if ($paragraph =~ m/^(\s*)((?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+)([^\n]*\n)(.*)$/s) {
             my $para = $5;
             my $bullet = $2;
@@ -145,16 +146,29 @@ sub do_paragraph {
                 $text .= $1;
             }
             # TODO: detect if a line starts with the same bullet
-            if ($para eq '' and $text !~ m/\S[ \t][ \t][ \t]+\S/s) {
+            if ($text !~ m/\S[ \t][ \t][ \t]+\S/s) {
+                my $bullet_regex = $indent1.$bullet;
+                $bullet_regex =~ s/\*/\\\*/;
+                $bullet_regex =~ s/\+/\\\+/;
+                $bullet_regex =~ s/\./\\\./;
+                $bullet_regex =~ s/[0-9]+/\\d\+/;
+                if ($para eq '' or $para =~ m/^$bullet_regex\S/s) {
                 my $trans = $self->translate($text,
                                              $self->{ref},
-                                             "Bullet: '$bullet'",
+                                             "Bullet: '$indent1$bullet'",
                                              "wrap" => 1,
                                              "wrapcol" => - (length $indent2));
                 $trans =~ s/^/$indent1$bullet/s;
                 $trans =~ s/\n(.)/\n$indent2$1/sg;
                 $self->pushline( $trans."\n" );
-                return;
+                    if ($para eq '') {
+                        return;
+                    } else {
+                        # Another bullet
+                        $paragraph = $para;
+                        goto TEST_BULLET;
+                    }
+                }
             }
         }
     }
