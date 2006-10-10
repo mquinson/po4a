@@ -147,10 +147,7 @@ TEST_BULLET:
             }
             # TODO: detect if a line starts with the same bullet
             if ($text !~ m/\S[ \t][ \t][ \t]+\S/s) {
-                my $bullet_regex = $indent1.$bullet;
-                $bullet_regex =~ s/\*/\\\*/;
-                $bullet_regex =~ s/\+/\\\+/;
-                $bullet_regex =~ s/\./\\\./;
+                my $bullet_regex = quotemeta($indent1.$bullet);
                 $bullet_regex =~ s/[0-9]+/\\d\+/;
                 if ($para eq '' or $para =~ m/^$bullet_regex\S/s) {
                     my $trans = $self->translate($text,
