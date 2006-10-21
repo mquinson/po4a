@@ -329,6 +329,13 @@ sub set_tags_kind {
 
     foreach (qw(translate empty section verbatim ignore attributes qualify)) {
 	$self->{SGML}->{k}{$_} = $self->{options}{$_} ? $self->{options}{$_}.' ' : '';
+        # Remove the default behavior for the tags defined with the
+        # options.
+        foreach my $k (keys %kinds) {
+            foreach my $t (split(" ", $self->{SGML}->{k}{$_})) {
+                $kinds{$k} =~ s/\b$t\b//;
+            }
+        }
     }
 
     foreach (keys %kinds) {
