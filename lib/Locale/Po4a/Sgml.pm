@@ -718,7 +718,7 @@ sub parse_file {
 	    # Add the references of the added lines
 	    my $i;
 	    for ($i=0; $i<$len; $i++) {
-		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i);
+		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+1);
 	    }
 
 	    if ($begin !~ m/\n[ \t]*$/s) {
