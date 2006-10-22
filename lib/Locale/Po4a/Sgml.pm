@@ -856,10 +856,21 @@ sub parse_file {
     my $lastchar = ''; #
     my $buffer= ""; # what we will soon handle
 
+    # Keep a reference to the last line indicated by nsgmls
+    my $line=0;
+    # Unfortunately, nsgmls do not mention all the line changes.  We have
+    # to keep track of the number of lines seen in the "record ends".
+    my $adds=0;
     # run the appropriate handler for each event
     EVENT: while (my $event = $parse->next_event) {
 	# to build po entries
-	my $ref=$refs[$parse->line-1];
+	my $ref=$refs[$parse->line-1+(($adds < 0)?-$adds:0)];
+	# Reset $adds (~number of lines of the current paragraph)
+	# When $adds is negative (end of paragraph), and nsgmls starts
+	# mentioning the line change.
+	$adds = 0 if ($adds < 0 and $line != $parse->line);
+	# Keep a reference to the last line indicated by nsgmls
+	$line = $parse->line;
 	my $type;
 
 	if ($event->type eq 'start_element') {
@@ -950,6 +961,9 @@ sub parse_file {
 		    $self->pushline($buffer) if $buffer;
 		}
 		$buffer="";
+		# The end of paragraph was seen. $adds must be negative,
+		# so that it can be used for computing the line reference.
+		$adds=-abs($adds);
 		push @open,$tag;
 	    } elsif ($indent{$event->data->name()}) {
 		die wrap_ref_mod($ref, "po4a::sgml", dgettext("po4a",
@@ -1024,6 +1038,9 @@ sub parse_file {
 		$type = $open[$#open] . $tag;
 		$self->end_paragraph($buffer,$ref,$type,$verb,$indent,@open);
 		$buffer = "";
+		# The end of paragraph was seen. $adds must be negative,
+		# so that it can be used for computing the line reference.
+		$adds=-abs($adds);
 		pop @open;
 		if (@open > 0) {
 		    pop @open;
@@ -1081,6 +1098,8 @@ sub parse_file {
 	} # end of type eq 'sdata'
 
 	elsif ($event->type eq 're') {
+	    # End of record, the line reference shall be incremented.
+	    $adds +=1;
 	    if ($verb) {
 		# Check if this line of data appear on the same line
 		# than the previous tag. If not, append an end of line
