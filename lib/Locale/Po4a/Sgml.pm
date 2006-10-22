@@ -861,16 +861,20 @@ sub parse_file {
     # Unfortunately, nsgmls do not mention all the line changes.  We have
     # to keep track of the number of lines seen in the "record ends".
     my $adds=0;
+    # If the last line received contains only spaces, do not take it into
+    # account for the line reference of the paragraph.
+    my $empty_last_cdata=0;
     # run the appropriate handler for each event
     EVENT: while (my $event = $parse->next_event) {
-	# to build po entries
-	my $ref=$refs[$parse->line-1+(($adds < 0)?-$adds:0)];
-	# Reset $adds (~number of lines of the current paragraph)
-	# When $adds is negative (end of paragraph), and nsgmls starts
-	# mentioning the line change.
-	$adds = 0 if ($adds < 0 and $line != $parse->line);
-	# Keep a reference to the last line indicated by nsgmls
-	$line = $parse->line;
+	# get the line reference to build po entries
+	if ($line != $parse->line) {
+	    # nsgmls informs us of that the line changed. Reset $adds and
+	    # $empty_last_cdata
+	    $adds = 0;
+	    $empty_last_cdata = 0;
+	    $line = $parse->line;
+	}
+	my $ref=$refs[$parse->line-1 + $adds - $empty_last_cdata];
 	my $type;
 
 	if ($event->type eq 'start_element') {
@@ -961,9 +965,6 @@ sub parse_file {
 		    $self->pushline($buffer) if $buffer;
 		}
 		$buffer="";
-		# The end of paragraph was seen. $adds must be negative,
-		# so that it can be used for computing the line reference.
-		$adds=-abs($adds);
 		push @open,$tag;
 	    } elsif ($indent{$event->data->name()}) {
 		die wrap_ref_mod($ref, "po4a::sgml", dgettext("po4a",
@@ -1038,9 +1039,6 @@ sub parse_file {
 		$type = $open[$#open] . $tag;
 		$self->end_paragraph($buffer,$ref,$type,$verb,$indent,@open);
 		$buffer = "";
-		# The end of paragraph was seen. $adds must be negative,
-		# so that it can be used for computing the line reference.
-		$adds=-abs($adds);
 		pop @open;
 		if (@open > 0) {
 		    pop @open;
@@ -1067,6 +1065,7 @@ sub parse_file {
 
 	elsif ($event->type eq 'cdata') {
 	    my $cdata = $event->data;
+	    $empty_last_cdata=($cdata =~ m/^\s*$/);
 	    $cdata =~ s/{PO4A-lt}/</g;
 	    $cdata =~ s/{PO4A-gt}/>/g;
 	    $cdata =~ s/{PO4A-amp}/&/g;
