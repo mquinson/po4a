@@ -905,7 +905,7 @@ sub parse_file {
                                 }
                             }
                         }
-			if ($value =~ m/"/) { #"
+			if ($value =~ m/\"/) {
 			    $value = "'".$value."'";
 			} else {
 			    $value = '"'.$value.'"';
