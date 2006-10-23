@@ -749,6 +749,9 @@ sub parse_file {
         }
     }
     $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+)\b/$1\{PO4A-amp\}$2/gs;
+    if (defined($xmlprolog) && length($xmlprolog)) {
+        $origfile=~s/\/>/\{PO4A-close\}>/gs;
+    }
 
     if ($debug{'refs'}) {
 	print "XX Resulting shifts\n";
@@ -1086,6 +1089,10 @@ sub parse_file {
 	    }
 	    $lastchar = substr($cdata, -1, 1);
 	    $buffer .= $cdata;
+	    if (defined($xmlprolog) && length($xmlprolog)) {
+		$buffer =~ s/>PO4A-close\}>/\/>/sg;
+		$buffer =~ s/PO4A-close\}>//sg; # This should not be necessary
+	    }
 	} # end of type eq 'cdata'
 
 	elsif ($event->type eq 'sdata') {
