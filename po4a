@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.59 2006-08-16 21:57:22 nekral-guest Exp $
+# $Id: po4a,v 1.60 2006-10-27 22:25:49 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -797,8 +797,8 @@ foreach $lang (sort keys %po_filename) {
     } else {
 	print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
 	    if $po4a_opts{"verbose"};
-	copy($pot_filename,$po_filename{$lang})
-	    or die wrap_msg(gettext("Error while copying the po file: %s"), $!);
+	my $cmd = "msginit -i $pot_filename --locale $lang -o ".$po_filename{$lang}." --no-translator";
+	run_cmd($cmd);
     }
 }
 
