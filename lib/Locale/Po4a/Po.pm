@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.66 2006-10-30 23:00:49 nekral-guest Exp $
+# $Id: Po.pm,v 1.67 2006-10-30 23:06:17 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -82,7 +82,7 @@ use vars qw(@ISA @EXPORT);
 use Carp qw(croak);
 use File::Path; # mkdir before write
 use File::Copy; # move
-use POSIX qw(strftime);
+use POSIX qw(strftime floor);
 
 use Encode;
 
@@ -117,9 +117,26 @@ sub new {
     return $self;
 }
 
+# Return the numerical timezone (e.g. +0200)
+# The %z format of strftime is not portable.
+# For example, it indicates "2006-10-25 19:36E. Europe Standard Time" on
+# MS Windows.
+sub timezone {
+    my @g = gmtime();
+    my @l = localtime();
+
+    my $diff = floor(strftime("%s", @l)/60 +0.5) - floor(strftime("%s", @g)/60 + 0.5);
+
+    my $h = floor($diff / 60) + $l[8]; # $l[8] indicates if we are currently
+                                       # in a daylight saving time zone
+    my $m = $diff%60;
+
+    return sprintf "%+03d%02d\n", $h, $m;
+}
+
 sub initialize {
     my ($self, $options) = (shift, shift);
-    my $date = strftime("%Y-%m-%d %H:%M%z", localtime);
+    my $date = strftime("%Y-%m-%d %H:%M", localtime).timezone();
     chomp $date;
 #    $options = ref($options) || $options;
 
