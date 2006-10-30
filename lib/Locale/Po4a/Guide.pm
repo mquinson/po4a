@@ -108,6 +108,10 @@ sub initialize {
 		<path>
 		W<pre>
 		<stmt>
+		<sub>
+		w<subtitle>
+		w<summary>
+		<sup>
 		w<th>
 		w<ti>
 		w<title>
@@ -131,6 +135,7 @@ sub initialize {
 		<e>
 		<i>
 		<ident>
+		<img>
 		<keyword>
 		<mail>
 		<path>
