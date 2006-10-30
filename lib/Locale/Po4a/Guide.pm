@@ -88,27 +88,40 @@ sub initialize {
 		w<abstract>
 		<codenote>
 		<comment>
+		<const>
 		<date>
-		<impo>
+		<dd>
+		<dt>
+		<ident>
+		w<impo>
+		<keyword>
 		<li>
-		<note>
+		<mail>
+		w<note>
 		w<p>
 		W<pre>
+		<stmt>
 		<th>
 		<ti>
 		<title>
-		<warn>';
+		<var>
+		<version>
+		w<warn>';
 	$self->{options}{'attributes'}.='
 		<author>title
 		<figure>caption
 		<figure>short
 		<guide>link
+		<p>by
 		<pre>caption';
 	$self->{options}{'inline'}.='
+		<b>
 		<c>
 		<e>
 		<i>
 		<path>
+		<sub>
+		<sup>
 		<uri>';
 	$self->treat_options;
 }
