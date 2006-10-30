@@ -86,42 +86,58 @@ sub initialize {
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'tags'}.='
 		w<abstract>
+		<author>
+		<b>
+		<brite>
+		<c>
 		<codenote>
 		<comment>
 		<const>
 		<date>
-		<dd>
-		<dt>
+		w<dd>
+		w<dt>
+		<e>
+		<i>
 		<ident>
 		w<impo>
 		<keyword>
-		<li>
+		w<li>
 		<mail>
 		w<note>
 		w<p>
+		<path>
 		W<pre>
 		<stmt>
-		<th>
-		<ti>
-		<title>
+		w<th>
+		w<ti>
+		w<title>
+		<uri>
 		<var>
 		<version>
 		w<warn>';
 	$self->{options}{'attributes'}.='
 		<author>title
 		<figure>caption
+		<figure>link
 		<figure>short
 		<guide>link
 		<p>by
 		<pre>caption';
 	$self->{options}{'inline'}.='
 		<b>
+		<brite>
 		<c>
+		<const>
 		<e>
 		<i>
+		<ident>
+		<keyword>
+		<mail>
 		<path>
+		<stmt>
 		<sub>
 		<sup>
-		<uri>';
+		<uri>
+		<var>';
 	$self->treat_options;
 }
