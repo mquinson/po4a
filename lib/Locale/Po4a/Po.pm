@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.65 2006-10-07 20:33:28 nekral-guest Exp $
+# $Id: Po.pm,v 1.66 2006-10-30 23:00:49 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -82,6 +82,7 @@ use vars qw(@ISA @EXPORT);
 use Carp qw(croak);
 use File::Path; # mkdir before write
 use File::Copy; # move
+use POSIX qw(strftime);
 
 use Encode;
 
@@ -118,7 +119,7 @@ sub new {
 
 sub initialize {
     my ($self, $options) = (shift, shift);
-    my $date = `date +'%Y-%m-%d %k:%M%z'`;
+    my $date = strftime("%Y-%m-%d %H:%M%z", localtime);
     chomp $date;
 #    $options = ref($options) || $options;
 
