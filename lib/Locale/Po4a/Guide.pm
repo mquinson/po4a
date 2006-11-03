@@ -124,6 +124,7 @@ sub initialize {
 		<figure>caption
 		<figure>link
 		<figure>short
+		<guide>lang
 		<guide>link
 		<p>by
 		<pre>caption';
