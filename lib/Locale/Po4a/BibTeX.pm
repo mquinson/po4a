@@ -33,7 +33,7 @@ areas where they were not expected like documentation.
 Locale::Po4a::BibTeX is a module to help the translation of
 bibliographies in the BibTeX format into other [human] languages.
 
-fields values are extracted and proposed for translation.
+Fields values are extracted and proposed for translation.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
