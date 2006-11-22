@@ -2220,7 +2220,7 @@ sub translate_mdoc {
     my $macroarg = "";
     foreach (@_) {
         $macroarg.=" " if (length $macroarg);
-        if ($_ =~ m/((?<!\\) |\t)/) {
+        if ($_ =~ m/((?<!\\) |\t|^$)/) {
             $macroarg.="\"$_\"";
         } else {
             $macroarg.=$_;
@@ -2279,7 +2279,7 @@ sub define_mdoc_macros {
         my $macroarg = "";
         foreach (@_) {
             $macroarg.=" " if (length $macroarg);
-            if ($_ =~ m/((?<!\\) |\t)/) {
+            if ($_ =~ m/((?<!\\) |\t|^$)/) {
                 $macroarg.="\"$_\"";
             } else {
                 $macroarg.=$_;
