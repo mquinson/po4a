@@ -743,7 +743,7 @@ sub pushline {
         # add comments
         foreach my $c (@comments) {
             # comments are pushed (maybe at the wrong place).
-            $self->SUPER::pushline(".\\\"$c\n");
+            $self->SUPER::pushline($self->r(".\\\"$c\n"));
         }
         @comments = ();
     }
@@ -1116,6 +1116,13 @@ sub t {
     return $_[0]->translate($_[1]);
 }
 
+# shortcut.
+# As a rule of thumb, I do not recode macro names, unless they may be
+# followed by other characters.
+sub r {
+    return $_[0]->recode_skipped_text($_[1]);
+}
+
 
 sub do_paragraph {
     my ($self,$paragraph,$wrapped_mode) = (shift,shift,shift);
@@ -1213,7 +1220,7 @@ sub parse{
 	    #       => substitution like Perl's tr/ac/bd/ on output.
 	    if ($macro eq '\\"' || $macro eq '' || $macro eq 'tr' ||
 	        $macro eq '"'   || $macro eq '\\#') {
-		$self->pushline($line."\n");
+		$self->pushline($self->r($line)."\n");
 		goto LINE;
 	    }
 	    # Special case:
@@ -1225,7 +1232,7 @@ sub parse{
 		} else {
 		    $wrapped_mode='MACRONO';
 		}
-		$self->pushline($line."\n");
+		$self->pushline($self->r($line)."\n");
 		goto LINE;
 	    }
 	    
@@ -1241,7 +1248,7 @@ sub parse{
 	    if (defined ($macro{$macro})) {
 		&{$macro{$macro}}(@args);
 	    } else {
-		$self->pushline($line."\n");
+		$self->pushline($self->r($line)."\n");
 		die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
 		    "Unknown macro '%s'. Remove it from the document, or refer to the Locale::Po4a::Man manpage to see how po4a can handle new macros."), $line);
 	    }
@@ -1260,7 +1267,7 @@ sub parse{
 		# From info groff:
 		# Escape: \": Start a comment.  Everything to the end of the
 		# input line is ignored.
-		$self->pushline($line."\n");
+		$self->pushline($self->r($line)."\n");
 		goto LINE;
 	    } elsif ($line =~ /^\\#/) {
 		# Special groff comment. Do not keep the new line
@@ -1302,7 +1309,7 @@ sub parse{
     @next_comments = @comments;
     @comments = ();
     for my $c (@next_comments) {
-	$self->pushline(".\\\"$c\n");
+	$self->pushline($self->r(".\\\"$c\n"));
     }
 
     # reinitialize the module
@@ -1755,12 +1762,12 @@ $macro{'TP'}=sub {
     my ($line,$l2,$ref2);
     $line .= $_[0] if defined($_[0]);
     $line .= ' '.$_[1] if defined($_[1]);
-    $self->pushline($line."\n");
+    $self->pushline($self->r($line)."\n");
 
     ($l2,$ref2) = $self->shiftline();
     chomp($l2);
     while ($l2 =~ /^\.PD/) {
-	$self->pushline($l2."\n");
+	$self->pushline($self->r($l2)."\n");
 	($l2,$ref2) = $self->shiftline();
 	chomp($l2);
     }
@@ -1900,7 +1907,7 @@ $macro{'de'}=sub {
         }
         $paragraph .= "\n";
         if ($groff_code eq "verbatim") {
-            $self->pushline($paragraph);
+            $self->pushline( $self->r($paragraph) );
         } else {
             $self->pushline( $self->translate($paragraph,
                                               $self->{ref},
@@ -1921,7 +1928,7 @@ $macro{'ds'}=sub {
     # find references to this string in the translation "\*(name" or
     # "\*[name]"
     $self->{type} = "ds $name";
-    $self->pushline($m." ".$name." ".$self->translate($string)."\n");
+    $self->pushline($m." ".$self->r($name)." ".$self->translate($string)."\n");
 };
 #       .fam      Return to previous font family.
 #       .fam name Set the current font family to name.
@@ -1991,7 +1998,7 @@ $macro{'ie'}=$macro{'if'}=sub {
         }
         $paragraph .= "\n";
         if ($groff_code eq "verbatim") {
-            $self->pushline($paragraph);
+            $self->pushline( $self->r($paragraph) );
         } else {
             $self->pushline( $self->translate($paragraph,
                                               $self->{ref},
@@ -2014,7 +2021,7 @@ $macro{'ig'}=sub {
     $end='' if ($end =~ m/^\\\"/);
     my ($line,$ref)=$self->shiftline();
     while (defined($line)) {
-	$self->pushline($line);
+	$self->pushline($self->r($line));
 	last if ($line =~ /^\.$end\./);
 	($line,$ref)=$self->shiftline();
     }
@@ -2083,14 +2090,14 @@ $macro{'TS'}=sub {
     while (defined($line)) {
 	if ($line =~ /^\.TE/) {
 	    # Table end
-	    $self->pushline($line);
+	    $self->pushline($self->r($line));
 	    return;
 	}
 	if ($in_headers) {
 	    if ($line =~ /\.$/) {
 		$in_headers = 0;
 	    }
-	    $self->pushline($line);
+	    $self->pushline($self->r($line));
 	} elsif ($line =~ /\\$/) {
 	    # Lines are continued on \ at the end of line
 	    $buffer .= $line;
@@ -2279,7 +2286,7 @@ sub define_mdoc_macros {
             }
         }
         if ($mdoc{$macroarg}) {
-            $self->pushline("$macroname ".$macroarg."\n");
+            $self->pushline("$macroname ".$self->r($macroarg)."\n");
         } else {
             $self->pushline("$macroname ".$self->t($macroarg)."\n");
         }
