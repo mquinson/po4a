@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.60 2006-10-27 22:25:49 nekral-guest Exp $
+# $Id: po4a,v 1.61 2006-11-22 23:54:52 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -636,7 +636,7 @@ my %splitted_pot; # pot_files: '$master' => '$path'
 # make a big pot
 my $update_pot_file = 0;
 if ($pot_filename =~ m/\$master/) {
-    print "Splitted mode, creating a temporary POT.\n"
+    print wrap_msg(gettext("Splitted mode, creating a temporary POT")."\n")
         if $po4a_opts{"verbose"};
     foreach my $master (keys %document) {
         my $m = basename $master;
@@ -749,6 +749,12 @@ if ($po4a_opts{"split"}) {
         run_cmd($cmd);
 
         unless ($po4a_opts{"force"}) {
+            my $dir = dirname($splitted_pot{$master});
+            if (not -d $dir) {
+                mkdir $dir
+                    or die wrap_msg(gettext("Can't create directory '%s': %s"),
+                                    $dir, $!);
+            }
             Locale::Po4a::Po::move_po_if_needed($tmp_file,
                                                 $splitted_pot{$master});
         }
@@ -828,9 +834,16 @@ if ($po4a_opts{"split"}) {
                       " $po_filename{$lang}";
             run_cmd($cmd);
 
-            Locale::Po4a::Po::move_po_if_needed($tmp_file,
-                                                $splitted_po{$lang}{$master})
-                unless ($po4a_opts{"force"});
+            unless ($po4a_opts{"force"}) {
+                my $dir = dirname($splitted_po{$lang}{$master});
+                if (not -d $dir) {
+                    mkdir $dir
+                        or die wrap_msg(gettext("Can't create directory '%s': %s"),
+                                        $dir, $!);
+                }
+                Locale::Po4a::Po::move_po_if_needed($tmp_file,
+                                                  $splitted_po{$lang}{$master});
+            }
         }
     }
 }
