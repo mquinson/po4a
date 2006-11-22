@@ -620,7 +620,7 @@ sub addendum {
     }
     if ($found > 1) {
 	warn wrap_msg(dgettext("po4a",
-	    "More than one cadidate position found for the addendum %s."), $filename);
+	    "More than one candidate position found for the addendum %s."), $filename);
 	return 0;
     }
 
