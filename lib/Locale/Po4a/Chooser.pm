@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.33 2006-08-26 14:19:56 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.34 2006-11-23 00:09:53 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -34,12 +34,8 @@ sub new {
         $modname = 'NewsDebian';
     } elsif ($module eq 'latex') {
         $modname = 'LaTeX';
-    } elsif ($module eq 'texinfo') {
-        $modname = 'Texinfo';
-    } elsif ($module eq 'text') {
-        $modname = 'Text';
-    } elsif ($module eq 'ini') {
-        $modname = 'Ini';
+#    } elsif ($module eq 'bibtex') {
+#        $modname = 'BibTex';
     } else {
         $modname = ucfirst($module);
     }
@@ -59,16 +55,23 @@ sub new {
 
 sub list {
     warn wrap_msg(gettext("List of valid formats:")
-	."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
+#	."\n  - ".gettext("bibtex: BibTex bibliography format.")
+	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
+	."\n  - ".gettext("docbook: Docbook XML.")
+	."\n  - ".gettext("guide: Gentoo Linux's xml documentation format.")
 #	."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
+	."\n  - ".gettext("ini: .INI format.")
+	."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
+	."\n  - ".gettext("latex: LaTeX format.")
 	."\n  - ".gettext("man: Good old manual page format.")
 	."\n  - ".gettext("pod: Perl Online Documentation format.")
 	."\n  - ".gettext("sgml: either debiandoc or docbook DTD.")
-	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
-	."\n  - ".gettext("guide: Gentoo Linux's xml documentation format.")
-	."\n  - ".gettext("docbook: Docbook XML.")
-	."\n  - ".gettext("latex: LaTeX format.")
 	."\n  - ".gettext("texinfo: The info page format.")
+#	."\n  - ".gettext("tex: generic TeX documents.")
+	."\n  - ".gettext("text: simple text document.")
+#	."\n  - ".gettext("wml: WML documents.")
+#	."\n  - ".gettext("xhtml: XHTML documents.")
+#	."\n  - ".gettext("xml: generic XML documents.")
     );
     exit shift;
 }
