@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.68 2006-11-30 14:15:11 nekral-guest Exp $
+# $Id: Po.pm,v 1.69 2006-11-30 14:17:15 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -350,20 +350,20 @@ sub move_po_if_needed {
         $diff = qx(diff -q -I'^#:' -I'^"POT-Creation-Date:' -I'^"PO-Revision-Date:' $old_po $new_po);
         if ( $diff eq "" ) {
             unlink $new_po
-                or die wrap_msg(dgettext("po4a","Can't unlink %s."),
-                                $new_po);
+                or die wrap_msg(dgettext("po4a","Can't unlink %s: %s."),
+                                $new_po, $!);
             # touch the old PO
             my ($atime, $mtime) = (time,time);
             utime $atime, $mtime, $old_po;
         } else {
             move $new_po, $old_po
-                or die wrap_msg(dgettext("po4a","Can't move %s to %s."),
-                                $new_po, $old_po);
+                or die wrap_msg(dgettext("po4a","Can't move %s to %s: %s."),
+                                $new_po, $old_po, $!);
         }
     } else {
         move $new_po, $old_po
-            or die wrap_msg(dgettext("po4a","Can't move %s to %s."),
-                            $new_po, $old_po);
+            or die wrap_msg(dgettext("po4a","Can't move %s to %s: %s."),
+                            $new_po, $old_po, $!);
     }
 }
 
