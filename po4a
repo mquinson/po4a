@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.66 2006-11-30 19:46:05 nekral-guest Exp $
+# $Id: po4a,v 1.67 2006-11-30 20:00:37 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -826,7 +826,24 @@ if ($po4a_opts{"split"}) {
                 or die wrap_msg(
                     gettext("Can't create a temporary pot file: %s"), $!);
 
-            my $cmd = "msggrep -N '$master' -o $tmp_file $po_filename{$lang}";
+            my $cmd;
+            # Create an empty PO or copy the original PO header.
+            # This permits to keep the header.
+            if (-f $splitted_po{$lang}{$master}) {
+                $cmd = "msggrep --force-po -v -K -e '.'".
+                       " -o ".$tmp_file.
+                       " ".$splitted_po{$lang}{$master};
+            } else {
+                $cmd = "msginit --no-translator -l ".$lang.
+                       " -i ".$splitted_pot{$master}.
+                       " -o ".$tmp_file;
+            }
+            run_cmd($cmd);
+
+            # Update the PO according to the new POT and to the big PO
+            # (compendium).
+            $cmd = "msgmerge -U -C ".$po_filename{$lang}.
+                   " --backup=none ".$tmp_file." ".$splitted_pot{$master};
             run_cmd($cmd);
 
             my $dir = dirname($splitted_po{$lang}{$master});

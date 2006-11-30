@@ -1,6 +1,6 @@
 2006-11-30  Nicolas François  <nicolas.francois@centraliens.net>
 
-	* po4a: In splitted mode, always add the directories (for POs and
+	* po4a: (Splitted mode) Always add the directories (for POs and
 	POTs). They were missing when --force is used.
 	* lib/Locale/Po4a/Po.pm: Export move_po_if_needed. Other
 	subroutine are not needed. They are object's methods.
@@ -15,6 +15,11 @@
 	* po4a: (Splitted mode) Always write in a temporary file, and at the
 	end, move it to the final location or use move_po_if_needed. This
 	was needed for the handling of backup files.
+	* po4a: (Splitted mode) When we create the big merged po, if an
+	header differ, the big PO's header is completely crap. So we have
+	to use msgmerge -U, and we have to create a initial PO with at
+	least a good header (with msggrep or msginit).
+	Thanks to Azamat H. Hackimov.
 
 2006-11-25  Nicolas François  <nicolas.francois@centraliens.net>
 
