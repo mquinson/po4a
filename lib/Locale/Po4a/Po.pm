@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.69 2006-11-30 14:17:15 nekral-guest Exp $
+# $Id: Po.pm,v 1.70 2006-11-30 14:40:11 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -343,7 +343,7 @@ update a line reference or the POT-Creation-Date field).
 =cut
 
 sub move_po_if_needed {
-    my ($new_po, $old_po) = (shift, shift);
+    my ($new_po, $old_po, $backup) = (shift, shift, shift);
     my $diff;
 
     if (-e $old_po) {
@@ -356,6 +356,12 @@ sub move_po_if_needed {
             my ($atime, $mtime) = (time,time);
             utime $atime, $mtime, $old_po;
         } else {
+            if ($backup) {
+                copy $old_po, $old_po."~"
+                  or die wrap_msg(dgettext("po4a","Can't copy %s to %s: %s."),
+                                  $old_po, $old_po."~", $!);
+            } else {
+            }
             move $new_po, $old_po
                 or die wrap_msg(dgettext("po4a","Can't move %s to %s: %s."),
                                 $new_po, $old_po, $!);
