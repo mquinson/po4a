@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.65 2006-11-30 19:38:17 nekral-guest Exp $
+# $Id: po4a,v 1.66 2006-11-30 19:46:05 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -818,20 +818,15 @@ if ($po4a_opts{"split"}) {
             my $tmp_file;
             # Create a temporary PO, and check if the old one needs to be
             # updated (unless --force was specified).
-            unless ($po4a_opts{"force"}) {
-                (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
-                                                       DIR    => "/tmp",
-                                                       SUFFIX => ".po",
-                                                       OPEN   => 0,
-                                                       UNLINK => 0)
-                    or die wrap_msg(
-                        gettext("Can't create a temporary pot file: %s"), $!);
-            }
+            (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
+                                                   DIR    => "/tmp",
+                                                   SUFFIX => ".po",
+                                                   OPEN   => 0,
+                                                   UNLINK => 0)
+                or die wrap_msg(
+                    gettext("Can't create a temporary pot file: %s"), $!);
 
-            my $cmd = "msggrep -N '$master' -o ".
-                      ($po4a_opts{"force"}?$splitted_po{$lang}{$master}:
-                                           $tmp_file).
-                      " $po_filename{$lang}";
+            my $cmd = "msggrep -N '$master' -o $tmp_file $po_filename{$lang}";
             run_cmd($cmd);
 
             my $dir = dirname($splitted_po{$lang}{$master});
@@ -844,6 +839,23 @@ if ($po4a_opts{"split"}) {
                 move_po_if_needed($tmp_file,
                                   $splitted_po{$lang}{$master},
                                   $po4a_opts{"no-backups"}?0:1);
+            } else {
+                if (    -f $splitted_po{$lang}{$master}
+                    and not $po4a_opts{"no-backups"}) {
+                    copy $splitted_po{$lang}{$master},
+                         $splitted_po{$lang}{$master}."~"
+                        or die wrap_msg(dgettext("po4a",
+                                                 "Can't copy %s to %s: %s."),
+                                        $splitted_po{$lang}{$master},
+                                        $splitted_po{$lang}{$master}."~",
+                                        $!);
+                }
+                move $tmp_file, $splitted_po{$lang}{$master}
+                    or die wrap_msg(dgettext("po4a",
+                                             "Can't move %s to %s: %s."),
+                                    $tmp_file,
+                                    $splitted_po{$lang}{$master},
+                                    $!);
             }
         }
     }
