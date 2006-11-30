@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.62 2006-11-30 12:25:28 nekral-guest Exp $
+# $Id: po4a,v 1.63 2006-11-30 14:15:11 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -304,6 +304,7 @@ use Getopt::Long qw(GetOptions);
 use Locale::Po4a::Chooser;
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
+use Locale::Po4a::Po qw(move_po_if_needed);
 
 use Pod::Usage qw(pod2usage);
 
@@ -755,8 +756,7 @@ if ($po4a_opts{"split"}) {
         run_cmd($cmd);
 
         unless ($po4a_opts{"force"}) {
-            Locale::Po4a::Po::move_po_if_needed($tmp_file,
-                                                $splitted_pot{$master});
+            move_po_if_needed($tmp_file, $splitted_pot{$master});
         }
     }
     # Generate a complete .po
@@ -841,8 +841,8 @@ if ($po4a_opts{"split"}) {
                         or die wrap_msg(gettext("Can't create directory '%s': %s"),
                                         $dir, $!);
                 }
-                Locale::Po4a::Po::move_po_if_needed($tmp_file,
-                                                  $splitted_po{$lang}{$master});
+                move_po_if_needed($tmp_file,
+                                  $splitted_po{$lang}{$master});
             }
         }
     }
