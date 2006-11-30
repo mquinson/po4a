@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.64 2006-11-30 14:40:11 nekral-guest Exp $
+# $Id: po4a,v 1.65 2006-11-30 19:38:17 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -834,13 +834,13 @@ if ($po4a_opts{"split"}) {
                       " $po_filename{$lang}";
             run_cmd($cmd);
 
+            my $dir = dirname($splitted_po{$lang}{$master});
+            if (not -d $dir) {
+                mkdir $dir
+                    or die wrap_msg(gettext("Can't create directory '%s': %s"),
+                                    $dir, $!);
+            }
             unless ($po4a_opts{"force"}) {
-                my $dir = dirname($splitted_po{$lang}{$master});
-                if (not -d $dir) {
-                    mkdir $dir
-                        or die wrap_msg(gettext("Can't create directory '%s': %s"),
-                                        $dir, $!);
-                }
                 move_po_if_needed($tmp_file,
                                   $splitted_po{$lang}{$master},
                                   $po4a_opts{"no-backups"}?0:1);
