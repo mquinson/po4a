@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.70 2006-11-30 14:40:11 nekral-guest Exp $
+# $Id: Po.pm,v 1.71 2006-12-31 14:36:27 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -67,7 +67,6 @@ require Exporter;
 
 package Locale::Po4a::Po;
 
-use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use subs qw(makespace);
