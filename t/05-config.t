@@ -10,8 +10,12 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
+my $diff_po_flags = " -I '^# .* translations for .* package'".
+                    " -I '^# Copyright (C) .* Free Software Foundation, Inc.'".
+                    " -I '^# Automatically generated, '".
+                    " -I '^\"Project-Id-Version: '".
+                    " -I '^\"POT-Creation-Date: '".
+                    " -I '^\"PO-Revision-Date: '";
 
 $tests[0]{'run'}  =
     'LC_ALL=C COLUMNS=80 perl ../po4a data-05/test0.conf > tmp/err 2>&1';
