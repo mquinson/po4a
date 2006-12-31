@@ -286,9 +286,9 @@ my $b = $builder->new
 
                      'SGMLS' => 0,          # Needed for the Sgml module.
 
-                     'Locale::gettext' => '1.01'}, # Only used for
-                                                   # translating the
-                                                   # po4a's messages.
+                     'Locale::gettext' => '1.01', # Only used for
+                                                  # translating the
+                                                  # po4a's messages.
                     },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
