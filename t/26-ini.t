@@ -1,5 +1,5 @@
 #! /usr/bin/perl
-# Xhtml module tester.
+# Ini module tester.
 
 #########################
 
