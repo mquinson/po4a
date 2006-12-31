@@ -32,6 +32,20 @@ PO4A DEPENDENCIES
   Locale::gettext (v1.01): 
     This module being itself internationalized, it needs the Locale::gettext
     library to translate its own messages.
+    If it is not present, then po4a's messages won't be translated, but
+    po4a will remain fully functional.
+
+  Text::WrapI18N:
+    This module is used to format po4a's warnings and error messages.  It
+    permits to wrap long error messages without splitting words.
+    If it is not present, the formatting of messages will be different,
+    but po4a will remain fully functional.
+
+  Term::ReadKey:
+    This module is used to retrieve the terminal's line width.  It is not
+    used if Text::WrapI18N is not available.
+    If it is not present, the line width can be specified with the COLUMN
+    environment variable.
 
 
 SGML MODULE SPECIFIC DEPENDENCIES

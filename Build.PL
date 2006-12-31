@@ -276,8 +276,20 @@ my $b = $builder->new
   ( module_name => 'po4a',
       license => 'gpl',
       dist_version_from => 'lib/Locale/Po4a/TransTractor.pm', # finds $VERSION
-      requires => {'Locale::gettext' => '1.01', 'Text::WrapI18N' => 0,
-	  'SGMLS' => 0, 'Term::ReadKey' => 0},
+      requires => {},
+      recommends => {'Text::WrapI18N' => 0, # Only used for wrapping long
+                                            # error/wraning lines.
+
+                     'Term::ReadKey' => 0,  # Needed to detect terminal
+                                            # width. Not needed if you
+                                            # don't have Text::WrapI18N.
+
+                     'SGMLS' => 0,          # Needed for the Sgml module.
+
+                     'Locale::gettext' => '1.01'}, # Only used for
+                                                   # translating the
+                                                   # po4a's messages.
+                    },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
 	  'scripts/po4aman-display-po'],

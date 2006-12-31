@@ -21,8 +21,12 @@ eval qq{use Locale::Po4a::Man};          ok(!$@, 'Man.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Pod};          ok(!$@, 'Pod.pm loadable');
 diag($@) if $@;
-eval qq{use Locale::Po4a::Sgml};         ok(!$@, 'Sgml.pm loadable');
-diag($@) if $@;
+SKIP: {
+    skip "SGMLS required for this test", 1
+        unless eval 'require SGMLS';
+    eval qq{use Locale::Po4a::Sgml};         ok(!$@, 'Sgml.pm loadable');
+    diag($@) if $@;
+}
 eval qq{use Locale::Po4a::Xml};          ok(!$@, 'Xml.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Dia};          ok(!$@, 'Dia.pm loadable');

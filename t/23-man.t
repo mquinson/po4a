@@ -48,14 +48,17 @@ push @tests, {
   'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
   'test' => "diff -u $diff_po_flags  data-23/dot2.err tmp/dot2.err",
   'doc'  => "gettextize well various lines beginning by a dot (2)",
+  'requires' => "Text::WrapI18N",
 }, {
   'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot3 -p tmp/dot3.pot 2>tmp/dot3.err || true",
   'test' => "diff -u $diff_po_flags  data-23/dot3.err tmp/dot3.err",
   'doc'  => "gettextize well various lines beginning by a dot (3)",
+  'requires' => "Text::WrapI18N",
 }, {
   'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m data-23/dot4 -p tmp/dot4.pot 2>tmp/dot4.err || true",
   'test' => "diff -u $diff_po_flags  data-23/dot4.err tmp/dot4.err",
   'doc'  => "gettextize well various lines beginning by a dot (4)",
+  'requires' => "Text::WrapI18N",
 }, {
   'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/dot5 -p tmp/dot5.pot 2>/dev/null",
   'test' => "diff -u $diff_po_flags  data-23/dot5.pot tmp/dot5.pot",
@@ -102,7 +105,7 @@ push @tests, {
 
 # Fonts
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/fonts -p tmp/fonts.pot 2>/dev/null",
+  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/fonts -p tmp/fonts.pot",
   'test' => "diff -u $diff_po_flags  data-23/fonts.pot tmp/fonts.pot",
   'doc'  => "gettextize well fonts",
 }, {
@@ -180,10 +183,20 @@ foreach my $format (@formats) {
 	
 	$name=$tests[$i]{'doc'}.' runs';
 	$name =~ s/#format#/$format/g;
-	ok($val == 0,$name);
-	diag($cmd) unless ($val == 0);
-	
 	SKIP: {
+	    if (defined $tests[$i]{'requires'}) {
+		skip ($tests[$i]{'requires'}." required for this test", 1)
+		    unless eval 'require '.$tests[$i]{'requires'};
+	    }
+	    ok($val == 0,$name);
+	    diag($cmd) unless ($val == 0);
+	}
+
+	SKIP: {
+	    if (defined $tests[$i]{'requires'}) {
+		skip ($tests[$i]{'requires'}." required for this test", 1)
+		    unless eval 'require '.$tests[$i]{'requires'};
+	    }
 	    skip ("Command don't run, can't test the validity of its return",1)
 	      if $val;
 	    my $testcmd=$tests[$i]{'test'};	
@@ -208,4 +221,4 @@ foreach my $format (@formats) {
 }
 
 0;
-    
+
