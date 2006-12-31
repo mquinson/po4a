@@ -916,7 +916,7 @@ sub parse_file {
                                     if ($translated =~ s/^$lattr=//) {
                                         $value=$translated;
                                     } else {
-                                        die wrap_mod("po4a::sgml", dgettext("po4a", "bad translation '%s' for '%s' in '%s'"), $translated, "$context$lattr", $ref);
+                                        die wrap_mod("po4a::sgml", dgettext("po4a", "bad translation '%s' for '%s' in '%s'"), $translated, $context.$lattr, $ref);
                                     }
                                 } else {
                                     $value = $self->translate($value, $ref, "attribute $context$lattr");
