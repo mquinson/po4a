@@ -59,6 +59,8 @@ use Locale::Po4a::Common;
 #It will mantain the path from the root tag to the current one
 my @path;
 
+my @comments;
+
 sub read {
 	my ($self,$filename)=@_;
 	push @{$self->{DOCPOD}{infile}}, $filename;
@@ -343,8 +345,7 @@ sub found_string {
 	} else {
 		die wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Internal error: unknown type identifier '%s'."), $options->{'type'});
 	}
-
-	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap);
+	$text = $self->translate($text,$ref,$comment,'wrap'=>$wrap, comment => $options->{'comments'});
 	return $text;
 }
 
@@ -959,6 +960,7 @@ sub treat_content {
 		    and $f_extract eq \&tag_extract_comment) {
 			# Remove the content of the comments
 			($eof, @text) = $self->extract_tag($type,1);
+			push @comments, @text;
 		} else {
 			my ($tmpeof, @tag) = $self->extract_tag($type,0);
 			# Append the found inline tag
@@ -1201,6 +1203,15 @@ sub translate_paragraph {
 	my ($self, $translate) = (shift, shift);
 	my @paragraph = @_;
 
+	my $comments;
+	while (@comments) {
+		my ($t,$l) = (shift @comments, shift @comments);
+		$comments .= "\n" if defined $comments;
+		$comments .= $t;
+	}
+	$self->pushline("<!--".$comments."-->\n") if defined $comments;
+	@comments = ();
+
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
 		my $options = $self->tag_in_list($struc,@{$self->{tags}});
@@ -1211,7 +1222,8 @@ sub translate_paragraph {
 				$self->join_lines(@paragraph),
 				$paragraph[1], {
 					type=>"tag",
-					tag_options=>$options
+					tag_options=>$options,
+					comments=>$comments
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
