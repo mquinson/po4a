@@ -116,6 +116,7 @@ sub initialize {
 		<pubdate>
 		<publishername>
 		<primary>
+		W<programlisting>
 		<prompt>
 		<quote>
 		<refclass>
