@@ -1664,7 +1664,7 @@ sub translate_joined {
 		     $self->t($macroarg));
 }
 
-# For macro taking several arguments, having to be translated separatly
+# For macro taking several arguments, having to be translated separately
 sub translate_each {
     my ($self,$first)= (shift,0);
     $self->pushmacro( map { $first++ ?$self->t($_):$_ } @_);
@@ -1678,7 +1678,7 @@ sub noarg {
     $self->pushmacro(@_);
 }
 
-# For macro whose arguments shouln't be translated
+# For macro whose arguments shouldn't be translated
 sub untranslated {
     my $self = shift;
     $self->pushmacro(@_);
@@ -2127,7 +2127,7 @@ $macro{'F'}=$macro{'H'}=$macro{'V'}=$macro{'A'}=$macro{'T'}=\&untranslated;
 ##
 #
 # Displays and keeps. None of these macro accept a translated argument
-# (they allow to make blocks of text which cannot be breaked by new page)
+# (they allow to make blocks of text which cannot be broken by new page)
 
 $macro{'DS'}=$macro{'LD'}=$macro{'DE'}=\&untranslated;
 $macro{'ID'}=$macro{'BD'}=$macro{'CD'}=\&untranslated;
@@ -2150,7 +2150,7 @@ $macro{'cs'}=\&untranslated;
 # Change the minimum size of a space between filled words.
 $macro{'ss'}=\&untranslated;
 
-# .ce     Center one line horizontaly
+# .ce     Center one line horizontally
 # .ce N   Center N lines
 # .ul N   Underline N lines (but not the spaces)
 # .cu N   Underline N lines (even the spaces)
@@ -2199,7 +2199,7 @@ $macro{'UC'}=$macro{'AT'}=\&untranslated;
 #   Define how WORD1, WORD2, etc. are to be hyphenated.  The words
 #   must be given with hyphens at the hyphenation points.
 #
-#   If the english page needs to specify how a word must be hyphanted, the
+#   If the English page needs to specify how a word must be hyphenated, the
 #   translated page may also have this need.
 $macro{'hw'}=\&translate_each;
 
