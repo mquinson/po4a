@@ -53,7 +53,7 @@ foreach my $format (@formats) {
 	SKIP: {
 	    skip ("Command don't run, can't test the validity of its return",1)
 	      if $val;
-	    my $testcmd=$tests[$i]{'test'};	
+	    my $testcmd=$tests[$i]{'test'};
 	    $testcmd =~ s/#format#/$format/g;
 	    
 	    $val=system($testcmd);
