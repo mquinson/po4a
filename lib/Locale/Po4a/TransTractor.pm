@@ -397,6 +397,7 @@ sub read() {
 	my @entry=($textline,$ref);
 	push @{$self->{TT}{doc_in}}, @entry;
 
+	if (!defined($self->{TT}{'file_in_charset'})) {
 	# Detect if this file has non-ascii characters
 	if($self->{TT}{ascii_input}) {
 	    my $decoder = guess_encoding($textline);
@@ -407,6 +408,7 @@ sub read() {
 		$self->{TT}{non_ascii_ref} ||= $ref;
 	    }
 	}
+        }
     }
     close INPUT 
 	or croak wrap_msg(dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
