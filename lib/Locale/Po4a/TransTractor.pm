@@ -818,7 +818,6 @@ sub translate {
     } else {
 	if (defined($self->{TT}{'file_in_charset'}) and
 	    length($self->{TT}{'file_in_charset'}) and
-	    $self->{TT}{'file_in_charset'} ne "CHARSET" and
 	    $self->{TT}{'file_in_charset'} ne "ascii") {
 	    $in_charset=$self->{TT}{'file_in_charset'};
 	} else {
