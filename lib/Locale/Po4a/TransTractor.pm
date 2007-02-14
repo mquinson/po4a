@@ -283,6 +283,11 @@ sub process {
     $self->{TT}{'file_in_charset'}=$params{'file_in_charset'};
     $self->{TT}{'file_out_charset'}=$params{'file_out_charset'};
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
+    if (defined $self->{TT}{'file_in_charset'} and
+        length $self->{TT}{'file_in_charset'} and
+        $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
+	$self->{TT}{ascii_input}=0;
+    }
 
     foreach my $file (@{$params{'po_in_name'}}) {
 	print STDERR "readpo($file)... " if $self->debug();
@@ -925,6 +930,11 @@ sub detected_charset {
 	length($self->{TT}{'file_in_charset'}) ) {
 
 	$self->{TT}{'file_in_charset'}=$charset;
+    }
+    if (defined $self->{TT}{'file_in_charset'} and
+        length $self->{TT}{'file_in_charset'} and
+        $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
+	$self->{TT}{ascii_input}=0;
     }
 }
 
