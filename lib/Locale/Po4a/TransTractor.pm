@@ -818,7 +818,7 @@ sub translate {
     } else {
 	if (defined($self->{TT}{'file_in_charset'}) and
 	    length($self->{TT}{'file_in_charset'}) and
-	    $self->{TT}{'file_in_charset'} ne "ascii") {
+	    $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
 	    $in_charset=$self->{TT}{'file_in_charset'};
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
