@@ -1005,7 +1005,7 @@ sub post_trans {
         $t1 =~ s/ +$//s;
         $t2 =~ s/\n/ /gs;
         if ($mdoc_mode) {
-            # restore the punctuaction inside the line (see pre_trans)
+            # restore the punctuation inside the line (see pre_trans)
             if ($t3 =~ s/^([.,;:\)\]]+)//s) {
                 my $punctuation = $1;
                 $punctuation =~ s/([.,;:\)\]])/$1 /;
@@ -1586,7 +1586,7 @@ sub splitargs {
             $str =~ s/($FONT_RE)($FONT_RE)/$2/s;
         }
 
-        # when there are two concecutive switches to the regular font,
+        # when there are two consecutive switches to the regular font,
         # remove the last one.
         while ($str =~ /^(.*)\\f$regular_font # anything followed by a
                                               # regular font
