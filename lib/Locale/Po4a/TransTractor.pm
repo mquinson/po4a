@@ -280,14 +280,13 @@ sub process {
 	$newparams{$_}=$params{$_};
     }
 
-    $self->{TT}{'file_in_charset'}=$params{'file_in_charset'};
+    $self->detected_charset($params{'file_in_charset'});
     $self->{TT}{'file_out_charset'}=$params{'file_out_charset'};
-    $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
-    if (defined $self->{TT}{'file_in_charset'} and
-        length $self->{TT}{'file_in_charset'} and
-        $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
-	$self->{TT}{ascii_input}=0;
+    if (defined($self->{TT}{'file_out_charset'}) and
+	length($self->{TT}{'file_out_charset'})) {
+	$self->{TT}{'file_out_encoder'} = find_encoding($self->{TT}{'file_out_charset'});
     }
+    $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
     foreach my $file (@{$params{'po_in_name'}}) {
 	print STDERR "readpo($file)... " if $self->debug();
@@ -835,7 +834,9 @@ sub translate {
     }
 
     if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
-	Encode::from_to($string, $in_charset, $self->{TT}{po_in}->get_charset);
+	$string = encode_from_to($string,
+	                         $self->{TT}{'file_in_encoder'},
+	                         $self->{TT}{po_in}{encoder});
     }
 
     if (defined $options{'wrapcol'} && $options{'wrapcol'} < 0) {
@@ -847,8 +848,13 @@ sub translate {
 					'wrapcol'   => $options{'wrapcol'});
 
     if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
-	Encode::from_to($transstring,$self->{TT}{po_in}->get_charset,
-	    $self->get_out_charset);
+	my $out_encoder = $self->{TT}{'file_out_encoder'};
+	unless (defined $out_encoder) {
+	    $out_encoder = find_encoding($self->get_out_charset)
+	}
+	$transstring = encode_from_to($transstring,
+	                              $self->{TT}{po_in}{encoder},
+	                              $out_encoder);
     }
 
     # If the input document isn't completely in ascii, we should see what to
@@ -929,10 +935,13 @@ process() arguments or detected from the document.
 sub detected_charset {
     my ($self,$charset)=(shift,shift);
     unless (defined($self->{TT}{'file_in_charset'}) and
-	length($self->{TT}{'file_in_charset'}) ) {
-
-	$self->{TT}{'file_in_charset'}=$charset;
+            length($self->{TT}{'file_in_charset'}) ) {
+        $self->{TT}{'file_in_charset'}=$charset;
+        if (defined $charset) {
+            $self->{TT}{'file_in_encoder'}=find_encoding($charset);
+        }
     }
+
     if (defined $self->{TT}{'file_in_charset'} and
         length $self->{TT}{'file_in_charset'} and
         $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
@@ -992,12 +1001,45 @@ sub recode_skipped_text {
     unless ($self->{TT}{'ascii_input'}) {
 	if(defined($self->{TT}{'file_in_charset'}) and
 	    length($self->{TT}{'file_in_charset'}) ) {
-	    Encode::from_to($text,$self->{TT}{'file_in_charset'},
-		$self->get_out_charset);
+	    $text = encode_from_to($text,
+	                           $self->{TT}{'file_in_encoder'},
+	                           find_encoding($self->get_out_charset));
 	} else {
 	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"), $self->{TT}{non_ascii_ref})
 	}
     }
+    return $text;
+}
+
+
+# encode_from_to($,$,$)
+#
+# Encode the given text from one encoding to another one.
+# It differs from Encode::from_to because it does not take the name of the
+# encoding in argument, but the encoders (as returned by the
+# Encode::find_encoding(<name>) method). Thus it permits to save a bunch
+# of call to find_encoding.
+#
+# If the "from" encoding is undefined, it is considered as UTF-8 (or
+# ascii).
+# If the "to" encoding is undefined, it is considered as UTF-8.
+#
+sub encode_from_to {
+    my ($text,$from,$to) = (shift,shift,shift);
+
+    if (not defined $from) {
+        # for ascii and UTF-8, no conversion needed to get an utf-8
+        # string.
+    } else {
+        $text = $from->decode($text, 0);
+    }
+
+    if (not defined $to) {
+        # Already in UTF-8, no conversion needed
+    } else {
+        $text = $to->encode($text, 0);
+    }
+
     return $text;
 }
 

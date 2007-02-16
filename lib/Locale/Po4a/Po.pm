@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.71 2006-12-31 14:36:27 nekral-guest Exp $
+# $Id: Po.pm,v 1.72 2007-02-16 19:13:00 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -171,6 +171,7 @@ sub initialize {
 				"MIME-Version: 1.0\n".
 				"Content-Type: text/plain; charset=CHARSET\n".
 				"Content-Transfer-Encoding: ENCODING");
+    $self->{encoder}=find_encoding("ascii");
 
     # To make stats about gettext hits
     $self->stats_clear();
@@ -991,6 +992,12 @@ sub push_raw {
 #	} FIXME: do that iff the header isn't the default one.
 	$self->{header}=$msgstr;
 	$self->{header_comment}=$comment;
+	my $charset = $self->get_charset;
+	if ($charset ne "CHARSET") {
+	    $self->{encoder}=find_encoding($charset);
+	} else {
+	    $self->{encoder}=find_encoding("ascii");
+	}
 	return;
     }
 
@@ -1158,6 +1165,7 @@ sub set_charset() {
     $oldchar = $self->get_charset();
 
     $self->{header} =~ s/$oldchar/$newchar/;
+    $self->{encoder}=find_encoding($newchar);
 }
 
 #----[ helper functions ]---------------------------------------------------

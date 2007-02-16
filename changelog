@@ -1,5 +1,22 @@
 2007-02-16  Nicolas François  <nicolas.francois@centraliens.net>
 
+	Encode::from_to spends 40% of its time in find_encoding. As the
+	encoding of the input file, output file and po files do not change
+	a lot, it's faster to keep the encoders in the Transtractor or Po
+	objects.
+	* lib/Locale/Po4a/Transtractor.pm: Use detected_charset to change
+	the charset, even in the initialization (in process()).
+	* lib/Locale/Po4a/Transtractor.pm: Add a file_out_encoder
+	* lib/Locale/Po4a/Transtractor.pm (encode_from_to): New function
+	to replace Encode::from_to.
+	* lib/Locale/Po4a/Transtractor.pm: Replace some occurences of
+	Encode::from_to by encode_from_to, when the encoders are known.
+	* lib/Locale/Po4a/Po.pm: add an 'encoder' field to the po
+	structure. It defaults to find_encoding("ascii"), and is changed
+	every time the header's charset is changed.
+
+2007-02-16  Nicolas François  <nicolas.francois@centraliens.net>
+
 	* lib/Locale/Po4a/Man.pm (post_trans, parse): Cache the result
 	when we convert a non-breaking space to its representation in the
 	input and output charset.
