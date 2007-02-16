@@ -967,12 +967,8 @@ sub post_trans {
     $str =~ s/\n([.'])/ $1/mg;
 
     # Change ascii non-breaking space to groff one
-    my $nbs_out = "\xA0";
-    my $enc_length;
-    eval("\$enc_length = Encode::from_to(\$nbs_out, \"latin1\",
-                                         \$self->get_out_charset,
-                                         1)");
-    $str =~ s/\Q$nbs_out/\\ /sg if defined $enc_length;
+    my $nbs_out = get_out_nbs($self->get_out_charset);
+    $str =~ s/\Q$nbs_out/\\ /sg if defined $nbs_out;
     # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
     # an extra space
     $str =~ s/\\ \n/\\ /sg;
@@ -1154,19 +1150,9 @@ sub parse{
                             #          until the next fi macro.
 
 
-    # change the non-breaking space according to the input document charset
-    $nbs = "\xA0";
-    my $enc_length;
-    if (defined $self->{TT}{'file_in_charset'} and
-        length $self->{TT}{'file_in_charset'})
-    {
-        eval ("\$enc_length = Encode::from_to(\$nbs, \"latin-1\",
-                                              \$self->{TT}{'file_in_charset'},
-                                              1)");
-    }
-    # fall back solution
-    $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES"
-        unless defined $enc_length;
+    # We want to change the non-breaking space according to the input
+    # document charset
+    $nbs = get_in_nbs($self->{TT}{'file_in_charset'});
 
   LINE:
     undef $self->{type};
@@ -1319,6 +1305,74 @@ sub parse{
     set_font("R");
     $mdoc_mode = 0;
 } # end of main
+
+# Cache the results of get_in_nbs and get_out_nbs
+{
+    my $last_in_charset;
+    my $last_in_nbs;
+
+# get_in_nbs(charset)
+# Return the representation of a non breaking space in the input charset
+# (given in argument).
+# or PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES if this
+# character doesn't exist in this charset.
+    sub get_in_nbs() {
+        my $charset = shift;
+
+        return $last_in_nbs
+            if (    defined $charset
+                and defined $last_in_charset
+                and $charset eq $last_in_charset);
+
+        my $nbs = "\xA0";
+        my $length;
+        if (defined $charset and length $charset)
+        {
+            eval ("\$length = Encode::from_to(\$nbs, \"latin-1\",
+                                              \$charset,
+                                              1)");
+        }
+        # fall back solution
+        $nbs = "PO4A:VERY_IMPROBABLE_STRING_USEDFOR_NON-BREAKING-SPACES"
+            unless defined $length;
+        $last_in_charset = $charset;
+        $last_in_nbs = $nbs;
+
+        return $last_in_nbs;
+    }
+
+    my $last_out_charset;
+    my $last_out_nbs;
+# get_out_nbs(charset)
+# Return the representation of a non breaking space in the output charset
+# (given in argument).
+# or undef if this character doesn't exist in this charset.
+    sub get_out_nbs() {
+        my $charset = shift;
+
+        return $last_out_nbs
+            if (    defined $charset
+                and defined $last_out_charset
+                and $charset eq $last_out_charset);
+
+        my $nbs = "\xA0";
+        my $length;
+        if (defined $charset and length $charset)
+        {
+            eval ("\$length = Encode::from_to(\$nbs, \"latin-1\",
+                                              \$charset,
+                                              1)");
+        }
+        # fall back solution
+        undef $nbs
+            unless defined $length;
+        $last_out_charset = $charset;
+        $last_out_nbs = $nbs;
+
+        return $last_out_nbs;
+    }
+
+}
 
 # We can't push the header in the first line of the document, as in the
 # other module, because the first line may contain indications on how the
