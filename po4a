@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.67 2006-11-30 20:00:37 nekral-guest Exp $
+# $Id: po4a,v 1.68 2007-03-24 20:49:41 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -131,7 +131,7 @@ module specific and are specified with the -o switch.
 
 If you need a specific option for one of the document you want to
 translate, you can also specify it in the configuration file. Options are
-introduced the I<opt> keyword. The argument of the I<opt> keyword must be
+introduced by the I<opt> keyword. The argument of the I<opt> keyword must be
 quoted with double quotes if it contains a space (e.g. if you specify
 multiple options, or an option with an argument).
 You can also specify options that will only apply to a specific language
@@ -144,6 +144,12 @@ Here is an example:
  [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \
             opt:"-k 75" opt_it:"-L UTF-8" opt_fr:-v
 
+If you want to specify the same options for many documents, you may want
+to use an alias (see the B<Specifying aliases> section below).
+
+You can also set options for all the documents specified in the
+configuration file:
+ [options] opt:"..." opt_fr:"..."
 
 =head2 Specifying aliases
 
@@ -263,6 +269,16 @@ Define a variable that will be expanded in the po4a configuration file.
 Every occurrence of I<$(var)> will be replaced by I<value>.
 This option can be used multiple times.
 
+=item --msgid-bugs-address email@address
+
+Set the report address for msgid bugs. By default, the created POT files
+have no Report-Msgid-Bugs-To fields.
+
+=item --copyright-holder string
+
+Set the copyright holder in the POT header. The default value is
+"Free Software Foundation, Inc."
+
 =back
 
 =head1 SHORTCOMINGS
@@ -353,7 +369,9 @@ sub get_options {
         "locchar"         => "",
         "addchar"         => "",
         "options"         => {"verbose" => 0, "debug" => 0},
-        "variables"       => {}
+        "variables"       => {},
+        "copyright-holder"=> undef,
+        "msgid-bugs-address"=> undef
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     GetOptions(
@@ -374,7 +392,9 @@ sub get_options {
         'rm-backups'            => \$opts{"rm-backups"},
         'version|V'             => \&show_version,
         'option|o=s'            => \@options,
-        'variable=s'            => \@variables
+        'variable=s'            => \@variables,
+        'copyright-holder=s'    => \$opts{"copyright-holder"},
+        'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"}
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -423,7 +443,7 @@ sub parse_config_options {
             $line = $2;
             my $opt = "";
             if ($line =~ m/^\s*"(.+?(?<!\\)(?:\\\\)*)"(?:\s+(.+))?$/) {
-                # take up to the next " not preceeded by an odd number of \
+                # take up to the next " not preceded by an odd number of \
                 $opt = $1;
                 $line = $2;
             } else {
@@ -575,15 +595,27 @@ while (<CONFIG>) {
 	$document{$main}{'format'} = $1;
 	$document{$main}{'pos'} = $doc_count;
 	$doc_count++;
+
+	# Options
 	my %options;
-	%options = %{$document{$main}{'options'}}
-	  if defined %{$document{$main}{'options'}};
+	# 1. Use the global options ([opt] ...)
+	%options = %{$document{''}{'options'}}
+	  if defined %{$document{''}{'options'}};
+
+	# 2. Merge the alias options
 	if (defined $aliases{$1}) {
 	    $document{$main}{'format'} = $aliases{$1}{"module"};
 	    if (defined %{$aliases{$1}{"options"}}) {
 		%options = %{$aliases{$1}{"options"}};
 	    }
 	}
+
+	# 3. If this file was already specified, reuse the previous
+	#    options (no merge)
+	%options = %{$document{$main}{'options'}}
+	  if defined %{$document{$main}{'options'}};
+
+	# 4. Merge the document specific options
 	# separate the end of the line, which contains options.
 	# Something more clever could be done to allow options in the
 	# middle of a line.
@@ -594,6 +626,7 @@ while (<CONFIG>) {
 	                                      $2, \%options);
 	}
 	%{$document{$main}{'options'}} = %options;
+
 	foreach my $arg (split(/ /,$args)) {
 	    die wrap_ref_mod("$config_file:$nb", "",
 		gettext("Unparsable argument '%s' (%s)."), $arg, $line)
@@ -620,6 +653,13 @@ while (<CONFIG>) {
 	$args = parse_config_options("$config_file:$nb", $args, \%options);
 	%{$alias{"options"}} = %options;
 	%{$aliases{$name}} = %alias;
+    } elsif ($cmd eq "options") {
+	my %options;
+	my $o = $line;
+	$o =~ s/.*?\[options\] +//;
+	parse_config_options("$config_file:$nb",
+	                     $o,
+	                     \%{$document{''}{"options"}});
     } else {
 	die wrap_ref_mod("$config_file:$nb", "",
 	    gettext("Unparsable command '%s'."), $cmd);
@@ -631,6 +671,13 @@ close CONFIG; # don't care about error here
 die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and po files"))
   unless (length $pot_filename);
 
+if (defined $document{''}{"options"}
+    and defined $document{''}{"options"}{"global"}) {
+    # Merge the options with the ones specified in the configuration file
+     %po4a_opts = get_options(@ORIGINAL_ARGV,
+                              split(/ /, $document{''}{"options"}{"global"}));
+}
+
 my %splitted_po; # po_files: '$lang','$master' => '$path'
 my %splitted_pot; # pot_files: '$master' => '$path'
 
@@ -640,6 +687,7 @@ if ($pot_filename =~ m/\$master/) {
     print wrap_msg(gettext("Splitted mode, creating a temporary POT")."\n")
         if $po4a_opts{"verbose"};
     foreach my $master (keys %document) {
+        next if ($master eq '');
         my $m = basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
@@ -654,6 +702,7 @@ if (-e $pot_filename) {
     # The POT needs to be re-generated if a master document is more recent
     # than the POT.
     foreach my $master (keys %document) {
+        next if ($master eq '');
         if ((stat $master)[9] >= $modtime) {
             $update_pot_file = 1;
             last;
@@ -679,11 +728,19 @@ if (-e $pot_filename) {
 }
 }
 
-my $potfile=Locale::Po4a::Po->new();
+my %Po_opts;
+if (defined $po4a_opts{'msgid-bugs-address'}) {
+    $Po_opts{'msgid-bugs-address'} = $po4a_opts{'msgid-bugs-address'};
+}
+if (defined $po4a_opts{'copyright-holder'}) {
+    $Po_opts{'copyright-holder'} = $po4a_opts{'copyright-holder'};
+}
+my $potfile=Locale::Po4a::Po->new(\%Po_opts);
 if ($update_pot_file) {
-    foreach my $master (sort {
+    foreach my $master (sort { return -1 if ($a eq "");
                                $document{$a}{'pos'} <=> $document{$b}{'pos'}
                              } keys %document) {
+        next if ($master eq '');
         my %file_opts = %po4a_opts;
         my $options = $document{$master}{"options"}{"global"};
         if (defined $options) {
@@ -731,6 +788,7 @@ if ($update_pot_file) {
 if ($po4a_opts{"split"}) {
     # Generate a .pot for each document
     foreach my $master (keys %document) {
+        next if ($master eq '');
         my $tmp_file;
         # Create a temporary POT, and check if the old one needs to be
         # updated (unless --force was specified).
@@ -771,6 +829,7 @@ if ($po4a_opts{"split"}) {
                             $!);
         my $cmd_cat = "";
         foreach my $master (keys %document) {
+            next if ($master eq '');
             my $m = basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
@@ -815,6 +874,7 @@ if ($po4a_opts{"split"}) {
     # Split the complete PO in multiple POs
     foreach $lang (sort keys %po_filename) {
         foreach my $master (keys %document) {
+            next if ($master eq '');
             my $tmp_file;
             # Create a temporary PO, and check if the old one needs to be
             # updated (unless --force was specified).
@@ -890,12 +950,14 @@ if (not $po4a_opts{"no-translations"}) {
     # update all translations
 
     foreach $lang (sort keys %po_filename) {
-	# Read the $lang PO once
+	# Read the $lang PO once, no options for the creation
 	my $po = Locale::Po4a::Po->new();
 	$po->read($po_filename{$lang});
 
-	DOC: foreach my $master (sort { $document{$a}{'pos'} <=>
+	DOC: foreach my $master (sort { return -1 if ($a eq "");
+	                                $document{$a}{'pos'} <=>
 	                                $document{$b}{'pos'} } keys %document) {
+	    next if ($master eq '');
 	    next unless defined $document{$master}{$lang};
 
 	    my %file_opts = %po4a_opts;
@@ -975,6 +1037,7 @@ if ($po4a_opts{"rm-translations"}) {
     # Delete the translated documents
     foreach $lang (keys %po_filename) {
 	foreach my $master (keys %document) {
+	    next if ($master eq '');
 	    unlink $document{$master}{$lang};
 	}
     }

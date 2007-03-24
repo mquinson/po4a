@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.73 2007-03-24 12:04:44 nekral-guest Exp $
+# $Id: Po.pm,v 1.74 2007-03-24 20:49:41 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -145,6 +145,8 @@ sub initialize {
 #    $options = ref($options) || $options;
 
     $self->{options}{'porefs'}= 'full';
+    $self->{options}{'msgid-bugs-address'}= undef;
+    $self->{options}{'copyright-holder'}= "Free Software Foundation, Inc.";
     foreach my $opt (keys %$options) {
 	if ($options->{$opt}) {
 	    die wrap_mod("po4a::po", dgettext ("po4a", "Unknown option: %s"), $opt) unless exists $self->{options}{$opt};
@@ -163,12 +165,15 @@ sub initialize {
     $self->{count_doc}=0;
     $self->{header_comment}=
 	escape_text( " SOME DESCRIPTIVE TITLE\n"
-		    ." Copyright (C) YEAR Free Software Foundation, Inc.\n"
+		    ." Copyright (C) YEAR ".$self->{options}{'copyright-holder'}."\n"
 		    ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
 		    ." \n"
 		    .", fuzzy");
 #    $self->header_tag="fuzzy";
     $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
+			((defined $self->{options}{'msgid-bugs-address'})?
+	"Report-Msgid-Bugs-To: ".$self->{options}{'msgid-bugs-address'}."\n":
+				"").
 				"POT-Creation-Date: $date\n".
 				"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n".
 				"Last-Translator: FULL NAME <EMAIL\@ADDRESS>\n".
@@ -176,6 +181,7 @@ sub initialize {
 				"MIME-Version: 1.0\n".
 				"Content-Type: text/plain; charset=CHARSET\n".
 				"Content-Transfer-Encoding: ENCODING");
+
     $self->{encoder}=find_encoding("ascii");
 
     # To make stats about gettext hits
