@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.68 2007-03-24 20:49:41 nekral-guest Exp $
+# $Id: po4a,v 1.69 2007-03-24 22:19:12 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -137,12 +137,13 @@ multiple options, or an option with an argument).
 You can also specify options that will only apply to a specific language
 by using the opt_I<lang> keyword.
 
-There are some known limitations: you can't specify an argument with a
-space or a double quote to a module option.
-
 Here is an example:
  [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \
             opt:"-k 75" opt_it:"-L UTF-8" opt_fr:-v
+
+Arguments may contain spaces if you use single quotes or escaped double
+quotes:
+ [po4a_alias:man] man opt:"-o \"mdoc=NAME,SEE ALSO\" -k 20"
 
 If you want to specify the same options for many documents, you may want
 to use an alias (see the B<Specifying aliases> section below).
@@ -671,11 +672,29 @@ close CONFIG; # don't care about error here
 die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and po files"))
   unless (length $pot_filename);
 
+sub split_opts {
+    my $options = shift;
+    my @opts = ();
+    $options =~ s/\\"/"/g;
+    while (length $options) {
+        $options =~ s/^(["'])                   # A quote
+                        ((?:\\.|(?!\1)[^\\])*)  # quoted text
+                        \1                      # The same quote
+                      |
+                      ^((?:\\.|[^\\"'])*?)      # unquoted word
+                      ([ ]|$)                   # space is the separator
+                     //xs;                      # extended regex
+        push @opts, (defined $1?$2:$3);
+    }
+
+    return @opts;
+}
+
 if (defined $document{''}{"options"}
     and defined $document{''}{"options"}{"global"}) {
     # Merge the options with the ones specified in the configuration file
      %po4a_opts = get_options(@ORIGINAL_ARGV,
-                              split(/ /, $document{''}{"options"}{"global"}));
+                              split_opts($document{''}{"options"}{"global"}));
 }
 
 my %splitted_po; # po_files: '$lang','$master' => '$path'
@@ -745,7 +764,7 @@ if ($update_pot_file) {
         my $options = $document{$master}{"options"}{"global"};
         if (defined $options) {
             %file_opts = get_options(@ORIGINAL_ARGV,
-                                     split(/ /, $options));
+                                     split_opts($options));
         }
         my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
                                            %{$file_opts{"options"}});
@@ -972,7 +991,7 @@ if (not $po4a_opts{"no-translations"}) {
 	    if (defined $options) {
 		# also use the options provided on the command line
 		%file_opts = get_options(@ORIGINAL_ARGV,
-		                         split(/ /, $options));
+		                         split_opts($options));
 	    }
 	    my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
 		                               %{$file_opts{"options"}});
