@@ -1,3 +1,39 @@
+2007-03-24  Nicolas François  <nicolas.francois@centraliens.net>
+
+	* extension/: New directory. It will be used for a C extension to
+	speed up po4a.
+	* extension/Build.PL: Build system for the extension. For testing,
+	you should add the links Locale and t, pointing to ../lib/Locale
+	and ../t in the extension directory.
+	* extension/lib/Locale/Po4a/Po.xs: First attempt for a C
+	extension.  The extensions for canonize, unquote_text,
+	get_charset, unescape_text, escape_text are complete, tested and
+	provide a speed up.
+	The Po object extension is not complete (Po_new, Po_DESTROY,
+	Po_read, Po_push). The goal for the Po object extension is to
+	fully rely on the gettext libraries. A Po object from the
+	extension will not be binary compatible with a Po object from the
+	Perl code, but it should provide the same API.
+	* extension/lib/Locale/Po4a/Man.xs: First attempt for a C
+	extension.  It provides a good speedup. It should be fully
+	compatible with the Perl code.
+	* extension/lib/Locale/Po4a/TransTractor.xs: First attempt for a C
+	extension.  No speedup noticed. Provided as an example, but could
+	be dropped latter.
+	* extension/typemap, extension/lib/Locale/Po4a/Po.h,
+	extension/lib/Locale/Po4a/hash.h,
+	extension/lib/Locale/Po4a/message.h,
+	extension/lib/Locale/Po4a/pos.h,
+	extension/lib/Locale/Po4a/str-list.h: Header files for the Po
+	object extension.  At least on Debian, the gettext library is not
+	directly useable if we want to play with the internal structure or
+	advance internal functions.  This may be a temporary hack.
+	* lib/Locale/Po4a/Man.pm, lib/Locale/Po4a/Po.pm,
+	lib/Locale/Po4a/TransTractor.pm: Load the C extensions if they are
+	available. This does not make po4a slower if the extension is not
+	built and present on the system.
+	* NEWS: Document the new C extension. Status of this extension.
+
 2007-02-16  Nicolas François  <nicolas.francois@centraliens.net>
 
 	* t/data-21/extract.po-ok, t/data-27/general-normalized.xml,

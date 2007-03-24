@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.72 2007-02-16 19:13:00 nekral-guest Exp $
+# $Id: Po.pm,v 1.73 2007-03-24 12:04:44 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -66,13 +66,18 @@ use IO::File;
 require Exporter;
 
 package Locale::Po4a::Po;
+use DynaLoader;
 
 use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use subs qw(makespace);
 use vars qw(@ISA @EXPORT_OK);
-@ISA = (Exporter);
-@EXPORT_OK = qw(move_po_if_needed);
+@ISA = qw(Exporter DynaLoader);
+@EXPORT = qw(%debug);
+@EXPORT_OK = qw(&move_po_if_needed);
+
+# Try to use a C extension if present.
+eval("bootstrap Locale::Po4a::Po '$VERSION'");
 
 use 5.006;
 use strict;
@@ -87,7 +92,7 @@ use Encode;
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
-my %debug=('canonize'	=> 0,
+our %debug=('canonize'	=> 0,
            'quote'	=> 0,
            'escape'	=> 0,
            'encoding'   => 0,
@@ -185,7 +190,7 @@ catalog.
 
 =cut
 
-sub read{
+sub read {
     my $self=shift;
     my $filename=shift 
 	|| croak wrap_mod("po4a::po", dgettext("po4a", "Please provide a non-null filename"));

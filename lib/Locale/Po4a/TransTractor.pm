@@ -3,6 +3,7 @@
 require Exporter;
 
 package Locale::Po4a::TransTractor;
+use DynaLoader;
 
 use 5.006;
 use strict;
@@ -11,10 +12,13 @@ use warnings;
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
 $VERSION="0.30";
-@ISA = ();
+@ISA = qw(DynaLoader);
 @EXPORT = qw(new process translate 
              read write readpo writepo
              getpoout setpoout);
+
+# Try to use a C extension if present.
+eval("bootstrap Locale::Po4a::TransTractor $VERSION");
 
 use Carp qw(croak);
 use Locale::Po4a::Po;
