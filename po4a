@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.69 2007-03-24 22:19:12 nekral-guest Exp $
+# $Id: po4a,v 1.70 2007-03-24 22:23:17 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -756,7 +756,7 @@ if (defined $po4a_opts{'copyright-holder'}) {
 }
 my $potfile=Locale::Po4a::Po->new(\%Po_opts);
 if ($update_pot_file) {
-    foreach my $master (sort { return -1 if ($a eq "");
+    foreach my $master (sort { return -1 if ($a eq "" or $b eq "");
                                $document{$a}{'pos'} <=> $document{$b}{'pos'}
                              } keys %document) {
         next if ($master eq '');
@@ -973,7 +973,7 @@ if (not $po4a_opts{"no-translations"}) {
 	my $po = Locale::Po4a::Po->new();
 	$po->read($po_filename{$lang});
 
-	DOC: foreach my $master (sort { return -1 if ($a eq "");
+	DOC: foreach my $master (sort { return -1 if ($a eq "" or $b eq "");
 	                                $document{$a}{'pos'} <=>
 	                                $document{$b}{'pos'} } keys %document) {
 	    next if ($master eq '');
