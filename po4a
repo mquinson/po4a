@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.71 2007-03-26 21:06:47 nekral-guest Exp $
+# $Id: po4a,v 1.72 2007-03-26 21:40:02 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -239,12 +239,23 @@ The default behavior (when --force is not specified) is the following:
 
 =over
 
-If the POT file already exists, it is regenerated if a master document is
-more recent.
+If the POT file already exists, it is regenerated if a master document
+or the configuration file is more recent.
 The POT file is also written in a temporary document and po4a verifies
 that the changes are really needed.
 
+Also, a translation is regenerated only if its master document, the PO file,
+one of its addenda or the configuration file is more recent.
+To avoid trying to regenerate translations which do not pass the threshold
+test (see B<--keep>), a file with the '.po4a-stamp' extension is created.
+These stamp files are removed when po4a is called with the
+B<--rm-translations> flag or when a file is finally translated.
+
 =back
+
+If a master document includes files, you should use the B<--force> flag
+because the modification time of these included files are not taken into
+account.
 
 The PO files are always re-generated based on the POT with B<msgmerge -U>.
 
@@ -328,6 +339,7 @@ use Pod::Usage qw(pod2usage);
 use File::Temp;
 use File::Basename;
 use File::Copy;
+use Fcntl; # sysopen flags
 
 Locale::Po4a::Common::textdomain('po4a');
 
@@ -979,6 +991,25 @@ if (not $po4a_opts{"no-translations"}) {
 	    next if ($master eq '');
 	    next unless defined $document{$master}{$lang};
 
+            unless ($po4a_opts{"force"}) {
+                my $stampfile = $document{$master}{$lang};
+                unless (-e $document{$master}{$lang}) {
+                    $stampfile = $document{$master}{$lang}.".po4a-stamp";
+                }
+
+                my @files = ($master, $po_filename{$lang}, $config_file);
+                if (defined $document{$master}{"add_$lang"}) {
+                    push @files, @{$document{$master}{"add_$lang"}};
+                }
+
+                unless (is_older($stampfile, @files)) {
+                    print wrap_msg(gettext("%s don't need to be updated."),
+                                   $document{$master}{$lang})
+                        if ($po4a_opts{"verbose"});
+                    next DOC;
+                }
+            }
+
 	    my %file_opts = %po4a_opts;
 	    my $options = "";
 	    if (defined $document{$master}{"options"}{"global"}) {
@@ -1017,7 +1048,21 @@ if (not $po4a_opts{"no-translations"}) {
 		    $document{$master}{$lang}, $hit, $queries,
 		    $percent, $file_opts{"threshold"});
 		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+		unless ($po4a_opts{"force"}) {
+		    touch($document{$master}{$lang}.".po4a-stamp");
+		    print wrap_msg(gettext("Timestamp %s created."),
+		                   $document{$master}{$lang}.".po4a-stamp")
+			if ($po4a_opts{"verbose"});
+		}
 		next DOC;
+	    }
+	    unless ($po4a_opts{"force"}) {
+		if (-e $document{$master}{$lang}.".po4a-stamp") {
+		    unlink $document{$master}{$lang}.".po4a-stamp";
+		    print wrap_msg(gettext("Timestamp %s removed."),
+		                   $document{$master}{$lang}.".po4a-stamp")
+			if ($po4a_opts{"verbose"});
+		}
 	    }
 
 	    if (defined ($document{$master}{"add_$lang"})) {
@@ -1058,9 +1103,38 @@ if ($po4a_opts{"rm-translations"}) {
 	foreach my $master (keys %document) {
 	    next if ($master eq '');
 	    unlink $document{$master}{$lang};
+	    unlink $document{$master}{$lang}.".po4a-stamp";
 	}
     }
 }
 
+sub touch {
+    my $file = shift;
+    if (-e $file) {
+        utime undef, undef, $file;
+    } else {
+        sysopen(FH,$file,O_WRONLY|O_CREAT|O_NONBLOCK|O_NOCTTY)
+            or croak("Can't create $file : $!");
+        close FH or croak("Can't close $file : $!");
+    }
+}
+
+sub is_older {
+    my $file = shift;
+    my @files = @_;
+    return 1 unless (-e $file);
+    my $older = 0;
+
+    my $modtime = (stat $file)[9];
+
+    for my $f (@files) {
+        if ((stat $f)[9] > $modtime) {
+            $older = 1;
+            last;
+        }
+    }
+
+    return $older;
+}
 
 __END__
