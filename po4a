@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.70 2007-03-24 22:23:17 nekral-guest Exp $
+# $Id: po4a,v 1.71 2007-03-26 21:06:47 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -872,7 +872,7 @@ foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
-	my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename".
+	my $cmd = "msgmerge --previous -U ".$po_filename{$lang}." $pot_filename".
 	          (($po4a_opts{"no-backups"}||$po4a_opts{"split"})?
 	           " --backup=none":"");
 	run_cmd($cmd);
@@ -921,7 +921,7 @@ if ($po4a_opts{"split"}) {
 
             # Update the PO according to the new POT and to the big PO
             # (compendium).
-            $cmd = "msgmerge -U -C ".$po_filename{$lang}.
+            $cmd = "msgmerge --previous -U -C ".$po_filename{$lang}.
                    " --backup=none ".$tmp_file." ".$splitted_pot{$master};
             run_cmd($cmd);
 
