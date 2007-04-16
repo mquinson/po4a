@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.73 2007-04-16 18:39:51 nekral-guest Exp $
+# $Id: po4a,v 1.74 2007-04-16 18:41:11 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -1128,7 +1128,7 @@ sub is_older {
     my $modtime = (stat $file)[9];
 
     for my $f (@files) {
-        if ((stat $f)[9] > $modtime) {
+        if (-e $f and (stat $f)[9] > $modtime) {
             $older = 1;
             last;
         }
