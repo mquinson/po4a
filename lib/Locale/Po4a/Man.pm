@@ -226,6 +226,13 @@ not split the current paragraph. The string to translate will then contain
 I<foo E<lt>.bar baz quxE<gt> quux>, where I<bar> is the command that
 should be inlined, and I<baz qux> its arguments.
 
+=item B<unknown_macros>
+
+This option indicates how po4a should behave when an unknown macro is found.
+By default, po4a fails with a warning.
+It can take the following values: I<failed> (the default value),
+I<untranslated>, I<noarg>, I<translate_joined>, I<translate_each>.
+
 =back
 
 =head1 AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN
@@ -388,6 +395,8 @@ my $nbs;
 # Indicate if the page uses the mdoc macros
 my $mdoc_mode = 0;
 
+my $unknown_macros = undef;
+
 #########################
 #### DEBUGGING STUFF ####
 #########################
@@ -443,6 +452,7 @@ sub initialize {
     $self->{options}{'inline'}='';
     $self->{options}{'generated'}='';
     $self->{options}{'mdoc'}='';
+    $self->{options}{'unknown_macros'}='';
 
     # reset the debug options
     %debug = ();
@@ -515,6 +525,23 @@ sub initialize {
             foreach (split(/,/, $options{'mdoc'})) {
                 $mdoc{$_} = 1;
             }
+        }
+    }
+    if (defined $options{'unknown_macros'}) {
+        if ($options{'unknown_macros'} eq "failed") {
+            $unknown_macros = undef;
+        } elsif ($options{'unknown_macros'} eq "untranslated") {
+            $unknown_macros = \&untranslated;
+        } elsif ($options{'unknown_macros'} eq "noarg") {
+            $unknown_macros = \&noarg;
+        } elsif ($options{'unknown_macros'} eq "translate_joined") {
+            $unknown_macros = \&translate_joined;
+        } elsif ($options{'unknown_macros'} eq "translate_each") {
+            $unknown_macros = \&translate_each;
+        } else {
+            die wrap_mod("po4a::man", dgettext("po4a",
+                "Invalid 'unknown_macros' value. Must be one of:\n").
+                "failed untranslated noarg translate_joined translate_each\n");
         }
     }
 }
@@ -1239,9 +1266,13 @@ sub parse{
 	    if (defined ($macro{$macro})) {
 		&{$macro{$macro}}(@args);
 	    } else {
+		if (defined $unknown_macros) {
+		    &{$unknown_macros}(@args);
+		} else {
 		$self->pushline($self->r($line)."\n");
 		die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
 		    "Unknown macro '%s'. Remove it from the document, or refer to the Locale::Po4a::Man manpage to see how po4a can handle new macros."), $line);
+		}
 	    }
 
 	} elsif ($line =~ /^ +[^. ]/) {
