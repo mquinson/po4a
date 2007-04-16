@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.75 2007-04-16 21:29:16 nekral-guest Exp $
+# $Id: po4a,v 1.76 2007-04-16 22:45:54 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -247,9 +247,8 @@ that the changes are really needed.
 Also, a translation is regenerated only if its master document, the PO file,
 one of its addenda or the configuration file is more recent.
 To avoid trying to regenerate translations which do not pass the threshold
-test (see B<--keep>), a file with the '.po4a-stamp' extension is created.
-These stamp files are removed when po4a is called with the
-B<--rm-translations> flag or when a file is finally translated.
+test (see B<--keep>), a file with the '.po4a-stamp' extension can be created
+(see B<--stamp>).
 
 =back
 
@@ -258,6 +257,17 @@ because the modification time of these included files are not taken into
 account.
 
 The PO files are always re-generated based on the POT with B<msgmerge -U>.
+
+=item --stamp
+
+Tells po4a to create stamp files when a translation is not generated
+because it it does not reach the threshold. These stamp files are named
+according to the expected translated document, with the I<.po4a-stamp>
+extension.
+
+Note: This only activates the creation of the I<.po4a-stamp> files. The stamp
+files are always used if they exist, and they are removed with
+B<--rm-translations> or when the file is finally translated.
 
 =item --no-translations
 
@@ -397,6 +407,7 @@ sub get_options {
         'verbose|v'             => \@verbose,
         'debug|d'               => \$opts{"debug"},
         'force|f'               => \$opts{"force"},
+        'stamp'                 => \$opts{"stamp"},
         'quiet|q'               => \$opts{"quiet"},
         'keep|k=s'              => \$opts{"threshold"},
         'no-translations'       => \$opts{"no-translations"},
@@ -1051,10 +1062,12 @@ if (not $po4a_opts{"no-translations"}) {
 		    $percent, $file_opts{"threshold"});
 		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		unless ($po4a_opts{"force"}) {
+		    if ($po4a_opts{"stamp"}) {
 		    touch($document{$master}{$lang}.".po4a-stamp");
 		    print wrap_msg(gettext("Timestamp %s created."),
 		                   $document{$master}{$lang}.".po4a-stamp")
 			if ($po4a_opts{"verbose"});
+		    }
 		}
 		next DOC;
 	    }

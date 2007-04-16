@@ -20,12 +20,14 @@ po4a NEWS
 
   general: po4a now uses timestamps to avoid re-generating a translation
            if no changes are expected: if a translation is more recent
-           than its associated PO and master document, then there is no
-           need to update it. For the documents which do not pass the
-           translation threshold, a file is created with the .po4a-stamp
-           extension. This file is also used as a timestamp file, and
-           permits to avoid spending time if po4a expect that the
-           translation will not be generated.
+           than its associated PO, master document, addenda or
+           configuration file, then there is no need to update it. For the
+           documents which do not pass the translation threshold, a
+           --stamp option was added to tell po4a to create files with a
+           .po4a-stamp extension (you can also create them manually).
+           This can save a lot of time when po4a knows that the
+           translation will not be generated because there were no changes
+           since the last po4a run.
 
   general: Beginning of a C extension. This provides speedup. Testers are
            welcomed.
