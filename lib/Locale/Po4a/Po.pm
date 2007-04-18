@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.75 2007-04-16 19:40:44 nekral-guest Exp $
+# $Id: Po.pm,v 1.76 2007-04-18 08:36:04 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -76,6 +76,7 @@ use vars qw(@ISA @EXPORT_OK);
 @EXPORT = qw(%debug);
 @EXPORT_OK = qw(&move_po_if_needed);
 
+use Locale::Po4a::TransTractor;
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::Po $Locale::Po4a::TransTractor::VERSION");
 
