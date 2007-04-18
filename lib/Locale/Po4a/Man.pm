@@ -379,6 +379,7 @@ use File::Spec;
 use Getopt::Std;
 
 my %macro; # hash of known macro, with parsing sub. See end of this file
+my %default_macro; # The default known macros, when no options are used.
 
 # A font start by \f and is followed either by
 # [.*] - a font name within brackets (e.g. [P], [A_USER_FONT])
@@ -400,43 +401,38 @@ my $unknown_macros = undef;
 #########################
 #### DEBUGGING STUFF ####
 #########################
-my %debug=('splitargs' => 0, # see how macro args are separated
-	   'pretrans' => 0,  # see pre-conditioning of translation
-	   'postrans' => 0,  # see post-conditioning of translation
-	   'fonts'    => 0,  # see font modifier handling
-	   );
+my %debug;
+# The following debug options can be set with '-o debug=...':
+# * splitargs  see how macro args are separated
+# * pretrans   see pre-conditioning of translation
+# * postrans   see post-conditioning of translation
+# * fonts      see font modifier handling
 
 
 ######## CONFIG #########
 # This variable indicates the behavior of the module when a .de, .if or
 # .ie is encountered.
-my $groff_code = "fail";
+my $groff_code;
 # %no_wrap_begin and %no_wrap_end are lists of macros that respectively
 # begins and ends a no_wrap paragraph.
 # Any ending macro will end the no_wrap paragraph started by any beginning
 # macro.
-my %no_wrap_begin = (
-    'nf' => 1,
-    'EX' => 1,
-    'EQ' => 1
-);
-my %no_wrap_end = (
-    'fi' => 1,
-    'EE' => 1,
-    'EN' => 1
-);
-my %inline = (
-);
+my %no_wrap_begin;
+my %no_wrap_end;
+# List of macros that should be inlined (with E<.xx ...>)
+my %inline;
+# The default list of inlined macros (when no options are used)
+my %default_inline;
 # This variable indicates whether po4a should try to detect the generated
 # files.
-my $allow_generated = 0;
+my $allow_generated;
 # This hash indicates section name that should not be translated in mdoc
 # mode.
 # The groff's mdoc processor requires the NAME section, otherwise headers
 # and footers of the pages are not generated.
 # The mdoc_groff man page indicates that NAME, SYNOPSIS and DESCRIPTION
 # are mandatory.
-my %mdoc = ();
+my %mdoc;
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -454,9 +450,6 @@ sub initialize {
     $self->{options}{'mdoc'}='';
     $self->{options}{'unknown_macros'}='';
 
-    # reset the debug options
-    %debug = ();
-
     foreach my $opt (keys %options) {
         if (defined $options{$opt}) {
             die wrap_mod("po4a::man",
@@ -466,12 +459,14 @@ sub initialize {
         }
     }
 
+    %debug = ();
     if (defined $options{'debug'}) {
         foreach ($options{'debug'}) {
             $debug{$_} = 1;
         }
     }
 
+    $groff_code = "fail";
     if (defined $options{'groff_code'}) {
         unless ($options{'groff_code'} =~ m/fail|verbatim|translate/) {
           die wrap_mod("po4a::man", dgettext("po4a",
@@ -480,6 +475,11 @@ sub initialize {
         $groff_code = $options{'groff_code'};
     }
 
+    if (%default_macro) {
+        %macro = %default_macro;
+    } else {
+        %default_macro = %macro
+    }
     if (defined $options{'untranslated'}) {
         foreach (split(/,/, $options{'untranslated'})) {
             $macro{$_} = \&untranslated;
@@ -500,6 +500,17 @@ sub initialize {
             $macro{$_} = \&translate_each;
         }
     }
+
+    %no_wrap_begin = (
+        'nf' => 1,
+        'EX' => 1,
+        'EQ' => 1
+    );
+    %no_wrap_end = (
+        'fi' => 1,
+        'EE' => 1,
+        'EN' => 1
+    );
     if (defined $options{'no_wrap'}) {
         foreach (split(/,/, $options{'no_wrap'})) {
             if ($_ =~ m/^(.*):(.*)$/) {
@@ -510,14 +521,24 @@ sub initialize {
             }
         }
     }
+
+    if (%default_inline) {
+        %inline = %default_inline;
+    } else {
+        %default_inline = %inline
+    }
     if (defined $options{'inline'}) {
         foreach (split(/,/, $options{'inline'})) {
             $inline{$_} = 1;
         }
     }
+
+    $allow_generated = 0;
     if (defined $options{'generated'}) {
         $allow_generated = 1;
     }
+
+    %mdoc = ();
     if (defined $options{'mdoc'}) {
         if ($options{'mdoc'} eq 1) {
             $mdoc{"NAME"} = 1;
@@ -527,6 +548,8 @@ sub initialize {
             }
         }
     }
+
+    $unknown_macros = undef;
     if (defined $options{'unknown_macros'}) {
         if ($options{'unknown_macros'} eq "failed") {
             $unknown_macros = undef;
