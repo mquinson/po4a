@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.40 2007-03-26 21:06:48 nekral-guest Exp $
+# $Id: po4a-updatepo,v 1.41 2007-04-29 22:57:28 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -67,6 +67,15 @@ C<po4a-updatepo>.
 Extra option(s) to pass to the format plugin and other po4a internal module.
 Specify each option in the 'name=value' format. See the documentation of
 each plugin for more information about the valid options and their meanings.
+
+=item --previous
+
+This option adds '--previous' to the options passed to msgmerge.
+It requires gettext 0.16 or later.
+
+=item msgmerge-opt options
+
+Extra options for msgmerge.
 
 =item -h, --help
 
@@ -138,6 +147,7 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 my (@masterfiles,@pofiles);
 my ($help,$help_fmt,$verbose,$debug,$format,@options);
 my $mastchar;
+my ($previous, $msgmerge_opt);
 GetOptions('help|h'      => \$help,
 	   'help-format' => \$help_fmt,
 
@@ -147,7 +157,10 @@ GetOptions('help|h'      => \$help,
 
 	   'master-charset|M=s' => \$mastchar,
 
-	   'option|o=s'    => \@options,
+	   'option|o=s'  => \@options,
+
+	   'previous'    => \$previous,
+	   'msgmerge-opt=s' => \$msgmerge_opt,
     
 	   'verbose|v'   => \$verbose,
 	   'debug|d'     => \$debug,
@@ -157,6 +170,8 @@ GetOptions('help|h'      => \$help,
 $help && pod2usage (-verbose => 1, -exitval => 0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
+
+$msgmerge_opt .= " --previous" if $previous;
 
 my %options = (
     "verbose" => $verbose,
@@ -203,7 +218,8 @@ while (my $po_filename=shift @pofiles) {
     if (-e $po_filename) {
 	print STDERR wrap_msg(gettext("Updating %s:"), $po_filename)
 	    if $verbose;
-	system ("msgmerge","--previous","-U",$po_filename,$pot_filename) == 0
+	my $cmd = "msgmerge $msgmerge_opt -U $po_filename $pot_filename";
+	system ($cmd) == 0
 	    or die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
 	system "msgfmt --statistics -v -o /dev/null $po_filename"
 	  if $verbose;

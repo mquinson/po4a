@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.76 2007-04-16 22:45:54 nekral-guest Exp $
+# $Id: po4a,v 1.77 2007-04-29 22:57:27 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -301,6 +301,15 @@ have no Report-Msgid-Bugs-To fields.
 Set the copyright holder in the POT header. The default value is
 "Free Software Foundation, Inc."
 
+=item --msgmerge-opt options
+
+Extra options for msgmerge.
+
+=item --previous
+
+This option adds '--previous' to the options passed to msgmerge.
+It requires gettext 0.16 or later.
+
 =back
 
 =head1 SHORTCOMINGS
@@ -376,6 +385,7 @@ sub get_options {
     my @verbose = ();
     my @options = ();
     my @variables = ();
+    my $previous;
 
     my %opts = (
         "help"            => 0,
@@ -394,7 +404,8 @@ sub get_options {
         "options"         => {"verbose" => 0, "debug" => 0},
         "variables"       => {},
         "copyright-holder"=> undef,
-        "msgid-bugs-address"=> undef
+        "msgid-bugs-address"=> undef,
+        "msgmerge-opt"    => ""
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     GetOptions(
@@ -418,12 +429,15 @@ sub get_options {
         'option|o=s'            => \@options,
         'variable=s'            => \@variables,
         'copyright-holder=s'    => \$opts{"copyright-holder"},
-        'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"}
+        'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
+        'previous'              => \$previous,
+        'msgmerge-opt=s'        => \$opts{"msgmerge-opt"}
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
+    $opts{"msgmerge-opt"} .= " --previous" if $previous;
 
     # options to transmit to the modules
     %{$opts{"options"}} = (
@@ -896,7 +910,8 @@ foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
-	my $cmd = "msgmerge --previous -U ".$po_filename{$lang}." $pot_filename".
+	my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename ".
+	          $po4a_opts{"msgmerge-opt"}.
 	          (($po4a_opts{"no-backups"}||$po4a_opts{"split"})?
 	           " --backup=none":"");
 	run_cmd($cmd);
@@ -945,8 +960,9 @@ if ($po4a_opts{"split"}) {
 
             # Update the PO according to the new POT and to the big PO
             # (compendium).
-            $cmd = "msgmerge --previous -U -C ".$po_filename{$lang}.
-                   " --backup=none ".$tmp_file." ".$splitted_pot{$master};
+            $cmd = "msgmerge -U -C ".$po_filename{$lang}.
+                   " --backup=none ".$po4a_opts{"msgmerge-opt"}.
+                   " $tmp_file ".$splitted_pot{$master};
             run_cmd($cmd);
 
             my $dir = dirname($splitted_po{$lang}{$master});
