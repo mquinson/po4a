@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "POT-Creation-Date: 2007-04-22 03:22+0200\n"
-"PO-Revision-Date: 2006-07-14 17:32+0200\n"
+"PO-Revision-Date: 2007-04-29 17:49+0200\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -2944,7 +2944,6 @@ msgstr ""
 
 # type: textblock
 #: ../../lib/Locale/Po4a/BibTeX.pm:36
-#, fuzzy
 msgid "Fields values are extracted and proposed for translation."
 msgstr "Les valeurs des champs sont extraites et proposées pour la traduction."
 
@@ -4241,7 +4240,7 @@ msgstr ""
 # type: =item
 #: ../../lib/Locale/Po4a/Man.pm:229
 msgid "B<unknown_macros>"
-msgstr ""
+msgstr "B<unknown_macros>"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:231
@@ -4251,6 +4250,10 @@ msgid ""
 "values: I<failed> (the default value), I<untranslated>, I<noarg>, "
 "I<translate_joined>, I<translate_each>."
 msgstr ""
+"Cette option indique à po4a comment traiter les macros inconnues. Par "
+"défaut, po4a échoue en émettant un avertissement. Les valeur suivantes "
+"sont autorisées : I<failed> (la valeur par défaut), I<untranslated>, "
+"I<noarg>, I<translate_joined>, I<translate_each>."
 
 #: ../../lib/Locale/Po4a/Man.pm:238
 msgid "AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN"
@@ -8830,7 +8833,6 @@ msgstr ""
 
 # type: textblock
 #: ../../po4a:132
-#, fuzzy
 msgid ""
 "If you need a specific option for one of the document you want to translate, "
 "you can also specify it in the configuration file. Options are introduced by "
@@ -8870,6 +8872,11 @@ msgid ""
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
 "\n"
 msgstr ""
+"Les arguments peuvent contenir des espaces si vous utilisez des "
+"guillemets simples ou si vous protégez les guillemets doubles comme "
+"ceci :\n"
+" [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
+"\n"
 
 # type: textblock
 #: ../../po4a:148
@@ -8877,6 +8884,8 @@ msgid ""
 "If you want to specify the same options for many documents, you may want to "
 "use an alias (see the B<Specifying aliases> section below)."
 msgstr ""
+"Pour préciser les mêmes options pour un jeu de documents, vous pouvez "
+"utiliser un alias (consultez la section B<Spécifier des alias> ci-dessous)."
 
 # type: verbatim
 #: ../../po4a:151
@@ -8887,6 +8896,10 @@ msgid ""
 " [options] opt:\"...\" opt_fr:\"...\"\n"
 "\n"
 msgstr ""
+"Vous pouvez aussi définir des options pour tous les documents du fichier "
+"de configuration :\n"
+" [options] opt:\"...\" opt_fr:\"...\"\n"
+"\n"
 
 # type: =head2
 #: ../../po4a:155
@@ -9112,13 +9125,12 @@ msgstr ""
 
 # type: textblock
 #: ../../po4a:242
-#, fuzzy
 msgid ""
 "If the POT file already exists, it is regenerated if a master document or "
 "the configuration file is more recent.  The POT file is also written in a "
 "temporary document and po4a verifies that the changes are really needed."
 msgstr ""
-"Si le fichier POT existe déjà, il est regénéré si un document maître est "
+"Si le fichier POT existe déjà, il est regénéré si un document maître ou le fichier de configuration est "
 "plus récent. De plus, le fichier POT est écrit dans un document temporaire, "
 "et po4a vérifie que les modifications valent le coût."
 
@@ -9131,6 +9143,11 @@ msgid ""
 "B<--keep>), a file with the '.po4a-stamp' extension can be created (see B<--"
 "stamp>)."
 msgstr ""
+"De plus, une traduction est mise à jour seulement si le document maître, "
+"le fichier PO, un de ses addenda ou le fichier de configuration est plus "
+"récent. Pour éviter de retenter de créer une traduction qui ne passe pas "
+"le test du seuil (voir l'option B<--keep>), un fichier avec une extension "
+"« .po4a-stamp » peut être créé (voir l'option B<--stamp>)."
 
 # type: textblock
 #: ../../po4a:255
@@ -9139,6 +9156,9 @@ msgid ""
 "because the modification time of these included files are not taken into "
 "account."
 msgstr ""
+"Si un document maître inclue d'autres fichiers, vous devriez utiliser "
+"l'option B<--force> parce que les dates de modification de ces fichiers "
+"ne sont pas prises en compte."
 
 # type: textblock
 #: ../../po4a:259
@@ -9151,7 +9171,7 @@ msgstr ""
 # type: =item
 #: ../../po4a:261
 msgid "--stamp"
-msgstr ""
+msgstr "--stamp"
 
 # type: textblock
 #: ../../po4a:263
@@ -9160,6 +9180,10 @@ msgid ""
 "it it does not reach the threshold. These stamp files are named according to "
 "the expected translated document, with the I<.po4a-stamp> extension."
 msgstr ""
+"Indique à po4a de créer des fichiers d'horodatage quand une traduction "
+"n'a pas été générée par ce qu'elle ne dépasse pas le seuil de traduction. "
+"Ces fichiers d'horodatage sont nommés en ajoutant l'extension "
+"I<.po4a-stamp> au nom du fichier à générer."
 
 # type: textblock
 #: ../../po4a:268
@@ -9168,6 +9192,10 @@ msgid ""
 "stamp files are always used if they exist, and they are removed with B<--rm-"
 "translations> or when the file is finally translated."
 msgstr ""
+"Note : Cette option ne concerne que la création des fichiers "
+"I<.po4a-stamp>. Ces fichiers d'horodatage sont toujours utilisés s'ils "
+"existent et sont retirés quand l'option B<--rm-translations> est utilisée "
+"ou quand le fichier est finalement traduit."
 
 #: ../../po4a:272
 msgid "--no-translations"
@@ -9228,7 +9256,7 @@ msgstr ""
 # type: =item
 #: ../../po4a:294
 msgid "--msgid-bugs-address email@address"
-msgstr ""
+msgstr "--msgid-bugs-address adresse@email"
 
 # type: textblock
 #: ../../po4a:296
@@ -9236,11 +9264,13 @@ msgid ""
 "Set the report address for msgid bugs. By default, the created POT files "
 "have no Report-Msgid-Bugs-To fields."
 msgstr ""
+"Fixe l'adresse à laquelle les bogues des msgid doivent être envoyés. Par "
+"défaut, les fichiers POT créés n'ont pas de champ Report-Msgid-Bugs-To."
 
 # type: =item
 #: ../../po4a:299
 msgid "--copyright-holder string"
-msgstr ""
+msgstr "--copyright-holder chaîne"
 
 # type: textblock
 #: ../../po4a:301
@@ -9248,6 +9278,8 @@ msgid ""
 "Set the copyright holder in the POT header. The default value is \"Free "
 "Software Foundation, Inc.\""
 msgstr ""
+"Fixe le détenteur du copyright dans l'en-tête du fichier POT. La valeur "
+"par défaut est « Free Software Foundation, Inc. »."
 
 # type: =head1
 #: ../../po4a:306
