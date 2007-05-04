@@ -3,14 +3,13 @@
 # Robert Luberda <robert@debian.org>, 2005 - 2007
 #
 msgid ""
-msgstr ""
-"Project-Id-Version: po4a 0.30\n"
+msgstr "Project-Id-Version: po4a 0.31\n"
 "POT-Creation-Date: 2007-04-30 10:19+0200\n"
-"PO-Revision-Date: 2007-03-18 13:25+0100\n"
+"PO-Revision-Date: 2007-05-04 22:11+0200\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
-"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
+"MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../../doc/po4a.7.pod:1 ../../lib/Locale/Po4a/BibTeX.pm:23
@@ -4197,7 +4196,7 @@ msgstr ""
 # type: =item
 #: ../../lib/Locale/Po4a/Man.pm:229
 msgid "B<unknown_macros>"
-msgstr ""
+msgstr "B<unknown_macros>"
 
 # type: textblock
 #: ../../lib/Locale/Po4a/Man.pm:231
@@ -4206,7 +4205,10 @@ msgid ""
 "found.  By default, po4a fails with a warning.  It can take the following "
 "values: I<failed> (the default value), I<untranslated>, I<noarg>, "
 "I<translate_joined>, I<translate_each>."
-msgstr ""
+msgstr "Ta opcja określa zachowanie po4a po napotkaniu nieznanego makra. Domyślnie "
+"po4a wyświetli ostrzeżenie. Możliwe są następujące wartości: I<failed> (wartość domyślna), "
+"I<untranslated>, I<noarg>, "
+"I<translate_joined>, I<translate_each>."
 
 # type: =head1
 #: ../../lib/Locale/Po4a/Man.pm:238
@@ -8915,7 +8917,6 @@ msgstr ""
 
 # type: textblock
 #: ../../po4a:132
-#, fuzzy
 msgid ""
 "If you need a specific option for one of the document you want to translate, "
 "you can also specify it in the configuration file. Options are introduced by "
@@ -8927,8 +8928,8 @@ msgstr ""
 "Jeśli jest potrzeba użycia określonej opcji tylko dla jednego dokumentu, "
 "który ma być przetłumaczony, to można to także podać w pliku "
 "konfiguracyjnym. Opcje są wprowadzane słowem kluczowym I<opt>. Jeżeli "
-"argument słowa kluczowego I<opt> zawiera spację, to musi być ujęty w "
-"cudzysłowy (np. gdy się podaje wiele opcji lub opcję z argumentem). Można "
+"argument słowa kluczowego I<opt> zawiera spacje (np. gdy się podaje wiele opcji"
+" lub opcję z argumentem), to musi być ujęty w cudzysłowy. Można "
 "także podać opcje, które będą stosowane tylko do określonego języka, "
 "używając słowa kluczowego opt_l<język>."
 
@@ -8954,14 +8955,18 @@ msgid ""
 "quotes:\n"
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
 "\n"
-msgstr ""
+msgstr "Argumenty mogą zawierać spacje, jeżeli zostaną otoczone pojedynczymi cudzysłowami\n"
+"lub cytowanymi (tj. poprzedzonymi znakiem \\)podwójnymi cudzysłowami:\n"
+" [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
+"\n"
 
 # type: textblock
 #: ../../po4a:148
 msgid ""
 "If you want to specify the same options for many documents, you may want to "
 "use an alias (see the B<Specifying aliases> section below)."
-msgstr ""
+msgstr "Aby podać te same opcje dla wielu dokumentów, można użyć aliasów (patrz poniżej, "
+"sekcja B<Podawanie aliasów>)."
 
 # type: verbatim
 #: ../../po4a:151
@@ -8971,7 +8976,10 @@ msgid ""
 "configuration file:\n"
 " [options] opt:\"...\" opt_fr:\"...\"\n"
 "\n"
-msgstr ""
+msgstr "Można określić także zbiór opcji dla wszystkich dokumentów określonych\n"
+" w pliku konfiguracyjnym:\n"
+" [options] opt:\"...\" opt_fr:\"...\"\n"
+"\n"
 
 #: ../../po4a:155
 msgid "Specifying aliases"
@@ -9207,14 +9215,14 @@ msgstr "Domyślne zachowanie (jeśli nie podano --force) jest następujące:"
 
 # type: textblock
 #: ../../po4a:242
-#, fuzzy
 msgid ""
 "If the POT file already exists, it is regenerated if a master document or "
 "the configuration file is more recent.  The POT file is also written in a "
 "temporary document and po4a verifies that the changes are really needed."
 msgstr ""
 "Jeżeli plik POT już istnieje i jest starszy niż plik z oryginalnym "
-"dokumentem, to jest on ponownie generowany. Plik POT jest zapisywany do "
+"dokumentem lub plik konfiguracyjny, to jest ponownie generowany. Plik POT jest "
+"zapisywany do "
 "pliku tymczasowego, a po4a sprawdza, czy rzeczywiście jest potrzeba jego "
 "zmieniania."
 
@@ -9226,7 +9234,10 @@ msgid ""
 "trying to regenerate translations which do not pass the threshold test (see "
 "B<--keep>), a file with the '.po4a-stamp' extension can be created (see B<--"
 "stamp>)."
-msgstr ""
+msgstr "Ponadto tłumaczenie zostanie ponownie wygenerowane, jeżeli oryginalny dokument, plik PO, jeden z załączników "
+"lub plik konfiguracyjny są od niego nowsze. Aby uniknąć prób ponownego generowania tłumaczeń, które "
+"są poniżej zdefiniowanego progu (patrz B<--keep>), można utworzyć plik z rozszerzeniem  `.po4a-stamp'"
+" (patrz B<--stamp>)."
 
 # type: textblock
 #: ../../po4a:255
@@ -9234,7 +9245,8 @@ msgid ""
 "If a master document includes files, you should use the B<--force> flag "
 "because the modification time of these included files are not taken into "
 "account."
-msgstr ""
+msgstr "Jeśli jakieś pliki są włączane (include) do oryginalnego dokumentu, należy użyć "
+"flagi B<--force>, ponieważ czasy modyfikacji włączanych plików nie są brane pod uwagę."
 
 # type: textblock
 #: ../../po4a:259
@@ -9247,7 +9259,7 @@ msgstr ""
 # type: =item
 #: ../../po4a:261
 msgid "--stamp"
-msgstr ""
+msgstr "--stamp"
 
 # type: textblock
 #: ../../po4a:263
@@ -9255,7 +9267,9 @@ msgid ""
 "Tells po4a to create stamp files when a translation is not generated because "
 "it it does not reach the threshold. These stamp files are named according to "
 "the expected translated document, with the I<.po4a-stamp> extension."
-msgstr ""
+msgstr "Nakazuje programowi po4a tworzenie plików ze znacznikiem czasowym, jeżeli tłumaczenie nie zostanie "
+"wygenerowane z powodu nieprzekroczenia zdefiniowanego progu. Pliki znaczników mają nazwę taką jak "
+"oczekiwany przetłumaczony dokument z dodanym rozszerzeniem I<.po4a-stamp>."
 
 # type: textblock
 #: ../../po4a:268
@@ -9263,7 +9277,10 @@ msgid ""
 "Note: This only activates the creation of the I<.po4a-stamp> files. The "
 "stamp files are always used if they exist, and they are removed with B<--rm-"
 "translations> or when the file is finally translated."
-msgstr ""
+msgstr "Uwaga: Ta opcja aktywuje tworzenie plików I<.po4a-stamp>. Pliki znaczników, jeżeli "
+"tylko istnieją, "
+"to są zawsze używane. Pliki te są usuwane za pomocą <--rm-"
+"translations>, albo gdy plik zostanie w końcu przetłumaczony."
 
 # type: textblock
 #: ../../po4a:272
@@ -9326,48 +9343,52 @@ msgstr ""
 # type: =item
 #: ../../po4a:294
 msgid "--msgid-bugs-address email@address"
-msgstr ""
+msgstr "--msgid-bugs-address adres@e-mail"
 
 # type: textblock
 #: ../../po4a:296
 msgid ""
 "Set the report address for msgid bugs. By default, the created POT files "
 "have no Report-Msgid-Bugs-To fields."
-msgstr ""
+msgstr "Ustawia adres, pod który należy zgłaszać błędy w polach msgid. Domyślnie, utworzone pliki"
+" POT nie zawierają nagłówków Report-Msgid-Bugs-To."
 
 # type: =item
 #: ../../po4a:299
 msgid "--copyright-holder string"
-msgstr ""
+msgstr "--copyright-holder string"
 
 # type: textblock
 #: ../../po4a:301
 msgid ""
 "Set the copyright holder in the POT header. The default value is \"Free "
 "Software Foundation, Inc.\""
-msgstr ""
+msgstr "Ustawia właściciela praw autorskich w nagłówku POT. Domyślną wartością jest "
+"\"Free "
+"Software Foundation, Inc.\""
 
 # type: =item
 #: ../../po4a:304 ../../po4a-updatepo:76
 msgid "--msgmerge-opt options"
-msgstr ""
+msgstr "--msgmerge-opt options"
 
 # type: textblock
 #: ../../po4a:306 ../../po4a-updatepo:78
 msgid "Extra options for msgmerge."
-msgstr ""
+msgstr "Dodatkowe opcje przekazywane programowi msgmerge."
 
 # type: =item
 #: ../../po4a:308 ../../po4a-updatepo:71
 msgid "--previous"
-msgstr ""
+msgstr "--previous"
 
 # type: textblock
 #: ../../po4a:310 ../../po4a-updatepo:73
 msgid ""
 "This option adds '--previous' to the options passed to msgmerge.  It "
 "requires gettext 0.16 or later."
-msgstr ""
+msgstr "Opcja dodaje '--previous' do opcji przekazywanych programowi msgmerge. "
+"Wymaga wersji 0.16 lub późniejszej pakietu gettext."
 
 # type: =head1
 #: ../../po4a:315
@@ -10113,10 +10134,3 @@ msgstr ""
 " Martin Quinson (mquinson#debian.org)\n"
 "\n"
 
-# type: textblock
-#~ msgid ""
-#~ "There are some known limitations: you can't specify an argument with a "
-#~ "space or a double quote to a module option."
-#~ msgstr ""
-#~ "Jest kilka znanych ograniczeń: nie można podać argumentu zawierającego "
-#~ "spację lub cudzysłów w opcji modułu."
