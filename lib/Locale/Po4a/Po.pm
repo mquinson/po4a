@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.76 2007-04-18 08:36:04 nekral-guest Exp $
+# $Id: Po.pm,v 1.77 2007-06-17 00:19:39 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -487,14 +487,14 @@ sub gettextize {
 	# Make sure both type are the same
 	#
 	if ($typeorig ne $typetrans){
-	    $pores->write("/tmp/gettextization.failed.po");
+	    $pores->write("gettextization.failed.po");
 	    die wrap_msg(dgettext("po4a",
 	    	"po4a gettextization: Structure disparity between original and translated files:\n".
 		"msgid (at %s) is of type '%s' while\n".
 		"msgstr (at %s) is of type '%s'.\n".
 		"Original text: %s\n".
 		"Translated text: %s\n".
-	        "(result so far dumped to /tmp/gettextization.failed.po)")."%s",
+	        "(result so far dumped to gettextization.failed.po)")."%s",
 	        $reforig, $typeorig, $reftrans, $typetrans, $orig, $trans,$toobad);
 	}
 
