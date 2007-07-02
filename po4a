@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.77 2007-04-29 22:57:27 nekral-guest Exp $
+# $Id: po4a,v 1.78 2007-07-02 22:55:21 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -714,14 +714,17 @@ sub split_opts {
     my @opts = ();
     $options =~ s/\\"/"/g;
     while (length $options) {
-        $options =~ s/^(["'])                   # A quote
-                        ((?:\\.|(?!\1)[^\\])*)  # quoted text
-                        \1                      # The same quote
-                      |
-                      ^((?:\\.|[^\\"'])*?)      # unquoted word
-                      ([ ]|$)                   # space is the separator
-                     //xs;                      # extended regex
-        push @opts, (defined $1?$2:$3);
+        my $o = "";
+        while (length $options and $options !~ /^ /s) {
+            # Extract non quoted parts
+            $options =~ s/^([^\\"' ]*)//s;
+            $o .= $1 if defined $1;
+            # And extract quoted parts
+            $options =~ s/^(["'])((?:\\.|(?!\1)[^\\])*)\1//s;
+            $o .= $2 if defined $2;
+        }
+        $options =~ s/^ *//s;
+        push @opts, $o;
     }
 
     return @opts;
