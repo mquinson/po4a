@@ -143,7 +143,8 @@ TEST_BULLET:
             my $indent1 = $1;
             my $indent2 = "$1".(' ' x length $bullet);
             my $text = $4;
-            while ($para =~ s/^$indent2(\S[^\n]*\n)//s) {
+            while ($para !~ m/$indent2(?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+/
+                   and $para =~ s/^$indent2(\S[^\n]*\n)//s) {
                 $text .= $1;
             }
             # TODO: detect if a line starts with the same bullet
