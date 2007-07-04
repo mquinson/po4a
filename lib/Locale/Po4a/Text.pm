@@ -40,14 +40,6 @@ tabulations).
 If a paragraph contains a line starting by a space (or tabulation), this
 paragraph won't be rewrapped.
 
-=head1 OPTIONS ACCEPTED BY THIS MODULE
-
-NONE.
-
-=head1 STATUS OF THIS MODULE
-
-Still to be implemented.
-
 =cut
 
 package Locale::Po4a::Text;
@@ -64,7 +56,33 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over
+
+=item B<nobullet>
+
+Deactivate detection of bullets.
+
+By default, when a bullet is detected, the bullet paragraph is not considered
+as a verbatim paragraph (with the no-wrap flag inthe PO file), but the module
+rewrap this paragraph in the generated PO file and in the translation.
+
+=cut
+
 my $bullets = 1;
+
+=item B<debianchangelog>
+
+Handle the header and footer of
+released versions, which only contain non translatable informations.
+
+=cut
+
+my $debianchangelog = 0;
+
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -74,6 +92,10 @@ sub initialize {
     if (defined $options{'nobullets'}) {
         $bullets = 0;
     }
+
+    if (defined $options{'debianchangelog'}) {
+        $debianchangelog=1;
+    }
 }
 
 sub parse {
@@ -81,11 +103,28 @@ sub parse {
     my ($line,$ref);
     my $paragraph="";
     my $wrapped_mode = 1;
+    my $expect_header = 1;
     ($line,$ref)=$self->shiftline();
     while (defined($line)) {
         chomp($line);
         $self->{ref}="$ref";
-        if ($line =~ /^\s*$/) {
+        if ($debianchangelog and
+            $expect_header and
+            $line =~ /^(\w[-+0-9a-z.]*)\ \(([^\(\) \t]+)\) # src, version
+                       \s+([-+0-9a-z.]+);                 # distribution
+                       \s*urgency\s*\=\s*(.*\S)\s*$/ix) { #
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $self->pushline("$line\n");
+            $expect_header=0;
+        } elsif ($debianchangelog and
+                 $line =~ m/^ \-\- (.*) <(.*)>  ((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?)$/) {
+            # Found trailer
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $self->pushline("$line\n");
+            $expect_header=1;
+        } elsif ($line =~ /^\s*$/) {
             # Break paragraphs on lines containing only spaces
             do_paragraph($self,$paragraph,$wrapped_mode);
             $self->pushline("\n") unless (   $wrapped_mode == 0
@@ -181,13 +220,17 @@ TEST_BULLET:
 
 1;
 
+=head1 STATUS OF THIS MODULE
+
+Tested successfully on simple text files and NEWS.Debian files.
+
 =head1 AUTHORS
 
  Nicolas François <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright 2005,2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
