@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.35 2006-12-31 14:32:53 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.36 2007-07-06 18:45:23 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -67,11 +67,11 @@ sub list {
 	."\n  - ".gettext("pod: Perl Online Documentation format.")
 	."\n  - ".gettext("sgml: either debiandoc or docbook DTD.")
 	."\n  - ".gettext("texinfo: The info page format.")
-#	."\n  - ".gettext("tex: generic TeX documents.")
+	."\n  - ".gettext("tex: generic TeX documents (see also latex).")
 	."\n  - ".gettext("text: simple text document.")
 #	."\n  - ".gettext("wml: WML documents.")
 #	."\n  - ".gettext("xhtml: XHTML documents.")
-#	."\n  - ".gettext("xml: generic XML documents.")
+	."\n  - ".gettext("xml: generic XML documents (see also docbook).")
     );
     exit shift;
 }
