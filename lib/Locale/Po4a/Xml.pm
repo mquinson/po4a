@@ -906,7 +906,7 @@ sub treat_attributes {
 								shift @tag;
 								shift @tag;
 							}
-							$tag[0] =~ /^(.*?)\Q$quot\E(.*)/;
+							$tag[0] =~ /^(.*?)\Q$quot\E(.*)/s;
 							$value .= $1;
 							$tag[0] = $2;
 						}
