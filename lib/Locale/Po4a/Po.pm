@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.77 2007-06-17 00:19:39 nekral-guest Exp $
+# $Id: Po.pm,v 1.78 2007-07-07 14:02:50 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -167,6 +167,7 @@ sub initialize {
     $self->{header_comment}=
 	escape_text( " SOME DESCRIPTIVE TITLE\n"
 		    ." Copyright (C) YEAR ".$self->{options}{'copyright-holder'}."\n"
+		    ." This file is distributed under the same license as the PACKAGE package.\n"
 		    ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
 		    ." \n"
 		    .", fuzzy");
