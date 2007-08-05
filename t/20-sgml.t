@@ -21,7 +21,12 @@ $tests[0]{'test'} = "diff -u data-20/xml.po tmp/xml.po $diff_po_flags";
 $tests[0]{'doc'}  = "gettextize well simple xml documents";
 $tests[0]{'requires'} = "Text::WrapI18N";
 
-use Test::More tests =>2; # $formats * $tests * 2 
+$tests[1]{'run'}  = 'cd tmp && perl ../../po4a-normalize -f sgml ../data-20/test2.sgml';
+$tests[1]{'test'} = "diff -u $diff_po_flags data-20/test2.pot tmp/po4a-normalize.po".
+                    "&& diff -u $diff_po_flags data-20/test2-normalized.sgml tmp/po4a-normalize.output";
+$tests[1]{'doc'}  = 'normalisation test';
+
+use Test::More tests =>4; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
