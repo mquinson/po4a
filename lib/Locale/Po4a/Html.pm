@@ -4,8 +4,8 @@
 # 
 # extract and translate translatable strings from a html document.
 # 
-# This code extracts plain text between html tags and some "alt" attributes 
-# (images).
+# This code extracts plain text between html tags and some "alt" or
+# "title" attributes.
 #
 # Copyright (c) 2003 by Laurent Hausermann  <laurent@hausermann.org>
 #
@@ -112,6 +112,8 @@ sub parse_file {
 	    push @type,$token->[1];
             my $text =  get_tag( $token );
             my $tag = $token->[1];
+# TODO: It would be nice to support an option to specify these
+#       (e.g. a list of tag.attribute)
             my @trans_attr = (( $tag eq 'img' ) || ( $tag eq 'input' ) ||
                               ( $tag eq 'area' ) || ( $tag eq 'applet'))
                 ? qw/title alt/ : qw/title/;
