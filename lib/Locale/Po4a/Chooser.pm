@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.36 2007-07-06 18:45:23 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.37 2007-08-05 18:38:26 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -70,7 +70,7 @@ sub list {
 	."\n  - ".gettext("tex: generic TeX documents (see also latex).")
 	."\n  - ".gettext("text: simple text document.")
 #	."\n  - ".gettext("wml: WML documents.")
-#	."\n  - ".gettext("xhtml: XHTML documents.")
+	."\n  - ".gettext("xhtml: XHTML documents.")
 	."\n  - ".gettext("xml: generic XML documents (see also docbook).")
     );
     exit shift;
@@ -120,6 +120,7 @@ L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
 L<Locale::Po4a::Texinfo(3pm)>,
 L<Locale::Po4a::Text(3pm)>,
+L<Locale::Po4a::Xhtml(3pm)>,
 L<Locale::Po4a::Xml(3pm)>.
 
 =back
