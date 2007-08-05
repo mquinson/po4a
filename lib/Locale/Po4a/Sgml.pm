@@ -1142,10 +1142,13 @@ sub parse_file {
     $self->pushline($buffer);
     close(IN);
     warn wrap_mod("po4a::sgml",
-                  dgettext("po4a","Warning: nsgmls is missing or non-".
-                  "functional.  Please make sure that nsgmls is present and ".
-                  "does not produce any error (with the -wno-valid option), ".
-                  "and report a bug otherwise.  Continuing...")) if ($? != 0);
+                  dgettext("po4a","Warning: nsgmls produced some errors.  ".
+                  "This is usually caused by po4a, which modifies the input ".
+                  "and restores it afterwards, causing the input of nsgmls ".
+                  "to be invalid.  This is usually safe, but you may wish ".
+                  "to verify the generated document with nsgmls -wno-valid.  ".
+                  "Continuing..."))
+        if ($? != 0 and $self->verbose() > 0);
     unlink ($tmpfile) unless ($debug{'refs'} or $debug{'nsgmls'});
 }
 
