@@ -879,6 +879,10 @@ sub parse_file {
 	    $line = $parse->line;
 	}
 	my $ref=$refs[$parse->line-1 + $adds - $empty_last_cdata];
+	# In verbatim mode, keep the current line reference.
+	if ($verb) {
+	    $ref=$refs[$parse->line-1];
+	}
 	my $type;
 
 	if ($event->type eq 'start_element') {
