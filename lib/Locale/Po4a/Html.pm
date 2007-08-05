@@ -111,27 +111,29 @@ sub parse_file {
 	} elsif ($token->[0] eq 'S') {
 	    push @type,$token->[1];
             my $text =  get_tag( $token );
-            if ( $token->[1] eq 'img' ) {
-                my %attr = %{$token->[2]};
-                for my $a (qw/title alt/) {
-                    my $content = $attr{$a};
-                    if (defined $content) {
-                        $content = trim($content);
-                        my $translated = $self->translate( 
-                                              $content,
-                                              "FIXME:0",
-                                              "img_$a"
-                                              );
-                        $attr{$a} = $translated;
-                    }
+            my $tag = $token->[1];
+            my @trans_attr = (( $tag eq 'img' ) || ( $tag eq 'input' ) ||
+                              ( $tag eq 'area' ) || ( $tag eq 'applet'))
+                ? qw/title alt/ : qw/title/;
+            my %attr = %{$token->[2]};
+            for my $a (@trans_attr) {
+                my $content = $attr{$a};
+                if (defined $content) {
+                    $content = trim($content);
+                    my $translated = $self->translate( 
+                        $content,
+                        "FIXME:0",
+                        "${tag}_$a"
+                        );
+                    $attr{$a} = $translated;
                 }
-                my ($closing) = ( $text =~ /(\s*\/?>)/ );
-                # reconstruct the tag from scratch
-                delete $attr{'/'}; # Parser thinks closing / in XHTML is an attribute
-                $text = "<img";
-                $text .= " $_=\"$attr{$_}\"" foreach keys %attr;
-                $text .= $closing;
             }
+            my ($closing) = ( $text =~ /(\s*\/?>)/ );
+            # reconstruct the tag from scratch
+            delete $attr{'/'}; # Parser thinks closing / in XHTML is an attribute
+            $text = "<$tag";
+            $text .= " $_=\"$attr{$_}\"" foreach keys %attr;
+            $text .= $closing;
             $self->pushline( $text );
         } elsif ($token->[0] eq 'E') {
 	    pop @type;
