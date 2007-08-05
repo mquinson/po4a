@@ -100,16 +100,16 @@ sub parse_file {
 #  use HTML::Entities ();
 #  $encoded = HTML::Entities::encode($a);
 #  $decoded = HTML::Entities::decode($a);
-	    #print STDERR $token->[0];
+            #print STDERR $token->[0];
             $self->pushline( $pre_spaces . $self->translate($text,
-		                                  "FIXME:0",
-		                                  (scalar @type ? $type[scalar @type-1]: "NOTYPE")
-	                                         ) . $post_spaces,
+                                                  "FIXME:0",
+                                                  (scalar @type ? $type[scalar @type-1]: "NOTYPE")
+                                                  ) . $post_spaces,
                              'wrap' => 1
                              );
             next NEXT;
-	} elsif ($token->[0] eq 'S') {
-	    push @type,$token->[1];
+        } elsif ($token->[0] eq 'S') {
+            push @type,$token->[1];
             my $text =  get_tag( $token );
             my $tag = $token->[1];
 # TODO: It would be nice to support an option to specify these
@@ -138,9 +138,9 @@ sub parse_file {
             $text .= $closing;
             $self->pushline( $text );
         } elsif ($token->[0] eq 'E') {
-	    pop @type;
+            pop @type;
             $self->pushline( get_tag( $token ) );
-	} else	{ 
+        } else { 
             $self->pushline( get_tag( $token ) );
         }       
     }
