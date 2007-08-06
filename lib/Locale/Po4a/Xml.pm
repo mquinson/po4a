@@ -56,11 +56,54 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
+use Carp qw(croak);
 
 #It will mantain the path from the root tag to the current one
 my @path;
 
+#It will contain a list of external entities and their attached paths
+my %entities;
+
 my @comments;
+
+sub shiftline {
+    my $self = shift;
+    # call Transtractor's shiftline
+    my ($line,$ref) = $self->SUPER::shiftline();
+    return ($line,$ref) if (not defined $line);
+
+    for my $k (keys %entities) {
+        if ($line =~ m/^(.*?)&$k;(.*)$/s) {
+            my ($before, $after) = ($1, $2);
+            my $linenum=0;
+            my @textentries;
+
+            open (my $in, $entities{$k})
+                or croak wrap_mod("po4a::xml",
+                                  dgettext("po4a", "Can't read from %s: %s"),
+                                  $entities{$k}, $!);
+            while (defined (my $textline = <$in>)) {
+                $linenum++;
+                my $textref=$entities{$k}.":$linenum";
+                push @textentries, ($textline,$textref);
+            }
+            close $in
+                or croak wrap_mod("po4a::tex",
+                          dgettext("po4a", "Can't close %s after reading: %s"),
+                                  $entities{$k}, $!);
+
+            push @textentries, ($after, $ref);
+            $line = $before.(shift @textentries);
+            $ref .= " ".(shift @textentries);
+            while (@textentries) {
+                my ($r, $l) = (pop @textentries, pop @textentries);
+                $self->unshiftline($l,$r);
+            }
+        }
+    }
+
+    return ($line,$ref);
+}
 
 sub read {
 	my ($self,$filename)=@_;
@@ -165,6 +208,13 @@ by custom tag options. See the "tags" option below.
 It makes the tags and attributes searching to work in a case insensitive
 way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang as E<lt>bookE<gt>lang.
 
+=item includeexternal
+
+When defined, external entities are included in the generated (translated)
+document, and for the extraction of strings.  If it's not defined, you
+will have to translate external entities separately as independent
+documents.
+
 =item tagsonly
 
 Extracts only the specified tags in the "tags" option.  Otherwise, it
@@ -234,6 +284,7 @@ sub initialize {
 	$self->{options}{'placeholder'}='';
 	$self->{options}{'doctype'}='';
 	$self->{options}{'nodefault'}='';
+	$self->{options}{'includeexternal'}=0;
 
 	$self->{options}{'verbose'}='';
 	$self->{options}{'debug'}='';
@@ -535,6 +586,10 @@ sub tag_trans_doctype {
 				$part1.= $1;
 				$part2 = $2;
 				$file = 1;
+				if ($self->{options}{'includeexternal'}) {
+					$entities{$name} = $part2;
+					$entities{$name} =~ s/^"?(.*?)".*$/$1/s;
+				}
 			}
 			if ((not $file) and (not $includenow)) {
 			    if ($part2 =~ m/^\s*(["'])(.*)\1(\s*>.*)$/s) {
