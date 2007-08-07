@@ -118,9 +118,16 @@ $ESCAPE = "\@";
 $RE_ESCAPE = "\@";
 $RE_VERBATIM = "\@example";
 $RE_COMMENT = "\\\@(?:c|comment)\\b";
-register_verbatim_environment("example");
 
 my %break_line = ();
+
+foreach (qw/example smallexample verbatim format smallformat exdent
+            flushleft flushright lisp smalllisp ignore/) {
+    register_verbatim_environment($_);
+    register_generic_command("*$_,");
+    $commands{$_} = \&environment_command;
+    $break_line{$_} = 1;
+}
 
 sub docheader {
     return "\@c This file was generated with po4a. Translate the source file.\n".
@@ -221,8 +228,18 @@ sub line_command {
 
 foreach (qw(c appendix section cindex pindex vindex comment subsection
             subsubsection refill top item chapter settitle setfilename
-            title author bye deffnx defvrx sp summarycontents contents item)) {
+            title author bye sp summarycontents contents item noindent)) {
     $commands{$_} = \&line_command;
+    $break_line{$_} = 1;
+}
+foreach (qw(defcodeindex defcv defcvx deffn deffnx defindex definfoenclose
+            defivar defivarx defmac defmacx defmethod defmethodx defop
+            defopx defopt defoptx defspec defspecx deftp deftpx deftypecv
+            deftypecvx deftypefn deftypefnx deftypefun deftypefunx
+            deftypeivar deftypeivarx deftypemethod deftypemethodx
+            deftypeop deftypeopx deftypevar deftypevarx deftypevr
+            deftypevrx defun defunx defvar defvarx defvr defvrx)) {
+    $commands{$_} = \&environment_line_command;
     $break_line{$_} = 1;
 }
 
@@ -265,6 +282,21 @@ sub environment_command {
     return ($t,@e);
 }
 
+sub environment_line_command {
+    my $self = shift;
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    print "environment_command_line($command,$variant,@$args,@$env)="
+        if ($debug{'commands'});
+    my ($t,@e)=("",());
+
+    ($t, @e) = line_command($self,$command,$variant,$args,$env);
+    @e = (@$env, $command);
+
+    print "($t,@e)\n"
+        if ($debug{'commands'});
+    return ($t,@e);
+}
+
 ## push the environment in the environment stack, and do not translate
 ## the command
 #sub push_environment {
@@ -280,14 +312,17 @@ sub environment_command {
 #    return ($t,@e);
 #}
 #
-#foreach (qw(itemize ignore menu smallexample titlepage ifinfo display example)) {
-foreach (qw(menu example format ifinfo titlepage enumerate tex ifhtml)) {
+foreach (qw(detailmenu menu titlepage enumerate tex group copying
+            quotation documentdescription display smalldisplay cartouche
+            ifdocbook ifhtml ifinfo ifplaintext iftex ifxml
+            ifnotdocbook ifnothtml ifnotinfo ifnotplaintext ifnottex ifnotxml)) {
     register_generic_command("*$_,");
     $commands{$_} = \&environment_command;
     $break_line{$_} = 1;
 }
+
 # FIXME: maybe format and menu should just be verbatim environments.
-$env_separators{'menu'} = "(?:(?:^|\n)\\\*|::)";
+$env_separators{'menu'} = $env_separators{'detailmenu'} = "(?:(?:^|\n)\\\*|::)";
 $env_separators{'format'} = "(?:(?:^|\n)\\\*|END-INFO-DIR-ENTRY|START-INFO-DIR-ENTRY)";
 
 my $end_command=$commands{'end'};
@@ -295,12 +330,6 @@ register_generic_command("*end,  ");
 $commands{'end'} = $end_command;
 $break_line{'end'} = 1;
 
-register_generic_command("*deffn,  ");
-$commands{'deffn'} = \&environment_command;
-$break_line{'deffn'} = 1;
-register_generic_command("*defvr,  ");
-$commands{'defvr'} = \&environment_command;
-$break_line{'defvr'} = 1;
 register_generic_command("*macro,  ");
 $commands{'macro'} = \&environment_command;
 $break_line{'macro'} = 1;
@@ -321,8 +350,6 @@ $break_line{'setchapternewpage'} = 1;
 # be used as verbatim. (Expressions.texi)
 
 # TODO: @include
-# TODO: special function to split the deffn Function definitions
-#       (maybe too maxima specific)
 # TODO: special function for the indexes
 
 # TBC: node Indices
