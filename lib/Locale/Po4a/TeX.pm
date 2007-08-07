@@ -640,6 +640,8 @@ sub translate_buffer {
     my $t = ""; # a temporary string
 
     if ($buffer =~ /^\s*$/s) {
+        print STDERR "($buffer,@env)\n"
+            if ($debug{'translate_buffer'});
         return ($buffer, @env);
     }
     # verbatim blocks.
@@ -1091,14 +1093,14 @@ sub is_closed {
     # FIXME: { and } should not be counted in verbatim blocks
     # Remove comments
     $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\{(.*)$/s) {
+    while ($tmp =~ /^.*?(?<!$RE_ESCAPE)(?:$RE_ESCAPE$RE_ESCAPE)*\{(.*)$/s) {
         $opening += 1;
         $tmp = $1;
     }
     $tmp = $paragraph;
     # Remove comments
     $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?(?<!\\)(?:\\\\)*\}(.*)$/s) {
+    while ($tmp =~ /^.*?(?<!$RE_ESCAPE)(?:$RE_ESCAPE$RE_ESCAPE)*\}(.*)$/s) {
         $closing += 1;
         $tmp = $1;
     }
