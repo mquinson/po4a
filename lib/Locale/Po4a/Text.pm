@@ -67,7 +67,7 @@ These are this module's particular options:
 Deactivate detection of bullets.
 
 By default, when a bullet is detected, the bullet paragraph is not considered
-as a verbatim paragraph (with the no-wrap flag inthe PO file), but the module
+as a verbatim paragraph (with the no-wrap flag in the PO file), but the module
 rewrap this paragraph in the generated PO file and in the translation.
 
 =cut
