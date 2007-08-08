@@ -88,7 +88,7 @@ sub shiftline {
                 push @textentries, ($textline,$textref);
             }
             close $in
-                or croak wrap_mod("po4a::tex",
+                or croak wrap_mod("po4a::xml",
                           dgettext("po4a", "Can't close %s after reading: %s"),
                                   $entities{$k}, $!);
 
