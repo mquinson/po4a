@@ -8,6 +8,7 @@
 # documents.
 #
 # Copyright (c) 2005 by Yves Rütschlé <po4a@rutschle.net>
+# Copyright (c) 2007 by Nicolas François <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,6 +43,24 @@ Please note that this module is still experimental. It is not distributed in
 the official po4a releases since we don't feel it to be mature enough. If you
 insist on trying, check the CVS out.
 
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over 4
+
+=item B<includessi>[=I<rootpath>]
+
+Include files specified by an include SSI (Server Side Includes) element
+(e.g. <!--#include virtual="/foo/bar.html" -->).
+
+B<Note:> You should use it only for static files.
+
+An additionnal I<rootpath> parameter can be specified. It specifies the root
+path to find files included by a B<virtual> attribute.
+
+=back
+
 =head1 STATUS OF THIS MODULE
 
 This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
@@ -60,6 +79,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 =head1 AUTHORS
 
  Yves Rütschlé <po4a@rutschle.net>
+ Nicolas François <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
@@ -77,15 +97,71 @@ use strict;
 use warnings;
 
 use Locale::Po4a::Xml;
+use vars qw(@tag_types);
+*tag_types = \@Locale::Po4a::Xml::tag_types;
+
+use Locale::Po4a::Common;
+use Carp qw(croak);
 
 use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::Xml);
+
+sub tag_extract_SSI {
+        my ($self,$remove)=(shift,shift);
+        my ($eof,@tag)=$self->get_string_until("-->",
+                                               {include=>1,
+                                                remove=>$remove,
+                                                unquoted=>1});
+        my ($t,$r) = @tag;
+        if ($t =~ m/<!--#include (file|virtual)="(.*?)"\s-->/s) {
+                my $includefile;
+                if ($1 eq "file") {
+                        $includefile = ".";
+                } else {
+                        $includefile = $self->{options}{'includessi'};
+                }
+                $includefile .= $2;
+                if (!$remove) {
+                        $self->get_string_until("-->",
+                                                {include=>1,
+                                                 remove=>1,
+                                                 unquoted=>1});
+                }
+                my $linenum=0;
+                my @include;
+
+                open (my $in, $includefile)
+                    or croak wrap_mod("po4a::xml",
+                                     dgettext("po4a", "Can't read from %s: %s"),
+                                      $includefile, $!);
+                while (defined (my $includeline = <$in>)) {
+                        $linenum++;
+                        my $includeref=$includefile.":$linenum";
+                        push @include, ($includeline,$includeref);
+                }
+                close $in
+                    or croak wrap_mod("po4a::xml",
+                           dgettext("po4a", "Can't close %s after reading: %s"),
+                                      $includefile, $!);
+
+                while (@include) {
+                        my ($ir, $il) = (pop @include, pop @include);
+                        $self->unshiftline($il,$ir);
+                }
+                $t =~ s/<!--#include/<!-- SSI included by po4a: /;
+                $self->unshiftline($t, $r);
+        }
+        return ($eof,@tag);
+}
 
 sub initialize {
         my $self = shift;
         my %options = @_;
 
+        $self->{options}{'includessi'}='';
+
         $self->SUPER::initialize(%options);
+
         $self->{options}{'wrap'}=1;
         $self->{options}{'doctype'}=$self->{options}{'doctype'} || 'html';
 
@@ -136,4 +212,16 @@ sub initialize {
                 title
                 ';
         $self->treat_options;
+
+        if (defined $self->{options}{'includessi'}) {
+                foreach (@tag_types) {
+                        if ($_->{beginning} eq "!--#") {
+                                $_->{f_extract} = \&tag_extract_SSI;
+                        }
+                }
+                # FIXME: the directory may be named "1" ;(
+                if ($self->{options}{'includessi'} eq "1") {
+                        $self->{options}{'includessi'} = ".";
+                }
+        }
 }

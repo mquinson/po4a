@@ -52,7 +52,7 @@ use warnings;
 require Exporter;
 use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw(new initialize);
+@EXPORT = qw(new initialize @tag_types);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
@@ -452,7 +452,7 @@ single string.
 
 ##### Generic XML tag types #####' 
 
-my @tag_types = ( 
+our @tag_types = ( 
 	{	beginning	=> "!--#",
 		end		=> "--",
 		breaking	=> 0},
