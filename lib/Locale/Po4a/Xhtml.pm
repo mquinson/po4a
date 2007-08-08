@@ -82,14 +82,14 @@ use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::Xml);
 
 sub initialize {
-	my $self = shift;
-	my %options = @_;
+        my $self = shift;
+        my %options = @_;
 
-	$self->SUPER::initialize(%options);
-	$self->{options}{'wrap'}=1;
+        $self->SUPER::initialize(%options);
+        $self->{options}{'wrap'}=1;
         $self->{options}{'doctype'}=$self->{options}{'doctype'} || 'html';
 
-	$self->{options}{'inline'}.='
+        $self->{options}{'inline'}.='
                 <a> 
                 <object> 
                 <br> 
@@ -121,7 +121,7 @@ sub initialize {
                 <button> 
                 <ins> 
                 <del>
-	';
+        ';
 
         # Ignored tags: <img>
         # Technically, <img> is an inline tag, but setting it as such is
@@ -130,10 +130,10 @@ sub initialize {
         # program not inlining img: you now have to translate all your
         # images. That'll teach you).
 
-	$self->{options}{'attributes'}.='
-		lang
+        $self->{options}{'attributes'}.='
+                lang
                 alt
                 title
                 ';
-	$self->treat_options;
+        $self->treat_options;
 }
