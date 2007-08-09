@@ -213,7 +213,8 @@ sub initialize {
                 ';
         $self->treat_options;
 
-        if (defined $self->{options}{'includessi'}) {
+        if (    defined $self->{options}{'includessi'}
+            and length $self->{options}{'includessi'}) {
                 foreach (@tag_types) {
                         if ($_->{beginning} eq "!--#") {
                                 $_->{f_extract} = \&tag_extract_SSI;
