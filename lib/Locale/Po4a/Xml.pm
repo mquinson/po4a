@@ -215,6 +215,32 @@ document, and for the extraction of strings.  If it's not defined, you
 will have to translate external entities separately as independent
 documents.
 
+=item ontagerror
+
+This option defines the behavior of the module when it encounter a invalid
+closing tag (a tag is closed, which does not match the last opening tag).
+It can take the following values:
+
+=over
+
+=item I<fail>
+
+This is the default value.
+The module will exit with an error.
+
+=item I<warn>
+
+The module will continue, and will issue a warning.
+
+=item I<silent>
+
+The module will continue without any warnings.
+
+=back
+
+Be careful when using this option.
+It is generally recommended to fix the input file.
+
 =item tagsonly
 
 Extracts only the specified tags in the "tags" option.  Otherwise, it
@@ -285,6 +311,7 @@ sub initialize {
 	$self->{options}{'doctype'}='';
 	$self->{options}{'nodefault'}='';
 	$self->{options}{'includeexternal'}=0;
+	$self->{options}{'ontagerror'}="fail";
 
 	$self->{options}{'verbose'}='';
 	$self->{options}{'debug'}='';
@@ -630,7 +657,12 @@ sub tag_trans_close {
 
 	my $test = pop @path;
 	if (!defined($test) || $test ne $name ) {
-		die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
+		my $ontagerror = $self->{options}{'ontagerror'};
+		if ($ontagerror eq "warn") {
+			warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $name);
+		} elsif ($ontagerror ne "silent") {
+			die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
+		}
 	}
 	return $self->join_lines(@tag);
 }
@@ -1069,7 +1101,12 @@ sub treat_content {
 					my $test = pop @path;
 					if (!defined($test) ||
 					    $test ne $tag[0] ) {
-						die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
+						my $ontagerror = $self->{options}{'ontagerror'};
+						if ($ontagerror eq "warn") {
+							warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $tag[0]);
+						} elsif ($ontagerror ne "silent") {
+							die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
+						}
 					}
 
 					my $placeholder_regex = join("|", @{$self->{placeholder}});
