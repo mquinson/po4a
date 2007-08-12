@@ -42,15 +42,15 @@ NONE.
 
 Still to be implemented.
 
-=head1 TODO
-
-Dans le po, faut corriger les references pour pointer sur le fichier de depart, pas le temporaire 
-
-(12:11:26) adn: et pour les # du debut ?
-(12:11:57) adn: si y a moyen juste de sortir le pagetitle="foo" en <title>foo</title>, c'est encore mieux
-(00:42:51) adn: #use wml::debian::mainpage title="Le systeme d'exploitation universel"
-
 =cut
+#
+#=head1 TODO
+#
+#Dans le po, faut corriger les references pour pointer sur le fichier de depart, pas le temporaire 
+#
+#(12:11:26) adn: et pour les # du debut ?
+#(12:11:57) adn: si y a moyen juste de sortir le pagetitle="foo" en <title>foo</title>, c'est encore mieux
+#(00:42:51) adn: #use wml::debian::mainpage title="Le systeme d'exploitation universel"
 
 package Locale::Po4a::Wml;
 
