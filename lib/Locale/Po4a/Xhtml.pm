@@ -56,7 +56,7 @@ Include files specified by an include SSI (Server Side Includes) element
 
 B<Note:> You should use it only for static files.
 
-An additionnal I<rootpath> parameter can be specified. It specifies the root
+An additional I<rootpath> parameter can be specified. It specifies the root
 path to find files included by a B<virtual> attribute.
 
 =back
