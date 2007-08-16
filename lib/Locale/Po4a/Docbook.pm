@@ -89,9 +89,7 @@ sub initialize {
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'wrap'}=1;
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
-	my ($additional_tags, $additional_inline) = ("", "");
-	my $tag;
-	foreach $tag qw(
+	$self->{options}{'tags'} .= '
 		<abbrev>
 		<acronym>
 		<arg>
@@ -139,12 +137,8 @@ sub initialize {
 		<term>
 		<title>
 		<titleabbrev>
-		<userinput>) {
-		if (not defined $self->{nodefault}{$tag}) {
-			$additional_tags .= " $tag";
-		}
-	}
-	foreach $tag qw(
+		<userinput>';
+	$self->{options}{'inline'} .= '
 		<action>
 		<affiliation>
 		<anchor>
@@ -242,14 +236,9 @@ sub initialize {
 		<varname>
 		<wordasword>
 		<xref>
-		<year>) {
-		if (not defined $self->{nodefault}{$tag}) {
-			$additional_inline .= " $tag";
-		}
-	}
-	$self->{options}{'tags'} .= $additional_tags;
-	$self->{options}{'inline'} .= $additional_inline;
+		<year>';
 	$self->{options}{'attributes'}.='
 		lang';
+
 	$self->treat_options;
 }

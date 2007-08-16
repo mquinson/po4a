@@ -1345,22 +1345,6 @@ or in the initialize function).
 
 sub treat_options {
 	my $self = shift;
-
-	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
-	my @list_tags = split(/\s+/s,$1);
-	$self->{tags} = \@list_tags;
-
-	$self->{options}{'attributes'} =~ /\s*(.*)\s*/s;
-	my @list_attr = split(/\s+/s,$1);
-	$self->{attributes} = \@list_attr;
-
-	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
-	my @list_inline = split(/\s+/s,$1);
-	$self->{inline} = \@list_inline;
-
-	$self->{options}{'placeholder'} =~ /\s*(.*)\s*/s;
-	my @list_placeholder = split(/\s+/s,$1);
-	$self->{placeholder} = \@list_placeholder;
         
 	$self->{options}{'nodefault'} =~ /\s*(.*)\s*/s;
 	my %list_nodefault;
@@ -1368,6 +1352,30 @@ sub treat_options {
 	    $list_nodefault{$_} = 1;
 	}
 	$self->{nodefault} = \%list_nodefault;
+
+	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
+	my @list_tags;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_tags, $tag
+			unless $list_nodefault{$tag};
+	}
+	$self->{tags} = \@list_tags;
+
+	$self->{options}{'attributes'} =~ /\s*(.*)\s*/s;
+	my @list_attr = split(/\s+/s,$1);
+	$self->{attributes} = \@list_attr;
+
+	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
+	my @list_inline;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_inline, $tag
+			unless $list_nodefault{$tag};
+	}
+	$self->{inline} = \@list_inline;
+
+	$self->{options}{'placeholder'} =~ /\s*(.*)\s*/s;
+	my @list_placeholder = split(/\s+/s,$1);
+	$self->{placeholder} = \@list_placeholder;
 }
 
 =head2 GETTING TEXT FROM THE INPUT DOCUMENT
