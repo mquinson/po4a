@@ -87,147 +87,56 @@ my $builder = Module::Build->subclass
 
 	}
 	sub ACTION_manpo {
-	    my $self = shift;
-
-	    # update pot
-	    my @files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}, @{$self->rscan_dir('doc',qr{\.pod$})}));
-	    unless ($self->up_to_date(\@files, "po/pod/po4a-pod.pot")) {
-		my $podfiles = join ("", map {" -m ../../".$_ } @files);
-		print "XX Update documentation pot files: ";
-		system("cd po/pod; PERL5LIB=../../lib perl ../../po4a-updatepo -f pod $podfiles -M utf-8 -p po4a-pod.pot") 
-		  && die;
-		my ($atime, $mtime) = (time,time);
-		utime $atime, $mtime, "po/pod/po4a-pod.pot";
-
-	    } else {
-		print "XX Documentation pot file uptodate.\n";
-	    }
-
-	    # update languages
-	    @files = @{$self->rscan_dir('po/pod',qr{\.po$})};
-	    foreach (@files) {
-		$_ =~ /.*\/(.*)\.po$/;
-		my $lang = $1;
-
-		unless ($self->up_to_date("po/pod/po4a-pod.pot","po/pod/$lang.po")) {
-		    print "XX Update documentation $lang.po: ";
-
-		    system("msgmerge po/pod/$lang.po po/pod/po4a-pod.pot -o po/pod/$lang.po.new")
-		      && die;
-
-		    # Typically all that changes was a date. I'd
-		    # prefer not to cvs commit such changes, so
-		    # detect and ignore them.
-		    $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/pod/$lang.po po/pod/$lang.po.new);
-		    if ( $diff eq "" ) {
-			unlink "po/pod/$lang.po.new" || die;
-			my ($atime, $mtime) = (time,time);
-			utime $atime, $mtime, "po/pod/$lang.po";
-		    } else {
-			rename "po/pod/$lang.po.new", "po/pod/$lang.po" || die;
-		    }		    
-		} else {
-		    print "XX Documentation $lang.po uptodate.\n";
-		}
-	    }
+	    system("PERL5LIB=lib perl po4a --no-translations po/pod.cfg")
+		and die;
 	}
 	sub ACTION_man {
 	    my $self = shift;
 
-	    $self->depends_on('manpo');
 	    use Pod::Man;
-	    use File::Basename;
-
-	    my %charsets = ( 'default' => 'iso8859-1',
-	                     'pl'      => 'iso8859-2'
-			   );
-
-	    my $options = "-v -f pod -M utf-8";
-
-	    #get the languages
-	    my @langs = @{$self->rscan_dir('po/pod',qr{\.po$})};
-	    my $i=0;
-	    while ($i < @langs) {
-		$langs[$i] =~ /.*\/(.*)\.po$/;
-		$langs[$i] = $1;
-		$i++;
-	    }
-
-	    system("rm -rf blib/man") && die;
-	    system("mkdir -p blib/man") && die;
 
 	    # Translate binaries manpages
-	    my $parser = Pod::Man->new (release => "Po4a Tools",
-		center => "Po4a Tools", section => "1p");
+	    my $parser = Pod::Man->new ();
 
-	    foreach $lang (@langs) {
-	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
-		print ("X Translate binary manpages to $lang\n");
-		foreach $file (perl_scripts()) {
-		    my $man = basename $file;
-		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$man -a doc/addendum.$lang")
-		      && die;
-		    if (-e "blib/man/$man") {
-			system("mkdir -p blib/man/$lang/man1") && die;
-			$parser->parse_from_file ("blib/man/$man", "blib/man/$lang/man1/$man.1p");
-			system("gzip -9 blib/man/$lang/man1/$man.1p") && die;
-			system("rm -f blib/man/$man")&& die;
-		    }
+	    system("PERL5LIB=lib perl po4a po/pod.cfg") and die;
+	    system("mkdir -p blib/man/man7") and die;
+	    system("mkdir -p blib/man/man1") and die;
+	    system("cp doc/po4a.7.pod blib/man/man7") and die;
+
+	    foreach $file (@{$self->rscan_dir('blib/man',qr{\.pod$})}) {
+		my $out = $file;
+		$out =~ s/\.pod$//;
+		$section = $2;
+		$parser->{name} = $out;
+		$parser->{name} =~ s/^.*\///;
+		$parser->{name} =~ s/^(.*).(1p|3pm|7)/$1/;
+		$parser->{section} = $2;
+		if ($parser->{section} ne "3pm") {
+		    $parser->{name} = uc $parser->{name};
 		}
-	    }
 
-	    # Translate modules manpages
-	    $parser = Pod::Man->new (release => "Po4a Tools",
-		center => "Po4a Tools", section => "3pm");
+		my $lang = $out;
+		$lang =~ s/^blib\/man\/([^\/]*)\/.*$/$1/;
 
-	    foreach $lang (@langs) {
-	        my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
-		print ("X Translate module manpages to $lang\n");
-		foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
-		    $file =~ /.*\/(.*)\.pm$/;
-		    my $filename = $1;
-		    system("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
-		      && die;
-		    if (-e "blib/man/$filename") {
-			system ("mkdir -p blib/man/$lang/man3") && die;
-			$parser->parse_from_file ("blib/man/$filename", 
-			    "blib/man/$lang/man3/Locale::Po4a::$filename.3pm") || die;
-			system ("gzip -9 blib/man/$lang/man3/Locale::Po4a::$filename.3pm") 
-			  && die "Cannot gzip blib/man/$lang/man3/Locale::Po4a::$filename.3pm";
-			system ("rm -f blib/man/$filename") && die;
-		    }
-		}
-	    }
+		my $command;
+		$command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
+		$command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
+		$command .= "&& cat || cat > /dev/null'";
 
-	    # Translate docs manpages
-	    $parser = Pod::Man->new (release => "Po4a Tools",
-		center => "Po4a Tools", section => 7);
+		my $title = `$command 2> /dev/null`;
+		$title = "Po4a Tools" unless length $title;
+		$parser->{release} = $parser->{center} = $title;
+		$parser->parse_from_file ($file, $out);
 
-	    foreach $file (@{$self->rscan_dir('doc',qr{\.pod$})}) {
-		$file =~ /.*\/(.*)\.pod$/;
-		my $filename = $1;
-		print "X Generate the man version of $file\n";
-		system("mkdir -p blib/man/man7") && die;
-		$parser->parse_from_file ($file, "blib/man/man7/$filename");
-		system ("gzip -9 -f blib/man/man7/$filename") && die;
-		foreach $lang (@langs) {
-	            my $charset = defined $charsets{$lang} ? $charsets{$lang} : $charsets{'default'};
-		    print "X Translate $file to $lang\n";
-		    system ("PERL5LIB=lib perl po4a-translate $options -L $charset -m $file -p po/pod/$lang.po -l blib/man/$filename -a doc/addendum.$lang")
-		      && die;
-		    if (-e "blib/man/$filename") {
-			`mkdir -p blib/man/$lang/man7`;
-			$parser->parse_from_file ("blib/man/$filename", "blib/man/$lang/man7/$filename");
-			`gzip -9 blib/man/$lang/man7/$filename`;
-			`rm -f blib/man/$filename`;
-		    }
-		}
+		system("gzip -9 -f $out") and die;
+		system("rm -f $file") and die;
 	    }
 
 	    # Install the manpages of the Shell scripts
-	    system ("mkdir -p blib/man/man1") && die;
-	    system ("cp scripts/po4aman-display-po.1 blib/man/man1/") && die;
-	    system ("gzip -9 -f blib/man/man1/po4aman-display-po.1") && die;
+	    system ("cp scripts/po4aman-display-po.1 blib/man/man1/") and die;
+	    foreach $file (@{$self->rscan_dir('blib/man',qr{\.1$})}) {
+		system ("gzip -9 -f $file") and die;
+	    }
 	}
 	sub ACTION_dist {
 	    my ($self) = @_;
