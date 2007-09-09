@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (c) 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright (c) 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 #
 # This file is part of po4a.
 #
@@ -54,7 +54,7 @@ L<Locale::Po4a::TeX(3pm)|Locale::Po4a::TeX>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
@@ -121,14 +121,22 @@ $RE_COMMENT = "\\\@(?:c|comment)\\b";
 
 my %break_line = ();
 
-foreach (qw/example smallexample verbatim format smallformat exdent
+# translate_line_command indicate if the arguments to the command handled
+# by line_command() should be translated:
+# undefined: arguments are not translated
+# 0:         there should be no arguments
+# 1:         arguments should be translated
+my %translate_line_command = ();
+
+foreach (qw/example smallexample tex display smalldisplay verbatim format smallformat
             flushleft flushright lisp smalllisp ignore/) {
     register_verbatim_environment($_);
-    register_generic_command("*$_,");
-    $commands{$_} = \&environment_command;
+    $commands{$_} = \&environment_line_command;
+    $translate_line_command{$_} = 0; # There should be no arguments
     $break_line{$_} = 1;
 }
 
+# TODO: Header shall be put after any \input
 sub docheader {
     return "\@c This file was generated with po4a. Translate the source file.\n".
            "\@c\n";
@@ -171,6 +179,13 @@ sub parse {
                 $self->pushline($t);
                 $paragraph="";
             }
+        } elsif ($line =~ m/^\\input /) {
+            if (length($paragraph)) {
+                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                $self->pushline($t);
+                $paragraph="";
+            }
+            $self->pushline($line."\n");
         } elsif ($line =~ m/^$RE_COMMENT/) {
             $self->pushline($line."\n");
         } elsif (    $closed
@@ -217,34 +232,96 @@ sub line_command {
     my $translated = $ESCAPE.$command;
     my $line = $args->[1];
     if (defined $line and length $line) {
-        $translated .= " ".$self->translate($line, $self->{ref},
-                                            $command,
-                                            "wrap" => 0);
+        if (    defined $translate_line_command{$command}
+            and $translate_line_command{$command}) {
+            my $no_wrap = 0;
+            foreach (split(' ', $no_wrap_environments)) {
+                if ($command eq $_) {
+                    $no_wrap = 1;
+                    last;
+                }
+            }
+            if ($no_wrap == 0) {
+                $no_wrap_environments .= " $command";
+            }
+            my ($t, $e) = $self->translate_buffer($line,@$env,$command);
+            if ($no_wrap == 0) {
+                $no_wrap_environments =~ s/ $command$//s;
+            }
+            $translated .= " ".$t;
+        } else {
+            $translated .= " ".$line;
+        }
     }
     print "($translated,@$env)\n"
         if ($debug{'commands'});
     return ($translated,@$env);
 }
 
-foreach (qw(c appendix section cindex pindex vindex comment subsection
-            subsubsection refill top item chapter settitle setfilename
-            title author bye sp summarycontents contents item noindent)) {
+foreach (qw(appendix section cindex findex kindex pindex vindex subsection
+            dircategory subtitle include
+            exdent center unnumberedsec
+            heading unnumbered unnumberedsubsec
+            unnumberedsubsubsec appendixsec appendixsubsec
+            appendixsubsubsec majorheading chapheading subheading
+            subsubheading shorttitlepage
+            subsubsection top item itemx chapter settitle
+            title author)) {
+    $commands{$_} = \&line_command;
+    $break_line{$_} = 1;
+    $translate_line_command{$_} = 1;
+}
+foreach (qw(c comment set setfilename setchapternewpage vskip synindex
+            syncodeindex need fonttextsize printindex headings finalout sp
+            defcodeindex defindex definfoenclose)) {
     $commands{$_} = \&line_command;
     $break_line{$_} = 1;
 }
-foreach (qw(defcodeindex defcv defcvx deffn deffnx defindex definfoenclose
-            defivar defivarx defmac defmacx defmethod defmethodx defop
-            defopx defopt defoptx defspec defspecx deftp deftpx deftypecv
-            deftypecvx deftypefn deftypefnx deftypefun deftypefunx
-            deftypeivar deftypeivarx deftypemethod deftypemethodx
-            deftypeop deftypeopx deftypevar deftypevarx deftypevr
-            deftypevrx defun defunx defvar defvarx defvr defvrx)) {
+# definfoenclose: command definition => translate?
+foreach (qw(insertcopying page bye summarycontents shortcontents contents
+            noindent)) {
+    $commands{$_} = \&line_command;
+    $break_line{$_} = 1;
+    $translate_line_command{$_} = 0;
+}
+
+foreach (qw(defcv deffn
+            defivar defmac defmethod defop
+            defopt defspec deftp deftypecv
+            deftypefn deftypefun 
+            deftypeivar deftypemethod
+            deftypeop deftypevar deftypevr
+            defun defvar defvr)) {
     $commands{$_} = \&environment_line_command;
+    $translate_line_command{$_} = 1;
+    $break_line{$_} = 1;
+}
+foreach (qw(defcvx deffnx defivarx defmacx defmethodx defopx defoptx
+            defspecx deftpx deftypecvx deftypefnx deftypefunx deftypeivarx
+            deftypemethodx deftypeopx deftypevarx deftypevrx defunx
+            defvarx defvrx)) {
+    $commands{$_} = \&line_command;
+    $translate_line_command{$_} = 1;
     $break_line{$_} = 1;
 }
 
-register_generic_command("*node,");
+foreach (qw(titlefont w i r b sansserif sc slanted strong t cite email
+            footnote indicateurl emph ref xref pxref inforef kbd key
+            acronym),
+# The following commands could cause problems since the their arguments
+# has a semantic and a translator could decide not to translate code but
+# still translate thses short words if they appear in another context.
+         qw(file command dfn dmn option math code samp var)) {
+    register_generic_command("-$_,{_}");
+}
+
+register_generic_command("*anchor,{_}");
+register_generic_command("*refill,");
+
+$translate_line_command{'node'} = 1;
+$no_wrap_environments .= " node";
 $break_line{'node'} = 1;
+# @node     Comments,  Minimum, Conventions, Overview
 $commands{'node'} = sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
@@ -312,18 +389,30 @@ sub environment_line_command {
 #    return ($t,@e);
 #}
 #
-foreach (qw(detailmenu menu titlepage enumerate tex group copying
-            quotation documentdescription display smalldisplay cartouche
+foreach (qw(detailmenu menu titlepage group copying
+            documentdescription cartouche
+            direntry
             ifdocbook ifhtml ifinfo ifplaintext iftex ifxml
             ifnotdocbook ifnothtml ifnotinfo ifnotplaintext ifnottex ifnotxml)) {
-    register_generic_command("*$_,");
-    $commands{$_} = \&environment_command;
+    $commands{$_} = \&environment_line_command;
+    $translate_line_command{$_} = 0;
+    $break_line{$_} = 1;
+}
+register_verbatim_environment('detailmenu');
+foreach (qw(enumerate multitable ifset)) {
+    $commands{$_} = \&environment_line_command;
+    $break_line{$_} = 1;
+}
+foreach (qw(quotation)) {
+    $commands{$_} = \&environment_line_command;
+    $translate_line_command{$_} = 1;
     $break_line{$_} = 1;
 }
 
 # FIXME: maybe format and menu should just be verbatim environments.
-$env_separators{'menu'} = $env_separators{'detailmenu'} = "(?:(?:^|\n)\\\*|::)";
+$env_separators{'direntry'} = $env_separators{'menu'} = $env_separators{'detailmenu'} = "(?:(?:^|\n)\\\*|::|\.  )";
 $env_separators{'format'} = "(?:(?:^|\n)\\\*|END-INFO-DIR-ENTRY|START-INFO-DIR-ENTRY)";
+$env_separators{'multitable'} = "(?:\@item|\@tab)";
 
 my $end_command=$commands{'end'};
 register_generic_command("*end,  ");
@@ -340,16 +429,12 @@ register_generic_command("*table,  ");
 $commands{'table'} = \&environment_command;
 $break_line{'table'} = 1;
 
-register_generic_command("*setchapternewpage,  ");
-$commands{'setchapternewpage'} = \&line_command;
-$break_line{'setchapternewpage'} = 1;
-
 # TODO: is_closed, use a regexp: \ does not escape the closing brace.
 # TBC on LaTeX.
 # In Texinfo, it appears with the "code" command. Maybe this command should
 # be used as verbatim. (Expressions.texi)
 
-# TODO: @include
+# TODO: @include @ignore
 # TODO: special function for the indexes
 
 # TBC: node Indices

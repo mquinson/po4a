@@ -1,5 +1,46 @@
 2007-09-09  Nicolas François  <nicolas.francois@centraliens.net>
 
+	Major changes in the Texinfo.pm module. Tested on the elisp
+	documentation:
+	* lib/Locale/Po4a/Texinfo.pm: Add 'tex' 'display' 'smalldisplay'
+	to the list of verbatim environments.
+	* lib/Locale/Po4a/Texinfo.pm: Remove exdent to the list of
+	verbatim environments. It is just a command.
+	* lib/Locale/Po4a/Texinfo.pm (line_command): Use
+	%translate_line_command to indicate which commands have
+	translatable arguments.
+	* lib/Locale/Po4a/Texinfo.pm (parse): Handle \input
+	* lib/Locale/Po4a/Texinfo.pm (line_command): Use translate_buffer
+	to translate the command arguments (when they are translatable).
+	Add the command to $no_wrap_environments just before and remove it
+	afterwards to force a no-wrap translation.
+	* lib/Locale/Po4a/Texinfo.pm: Add support for 'findex' 'kindex'
+	dircategory subtitle include center unnumberedsec heading
+	unnumbered unnumberedsubsec unnumberedsubsubsec appendixsec
+	appendixsubsec appendixsubsubsec majorheading chapheading
+	subheading subsubheading shorttitlepage set vskip synindex
+	syncodeindex need fonttextsize printindex headings finalout
+	defcodeindex defindex definfoenclose insertcopying page
+	shortcontents
+	* lib/Locale/Po4a/Texinfo.pm: Remove the def*x commands from the
+	list of environments. They are just commands.
+	* lib/Locale/Po4a/Texinfo.pm: Define anchor and refill as commands
+	which can be removed from the beginning or end of paragraphs.
+	* lib/Locale/Po4a/Texinfo.pm: Add a list of commands for which
+	only the argument are translated if a string only consist in this
+	command: titlefont w i r b sansserif sc slanted strong t cite
+	email footnote indicateurl emph ref xref pxref inforef kbd key
+	acronym file command dfn dmn option math code samp var
+	* lib/Locale/Po4a/Texinfo.pm: Add ".  " to the menu and detailmenu
+	environment separators.
+	* lib/Locale/Po4a/Texinfo.pm: Use the same separators for direntry
+	as for menu and detailmenu.
+	* lib/Locale/Po4a/Texinfo.pm: Use @item and @tab as the multitable
+	separators.
+	* lib/Locale/Po4a/Texinfo.pm: Update copyright informations.
+
+2007-09-09  Nicolas François  <nicolas.francois@centraliens.net>
+
 	* NEWS, debian/changelog: Update old entries and mention the CVE
 	id: CVE-2007-4462.
 
