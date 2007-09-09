@@ -42,6 +42,10 @@ areas where they were not expected like documentation.
 Locale::Po4a::Sgml is a module to help the translation of documentation in
 the SGML format into other [human] languages.
 
+This module uses B<nsgmls> to parse the SGML files. Make sure it is
+installed.
+Also make sure that the DTD of the SGML files are installed in the system.
+
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
 =over 4
@@ -363,6 +367,16 @@ sub parse_file {
         $origfile .= ${$self->{TT}{doc_in}}[$i];
         $i+=2;
     }
+    # Detect if we can find the DTD
+    open (VALID, "| nsgmls -p")
+        or die wrap_mod("po4a::sgml",
+                        dgettext("po4a", "Can't run nsgmls -p: %s"), $!);
+    print VALID $origfile;
+    close VALID
+        or die wrap_mod("po4a::sgml",
+                        dgettext("po4a", "Error while running nsgmls -p.  ".
+                                         "Please check if nsgmls and the ".
+                                         "DTD are installed."));
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a",
