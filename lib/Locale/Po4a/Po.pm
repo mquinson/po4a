@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.78 2007-07-07 14:02:50 nekral-guest Exp $
+# $Id: Po.pm,v 1.79 2007-09-15 16:07:24 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -225,26 +225,26 @@ sub read {
         my ($msgid,$msgstr,$comment,$automatic,$reference,$flags,$buffer);
 	foreach my $line (split (/\n/,$msg)) {
 	    $linenum++;
-	    if ($line =~ /^#\. ?(.*)/) {  # Automatic comment
+	    if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
 		$automatic .= (defined($automatic) ? "\n" : "").$1;
 		
-	    } elsif ($line =~ /^#: ?(.*)/) { # reference
+	    } elsif ($line =~ /^#: ?(.*)$/) { # reference
 	        $reference .= (defined($reference) ? "\n" : "").$1;
 		     
-	    } elsif ($line =~ /^#, ?(.*)/) { # flags
+	    } elsif ($line =~ /^#, ?(.*)$/) { # flags
 		$flags .= (defined($flags) ? "\n" : "").$1;
 		 
-	    } elsif ($line =~ /^#(.*)/ || $line =~ /^#$/) {  # Translator comments 
+	    } elsif ($line =~ /^#(.*)$/ || $line =~ /^#$/) {  # Translator comments 
 	        $comment .= (defined($comment) ? "\n" : "").($1||"");
 
-	    } elsif ($line =~ /^msgid (".*")/) { # begin of msgid
+	    } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
 	        $buffer .= (defined($buffer) ? "\n" : "").$1;
 		 
-	    } elsif ($line =~ /^msgstr (".*")/) { # begin of msgstr, end of msgid
+	    } elsif ($line =~ /^msgstr (".*")$/) { # begin of msgstr, end of msgid
 	        $msgid = $buffer;
 	        $buffer = "$1";
 	     
-	    } elsif ($line =~ /^(".*")/) { # continuation of a line
+	    } elsif ($line =~ /^(".*")$/) { # continuation of a line
 	        $buffer .= "\n$1";
 	    } else {
 	        warn wrap_ref_mod("$filename:$linenum", "po4a::po", dgettext("po4a", "Strange line: -->%s<--"), $line);
