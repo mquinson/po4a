@@ -1,5 +1,5 @@
-# Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.83 2007-09-15 16:50:15 nekral-guest Exp $
+# Locale::Po4a::Po -- manipulation of po files
+# $Id: Po.pm,v 1.84 2007-09-15 19:42:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -12,7 +12,7 @@
 
 Locale::Po4a::Po - po file manipulation module
 
-=head1 SYNOPSIS    
+=head1 SYNOPSIS
 
     use Locale::Po4a::Po;
     my $pofile=Locale::Po4a::Po->new();
@@ -21,7 +21,7 @@ Locale::Po4a::Po - po file manipulation module
     $pofile->read('file.po');
 
     # Add an entry
-    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour', 
+    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour',
                   'flags' => "wrap", 'reference'=>'file.c:46');
 
     # Extract a translation
@@ -93,11 +93,11 @@ use Encode;
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
-our %debug=('canonize'	=> 0,
-           'quote'	=> 0,
-           'escape'	=> 0,
-           'encoding'   => 0,
-           'filter'     => 0);
+our %debug=('canonize'  => 0,
+            'quote'     => 0,
+            'escape'    => 0,
+            'encoding'  => 0,
+            'filter'    => 0);
 
 =head1 Functions about whole message catalogs
 
@@ -116,7 +116,7 @@ sub new {
     my $self = {};
     bless $self, $class;
     $self->initialize($options);
- 
+
     my $filename = shift;
     $self->read($filename) if defined($filename) && length($filename);
     return $self;
@@ -130,7 +130,9 @@ sub timezone {
     my @g = gmtime();
     my @l = localtime();
 
-    my $diff = floor(strftime("%s", @l)/60 +0.5) - floor(strftime("%s", @g)/60 + 0.5);
+    my $diff;
+    $diff  = floor(strftime("%s",@l)/60 +0.5);
+    $diff -= floor(strftime("%s",@g)/60 +0.5);
 
     my $h = floor($diff / 60) + $l[8]; # $l[8] indicates if we are currently
                                        # in a daylight saving time zone
@@ -149,14 +151,18 @@ sub initialize {
     $self->{options}{'msgid-bugs-address'}= undef;
     $self->{options}{'copyright-holder'}= "Free Software Foundation, Inc.";
     foreach my $opt (keys %$options) {
-	if ($options->{$opt}) {
-	    die wrap_mod("po4a::po", dgettext ("po4a", "Unknown option: %s"), $opt) unless exists $self->{options}{$opt};
-	    $self->{options}{$opt} = $options->{$opt};
-	}
+        if ($options->{$opt}) {
+            die wrap_mod("po4a::po",
+                         dgettext ("po4a", "Unknown option: %s"), $opt)
+                unless exists $self->{options}{$opt};
+            $self->{options}{$opt} = $options->{$opt};
+        }
     }
     $self->{options}{'porefs'} =~ /^(full|noline|none)$/ ||
-        die wrap_mod("po4a::po", 
-                     dgettext ("po4a", "Invalid value for option 'porefs' ('%s' is not one of 'full', 'noline' or 'none')"), 
+        die wrap_mod("po4a::po",
+                     dgettext ("po4a",
+                               "Invalid value for option 'porefs' ('%s' is ".
+                               "not one of 'full', 'noline' or 'none')"),
                      $self->{options}{'porefs'});
 
     $self->{po}=();
@@ -165,24 +171,26 @@ sub initialize {
     # (duplicate strings counted multiple times)
     $self->{count_doc}=0;
     $self->{header_comment}=
-	escape_text( " SOME DESCRIPTIVE TITLE\n"
-		    ." Copyright (C) YEAR ".$self->{options}{'copyright-holder'}."\n"
-		    ." This file is distributed under the same license as the PACKAGE package.\n"
-		    ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
-		    ." \n"
-		    .", fuzzy");
+        escape_text( " SOME DESCRIPTIVE TITLE\n"
+                    ." Copyright (C) YEAR ".
+                     $self->{options}{'copyright-holder'}."\n"
+                    ." This file is distributed under the same license ".
+                     "as the PACKAGE package.\n"
+                    ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
+                    ." \n"
+                    .", fuzzy");
 #    $self->header_tag="fuzzy";
     $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
-			((defined $self->{options}{'msgid-bugs-address'})?
-	"Report-Msgid-Bugs-To: ".$self->{options}{'msgid-bugs-address'}."\n":
-				"").
-				"POT-Creation-Date: $date\n".
-				"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n".
-				"Last-Translator: FULL NAME <EMAIL\@ADDRESS>\n".
-				"Language-Team: LANGUAGE <LL\@li.org>\n".
-				"MIME-Version: 1.0\n".
-				"Content-Type: text/plain; charset=CHARSET\n".
-				"Content-Transfer-Encoding: ENCODING");
+                        ((defined $self->{options}{'msgid-bugs-address'})?
+        "Report-Msgid-Bugs-To: ".$self->{options}{'msgid-bugs-address'}."\n":
+                                "").
+                                "POT-Creation-Date: $date\n".
+                                "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n".
+                                "Last-Translator: FULL NAME <EMAIL\@ADDRESS>\n".
+                                "Language-Team: LANGUAGE <LL\@li.org>\n".
+                                "MIME-Version: 1.0\n".
+                                "Content-Type: text/plain; charset=CHARSET\n".
+                                "Content-Transfer-Encoding: ENCODING");
 
     $self->{encoder}=find_encoding("ascii");
 
@@ -200,115 +208,135 @@ catalog.
 
 sub read {
     my $self=shift;
-    my $filename=shift 
-	|| croak wrap_mod("po4a::po", dgettext("po4a", "Please provide a non-null filename"));
+    my $filename=shift
+        || croak wrap_mod("po4a::po",
+                          dgettext("po4a",
+                                   "Please provide a non-null filename"));
 
     my $fh;
     if ($filename eq '-') {
-	$fh=*STDIN;
+        $fh=*STDIN;
     } else {
-	open $fh,"<$filename" 
-	  || croak wrap_mod("po4a::po", dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
+        open $fh,"<$filename"
+                || croak wrap_mod("po4a::po",
+                                  dgettext("po4a", "Can't read from %s: %s"),
+                                  $filename, $!);
     }
 
     ## Read paragraphs line-by-line
     my $pofile="";
     my $textline;
     while (defined ($textline = <$fh>)) {
-	$pofile .= $textline;
+        $pofile .= $textline;
     }
-#    close INPUT || croak (sprintf(dgettext("po4a","Can't close %s after reading: %s"),$filename,$!)."\n");
+#    close INPUT
+#        or croak (sprintf(dgettext("po4a",
+#                                   "Can't close %s after reading: %s"),
+#                          $filename,$!)."\n");
 
     my $linenum=0;
 
     foreach my $msg (split (/\n\n/,$pofile)) {
         my ($msgid,$msgstr,$comment,$automatic,$reference,$flags,$buffer);
         my ($msgid_plural, $msgstr_plural);
-	foreach my $line (split (/\n/,$msg)) {
-	    $linenum++;
-	    if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
-		$automatic .= (defined($automatic) ? "\n" : "").$1;
+        foreach my $line (split (/\n/,$msg)) {
+            $linenum++;
+            if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
+                $automatic .= (defined($automatic) ? "\n" : "").$1;
 
-	    } elsif ($line =~ /^#: ?(.*)$/) { # reference
-		$reference .= (defined($reference) ? "\n" : "").$1;
+            } elsif ($line =~ /^#: ?(.*)$/) { # reference
+                $reference .= (defined($reference) ? "\n" : "").$1;
 
-	    } elsif ($line =~ /^#, ?(.*)$/) { # flags
-		$flags .= (defined($flags) ? "\n" : "").$1;
+            } elsif ($line =~ /^#, ?(.*)$/) { # flags
+                $flags .= (defined($flags) ? "\n" : "").$1;
 
-	    } elsif ($line =~ /^#(.*)$/) {  # Translator comments 
-		$comment .= (defined($comment) ? "\n" : "").($1||"");
+            } elsif ($line =~ /^#(.*)$/) {  # Translator comments
+                $comment .= (defined($comment) ? "\n" : "").($1||"");
 
-	    } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
-		$buffer = $1;
+            } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
+                $buffer = $1;
 
-	    } elsif ($line =~ /^msgid_plural (".*")$/) { # begin of msgid_plural, end of msgid
-		$msgid = $buffer;
-		$buffer = $1;
+            } elsif ($line =~ /^msgid_plural (".*")$/) {
+                # begin of msgid_plural, end of msgid
 
-	    } elsif ($line =~ /^msgstr (".*")$/) { # begin of msgstr, end of msgid
-		$msgid = $buffer;
-		$buffer = "$1";
+                $msgid = $buffer;
+                $buffer = $1;
 
-	    } elsif ($line =~ /^msgstr\[([0-9]+)\] (".*")$/) { # begin of msgstr[x]
-		# po4a cannot uses plural forms 
-		# (no integer to use the plural form)
-		# Just drop the msgstr[...]
-		if ($1 eq "0") {
-		    $msgid_plural = $buffer;
-		    $buffer = "$2";
-		} elsif ($1 eq "1") {
-		    $msgstr = $buffer;
-		    $buffer = "$2";
-		} elsif ($1 eq "2") {
-		    $msgstr_plural = $buffer;
-		}
-	    } elsif ($line =~ /^(".*")$/) { # continuation of a line
-		$buffer .= "\n$1";
+            } elsif ($line =~ /^msgstr (".*")$/) {
+                # begin of msgstr, end of msgid
 
-	    } else {
-		warn wrap_ref_mod("$filename:$linenum",
-		                  "po4a::po",
-		                  dgettext("po4a", "Strange line: -->%s<--"),
-		                  $line);
-	    }
-	}
-	$linenum++;
-	if (defined $msgstr) {
-	    $msgstr_plural=$buffer;
+                $msgid = $buffer;
+                $buffer = "$1";
 
-	    $msgid = unquote_text($msgid) if (defined($msgid));
-	    $msgstr = unquote_text($msgstr) if (defined($msgstr));
-	    $self->push_raw ('msgid'     => $msgid,
-	                     'msgstr'    => $msgstr,
-	                     'reference' => $reference,
-	                     'flags'     => $flags,
-	                     'comment'   => $comment,
-	                     'automatic' => $automatic,
-	                     'plural'    => 0);
+            } elsif ($line =~ /^msgstr\[([0-9]+)\] (".*")$/) {
+                # begin of msgstr[x], end of msgid_plural or msgstr[x-1]
 
-	    $msgid_plural = unquote_text($msgid_plural)
-		if (defined($msgid_plural));
-	    $msgstr_plural = unquote_text($msgstr_plural)
-		if (defined($msgstr_plural));
-	    $self->push_raw ('msgid'     => $msgid_plural,
-	                     'msgstr'    => $msgstr_plural,
-	                     'reference' => $reference,
-	                     'flags'     => $flags,
-	                     'comment'   => $comment,
-	                     'automatic' => $automatic,
-	                     'plural'    => 1);
-	} else {
-	    $msgstr=$buffer;
+                # Note: po4a cannot uses plural forms
+                # (no integer to use the plural form)
+                #   * drop the msgstr[x] where x >= 2
+                #   * use msgstr[0] as the translation of msgid
+                #   * use msgstr[1] as the translation of msgid_plural
 
-	    $msgid = unquote_text($msgid) if (defined($msgid));
-	    $msgstr = unquote_text($msgstr) if (defined($msgstr));
-	    $self->push_raw ('msgid'     => $msgid,
-	                     'msgstr'    => $msgstr,
-	                     'reference' => $reference,
-	                     'flags'     => $flags,
-	                     'comment'   => $comment,
-	                     'automatic' => $automatic);
-	}
+                if ($1 eq "0") {
+                    $msgid_plural = $buffer;
+                    $buffer = "$2";
+                } elsif ($1 eq "1") {
+                    $msgstr = $buffer;
+                    $buffer = "$2";
+                } elsif ($1 eq "2") {
+                    $msgstr_plural = $buffer;
+                }
+            } elsif ($line =~ /^(".*")$/) {
+                # continuation of a line
+                $buffer .= "\n$1";
+
+            } else {
+                warn wrap_ref_mod("$filename:$linenum",
+                                  "po4a::po",
+                                  dgettext("po4a", "Strange line: -->%s<--"),
+                                  $line);
+            }
+        }
+        $linenum++;
+        if (defined $msgstr) {
+            $msgstr_plural=$buffer;
+
+            $msgid = unquote_text($msgid) if (defined($msgid));
+            $msgstr = unquote_text($msgstr) if (defined($msgstr));
+
+            $self->push_raw ('msgid'     => $msgid,
+                             'msgstr'    => $msgstr,
+                             'reference' => $reference,
+                             'flags'     => $flags,
+                             'comment'   => $comment,
+                             'automatic' => $automatic,
+                             'plural'    => 0);
+
+            $msgid_plural = unquote_text($msgid_plural)
+                if (defined($msgid_plural));
+            $msgstr_plural = unquote_text($msgstr_plural)
+                if (defined($msgstr_plural));
+
+            $self->push_raw ('msgid'     => $msgid_plural,
+                             'msgstr'    => $msgstr_plural,
+                             'reference' => $reference,
+                             'flags'     => $flags,
+                             'comment'   => $comment,
+                             'automatic' => $automatic,
+                             'plural'    => 1);
+        } else {
+            $msgstr=$buffer;
+
+            $msgid = unquote_text($msgid) if (defined($msgid));
+            $msgstr = unquote_text($msgstr) if (defined($msgstr));
+
+            $self->push_raw ('msgid'     => $msgid,
+                             'msgstr'    => $msgstr,
+                             'reference' => $reference,
+                             'flags'     => $flags,
+                             'comment'   => $comment,
+                             'automatic' => $automatic);
+        }
     }
 }
 
@@ -320,78 +348,84 @@ Writes the current catalog to the given file.
 
 sub write{
     my $self=shift;
-    my $filename=shift 
-	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
+    my $filename=shift
+        or croak dgettext("po4a","Can't write to a file without filename")."\n";
 
     my $fh;
     if ($filename eq '-') {
-	$fh=\*STDOUT;
+        $fh=\*STDOUT;
     } else {
-	# make sure the directory in which we should write the localized file exists
-	my $dir = $filename;
-	if ($dir =~ m|/|) {
-	    $dir =~ s|/[^/]*$||;
-	
-	    File::Path::mkpath($dir, 0, 0755) # Croaks on error
-	      if (length ($dir) && ! -e $dir);
-	}
-	open $fh,">$filename" 
-	    || croak wrap_mod("po4a::po", dgettext("po4a", "Can't write to %s: %s"), $filename, $!);
+        # make sure the directory in which we should write the localized
+        # file exists
+        my $dir = $filename;
+        if ($dir =~ m|/|) {
+            $dir =~ s|/[^/]*$||;
+
+            File::Path::mkpath($dir, 0, 0755) # Croaks on error
+                if (length ($dir) && ! -e $dir);
+        }
+        open $fh,">$filename"
+            || croak wrap_mod("po4a::po",
+                              dgettext("po4a", "Can't write to %s: %s"),
+                              $filename, $!);
     }
 
-    print $fh "".format_comment(unescape_text($self->{header_comment}),"") 
-	if defined($self->{header_comment}) && length($self->{header_comment});
+    print $fh "".format_comment(unescape_text($self->{header_comment}),"")
+        if defined($self->{header_comment}) && length($self->{header_comment});
 
     print $fh "msgid \"\"\n";
     print $fh "msgstr ".quote_text($self->{header})."\n\n";
 
 
     my $first=1;
-    foreach my $msgid ( sort { ($self->{po}{"$a"}{'pos'}) <=> 
- 			       ($self->{po}{"$b"}{'pos'}) 
+    foreach my $msgid ( sort { ($self->{po}{"$a"}{'pos'}) <=>
+                               ($self->{po}{"$b"}{'pos'})
                              }  keys %{$self->{po}}) {
-	my $output="";
+        my $output="";
 
-	if ($first) {
-	    $first=0;
-	} else {
-	    $output .= "\n";
-	}
-	
-	$output .= format_comment($self->{po}{$msgid}{'comment'},"") 
-	    if    defined($self->{po}{$msgid}{'comment'})
-	       && length ($self->{po}{$msgid}{'comment'});
-	if (   defined($self->{po}{$msgid}{'automatic'})
-	    && length ($self->{po}{$msgid}{'automatic'})) {
-	    foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'}))
-	    {
-		$output .= format_comment($comment, ". ")
-	    }
-	}
-	$output .= format_comment($self->{po}{$msgid}{'type'}," type: ") 
-	    if    defined($self->{po}{$msgid}{'type'})
-	       && length ($self->{po}{$msgid}{'type'});
-	$output .= format_comment($self->{po}{$msgid}{'reference'},": ") 
-	    if    defined($self->{po}{$msgid}{'reference'})
-	       && length ($self->{po}{$msgid}{'reference'});
-	$output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
-	    if    defined($self->{po}{$msgid}{'flags'})
-	       && length ($self->{po}{$msgid}{'flags'});
+        if ($first) {
+            $first=0;
+        } else {
+            $output .= "\n";
+        }
 
-	if ($self->get_charset =~ /^utf-8$/i) {
-	    my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
-	    $msgid = Encode::decode_utf8($msgid);
-	    $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
-	    $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
-	} else {
-	    $output .= "msgid ".quote_text($msgid)."\n";
-	    $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
-	}
-	print $fh $output;
-    }   
+        $output .= format_comment($self->{po}{$msgid}{'comment'},"")
+            if    defined($self->{po}{$msgid}{'comment'})
+               && length ($self->{po}{$msgid}{'comment'});
+        if (   defined($self->{po}{$msgid}{'automatic'})
+            && length ($self->{po}{$msgid}{'automatic'})) {
+            foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'}))
+            {
+                $output .= format_comment($comment, ". ")
+            }
+        }
+        $output .= format_comment($self->{po}{$msgid}{'type'}," type: ")
+            if    defined($self->{po}{$msgid}{'type'})
+               && length ($self->{po}{$msgid}{'type'});
+        $output .= format_comment($self->{po}{$msgid}{'reference'},": ")
+            if    defined($self->{po}{$msgid}{'reference'})
+               && length ($self->{po}{$msgid}{'reference'});
+        $output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
+            if    defined($self->{po}{$msgid}{'flags'})
+               && length ($self->{po}{$msgid}{'flags'});
+
+        if ($self->get_charset =~ /^utf-8$/i) {
+            my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
+            $msgid = Encode::decode_utf8($msgid);
+            $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
+            $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
+        } else {
+            $output .= "msgid ".quote_text($msgid)."\n";
+            $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+        }
+        print $fh $output;
+    }
 #    print STDERR "$fh";
 #    if ($filename ne '-') {
-#	close $fh || croak (sprintf(dgettext("po4a","Can't close %s after writing: %s\n"),$filename,$!));
+#        close $fh
+#            or croak (sprintf(dgettext("po4a",
+#                                       "Can't close %s after writing: %s\n"),
+#                              $filename,$!));
 #    }
 }
 
@@ -409,7 +443,10 @@ sub move_po_if_needed {
     my $diff;
 
     if (-e $old_po) {
-        $diff = qx(diff -q -I'^#:' -I'^"POT-Creation-Date:' -I'^"PO-Revision-Date:' $old_po $new_po);
+        my $diff_ignore = "-I'^#:' "
+                         ."-I'^\"POT-Creation-Date:' "
+                         ."-I'^\"PO-Revision-Date:'";
+        $diff = qx(diff -q $diff_ignore $old_po $new_po);
         if ( $diff eq "" ) {
             unlink $new_po
                 or die wrap_msg(dgettext("po4a","Can't unlink %s: %s."),
@@ -437,8 +474,8 @@ sub move_po_if_needed {
 
 sub write_if_needed {
     my $self=shift;
-    my $filename=shift 
-	or croak (dgettext("po4a","Can't write to a file without filename")."\n");
+    my $filename=shift
+        or croak dgettext("po4a","Can't write to a file without filename")."\n";
 
     if (-e $filename) {
         my ($tmp_filename);
@@ -461,107 +498,136 @@ section I<Gettextization: how does it work?>.
 
 =cut
 
-sub gettextize { 
+sub gettextize {
     my $this = shift;
     my $class = ref($this) || $this;
     my ($poorig,$potrans)=(shift,shift);
 
     my $pores=Locale::Po4a::Po->new();
-    
+
     my $please_fail = 0;
     my $toobad = dgettext("po4a",
-  	"\nThe gettextization failed (once again). Don't give up, gettextizing is a subtle art, ".
-	"but this is only needed once to convert a project to the gorgeous luxus offered ".
-        "by po4a to translators.".
-        "\nPlease refer to the po4a(7) documentation, the section \"HOWTO convert a pre-existing ".
-        "translation to po4a?\" contains several hints to help you in your task");
+        "\nThe gettextization failed (once again). Don't give up, ".
+        "gettextizing is a subtle art, but this is only needed once ".
+        "to convert a project to the gorgeous luxus offered by po4a ".
+        "to translators.".
+        "\nPlease refer to the po4a(7) documentation, the section ".
+        "\"HOWTO convert a pre-existing translation to po4a?\" ".
+        "contains several hints to help you in your task");
 
-    # Don't fail right now when the entry count does not match. Instead, give it a try so that the user
-    # can see where we fail (which is probably where the problem is).
+    # Don't fail right now when the entry count does not match. Instead, give
+    # it a try so that the user can see where we fail (which is probably where
+    # the problem is).
     if ($poorig->count_entries_doc() > $potrans->count_entries_doc()) {
-	warn wrap_mod("po4a gettextize", dgettext("po4a",
-	    "Original has more strings than the translation (%d>%d). ".
-	    "Please fix it by editing the translated version to add some dummy entry."),
-		$poorig->count_entries_doc() , $potrans->count_entries_doc());
-        $please_fail = 1;      
+        warn wrap_mod("po4a gettextize", dgettext("po4a",
+            "Original has more strings than the translation (%d>%d). ".
+            "Please fix it by editing the translated version to add ".
+            "some dummy entry."),
+                      $poorig->count_entries_doc(),
+                      $potrans->count_entries_doc());
+        $please_fail = 1;
     } elsif ($poorig->count_entries_doc() < $potrans->count_entries_doc()) {
-	warn wrap_mod("po4a gettextize", dgettext("po4a",
-	    "Original has less strings than the translation (%d<%d). ".
-	    "Please fix it by removing the extra entry from the translated file. ".
-	    "You may need an addendum (cf po4a(7)) to reput the chunk in place after gettextization. ".
-	    "A possible cause is that a text duplicated in the original is not translated the same way each time. Remove one of the translations, and you're fine."),
-               $poorig->count_entries_doc(), $potrans->count_entries_doc());
+        warn wrap_mod("po4a gettextize", dgettext("po4a",
+            "Original has less strings than the translation (%d<%d). ".
+            "Please fix it by removing the extra entry from the ".
+            "translated file. You may need an addendum (cf po4a(7)) ".
+            "to reput the chunk in place after gettextization. A ".
+            "possible cause is that a text duplicated in the original ".
+            "is not translated the same way each time. Remove one of ".
+            "the translations, and you're fine."),
+                      $poorig->count_entries_doc(),
+                      $potrans->count_entries_doc());
         $please_fail = 1;
     }
 
     if ( $poorig->get_charset =~ /^utf-8$/i ) {
-	$potrans->to_utf8;
-	$pores->set_charset("utf-8");
+        $potrans->to_utf8;
+        $pores->set_charset("utf-8");
     } else {
-	if ($potrans->get_charset eq "CHARSET") {
-	    $pores->set_charset("ascii");
-	} else {
-	    $pores->set_charset($potrans->get_charset);
-	}
+        if ($potrans->get_charset eq "CHARSET") {
+            $pores->set_charset("ascii");
+        } else {
+            $pores->set_charset($potrans->get_charset);
+        }
     }
     print "Po character sets:\n".
-	"  original=".$poorig->get_charset."\n".
-	"  translated=".$potrans->get_charset."\n".
-	"  result=".$pores->get_charset."\n"
-	    if $debug{'encoding'};
+        "  original=".$poorig->get_charset."\n".
+        "  translated=".$potrans->get_charset."\n".
+        "  result=".$pores->get_charset."\n"
+            if $debug{'encoding'};
 
     for (my ($o,$t)=(0,0) ;
-	 $o<$poorig->count_entries_doc() && $t<$potrans->count_entries_doc();
-	 $o++,$t++) {
-	#
-	# Extract some informations
-	#
-	my ($orig,$trans)=($poorig->msgid_doc($o),$potrans->msgid_doc($t));
-#	print STDERR "Matches [[$orig]]<<$trans>>\n";
+         $o<$poorig->count_entries_doc() && $t<$potrans->count_entries_doc();
+         $o++,$t++) {
+        #
+        # Extract some informations
 
-	my ($reforig,$reftrans)=($poorig->{po}{$orig}{'reference'},
-				 $potrans->{po}{$trans}{'reference'});
-	my ($typeorig,$typetrans)=($poorig->{po}{$orig}{'type'},
-				   $potrans->{po}{$trans}{'type'});
+        my ($orig,$trans)=($poorig->msgid_doc($o),$potrans->msgid_doc($t));
+#       print STDERR "Matches [[$orig]]<<$trans>>\n";
 
-	#
-	# Make sure the type of both string exist
-	#
-	die wrap_mod("po4a gettextize", "Internal error: type of original string number %s isn't provided", $o)
-	    if ($typeorig eq '');
-	
-	die wrap_mod("po4a gettextize", "Internal error: type of translated string number %s isn't provided", $o)
-	    if ($typetrans eq '');
+        my ($reforig,$reftrans)=($poorig->{po}{$orig}{'reference'},
+                                 $potrans->{po}{$trans}{'reference'});
+        my ($typeorig,$typetrans)=($poorig->{po}{$orig}{'type'},
+                                   $potrans->{po}{$trans}{'type'});
 
-	#
-	# Make sure both type are the same
-	#
-	if ($typeorig ne $typetrans){
-	    $pores->write("gettextization.failed.po");
-	    die wrap_msg(dgettext("po4a",
-	    	"po4a gettextization: Structure disparity between original and translated files:\n".
-		"msgid (at %s) is of type '%s' while\n".
-		"msgstr (at %s) is of type '%s'.\n".
-		"Original text: %s\n".
-		"Translated text: %s\n".
-	        "(result so far dumped to gettextization.failed.po)")."%s",
-	        $reforig, $typeorig, $reftrans, $typetrans, $orig, $trans,$toobad);
-	}
+        #
+        # Make sure the type of both string exist
+        #
+        die wrap_mod("po4a gettextize",
+                     "Internal error: type of original string number %s ".
+                     "isn't provided", $o)
+            if ($typeorig eq '');
 
-	# 
-	# Push the entry
-	#
-	$pores->push_raw('msgid' => $orig, 'msgstr' => $trans, 
-			 'flags' => ($poorig->{po}{$orig}{'flags'} ? $poorig->{po}{$orig}{'flags'} :"")." fuzzy",
-	                 'type'  => $typeorig,
-			 'reference' => $reforig,
-			 'conflict' => 1)
-	    unless (defined($pores->{po}{$orig})
-	            and ($pores->{po}{$orig}{'msgstr'} eq $trans))
-	# FIXME: maybe we should be smarter about what reference should be
-	#        sent to push_raw.
+        die wrap_mod("po4a gettextize",
+                     "Internal error: type of translated string number %s ".
+                     "isn't provided", $o)
+            if ($typetrans eq '');
+
+        #
+        # Make sure both type are the same
+        #
+        if ($typeorig ne $typetrans){
+            $pores->write("gettextization.failed.po");
+            die wrap_msg(dgettext("po4a",
+                         "po4a gettextization: Structure disparity between ".
+                         "original and translated files:\n".
+                         "msgid (at %s) is of type '%s' while\n".
+                         "msgstr (at %s) is of type '%s'.\n".
+                         "Original text: %s\n".
+                         "Translated text: %s\n".
+                         "(result so far dumped to gettextization.failed.po)").
+                         "%s",
+                         $reforig, $typeorig,
+                         $reftrans, $typetrans,
+                         $orig,
+                         $trans,
+                         $toobad);
+        }
+
+        #
+        # Push the entry
+        #
+        my $flags;
+        if (defined $poorig->{po}{$orig}{'flags'}) {
+            $flags = $poorig->{po}{$orig}{'flags'}." fuzzy";
+        } else {
+            $flags = "fuzzy";
+        }
+        $pores->push_raw('msgid'     => $orig,
+                         'msgstr'    => $trans,
+                         'flags'     => $flags,
+                         'type'      => $typeorig,
+                         'reference' => $reforig,
+                         'conflict'  => 1)
+            unless (defined($pores->{po}{$orig})
+                    and ($pores->{po}{$orig}{'msgstr'} eq $trans))
+        # FIXME: maybe we should be smarter about what reference should be
+        #        sent to push_raw.
     }
-    die "$toobad\n" if $please_fail; # make sure we return a useful error message when entry count differ
+
+    # make sure we return a useful error message when entry count differ
+    die "$toobad\n" if $please_fail;
+
     return $pores;
 }
 
@@ -570,7 +636,7 @@ sub gettextize {
 This function extracts a catalog from an existing one. Only the entries having
 a reference in the given file will be placed in the resulting catalog.
 
-This function parses its argument, converts it to a perl function definition, 
+This function parses its argument, converts it to a perl function definition,
 eval this definition and filter the fields for which this function returns
 true.
 
@@ -589,190 +655,200 @@ sub filter {
     our $code="sub apply { return ";
     our $pos=0;
     our $length = length $filter;
-    our @filter = split(//,$filter); # explode chars to parts. How to subscript a string in Perl?
+
+    # explode chars to parts. How to subscript a string in Perl?
+    our @filter = split(//,$filter);
 
     sub gloups {
-	my $fmt=shift;
-	my $space = "";
-	for (1..$pos){
-	    $space .= ' ';
-	}
-	die wrap_msg("$fmt\n$filter\n$space^ HERE");
+        my $fmt=shift;
+        my $space = "";
+        for (1..$pos){
+            $space .= ' ';
+        }
+        die wrap_msg("$fmt\n$filter\n$space^ HERE");
     }
     sub showmethecode {
-	return unless $debug{'filter'};
-	my $fmt=shift;
-	my $space="";
-	for (1..$pos){
-	    $space .= ' ';
-	}
-	print STDERR "$filter\n$space^ $fmt\n";#"$code\n";
+        return unless $debug{'filter'};
+        my $fmt=shift;
+        my $space="";
+        for (1..$pos){
+            $space .= ' ';
+        }
+        print STDERR "$filter\n$space^ $fmt\n";#"$code\n";
     }
-    
+
     # I dream of a lex in perl :-/
     sub parse_expression {
-	showmethecode("Begin expression")
-	    if $debug{'filter'};
+        showmethecode("Begin expression")
+            if $debug{'filter'};
 
-	gloups("Begin of expression expected, got '%s'",$filter[$pos])
-	  unless ($filter[$pos] eq '(');
-	$pos ++; # pass the '('
-	if ($filter[$pos] eq '&') {
-	    # AND
-	    $pos++;
-	    showmethecode("Begin of AND")
-		if $debug{'filter'};
-	    $code .= "(";
-	    while (1) {
-		gloups ("Unfinished AND statement.") 
-		  if ($pos == $length);
-		parse_expression();
-		if ($filter[$pos] eq '(') {
-		    $code .= " && ";
-		} elsif ($filter[$pos] eq ')') {
-		    last; # do not eat that char
-		} else {
-		    gloups("End of AND or begin of sub-expression expected, got '%s'", $filter[$pos]);
-		}
-	    }
-	    $code .= ")";
-	} elsif ($filter[$pos] eq '|') {
-	    # OR
-	    $pos++;
-	    $code .= "(";
-	    while (1) {
-		gloups("Unfinished OR statement.")
-		  if ($pos == $length);
-		parse_expression();
-		if ($filter[$pos] eq '(') {
-		    $code .= " || ";
-		} elsif ($filter[$pos] eq ')') {
-		    last; # do not eat that char
-		} else {
-		    gloups("End of OR or begin of sub-expression expected, got '%s'",$filter[$pos]);
-		}
-	    }
-	    $code .= ")";
-	} elsif ($filter[$pos] eq '!') {
-	    # NOT
-	    $pos++;
-	    $code .= "(!";
-	    gloups("Missing sub-expression in NOT statement.")
-	      if ($pos == $length);
-	    parse_expression();
-	    $code .= ")";
-	} else {
-	    # must be an equal. Let's get field and argument
-	    my ($field,$arg,$done);
-	    $field = substr($filter,$pos);
-	    gloups("EQ statement contains no '=' or invalid field name")
-	      unless ($field =~ /([a-z]*)=/i); 
-	    $field = lc($1);
-	    $pos += (length $field) + 1;
+        gloups("Begin of expression expected, got '%s'",$filter[$pos])
+            unless ($filter[$pos] eq '(');
+        $pos ++; # pass the '('
+        if ($filter[$pos] eq '&') {
+            # AND
+            $pos++;
+            showmethecode("Begin of AND")
+                if $debug{'filter'};
+            $code .= "(";
+            while (1) {
+                gloups ("Unfinished AND statement.")
+                    if ($pos == $length);
+                parse_expression();
+                if ($filter[$pos] eq '(') {
+                    $code .= " && ";
+                } elsif ($filter[$pos] eq ')') {
+                    last; # do not eat that char
+                } else {
+                    gloups("End of AND or begin of sub-expression expected, got '%s'", $filter[$pos]);
+                }
+            }
+            $code .= ")";
+        } elsif ($filter[$pos] eq '|') {
+            # OR
+            $pos++;
+            $code .= "(";
+            while (1) {
+                gloups("Unfinished OR statement.")
+                    if ($pos == $length);
+                parse_expression();
+                if ($filter[$pos] eq '(') {
+                    $code .= " || ";
+                } elsif ($filter[$pos] eq ')') {
+                    last; # do not eat that char
+                } else {
+                    gloups("End of OR or begin of sub-expression expected, got '%s'",$filter[$pos]);
+                }
+            }
+            $code .= ")";
+        } elsif ($filter[$pos] eq '!') {
+            # NOT
+            $pos++;
+            $code .= "(!";
+            gloups("Missing sub-expression in NOT statement.")
+                if ($pos == $length);
+            parse_expression();
+            $code .= ")";
+        } else {
+            # must be an equal. Let's get field and argument
+            my ($field,$arg,$done);
+            $field = substr($filter,$pos);
+            gloups("EQ statement contains no '=' or invalid field name")
+                unless ($field =~ /([a-z]*)=/i);
+            $field = lc($1);
+            $pos += (length $field) + 1;
 
-	    # check that we've got a valid field name, and the number it referes to
-	    my @names=qw(msgid msgstr reference flags comment automatic); # DO NOT CHANGE THE ORDER
-	    my $fieldpos;
-	    for ($fieldpos = 0; 
- 		 $fieldpos < scalar @names && $field ne $names[$fieldpos];
-		 $fieldpos++) {}
-	    gloups("Invalid field name: %s",$field)
-	      if $fieldpos == scalar @names; # not found
-	    
-	    # Now, get the argument value. It has to be between quotes, which can be escaped
-	    # We point right on the first char of the argument (first quote already ate)
-	    my $escaped = 0;
-	    my $quoted = 0;
-	    if ($filter[$pos] eq '"') {
-		$pos++;
-		$quoted = 1;
-	    }
-	    showmethecode(($quoted?"Quoted":"Unquoted")." argument of field '$field'")
-		if $debug{'filter'};
+            # check that we've got a valid field name,
+            # and the number it referes to
+            # DO NOT CHANGE THE ORDER
+            my @names=qw(msgid msgstr reference flags comment automatic);
+            my $fieldpos;
+            for ($fieldpos = 0;
+                 $fieldpos < scalar @names && $field ne $names[$fieldpos];
+                 $fieldpos++) {}
+            gloups("Invalid field name: %s",$field)
+                if $fieldpos == scalar @names; # not found
 
-	    while (!$done) {
-		gloups("Unfinished EQ argument.")
-		  if ($pos == $length);
+            # Now, get the argument value. It has to be between quotes,
+            # which can be escaped
+            # We point right on the first char of the argument
+            # (first quote already eaten)
+            my $escaped = 0;
+            my $quoted = 0;
+            if ($filter[$pos] eq '"') {
+                $pos++;
+                $quoted = 1;
+            }
+            showmethecode(($quoted?"Quoted":"Unquoted")." argument of field '$field'")
+                if $debug{'filter'};
 
-		if ($quoted) {
-		    if ($filter[$pos] eq '\\') {
-			if ($escaped) {
-			    $arg .= '\\';
-			    $escaped = 0;
-			} else {
-			    $escaped = 1;
-			}
-		    } elsif ($escaped) {
-			if ($filter[$pos] eq '"') {
-			    $arg .= '"';
-			    $escaped = 0;
-			} else {
-			    gloups("Invalid escape sequence in argument: '\\%s'",$filter[$pos]);
-			}
-		    } else {
-			if ($filter[$pos] eq '"') {
-			    $done = 1;
-			} else {
-			    $arg .= $filter[$pos];
-			}
-		    }
-		} else {
-		    if ($filter[$pos] eq ')') {
-			$pos--; # counter the next ++ since we don't want to eat this char
-			$done = 1;
-		    } else {
-			$arg .= $filter[$pos];
-		    }
-		}
-		$pos++;
-	    }
-	    # and now, add the code to check this equality
-	    $code .= "(\$_[$fieldpos] =~ m/$arg/)";
-	    
-	}
-	showmethecode("End of expression")
-	    if $debug{'filter'};
+            while (!$done) {
+                gloups("Unfinished EQ argument.")
+                    if ($pos == $length);
+
+                if ($quoted) {
+                    if ($filter[$pos] eq '\\') {
+                        if ($escaped) {
+                            $arg .= '\\';
+                            $escaped = 0;
+                        } else {
+                            $escaped = 1;
+                        }
+                    } elsif ($escaped) {
+                        if ($filter[$pos] eq '"') {
+                            $arg .= '"';
+                            $escaped = 0;
+                        } else {
+                            gloups("Invalid escape sequence in argument: '\\%s'",$filter[$pos]);
+                        }
+                    } else {
+                        if ($filter[$pos] eq '"') {
+                            $done = 1;
+                        } else {
+                            $arg .= $filter[$pos];
+                        }
+                    }
+                } else {
+                    if ($filter[$pos] eq ')') {
+                        # counter the next ++ since we don't want to eat
+                        # this char
+                        $pos--;
+                        $done = 1;
+                    } else {
+                        $arg .= $filter[$pos];
+                    }
+                }
+                $pos++;
+            }
+            # and now, add the code to check this equality
+            $code .= "(\$_[$fieldpos] =~ m/$arg/)";
+
+        }
+        showmethecode("End of expression")
+            if $debug{'filter'};
         gloups("Unfinished statement.")
-	  if ($pos == $length);
-	gloups("End of expression expected, got '%s'",$filter[$pos])
-	  unless ($filter[$pos] eq ')');
-	$pos++;
+            if ($pos == $length);
+        gloups("End of expression expected, got '%s'",$filter[$pos])
+            unless ($filter[$pos] eq ')');
+        $pos++;
     }
-    # And now, launch the beast, finish the function and use eval to construct this function.
+    # And now, launch the beast, finish the function and use eval
+    # to construct this function.
     # Ok, the lack of lexer is a fair price for the eval ;)
     parse_expression();
     gloups("Garbage at the end of the expression")
-      if ($pos != $length);
+        if ($pos != $length);
     $code .= "; }";
     print STDERR "CODE = $code\n"
-	if $debug{'filter'};
+        if $debug{'filter'};
     eval $code;
     die wrap_mod("po4a::po", dgettext("po4a", "Eval failure: %s"), $@)
-      if $@;
+        if $@;
 
     for (my $cpt=(0) ;
-	 $cpt<$self->count_entries();
-	 $cpt++) {
+         $cpt<$self->count_entries();
+         $cpt++) {
 
-	my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
+        my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
 
-	$msgid = $self->msgid($cpt);
-	$ref=$self->{po}{$msgid}{'reference'};
+        $msgid = $self->msgid($cpt);
+        $ref=$self->{po}{$msgid}{'reference'};
 
-	$msgstr= $self->{po}{$msgid}{'msgstr'};
-	$flags =  $self->{po}{$msgid}{'flags'};
-	$type = $self->{po}{$msgid}{'type'};
-	$comment = $self->{po}{$msgid}{'comment'};
-	$automatic = $self->{po}{$msgid}{'automatic'};
+        $msgstr= $self->{po}{$msgid}{'msgstr'};
+        $flags =  $self->{po}{$msgid}{'flags'};
+        $type = $self->{po}{$msgid}{'type'};
+        $comment = $self->{po}{$msgid}{'comment'};
+        $automatic = $self->{po}{$msgid}{'automatic'};
 
-	$res->push_raw('msgid' => $msgid, 
-		       'msgstr' => $msgstr,
-		       'flags' => $flags,
-	               'type'  => $type,
-		       'reference' => $ref,
-		       'comment' => $comment,
-		       'automatic' => $automatic)
-	       if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic)); # DO NOT CHANGE THE ORDER
+        # DO NOT CHANGE THE ORDER
+        $res->push_raw('msgid' => $msgid,
+                       'msgstr' => $msgstr,
+                       'flags' => $flags,
+                       'type'  => $type,
+                       'reference' => $ref,
+                       'comment' => $comment,
+                       'automatic' => $automatic)
+               if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic));
     }
     # delete the apply subroutine
     # otherwise it will be redefined.
@@ -788,17 +864,17 @@ ascii.
 
 =cut
 
-sub to_utf8 { 
+sub to_utf8 {
     my $this = shift;
     my $charset = $this->get_charset();
 
     unless ($charset eq "CHARSET" or
-	    $charset =~ /^ascii$/i or
-	    $charset =~ /^utf-8$/i) {
-	foreach my $msgid ( keys %{$this->{po}} ) {
-	    Encode::from_to($this->{po}{$msgid}{'msgstr'}, $charset, "utf-8");
-	}
-	$this->set_charset("utf-8");
+            $charset =~ /^ascii$/i or
+            $charset =~ /^utf-8$/i) {
+        foreach my $msgid ( keys %{$this->{po}} ) {
+            Encode::from_to($this->{po}{$msgid}{'msgstr'}, $charset, "utf-8");
+        }
+        $this->set_charset("utf-8");
     }
 }
 
@@ -845,40 +921,40 @@ sub gettext {
 
     map { $validoption{$_}=1 } (split(/ /,$validoption));
     foreach (keys %opt) {
-	Carp::confess "internal error:  unknown arg $_.\n".
-	              "Here are the valid options: $validoption.\n"
-	    unless $validoption{$_};
+        Carp::confess "internal error:  unknown arg $_.\n".
+                      "Here are the valid options: $validoption.\n"
+            unless $validoption{$_};
     }
-    
-    $text=canonize($text)     
-	if ($opt{'wrap'});
+
+    $text=canonize($text)
+        if ($opt{'wrap'});
 
     my $esc_text=escape_text($text);
 
     $self->{gettextqueries}++;
-    
-    if ($self->{po}{$esc_text}  && 
-	defined( $self->{po}{$esc_text}{'msgstr'} ) &&
-	length( $self->{po}{$esc_text}{'msgstr'} ) && 
-	!( ($self->{po}{$esc_text}{'flags'}||"") =~ /fuzzy/) ) { 
 
-	$self->{gettexthits}++;
-	$res= unescape_text($self->{po}{$esc_text}{'msgstr'});
-	if (defined $self->{po}{$esc_text}{'plural'}) {
-	    if ($self->{po}{$esc_text}{'plural'} eq "0") {
-		warn wrap_mod("po4a gettextize", dgettext("po4a",
-		              "'%s' is the singular form of a message, ".
-		              "po4a will use the msgstr[0] translation (%s)."),
-		              $esc_text, $res);
-	    } else {
-		warn wrap_mod("po4a gettextize", dgettext("po4a",
-		              "'%s' is the plural form of a message, ".
-		              "po4a will use the msgstr[1] translation (%s)."),
-		              $esc_text, $res);
-	    }
-	}
+    if ($self->{po}{$esc_text}  &&
+        defined( $self->{po}{$esc_text}{'msgstr'} ) &&
+        length( $self->{po}{$esc_text}{'msgstr'} ) &&
+        !( ($self->{po}{$esc_text}{'flags'}||"") =~ /fuzzy/) ) {
+
+        $self->{gettexthits}++;
+        $res = unescape_text($self->{po}{$esc_text}{'msgstr'});
+        if (defined $self->{po}{$esc_text}{'plural'}) {
+            if ($self->{po}{$esc_text}{'plural'} eq "0") {
+                warn wrap_mod("po4a gettextize", dgettext("po4a",
+                              "'%s' is the singular form of a message, ".
+                              "po4a will use the msgstr[0] translation (%s)."),
+                              $esc_text, $res);
+            } else {
+                warn wrap_mod("po4a gettextize", dgettext("po4a",
+                              "'%s' is the plural form of a message, ".
+                              "po4a will use the msgstr[1] translation (%s)."),
+                              $esc_text, $res);
+            }
+        }
     } else {
-	$res= $text;
+        $res = $text;
     }
 
     if ($opt{'wrap'}) {
@@ -971,11 +1047,11 @@ more information.
 
 =item flags
 
-space-separated list of all defined flags for this entry. 
+space-separated list of all defined flags for this entry.
 
 Valid flags are: c-text, python-text, lisp-text, elisp-text, librep-text,
 smalltalk-text, java-text, awk-text, object-pascal-text, ycp-text,
-tcl-text, wrap, no-wrap and fuzzy. 
+tcl-text, wrap, no-wrap and fuzzy.
 
 See the gettext documentation for their meaning.
 
@@ -1019,25 +1095,25 @@ sub push {
 
     map { $validoption{$_}=1 } (split(/ /,$validoption));
     foreach (keys %entry) {
-	Carp::confess "internal error:  unknown arg $_.\n".
-	              "Here are the valid options: $validoption.\n"
-	    unless $validoption{$_};
+        Carp::confess "internal error:  unknown arg $_.\n".
+                      "Here are the valid options: $validoption.\n"
+            unless $validoption{$_};
     }
 
     unless ($entry{'wrap'}) {
-	$entry{'flags'} .= " no-wrap";
+        $entry{'flags'} .= " no-wrap";
     }
     if (defined ($entry{'msgid'})) {
-	$entry{'msgid'} = canonize($entry{'msgid'})
-	    if ($entry{'wrap'});
+        $entry{'msgid'} = canonize($entry{'msgid'})
+            if ($entry{'wrap'});
 
-	$entry{'msgid'} = escape_text($entry{'msgid'});
+        $entry{'msgid'} = escape_text($entry{'msgid'});
     }
     if (defined ($entry{'msgstr'})) {
-	$entry{'msgstr'} = canonize($entry{'msgstr'})
-	    if ($entry{'wrap'});
+        $entry{'msgstr'} = canonize($entry{'msgstr'})
+            if ($entry{'wrap'});
 
-	$entry{'msgstr'} = escape_text($entry{'msgstr'});
+        $entry{'msgstr'} = escape_text($entry{'msgstr'});
     }
 
     $self->push_raw(%entry);
@@ -1048,32 +1124,33 @@ sub push_raw {
     my $self=shift;
     my %entry=@_;
     my ($msgid,$msgstr,$reference,$comment,$automatic,$flags,$type)=
-	($entry{'msgid'},$entry{'msgstr'},
-	 $entry{'reference'},$entry{'comment'},$entry{'automatic'},
-	 $entry{'flags'},$entry{'type'});
+        ($entry{'msgid'},$entry{'msgstr'},
+         $entry{'reference'},$entry{'comment'},$entry{'automatic'},
+         $entry{'flags'},$entry{'type'});
     my $keep_conflict = $entry{'conflict'};
 
 #    print STDERR "Push_raw\n";
 #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
 #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
 #    Carp::cluck " flags=$flags\n" if $flags;
-    
+
     return unless defined($entry{'msgid'});
 
     #no msgid => header definition
-    unless (length($entry{'msgid'})) { 
-#	if (defined($self->{header}) && $self->{header} =~ /\S/) {
-#	    warn dgettext("po4a","Redefinition of the header. The old one will be discarded\n");
-#	} FIXME: do that iff the header isn't the default one.
-	$self->{header}=$msgstr;
-	$self->{header_comment}=$comment;
-	my $charset = $self->get_charset;
-	if ($charset ne "CHARSET") {
-	    $self->{encoder}=find_encoding($charset);
-	} else {
-	    $self->{encoder}=find_encoding("ascii");
-	}
-	return;
+    unless (length($entry{'msgid'})) {
+#       if (defined($self->{header}) && $self->{header} =~ /\S/) {
+#           warn dgettext("po4a","Redefinition of the header. ".
+#                                "The old one will be discarded\n");
+#       } FIXME: do that iff the header isn't the default one.
+        $self->{header}=$msgstr;
+        $self->{header_comment}=$comment;
+        my $charset = $self->get_charset;
+        if ($charset ne "CHARSET") {
+            $self->{encoder}=find_encoding($charset);
+        } else {
+            $self->{encoder}=find_encoding("ascii");
+        }
+        return;
     }
 
     if ($self->{options}{'porefs'} eq "none") {
@@ -1083,40 +1160,47 @@ sub push_raw {
     }
 
     if (defined($self->{po}{$msgid})) {
-        warn wrap_mod("po4a::po", dgettext("po4a","msgid defined twice: %s"), $msgid) if (0); # FIXME: put a verbose stuff
-	if ($msgstr && $self->{po}{$msgid}{'msgstr'} 
-	    && $self->{po}{$msgid}{'msgstr'} ne "$msgstr") {
-	    my $txt=quote_text($msgid);
-	    my ($first,$second)=
-		(format_comment(". ",$self->{po}{$msgid}{'reference'}).
-		 quote_text($self->{po}{$msgid}{'msgstr'}),
-		    
-		 format_comment(". ",$reference).
-		 quote_text($msgstr));
+        warn wrap_mod("po4a::po",
+                      dgettext("po4a","msgid defined twice: %s"),
+                      $msgid)
+            if (0); # FIXME: put a verbose stuff
+        if ($msgstr && $self->{po}{$msgid}{'msgstr'}
+            && $self->{po}{$msgid}{'msgstr'} ne "$msgstr") {
+            my $txt=quote_text($msgid);
+            my ($first,$second)=
+                (format_comment(". ",$self->{po}{$msgid}{'reference'}).
+                 quote_text($self->{po}{$msgid}{'msgstr'}),
 
-	    if ($keep_conflict) {
-		$msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".
-		          $self->{po}{$msgid}{'msgstr'}."\\n".
-		          "#-#-#-#-#  choice  #-#-#-#-#\\n".
-		          "$msgstr";
-		$msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".$msgstr
-		    unless ($msgstr =~ m/^#-#-#-#-#  choice  #-#-#-#-#\\n/s);
-	    } else {
-	    warn wrap_msg(dgettext("po4a",
-	    	"Translations don't match for:\n".
-		"%s\n".
-		"-->First translation:\n".
-		"%s\n".
-		" Second translation:\n".
-		"%s\n".
-		" Old translation discarded."),$txt,$first,$second);
-	    }
-	}
+                 format_comment(". ",$reference).
+                 quote_text($msgstr));
+
+            if ($keep_conflict) {
+                $msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".
+                          $self->{po}{$msgid}{'msgstr'}."\\n".
+                          "#-#-#-#-#  choice  #-#-#-#-#\\n".
+                          "$msgstr";
+                $msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".$msgstr
+                    unless ($msgstr =~ m/^#-#-#-#-#  choice  #-#-#-#-#\\n/s);
+            } else {
+            warn wrap_msg(dgettext("po4a",
+                                   "Translations don't match for:\n".
+                                   "%s\n".
+                                   "-->First translation:\n".
+                                   "%s\n".
+                                   " Second translation:\n".
+                                   "%s\n".
+                                   " Old translation discarded."),
+                          $txt,$first,$second);
+            }
+        }
     }
-    $self->{po}{$msgid}{'reference'} = (defined($self->{po}{$msgid}{'reference'}) ? 
-                                          $self->{po}{$msgid}{'reference'}." " : "")
-                                         . $reference
-       if (defined($reference));
+    if (defined $reference) {
+        if (defined $self->{po}{$msgid}{'reference'}) {
+            $self->{po}{$msgid}{'reference'} .= " ".$reference;
+        } else {
+            $self->{po}{$msgid}{'reference'} = $reference;
+        }
+    }
     $self->{po}{$msgid}{'msgstr'} = $msgstr;
     $self->{po}{$msgid}{'comment'} = $comment;
     $self->{po}{$msgid}{'automatic'} = $automatic;
@@ -1126,21 +1210,26 @@ sub push_raw {
         $self->{po}{$msgid}{'pos_doc'}  = $self->{count_doc}++;
     }
     unless (defined($self->{po}{$msgid}{'pos'})) {
-      $self->{po}{$msgid}{'pos'} = $self->{count}++;
+        $self->{po}{$msgid}{'pos'} = $self->{count}++;
     }
     $self->{po}{$msgid}{'type'} = $type;
     $self->{po}{$msgid}{'plural'} = $entry{'plural'}
         if defined $entry{'plural'};
-      
+
     if (defined($flags)) {
         $flags = " $flags ";
         $flags =~ s/,/ /g;
-	foreach my $flag (@known_flags) {
-	    if ($flags =~ /\s$flag\s/) { # if flag to be set
-		unless (defined($self->{po}{$msgid}{'flags'}) && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/) {
-		    # flag not already set
-		    $self->{po}{$msgid}{'flags'} .= (defined($self->{po}{$msgid}{'flags'}) ? " " : "") .$flag;
-		}
+        foreach my $flag (@known_flags) {
+            if ($flags =~ /\s$flag\s/) { # if flag to be set
+                unless (   defined($self->{po}{$msgid}{'flags'})
+                        && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/) {
+                    # flag not already set
+                    if (defined $self->{po}{$msgid}{'flags'}) {
+                        $self->{po}{$msgid}{'flags'} .= " ".$flag;
+                    } else {
+                        $self->{po}{$msgid}{'flags'} = $flag;
+                    }
+                }
             }
         }
     }
@@ -1186,9 +1275,9 @@ Returns the msgid of the given number.
 sub msgid($$) {
     my $self=shift;
     my $num=shift;
-    
+
     foreach my $msgid ( keys %{$self->{po}} ) {
-	return $msgid if ($self->{po}{$msgid}{'pos'} eq $num);
+        return $msgid if ($self->{po}{$msgid}{'pos'} eq $num);
     }
     return undef;
 }
@@ -1202,7 +1291,7 @@ Returns the msgid with the given position in the document.
 sub msgid_doc($$) {
     my $self=shift;
     my $num=shift;
-    
+
     foreach my $msgid ( keys %{$self->{po}} ) {
         foreach my $pos (split / /, $self->{po}{$msgid}{'pos_doc'}) {
             return $msgid if ($pos eq $num);
@@ -1247,7 +1336,7 @@ sub set_charset() {
 
 #----[ helper functions ]---------------------------------------------------
 
-# transforme the string from its po file representation to the form which 
+# transforme the string from its po file representation to the form which
 #   should be used to print it
 sub unescape_text {
     my $text = shift;
@@ -1260,7 +1349,7 @@ sub unescape_text {
     #   The following regular expression introduce newlines.
     #   Thus, ^ doesn't match all beginnings of lines.
     #   \G is a zero-width assertion that matches the position
-    #   of the previous substitution with s///g. As every 
+    #   of the previous substitution with s///g. As every
     #   substitution ends by a newline, it always matches a
     #   position just after a newline.
     $text =~ s/(           # $1:
@@ -1283,23 +1372,24 @@ sub unescape_text {
     return $text;
 }
 
-# transform the string to its representation as it should be written in po files
+# transform the string to its representation as it should be written in po
+# files
 sub escape_text {
     my $text = shift;
-    
+
     print STDERR "\nescape [$text]====" if $debug{'escape'};
     $text =~ s/\\/\\\\/g;
     $text =~ s/"/\\"/g;
     $text =~ s/\n/\\n/g;
     $text =~ s/\t/\\t/g;
     print STDERR ">$text<\n" if $debug{'escape'};
-    
+
     return $text;
 }
 
 # put quotes around the string on each lines (without escaping it)
-# It does also normalize the text (ie, make sure its representation is wraped 
-#   on the 80th char, but without changing the meaning of the string) 
+# It does also normalize the text (ie, make sure its representation is wraped
+#   on the 80th char, but without changing the meaning of the string)
 sub quote_text {
   my $string = shift;
 
@@ -1341,9 +1431,10 @@ sub unquote_text {
   return $string;
 }
 
-# canonize the string: write it on only one line, changing consecutive whitespace to
-# only one space.
-# Warning, it changes the string and should only be called if the string is plain text
+# canonize the string: write it on only one line, changing consecutive
+# whitespace to only one space.
+# Warning, it changes the string and should only be called if the string is
+# plain text
 sub canonize {
     my $text=shift;
     print STDERR "\ncanonize [$text]====" if $debug{'canonize'};
@@ -1368,50 +1459,50 @@ sub wrap {
     my $res="";
     my $first=1;
     while (defined(my $line=shift @lines)) {
-	if ($first && length($line) > $col - 10) {
-	    unshift @lines,$line;
-	    $first=0;
-	    next;
-	}
-	if (length($line) > $col) {
-	    my $pos=rindex($line," ",$col);
-	    while (substr($line,$pos-1,1) eq '.' && $pos != -1) {
-		$pos=rindex($line," ",$pos-1);
-	    }
-	    if ($pos == -1) {
-		# There are no spaces in the first $col chars, pick-up the
-		# first space
-		$pos = index($line," ");
-	    }
-	    if ($pos != -1) {
-		my $end=substr($line,$pos+1);
-		$line=substr($line,0,$pos+1);
-		if ($end =~ s/^( +)//) {
-		    $line .= $1;
-		}
-		unshift @lines,$end;
-	    }
-	}
-	$first=0;
-	$res.="$line\n";
+        if ($first && length($line) > $col - 10) {
+            unshift @lines,$line;
+            $first=0;
+            next;
+        }
+        if (length($line) > $col) {
+            my $pos=rindex($line," ",$col);
+            while (substr($line,$pos-1,1) eq '.' && $pos != -1) {
+                $pos=rindex($line," ",$pos-1);
+            }
+            if ($pos == -1) {
+                # There are no spaces in the first $col chars, pick-up the
+                # first space
+                $pos = index($line," ");
+            }
+            if ($pos != -1) {
+                my $end=substr($line,$pos+1);
+                $line=substr($line,0,$pos+1);
+                if ($end =~ s/^( +)//) {
+                    $line .= $1;
+                }
+                unshift @lines,$end;
+            }
+        }
+        $first=0;
+        $res.="$line\n";
     }
     # Restore the original trailing spaces
     $res =~ s/\s+$//s;
     if ($text =~ m/(\s+)$/s) {
-	$res .= $1;
+        $res .= $1;
     }
     return $res;
 }
 
 # outputs properly a '# ... ' line to be put in the po file
 sub format_comment {
-  my $comment=shift;
-  my $char=shift;
-  my $result = "#". $char . $comment;
-  $result =~ s/\n/\n#$char/gs;
-  $result =~ s/^#$char$/#/gm; 
-  $result .= "\n";
-  return $result;
+    my $comment=shift;
+    my $char=shift;
+    my $result = "#". $char . $comment;
+    $result =~ s/\n/\n#$char/gs;
+    $result =~ s/^#$char$/#/gm;
+    $result .= "\n";
+    return $result;
 }
 
 
