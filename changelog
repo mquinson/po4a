@@ -1,5 +1,16 @@
 2007-09-15  Nicolas François  <nicolas.francois@centraliens.net>
 
+	* lib/Locale/Po4a/Po.pm: Add support for PO with plural forms.
+	Po4a does not generate such PO files, but it can receive one in
+	input. In such case, po4a cannot choose between the (singular and)
+	plural forms. It will consider that msgstr[0] is the translation
+	of msgid and msgstr[1] is the translation of msgid_plural, which
+	may be wrong. Thus, a warning will be issued if po4a is asked to
+	translate the singular or plural form of a message with plural
+	forms.
+
+2007-09-15  Nicolas François  <nicolas.francois@centraliens.net>
+
 	* lib/Locale/Po4a/Po.pm (read): Be stricter when parsing PO files.
 	Add $ to the regular expressions.
 	* lib/Locale/Po4a/Po.pm (read): Remove unneeded test.

@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.82 2007-09-15 16:48:19 nekral-guest Exp $
+# $Id: Po.pm,v 1.83 2007-09-15 16:50:15 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -223,6 +223,7 @@ sub read {
 
     foreach my $msg (split (/\n\n/,$pofile)) {
         my ($msgid,$msgstr,$comment,$automatic,$reference,$flags,$buffer);
+        my ($msgid_plural, $msgstr_plural);
 	foreach my $line (split (/\n/,$msg)) {
 	    $linenum++;
 	    if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
@@ -240,10 +241,27 @@ sub read {
 	    } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
 		$buffer = $1;
 
+	    } elsif ($line =~ /^msgid_plural (".*")$/) { # begin of msgid_plural, end of msgid
+		$msgid = $buffer;
+		$buffer = $1;
+
 	    } elsif ($line =~ /^msgstr (".*")$/) { # begin of msgstr, end of msgid
 		$msgid = $buffer;
 		$buffer = "$1";
 
+	    } elsif ($line =~ /^msgstr\[([0-9]+)\] (".*")$/) { # begin of msgstr[x]
+		# po4a cannot uses plural forms 
+		# (no integer to use the plural form)
+		# Just drop the msgstr[...]
+		if ($1 eq "0") {
+		    $msgid_plural = $buffer;
+		    $buffer = "$2";
+		} elsif ($1 eq "1") {
+		    $msgstr = $buffer;
+		    $buffer = "$2";
+		} elsif ($1 eq "2") {
+		    $msgstr_plural = $buffer;
+		}
 	    } elsif ($line =~ /^(".*")$/) { # continuation of a line
 		$buffer .= "\n$1";
 
@@ -255,15 +273,42 @@ sub read {
 	    }
 	}
 	$linenum++;
-	$msgstr=$buffer;
-	$msgid = unquote_text($msgid) if (defined($msgid));
-	$msgstr = unquote_text($msgstr) if (defined($msgstr));
-        $self->push_raw ('msgid'     => $msgid,
-		        'msgstr'    => $msgstr,
-		        'reference' => $reference,
-		        'flags'     => $flags,
-		        'comment'   => $comment,
-		        'automatic' => $automatic);
+	if (defined $msgstr) {
+	    $msgstr_plural=$buffer;
+
+	    $msgid = unquote_text($msgid) if (defined($msgid));
+	    $msgstr = unquote_text($msgstr) if (defined($msgstr));
+	    $self->push_raw ('msgid'     => $msgid,
+	                     'msgstr'    => $msgstr,
+	                     'reference' => $reference,
+	                     'flags'     => $flags,
+	                     'comment'   => $comment,
+	                     'automatic' => $automatic,
+	                     'plural'    => 0);
+
+	    $msgid_plural = unquote_text($msgid_plural)
+		if (defined($msgid_plural));
+	    $msgstr_plural = unquote_text($msgstr_plural)
+		if (defined($msgstr_plural));
+	    $self->push_raw ('msgid'     => $msgid_plural,
+	                     'msgstr'    => $msgstr_plural,
+	                     'reference' => $reference,
+	                     'flags'     => $flags,
+	                     'comment'   => $comment,
+	                     'automatic' => $automatic,
+	                     'plural'    => 1);
+	} else {
+	    $msgstr=$buffer;
+
+	    $msgid = unquote_text($msgid) if (defined($msgid));
+	    $msgstr = unquote_text($msgstr) if (defined($msgstr));
+	    $self->push_raw ('msgid'     => $msgid,
+	                     'msgstr'    => $msgstr,
+	                     'reference' => $reference,
+	                     'flags'     => $flags,
+	                     'comment'   => $comment,
+	                     'automatic' => $automatic);
+	}
     }
 }
 
@@ -819,6 +864,19 @@ sub gettext {
 
 	$self->{gettexthits}++;
 	$res= unescape_text($self->{po}{$esc_text}{'msgstr'});
+	if (defined $self->{po}{$esc_text}{'plural'}) {
+	    if ($self->{po}{$esc_text}{'plural'} eq "0") {
+		warn wrap_mod("po4a gettextize", dgettext("po4a",
+		              "'%s' is the singular form of a message, ".
+		              "po4a will use the msgstr[0] translation (%s)."),
+		              $esc_text, $res);
+	    } else {
+		warn wrap_mod("po4a gettextize", dgettext("po4a",
+		              "'%s' is the plural form of a message, ".
+		              "po4a will use the msgstr[1] translation (%s)."),
+		              $esc_text, $res);
+	    }
+	}
     } else {
 	$res= $text;
     }
@@ -1071,6 +1129,8 @@ sub push_raw {
       $self->{po}{$msgid}{'pos'} = $self->{count}++;
     }
     $self->{po}{$msgid}{'type'} = $type;
+    $self->{po}{$msgid}{'plural'} = $entry{'plural'}
+        if defined $entry{'plural'};
       
     if (defined($flags)) {
         $flags = " $flags ";
