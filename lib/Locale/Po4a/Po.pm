@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.80 2007-09-15 16:11:39 nekral-guest Exp $
+# $Id: Po.pm,v 1.81 2007-09-15 16:15:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -227,27 +227,31 @@ sub read {
 	    $linenum++;
 	    if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
 		$automatic .= (defined($automatic) ? "\n" : "").$1;
-		
+
 	    } elsif ($line =~ /^#: ?(.*)$/) { # reference
-	        $reference .= (defined($reference) ? "\n" : "").$1;
-		     
+		$reference .= (defined($reference) ? "\n" : "").$1;
+
 	    } elsif ($line =~ /^#, ?(.*)$/) { # flags
 		$flags .= (defined($flags) ? "\n" : "").$1;
-		 
+
 	    } elsif ($line =~ /^#(.*)$/) {  # Translator comments 
-	        $comment .= (defined($comment) ? "\n" : "").($1||"");
+		$comment .= (defined($comment) ? "\n" : "").($1||"");
 
 	    } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
-	        $buffer .= (defined($buffer) ? "\n" : "").$1;
-		 
+		$buffer .= (defined($buffer) ? "\n" : "").$1;
+
 	    } elsif ($line =~ /^msgstr (".*")$/) { # begin of msgstr, end of msgid
-	        $msgid = $buffer;
-	        $buffer = "$1";
-	     
+		$msgid = $buffer;
+		$buffer = "$1";
+
 	    } elsif ($line =~ /^(".*")$/) { # continuation of a line
-	        $buffer .= "\n$1";
+		$buffer .= "\n$1";
+
 	    } else {
-	        warn wrap_ref_mod("$filename:$linenum", "po4a::po", dgettext("po4a", "Strange line: -->%s<--"), $line);
+		warn wrap_ref_mod("$filename:$linenum",
+		                  "po4a::po",
+		                  dgettext("po4a", "Strange line: -->%s<--"),
+		                  $line);
 	    }
 	}
 	$linenum++;
