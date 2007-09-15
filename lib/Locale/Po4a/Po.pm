@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files 
-# $Id: Po.pm,v 1.79 2007-09-15 16:07:24 nekral-guest Exp $
+# $Id: Po.pm,v 1.80 2007-09-15 16:11:39 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -234,7 +234,7 @@ sub read {
 	    } elsif ($line =~ /^#, ?(.*)$/) { # flags
 		$flags .= (defined($flags) ? "\n" : "").$1;
 		 
-	    } elsif ($line =~ /^#(.*)$/ || $line =~ /^#$/) {  # Translator comments 
+	    } elsif ($line =~ /^#(.*)$/) {  # Translator comments 
 	        $comment .= (defined($comment) ? "\n" : "").($1||"");
 
 	    } elsif ($line =~ /^msgid (".*")$/) { # begin of msgid
