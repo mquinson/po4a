@@ -109,7 +109,8 @@ given attribute into the 'attributes' list too.
 
 =item force
 
-Proceed even if the DTD is unknown.
+Proceed even if the DTD is unknown or if nsgmls finds errors in the input
+file.
 
 =item include-all
 
@@ -367,6 +368,7 @@ sub parse_file {
         $origfile .= ${$self->{TT}{doc_in}}[$i];
         $i+=2;
     }
+    unless ($self->{options}{'force'}) {
     # Detect if we can find the DTD
     open (VALID, "| nsgmls -p")
         or die wrap_mod("po4a::sgml",
@@ -377,6 +379,7 @@ sub parse_file {
                         dgettext("po4a", "Error while running nsgmls -p.  ".
                                          "Please check if nsgmls and the ".
                                          "DTD are installed."));
+    }
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
 	warn wrap_mod("po4a::sgml", dgettext("po4a",
