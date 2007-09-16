@@ -281,6 +281,7 @@ sub translate_buffer_menu {
     my ($self,$buffer,@env) = (shift,shift,@_);
     print STDERR "translate_buffer_menu($buffer,@env)="
         if ($debug{'translate_buffer'});
+
     my $translated_buffer = "";
     my $spaces = "";
     if ($buffer =~ m/(\s*)$/s) {
@@ -332,6 +333,10 @@ sub translate_buffer_menuentry {
         my $spaces = ' 'x($l+2);
         $t =~ s/\n/\n$spaces/sg;
         $translated_buffer .= $t;
+    } else {
+# FIXME: no-wrap if a line start by a space
+        my ($t, @e) = $self->translate_buffer($buffer, @env);
+        $translated_buffer = $t;
     }
 
     print STDERR "($translated_buffer,@env)\n"
