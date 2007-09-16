@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.84 2007-09-15 19:42:02 nekral-guest Exp $
+# $Id: Po.pm,v 1.85 2007-09-16 13:24:21 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -209,7 +209,7 @@ catalog.
 sub read {
     my $self=shift;
     my $filename=shift
-        || croak wrap_mod("po4a::po",
+        or croak wrap_mod("po4a::po",
                           dgettext("po4a",
                                    "Please provide a non-null filename"));
 
@@ -218,9 +218,9 @@ sub read {
         $fh=*STDIN;
     } else {
         open $fh,"<$filename"
-                || croak wrap_mod("po4a::po",
-                                  dgettext("po4a", "Can't read from %s: %s"),
-                                  $filename, $!);
+            or croak wrap_mod("po4a::po",
+                              dgettext("po4a", "Can't read from %s: %s"),
+                              $filename, $!);
     }
 
     ## Read paragraphs line-by-line
@@ -365,7 +365,7 @@ sub write{
                 if (length ($dir) && ! -e $dir);
         }
         open $fh,">$filename"
-            || croak wrap_mod("po4a::po",
+            or croak wrap_mod("po4a::po",
                               dgettext("po4a", "Can't write to %s: %s"),
                               $filename, $!);
     }
@@ -457,8 +457,8 @@ sub move_po_if_needed {
         } else {
             if ($backup) {
                 copy $old_po, $old_po."~"
-                  or die wrap_msg(dgettext("po4a","Can't copy %s to %s: %s."),
-                                  $old_po, $old_po."~", $!);
+                    or die wrap_msg(dgettext("po4a","Can't copy %s to %s: %s."),
+                                    $old_po, $old_po."~", $!);
             } else {
             }
             move $new_po, $old_po
@@ -933,10 +933,11 @@ sub gettext {
 
     $self->{gettextqueries}++;
 
-    if ($self->{po}{$esc_text}  &&
-        defined( $self->{po}{$esc_text}{'msgstr'} ) &&
-        length( $self->{po}{$esc_text}{'msgstr'} ) &&
-        !( ($self->{po}{$esc_text}{'flags'}||"") =~ /fuzzy/) ) {
+    if (    defined $self->{po}{$esc_text}
+        and defined $self->{po}{$esc_text}{'msgstr'}
+        and length $self->{po}{$esc_text}{'msgstr'}
+        and (   not defined $self->{po}{$esc_text}{'flags'}
+             or $self->{po}{$esc_text}{'flags'} !~ /fuzzy/)) {
 
         $self->{gettexthits}++;
         $res = unescape_text($self->{po}{$esc_text}{'msgstr'});
@@ -1164,8 +1165,9 @@ sub push_raw {
                       dgettext("po4a","msgid defined twice: %s"),
                       $msgid)
             if (0); # FIXME: put a verbose stuff
-        if ($msgstr && $self->{po}{$msgid}{'msgstr'}
-            && $self->{po}{$msgid}{'msgstr'} ne "$msgstr") {
+        if (    defined $msgstr
+            and defined $self->{po}{$msgid}{'msgstr'}
+            and $self->{po}{$msgid}{'msgstr'} ne $msgstr) {
             my $txt=quote_text($msgid);
             my ($first,$second)=
                 (format_comment(". ",$self->{po}{$msgid}{'reference'}).
@@ -1391,44 +1393,44 @@ sub escape_text {
 # It does also normalize the text (ie, make sure its representation is wraped
 #   on the 80th char, but without changing the meaning of the string)
 sub quote_text {
-  my $string = shift;
+    my $string = shift;
 
-  return '""' unless defined($string) && length($string);
+    return '""' unless defined($string) && length($string);
 
-  print STDERR "\nquote [$string]====" if $debug{'quote'};
-  # break lines on newlines, if any
-  # see unescape_text for an explanation on \G
-  $string =~ s/(           # $1:
-                (\G|[^\\]) #    beginning of the line or any char
-                           #    different from '\'
-                (\\\\)*    #    followed by any even number of '\'
-               \\n)        # and followed by an escaped newline
-              /$1\n/sgx;   # single string, match globally, allow comments
-  $string = wrap($string);
-  my @string = split(/\n/,$string);
-  $string = join ("\"\n\"",@string);
-  $string = "\"$string\"";
-  if (scalar @string > 1 && $string[0] ne '') {
-      $string = "\"\"\n".$string;
-  }
+    print STDERR "\nquote [$string]====" if $debug{'quote'};
+    # break lines on newlines, if any
+    # see unescape_text for an explanation on \G
+    $string =~ s/(           # $1:
+                  (\G|[^\\]) #    beginning of the line or any char
+                             #    different from '\'
+                  (\\\\)*    #    followed by any even number of '\'
+                 \\n)        # and followed by an escaped newline
+                /$1\n/sgx;   # single string, match globally, allow comments
+    $string = wrap($string);
+    my @string = split(/\n/,$string);
+    $string = join ("\"\n\"",@string);
+    $string = "\"$string\"";
+    if (scalar @string > 1 && $string[0] ne '') {
+        $string = "\"\"\n".$string;
+    }
 
-  print STDERR ">$string<\n" if $debug{'quote'};
-  return $string;
+    print STDERR ">$string<\n" if $debug{'quote'};
+    return $string;
 }
 
 # undo the work of the quote_text function
 sub unquote_text {
-  my $string = shift;
-  print STDERR "\nunquote [$string]====" if $debug{'quote'};
-  $string =~ s/^""\\n//s;
-  $string =~ s/^"(.*)"$/$1/s;
-  $string =~ s/"\n"//gm;
-  # Note: an even number of '\' could precede \\n, but I could not build a
-  # document to test this
-  $string =~ s/([^\\])\\n\n/$1!!DUMMYPOPM!!/gm;
-  $string =~ s|!!DUMMYPOPM!!|\\n|gm;
-  print STDERR ">$string<\n" if $debug{'quote'};
-  return $string;
+    my $string = shift;
+    print STDERR "\nunquote [$string]====" if $debug{'quote'};
+    $string =~ s/^""\\n//s;
+    $string =~ s/^"(.*)"$/$1/s;
+    $string =~ s/"\n"//gm;
+    # Note: an even number of '\' could precede \\n, but I could not build a
+    # document to test this
+    $string =~ s/([^\\])\\n\n/$1!!DUMMYPOPM!!/gm;
+    $string =~ s|!!DUMMYPOPM!!|\\n|gm;
+    print STDERR ">$string<\n" if $debug{'quote'};
+    return $string;
 }
 
 # canonize the string: write it on only one line, changing consecutive
