@@ -97,6 +97,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
             %commands             %environments
             %command_categories   %separated
             %env_separators       %debug
+            %translate_buffer_env
             @exclude_include      @comments);
 *RE_ESCAPE             = \$Locale::Po4a::TeX::RE_ESCAPE;
 *ESCAPE                = \$Locale::Po4a::TeX::ESCAPE;
@@ -111,6 +112,7 @@ use vars qw($RE_ESCAPE            $ESCAPE
 *separated             = \%Locale::Po4a::TeX::separated;
 *env_separators        = \%Locale::Po4a::TeX::env_separators;
 *debug                 = \%Locale::Po4a::TeX::debug;
+*translate_buffer_env  = \%Locale::Po4a::TeX::translate_buffer_env;
 *exclude_include       = \@Locale::Po4a::TeX::exclude_include;
 *comments              = \@Locale::Po4a::TeX::comments;
 
@@ -275,6 +277,76 @@ sub line_command {
     return ($translated,@$env);
 }
 
+sub translate_buffer_menu {
+    my ($self,$buffer,@env) = (shift,shift,@_);
+    print STDERR "translate_buffer_menu($buffer,@env)="
+        if ($debug{'translate_buffer'});
+    my $translated_buffer = "";
+    my $spaces = "";
+    if ($buffer =~ m/(\s*)$/s) {
+        $spaces = $1;
+    }
+
+
+    while ($buffer =~ m/^(.*?)((?:\n|^)\* )(.*)$/s) {
+        my $sep = $2;
+        $buffer = $3;
+        my($t, @e) = $self->translate_buffer_menuentry($1, @env, "menuentry");
+        $translated_buffer .= $t.$sep;
+    }
+    my($t, @e) = $self->translate_buffer_menuentry($buffer, @env, "menuentry");
+    $translated_buffer .= $t;
+
+    $translated_buffer .= $spaces;
+
+    print STDERR "($translated_buffer,@env)\n"
+        if ($debug{'translate_buffer'});
+    return ($translated_buffer,@env);
+}
+$translate_buffer_env{"menu"}       = \&translate_buffer_menu;
+$translate_buffer_env{"detailmenu"} = \&translate_buffer_menu;
+$translate_buffer_env{"direntry"}   = \&translate_buffer_menu;
+
+my $menu_width = 78;
+my $menu_sep_width = 30;
+sub translate_buffer_menuentry {
+    my ($self,$buffer,@env) = (shift,shift,@_);
+    print STDERR "translate_buffer_menuentry($buffer,@env)="
+        if ($debug{'translate_buffer'});
+
+    my $translated_buffer = "";
+    
+    if (   $buffer =~ m/^(.*?)(::)\s+(.*)$/s
+        or $buffer =~ m/^(.*?: .*?)(\.)\s+(.*)$/s) {
+        my ($name, $sep, $description) = ($1, $2, $3);
+        my ($t, @e) = $self->translate_buffer($name, @env);
+        $translated_buffer = $t.$sep."  ";
+        my $l = length($translated_buffer) + 2;
+        if ($l < $menu_sep_width-1) {
+            $translated_buffer .= ' 'x($menu_sep_width-1-$l);
+            $l = $menu_sep_width-1;
+        }
+        ($t, @e) = $self->translate_buffer($description, @env);
+        $t =~ s/\n//sg;
+        $t = Locale::Po4a::Po::wrap($t, $menu_width-$l-2);
+        my $spaces = ' 'x($l+2);
+        $t =~ s/\n/\n$spaces/sg;
+        $translated_buffer .= $t;
+    }
+
+    print STDERR "($translated_buffer,@env)\n"
+        if ($debug{'translate_buffer'});
+    return ($translated_buffer,@env);
+}
+
+sub translate_buffer_ignore {
+    my ($self,$buffer,@env) = (shift,shift,@_);
+    print STDERR "translate_buffer_ignore($buffer,@env);\n"
+        if ($debug{'translate_buffer'});
+    return ($buffer,@env);
+}
+$translate_buffer_env{"ignore"} = \&translate_buffer_ignore;
+
 foreach (qw(appendix section cindex findex kindex pindex vindex subsection
             dircategory subtitle include
             exdent center unnumberedsec
@@ -415,7 +487,6 @@ foreach (qw(detailmenu menu titlepage group copying
     $translate_line_command{$_} = 0;
     $break_line{$_} = 1;
 }
-register_verbatim_environment('detailmenu');
 foreach (qw(enumerate multitable ifset)) {
     $commands{$_} = \&environment_line_command;
     $break_line{$_} = 1;
@@ -426,8 +497,6 @@ foreach (qw(quotation)) {
     $break_line{$_} = 1;
 }
 
-# FIXME: maybe format and menu should just be verbatim environments.
-$env_separators{'direntry'} = $env_separators{'menu'} = $env_separators{'detailmenu'} = "(?:(?:^|\n)\\\*|::|\.  )";
 $env_separators{'format'} = "(?:(?:^|\n)\\\*|END-INFO-DIR-ENTRY|START-INFO-DIR-ENTRY)";
 $env_separators{'multitable'} = "(?:\@item|\@tab)";
 
