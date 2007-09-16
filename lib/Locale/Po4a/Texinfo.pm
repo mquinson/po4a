@@ -136,10 +136,24 @@ foreach (qw/example smallexample tex display smalldisplay verbatim format smallf
     $break_line{$_} = 1;
 }
 
-# TODO: Header shall be put after any \input
+my $docheader_pushed = 0;
+# The header shall not be written before the Texinfo header (which include
+# the \input command that define the texinfo macros)
 sub docheader {
-    return "\@c This file was generated with po4a. Translate the source file.\n".
-           "\@c\n";
+    return "";
+}
+
+sub push_docheader {
+    return if $docheader_pushed;
+    my $self = shift;
+    $self->pushline(<<END);
+\@c ===========================================================================
+\@c
+\@c This file was generated with po4a. Translate the source file.
+\@c
+\@c ===========================================================================
+END
+    $docheader_pushed = 1;
 }
 
 sub parse {
@@ -148,6 +162,7 @@ sub parse {
     my $paragraph = ""; # Buffer where we put the paragraph while building
     my @env = (); # environment stack
     my $t = "";
+    $docheader_pushed = 0;
 
   LINE:
     undef $self->{type};
@@ -186,7 +201,9 @@ sub parse {
                 $paragraph="";
             }
             $self->pushline($line."\n");
+            $self->push_docheader();
         } elsif ($line =~ m/^$RE_COMMENT/) {
+            $self->push_docheader();
             $self->pushline($line."\n");
         } elsif (    $closed
                  and ($line =~ /^@([^ ]*?)(?: +(.*))?$/)
