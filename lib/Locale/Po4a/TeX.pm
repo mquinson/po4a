@@ -77,6 +77,7 @@ use vars qw(@ISA @EXPORT);
              $verbatim_environments
              %separated_command
              %separated_environment
+             %translate_buffer_env
              &generic_command
              &register_generic_command
              &register_generic_environment);
@@ -627,10 +628,20 @@ Recursively translate a buffer by separating leading and trailing
 commands (those which should be translated separately) from the
 buffer.
 
+If a function is defined in %translate_buffer_env for the current
+environment, this function will be used to translate the buffer instead of
+translate_buffer().
+
 =cut
 
+our %translate_buffer_env = ();
 sub translate_buffer {
     my ($self,$buffer,@env) = (shift,shift,@_);
+
+    if (@env and defined $translate_buffer_env{$env[-1]}) {
+        return &{$translate_buffer_env{$env[-1]}}($self,$buffer, @env);
+    }
+
     print STDERR "translate_buffer($buffer,@env)="
         if ($debug{'translate_buffer'});
     my ($command,$variant) = ("","");
