@@ -636,14 +636,15 @@ translate_buffer().
 
 our %translate_buffer_env = ();
 sub translate_buffer {
-    my ($self,$buffer,@env) = (shift,shift,@_);
+    my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
 
     if (@env and defined $translate_buffer_env{$env[-1]}) {
-        return &{$translate_buffer_env{$env[-1]}}($self,$buffer, @env);
+        return &{$translate_buffer_env{$env[-1]}}($self,$buffer,$no_wrap,@env);
     }
 
-    print STDERR "translate_buffer($buffer,@env)="
+    print STDERR "translate_buffer($buffer,$no_wrap,@env)="
         if ($debug{'translate_buffer'});
+
     my ($command,$variant) = ("","");
     my $args;
     my $translated_buffer = "";
@@ -667,8 +668,8 @@ sub translate_buffer {
                                        $env[-1],
                                        "wrap" => 0);
             }
-            ($t2, @env) = translate_buffer($self, $end, @env);
-            print STDERR "($t1.$t2,@env)\n"
+            ($t2, @env) = translate_buffer($self, $end, $no_wrap, @env);
+            print STDERR "($t1$t2,@env)\n"
                 if ($debug{'translate_buffer'});
             return ($t1.$t2, @env);
         } else {
@@ -684,10 +685,10 @@ sub translate_buffer {
     if ($buffer =~ /^($RE_VERBATIM\n?)(.*)$/s and length $2) {
         my ($begin, $end) = ($1, $2);
         my ($t1, $t2) = ("", "");
-        ($t1, @env) = translate_buffer($self, $begin, @env);
-        ($t2, @env) = translate_buffer($self, $end,   @env);
+        ($t1, @env) = translate_buffer($self, $begin, $no_wrap, @env);
+        ($t2, @env) = translate_buffer($self, $end,   $no_wrap, @env);
 
-        print STDERR "($t1.$t2,@env)\n"
+        print STDERR "($t1$t2,@env)\n"
             if ($debug{'translate_buffer'});
         return ($t1.$t2, @env);
     }
@@ -702,10 +703,10 @@ sub translate_buffer {
         my ($begin, $end) = ($1, $2);
         my ($t1, $t2) = ("", "");
         if (is_closed($begin)) {
-            ($t1, @env) = translate_buffer($self, $begin, @env);
-            ($t2, @env) = translate_buffer($self, $end,   @env);
+            ($t1, @env) = translate_buffer($self, $begin, $no_wrap, @env);
+            ($t2, @env) = translate_buffer($self, $end,   $no_wrap, @env);
 
-            print STDERR "($t1.$t2,@env)\n"
+            print STDERR "($t1$t2,@env)\n"
                 if ($debug{'translate_buffer'});
             return ($t1.$t2, @env);
         }
@@ -759,7 +760,7 @@ sub translate_buffer {
             # with the content of each argument that need a translation.
             if (defined ($commands{$command})) {
                 ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                                   $args,\@env);
+                                                   $args,\@env,$no_wrap);
                 $translated_buffer .= $spaces.$t;
                 # Handle spaces after a command.
                 $spaces = "";
@@ -819,7 +820,7 @@ sub translate_buffer {
             $buf_begin .= $begin;
             if (is_closed($buf_begin)) {
                 my $t = "";
-                ($t, @env) = translate_buffer($self, $buf_begin, @env);
+                ($t, @env) = translate_buffer($self,$buf_begin,$no_wrap,@env);
                 $translated_buffer .= $t.$sep;
                 $buf_begin = "";
             } else {
@@ -843,6 +844,7 @@ sub translate_buffer {
                 }
             }
         }
+        $wrap = 0 if (defined $no_wrap and $no_wrap == 1);
         # Keep spaces at the end of the buffer.
         my $spaces = "";
         if ($buffer =~ /^(.*?)(\s+)$/s) {
@@ -864,7 +866,7 @@ sub translate_buffer {
         my $spaces  = shift @trailing_commands;
         if (defined ($commands{$command})) {
             ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                               $args,\@env);
+                                               $args,\@env,$no_wrap);
             $translated_buffer .= $t.$spaces;
         } else {
             die wrap_ref_mod($self->{ref},
@@ -1170,7 +1172,7 @@ sub parse {
             # paragraph.
             $paragraph .= $line."\n";
             if (length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
                 $self->pushline($t);
                 $paragraph="";
                 @comments = ();
@@ -1186,7 +1188,7 @@ sub parse {
     }
 
     if (length($paragraph)) {
-        ($t, @env) = translate_buffer($self,$paragraph,@env);
+        ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
         $self->pushline($t);
         $paragraph="";
     }
@@ -1258,7 +1260,8 @@ followed by an identifier of the parameter (like {#7} or [#2]).
 $commands{'begin'}= sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "begin($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "begin($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'} || $debug{'environments'});
     my ($t,@e) = ("",());
 
@@ -1269,7 +1272,7 @@ $commands{'begin'}= sub {
 
     if (defined($envir) && defined($environments{$envir})) {
         ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
-                                            $args,$env);
+                                            $args,$env,$no_wrap);
     } else {
         die wrap_ref_mod($self->{ref}, "po4a::tex",
                      dgettext("po4a", "unknown environment: '%s'"),
@@ -1286,7 +1289,8 @@ register_generic_command("*end,{}");
 $commands{'end'}= sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "end($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "end($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'} || $debug{'environments'});
 
     # verify that this environment was the last pushed environment.
@@ -1300,7 +1304,7 @@ $commands{'end'}= sub {
         pop @$env;
     }
 
-    my ($t,@e) = generic_command($self,$command,$variant,$args,$env);
+    my ($t,@e) = generic_command($self,$command,$variant,$args,$env,$no_wrap);
 
     print "($t, @$env)\n"
         if ($debug{'commands'} || $debug{'environments'});
@@ -1311,8 +1315,10 @@ $separated_command{'begin'} = '*';
 sub generic_command {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "generic_command($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "generic_command($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'} || $debug{'environments'});
+
     my ($t,@e)=("",());
     my $translated = "";
 
@@ -1361,7 +1367,7 @@ TEST_TYPE:
                                  $command, $reason);
             }
             if ($have_to_be_translated) {
-                ($t, @e) = translate_buffer($self,$opt,(@$env,$command.$type."#".$count.$type_end{$type}));
+                ($t, @e) = translate_buffer($self,$opt,$no_wrap,(@$env,$command.$type."#".$count.$type_end{$type}));
             } else {
                 $t = $opt;
             }
@@ -1377,9 +1383,11 @@ TEST_TYPE:
             $tmp .= $type.$opt.$type_end{$type};
         }
         @e = @$env;
+        my $wrap = 1;
+        $wrap = 0 if $no_wrap == 1;
         $translated = $self->translate($tmp,$self->{ref},
                                        @e?$e[-1]:"Plain text",
-                                       "wrap" => 1);
+                                       "wrap" => $wrap);
     }
 
     print "($translated, @$env)\n"
@@ -1423,7 +1431,8 @@ sub register_generic_command {
 sub generic_environment {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "generic_environment($command,$variant,$args,$env)="
+    my $no_wrap = shift;
+    print "generic_environment($command,$variant,$args,$env,$no_wrap)="
         if ($debug{'environments'});
     my ($t,@e)=("",());
     my $translated = "";
@@ -1474,7 +1483,7 @@ TEST_TYPE:
             }
 
             if ($have_to_be_translated) {
-                ($t, @e) = translate_buffer($self,$opt,(@$env,$new_env.$type."#".$count.$type_end{$type}));
+                ($t, @e) = translate_buffer($self,$opt,$no_wrap,(@$env,$new_env.$type."#".$count.$type_end{$type}));
             } else {
                 $t = $opt;
             }
@@ -1491,9 +1500,11 @@ TEST_TYPE:
             $buf .= $type.$opt.$type_end{$type};
         }
         @e = @$env;
+        my $wrap = 1;
+        $wrap = 0 if $no_wrap == 1;
         $translated = $self->translate($buf,$self->{ref},
                                        @e?$e[-1]:"Plain text",
-                                       "wrap" => 1);
+                                       "wrap" => $wrap);
     }
     @e = (@$env, $new_env);
 

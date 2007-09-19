@@ -111,13 +111,14 @@ register_generic_command("*documentclass,[]{}");
 $commands{'documentclass'} = sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my $no_wrap = shift;
 
     # Only try to parse the file.  We don't want to fail or parse this file
     # if it is a standard documentclass.
     my $name = ($args->[0] eq '[')? $args->[3]: $args->[1];
     parse_definition_file($self, $name.".cls", 1);
 
-    my ($t,@e) = generic_command($self,$command,$variant,$args,$env);
+    my ($t,@e) = generic_command($self,$command,$variant,$args,$env,$no_wrap);
 
     return ($t, @$env);
 };

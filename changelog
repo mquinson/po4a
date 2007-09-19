@@ -1,3 +1,25 @@
+2007-09-18  Nicolas François  <nicolas.francois@centraliens.net>
+
+	* lib/Locale/Po4a/TeX.pm: Add a no_wrap argument to the command,
+	environment (last argument) and translate_buffer functions (second
+	argument, before the @environments).
+	Currently, when $no_wrap equals 1 the no-wrap flag is forced.
+	A value of 0 could force the removal of the no-wrap flag and undef
+	could be used to specify that the current function can decide.
+	These last 2 values are not differentiated currently.
+	* lib/Locale/Po4a/TeX.pm: Fix debugging (do not display $t1.$t2,
+	but $t1$t2).
+	* lib/Locale/Po4a/LaTeX.pm: Add the no_wrap argument to the
+	'documentclass' command function, and passe it to the
+	generic_command function.
+	* lib/Locale/Po4a/Texinfo.pm: Add a no_wrap argument to the
+	command and environment function. Call translate_buffer with the
+	additional no_wrap parameter and add a parameter to the customized
+	translate_buffer functions (for the menu and ignore environments).
+	* lib/Locale/Po4a/Texinfo.pm: (line_command): line_command does
+	not need to add the command name to the list of no_wrap
+	environment. It now uses the no_wrap argument of translate_buffer.
+
 2007-09-16  Nicolas François  <nicolas.francois@centraliens.net>
 
 	* lib/Locale/Po4a/Texinfo.pm: Also translate in the menu

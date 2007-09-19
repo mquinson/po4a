@@ -192,13 +192,13 @@ sub parse {
             # paragraph.
             $paragraph .= $line."\n";
             if (length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
                 $self->pushline($t);
                 $paragraph="";
             }
         } elsif ($line =~ m/^\\input /) {
             if (length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
                 $self->pushline($t);
                 $paragraph="";
             }
@@ -212,7 +212,7 @@ sub parse {
                  and (defined $commands{$1})
                  and ($break_line{$1})) {
             if (length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,@env);
+                ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
                 $self->pushline($t);
                 $paragraph="";
             }
@@ -223,7 +223,7 @@ sub parse {
                 $arg =~ s/\s*$//s;
                 @args= (" ", $arg);
             }
-            ($t, @env) = &{$commands{$1}}($self, $1, "", \@args, \@env);
+            ($t, @env) = &{$commands{$1}}($self, $1, "", \@args, \@env, 1);
             $self->pushline($t."\n");
         } else {
             # continue the same paragraph
@@ -236,7 +236,7 @@ sub parse {
     }
 
     if (length($paragraph)) {
-        ($t, @env) = translate_buffer($self,$paragraph,@env);
+        ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
         $self->pushline($t);
         $paragraph="";
     }
@@ -245,7 +245,8 @@ sub parse {
 sub line_command {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "line_command($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "line_command($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'});
 
     my $translated = $ESCAPE.$command;
@@ -253,20 +254,8 @@ sub line_command {
     if (defined $line and length $line) {
         if (    defined $translate_line_command{$command}
             and $translate_line_command{$command}) {
-            my $no_wrap = 0;
-            foreach (split(' ', $no_wrap_environments)) {
-                if ($command eq $_) {
-                    $no_wrap = 1;
-                    last;
-                }
-            }
-            if ($no_wrap == 0) {
-                $no_wrap_environments .= " $command";
-            }
-            my ($t, $e) = $self->translate_buffer($line,@$env,$command);
-            if ($no_wrap == 0) {
-                $no_wrap_environments =~ s/ $command$//s;
-            }
+            # $no_wrap could be forced to 1, but it should already be set
+            my ($t,$e) = $self->translate_buffer($line,$no_wrap,@$env,$command);
             $translated .= " ".$t;
         } else {
             $translated .= " ".$line;
@@ -278,8 +267,8 @@ sub line_command {
 }
 
 sub translate_buffer_menu {
-    my ($self,$buffer,@env) = (shift,shift,@_);
-    print STDERR "translate_buffer_menu($buffer,@env)="
+    my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
+    print STDERR "translate_buffer_menu($buffer,$no_wrap,@env)="
         if ($debug{'translate_buffer'});
 
     my $translated_buffer = "";
@@ -292,10 +281,12 @@ sub translate_buffer_menu {
     while ($buffer =~ m/^(.*?)((?:\n|^)\* )(.*)$/s) {
         my $sep = $2;
         $buffer = $3;
-        my($t, @e) = $self->translate_buffer_menuentry($1, @env, "menuentry");
+        my($t, @e) = $self->translate_buffer_menuentry($1, $no_wrap,
+                                                       @env, "menuentry");
         $translated_buffer .= $t.$sep;
     }
-    my($t, @e) = $self->translate_buffer_menuentry($buffer, @env, "menuentry");
+    my($t, @e) = $self->translate_buffer_menuentry($buffer, $no_wrap,
+                                                   @env, "menuentry");
     $translated_buffer .= $t;
 
     $translated_buffer .= $spaces;
@@ -311,8 +302,8 @@ $translate_buffer_env{"direntry"}   = \&translate_buffer_menu;
 my $menu_width = 78;
 my $menu_sep_width = 30;
 sub translate_buffer_menuentry {
-    my ($self,$buffer,@env) = (shift,shift,@_);
-    print STDERR "translate_buffer_menuentry($buffer,@env)="
+    my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
+    print STDERR "translate_buffer_menuentry($buffer,$no_wrap,@env)="
         if ($debug{'translate_buffer'});
 
     my $translated_buffer = "";
@@ -320,14 +311,14 @@ sub translate_buffer_menuentry {
     if (   $buffer =~ m/^(.*?)(::)\s+(.*)$/s
         or $buffer =~ m/^(.*?: .*?)(\.)\s+(.*)$/s) {
         my ($name, $sep, $description) = ($1, $2, $3);
-        my ($t, @e) = $self->translate_buffer($name, @env);
+        my ($t, @e) = $self->translate_buffer($name, $no_wrap, @env);
         $translated_buffer = $t.$sep."  ";
         my $l = length($translated_buffer) + 2;
         if ($l < $menu_sep_width-1) {
             $translated_buffer .= ' 'x($menu_sep_width-1-$l);
             $l = $menu_sep_width-1;
         }
-        ($t, @e) = $self->translate_buffer($description, @env);
+        ($t, @e) = $self->translate_buffer($description, $no_wrap, @env);
         $t =~ s/\n//sg;
         $t = Locale::Po4a::Po::wrap($t, $menu_width-$l-2);
         my $spaces = ' 'x($l+2);
@@ -335,7 +326,7 @@ sub translate_buffer_menuentry {
         $translated_buffer .= $t;
     } else {
 # FIXME: no-wrap if a line start by a space
-        my ($t, @e) = $self->translate_buffer($buffer, @env);
+        my ($t, @e) = $self->translate_buffer($buffer, $no_wrap, @env);
         $translated_buffer = $t;
     }
 
@@ -345,8 +336,8 @@ sub translate_buffer_menuentry {
 }
 
 sub translate_buffer_ignore {
-    my ($self,$buffer,@env) = (shift,shift,@_);
-    print STDERR "translate_buffer_ignore($buffer,@env);\n"
+    my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
+    print STDERR "translate_buffer_ignore($buffer,$no_wrap,@env);\n"
         if ($debug{'translate_buffer'});
     return ($buffer,@env);
 }
@@ -419,7 +410,8 @@ $break_line{'node'} = 1;
 $commands{'node'} = sub {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "node($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "node($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'});
 
     my $translated = $ESCAPE.$command;
@@ -428,7 +420,7 @@ $commands{'node'} = sub {
         my @pointers = split (/, */, $line);
         my @t;
         foreach (@pointers) {
-           push @t, $self->translate($_, $self->{ref}, $command, "wrap" => 0);
+            push @t, $self->translate($_, $self->{ref}, $command, "wrap" => 0);
         }
         $translated .= " ".join(", ", @t);
     }
@@ -441,11 +433,12 @@ $commands{'node'} = sub {
 sub environment_command {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "environment_command($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "environment_command($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'});
     my ($t,@e)=("",());
 
-    ($t, @e) = generic_command($self,$command,$variant,$args,$env);
+    ($t, @e) = generic_command($self,$command,$variant,$args,$env,$no_wrap);
     @e = (@$env, $command);
 
     print "($t,@e)\n"
@@ -456,11 +449,12 @@ sub environment_command {
 sub environment_line_command {
     my $self = shift;
     my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
-    print "environment_command_line($command,$variant,@$args,@$env)="
+    my $no_wrap = shift;
+    print "environment_command_line($command,$variant,@$args,@$env,$no_wrap)="
         if ($debug{'commands'});
     my ($t,@e)=("",());
 
-    ($t, @e) = line_command($self,$command,$variant,$args,$env);
+    ($t, @e) = line_command($self,$command,$variant,$args,$env,$no_wrap);
     @e = (@$env, $command);
 
     print "($t,@e)\n"
@@ -526,7 +520,6 @@ $break_line{'table'} = 1;
 # be used as verbatim. (Expressions.texi)
 
 # TODO: @include @ignore
-# TODO: special function for the indexes
 
 # TBC: node Indices
 
