@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.15 2007-02-14 21:14:38 nekral-guest Exp $
+# $Id: Common.pm,v 1.16 2008-01-13 15:37:17 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -192,8 +192,8 @@ dgettext($$)
 BEGIN {
     if (eval { require Locale::gettext }) {
        import Locale::gettext;
-       use POSIX;
-       setlocale(LC_MESSAGES, '');
+       require POSIX;
+       POSIX::setlocale(&POSIX::LC_MESSAGES, '');
     } else {
        eval '
            sub bindtextdomain($$) { }
