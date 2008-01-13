@@ -1079,6 +1079,12 @@ sub post_trans {
             $str.= "\n$t3";
         }
     }
+    my $str2 = $str;
+    $str2 =~ s/E<[gl]t>//g;
+    die wrap_ref_mod($ref||$self->{ref}, "po4a::man",
+                     dgettext("po4a","Unknown '<' or '>' sequence. ".
+                                     "Faulty message: %s"),$str)
+        if $str2 =~ /[<>]/;
     $str =~ s/E<gt>/>/mg;
     $str =~ s/E<lt>/</mg;
     # Don't do that, because we'll go into trouble if previous line was .TP
