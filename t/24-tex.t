@@ -23,7 +23,7 @@ push @tests, {
 }, {
   'run'  => "cp data-24/simple.fr.po tmp/".
         " && LC_ALL=C COLUMNS=80 perl ../po4a-updatepo -f latex -m data-24/simple.tex -p tmp/simple.fr.po > tmp/simple-updatepo.out 2>&1",
-  'test' => "diff -u data-24/simple-updatepo.out tmp/simple-updatepo.out".
+  'test' => "diff -u -I '^\.* done\.' data-24/simple-updatepo.out tmp/simple-updatepo.out".
         " && diff -u $diff_po_flags data-24/simple.fr.po tmp/simple.fr.po",
   'doc'  => "updatepo for this document",
 }, {

@@ -75,7 +75,7 @@ $tests[4]{'run'}  =
     'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a -v -k 0 data-05/test2.conf >tmp/err 2>&1';
 @{$tests[4]{'test'}} =
-    ("diff -u data-05/test4.err tmp/err",
+    ("diff -u -I '^\.* done\.' data-05/test4.err tmp/err",
      "diff -u $diff_po_flags data-05/test2.pot tmp/test2.pot",
      "diff -u $diff_po_flags data-05/test2.fr.po tmp/test2.fr.po",
      "diff -u $diff_po_flags data-05/test2.es.po tmp/test2.es.po",
@@ -92,7 +92,7 @@ $tests[5]{'run'}  =
     'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a -v data-05/test3.conf > tmp/err 2>&1';
 @{$tests[5]{'test'}} =
-    ("diff -u data-05/test4.err tmp/err",
+    ("diff -u -I '^\.* done\.' data-05/test4.err tmp/err",
      "diff -u $diff_po_flags data-05/test2.pot tmp/test2.pot",
      "diff -u $diff_po_flags data-05/test2.fr.po tmp/test2.fr.po",
      "diff -u $diff_po_flags data-05/test2.es.po tmp/test2.es.po",
