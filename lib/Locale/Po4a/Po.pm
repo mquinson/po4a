@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.85 2007-09-16 13:24:21 nekral-guest Exp $
+# $Id: Po.pm,v 1.86 2008-01-13 13:40:08 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -177,7 +177,7 @@ sub initialize {
                     ." This file is distributed under the same license ".
                      "as the PACKAGE package.\n"
                     ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
-                    ." \n"
+                    ."\n"
                     .", fuzzy");
 #    $self->header_tag="fuzzy";
     $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
