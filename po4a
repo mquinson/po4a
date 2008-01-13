@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.78 2007-07-02 22:55:21 nekral-guest Exp $
+# $Id: po4a,v 1.79 2008-01-13 15:21:16 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -440,10 +440,10 @@ sub get_options {
     $opts{"msgmerge-opt"} .= " --previous" if $previous;
 
     # options to transmit to the modules
-    %{$opts{"options"}} = (
+    $opts{"options"} = {
         "verbose" => $opts{"verbose"},
         "debug"   => $opts{"debug"}
-    );
+    };
     foreach (@options) {
         if (m/^([^=]*)=(.*)$/) {
             $opts{"options"}{$1}="$2";
@@ -498,10 +498,10 @@ sub parse_config_options {
             if (! defined $lang) {
                 $lang = "global";
             }
-            if (! defined ${%$options}{$lang}) {
-                ${%$options}{$lang} = $opt;
+            if (! defined $options->{$lang}) {
+                $options->{$lang} = $opt;
             } else {
-                ${%$options}{$lang} .= " $opt";
+                $options->{$lang} .= " $opt";
             }
         } else {
             last;
@@ -638,20 +638,20 @@ while (<CONFIG>) {
 	my %options;
 	# 1. Use the global options ([opt] ...)
 	%options = %{$document{''}{'options'}}
-	  if defined %{$document{''}{'options'}};
+	  if defined $document{''}{'options'};
 
 	# 2. Merge the alias options
 	if (defined $aliases{$1}) {
 	    $document{$main}{'format'} = $aliases{$1}{"module"};
-	    if (defined %{$aliases{$1}{"options"}}) {
-		%options = %{$aliases{$1}{"options"}};
+	    if (defined $aliases{$1}{"options"}) {
+		%options = %{$aliases{$1}{"options"}}; # XXX not a merge, but overwrite
 	    }
 	}
 
 	# 3. If this file was already specified, reuse the previous
 	#    options (no merge)
 	%options = %{$document{$main}{'options'}}
-	  if defined %{$document{$main}{'options'}};
+	  if defined $document{$main}{'options'};
 
 	# 4. Merge the document specific options
 	# separate the end of the line, which contains options.
@@ -697,7 +697,7 @@ while (<CONFIG>) {
 	$o =~ s/.*?\[options\] +//;
 	parse_config_options("$config_file:$nb",
 	                     $o,
-	                     \%{$document{''}{"options"}});
+	                     $document{''}{"options"});
     } else {
 	die wrap_ref_mod("$config_file:$nb", "",
 	    gettext("Unparsable command '%s'."), $cmd);
