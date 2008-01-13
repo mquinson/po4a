@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.86 2008-01-13 13:40:08 nekral-guest Exp $
+# $Id: Po.pm,v 1.87 2008-01-13 20:48:22 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -171,14 +171,14 @@ sub initialize {
     # (duplicate strings counted multiple times)
     $self->{count_doc}=0;
     $self->{header_comment}=
-        escape_text( " SOME DESCRIPTIVE TITLE\n"
+                     " SOME DESCRIPTIVE TITLE\n"
                     ." Copyright (C) YEAR ".
                      $self->{options}{'copyright-holder'}."\n"
                     ." This file is distributed under the same license ".
                      "as the PACKAGE package.\n"
                     ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
                     ."\n"
-                    .", fuzzy");
+                    .", fuzzy";
 #    $self->header_tag="fuzzy";
     $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
                         ((defined $self->{options}{'msgid-bugs-address'})?
@@ -370,7 +370,7 @@ sub write{
                               $filename, $!);
     }
 
-    print $fh "".format_comment(unescape_text($self->{header_comment}),"")
+    print $fh "".format_comment($self->{header_comment},"")
         if defined($self->{header_comment}) && length($self->{header_comment});
 
     print $fh "msgid \"\"\n";
