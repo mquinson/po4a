@@ -279,6 +279,40 @@ my box are inaccessible to po4a::man.
  .splitfont       .Sx             .T              .TF             .The
  .TT              .UC             .ul             .Vb             .zZ
 
+=head2 Hiding text to po4a
+
+Sometimes, the author knows that some parts are not translatable, and
+should not be extracted by po4a. For example, an option may accept an
+I<other> argument, and I<other> may also appear as the last item of a
+list. In the first case, I<other> should be not be translatable. And in
+the second case, I<other> should be translated.
+
+In such case, the author can avoid po4a to extract some strings, using
+some special groff constructs:
+
+ .if !'po4a'hide' .B other
+
+(this will require the B<-o groff_code=verbatim> option)
+
+A new macro can also be defined to automate this:
+ .de IR_untranslated
+ .    IR \\$@
+ ..
+
+ .IR_untranslated \-q ", " \-\-quiet
+
+(this will require the options B<-o groff_code=verbatim> and
+B<-o untranslated=IR_untranslated>; with this construct, the B<.if
+!'po4a'hide'> conditional is not strictly needed since po4a will not parse
+the internal of the macro definition)
+
+or using an alias:
+ .als IR_untranslated IR
+
+ .IR_untranslated \-q ", " \-\-quiet
+
+(this will require the B<-o untranslated=als,IR_untranslated> option)
+
 =head2 Conclusion
 
 To summarise this section, keep simple, and don't try to be clever while
@@ -350,7 +384,7 @@ L<Locale::Po4a::Pod(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002, 2003, 2004, 2005, 2006 by SPI, inc.
+Copyright 2002-2008 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
