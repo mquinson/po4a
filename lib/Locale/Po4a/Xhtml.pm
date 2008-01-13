@@ -167,36 +167,36 @@ sub initialize {
 
         $self->{options}{'inline'}.='
                 <a> 
-                <object> 
-                <br> 
-                <span> 
-                <bdo> 
-                <map> 
-                <tt> 
-                <i> 
-                <b> 
-                <big> 
-                <small> 
-                <em> 
-                <strong> 
-                <dfn> 
-                <code> 
-                <q> 
-                <samp> 
-                <kbd> 
-                <var> 
-                <cite> 
                 <abbr> 
                 <acronym> 
+                <b> 
+                <big> 
+                <bdo> 
+                <br> 
+                <button> 
+                <cite> 
+                <code> 
+                <del>
+                <dfn> 
+                <em> 
+                <i> 
+                <ins> 
+                <input> 
+                <kbd> 
+                <label> 
+                <map> 
+                <object> 
+                <q> 
+                <samp> 
+                <select> 
+                <small> 
+                <span> 
+                <strong> 
                 <sub> 
                 <sup> 
-                <input> 
-                <select> 
                 <textarea> 
-                <label> 
-                <button> 
-                <ins> 
-                <del>
+                <tt> 
+                <var> 
         ';
 
         # Ignored tags: <img>
