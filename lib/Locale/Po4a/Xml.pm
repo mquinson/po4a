@@ -284,6 +284,18 @@ all tags break the sequence.  This follows the same syntax as the tags option.
 Space separated list of tags that the module should not try to set by
 default in the "tags" or "inline" category.
 
+=item cpp
+
+Support C preprocessor directives.
+When this option is set, po4a will consider preprocessor directives as
+paragraph separators.
+This is important if the XML file must be preprocessed because otherwise
+the directives may be inserted in the middle of lines if po4a consider it
+belong to the current paragraph, and they won't be recognized by the
+preprocessor.
+Note: the preprocessor directives must only appear between tags
+(they must not break a tag).
+
 =back
 
 =cut
@@ -312,6 +324,7 @@ sub initialize {
 	$self->{options}{'nodefault'}='';
 	$self->{options}{'includeexternal'}=0;
 	$self->{options}{'ontagerror'}="fail";
+	$self->{options}{'cpp'}=0;
 
 	$self->{options}{'verbose'}='';
 	$self->{options}{'debug'}='';
@@ -1304,6 +1317,29 @@ sub translate_paragraph {
 	}
 	$self->pushline("<!--".$comments."-->\n") if defined $comments;
 	@comments = ();
+
+	if ($self->{options}{'cpp'}) {
+		my @tmp = @paragraph;
+		@paragraph = ();
+		while (@tmp) {
+			my ($t,$l) = (shift @tmp, shift @tmp);
+			# #include can be followed by a filename between
+			# <> brackets. In that case, the argument won't be
+			# handled in the same call to translate_paragraph.
+			# Thus do not try to match "include ".
+			if ($t =~ m/^#[ \t]*(if |endif|undef |include|else|ifdef |ifndef |define )/si) {
+				if (@paragraph) {
+					$self->translate_paragraph($translate,
+					                           @paragraph);
+					@paragraph = ();
+					$self->pushline("\n");
+				}
+				$self->pushline($t);
+			} else {
+				push @paragraph, ($t,$l);
+			}
+		}
+	}
 
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
 		my $struc = $self->get_path;
