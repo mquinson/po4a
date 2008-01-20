@@ -1030,26 +1030,97 @@ sub treat_attributes {
 	return $text;
 }
 
+# Returns an empty string if the content in the $path should not be
+# translated.
+#
+# Otherwise, returns the set of options for translation:
+#   w: the content shall be re-wrapped
+#   W: the content shall not be re-wrapped
+sub get_translate_options {
+	my $self = shift;
+	my $path = shift;
+	my $options = "";
+	my $translate = 0;
+
+	my $inlist = 0;
+	my $tag = $self->get_tag_from_list($path, @{$self->{tags}});
+	if (defined $tag) {
+		$inlist = 1;
+	}
+	if ($self->{options}{'tagsonly'} eq $inlist) {
+		if (defined $tag) {
+			$options = $tag;
+			$options =~ s/<.*$//;
+		} else {
+			if ($self->{options}{'wrap'}) {
+				$options = "w";
+			} else {
+				$options = "W";
+			}
+		}
+		$translate = 1;
+	}
+
+	if ($translate and $options !~ m/w/i) {
+		$options .= ($self->{options}{'wrap'})?"w":"W";
+	}
+
+	return $options;
+}
+
+
+# Return the tag (or biggest set of tags) of a list which matches with the
+# given path.
+#
+# The tag (or set of tags) is returned with its options.
+#
+# If no tags could match the path, undef is returned.
+sub get_tag_from_list {
+	my ($self,$path,@list) = @_;
+	my $found = 0;
+	my $i = 0;
+	
+	while (!$found && $i < @list) {
+		my $options;
+		my $element;
+		if ($list[$i] =~ /(.*?)(<.*)/) {
+			$options = $1;
+			$element = $2;
+		} else {
+			$element = $list[$i];
+		}
+		if ($self->{options}{'caseinsensitive'}) {
+			if ( $path =~ /\Q$element\E$/i ) {
+				$found = 1;
+			}
+		} else {
+			if ( $path =~ /\Q$element\E$/ ) {
+				$found = 1;
+			}
+		}
+		if ($found) {
+			return $list[$i];
+		} else {
+			$i++;
+		}
+	}
+	return undef;
+}
+
 
 
 sub treat_content {
 	my $self = shift;
 	my $blank="";
 	# Indicates if the paragraph will have to be translated
-	my $translate = 0;
+	my $translate = "";
 
 	my ($eof,@paragraph)=$self->get_string_until('<',{remove=>1});
 
 	# Check if this has to be translated
 	if ($self->join_lines(@paragraph) !~ /^\s*$/s) {
 		my $struc = $self->get_path;
-		my $inlist = 0;
-		if ($self->tag_in_list($struc,@{$self->{tags}})) {
-			$inlist = 1;
-		}
-		if ($self->{options}{'tagsonly'} eq $inlist) {
-			$translate = 1;
-		}
+		$translate = $self->get_translate_options($struc);
 	}
 
 	while (!$eof and !$self->breaking_tag) {
@@ -1170,14 +1241,7 @@ sub treat_content {
 			# has to be translated
 			if ($self->join_lines(@text) !~ /^\s*$/s) {
 				my $struc = $self->get_path;
-				my $inlist = 0;
-				if ($self->tag_in_list($struc,
-				                       @{$self->{tags}})) {
-					$inlist = 1;
-				}
-				if ($self->{options}{'tagsonly'} eq $inlist) {
-					$translate = 1;
-				}
+				$translate = $self->get_translate_options($struc);
 			}
 			push @paragraph, @text;
 		}
@@ -1342,16 +1406,13 @@ sub translate_paragraph {
 	}
 
 	if ( length($self->join_lines(@paragraph)) > 0 ) {
-		my $struc = $self->get_path;
-		my $options = $self->tag_in_list($struc,@{$self->{tags}});
-		$options = "" if ($options eq 0 or $options eq 1);
-		if ($translate) {
+		if ($translate ne "") {
 			# This tag should be translated
 			$self->pushline($self->found_string(
 				$self->join_lines(@paragraph),
 				$paragraph[1], {
 					type=>"tag",
-					tag_options=>$options,
+					tag_options=>$translate,
 					comments=>$comments
 				}));
 		} else {
