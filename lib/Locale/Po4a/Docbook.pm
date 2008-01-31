@@ -104,6 +104,7 @@ sub initialize {
 		<glossseealso>
 		<glossterm>
 		<holder>
+		<keyword>
 		<member>
 		<msgaud>
 		<msglevel>
