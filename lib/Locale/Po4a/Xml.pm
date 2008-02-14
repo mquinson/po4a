@@ -247,6 +247,8 @@ It is generally recommended to fix the input file.
 Extracts only the specified tags in the "tags" option.  Otherwise, it
 will extract all the tags except the ones specified.
 
+Note: This option is deprecated.
+
 =item doctype
 
 String that will try to match with the first line of the document's doctype
@@ -265,6 +267,9 @@ the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to override the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
+
+Note: This option is deprecated.
+You should use the B<translated> and B<untranslate> options instead.
 
 =item attributes
 
@@ -297,6 +302,20 @@ preprocessor.
 Note: the preprocessor directives must only appear between tags
 (they must not break a tag).
 
+=item translated
+=item unstranslated
+
+Space-separated list of the tags you want to translate or not.
+The tags must be in the form <aaa>, but you can join some (<bbb><aaa>) to
+indicate that the content of the tag <aaa> will only be translated when
+it’s into a <bbb> tag.
+
+You can also specify some tag options putting some characters in front of
+the tag hierarchy. For example, you can put ’w’ (wrap) or ’W’ (don’t wrap)
+to overide the default behavior specified by the global "wrap" option.
+
+Example: W<chapter><title>
+
 =back
 
 =cut
@@ -318,6 +337,8 @@ sub initialize {
 	$self->{options}{'caseinsensitive'}=0;
 	$self->{options}{'tagsonly'}=0;
 	$self->{options}{'tags'}='';
+	$self->{options}{'translated'}='';
+	$self->{options}{'untranslated'}='';
 	$self->{options}{'attributes'}='';
 	$self->{options}{'inline'}='';
 	$self->{options}{'placeholder'}='';
@@ -341,6 +362,8 @@ sub initialize {
 
 	#It will maintain the list of the translatable tags
 	$self->{tags}=();
+	$self->{translated}=();
+	$self->{untranslated}=();
 	#It will maintain the list of the translatable attributes
 	$self->{attributes}=();
 	#It will maintain the list of the inline tags
@@ -1068,6 +1091,21 @@ sub get_translate_options {
 		$translate = 1;
 	}
 
+# TODO: a less precise set of tags should not override a more precise one
+	# The tags and tagsonly options are deprecated.
+	# The translated and untranslated options have an higher priority.
+	$tag = $self->get_tag_from_list($path, @{$self->{untranslated}});
+	if (defined $tag) {
+		$options = "";
+		$translate = 0;
+	}
+	$tag = $self->get_tag_from_list($path, @{$self->{translated}});
+	if (defined $tag) {
+		$options = $tag;
+		$options =~ s/<.*$//;
+		$translate = 1;
+	}
+
 	if ($translate and $options !~ m/w/i) {
 		$options .= ($self->{options}{'wrap'})?"w":"W";
 	}
@@ -1464,6 +1502,14 @@ sub treat_options {
 			unless $list_nodefault{$tag};
 	}
 	$self->{tags} = \@list_tags;
+
+	$self->{options}{'translated'} =~ /\s*(.*)\s*/s;
+	my @list_translated = split(/\s+/s,$1);
+	$self->{translated} = \@list_translated;
+
+	$self->{options}{'untranslated'} =~ /\s*(.*)\s*/s;
+	my @list_untranslated = split(/\s+/s,$1);
+	$self->{untranslated} = \@list_untranslated;
 
 	$self->{options}{'attributes'} =~ /\s*(.*)\s*/s;
 	my @list_attr = split(/\s+/s,$1);
