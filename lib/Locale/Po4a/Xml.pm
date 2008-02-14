@@ -1314,8 +1314,9 @@ sub treat_content {
 	}
 
 	# This strips the extracted strings
-	# (only if you don't specify the 'nostrip' option)
-	if (!$self->{options}{'nostrip'}) {
+	# (only if you don't specify the 'nostrip' option, and if the
+	# paragraph can be re-wrapped)
+	if (!$self->{options}{'nostrip'} and $translate !~ m/W/) {
 		my $clean = 0;
 		# Clean the beginning
 		while (!$clean and $#paragraph > 0) {
