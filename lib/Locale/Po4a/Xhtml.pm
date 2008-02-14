@@ -207,8 +207,8 @@ sub initialize {
         # images. That'll teach you).
 
         $self->{options}{'attributes'}.='
-                lang
                 alt
+                lang
                 title
                 ';
         $self->treat_options;
