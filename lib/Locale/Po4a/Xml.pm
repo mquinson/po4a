@@ -218,7 +218,8 @@ documents.
 =item ontagerror
 
 This option defines the behavior of the module when it encounter a invalid
-closing tag (a tag is closed, which does not match the last opening tag).
+Xml syntax (a closing tag which does not match the last opening tag, or a
+tag's attribute without value).
 It can take the following values:
 
 =over
@@ -1023,8 +1024,14 @@ sub treat_attributes {
 				}
 			}
           
-			die wrap_ref_mod($ref, "po4a::xml", dgettext ("po4a", "Bad attribute syntax"))
-				unless ($complete);
+			unless ($complete) {
+				my $ontagerror = $self->{options}{'ontagerror'};
+				if ($ontagerror eq "warn") {
+					warn wrap_ref_mod($ref, "po4a::xml", dgettext ("po4a", "Bad attribute syntax.  Continuing..."));
+				} elsif ($ontagerror ne "silent") {
+					die wrap_ref_mod($ref, "po4a::xml", dgettext ("po4a", "Bad attribute syntax"));
+				}
+			}
 		}
 	}
 	return $text;
