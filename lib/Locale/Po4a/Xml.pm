@@ -1422,6 +1422,7 @@ sub translate_paragraph {
 	my $comments;
 	while (@comments) {
 		my ($t,$l) = (shift @comments, shift @comments);
+		$t =~ s/\n$//;
 		$comments .= "\n" if defined $comments;
 		$comments .= $t;
 	}
