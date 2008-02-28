@@ -123,6 +123,7 @@ sub parse {
       
       # Build the XML TransTractor which will do the job for us
       my $xmlizer = Locale::Po4a::Chooser::new("xhtml");
+      $xmlizer->{TT}{'file_in_charset'}=$self->{TT}{'file_in_charset'};
       $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
       $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
       
