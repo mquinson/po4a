@@ -111,6 +111,9 @@ sub parse {
           warn "FIXME: We should translate the page title: $1\n";
         }          
       }
+
+      # Validate define-tag tag's argument
+      $file =~ s|(<define-tag\s+)([^\s>]+)|$1PO4ADUMMYATTR="$2"|g;
                 
       # Flush the result to disk          
       open OUTFILE,">$tmp_filename";
@@ -136,6 +139,7 @@ sub parse {
       $file = join("",@{$xmlizer->{TT}{doc_out}});
       $file =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
       $file =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/msg;
+      $file =~ s|(<define-tag\s+)PO4ADUMMYATTR="([^"]*)"|$1$2|g;
       $file =~ s/PO4ALT/</msg;
       $file =~ s/PO4AGT/>/msg;
 
