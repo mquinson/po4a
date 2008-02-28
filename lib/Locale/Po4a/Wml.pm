@@ -104,7 +104,7 @@ sub parse {
       }
 
       # Mask mp4h cruft         
-      while ($file =~ m|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
+      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
         my $line = $1;
         print STDERR "PROTECT HEADER: $line\n";
         if ($line =~ m/title="([^"]*)"/) { #) {#"){
