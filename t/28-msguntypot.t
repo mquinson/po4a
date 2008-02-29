@@ -19,12 +19,12 @@ my $diff_po_flags = "";
 #  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
 
 push @tests, {
-  'run' => 'cp ../data-28/test1.po . && perl ../../scripts/msguntypot -o ../data-28/test1.old.pot -n ../data-28/test1.new.pot test1.po',
+  'run' => 'cp ../data-28/test1.po . && perl ../../scripts/msguntypot -o ../data-28/test1.old.pot -n ../data-28/test1.new.pot test1.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test1.new.po test1.po",
   'doc' => 'nominal test',
   };
 push @tests, {
-  'run' => 'cp ../data-28/test2.po . && perl ../../scripts/msguntypot -o ../data-28/test2.old.pot -n ../data-28/test2.new.pot test2.po',
+  'run' => 'cp ../data-28/test2.po . && perl ../../scripts/msguntypot -o ../data-28/test2.old.pot -n ../data-28/test2.new.pot test2.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test2.new.po test2.po",
   'doc' => 'fuzzy test',
   };
@@ -36,27 +36,27 @@ push @tests, {
 #  'doc' => 'msg moved test',
 #  };
 push @tests, {
-  'run' => 'cp ../data-28/test4.po . && perl ../../scripts/msguntypot -o ../data-28/test4.old.pot -n ../data-28/test4.new.pot test4.po',
+  'run' => 'cp ../data-28/test4.po . && perl ../../scripts/msguntypot -o ../data-28/test4.old.pot -n ../data-28/test4.new.pot test4.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test4.new.po test4.po",
   'doc' => 'plural strings test',
   };
 push @tests, {
-  'run' => 'cp ../data-28/test5.po . && perl ../../scripts/msguntypot -o ../data-28/test5.old.pot -n ../data-28/test5.new.pot test5.po',
+  'run' => 'cp ../data-28/test5.po . && perl ../../scripts/msguntypot -o ../data-28/test5.old.pot -n ../data-28/test5.new.pot test5.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test5.new.po test5.po",
   'doc' => 'plural strings test',
   };
 push @tests, {
-  'run' => 'cp ../data-28/test6.po . && perl ../../scripts/msguntypot -o ../data-28/test6.old.pot -n ../data-28/test6.new.pot test6.po',
+  'run' => 'cp ../data-28/test6.po . && perl ../../scripts/msguntypot -o ../data-28/test6.old.pot -n ../data-28/test6.new.pot test6.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test6.new.po test6.po",
   'doc' => 'plural strings test',
   };
 push @tests, {
-  'run' => 'cp ../data-28/test7.po . && perl ../../scripts/msguntypot -o ../data-28/test7.old.pot -n ../data-28/test7.new.pot test7.po',
+  'run' => 'cp ../data-28/test7.po . && perl ../../scripts/msguntypot -o ../data-28/test7.old.pot -n ../data-28/test7.new.pot test7.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test7.new.po test7.po",
   'doc' => 'plural strings test',
   };
 push @tests, {
-  'run' => 'cp ../data-28/test8.po . && perl ../../scripts/msguntypot -o ../data-28/test8.old.pot -n ../data-28/test8.new.pot test8.po',
+  'run' => 'cp ../data-28/test8.po . && perl ../../scripts/msguntypot -o ../data-28/test8.old.pot -n ../data-28/test8.new.pot test8.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test8.new.po test8.po",
   'doc' => 'plural strings test',
   };
