@@ -38,27 +38,27 @@ push @tests, {
 push @tests, {
   'run' => 'cp ../data-28/test4.po . && perl ../../scripts/msguntypot -o ../data-28/test4.old.pot -n ../data-28/test4.new.pot test4.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test4.new.po test4.po",
-  'doc' => 'plural strings test',
+  'doc' => 'plural strings (typo in msgid) test',
   };
 push @tests, {
   'run' => 'cp ../data-28/test5.po . && perl ../../scripts/msguntypot -o ../data-28/test5.old.pot -n ../data-28/test5.new.pot test5.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test5.new.po test5.po",
-  'doc' => 'plural strings test',
+  'doc' => 'plural strings (typo in msgid_plural) test',
   };
 push @tests, {
   'run' => 'cp ../data-28/test6.po . && perl ../../scripts/msguntypot -o ../data-28/test6.old.pot -n ../data-28/test6.new.pot test6.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test6.new.po test6.po",
-  'doc' => 'plural strings test',
+  'doc' => 'plural strings (typo in another msgid) test',
   };
 push @tests, {
   'run' => 'cp ../data-28/test7.po . && perl ../../scripts/msguntypot -o ../data-28/test7.old.pot -n ../data-28/test7.new.pot test7.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test7.new.po test7.po",
-  'doc' => 'plural strings test',
+  'doc' => 'plural fuzzy strings (typo in msgid) test',
   };
 push @tests, {
   'run' => 'cp ../data-28/test8.po . && perl ../../scripts/msguntypot -o ../data-28/test8.old.pot -n ../data-28/test8.new.pot test8.po > /dev/null',
   'test'=> "diff -u $diff_po_flags ../data-28/test8.new.po test8.po",
-  'doc' => 'plural strings test',
+  'doc' => 'plural fuzzy strings (typo in msgid_plural) test',
   };
 
 use Test::More tests => 14;
