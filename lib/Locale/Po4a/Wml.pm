@@ -45,10 +45,10 @@ Still to be implemented.
 =cut
 #
 #=head1 TODO
-#
-#(12:11:26) adn: et pour les # du debut ?
-#(12:11:57) adn: si y a moyen juste de sortir le pagetitle="foo" en <title>foo</title>, c'est encore mieux
-#(00:42:51) adn: #use wml::debian::mainpage title="Le systeme d'exploitation universel"
+# (translation from an IRC session)
+#(12:11:26) adn: What about the # at the beginning?
+#(12:11:57) adn: If there is a way to just extract the pagetitle="foo" into a <title>foo</title>, that would be even better.
+#(00:42:51) adn: #use wml::debian::mainpage title="The universal operating system"
 
 package Locale::Po4a::Wml;
 
