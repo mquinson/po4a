@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.88 2008-02-29 19:35:26 nekral-guest Exp $
+# $Id: Po.pm,v 1.89 2008-02-29 19:55:57 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -298,7 +298,7 @@ sub read {
             }
         }
         $linenum++;
-        if (defined $msgstr) {
+        if (defined $msgid_plural) {
             $msgstr_plural=$buffer;
 
             $msgid = unquote_text($msgid) if (defined($msgid));
