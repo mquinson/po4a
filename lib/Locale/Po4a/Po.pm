@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.89 2008-02-29 19:55:57 nekral-guest Exp $
+# $Id: Po.pm,v 1.90 2008-02-29 20:03:03 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -285,6 +285,9 @@ sub read {
                     $buffer = "$2";
                 } elsif ($1 eq "2") {
                     $msgstr_plural = $buffer;
+                    warn wrap_ref_mod("$filename:$linenum",
+                                      "po4a::po",
+                                      dgettext("po4a", "Messages with more than 2 plural forms are not supported."));
                 }
             } elsif ($line =~ /^(".*")$/) {
                 # continuation of a line
