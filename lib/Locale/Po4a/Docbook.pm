@@ -138,6 +138,7 @@ sub initialize {
 		<term>
 		<title>
 		<titleabbrev>
+		<ulink>
 		<userinput>';
 	$self->{options}{'inline'} .= '
 		<action>
