@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.87 2008-01-13 20:48:22 nekral-guest Exp $
+# $Id: Po.pm,v 1.88 2008-02-29 19:35:26 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -377,6 +377,7 @@ sub write{
     print $fh "msgstr ".quote_text($self->{header})."\n\n";
 
 
+    my $buf_msgstr_plural; # USed to keep the first msgstr of plural forms
     my $first=1;
     foreach my $msgid ( sort { ($self->{po}{"$a"}{'pos'}) <=>
                                ($self->{po}{"$b"}{'pos'})
@@ -409,15 +410,46 @@ sub write{
             if    defined($self->{po}{$msgid}{'flags'})
                && length ($self->{po}{$msgid}{'flags'});
 
-        if ($self->get_charset =~ /^utf-8$/i) {
-            my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
-            $msgid = Encode::decode_utf8($msgid);
-            $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
-            $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
+        if (exists $self->{po}{$msgid}{'plural'}) {
+            if ($self->{po}{$msgid}{'plural'} == 0) {
+                if ($self->get_charset =~ /^utf-8$/i) {
+                    my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
+                    $msgid = Encode::decode_utf8($msgid);
+                    $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
+                    $buf_msgstr_plural = Encode::encode_utf8("msgstr[0] ".quote_text($msgstr)."\n");
+                } else {
+                    $output = "msgid ".quote_text($msgid)."\n";
+                    $buf_msgstr_plural = "msgstr[0] ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+                }
+            } elsif ($self->{po}{$msgid}{'plural'} == 1) {
+# TODO: there may be only one plural form
+                if ($self->get_charset =~ /^utf-8$/i) {
+                    my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
+                    $msgid = Encode::decode_utf8($msgid);
+                    $output = Encode::encode_utf8("msgid_plural ".quote_text($msgid)."\n");
+                    $output .= $buf_msgstr_plural;
+                    $output .= Encode::encode_utf8("msgstr[1] ".quote_text($msgstr)."\n");
+                    $buf_msgstr_plural = "";
+                } else {
+                    $output = "msgid_plural ".quote_text($msgid)."\n";
+                    $output .= $buf_msgstr_plural;
+                    $output .= "msgstr[1] ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+                }
+            } else {
+                die wrap_msg(dgettext("po4a","Can't write PO files with more than two plural forms."));
+            }
         } else {
-            $output .= "msgid ".quote_text($msgid)."\n";
-            $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+            if ($self->get_charset =~ /^utf-8$/i) {
+                my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
+                $msgid = Encode::decode_utf8($msgid);
+                $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
+                $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
+            } else {
+                $output .= "msgid ".quote_text($msgid)."\n";
+                $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+            }
         }
+
         print $fh $output;
     }
 #    print STDERR "$fh";
