@@ -135,6 +135,10 @@ sub parse {
                         
       # Get the output po file back
       $self->{TT}{po_out}=$xmlizer->{TT}{po_out};
+      foreach my $msgid (keys %{$self->{TT}{po_out}{po}}) {
+        $self->{TT}{po_out}{po}{$msgid}{'reference'} =~
+           s|$tmp_filename(:\d+)|$filename$1|o;
+      }
       
       # Get the document back (undoing our wml masking)
       $file = join("",@{$xmlizer->{TT}{doc_out}});
