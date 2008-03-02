@@ -31,7 +31,7 @@ use Encode::Guess;
 
 =head1 NAME
 
-Po4a TransTractor - Generic trans(lator ex)tractor.
+Locale::Po4a::TransTractor - Generic trans(lator ex)tractor.
 
 =head1 DESCRIPTION
 
