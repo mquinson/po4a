@@ -1,4 +1,6 @@
 #!/usr/bin/perl
+#TODO:
+#Warn if tags / tagsonly / inline is used
 
 # Po4a::Xml.pm 
 # 
@@ -1425,6 +1427,7 @@ sub treat_content {
 # The $translate argument indicates if the strings must be translated or
 # just pushed
 sub translate_paragraph {
+# TODO: remove the translate parameter
 	my ($self, $translate) = (shift, shift);
 	my @paragraph = @_;
 	$translate = $self->get_translate_options($self->get_path);
