@@ -1098,12 +1098,6 @@ sub get_translate_options {
 # TODO: a less precise set of tags should not override a more precise one
 	# The tags and tagsonly options are deprecated.
 	# The translated and untranslated options have an higher priority.
-	$tag = $self->get_tag_from_list($path, @{$self->{untranslated}});
-	if (defined $tag) {
-		$usedefault = 0;
-		$options = "";
-		$translate = 0;
-	}
 	$tag = $self->get_tag_from_list($path, @{$self->{translated}});
 	if (defined $tag) {
 		$usedefault = 0;
@@ -1114,6 +1108,13 @@ sub get_translate_options {
 
 	if ($translate and $options !~ m/w/i) {
 		$options .= ($self->{options}{'wrap'})?"w":"W";
+	}
+
+	$tag = $self->get_tag_from_list($path, @{$self->{untranslated}});
+	if (defined $tag) {
+		$usedefault = 0;
+		$options = "";
+		$translate = 0;
 	}
 
 	if ($usedefault) {
