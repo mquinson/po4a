@@ -25,8 +25,14 @@ push @tests, {
             "&& diff -u $diff_po_flags ../data-27/comments-normalized.xml po4a-normalize.output",
   'doc' => 'normalisation test',
   };
+push @tests, {
+  'run' => 'perl ../../po4a-normalize -f xml -o translated="w<translate1w> W<translate2W> <translate5> i<inline6> " -o untranslated="<untranslated4>" ../data-27/options.xml',
+  'test'=> "diff -u $diff_po_flags ../data-27/options.po po4a-normalize.po".
+            "&& diff -u $diff_po_flags ../data-27/options-normalized.xml po4a-normalize.output",
+  'doc' => 'normalisation test',
+  };
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
