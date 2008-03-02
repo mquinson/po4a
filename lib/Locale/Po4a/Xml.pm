@@ -1068,6 +1068,7 @@ sub treat_attributes {
 # Otherwise, returns the set of options for translation:
 #   w: the content shall be re-wrapped
 #   W: the content shall not be re-wrapped
+#   i: the tag shall be inlined
 sub get_translate_options {
 	my $self = shift;
 	my $path = shift;
@@ -1093,6 +1094,12 @@ sub get_translate_options {
 			}
 		}
 		$translate = 1;
+	}
+
+	$tag = $self->get_tag_from_list($path, @{$self->{inline}});
+	if (defined $tag) {
+		$usedefault = 0;
+		$options .= "i";
 	}
 
 # TODO: a less precise set of tags should not override a more precise one
