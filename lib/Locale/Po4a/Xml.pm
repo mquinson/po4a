@@ -339,6 +339,7 @@ sub initialize {
 	$self->{options}{'tags'}='';
 	$self->{options}{'translated'}='';
 	$self->{options}{'untranslated'}='';
+	$self->{options}{'defaulttranslateoption'}='';
 	$self->{options}{'attributes'}='';
 	$self->{options}{'inline'}='';
 	$self->{options}{'placeholder'}='';
@@ -1071,6 +1072,7 @@ sub get_translate_options {
 	my $path = shift;
 	my $options = "";
 	my $translate = 0;
+	my $usedefault = 1;
 
 	my $inlist = 0;
 	my $tag = $self->get_tag_from_list($path, @{$self->{tags}});
@@ -1078,6 +1080,7 @@ sub get_translate_options {
 		$inlist = 1;
 	}
 	if ($self->{options}{'tagsonly'} eq $inlist) {
+		$usedefault = 0;
 		if (defined $tag) {
 			$options = $tag;
 			$options =~ s/<.*$//;
@@ -1096,11 +1099,13 @@ sub get_translate_options {
 	# The translated and untranslated options have an higher priority.
 	$tag = $self->get_tag_from_list($path, @{$self->{untranslated}});
 	if (defined $tag) {
+		$usedefault = 0;
 		$options = "";
 		$translate = 0;
 	}
 	$tag = $self->get_tag_from_list($path, @{$self->{translated}});
 	if (defined $tag) {
+		$usedefault = 0;
 		$options = $tag;
 		$options =~ s/<.*$//;
 		$translate = 1;
@@ -1108,6 +1113,10 @@ sub get_translate_options {
 
 	if ($translate and $options !~ m/w/i) {
 		$options .= ($self->{options}{'wrap'})?"w":"W";
+	}
+
+	if ($usedefault) {
+		$options = $self->{options}{'defaulttranslateoption'};
 	}
 
 	return $options;
