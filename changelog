@@ -1,5 +1,32 @@
 2008-03-02  Nicolas François  <nicolas.francois@centraliens.net>
 
+	* lib/Locale/Po4a/Docbook.pm: Remove ulink from the tags list
+	(already in the inline list).
+	* lib/Locale/Po4a/Docbook.pm: Move orgname from the tags list to
+	the inline list (can have para as parent).
+	* lib/Locale/Po4a/Docbook.pm: Move affiliation from the inline
+	list to the tags list (according to the list of parents, there is
+	no reasons to get an include tag for the <affiliation> tags.
+	* lib/Locale/Po4a/Docbook.pm: Move othercredit from the inline
+	list to the tags list (according to the list of parents, there is
+	no reasons to get an include tag for the <othercredit> tags).
+	* lib/Locale/Po4a/Docbook.pm: There is no need to have the
+	<revhistory> tag inline. Children tags are translated anyway.
+	* lib/Locale/Po4a/Docbook.pm: Added support for <affiliation>,
+	<appendixinfo>, <articleinfo>, <biblioentry>, <bibliographyinfo>,
+	<blockinfo>, <bookinfo>, <confgroup>, <confdates>, <conftitle>,
+	<confnum>, <confsponsor>, <contrib>, <chapterinfo>, <collab>,
+	<glossaryinfo>, <indexinfo>, <jobtitle>, <objectinfo>, <orgdiv>,
+	<prefaceinfo>, pubsnumber>, <refsynopsisdivinfo>, <revision>,
+	<revremark>, <sect1info>, <sect2info>, <sect3info>, <sect4info>,
+	<sect5info>, <setinfo>, <shortaffil>, <city>, <country>,
+	<imageobject>, <imagedata>, <othername>, <postcode>, <state>,
+	<street>.
+	* lib/Locale/Po4a/Docbook.pm: Added support for <address> (no
+	wrap).
+
+2008-03-02  Nicolas François  <nicolas.francois@centraliens.net>
+
 	* t/data-25/xhtml_normalized.html, t/data-25/xhtml.po: Update the
 	testsuite. Inline tags are really inlined now.
 	* NEWS, debian/changelog: paragraphs which only consist in an

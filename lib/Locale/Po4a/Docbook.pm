@@ -92,30 +92,53 @@ sub initialize {
 	$self->{options}{'tags'} .= '
 		<abbrev>
 		<acronym>
+		W<address>
+		<affiliation>
+		<appendixinfo>
 		<arg>
 		<artheader>
+		<articleinfo>
 		<attribution>
+		<biblioentry>
+		<bibliographyinfo>
+		<blockinfo>
+		<bookinfo>
 		<citetitle>
+		<confgroup>
+		<confdates>
+		<conftitle>
+		<confnum>
+		<confsponsor>
+		<contrib>
+		<chapterinfo>
+		<collab>
 		<computeroutput>
 		<date>
 		<entry>
 		<figure>
+		<glossaryinfo>
 		<glosssee>
 		<glossseealso>
 		<glossterm>
 		<holder>
+		<indexinfo>
+		<jobtitle>
 		<keyword>
 		<member>
 		<msgaud>
 		<msglevel>
 		<msgorig>
+		<objectinfo>
+		<orgdiv>
 		<option>
-		<orgname>
+		<othercredit>
 		<para>
 		<phrase>
+		<prefaceinfo>
+		<primary>
 		<pubdate>
 		<publishername>
-		<primary>
+		<pubsnumber>
 		W<programlisting>
 		<prompt>
 		<quote>
@@ -124,25 +147,34 @@ sub initialize {
 		<refmiscinfo>
 		<refname>
 		<refpurpose>
+		<refsynopsisdivinfo>
 		<releaseinfo>
 		<remark>
 		<replaceable>
+		<revision>
 		<revnumber>
+		<revremark>
 		W<screen>
 		<screeninfo>
+		<sect1info>
+		<sect2info>
+		<sect3info>
+		<sect4info>
+		<sect5info>
+		<sectioninfo>
 		<seg>
 		<segtitle>
+		<setinfo>
+		<shortaffil>
 		<simpara>
 		<subtitle>
 		<synopfragmentref>
 		<term>
 		<title>
 		<titleabbrev>
-		<ulink>
 		<userinput>';
 	$self->{options}{'inline'} .= '
 		<action>
-		<affiliation>
 		<anchor>
 		<application>
 		<arg>
@@ -152,6 +184,8 @@ sub initialize {
 		<citation>
 		<citerefentry>
 		<citetitle>
+		<city>
+		<country>
 		<classname>
 		<co>
 		<computeroutput>
@@ -181,6 +215,8 @@ sub initialize {
 		<guimenuitem>
 		<guisubmenu>
 		<hardware>
+		<imageobject>
+		<imagedata>
 		<indexterm>
 		<informalexample>
 		<inlineequation>
@@ -207,10 +243,12 @@ sub initialize {
 		<ooexception>
 		<oointerface>
 		<optional>
-		<othercredit>
+		<orgname>
+		<othername>
 		<parameter>
 		<personname>
 		<phrase>
+		<postcode>
 		<productname>
 		<productnumber>
 		<prompt>
@@ -220,9 +258,10 @@ sub initialize {
 		<replaceable>
 		<remark>
 		<returnvalue>
-		<revhistory>
 		<sgmltag>
 		<sidebar>
+		<state>
+		<street>
 		<structfield>
 		<structname>
 		<subscript>
