@@ -681,8 +681,8 @@ sub tag_trans_doctype {
 
 sub tag_break_close {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_path."<".
-		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
+	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
+	if ($self->get_translate_options($struct) =~ m/i/) {
 		return 0;
 	} else {
 		return 1;
@@ -721,8 +721,8 @@ sub CDATA_trans {
 
 sub tag_break_alone {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_path."<".
-		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
+	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
+	if ($self->get_translate_options($struct) =~ m/i/) {
 		return 0;
 	} else {
 		return 1;
@@ -742,8 +742,8 @@ sub tag_trans_alone {
 
 sub tag_break_open {
 	my ($self,@tag)=@_;
-	if ($self->tag_in_list($self->get_path."<".
-		$self->get_tag_name(@tag).">",@{$self->{inline}})) {
+	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
+	if ($self->get_translate_options($struct) =~ m/i/) {
 		return 0;
 	} else {
 		return 1;
