@@ -851,6 +851,7 @@ sub extract_tag {
 	}
 	$tag[0] =~ /^<\Q$match1\E(.*)$/s;
 	$tag[0] = $1;
+	$tag[0] =~ s/\s*$//s;
 	$tag[$#tag-1] =~ /^(.*)\Q$match2\E>$/s;
 	$tag[$#tag-1] = $1;
 	return ($eof,@tag);
