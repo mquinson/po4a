@@ -1180,12 +1180,6 @@ sub treat_content {
 
 	my ($eof,@paragraph)=$self->get_string_until('<',{remove=>1});
 
-	# Check if this has to be translated
-	if ($self->join_lines(@paragraph) !~ /^\s*$/s) {
-		my $struc = $self->get_path;
-		$translate = $self->get_translate_options($struc);
-	}
-
 	while (!$eof and !$self->breaking_tag) {
 	NEXT_TAG:
 		my @text;
@@ -1302,10 +1296,6 @@ sub treat_content {
 		if ($#text > 0) {
 			# Check if text (extracted after the inline tag)
 			# has to be translated
-			if ($self->join_lines(@text) !~ /^\s*$/s) {
-				my $struc = $self->get_path;
-				$translate = $self->get_translate_options($struc);
-			}
 			push @paragraph, @text;
 		}
 
@@ -1334,6 +1324,7 @@ sub treat_content {
 	# This strips the extracted strings
 	# (only if you don't specify the 'nostrip' option, and if the
 	# paragraph can be re-wrapped)
+	$translate = $self->get_translate_options($self->get_path);
 	if (!$self->{options}{'nostrip'} and $translate !~ m/W/) {
 		my $clean = 0;
 		# Clean the beginning
@@ -1436,6 +1427,7 @@ sub treat_content {
 sub translate_paragraph {
 	my ($self, $translate) = (shift, shift);
 	my @paragraph = @_;
+	$translate = $self->get_translate_options($self->get_path);
 
 	my $comments;
 	while (@comments) {
