@@ -853,7 +853,6 @@ sub extract_tag {
 	}
 	$tag[0] =~ /^<\Q$match1\E(.*)$/s;
 	$tag[0] = $1;
-	$tag[0] =~ s/\s*$//s;
 	$tag[$#tag-1] =~ /^(.*)\Q$match2\E>$/s;
 	$tag[$#tag-1] = $1;
 	return ($eof,@tag);
@@ -1242,13 +1241,14 @@ sub treat_content {
 					# Check if this is closing the
 					# last opening tag we detected.
 					my $test = pop @path;
+					my $name = $self->get_tag_name(@tag);
 					if (!defined($test) ||
-					    $test ne $tag[0] ) {
+					    $test ne $name ) {
 						my $ontagerror = $self->{options}{'ontagerror'};
 						if ($ontagerror eq "warn") {
-							warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $tag[0]);
+							warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $name);
 						} elsif ($ontagerror ne "silent") {
-							die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $tag[0]);
+							die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
 						}
 					}
 
