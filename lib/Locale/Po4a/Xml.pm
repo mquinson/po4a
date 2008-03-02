@@ -316,7 +316,7 @@ You can also specify some tag options putting some characters in front of
 the tag hierarchy. For example, you can put ’w’ (wrap) or ’W’ (don’t wrap)
 to overide the default behavior specified by the global "wrap" option.
 
-Example: W<chapter><title>
+Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
 =back
 
