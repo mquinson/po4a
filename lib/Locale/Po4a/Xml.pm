@@ -444,6 +444,10 @@ some strings.
 sub found_string {
 	my ($self,$text,$ref,$options)=@_;
 
+	if ($text =~ m/^\s*$/s) {
+		return $text;
+	}
+
 	my $comment;
 	my $wrap = $self->{options}{'wrap'};
 
@@ -1465,11 +1469,12 @@ sub translate_paragraph {
 		}
 	}
 
-	if ( length($self->join_lines(@paragraph)) > 0 ) {
+	my $para = $self->join_lines(@paragraph);
+	if ( length($para) > 0 ) {
 		if ($translate ne "") {
 			# This tag should be translated
 			$self->pushline($self->found_string(
-				$self->join_lines(@paragraph),
+				$para,
 				$paragraph[1], {
 					type=>"tag",
 					tag_options=>$translate,
@@ -1477,9 +1482,9 @@ sub translate_paragraph {
 				}));
 		} else {
 			# Inform that this tag isn't translated in debug mode
-			print wrap_ref_mod($paragraph[1], "po4a::xml", dgettext ("po4a", "Content of tag %s excluded: %s"), $self->get_path, $self->join_lines(@paragraph))
+			print wrap_ref_mod($paragraph[1], "po4a::xml", dgettext ("po4a", "Content of tag %s excluded: %s"), $self->get_path, $para)
 			       if $self->debug();
-			$self->pushline($self->recode_skipped_text($self->join_lines(@paragraph)));
+			$self->pushline($self->recode_skipped_text($para));
 		}
 	}
 }
