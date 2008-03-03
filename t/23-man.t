@@ -64,7 +64,7 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/dot5.pot tmp/dot5.pot",
   'doc'  => "gettextize well various lines beginning by a dot (5)",
 }, {
-  'run'  => "cp data-23/dot5.it.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/dot5.it.po tmp/ && chmod u+w tmp/dot5.it.po && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/dot5.it.po tmp/dot5.it.po",
   'doc'  => "updatepo for this document",
 }, {
