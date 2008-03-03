@@ -104,6 +104,7 @@ sub initialize {
 		<blockinfo>
 		<bookinfo>
 		<citetitle>
+		<cmdsynopsis>
 		<confgroup>
 		<confdates>
 		<conftitle>
@@ -150,7 +151,6 @@ sub initialize {
 		<refsynopsisdivinfo>
 		<releaseinfo>
 		<remark>
-		<replaceable>
 		<revision>
 		<revnumber>
 		<revremark>
@@ -169,6 +169,7 @@ sub initialize {
 		<simpara>
 		<subtitle>
 		<synopfragmentref>
+		<synopsis>
 		<term>
 		<title>
 		<titleabbrev>
@@ -180,7 +181,6 @@ sub initialize {
 		<arg>
 		<author>
 		<authorinitials>
-		<command>
 		<citation>
 		<citerefentry>
 		<citetitle>
@@ -188,6 +188,7 @@ sub initialize {
 		<country>
 		<classname>
 		<co>
+		<command>
 		<computeroutput>
 		<constant>
 		<corpauthor>
@@ -208,6 +209,7 @@ sub initialize {
 		<foreignphrase>
 		<function>
 		<glossterm>
+		<group>
 		<guibutton>
 		<guiicon>
 		<guilabel>
