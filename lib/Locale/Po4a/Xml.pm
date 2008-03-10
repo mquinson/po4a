@@ -1194,6 +1194,7 @@ sub treat_content {
 		    and $f_extract eq \&tag_extract_comment) {
 			# Remove the content of the comments
 			($eof, @text) = $self->extract_tag($type,1);
+			$text[$#text-1] .= "\0";
 			push @comments, @text;
 		} else {
 			my ($tmpeof, @tag) = $self->extract_tag($type,0);
@@ -1438,12 +1439,18 @@ sub translate_paragraph {
 
 	my $comments;
 	while (@comments) {
-		my ($t,$l) = (shift @comments, shift @comments);
-		$t =~ s/\n$//;
+		my ($comment,$eoc);
+		do {
+			my ($t,$l) = (shift @comments, shift @comments);
+			$t =~ s/\n?(\0)?$//;
+			$eoc = $1;
+			$comment .= "\n" if defined $comment;
+			$comment .= $t;
+		} until ($eoc);
 		$comments .= "\n" if defined $comments;
-		$comments .= $t;
+		$comments .= $comment;
+		$self->pushline("<!--".$comment."-->\n") if defined $comment;
 	}
-	$self->pushline("<!--".$comments."-->\n") if defined $comments;
 	@comments = ();
 
 	if ($self->{options}{'cpp'}) {
