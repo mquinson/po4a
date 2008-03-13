@@ -178,9 +178,6 @@ my $builder = Module::Build->subclass
     },
 );
 
-my $base= $Config::Config{man1dir};
-$base =~ s/\/man\/man1//;
-
 my $b = $builder->new
   ( module_name => 'po4a',
       license => 'gpl',
@@ -204,8 +201,17 @@ my $b = $builder->new
 	  'scripts/po4aman-display-po'],
       add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html',
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
-      install_path => {po => $base.'/locale', man => $base.'/man'},
       dist_abstract => 'Tools for helping translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',
 	  'Denis Barbier <barbier@linuxfr.org>']
-  )->create_build_script;
+  );
+
+# Tweak the installation path
+#  Retrieve the prefix (Ther should be a better way)
+my $base= $b->install_map->{"blib/bindoc"};
+$base =~ s/\/man\/man1//;
+$b->install_path(po => $base.'/locale');
+$b->install_path(man => $base.'/man');
+
+$b->create_build_script;
+
