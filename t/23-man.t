@@ -168,8 +168,26 @@ push @tests, {
   'doc'  => "translate this document (ja EUC-JP)",
 };
 
+# Hyphens (4 tests)
+push @tests, {
+  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/hyphens.1 -p tmp/hyphens.pot -o groff_code=verbatim 2>/dev/null",
+  'test' => "diff -u $diff_po_flags  data-23/hyphens.verbatim.pot tmp/hyphens.pot",
+  'doc'  => "gettextize well hyphens (verbatim)",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.verbatim.fr.po -l tmp/hyphens.fr -o groff_code=verbatim",
+  'test' => "diff -u $diff_pod_flags data-23/hyphens.verbatim.fr tmp/hyphens.fr",
+  'doc'  => "translate this document",
+}, {
+  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/hyphens.1 -p tmp/hyphens.pot -o groff_code=translate 2>/dev/null",
+  'test' => "diff -u $diff_po_flags  data-23/hyphens.translate.pot tmp/hyphens.pot",
+  'doc'  => "gettextize well hyphens (translate)",
+}, {
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.translate.fr.po -l tmp/hyphens.fr -o groff_code=translate",
+  'test' => "diff -u $diff_pod_flags data-23/hyphens.translate.fr tmp/hyphens.fr",
+  'doc'  => "translate this document",
+};
 
-use Test::More tests => 60; # $formats * $tests * 2 
+use Test::More tests => 68; # $formats * $tests * 2 
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {

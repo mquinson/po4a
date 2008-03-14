@@ -1008,9 +1008,9 @@ sub post_trans {
             $str = $2;
             my $tmp2 = $tmp.$begin;
             if (   ($begin =~ m/(?<!\\)(\\\\)*\\s$/s)
-                or ($begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)$/s)
-                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[hCv]'([^']|(?<!\\)(\\\\)*\\')*$/)
-                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)
+                or ($begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)?$/s)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\[ZHhCv]'([^']|(?<!\\)(\\\\)*\\')*$/)
+                or ($tmp2 =~ m/(?<!\\)(\\\\)*\\(\*)?\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/)
                 or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\*\(.?$/)) {
                 # Do not change - to \- for
                 #  * \s-n (reduce font size)
@@ -1019,7 +1019,10 @@ sub post_trans {
                 #  * inside a \C'...'
                 #  * inside a \[...]
                 #  * inside a \*(..
+                #  * inside a \*[...]
                 #  * inside a \v'...'
+                #  * inside a \H'...'
+                #  * inside a \Z'...'
                 $tmp = $tmp2."-";
             } else {
                 $tmp = $tmp2."\\-";
