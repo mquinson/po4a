@@ -137,7 +137,7 @@ push @tests, {
     'doc'  => "mixed config with roff and mdoc"
 };
 
-# iNon breaking spaces (7 tests)
+# Non breaking spaces (7 tests)
 push @tests, {
   'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/spaces -p tmp/spaces.pot 2>/dev/null",
   'test' => "diff -u $diff_po_flags  data-23/spaces.pot tmp/spaces.pot",
