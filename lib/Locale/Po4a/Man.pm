@@ -1014,7 +1014,7 @@ sub post_trans {
                 or ($tmp2 =~ m/(?<!\\)(\\\\)*\\\*\(.?$/)) {
                 # Do not change - to \- for
                 #  * \s-n (reduce font size)
-                #  * \(.- (a character named '.-', e.g. '<-')
+                #  * \(.. (e.g. '<-', '-D')
                 #  * inside a \h'...'
                 #  * inside a \C'...'
                 #  * inside a \[...]
