@@ -526,7 +526,9 @@ single string.
 our @tag_types = ( 
 	{	beginning	=> "!--#",
 		end		=> "--",
-		breaking	=> 0},
+		breaking	=> 0,
+		f_extract	=> \&tag_extract_comment,
+		f_translate	=> \&tag_trans_comment},
 	{	beginning	=> "!--",
 		end		=> "--",
 		breaking	=> 0,
@@ -1195,6 +1197,9 @@ sub treat_content {
 			# Remove the content of the comments
 			($eof, @text) = $self->extract_tag($type,1);
 			$text[$#text-1] .= "\0";
+			if ($tag_types[$type]->{'beginning'} eq "!--#") {
+				$text[0] = "#".$text[0];
+			}
 			push @comments, @text;
 		} else {
 			my ($tmpeof, @tag) = $self->extract_tag($type,0);

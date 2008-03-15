@@ -22,9 +22,14 @@ push @tests, {
   'test'=> "diff -u $diff_po_flags ../data-25/xhtml.po po4a-normalize.po".
             "&& diff -u $diff_po_flags ../data-25/xhtml_normalized.html po4a-normalize.output",
   'doc' => 'normalisation test',
+  }, {
+  'run' => 'perl ../../po4a-normalize -f xhtml -o includessi ../data-25/includessi.html',
+  'test'=> "diff -u $diff_po_flags ../data-25/includessi.po po4a-normalize.po".
+            "&& diff -u $diff_po_flags ../data-25/includessi_normalized.html po4a-normalize.output",
+  'doc' => 'includessi test',
   };
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
