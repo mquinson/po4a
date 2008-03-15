@@ -1,12 +1,12 @@
 # Polish translation of po4a
 # This file is distributed under the same license as the po4a package.
-# Robert Luberda <robert@debian.org>, 2005 - 2007
+# Robert Luberda <robert@debian.org>, 2005 - 2008
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.32\n"
+"Project-Id-Version: po4a 0.33\n"
 "POT-Creation-Date: 2008-03-02 16:47+0100\n"
-"PO-Revision-Date: 2007-09-05 00:02+0200\n"
+"PO-Revision-Date: 2008-03-15 09:52+0100\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -2660,8 +2660,8 @@ msgstr ""
 " #    Jeśli nie jesteś zaznajomiony z formatem PO, warto przeczytać\n"
 " #    dokumentację pakietu gettext, zwłaszcza sekcje poświęcone\n"
 " #    temu formatowi. Na przykład uruchom:\n"
-" #         info -n '(gettext)PO Files'\n"
-" #         info -n '(gettext)Heder Centry'\n"
+" #         info -n \"(gettext)PO Files\"\n"
+" #         info -n \"(gettext)Heder Centry\"\n"
 " #\n"
 " #    Informacje specyficzne po-debconf są dostępne w\n"
 " #            /usr/share/doc/po-debconf/README-trans\n"
@@ -2774,7 +2774,7 @@ msgid ""
 "there is an issue with the original, it should be reported as a bug anyway."
 msgstr ""
 "Nie można dostosowywać tłumaczonego tekstu do własnych upodobań, na przykład "
-"przed podzielenie w danym miejscu na akapity, połączenie dwóch innych "
+"przez podzielenie w danym miejscu na akapity, połączenie dwóch innych "
 "akapitów w jeden. Jednak w pewnym sensie, jeżeli jest jakiś problem z "
 "oryginałem, powinno to zostać zgłoszone jako błąd."
 
@@ -3760,7 +3760,7 @@ msgstr ""
 # type: =head2
 #: lib/Locale/Po4a/Man.pm:100
 msgid "Putting 'E<lt>' and 'E<gt>' in translations"
-msgstr "Wstawianie 'E<lt>' i 'E<gt>' w tłumaczeniach"
+msgstr "Wstawianie \"E<lt>\" i \"E<gt>\" w tłumaczeniach"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:102
@@ -4200,7 +4200,7 @@ msgstr ""
 # type: =head2
 #: lib/Locale/Po4a/Man.pm:282
 msgid "Hiding text to po4a"
-msgstr ""
+msgstr "Ukrywanie tekstu przez po4a"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:284
@@ -4211,6 +4211,11 @@ msgid ""
 "first case, I<other> should be not be translatable. And in the second case, "
 "I<other> should be translated."
 msgstr ""
+"Czasem autor wie, że niektóre części strony podręcznika nie powinny być "
+"tłumaczone, więc nie powinny być przetwarzane przez po4a. Na przykład opcja "
+"może pobierać argument I<other> oraz I<other> może się także pojawić jako "
+"ostatni element listu. Pierwsze I<other> nie powinno być tłumaczone, a "
+"drugie - powinno."
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:290
@@ -4218,6 +4223,8 @@ msgid ""
 "In such case, the author can avoid po4a to extract some strings, using some "
 "special groff constructs:"
 msgstr ""
+"W takim przypadku, aby po4a pominęło takie komunikaty, autor może użyć "
+"specjalnych konstrukcji groffa:"
 
 # type: verbatim
 #: lib/Locale/Po4a/Man.pm:293
@@ -4226,11 +4233,13 @@ msgid ""
 " .if !'po4a'hide' .B other\n"
 "\n"
 msgstr ""
+" .if !'po4a'hide' .B other\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:295
 msgid "(this will require the B<-o groff_code=verbatim> option)"
-msgstr ""
+msgstr "(wymaga to podania opcji B<-o groff_code=verbatim>)"
 
 # type: verbatim
 #: lib/Locale/Po4a/Man.pm:297
@@ -4242,6 +4251,11 @@ msgid ""
 " ..\n"
 "\n"
 msgstr ""
+"Aby to zautomatyzować, można zdefiniować nowe makro:\n"
+".de IR_untranslated\n"
+" .    IR \\\\$@\n"
+" ..\n"
+"\n"
 
 # type: verbatim
 #: lib/Locale/Po4a/Man.pm:302 lib/Locale/Po4a/Man.pm:312
@@ -4250,6 +4264,8 @@ msgid ""
 " .IR_untranslated \\-q \", \" \\-\\-quiet\n"
 "\n"
 msgstr ""
+" .IR_untranslated \\-q \", \" \\-\\-quiet\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:304
@@ -4259,6 +4275,10 @@ msgid ""
 "conditional is not strictly needed since po4a will not parse the internal of "
 "the macro definition)"
 msgstr ""
+"(wymaga to podania opcji B<-o groff_code=verbatim> i B<-o "
+"untranslated=IR_untranslated>; przy tej konstrukcji warunek B<."
+"if !'po4a'hide'> staje się zbędny, ponieważ po4a nie przetwarza wnętrza "
+"definicji makra)"
 
 # type: verbatim
 #: lib/Locale/Po4a/Man.pm:309
@@ -4268,11 +4288,14 @@ msgid ""
 " .als IR_untranslated IR\n"
 "\n"
 msgstr ""
+"lub używając aliasu:\n"
+" .als IR_untranslated IR\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:314
 msgid "(this will require the B<-o untranslated=als,IR_untranslated> option)"
-msgstr ""
+msgstr "(wymaga to podania opcji B<-o untranslated=als,IR_untranslated>)"
 
 # type: =head2
 #: lib/Locale/Po4a/Man.pm:316
@@ -4411,9 +4434,8 @@ msgstr ""
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:387
-#, fuzzy
 msgid "Copyright 2002-2008 by SPI, inc."
-msgstr "Copyright 2002 by SPI, inc."
+msgstr "Copyright 2002-2008 by SPI, inc."
 
 # type: textblock
 #: lib/Locale/Po4a/Po.pm:13
@@ -4454,7 +4476,7 @@ msgstr ""
 
 # type: verbatim
 #: lib/Locale/Po4a/Po.pm:23
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 "    # Add an entry\n"
 "    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour',\n"
@@ -4462,7 +4484,7 @@ msgid ""
 "\n"
 msgstr ""
 "    # Dodanie wpisu\n"
-"    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour', \n"
+"    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour',\n"
 "                  'flags' => \"wrap\", 'reference'=>'file.c:46');\n"
 "\n"
 
@@ -5349,6 +5371,9 @@ msgid ""
 "installed.  Also make sure that the DTD of the SGML files are installed in "
 "the system."
 msgstr ""
+"Moduł ten do przetworzenia plików SGML używa programu B<nsgmls>. Proszę się "
+"upewnić, że program ten wraz z definicjami DTD plików SGMLjest zainstalowany "
+"w systemie."
 
 # type: =item
 #: lib/Locale/Po4a/Sgml.pm:53 lib/Locale/Po4a/TeX.pm:127
@@ -5401,7 +5426,7 @@ msgid ""
 msgstr ""
 "Rozdzielona spacjami lista dodatkowych elementów (oprócz tych zdefiniowanych "
 "w DTD), zawierających inne elementy, wśród których istnieją elementy "
-"należące do kategorii 'translate'."
+"należące do kategorii \"translate\"."
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:73
@@ -5504,11 +5529,12 @@ msgstr "force"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:112
-#, fuzzy
 msgid ""
 "Proceed even if the DTD is unknown or if nsgmls finds errors in the input "
 "file."
-msgstr "Kontynuowanie działania, nawet gdy DTD nie jest znany."
+msgstr ""
+"Kontynuowanie działania, nawet gdy DTD nie jest znany lub gdy nsgmls wykryje "
+"błędy w pliku wejściowym."
 
 # type: =item
 #: lib/Locale/Po4a/Sgml.pm:115
@@ -6278,6 +6304,9 @@ msgid ""
 "environment, this function will be used to translate the buffer instead of "
 "translate_buffer()."
 msgstr ""
+"Jeżeli w bieżącym środowisku zmienna %translate_buffer_env zawiera definicję "
+"funkcji, to ta funkcja zostanie użyta zamiast translate_buffer() do "
+"przetłumaczenia zawartości bufora."
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:888
@@ -6582,11 +6611,10 @@ msgstr ""
 
 # type: textblock
 #: lib/Locale/Po4a/Texinfo.pm:57
-#, fuzzy
 msgid ""
 "Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
 msgstr ""
-"Copyright 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
+"Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
 
 # type: textblock
 #: lib/Locale/Po4a/Text.pm:26
@@ -6638,6 +6666,10 @@ msgid ""
 "but the module rewrap this paragraph in the generated PO file and in the "
 "translation."
 msgstr ""
+"Domyślnie, jeśli wykryto wcięty akapit, nie jest on traktowany jako akapit "
+"niezmienialny (mający w pliku PO ustawioną flagę \"no-wrap\") i moduł "
+"przeformatuje akapit zarówno w generowanym pliku PO jak i w przetłumaczonym "
+"dokumencie."
 
 # type: =item
 #: lib/Locale/Po4a/Text.pm:77
@@ -6672,9 +6704,8 @@ msgstr ""
 
 # type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:34
-#, fuzzy
 msgid "Locale::Po4a::TransTractor - Generic trans(lator ex)tractor."
-msgstr "Po4a TransTractor - Ogólny moduł wyodrębniania tłumaczeń."
+msgstr "Locale::Po4a::TransTractor - Ogólny moduł wyodrębniania tłumaczeń."
 
 # type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:42
@@ -7834,15 +7865,14 @@ msgstr "ontagerror"
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:222
-#, fuzzy
 msgid ""
 "This option defines the behavior of the module when it encounter a invalid "
 "Xml syntax (a closing tag which does not match the last opening tag, or a "
 "tag's attribute without value).  It can take the following values:"
 msgstr ""
-"Ta opcja określa zachowanie modułu, kiedy napotka niepoprawny element "
-"końcowy (znaleziono element zamykany, który nie odpowiada elementowi "
-"ostatnio otwieranemu). Może przyjmować następujące wartości:"
+"Ta opcja określa zachowanie modułu, kiedy wykryje błąd składni XML (element "
+"zamykany, który nie odpowiada elementowi ostatnio otwieranemu lub brak jest "
+"wartości atrybutu elementu). Może przyjmować następujące wartości:"
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:231
@@ -7895,7 +7925,7 @@ msgstr ""
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:252
 msgid "Note: This option is deprecated."
-msgstr ""
+msgstr "Uwaga: Opcja ta jest przestarzała."
 
 # type: =item
 #: lib/Locale/Po4a/Xml.pm:254
@@ -7958,6 +7988,8 @@ msgid ""
 "Note: This option is deprecated.  You should use the B<translated> and "
 "B<untranslate> options instead."
 msgstr ""
+"Uwaga: Opcja ta jest przestarzała. Prosimy zamiast niej używać opcji "
+"B<translated> i B<untranslate>."
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:278
@@ -8011,7 +8043,7 @@ msgstr ""
 # type: =item
 #: lib/Locale/Po4a/Xml.pm:295
 msgid "cpp"
-msgstr ""
+msgstr "cpp"
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:297
@@ -8024,15 +8056,21 @@ msgid ""
 "preprocessor directives must only appear between tags (they must not break a "
 "tag)."
 msgstr ""
+"Wspiera dyrektywy preprocesora C. Jeśli opcja zostanie włączona, po4a będzie "
+"przetwarzał dyrektywy preprocesora jako separatory akapitów. Jest to ważne, "
+"jeśli plik XML jest przetwarzanyprzez preprocesor, ponieważ jeśli nie użyje "
+"się tej opcji, a dyrektywy preprocesora trafią w środek linii, to po4a "
+"przyjmie, ża należą do bieżącego paragramu, co spowoduje, że preprocesor ich "
+"już nie rozpozna. Uwaga: dyrektywy preprocesora muszą być umieszczone między "
+"elementami (nie mogą rozdzielać elementu)."
 
 # type: =item
 #: lib/Locale/Po4a/Xml.pm:307
 msgid "translated =item unstranslated"
-msgstr ""
+msgstr "tłumaczenie=wpis nieprzetłumaczony"
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:310
-#, fuzzy
 msgid ""
 "Space-separated list of the tags you want to translate or not.  The tags "
 "must be in the form <aaa>, but you can join some (<bbb><aaa>) to indicate "
@@ -8040,16 +8078,12 @@ msgid ""
 "<bbb> tag."
 msgstr ""
 "Rozdzielona spacjami lista elementów, które mają być przetłumaczone lub "
-"opuszczone. Domyślnie podane elementy będę opuszczone, ale użycie opcji "
-"\"tagsonly\" oznacza, że podane elementy zostaną włączone. Elementy muszą "
-"mieć postać E<lt>aaaE<gt>, jednak można połączyć kilka z nich "
-"(E<lt>bbbE<gt>E<lt>aaaE<gt>), aby określić, że zawartość elementu "
-"E<lt>aaaE<gt> będzie przetłumaczona tylko wtedy, gdy sam element jest "
-"zawarty w elemencie E<lt>bbbE<gt>."
+"opuszczone. Elementy muszą mieć postać <aaa>, jednak można połączyć kilka z "
+"nich (<bbb><aaaE>), aby określić, że zawartość elementu <aaa> będzie "
+"przetłumaczona tylko wtedy, gdy sam element jest zawarty w elemencie <bbb>"
 
 # type: textblock
 #: lib/Locale/Po4a/Xml.pm:315
-#, fuzzy
 msgid ""
 "You can also specify some tag options putting some characters in front of "
 "the tag hierarchy. For example, you can put ’w’ (wrap) or ’W’ (don’t wrap)  "
@@ -9302,7 +9336,7 @@ msgstr ""
 "dokument, plik PO, jeden z załączników lub plik konfiguracyjny są od niego "
 "nowsze. Aby uniknąć prób ponownego generowania tłumaczeń, które są poniżej "
 "zdefiniowanego progu (patrz B<--keep>), można utworzyć plik z rozszerzeniem  "
-"`.po4a-stamp' (patrz B<--stamp>)."
+"\".po4a-stamp\" (patrz B<--stamp>)."
 
 # type: textblock
 #: po4a:255
@@ -9458,7 +9492,7 @@ msgid ""
 "This option adds '--previous' to the options passed to msgmerge.  It "
 "requires gettext 0.16 or later."
 msgstr ""
-"Opcja dodaje '--previous' do opcji przekazywanych programowi msgmerge. "
+"Opcja dodaje \"--previous\" do opcji przekazywanych programowi msgmerge. "
 "Wymaga wersji 0.16 lub późniejszej pakietu gettext."
 
 # type: =head1
@@ -10204,24 +10238,26 @@ msgstr ""
 #: scripts/po4aman-display-po.1:1
 #, no-wrap
 msgid "PO4AMAN-DISPLAY-PO"
-msgstr ""
+msgstr "PO4AMAN-DISPLAY-PO"
 
 # type: TH
 #: scripts/po4aman-display-po.1:1
 #, no-wrap
 msgid "2006-04-08"
-msgstr ""
+msgstr "2006-04-08"
 
 # type: TH
 #: scripts/po4aman-display-po.1:1
 #, no-wrap
 msgid "Po4a Tools"
-msgstr ""
+msgstr "Narzędzia po4a"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:4
 msgid "po4aman-display-po - display a translated man page according to a PO"
 msgstr ""
+"po4aman-display-po - wyświetla przetłumaczoną stronę podręcznika zgodnie z "
+"plikiem PO"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:13
@@ -10229,6 +10265,8 @@ msgid ""
 "B<po4aman-display-po> B<-p> I<PO_FILE> [B<-m> I<MASTER_FILE>] [B<-o> "
 "I<PO4A_OPT>]"
 msgstr ""
+"B<po4aman-display-po> B<-p> I<PLIK_PO> [B<-m> I<PLIK_ORYGINALNY>] [B<-o> "
+"I<OPCJA_PO4A>]"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:17
@@ -10236,24 +10274,25 @@ msgid ""
 "B<po4aman-display-po> can be used by a translator who wants to check how the "
 "man page being translated in a PO will be displayed."
 msgstr ""
+"B<po4aman-display-po> umożliwia tłumaczom sprawdzenie, jak będzie "
+"wyświetlona strona podręcznika, którą tłumaczą, wykorzystując narzędzia po4a."
 
 # type: TP
 #: scripts/po4aman-display-po.1:19
 #, no-wrap
 msgid "B<-p >I<PO_FILE>"
-msgstr ""
+msgstr "B<-p >I<PLIK_PO>"
 
 # type: textblock
 #: scripts/po4aman-display-po.1:22
-#, fuzzy
 msgid "The PO file containing the translations."
-msgstr "plik po zawierający tłumaczenia do użycia."
+msgstr "Plik PO zawierający tłumaczenia."
 
 # type: TP
 #: scripts/po4aman-display-po.1:22
 #, no-wrap
 msgid "B<-m >I<MASTER_FILE>"
-msgstr ""
+msgstr "B<-m >I<PLIK_ORYGINALNY>"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:28
@@ -10262,6 +10301,10 @@ msgid ""
 "original man page (gzipped or not), the name the man page or the name and "
 "section of the man page (using the man.section format)."
 msgstr ""
+"Oryginalna strona podręcznika. Można podać bezwzględną lub względną ścieżkę "
+"do oryginału strony podręcznika (spakowanej gzipem lub niespakowanej), nazwę "
+"strony podręcznika lub nazwę i sekcję strony podręcznika (używając formatu "
+"strona_podręcznika.sekcja)."
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:32
@@ -10270,201 +10313,27 @@ msgid ""
 "display-po> tries to find the original man page based on the line reference "
 "of the first string in the PO."
 msgstr ""
+"Jeżeli nie podano opcji B<-m>, B<po4aman-display-po> próbuje znaleźć "
+"oryginalną stronę opierając się na referencjach linii pierwszego komunikatu "
+"w pliku PO."
 
 # type: TP
 #: scripts/po4aman-display-po.1:32
 #, no-wrap
 msgid "B<-o >I<PO4A_OPT>"
-msgstr ""
+msgstr "B<-o >I<OPCJA_PO4A>"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:35
 msgid "Some options to pass to B<po4a-translate>."
-msgstr ""
+msgstr "Opcje przekazywane do B<po4a-translate>."
 
 #: scripts/po4aman-display-po.1:36
-#, fuzzy, no-wrap
+#, no-wrap
 msgid "AUTHOR"
-msgstr "AUTORZY"
+msgstr "AUTOR"
 
 # type: Plain text
 #: scripts/po4aman-display-po.1:37
 msgid "Thomas Huriaux"
-msgstr ""
-
-# type: textblock
-#, fuzzy
-#~ msgid "Example: WE<lt>chapter><title>"
-#~ msgstr "Przykład: WE<lt>chapterE<gt>E<lt>titleE<gt>"
-
-# type: textblock
-#~ msgid "Copyright 2002, 2003, 2004, 2005, 2006 by SPI, inc."
-#~ msgstr "Copyright 2002, 2003, 2004, 2005, 2006 by SPI, inc."
-
-# type: textblock
-#~ msgid "Locale::Po4a::Debconf - Convert debconf templates from/to PO files"
-#~ msgstr "Locale::Po4a::Debconf - Konwertuje szablony debconf do/z plików PO"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::Debconf is a module to help the translation of the debconf "
-#~ "templates into other [human] languages."
-#~ msgstr ""
-#~ "Locale::Po4a::Debconf jest modułem ułatwiającym tłumaczenie szablonów "
-#~ "programu debconf do innych języków [używanych przez ludzi]."
-
-# type: textblock
-#~ msgid "Not tested."
-#~ msgstr "Nietestowany."
-
-# type: textblock
-#~ msgid ""
-#~ "DO NOT USE THIS MODULE TO PRODUCE TEMPLATES. It's only good to extract "
-#~ "data."
-#~ msgstr ""
-#~ "NIE NALEŻY UŻYWAĆ TEGO MODUŁU DO TWORZENIA SZABLONÓW. Jest on dobry tylko "
-#~ "do wyciągania danych."
-
-# type: textblock
-#~ msgid ""
-#~ "This module is loosely inspired from both po-debconf and debconf code. "
-#~ "The adaptation for po4a was done by:"
-#~ msgstr ""
-#~ "Ten moduł został zainspirowany przez kody zarówno programu po-debconf, "
-#~ "jak i programu debconf. Adaptacji dla po4a dokonał:"
-
-# type: verbatim
-#~ msgid ""
-#~ " Martin Quinson (mquinson#debian.org)\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Martin Quinson (mquinson#debian.org)\n"
-#~ "\n"
-
-# type: verbatim
-#~ msgid ""
-#~ " Copyright 2005 by SPI, inc.\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Copyright 2005 by SPI, inc.\n"
-#~ "\n"
-
-# type: textblock
-#~ msgid "Locale::Po4a::Html - Convert html documents from/to PO files"
-#~ msgstr "Locale::Po4a::Html - Konwersja dokumentów HTML z/do plików PO"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::Html is a module to help the translation of documentation "
-#~ "in the HTML format into other [human] languages."
-#~ msgstr ""
-#~ "Locale::Po4a::Html jest modułem ułatwiającym tłumaczenie dokumentacji w "
-#~ "formacie HTML do innych języków [używanych przez ludzi]."
-
-# type: textblock
-#~ msgid ""
-#~ "Please note that this module is not distributed with the main po4a "
-#~ "archive because we don't feel it mature enough for that. If you insist on "
-#~ "using it anyway, check it from the CVS out."
-#~ msgstr ""
-#~ "Proszę zauważyć, że ten moduł nie jest dystrybuowany w oficjalnych "
-#~ "wydaniach po4a, gdyż nie jest wystarczająco stabilny. Jeśli chcesz "
-#~ "spróbować, musisz go ściągnąć z CVS-a."
-
-# type: verbatim
-#~ msgid ""
-#~ " Laurent Hausermann <laurent@hausermann.org>\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Laurent Hausermann <laurent@hausermann.org>\n"
-#~ "\n"
-
-# type: textblock
-#~ msgid "Laurent Hausermann <laurent@hausermann.org>"
-#~ msgstr "Laurent Hausermann <laurent@hausermann.org>"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::NewsDebian - Convert NEWS.Debian documents from/to PO files"
-#~ msgstr ""
-#~ "Locale::Po4a::NewsDebian - Konwersja dokumentów NEWS.Debian z/do plików PO"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::NewsDebian is a module to help the translation of the NEWS."
-#~ "Debian files into other [human] languages. Those files are where "
-#~ "maintainer are supposed to write the important news about their package."
-#~ msgstr ""
-#~ "Locale::Po4a::NewsDebian jest modułem ułatwiającym tłumaczenie plików "
-#~ "NEWS.Debian do innych języków [używanych przez ludzi]. W tych plikach "
-#~ "opiekun pakiety powinien opisać ważne wiadomości dotyczące jego pakietu."
-
-# type: textblock
-#~ msgid ""
-#~ "A finer split of the entries may be preferable (search for /^ */, for "
-#~ "example), but this version is more robust and NEWS.Debian entries are not "
-#~ "supposed to change that often."
-#~ msgstr ""
-#~ "Bardziej wyszukane dzielenie wpisów mogłoby być preferowane (np. "
-#~ "wyszukiwanie /^ */), ale ta wersja jest bardziej brutalna, a wpisy w NEWS."
-#~ "Debian nie zmieniają się często."
-
-# type: textblock
-#~ msgid ""
-#~ "This module is loosely inspired from /usr/lib/dpkg/parsechangelog/debian, "
-#~ "which is:"
-#~ msgstr ""
-#~ "Moduł jest luźno inspirowany /usr/lib/dpkg/parsechangelog/debian, który "
-#~ "jest:"
-
-# type: verbatim
-#~ msgid ""
-#~ " Copyright (C) 1996 Ian Jackson.  This is free software; see the GNU\n"
-#~ " General Public Licence version 2 or later for copying conditions.  "
-#~ "There\n"
-#~ " is NO warranty.\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Copyright (C) 1996 Ian Jackson. Ten program jest darmowy;\n"
-#~ " warunki kopiowania są opisane w Ogólnej Licencji Publicznej GNU\n"
-#~ " w wersji 2 lub późniejszej. Autorzy nie dają ŻADNYCH gwarancji.\n"
-#~ "\n"
-
-# type: verbatim
-#~ msgid ""
-#~ " Copyright (c) 1996 by Ian Jackson.\n"
-#~ " Copyright 2005 by SPI, inc.\n"
-#~ "\n"
-#~ msgstr ""
-#~ " Copyright (c) 1996 by Ian Jackson.\n"
-#~ " Copyright 2005 by SPI, inc.\n"
-#~ "\n"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::Wml - Convert wml (web markup language) documents from/to "
-#~ "PO files"
-#~ msgstr ""
-#~ "Locale::Po4a::Wml - Konwersja dokumentów wml (web markup language) z/do "
-#~ "plików PO"
-
-# type: textblock
-#~ msgid ""
-#~ "Locale::Po4a::Wml is a module to help the translation of wml documents "
-#~ "into other [human] languages. Do not mixup the WML we are speaking about "
-#~ "here (web markup language) and the WAP crap used on cell phones."
-#~ msgstr ""
-#~ "Locale::Po4a::Wml jest modułem ułatwiającym tłumaczenie dokumentów w "
-#~ "formacie wml do innych języków [używanych przez ludzi]."
-
-# type: textblock
-#~ msgid "Still to be implemented."
-#~ msgstr "Wciąż do zaimplementowania."
-
-# type: textblock
-#~ msgid ""
-#~ "This module will be implemented by Martin Quinson (mquinson#debian.org), "
-#~ "amonst other (I hope)."
-#~ msgstr ""
-#~ "Mam nadzieję, że moduł zostanie zaimplementowany między innymi przez "
-#~ "Martina Quinsona (mquinson#debian.org)."
+msgstr "Thomas Huriaux"
