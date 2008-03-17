@@ -207,11 +207,12 @@ my $b = $builder->new
   );
 
 # Tweak the installation path
-#  Retrieve the prefix (Ther should be a better way)
-my $base= $b->install_map->{"blib/bindoc"};
+#  Retrieve the prefix (There should be a better way)
+my $base = $b->install_sets($b->installdirs)->{bindoc};
 $base =~ s/\/man\/man1//;
-$b->install_path(po => $base.'/locale');
-$b->install_path(man => $base.'/man');
+#  Set the paths for the manpages and MO files
+$b->install_sets($b->installdirs)->{man} = $base.'/man';
+$b->install_sets($b->installdirs)->{po} = $base.'/locale';
 
 $b->create_build_script;
 
