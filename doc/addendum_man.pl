@@ -1,6 +1,6 @@
 PO4A-HEADER:mode=after;position=^\.SH AUTOR;beginboundary=^\.SH
 
-.SH T£UMACZENIE
+.SH T≈ÅUMACZENIE
 
 Robert Luberda <robert@debian.org>
 

@@ -36,7 +36,7 @@ my $builder = Module::Build->subclass
 	    unless ($self->up_to_date(\@files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a.pot\n";
 		my $podfiles = join ("", map {" ../../".$_ } @files);
-		system("cd po/bin; xgettext --from-code=iso-8859-1 -L Perl $podfiles -o po4a.pot.new") && die;
+		system("cd po/bin; xgettext --from-code=utf-8 -L Perl $podfiles -o po4a.pot.new") && die;
 		if ( -e "po/bin/po4a.pot") {
 		    $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
 		    if ( $diff eq "" ) {
@@ -120,6 +120,7 @@ my $builder = Module::Build->subclass
 
 		my $command;
 		$command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
+		$command .= "msgconv -t UTF-8 | ";
 		$command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
 		$command .= "&& cat || cat > /dev/null'";
 
