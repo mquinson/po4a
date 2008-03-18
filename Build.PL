@@ -63,7 +63,7 @@ my $builder = Module::Build->subclass
 
 		unless ($self->up_to_date("po/bin/po4a.pot","po/bin/$lang.po")) {
 		    print "XX Sync po/bin/$lang.po: ";
-		    system("msgmerge po/bin/$lang.po po/bin/po4a.pot -o po/bin/$lang.po.new") && die;
+		    system("msgmerge --previous po/bin/$lang.po po/bin/po4a.pot -o po/bin/$lang.po.new") && die;
 		    # Typically all that changes was a date. I'd
 		    # prefer not to cvs commit such changes, so
 		    # detect and ignore them.
@@ -87,7 +87,7 @@ my $builder = Module::Build->subclass
 
 	}
 	sub ACTION_manpo {
-	    system("PERL5LIB=lib perl po4a --no-translations po/pod.cfg")
+	    system("PERL5LIB=lib perl po4a --previous --no-translations po/pod.cfg")
 		and die;
 	}
 	sub ACTION_man {
@@ -98,7 +98,7 @@ my $builder = Module::Build->subclass
 	    # Translate binaries manpages
 	    my $parser = Pod::Man->new ();
 
-	    system("PERL5LIB=lib perl po4a po/pod.cfg") and die;
+	    system("PERL5LIB=lib perl po4a --previous po/pod.cfg") and die;
 	    system("mkdir -p blib/man/man7") and die;
 	    system("mkdir -p blib/man/man1") and die;
 	    system("cp doc/po4a.7.pod blib/man/man7") and die;
