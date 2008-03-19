@@ -200,7 +200,7 @@ my $b = $builder->new
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
 	  'scripts/po4aman-display-po'],
-      add_to_cleanup => ['t/tmp','messages.mo', 'blib', 'html',
+      add_to_cleanup => ['t/tmp','messages.mo', 'blib',
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
       dist_abstract => 'Tools for helping translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',
