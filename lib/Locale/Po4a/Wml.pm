@@ -92,6 +92,7 @@ sub parse {
         $/ = undef; 
         $file=<FILEIN>;
       }
+      $/ = "\n"; 
       
       # Mask perl cruft out of XML sight
       while ($file =~ m|^(.*?)<perl>(.*?)</perl>(.*?)$|ms || $file =~ m|^(.*?)<:(.*?):>(.*)$|ms) {
