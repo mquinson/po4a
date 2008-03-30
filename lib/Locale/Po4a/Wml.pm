@@ -34,13 +34,22 @@ Locale::Po4a::Wml is a module to help the translation of wml documents into
 other [human] languages. Do not mixup the WML we are speaking about here
 (web markup language) and the WAP crap used on cell phones.
 
+Please note that this module relies upon the Locale::Po4a::Xhtml
+module, which also relies upon the Locale::Po4a::Xml module.  This
+means that all tags for web page expressions are assumed to be written
+in the XHTML syntax.
+
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
 NONE.
 
 =head1 STATUS OF THIS MODULE
 
-Still to be implemented.
+This module works for some simple documents, but is still young.
+Currently, the biggest issue of the module is probably that it cannot
+handle documents that contain non-XML inline tags such as <email
+"foo@example.org">, which are often defined in the Wml.  Improvements
+will be added in the future releases.
 
 =cut
 #
@@ -156,7 +165,8 @@ sub parse {
 
 =head1 AUTHORS
 
-This module will be implemented by Martin Quinson (mquinson#debian.org), amonst other (I hope).
+ Martin Quinson (mquinson#debian.org)
+ Noriada Kobayashi <nori1@dolphin.c.u-tokyo.ac.jp>
 
 =head1 COPYRIGHT AND LICENSE
 
