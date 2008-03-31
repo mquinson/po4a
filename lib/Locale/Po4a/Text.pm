@@ -83,6 +83,15 @@ released versions, which only contain non translatable informations.
 
 my $debianchangelog = 0;
 
+=item B<fortunes>
+
+Handle the fortunes format, which separate fortunes with a line which
+consists in '%' or '%%', and use '%%' as the beginning of a comment.
+
+=cut
+
+my $fortunes = 0;
+
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -95,6 +104,10 @@ sub initialize {
 
     if (defined $options{'debianchangelog'}) {
         $debianchangelog=1;
+    }
+
+    if (defined $options{'fortunes'}) {
+        $fortunes=1;
     }
 }
 
@@ -124,6 +137,15 @@ sub parse {
             $paragraph="";
             $self->pushline("$line\n");
             $expect_header=1;
+        } elsif ($fortunes and
+                 $line =~ m/^%%?\s*$/) {
+            # Found end of fortune
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $self->pushline("\n") unless (   $wrapped_mode == 0
+                                          or $paragraph eq "");
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline("$line\n");
         } elsif ($line =~ /^\s*$/) {
             # Break paragraphs on lines containing only spaces
             do_paragraph($self,$paragraph,$wrapped_mode);
@@ -146,6 +168,8 @@ sub parse {
                 # paragraph
                 $wrapped_mode = 0;
             }
+            $line =~ s/%%(.*)$//;
+# TODO: comments
             $paragraph .= $line."\n";
         }
         # paragraphs starting by a bullet, or numbered
@@ -230,7 +254,7 @@ Tested successfully on simple text files and NEWS.Debian files.
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright 2005,2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
