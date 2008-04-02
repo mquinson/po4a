@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.90 2008-02-29 20:03:03 nekral-guest Exp $
+# $Id: Po.pm,v 1.91 2008-04-02 20:19:07 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -150,6 +150,8 @@ sub initialize {
     $self->{options}{'porefs'}= 'full';
     $self->{options}{'msgid-bugs-address'}= undef;
     $self->{options}{'copyright-holder'}= "Free Software Foundation, Inc.";
+    $self->{options}{'package-name'}= "PACKAGE";
+    $self->{options}{'package-version'}= "VERSION";
     foreach my $opt (keys %$options) {
         if ($options->{$opt}) {
             die wrap_mod("po4a::po",
@@ -175,12 +177,14 @@ sub initialize {
                     ." Copyright (C) YEAR ".
                      $self->{options}{'copyright-holder'}."\n"
                     ." This file is distributed under the same license ".
-                     "as the PACKAGE package.\n"
+                     "as the ".$self->{options}{'package-name'}." package.\n"
                     ." FIRST AUTHOR <EMAIL\@ADDRESS>, YEAR.\n"
                     ."\n"
                     .", fuzzy";
 #    $self->header_tag="fuzzy";
-    $self->{header}=escape_text("Project-Id-Version: PACKAGE VERSION\n".
+    $self->{header}=escape_text("Project-Id-Version: ".
+                                $self->{options}{'package-name'}." ".
+                                $self->{options}{'package-version'}."\n".
                         ((defined $self->{options}{'msgid-bugs-address'})?
         "Report-Msgid-Bugs-To: ".$self->{options}{'msgid-bugs-address'}."\n":
                                 "").

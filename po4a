@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.79 2008-01-13 15:21:16 nekral-guest Exp $
+# $Id: po4a,v 1.80 2008-04-02 20:19:07 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -301,6 +301,14 @@ have no Report-Msgid-Bugs-To fields.
 Set the copyright holder in the POT header. The default value is
 "Free Software Foundation, Inc."
 
+=item --package-name string
+
+Set the package name for the POT header. The default is "PACKAGE".
+
+=item --package-version string
+
+Set the package version for the POT header. The default is "VERSION".
+
 =item --msgmerge-opt options
 
 Extra options for msgmerge.
@@ -405,6 +413,8 @@ sub get_options {
         "variables"       => {},
         "copyright-holder"=> undef,
         "msgid-bugs-address"=> undef,
+        "package-name"    => undef,
+        "package-version" => undef,
         "msgmerge-opt"    => ""
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
@@ -430,6 +440,8 @@ sub get_options {
         'variable=s'            => \@variables,
         'copyright-holder=s'    => \$opts{"copyright-holder"},
         'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
+        'package-name=s'        => \$opts{"package-name"},
+        'package-version=s'     => \$opts{"package-version"},
         'previous'              => \$previous,
         'msgmerge-opt=s'        => \$opts{"msgmerge-opt"}
     ) or pod2usage();
@@ -793,6 +805,12 @@ if (defined $po4a_opts{'msgid-bugs-address'}) {
 }
 if (defined $po4a_opts{'copyright-holder'}) {
     $Po_opts{'copyright-holder'} = $po4a_opts{'copyright-holder'};
+}
+if (defined $po4a_opts{'package-name'}) {
+    $Po_opts{'package-name'} = $po4a_opts{'package-name'};
+}
+if (defined $po4a_opts{'package-version'}) {
+    $Po_opts{'package-version'} = $po4a_opts{'package-version'};
 }
 my $potfile=Locale::Po4a::Po->new(\%Po_opts);
 if ($update_pot_file) {
