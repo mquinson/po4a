@@ -36,7 +36,15 @@ my $builder = Module::Build->subclass
 	    unless ($self->up_to_date(\@files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a.pot\n";
 		my $podfiles = join ("", map {" ../../".$_ } @files);
-		system("cd po/bin; xgettext --from-code=utf-8 -L Perl $podfiles -o po4a.pot.new") && die;
+		my $cmd = "cd po/bin; xgettext ";
+		$cmd .= "--from-code=utf-8 ";
+		$cmd .= "-L Perl ";
+		$cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
+		$cmd .= "--package-name po4a ";
+		$cmd .= "--package-version ".$self->dist_version()." ";
+		$cmd .= "$podfiles ";
+		$cmd .= "-o po4a.pot.new";
+		system($cmd) && die;
 		if ( -e "po/bin/po4a.pot") {
 		    $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
 		    if ( $diff eq "" ) {
@@ -87,7 +95,16 @@ my $builder = Module::Build->subclass
 
 	}
 	sub ACTION_manpo {
-	    system("PERL5LIB=lib perl po4a --previous --no-translations po/pod.cfg")
+	    my $self = shift;
+
+	    my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+	    $cmd .= "--previous ";
+	    $cmd .= "--no-translations ";
+	    $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
+	    $cmd .= "--package-name po4a ";
+	    $cmd .= "--package-version ".$self->dist_version()." ";
+	    $cmd .= "po/pod.cfg";
+	    system($cmd)
 		and die;
 	}
 	sub ACTION_man {
