@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2008-04-02 23:07+0200\n"
-"PO-Revision-Date: 2008-04-03 22:33+0900\n"
+"POT-Creation-Date: 2008-04-09 11:51+0900\n"
+"PO-Revision-Date: 2008-04-10 23:37+0900\n"
 "Last-Translator: KURASAWA Nozomu <nabetaro@caldron.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Country: JAPAN\n"
-"X-Poedit-Bookmarks: 236,422,-1,534,578,678,-1,-1,-1,-1\n"
+"X-Poedit-Bookmarks: 578,678,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 # type: =head1
 #: doc/po4a.7.pod:1 lib/Locale/Po4a/BibTeX.pm:24 lib/Locale/Po4a/Chooser.pm:85
@@ -963,7 +963,9 @@ msgstr ""
 #: doc/po4a.7.pod:411
 msgid ""
 "Once you have the old original again, the gettextization may be as easy as:"
-msgstr "古いオリジナルがある場合、gettext 化は以下のように簡単かもしれません。"
+msgstr ""
+"古いオリジナルが残っていれば、gettext 化は以下のように簡単になるかもしれませ"
+"ん。"
 
 # type: verbatim
 #: doc/po4a.7.pod:413
@@ -1961,7 +1963,7 @@ msgid ""
 "    Original         Translation\n"
 "\n"
 msgstr ""
-"    オリジナル        翻訳\n"
+"    オリジナル       翻訳\n"
 "\n"
 
 # type: verbatim
@@ -1998,6 +2000,15 @@ msgid ""
 "it would allow us to detect that string 4 is a paragraph in one case, and a "
 "chapter title in another case and to report the problem."
 msgstr ""
+"これについては、po4a のパーサはオリジナルファイルと翻訳ファイルの双方で、po "
+"ファイルを抽出するのに使用されます。オリジナルファイル由来の po ファイルにあ"
+"る文字列の翻訳が、翻訳ファイル由来の po ファイルの文字列であるとして、新しく "
+"po ファイルを生成します。出力した文字列が実際にそれぞれの翻訳となっているかを"
+"チェックするために、po4a のドキュメントパーサは、ドキュメントから抽出した文字"
+"列の構文タイプ情報を出力すべきです (既存のものはすべてそうしますし、あなたの"
+"もののそうするべきです)。さらにその情報を、双方のドキュメントが同じ構文である"
+"かどうかを確認するのに使用します。先の例では、4 番目の文字列は片方では段落で"
+"すが、もう片方では章見出しであることを検出し、問題を報告できます。"
 
 # type: textblock
 #: doc/po4a.7.pod:847
@@ -2009,6 +2020,11 @@ msgid ""
 "resynchronize anything and verbosely fail when something goes wrong, "
 "requiring manual modification of files to fix the problem."
 msgstr ""
+"理論上、問題を検出した後でファイルを (ちょうど diff がするように) 再同期する"
+"ことは可能です。しかし、非同期の前にある、再同期するべき文字列は明確ではな"
+"く、何度もまずい結果に終わるでしょう。以上が、何かまずい場合、現在の実装では"
+"再同期を行わず、失敗について詳しく出力する理由です。問題の修正にはファイルの"
+"手修正が必要です。"
 
 # type: textblock
 #: doc/po4a.7.pod:854
@@ -2017,6 +2033,9 @@ msgid ""
 "why all translations guessed this way are marked fuzzy to make sure that the "
 "translator review and check them."
 msgstr ""
+"これだけ用心していても、この部分は非常に間違いやすいです。そのため、このよう"
+"に推測された翻訳すべてを fuzzy とマークし、翻訳者のレビューと確認を行うように"
+"しています。"
 
 # type: =head2
 #: doc/po4a.7.pod:858
@@ -2420,6 +2439,12 @@ msgid ""
 "how to ease the work of translators. To help with that, po4a comes with lot "
 "of documentation which can be referred to."
 msgstr ""
+"ドキュメントやプログラムの翻訳を行う際、3 つの問題に行き当たります。言語につ"
+"いて (皆が 2 つの言語で話せるわけではありません)、技術について (po4a が存在す"
+"る理由です)、人との連携についてです。すべての開発者が、翻訳の必要性について理"
+"解しているわけではありません。立派な意志があったとしても、翻訳者が作業しやす"
+"いやり方を無視する可能性もあります。これを補助するのに、po4a は参照可能なたく"
+"さんのドキュメントを用意しています。"
 
 # type: textblock
 #: doc/po4a.7.pod:1045
@@ -2429,6 +2454,10 @@ msgid ""
 "poor developers flooded with tons of files in different languages they "
 "hardly speak, and help them dealing correctly with it."
 msgstr ""
+"その他の重要な点として、このファイルが何で、どのように使用するのか、を示す短"
+"いコメントで、各翻訳済みファイルが始まるということがあります。これは、話すの"
+"も困難な言語の洪水におぼれている哀れな開発者を助け、ファイルを正しく扱う助け"
+"となるはずです。"
 
 # type: textblock
 #: doc/po4a.7.pod:1050
@@ -2481,6 +2510,14 @@ msgid ""
 "at compile time). That's why the po files produced by the po-debiandoc "
 "module contain the following header:"
 msgstr ""
+"同様に、gettext の通常の po ファイルは、po/ ディレクトリにコピーされる必要だ"
+"けがあります。しかし、B<これは po4a によって操作されたものの例ではありません"
+">。ここには、開発者が、自分のドキュメントの翻訳がある、自分のプログラムの既存"
+"の翻訳を削除するという、大きな危険があります (双方を同じ po ファイルに納める"
+"ことはできません。これは、ドキュメントはコンパイル時にのみ翻訳が必要であるの"
+"に対して、プログラムは翻訳を mo ファイルとしてインストールしなければならない"
+"からです)。以上が、po-debiandoc モジュールが以下のヘッダをつけて po ファイル"
+"を提供する理由です。"
 
 # type: verbatim
 #: doc/po4a.7.pod:1075
@@ -2627,6 +2664,9 @@ msgid ""
 "paragraph here, and joining two other ones there. But in some sense, if "
 "there is an issue with the original, it should be reported as a bug anyway."
 msgstr ""
+"翻訳したテキストを、この段落を分割するとか、あの二つの段落を結合するといっ"
+"た、あなたの好みに合わせることができません。しかし、オリジナルに問題があるの"
+"であれば、とりあえずバグとして報告すべきだ、という意見もあります。"
 
 # type: textblock
 #: doc/po4a.7.pod:1155
@@ -2822,7 +2862,7 @@ msgid ""
 "under the terms of GPL (see the COPYING file)."
 msgstr ""
 "本プログラムはフリーソフトウェアです。GPL の条項に基づき再頒布と変更を行うこ"
-"とができます。"
+"とができます (COPYING ファイルをご覧ください)。"
 
 # type: textblock
 #: lib/Locale/Po4a/Chooser.pm:87
@@ -3886,6 +3926,11 @@ msgid ""
 "can specify an existing I<end> (like fi) or I<begin> (like nf) as a "
 "counterpart.  These macros (and their arguments) wont be translated."
 msgstr ""
+"注意: I<end> コマンドが I<begin> コマンドと一致するかどうかのテストはしませ"
+"ん。いずれかの終了コマンドにより、no_wrap は終了します。I<end> (または "
+"I<begin>) がない I<begin> (または I<end>) マクロがある場合、既存の I<end> "
+"(fi など) や I<begin> (nf など) を対応するものとして指定できます。このマクロ "
+"(とその引数) は翻訳されません。"
 
 # type: =item
 #: lib/Locale/Po4a/Man.pm:222
@@ -3900,6 +3945,9 @@ msgid ""
 "bar baz quxE<gt> quux>, where I<bar> is the command that should be inlined, "
 "and I<baz qux> its arguments."
 msgstr ""
+"このオプションは、段落を分けるべきでないマクロの、カンマ区切りリストを指定し"
+"ます。I<bar> がインラインにすべきコマンドで、I<baz qux> を引数とした場合、翻"
+"訳する文字列は I<foo E<lt>.bar baz quxE<gt> quux> となります。"
 
 # type: =item
 #: lib/Locale/Po4a/Man.pm:229
@@ -3914,6 +3962,10 @@ msgid ""
 "values: I<failed> (the default value), I<untranslated>, I<noarg>, "
 "I<translate_joined>, I<translate_each>."
 msgstr ""
+"このオプションは、不明なマクロがあったときの po4a の挙動を指示します。デフォ"
+"ルトでは、po4a は警告を表示して失敗します。以下の値を取ることができます。"
+"I<failed> (デフォルト値), I<untranslated>, I<noarg>, I<translate_joined>, "
+"I<translate_each>。"
 
 # type: =head1
 #: lib/Locale/Po4a/Man.pm:238
@@ -3931,6 +3983,12 @@ msgid ""
 "see their productions translated, they may have to adapt to ease the work of "
 "translators."
 msgstr ""
+"このモジュールは、真の nroff インタプリタでないので、まだ非常に制限があり解消"
+"のめどは立ちません。既存のマクロがすべて使え、さらに新しいマクロを定義できる"
+"ような、真の nroff インタプリタであれば、制限を解消できたでしょうが、私たちは"
+"そうしませんでした。それは難しすぎましたし、必要でないと考えたのです。man "
+"ページの作者が、自身の創作物を翻訳したものを目にしたいのであれば、翻訳者に"
+"とって作業しやすいように適合した方がいいと思います。"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:248
@@ -3940,6 +3998,9 @@ msgid ""
 "you'll have to avoid if you want to see translators taking care of your "
 "documentation."
 msgstr ""
+"ですから、po4a で実装した man のパーサは、修正予定のない既知の制限がありま"
+"す。これは、翻訳者があなたのドキュメントを保守するのを目にしたければ、避ける"
+"べき落とし穴の構成要素となるでしょう。"
 
 # type: =head2
 #: lib/Locale/Po4a/Man.pm:253
@@ -3974,6 +4035,12 @@ msgid ""
 "for them. Because of these macros, about 250 pages on my box are "
 "inaccessible to po4a::man."
 msgstr ""
+"po4a::man がサポートしていないマクロはまだあります。これは単に、それについて"
+"のドキュメントが見つからなかったからです。以下にサポートしていないマクロのリ"
+"ストを掲げます。サポートしていないマクロが出てくると、プログラムが失敗してい"
+"まいますので、このリストは完全ではないことに注意してください。このマクロに関"
+"して何か情報がありましたら、ありがたくサポートに追加します。これらのマクロの"
+"ために、私の機械にある 250 ページは po4a::man でアクセスできないのです。"
 
 # type: verbatim
 #: lib/Locale/Po4a/Man.pm:270
@@ -4019,6 +4086,10 @@ msgid ""
 "first case, I<other> should be not be translatable. And in the second case, "
 "I<other> should be translated."
 msgstr ""
+"時には、筆者は翻訳できない部分があり、po4a で抽出するべきでないことを知ってい"
+"ます。例えば、オプションは I<other> 引数を受け付けてもよく、また I<other> は"
+"リストの最後の項目として現れてもよいとします。始めのケースでは、I<other> は翻"
+"訳するべきではありませんが、2 番目のケースでは、I<other> を訳すべきです。"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:290
@@ -4116,6 +4187,12 @@ msgid ""
 "put the macro arguments on the same line that the macro itself. I know that "
 "it's valid in nroff, but would complicate too much the parser to be handled."
 msgstr ""
+"このセクションをまとめると、シンプルなままにしておき、man ページを書く際に、"
+"賢く振る舞おうとしないでください。nroff ではたくさんのことができますが、この"
+"パーサではサポートしていません。例えば、テキスト処理を中断するのに、\\c をい"
+"じらないでください (私の機械にある 40 ページのように)。もしくは、マクロの引数"
+"をそのマクロと同じ行に、必ず配置してください。nroff としては適切なのは解って"
+"いますが、パーサが扱うには複雑すぎるのです。"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:326
@@ -4131,6 +4208,16 @@ msgid ""
 "didn't want to write support for. On my box, 1432 of the 4323 pages are "
 "generated from pod and will be ignored by po4a::man."
 msgstr ""
+"もちろん別の可能性として、もっと翻訳者に優しい (po4a::pod で使用する pod や、"
+"sgml のような xml ファミリーなど) 別のフォーマットを使用することが挙げられま"
+"す。しかし po4a::man のおかげで、もう必要ありません。そうはいっても、あなたの"
+"ドキュメントのソースフォーマットが pod や xml の場合、ソースフォーマットを翻"
+"訳し、生成したものを翻訳しない方が賢明かと思います。多くの場合、po4a::man は"
+"生成されたページを検出し、問題を警告します。po4a::pod がそのページを完璧に扱"
+"え、その対応する nroff では、サポートするように書きたくない新しいマクロが多く"
+"定義されているため、 Pod が生成したページを処理するのを、拒否することさえあり"
+"ます。私の機械では、1432/4323 ページが pod から生成され、po4a::man に無視され"
+"ます。"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:337
@@ -4141,6 +4228,10 @@ msgid ""
 "called \"bugs\" ;) If you encounter such case, be sure to report this, along "
 "with a fix when possible..."
 msgstr ""
+"多くの場合、po4a::man は問題を検出し、適合するメッセージを出力して、ページの"
+"処理を拒否します。まれなケースでは、プログラムが警告なく完了したのに、出力が"
+"誤っている場合があります。そのような場合は、\"bugs\"と呼びます ;) そのような"
+"場合は、可能であれば直し方とともに、ぜひ報告してください……"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:345
@@ -4186,6 +4277,8 @@ msgid ""
 "spacing differences or line rewrapped (font issues in less than 10% of the "
 "processed pages)."
 msgstr ""
+"その他のページは、通常、空白のみの差異や行の折り返しなどよりも、もっと重要な"
+"差異がないとして扱われます (フォントの問題は処理したページの 10% 以下です)。"
 
 # type: textblock
 #: lib/Locale/Po4a/Man.pm:376
@@ -4979,6 +5072,8 @@ msgid ""
 "behavior of the parser.  The recognized options common to all Pod::Parser "
 "children are:"
 msgstr ""
+"new() はキーと値の組の形のオプションを取り、パーサの振る舞いを制御できます。"
+"認識する以下のオプションは、Pod::Parser のすべての派生クラスで共通です。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:239
@@ -4992,6 +5087,9 @@ msgid ""
 "things, uses a different heading style and marks C<=item> entries with a "
 "colon in the left margin.  Defaults to false."
 msgstr ""
+"値を true とすると、代替出力フォーマットを選択します。他にもありますが、異な"
+"る見出しのスタイルを用い、左マージンとコロンで C<=item> エントリをマークしま"
+"す。デフォルトは false です。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:245
@@ -5005,6 +5103,9 @@ msgid ""
 "in the output.  Useful for viewing code documented with POD blocks with the "
 "POD rendered and the code left intact."
 msgstr ""
+"値を true とすると、入力ファイルの非 POD 部分を出力に含めます。POD ブロックで"
+"説明されているコードを、コードが損なわれないままに POD をレンダリングして表示"
+"するのに便利です。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:251 lib/Locale/Po4a/Sgml.pm:71
@@ -5035,6 +5136,11 @@ msgid ""
 "arbitrary text documents, setting this to true may result in more pleasing "
 "output."
 msgstr ""
+"値を true とすると、空行を C<=head1> 見出しの後に出力します。値を false (デ"
+"フォルト) とすると、C<=head2> の後には空行を出力しますが、C<=head1> の後に空"
+"行を出力しません。マニュアルページが期待している形式であるため、これをデフォ"
+"ルトとしています。任意のテキストドキュメントを整形する場合、true と設定する"
+"と、より満足する出力結果となるでしょう。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:265
@@ -5050,6 +5156,10 @@ msgid ""
 "the right quoted; and if it is four characters, the first two are used as "
 "the left quote and the second two as the right quote."
 msgstr ""
+"CE<lt>> で囲んだテキストに使用する、引用符を設定します。値が 1 文字の場合、左"
+"右の引用符にその文字を使用します。2 文字の場合、1 文字目が左引用符とし、2 文"
+"字目を右引用符とします。4 文字の場合、最初の 2 文字を左引用符とし、続く 2 文"
+"字を右引用符とします。"
 
 # type: textblock
 #: lib/Locale/Po4a/Pod.pm:273
@@ -5057,6 +5167,8 @@ msgid ""
 "This may also be set to the special value C<none>, in which case no quote "
 "marks are added around CE<lt>> text."
 msgstr ""
+"ここには特殊な値 C<none> も設定できます。この場合、CE<lt>> テキストのまわりに"
+"引用符を追加しません。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:276
@@ -5071,6 +5183,9 @@ msgid ""
 "all consecutive whitespace in non-verbatim paragraphs is compressed into a "
 "single space.  Defaults to true."
 msgstr ""
+"値を true とすると、Locale::Po4a::Pod は各文が 2 つの空白で終わると仮定し、そ"
+"の空白を保持しようとします。値を false とすると、非逐語段落にある連続した空白"
+"すべてを、ひとつの空白に圧縮します。デフォルトは true です。"
 
 # type: =item
 #: lib/Locale/Po4a/Pod.pm:283
@@ -5247,6 +5362,9 @@ msgid ""
 "qualified by the attribute name. Note that this setting automatically adds "
 "the given attribute into the 'attributes' list too."
 msgstr ""
+"翻訳が属性名で修飾しなければならない属性の、空白区切りのリストです。この設定"
+"に与えた属性は、自動的に 'attributes' リストにも追加されることに注意してくだ"
+"さい。"
 
 # type: =item
 #: lib/Locale/Po4a/Sgml.pm:110
@@ -6022,6 +6140,7 @@ msgid ""
 "Command and environment functions take the following arguments (in addition "
 "to the $self object):"
 msgstr ""
+"コマンド関数と環境関数は、($self オブジェクトに加えて) 以下の引数を取ります。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:1224
@@ -8324,8 +8443,8 @@ msgid ""
 msgstr ""
 "C<po4a> プログラムは、(オリジナルドキュメントと同期を取る) po ファイルと (po "
 "ファイルと同期を取る) 翻訳済みドキュメントの双方の更新を担当しています。主な"
-"点は、コマンドラインオプションを覚えておかなくても、簡単に po4a を使用できる"
-"ようにすることです。"
+"目的は、コマンドラインオプションを覚えておかなくても、簡単に po4a を使用でき"
+"るようにすることです。"
 
 # type: textblock
 #: po4a:32
@@ -8333,8 +8452,8 @@ msgid ""
 "It also allows you to mix documents having different formats into the same "
 "pot file so that you can have only one such file per project."
 msgstr ""
-"また、プロジェクトごとに一つのファイルしかない場合と同様に、異なるフォーマッ"
-"トが混在したドキュメントを、同じ pot ファイルにできます。"
+"また、異なるフォーマットが混在したドキュメントを同じ pot ファイルにでき、プロ"
+"ジェクトごとにひとつのファイルで管理できます。"
 
 # type: textblock
 #: po4a:35
@@ -8343,9 +8462,9 @@ msgid ""
 "example with makefiles), but it is rather difficult to do, and exhausting to "
 "redo the same complicated makefiles for each project using po4a."
 msgstr ""
-"po4a スイートの他のツールの振る舞いをまねることができます (例えば makefile 内"
-"など) が、これは難しいです。プロジェクトごとに po4a を使用して、同じ複雑な "
-"makefile を改めて作成するのは消耗します。"
+"この振る舞いは、po4a スイートの他のツールを (例えば makefile とともに) 用いて"
+"も同様のことができますが、これは少々難しいです。po4a を使用しているプロジェク"
+"トごとに、その複雑な makefile を何度も作成するのは大変です。"
 
 # type: textblock
 #: po4a:39
@@ -8378,9 +8497,9 @@ msgid ""
 "that task, please refer to L<po4a-gettextize(1)>."
 msgstr ""
 "このツールでは、データフローを逆にはできません。また、翻訳に対して行った変更"
-"は、po ファイルの内容で上書きされます。実は、このツールは既存の翻訳を po4a 系"
-"に変換するのには使用できません。このような用途には、to L<po4a-gettextize(1)> "
-"を参照してください。"
+"は、po ファイルの内容で上書きされます。つまり、実のところ、このツールは既存の"
+"翻訳を po4a 系に変換するのには使用できないのです。このような用途には、L<po4a-"
+"gettextize(1)> を参照してください。"
 
 # type: =head1
 #: po4a:51
@@ -8422,9 +8541,9 @@ msgid ""
 "will make it more scalable. You have to specify a list of the languages in "
 "which you want to translate the documents. This is as simple as:"
 msgstr ""
-"これは、設定ファイル全体を単純にするオプションコマンドで、より柔軟になるで"
-"しょう。ドキュメントを翻訳したい言語のリストを指定しなければなりません。単純"
-"に以下のようになります。"
+"これは、設定ファイル全体を単純にし、より柔軟にするオプションコマンドです。ド"
+"キュメントを翻訳したい言語のリストを指定しなければなりません。単純に以下のよ"
+"うになります。"
 
 # type: verbatim
 #: po4a:68
@@ -8456,8 +8575,8 @@ msgid ""
 "used by translators to do their job) are located. It can be done by such a "
 "line:"
 msgstr ""
-"まず、翻訳者入力ファイル (翻訳者が自分の作業に使用していたファイル) の位置を"
-"指定する必要があります。以下のような行で行います。"
+"まず、翻訳者入力ファイル (翻訳者が自分の作業に使用するファイル) の位置を指定"
+"する必要があります。以下のような行で行います。"
 
 # type: verbatim
 #: po4a:78
@@ -8476,7 +8595,7 @@ msgid ""
 "file to use. All subsequent arguments are of the self-explanatory form:"
 msgstr ""
 "コマンドは上記より 'po4a_paths' です。第一引数は、使用する pot ファイルのパス"
-"です。続くすべての引数は、次のような自己説明的な形をしています。"
+"です。続くすべての引数は、次のように一目瞭然な形をしています。"
 
 # type: verbatim
 #: po4a:83
@@ -8517,8 +8636,8 @@ msgid ""
 msgstr ""
 "ドキュメントのベース名を参照するのに $master も使用できます。この場合、po4a "
 "は分割モードとなります。これは po4a の設定ファイルで指定した各ドキュメントに"
-"ついて、POTファイルとPOファイルを (言語ごとに) 一つずつ作成します。B<分割モー"
-"ド> セクションをご覧ください。"
+"ついて、POT ファイルと (言語ごとの) PO ファイルを一つずつ作成します。B<分割"
+"モード> セクションをご覧ください。"
 
 # type: verbatim
 #: po4a:95
@@ -8541,9 +8660,9 @@ msgid ""
 "You now naturally have to specify which documents are translated, their "
 "format, and where to put the translations. It can be made by such lines:"
 msgstr ""
-"さて、当たり前ですが、どのドキュメントを翻訳するのか? そのフォーマットは? 翻"
-"訳はどこに出力するのか? といったことを指定しなければなりません。以下の行のよ"
-"うに指定できます。"
+"さて、当たり前ですが、「どのドキュメントを翻訳するのか?」「そのフォーマット"
+"は?」「翻訳はどこに出力するのか?」といったことを指定しなければなりません。以"
+"下の行のように指定できます。"
 
 # type: verbatim
 #: po4a:102
@@ -8751,8 +8870,7 @@ msgstr ""
 # type: textblock
 #: po4a:171
 msgid "Note that you can specify additional options on a per file basis."
-msgstr ""
-"原則として、ファイルごとの追加オプションが指定できることに注意してください。"
+msgstr "ファイルごとの追加オプションも指定できることに注意してください。"
 
 # type: =head2
 #: po4a:173
@@ -8785,8 +8903,8 @@ msgid ""
 msgstr ""
 "2 つの PO で、同じ文字列に対して異なる翻訳がされている場合、po4a はその文字列"
 "を fuzzy としてマークし、その文字列を持つすべての PO に、両方の訳を出力しま"
-"す。その場合、翻訳者は訳を更新し、PO から fuzzy タグを取り除くと、この文字列"
-"の訳は、すべての PO で自動的に更新されます。"
+"す。その場合、翻訳者は訳を更新し、ひとつの PO から fuzzy タグを取り除くと、こ"
+"の文字列の訳は、すべての PO で自動的に更新されます。"
 
 # type: =head1
 #: po4a:186 po4a-gettextize:57 po4a-normalize:35 po4a-translate:34
@@ -8951,9 +9069,9 @@ msgid ""
 "stamp>)."
 msgstr ""
 "また、マスタードキュメント、PO ファイル、追加内容のどれか、設定ファイルのいず"
-"れかがより新しい場合にのみ、翻訳を再生成します。閾値テスト (B<--keep> 参照) "
-"を渡さずに再生成しないように、'.po4a-stamp' 拡張子 を持つファイルを作成できま"
-"す (B<--stamp> 参照)。"
+"れかが翻訳より新しい場合にのみ、翻訳を再生成します。閾値テスト (B<--keep> 参"
+"照) に合格しない翻訳を再生成しないように、'.po4a-stamp' 拡張子を持つファイル"
+"を作成します (B<--stamp> 参照)。"
 
 # type: textblock
 #: po4a:255
@@ -8995,8 +9113,8 @@ msgid ""
 "translations> or when the file is finally translated."
 msgstr ""
 "注意: これは I<.po4a-stamp> ファイルの作成を行うだけです。stamp ファイルがあ"
-"る場合は常に使用され、B<--rm-translations> や、最終的にファイルの翻訳が完了す"
-"ると削除されます。"
+"る場合は常に使用され、B<--rm-translations> を指定した場合や、最終的にファイル"
+"の翻訳が完了した場合に削除されます。"
 
 # type: =item
 #: po4a:272
@@ -9053,7 +9171,7 @@ msgid ""
 "Every occurrence of I<$(var)> will be replaced by I<value>.  This option can "
 "be used multiple times."
 msgstr ""
-"po4a 設定ファイルを拡張する変数を定義します。現れるすべての I<$(var)> は、"
+"po4a 設定ファイル内で展開する変数を定義します。現れるすべての I<$(var)> は、"
 "I<value> に置換されます。このオプションは複数回使用できます。"
 
 # type: =item
@@ -9087,28 +9205,25 @@ msgstr ""
 # type: =item
 #: po4a:304
 msgid "--package-name string"
-msgstr ""
+msgstr "--package-name string"
 
 # type: textblock
 #: po4a:306
 msgid "Set the package name for the POT header. The default is \"PACKAGE\"."
 msgstr ""
+"POT ヘッダのパッケージ名をセットします。デフォルト値は \"PACKAGE\" です。"
 
 # type: =item
 #: po4a:308
 msgid "--package-version string"
-msgstr ""
+msgstr "--package-version string"
 
 # type: textblock
 #: po4a:310
-#, fuzzy
-#| msgid ""
-#| "Set the copyright holder in the POT header. The default value is \"Free "
-#| "Software Foundation, Inc.\""
 msgid "Set the package version for the POT header. The default is \"VERSION\"."
 msgstr ""
-"POT ヘッダの著作権者 (copyright holder) をセットします。デフォルト値は "
-"\"Free Software Foundation, Inc.\" です。"
+"POT ヘッダのパッケージバージョンをセットします。デフォルト値は \"VERSION\" で"
+"す。"
 
 # type: =item
 #: po4a:312 po4a-updatepo:76
@@ -9132,7 +9247,7 @@ msgid ""
 "requires gettext 0.16 or later."
 msgstr ""
 "このオプションは、msgmerge に渡すオプションに '--previous' を追加します。"
-"gettext 0.16 以降で必要です。"
+"gettext 0.16 以降が必要です。"
 
 # type: =head1
 #: po4a:323
