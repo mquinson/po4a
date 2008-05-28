@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2008-04-09 11:51+0900\n"
-"PO-Revision-Date: 2008-04-10 23:37+0900\n"
+"PO-Revision-Date: 2008-05-20 19:44+0900\n"
 "Last-Translator: KURASAWA Nozomu <nabetaro@caldron.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Country: JAPAN\n"
-"X-Poedit-Bookmarks: 578,678,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 # type: =head1
 #: doc/po4a.7.pod:1 lib/Locale/Po4a/BibTeX.pm:24 lib/Locale/Po4a/Chooser.pm:85
@@ -5349,6 +5348,13 @@ msgid ""
 "things like E<lt>aaa|bbbbE<gt>lang to only translate lang attributes that "
 "are in an E<lt>aaaE<gt> or a E<lt>bbbE<gt> tag."
 msgstr ""
+"翻訳する必要のある属性の、空白区切りリストです。属性を名前 (例: \"lang\") で"
+"指定できますが、特定のタグの中にあるときだけこの属性を訳すように、タグ階層を"
+"前につけることもできます。例えば、E<lt>bbbE<gt>E<lt>aaaE<gt>lang は、"
+"E<lt>bbbE<gt> タグの中にある、E<lt>aaaE<gt> タグの中にある場合に、lang 属性を"
+"訳すということを示しています。タグ名は、実際には正規表現ですから、E<lt>aaa|"
+"bbbbE<gt>lang のように書いた場合は、E<lt>aaaE<gt> タグか a E<lt>bbbE<gt> タグ"
+"の中にある lang 属性のみを訳せます。"
 
 # type: =item
 #: lib/Locale/Po4a/Sgml.pm:104
@@ -5410,6 +5416,9 @@ msgid ""
 "with caution: it may cause nsgmls (used internally) to add tags and render "
 "the output document invalid."
 msgstr ""
+"インラインにしたくないエンティティの、空白区切りリストです。このオプションは"
+"注意して使用してください。nsgmls (内部で使用) がタグを追加し、無効な出力ド"
+"キュメントを表示する原因になる可能性があります。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:132
@@ -5437,6 +5446,10 @@ msgid ""
 "eats them, and I don't know how to restore them in the final document. To "
 "prevent that, I rewrite them to C<{PO4A-beg-foo}> and C<{PO4A-end}>."
 msgstr ""
+"問題は、nsgmls から条件付き取り込み (つまり C<E<lt>! [ %foo [> and C<]]"
+"E<gt>> のようなもの) を、\"保護\" しなければならないということです。そうしな"
+"いと、nsgmls が展開してしまい、最終ドキュメントで復元する方法がわかりません。"
+"これを防ぐために、私は C<{PO4A-beg-foo}> と C<{PO4A-end}> に書き直しました。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:148
@@ -5444,6 +5457,8 @@ msgid ""
 "The problem with this is that the C<{PO4A-end}> and such I add are valid in "
 "the document (not in a E<lt>pE<gt> tag or so)."
 msgstr ""
+"それに関する問題は、C<{PO4A-end}> と私が追加するそのようなものが、ドキュメン"
+"ト内で (E<lt>pE<gt> タグ内などではなく) 有効であるということです。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:151
@@ -5451,6 +5466,9 @@ msgid ""
 "Everything works well with nsgmls's output redirected that way, but it will "
 "prevent us from detecting that the document is badly formatted."
 msgstr ""
+"nsgmls の出力を前述の方法でリダイレクトしてしまえば、すべてうまくいきますが、"
+"それによって、ドキュメントのフォーマットが間違っていることを、検出できなく"
+"なってしまいます。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:156
@@ -5460,6 +5478,9 @@ msgid ""
 "just have to give a list of the existing tags and some of their "
 "characteristics."
 msgstr ""
+"debiandoc dtd と docbook dtd でのみ動作します。新しい dtd のサポートを追加す"
+"るのは非常に簡単でしょう。仕組みはすべての dtd で同じで、既存のタグのリストと"
+"その特徴を与えるだけです。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:160
@@ -5467,6 +5488,8 @@ msgid ""
 "I agree, this needs some more documentation, but it is still considered as "
 "beta, and I hate to document stuff which may/will change."
 msgstr ""
+"確かに、もっとドキュメントの記述が必要です。しかし、これはまだベータ版です"
+"し、変わることが予想されるものの記述を行うのがイヤなのです。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:165
@@ -5519,6 +5542,11 @@ msgid ""
 "document. For that, I make a temp copy of the input file and do all the "
 "changes I want to this before passing it to nsgmls for parsing."
 msgstr ""
+"これにより、生成したドキュメントでは、条件付き取り込み (例; the C<E<lt>! [ %"
+"foo [> and C<]]E<gt>> など)やいくつかのエンティティ (&version; のような) がそ"
+"のまま扱われてほしいので、nsgmls から保護するため前処理を行うことになります。"
+"そこで、入力ファイルの一時コピーを作成し、nsgmls に渡してパースする前に、それ"
+"らすべてを変更します。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:188
@@ -5528,6 +5556,10 @@ msgid ""
 "also). But nothing is done so far to correct the references (i.e., filename "
 "and line number) afterward. I'm not sure what the best thing to do is."
 msgstr ""
+"こうするためには、与えられたファイルの内容により、ファイルの取り込みを確認し"
+"ながらエンティティを置換します (サブファイルでも必要とあらば保護できるよう"
+"に)。ですが今のところ、後で参照 (例えばファイル名や行番号) を修正するというこ"
+"とは行いません。どのようにするのが正しいのか、私にはよくわかりません。"
 
 # type: textblock
 #: lib/Locale/Po4a/Sgml.pm:1237
@@ -5765,6 +5797,8 @@ msgid ""
 "beginning or the end of a paragraph).  The translators will then have to "
 "translate the parameters that are marked as translatable."
 msgstr ""
+"po4a は (段落の先頭や末尾にある場合) 段落からこのコマンドを抽出します。ですか"
+"ら、翻訳者は、翻訳可能であるとマークされたパラメータを訳すべきです。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:197
@@ -5781,6 +5815,10 @@ msgid ""
 "with small words in parameter, which can have multiple meanings (and "
 "translations)."
 msgstr ""
+"アスタリスクのように、ブロックの端に現れる場合にコマンドを抽出しますが、パラ"
+"メータを分割して訳すことはしません。翻訳者はこのパラメータすべてを結合したコ"
+"マンドを訳さねばなりません。これにより文脈を保持し、複数の意味 (と翻訳) を持"
+"つ、短い単語のパラメータを持つコマンドに対して便利です。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:206
@@ -5788,6 +5826,8 @@ msgid ""
 "Note: In this case you don't have to specify which parameters are "
 "translatable, but po4a must know the type and number of parameters."
 msgstr ""
+"注意: この場合、翻訳可能なパラメータを指定する必要はありませんが、po4a がパラ"
+"メータの型と数を知らねばなりません。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:209
@@ -5804,6 +5844,12 @@ msgid ""
 "context), but there is no reason to annoy the translator with them if a "
 "whole string is enclosed in such a command."
 msgstr ""
+"この場合、いずれのブロックからもコマンドを抽出しません。しかし、ブロック内に"
+"ひとつしかないときだけ、翻訳可能とマークしたパラメータを翻訳者に提示します。"
+"これは font コマンドに対して便利です。こういったコマンドは、(文脈を保持するた"
+"め) 一般的に段落から切り離すべきではありませんが、文字列全体がそういったコマ"
+"ンドになっている場合は、切り離さずにいて、翻訳者をいらつかせる理由はありませ"
+"ん。"
 
 # type: verbatim
 #: lib/Locale/Po4a/TeX.pm:221
@@ -5816,6 +5862,9 @@ msgid ""
 " % po4a: command *chapter [_]{_}\n"
 "\n"
 msgstr ""
+"I<parameters> 引数は、[] (任意オプション) のセットか、{} (必須オプション) のセットです。括弧の間にアンダースコアを配置し、パラメータを訳さなければならないことを指定できます。以下のようになります。\n"
+" % po4a: command *chapter [_]{_}\n"
+"\n"
 
 # type: verbatim
 #: lib/Locale/Po4a/TeX.pm:227
@@ -5830,6 +5879,9 @@ msgid ""
 " % po4a: command -href {}{_}\n"
 "\n"
 msgstr ""
+"これは、chapter コマンドには 2 つのパラメータ (任意の短いタイトルと必須のもの) があり、どちらも訳さなければならないことを表しています。href コマンドに 2 つ必須パラメータがあり、URL (第 1 パラメータ) を訳したくなく、さらに、 (文の中で翻訳者がリンクを移動できるように) このコマンドを段落から分離したくない場合、以下のようになります。\n"
+" % po4a: command -href {}{_}\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:235
@@ -5837,6 +5889,8 @@ msgid ""
 "In this case, the information indicating which arguments must be translated "
 "is only used if a paragraph is only composed of this href command."
 msgstr ""
+"この場合、翻訳するべき引数を示す情報は、この href コマンドだけからなる段落の"
+"場合にのみ使用されます。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:239
@@ -5859,6 +5913,10 @@ msgid ""
 " % po4a: environment equation\n"
 "\n"
 msgstr ""
+"これは I<env> 環境が受け取るパラメータを定義できます。この情報は、\\begin コマンドの引数の数をチェックするのに後で使用し、翻訳すべきものを指定できます。I<parameters> 引数の構文は command で説明したものと同じです。\\begin コマンドの第 1 引数は環境の名前です。このパラメータは、パラメータのリストに指定してはいけません。以下にいくつか例を示します。\n"
+" % po4a: environment multicols {}\n"
+" % po4a: environment equation\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:252
@@ -5866,6 +5924,8 @@ msgid ""
 "As for the commands, I<env> can be preceded by a plus (+) to indicate that "
 "the \\begin command must be translated with all its arguments."
 msgstr ""
+"command と同様に、I<env> の前にプラス (+) を付けて、その \\begin コマンドはす"
+"べての引数を訳さなければならない、ということを表します。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:255
@@ -5985,7 +6045,7 @@ msgstr ""
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:442 lib/Locale/Po4a/TeX.pm:1222
 msgid "A variant"
-msgstr "バリアント"
+msgstr "派生"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:444
@@ -5995,6 +6055,10 @@ msgid ""
 "numbered.  In this case, this field will contain \"*\".  If there is no "
 "variant, the field is an empty string."
 msgstr ""
+"派生が使われるかを示します。例えば、番号付けされるべきではないことを指定する"
+"のに、アスタリスク (*) を section コマンドの最後に追加できます。この場合、"
+"フィールドは \"*\" を含むでしょう。派生がなければ、このフィールドは空文字列と"
+"なります。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:449
@@ -6047,6 +6111,8 @@ msgid ""
 "Recursively translate a buffer by separating leading and trailing commands "
 "(those which should be translated separately) from the buffer."
 msgstr ""
+"前後に付けられた (分割して翻訳すべき) コマンドで区切られたバッファを、再帰的"
+"に翻訳します。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:631
@@ -6081,6 +6147,9 @@ msgid ""
 "the input document or in a directory listed in the TEXINPUTS environment "
 "variable."
 msgstr ""
+"@exclude_include 配列にリストされていない取り込みファイルを追加したファイル"
+"を、再帰的に読み込みます。取り込みファイルを、入力ドキュメントのディレクトリ"
+"か、TEXINPUTS 環境変数にリストされたディレクトリから探します。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:910
@@ -6088,6 +6157,8 @@ msgid ""
 "Except from the file inclusion part, it is a cut and paste from "
 "Transtractor's read."
 msgstr ""
+"ファイル取り込み部を除いて、Transtractor の read からカット & ペーストしたも"
+"のです。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:1005
@@ -6111,7 +6182,7 @@ msgstr "parse_definition_line"
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:1046
 msgid "Parse a definition line of the form \"% po4a: \"."
-msgstr ""
+msgstr "\"% po4a: \" の形の定義行をパースします。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:1048
@@ -6166,7 +6237,8 @@ msgstr ""
 msgid ""
 "Command and environment functions return the translation of the command with "
 "its arguments and a new environment."
-msgstr "コマンドや環境関数は、引数や新しい環境でのコマンドの翻訳を返します。"
+msgstr ""
+"コマンド関数や環境関数は、引数や新しい環境でのコマンドの翻訳を返します。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:1236
@@ -6195,6 +6267,10 @@ msgid ""
 " % po4a: command I<command1> I<parameters>\n"
 "\n"
 msgstr ""
+"generic_command は、register_generic_command や\n"
+"TeX ファイルへの追加定義で指定した情報を使用します。:\n"
+" % po4a: command I<command1> I<parameters>\n"
+"\n"
 
 # type: verbatim
 #: lib/Locale/Po4a/TeX.pm:1246
@@ -6205,6 +6281,10 @@ msgid ""
 " % po4a: environment I<env> I<parameters>\n"
 "\n"
 msgstr ""
+"generic_environment は、register_generic_environment や\n"
+"TeX ファイルへの追加定義で指定した情報を使用します。:\n"
+" % po4a: environment I<env> I<parameters>\n"
+"\n"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:1250
@@ -6215,6 +6295,9 @@ msgid ""
 "name of the command followed by an identifier of the parameter (like {#7} or "
 "[#2])."
 msgstr ""
+"どちらの関数も、翻訳可能であると ('_' で) 指定したパラメータのみを翻訳しま"
+"す。generic_environment は環境スタックに環境名を追加し、generic_command は、"
+"({#7} や [#2] のような) パラメータの識別子が続くコマンド名を追加します。"
 
 # type: textblock
 #: lib/Locale/Po4a/TeX.pm:1673
@@ -6242,6 +6325,8 @@ msgid ""
 "The TeX module could parse the newcommand arguments and try to guess the "
 "number of arguments, their type and whether or not they should be translated."
 msgstr ""
+"TeX モジュールは、newcommand の引数をパースし、引数の数や型、翻訳するべきか否"
+"かを推測できるはずです。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:1687
@@ -6254,6 +6339,8 @@ msgid ""
 "When \\item is used as an environment separator, the item argument is "
 "attached to the following string."
 msgstr ""
+"\\item が環境セパレータとして使われている場合、item の引数は続く文字列にア"
+"タッチされます。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:1692
@@ -6266,6 +6353,8 @@ msgid ""
 "These commands should be specified by couples.  This could allow to specify "
 "commands beginning or ending a verbatim environment."
 msgstr ""
+"これらのコマンドは組を指定するべきです。verbatim 環境の開始コマンドと終了コマ"
+"ンドを指定できます。"
 
 # type: =item
 #: lib/Locale/Po4a/TeX.pm:1698
