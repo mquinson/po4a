@@ -75,14 +75,12 @@ $VERSION= $Locale::Po4a::TeX::VERSION;
 
 use Locale::Po4a::Common;
 use Locale::Po4a::TeX;
-use subs qw(&untranslated     &translate_joined
+use subs qw(
             &parse_definition_file
             &register_generic_command &is_closed &translate_buffer
             &register_verbatim_environment
             &generic_command
             &in_verbatim);
-*untranslated                  = \&Locale::Po4a::TeX::untranslated;
-*translate_joined              = \&Locale::Po4a::TeX::translate_joined;
 *parse_definition_file         = \&Locale::Po4a::TeX::parse_definition_file;
 *register_generic_command      = \&Locale::Po4a::TeX::register_generic_command;
 *register_verbatim_environment = \&Locale::Po4a::TeX::register_verbatim_environment;
@@ -120,6 +118,7 @@ $ESCAPE = "\@";
 $RE_ESCAPE = "\@";
 $RE_VERBATIM = "\@example";
 $RE_COMMENT = "\\\@(?:c|comment)\\b";
+$RE_PRE_COMMENT = "(?<!\@)(?:\@\@)*";
 
 my %break_line = ();
 
