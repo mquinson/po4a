@@ -1033,7 +1033,7 @@ sub post_trans {
     }
 
     # There must not be an end of line inside an inline macro
-    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1$2/gs;
+    $str =~ s/(E<\.[^>]*)\n([^>]*>)/$1 $2/gs;
 
     # No . or ' on first char, or nroff will think it's a macro
     # * at the beginning of a paragraph, add \& (zero width space) at
@@ -2478,7 +2478,7 @@ sub define_mdoc_macros {
     foreach (qw(Ad An Ar Cd Cm Dv Er Ev Fa Fd Fn Ic Li Nm Op Ot Pa St Va Vt Xr)) {
         $inline{$_} = 1;
     }
-    # FIXME: some of thes macro introduce a line in bold.
+    # FIXME: some of these macros introduce a line in bold.
     #        Using \fP in these line is not supported.
     #        do_fonts should be called for every inline line
 

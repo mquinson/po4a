@@ -894,6 +894,14 @@ sub translate {
 #	Encode::from_to($transstring,$self->{TT}{po_in}->get_charset,
 #	    $self->get_out_charset);
 #    }
+
+    if ($options{'wrap'}||0) {
+        $transstring =~ s/( *)$//s;
+        my $trailing_spaces = $1||"";
+        $transstring =~ s/ *$//gm;
+        $transstring .= $trailing_spaces;
+    }
+
     return $transstring;
 }
 
