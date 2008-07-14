@@ -92,6 +92,14 @@ consists in '%' or '%%', and use '%%' as the beginning of a comment.
 
 my $fortunes = 0;
 
+=item B<markdown>
+
+Handle some special markup in Markdown-formatted texts.
+
+=cut
+
+my $markdown = 0;
+
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -108,6 +116,10 @@ sub initialize {
 
     if (defined $options{'fortunes'}) {
         $fortunes=1;
+    }
+
+    if (defined $options{'markdown'}) {
+        $markdown=1;
     }
 }
 
@@ -162,13 +174,33 @@ sub parse {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
+        } elsif ($markdown and
+                 (   $line =~ /^#/            # headline
+                  or $line =~ /^\s*\[\[\!\S[^\]]*\]\]\s*$/)) { # sole macro
+            # Found Markdown markup that should be preserved as a single line
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="$line\n";
+            $wrapped_mode = 0;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $wrapped_mode = 1;
+            $paragraph="";
+        } elsif ($markdown and
+                 (   $paragraph =~ m/^>/       # blockquote
+                  or $paragraph =~ m/[<>]/     # maybe html
+                  or $paragraph =~ m/^"""/     # textblock inside macro end
+                  or $paragraph =~ m/"""$/)) { # textblock inside macro begin
+            # Found Markdown markup that might not survive wrapping
+            $wrapped_mode = 0;
+            $paragraph .= $line."\n";
         } else {
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
                 $wrapped_mode = 0;
             }
-            $line =~ s/%%(.*)$//;
+            if ($fortunes) {
+                $line =~ s/%%(.*)$//;
+            }
 # TODO: comments
             $paragraph .= $line."\n";
         }
