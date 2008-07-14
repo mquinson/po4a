@@ -469,7 +469,7 @@ sub get_leading_command {
     print STDERR "get_leading_command($buffer)="
         if ($debug{'extract_commands'});
 
-    if ($buffer =~ m/^$RE_ESCAPE([[:alpha:]]+)(\*?)(.*)$/s
+    if ($buffer =~ m/^$RE_ESCAPE([[:alnum:]]+)(\*?)(.*)$/s
         && defined $separated_command{$1}) {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
@@ -588,7 +588,7 @@ sub get_trailing_command {
     }
 
     # There should now be a command, maybe followed by an asterisk.
-    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alpha:]]+)(\*?)\s*$/s
+    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alnum:]]+)(\*?)\s*$/s
         && defined $separated_command{$2}) {
         $buffer = $1;
         $command = $2;
@@ -738,7 +738,7 @@ sub translate_buffer {
         if ($buffer =~ /^(\s+)(.*?)$/s) {
             $spaces = $1;
 #            $buffer = $2; # FIXME: this also remove trailing spaces!!
-            $buffer =~ s/^\s*//;
+            $buffer =~ s/^\s*//s;
         }
         my $buffer_save = $buffer;
         ($command, $variant, $args, $buffer) =
@@ -767,7 +767,7 @@ sub translate_buffer {
                 if ($buffer =~ /^(\s+)(.*?)$/s) {
                     $spaces = $1;
 #                    $buffer = $2;  # FIXME: this also remove trailing spaces!!
-                    $buffer =~ s/^\s*//;
+                    $buffer =~ s/^\s*//s;
                 }
                 $translated_buffer .= $spaces;
             } else {
@@ -846,16 +846,19 @@ sub translate_buffer {
         }
         $wrap = 0 if (defined $no_wrap and $no_wrap == 1);
         # Keep spaces at the end of the buffer.
-        my $spaces = "";
+        my $spaces_end = "";
         if ($buffer =~ /^(.*?)(\s+)$/s) {
-            $spaces = $2;
+            $spaces_end = $2;
             $buffer = $1;
+        }
+        if ($wrap and $buffer =~ s/^(\s+)//s) {
+                $translated_buffer .= $1;
         }
         $translated_buffer .= $self->translate($buffer,$self->{ref},
                                                @env?$env[-1]:"Plain text",
                                                "wrap" => $wrap);
         # Restore spaces at the end of the buffer.
-        $translated_buffer .= $spaces;
+        $translated_buffer .= $spaces_end;
     }
 
     # append the translation of the trailing commands
@@ -1384,7 +1387,7 @@ TEST_TYPE:
         }
         @e = @$env;
         my $wrap = 1;
-        $wrap = 0 if $no_wrap == 1;
+        $wrap = 0 if (defined $no_wrap and $no_wrap == 1);
         $translated = $self->translate($tmp,$self->{ref},
                                        @e?$e[-1]:"Plain text",
                                        "wrap" => $wrap);
