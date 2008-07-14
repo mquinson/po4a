@@ -130,7 +130,16 @@ sub parse {
     my $wrapped_mode = 1;
     my $expect_header = 1;
     ($line,$ref)=$self->shiftline();
+    my $file = $ref;
+    $file =~ s/:[0-9]+$//;
     while (defined($line)) {
+        $ref =~ m/^(.*):[0-9]+$/;
+        if ($1 ne $file) {
+            $file = $1;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+        }
+
         chomp($line);
         $self->{ref}="$ref";
         if ($debianchangelog and
