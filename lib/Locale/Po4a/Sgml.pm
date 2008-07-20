@@ -368,17 +368,25 @@ sub parse_file {
         $origfile .= ${$self->{TT}{doc_in}}[$i];
         $i+=2;
     }
+
     unless ($self->{options}{'force'}) {
-    # Detect if we can find the DTD
-    open (VALID, "| nsgmls -p")
-        or die wrap_mod("po4a::sgml",
-                        dgettext("po4a", "Can't run nsgmls -p: %s"), $!);
-    print VALID $origfile;
-    close VALID
-        or die wrap_mod("po4a::sgml",
-                        dgettext("po4a", "Error while running nsgmls -p.  ".
-                                         "Please check if nsgmls and the ".
-                                         "DTD are installed."));
+        # Detect if we can find the DTD
+        my ($tmpfh,$tmpfile)=File::Temp::tempfile("po4a-XXXX",
+                                                  SUFFIX => ".sgml",
+                                                  DIR    => "/tmp",
+                                                  UNLINK => 0);
+        print $tmpfh $origfile;
+        close $tmpfh
+            or die wrap_mod("po4a::sgml",
+                            dgettext("po4a", "Can't close tempfile: %s"), $!);
+        if (system("nsgmls -p < $tmpfile")) {
+            unlink ($tmpfile);
+            die wrap_mod("po4a::sgml",
+                         dgettext("po4a", "Error while running nsgmls -p.  ".
+                                          "Please check if nsgmls and the ".
+                                          "DTD are installed."));
+        }
+        unlink ($tmpfile);
     }
     # Detect the XML pre-prolog
     if ($origfile =~ s/^(\s*<\?xml[^?]*\?>)//) {
