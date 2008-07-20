@@ -226,11 +226,11 @@ my $b = $builder->new
 
 # Tweak the installation path
 #  Retrieve the prefix (There should be a better way)
-my $base = $b->install_sets($b->installdirs)->{bindoc};
+my $base = $b->install_destination("bindoc");
 $base =~ s/\/man\/man1//;
 #  Set the paths for the manpages and MO files
-$b->install_sets($b->installdirs)->{man} = $base.'/man';
-$b->install_sets($b->installdirs)->{po} = $base.'/locale';
+$b->{properties}{install_sets}{$b->installdirs}{man} = $base.'/man';
+$b->{properties}{install_sets}{$b->installdirs}{po} = $base.'/locale';
 
 $b->create_build_script;
 
