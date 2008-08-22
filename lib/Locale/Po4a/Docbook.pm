@@ -131,7 +131,6 @@ sub initialize {
 		<msgorig>
 		<objectinfo>
 		<orgdiv>
-		<option>
 		<othercredit>
 		<para>
 		<phrase>
@@ -244,6 +243,7 @@ sub initialize {
 		<ooclass>
 		<ooexception>
 		<oointerface>
+		<option>
 		<optional>
 		<orgname>
 		<othername>
