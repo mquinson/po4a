@@ -363,6 +363,9 @@ sub initialize {
 			$self->{options}{$opt} = $options{$opt};
 		}
 	}
+	# Default options set by modules. Forbidden for users.
+	$self->{options}{'_default_tags'}='';
+	$self->{options}{'_default_inline'}='';
 
 	#It will maintain the list of the translatable tags
 	$self->{tags}=();
@@ -1524,12 +1527,16 @@ sub treat_options {
 	$self->{options}{'nodefault'} =~ /\s*(.*)\s*/s;
 	my %list_nodefault;
 	foreach (split(/\s+/s,$1)) {
-	    $list_nodefault{$_} = 1;
+		$list_nodefault{$_} = 1;
 	}
 	$self->{nodefault} = \%list_nodefault;
 
-	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
 	my @list_tags;
+	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_tags, $tag;
+	}
+	$self->{options}{'_default_tags'} =~ /\s*(.*)\s*/s;
 	foreach my $tag (split(/\s+/s,$1)) {
 		push @list_tags, $tag
 			unless $list_nodefault{$tag};
@@ -1548,11 +1555,15 @@ sub treat_options {
 	my @list_attr = split(/\s+/s,$1);
 	$self->{attributes} = \@list_attr;
 
-	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
 	my @list_inline;
+	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
 	foreach my $tag (split(/\s+/s,$1)) {
 		push @list_inline, $tag
 			unless $list_nodefault{$tag};
+	}
+	$self->{options}{'_default_inline'} =~ /\s*(.*)\s*/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_inline, $tag;
 	}
 	$self->{inline} = \@list_inline;
 

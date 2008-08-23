@@ -93,7 +93,7 @@ sub initialize {
 	$self->SUPER::initialize(%options);
 	$self->{options}{'tagsonly'}=1;
 	$self->{options}{'nostrip'}=1;
-	$self->{options}{'tags'}.=' <dia:string>';
+	$self->{options}{'_default_tags'}.=' <dia:string>';
 	$self->treat_options;
 }
 
