@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-normalize -- normalize documentation files
-# $Id: po4a-normalize,v 1.29 2006-10-07 21:15:10 nekral-guest Exp $
+# $Id: po4a-normalize,v 1.30 2008-10-04 17:56:46 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -41,6 +41,14 @@ that ;)
 Extra option(s) to pass to the format plugin. Specify each option in the
 'name=value' format. See the documentation of each plugin for more
 information about the valid options and their meanings.
+
+=item -b, --blank
+
+Create an blank translated document.
+The generated translated document will be generated assuming all messages
+are translated by a space or new line.
+
+This is useful to check what parts of the document cannot be translated.
 
 =item -h, --help
 
@@ -102,13 +110,15 @@ sub show_version {
     exit 0;
 }
 
-my ($help_fmt,$help,$type,$debug,$verbose,@options);
+my ($blank,$help_fmt,$help,$type,$debug,$verbose,@options);
 my ($mastchar);
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
 	'help|h'       => \$help,
 	'help-format'  => \$help_fmt,
 	'format|f=s'   => \$type,
+
+	'blank|b'      => \$blank,
 
 	'master-charset|M=s'    => \$mastchar,
 
@@ -143,6 +153,22 @@ $parser->read($filename);
 $parser->{TT}{utf_mode} = 1;
 $parser->{TT}{file_in_charset} = $mastchar;
 $parser->parse();
+if ($blank) {
+	foreach my $msgid (keys %{$parser->{TT}{po_out}{po}}) {
+		if ($msgid =~ m/\n$/s) {
+			$parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = "\n";
+		} else {
+			$parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = " ";
+		}
+	}
+	my $empty_po = $parser->{TT}{po_out};
+	$parser = Locale::Po4a::Chooser::new($type,%options);
+	$parser->{TT}{po_in} = $empty_po;
+	$parser->read($filename);
+	$parser->{TT}{utf_mode} = 1;
+	$parser->{TT}{file_in_charset} = $mastchar;
+	$parser->parse();
+}
 $parser->write('po4a-normalize.output');
 $parser->writepo('po4a-normalize.po');
 
