@@ -93,7 +93,6 @@ sub initialize {
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
 	$self->{options}{'_default_tags'} = '
 		<abbrev>
-		<acronym>
 		W<address>
 		<affiliation>
 		<appendixinfo>
@@ -176,6 +175,7 @@ sub initialize {
 		<titleabbrev>
 		<userinput>';
 	$self->{options}{'_default_inline'} = '
+		<acronym>
 		<action>
 		<anchor>
 		<application>
