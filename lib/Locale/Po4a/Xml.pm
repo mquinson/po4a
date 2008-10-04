@@ -271,7 +271,7 @@ to override the default behavior specified by the global "wrap" option.
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
 Note: This option is deprecated.
-You should use the B<translated> and B<untranslate> options instead.
+You should use the B<translated> and B<untranslated> options instead.
 
 =item attributes
 
@@ -306,18 +306,21 @@ Note: the preprocessor directives must only appear between tags
 
 =item translated
 
-=item unstranslated
-
-Space-separated list of the tags you want to translate or not.
+Space-separated list of the tags you want to translate.
 The tags must be in the form <aaa>, but you can join some (<bbb><aaa>) to
 indicate that the content of the tag <aaa> will only be translated when
-it’s into a <bbb> tag.
+it's into a <bbb> tag.
 
 You can also specify some tag options putting some characters in front of
-the tag hierarchy. For example, you can put ’w’ (wrap) or ’W’ (don’t wrap)
+the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to overide the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
+
+=item untranslated
+
+Space-separated list of the tags you do not want to translate or not. It
+uses the same format as the B<translated> option.
 
 =back
 
