@@ -197,6 +197,7 @@ sub initialize {
                 <sup> 
                 <textarea> 
                 <tt> 
+                <u>
                 <var> 
         ';
 
