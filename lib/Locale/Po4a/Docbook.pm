@@ -209,7 +209,6 @@ sub initialize {
 		<footnoteref>
 		<foreignphrase>
 		<function>
-		<glossterm>
 		<group>
 		<guibutton>
 		<guiicon>
