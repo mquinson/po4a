@@ -99,6 +99,7 @@ Handle some special markup in Markdown-formatted texts.
 =cut
 
 my $markdown = 0;
+my $asciidoc = 0;
 
 sub initialize {
     my $self = shift;
@@ -121,6 +122,8 @@ sub initialize {
     if (defined $options{'markdown'}) {
         $markdown=1;
     }
+
+    $asciidoc=1 if (defined $options{'asciidoc'});
 }
 
 sub parse {
@@ -170,11 +173,182 @@ sub parse {
         } elsif ($line =~ /^\s*$/) {
             # Break paragraphs on lines containing only spaces
             do_paragraph($self,$paragraph,$wrapped_mode);
-            $self->pushline("\n") unless (   $wrapped_mode == 0
-                                          or $paragraph eq "");
             $paragraph="";
             $wrapped_mode = 1;
             $self->pushline($line."\n");
+        } elsif (defined $self->{verbatim} and $self->{verbatim} == 2) {
+            # Untranslated blocks
+            $self->pushline($line."\n");
+            if ($asciidoc and
+                ($line =~ m/^(\\{4,}|~{4,})$/)) {
+                undef $self->{verbatim};
+                undef $self->{type};
+                $wrapped_mode = 1;
+            }
+        } elsif ($asciidoc and
+                 ($line =~ m/^(={4,}|-{4,}|~{4,}|\^{4,}|\+{4,})$/) and
+                 (defined($paragraph) )and
+                 ($paragraph =~ m/^[^\n]*\n$/s) and
+                 (length($paragraph) == (length($line)+1))) {
+            # Found title
+            $wrapped_mode = 0;
+            my $level = $line;
+            $level =~ s/^(.).*$/$1/;
+            my $t = $self->translate($paragraph,
+                                     $self->{ref},
+                                     "Title $level",
+                                     "wrap" => 0);
+            $self->pushline($t);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline(($level x (length($t)-1))."\n");
+        } elsif ($asciidoc and
+                 ($line =~ m/^(={1,5}) +(.*)( +\1)?$/)) {
+            my $titlelevel1 = $1;
+            my $title = $2;
+            my $titlelevel2 = $3||"";
+            # Found one line title
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $wrapped_mode = 0;
+            $paragraph="";
+            my $t = $self->translate($title,
+                                     $self->{ref},
+                                     "Title $titlelevel1",
+                                     "wrap" => 0);
+            $self->pushline($titlelevel1.$t.$titlelevel2."\n");
+            $wrapped_mode = 1;
+        } elsif ($asciidoc and
+                 ($line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,})$/)) {
+            # Found one delimited block
+            my $t = $line;
+            $t =~ s/^(.).*$/$1/;
+            my $type = "delimited block $t";
+            if (defined $self->{verbatim} and ($self->{type} ne $type)) {
+                $paragraph .= "$line\n";
+            } else {
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            if (defined $self->{type}) {
+                undef $self->{type};
+                undef $self->{verbatim};
+                $wrapped_mode = 1;
+            } else {
+                $self->{type} = $type;
+                if ($t eq "\\") {
+                    # CommentBlock, should not be treated
+                    $self->{verbatim} = 2;
+                } elsif ($t eq "+") {
+                    # PassthroughBlock
+                    $wrapped_mode = 0;
+                    $self->{verbatim} = 1;
+                } elsif ($t eq "-") {
+                    # ListingBlock
+                    $wrapped_mode = 0;
+                    $self->{verbatim} = 1;
+                } elsif ($t eq ".") {
+                    # LiteralBlock, TBC
+                    $wrapped_mode = 0;
+                    $self->{verbatim} = 1;
+                } elsif ($t eq "*") {
+                    # SidebarBlock
+                    $wrapped_mode = 1;
+                } elsif ($t eq "_") {
+                    # QuoteBlock
+                    $wrapped_mode = 1;
+                } elsif ($t eq "=") {
+                    # ExampleBlock
+                    $wrapped_mode = 1;
+                } elsif ($t eq "~") {
+                    # Filter blocks, TBC: not translated
+                    $wrapped_mode = 0;
+                    $self->{verbatim} = 2;
+                } 
+            }
+            $paragraph="";
+            $self->pushline($line."\n");
+            }
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\[\[([^\]]*)\]\]$/)) {
+            # Found BlockId
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline($line."\n");
+            undef $self->{bullet};
+            undef $self->{indent};
+#        } elsif ($asciidoc and not defined $self->{verbatim} and
+#                 ($line =~ m/^\[(NOTE|TIP|IMPORTANT|WARNING|CAUTION|verse|quote)\]$/)) {
+# TODO: quote/verse as a special case (translated arguments).
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^(\s*)([[:alnum:]].*)(::|;;)$/)) {
+            my $indent = $1;
+            my $label = $2;
+            my $labelend = $3;
+            # Found labeled list
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->{bullet} = "";
+            $self->{indent} = $indent;
+            my $t = $self->translate($label,
+                                     $self->{ref},
+                                     "Labeled list",
+                                     "wrap" => 0);
+            $self->pushline("$t$labelend\n");
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\:(\S.*?)(:\s*)(.*)$/)) {
+            my $attrname = $1;
+            my $attrsep = $2;
+            my $attrvalue = $3;
+            # Found a Attribute entry
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            undef $self->{bullet};
+            undef $self->{indent};
+            my $t = $self->translate($attrvalue,
+                                     $self->{ref},
+                                     "Attribute :$attrname:",
+                                     "wrap" => 0);
+            $self->pushline(":$attrname$attrsep$t\n");
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\.(\S.*)$/)) {
+            my $title = $1;
+            # Found block title
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            undef $self->{bullet};
+            undef $self->{indent};
+            my $t = $self->translate($title,
+                                     $self->{ref},
+                                     "Block title",
+                                     "wrap" => 0);
+            $self->pushline(".$t\n");
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^(\s*)((?:[-*o+]|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\)|\.|\.\.)\s+)(.*)$/)) {
+            my $indent = $1||"";
+            my $bullet = $2;
+            my $text = $3;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph = $text."\n";
+            $self->{indent} = $indent;
+            $self->{bullet} = $bullet;
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 (defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/)) {
+            my $indent = $1;
+            my $text = $2;
+            if (not defined $self->{indent}) {
+                $paragraph .= $text."\n";
+                $self->{indent} = $indent;
+            } elsif (length($paragraph) and (length($self->{bullet}) + length($self->{indent}) == length($indent))) {
+                $paragraph .= $text."\n";
+            } else {
+
+                do_paragraph($self,$paragraph,$wrapped_mode);
+                $paragraph = $text."\n";
+                $self->{indent} = $indent;
+                $self->{bullet} = "";
+            }
         } elsif (   $line =~ /^=*$/
                  or $line =~ /^_*$/
                  or $line =~ /^-*$/) {
@@ -206,6 +380,9 @@ sub parse {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
                 $wrapped_mode = 0;
+            } else {
+                undef $self->{bullet};
+                undef $self->{indent};
             }
             if ($fortunes) {
                 $line =~ s/%%(.*)$//;
@@ -228,9 +405,19 @@ sub parse {
 
 sub do_paragraph {
     my ($self, $paragraph, $wrap) = (shift, shift, shift);
+    my $type = shift || $self->{type} || "Plain text";
     return if ($paragraph eq "");
 
-    if ($bullets) {
+# DEBUG
+#    my $b;
+#    if (defined $self->{bullet}) {
+#            $b = $self->{bullet};
+#    } else {
+#            $b = "UNDEF";
+#    }
+#    $type .= " verbatim: '".($self->{verbatim}||"NONE")."' bullet: '$b' indent: '".($self->{indent}||"NONE")."' type: '".($self->{type}||"NONE")."'";
+
+    if ($bullets and not $wrap and not defined $self->{verbatim}) {
         # Detect bullets
         # |        * blah blah
         # |<spaces>  blah
@@ -275,12 +462,24 @@ TEST_BULLET:
             }
         }
     }
-    # TODO: detect indented paragraphs
 
-    $self->pushline( $self->translate($paragraph,
-                                      $self->{ref},
-                                      "Plain text",
-                                      "wrap" => $wrap) );
+    my $end = ""
+    if ($wrap) {
+        $paragraph =~ s/^(.*?)(\n*)$/$1/s;
+        $end = $2 || "";
+    }
+    my $t = $self->translate($paragraph,
+                             $self->{ref},
+                             $type,
+                             "wrap" => $wrap);
+    if (defined $self->{bullet}) {
+        my $bullet = $self->{bullet};
+        my $indent1 = $self->{indent};
+        my $indent2 = $indent1.(' ' x length($bullet));
+        $t =~ s/^/$indent1$bullet/s;
+        $t =~ s/\n(.)/\n$indent2$1/sg;
+    }
+    $self->pushline( $t.$end );
 }
 
 1;
