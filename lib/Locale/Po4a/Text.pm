@@ -170,22 +170,23 @@ sub parse {
             $paragraph="";
             $wrapped_mode = 1;
             $self->pushline("$line\n");
-        } elsif ($line =~ /^\s*$/) {
-            # Break paragraphs on lines containing only spaces
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            $wrapped_mode = 1;
-            $self->pushline($line."\n");
-        } elsif (defined $self->{verbatim} and $self->{verbatim} == 2) {
+        } elsif (    (defined $self->{verbatim})
+                 and ($self->{verbatim} == 2)) {
             # Untranslated blocks
             $self->pushline($line."\n");
             if ($asciidoc and
-                ($line =~ m/^(\\{4,}|~{4,})$/)) {
+                ($line =~ m/^(\/{4,}|~{4,})$/)) {
                 undef $self->{verbatim};
                 undef $self->{type};
                 $wrapped_mode = 1;
             }
-        } elsif ($asciidoc and
+        } elsif ($line =~ /^\s*$/) {
+            # Break paragraphs on lines containing only spaces
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1 unless defined($self->{verbatim});
+            $self->pushline($line."\n");
+        } elsif ($asciidoc and (not defined($self->{verbatim})) and
                  ($line =~ m/^(={4,}|-{4,}|~{4,}|\^{4,}|\+{4,})$/) and
                  (defined($paragraph) )and
                  ($paragraph =~ m/^[^\n]*\n$/s) and
@@ -203,10 +204,11 @@ sub parse {
             $wrapped_mode = 1;
             $self->pushline(($level x (length($t)-1))."\n");
         } elsif ($asciidoc and
-                 ($line =~ m/^(={1,5}) +(.*)( +\1)?$/)) {
+                 ($line =~ m/^(={1,5})( +)(.*?)( +\1)?$/)) {
             my $titlelevel1 = $1;
-            my $title = $2;
-            my $titlelevel2 = $3||"";
+            my $titlespaces = $2;
+            my $title = $3;
+            my $titlelevel2 = $4||"";
             # Found one line title
             do_paragraph($self,$paragraph,$wrapped_mode);
             $wrapped_mode = 0;
@@ -215,7 +217,7 @@ sub parse {
                                      $self->{ref},
                                      "Title $titlelevel1",
                                      "wrap" => 0);
-            $self->pushline($titlelevel1.$t.$titlelevel2."\n");
+            $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
             $wrapped_mode = 1;
         } elsif ($asciidoc and
                  ($line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,})$/)) {
@@ -227,13 +229,13 @@ sub parse {
                 $paragraph .= "$line\n";
             } else {
             do_paragraph($self,$paragraph,$wrapped_mode);
-            if (defined $self->{type}) {
+            if (    (defined $self->{type})
+                and ($self->{type} eq $type)) {
                 undef $self->{type};
                 undef $self->{verbatim};
                 $wrapped_mode = 1;
             } else {
-                $self->{type} = $type;
-                if ($t eq "\\") {
+                if ($t eq "\/") {
                     # CommentBlock, should not be treated
                     $self->{verbatim} = 2;
                 } elsif ($t eq "+") {
@@ -245,7 +247,7 @@ sub parse {
                     $wrapped_mode = 0;
                     $self->{verbatim} = 1;
                 } elsif ($t eq ".") {
-                    # LiteralBlock, TBC
+                    # LiteralBlock
                     $wrapped_mode = 0;
                     $self->{verbatim} = 1;
                 } elsif ($t eq "*") {
@@ -253,7 +255,13 @@ sub parse {
                     $wrapped_mode = 1;
                 } elsif ($t eq "_") {
                     # QuoteBlock
-                    $wrapped_mode = 1;
+                    if (    (defined $self->{type})
+                        and ($self->{type} eq "verse")) {
+                        $wrapped_mode = 0;
+                        $self->{verbatim} = 1;
+                    } else {
+                        $wrapped_mode = 1;
+                    }
                 } elsif ($t eq "=") {
                     # ExampleBlock
                     $wrapped_mode = 1;
@@ -262,6 +270,7 @@ sub parse {
                     $wrapped_mode = 0;
                     $self->{verbatim} = 2;
                 } 
+                $self->{type} = $type;
             }
             $paragraph="";
             $self->pushline($line."\n");
@@ -275,11 +284,38 @@ sub parse {
             $self->pushline($line."\n");
             undef $self->{bullet};
             undef $self->{indent};
-#        } elsif ($asciidoc and not defined $self->{verbatim} and
-#                 ($line =~ m/^\[(NOTE|TIP|IMPORTANT|WARNING|CAUTION|verse|quote)\]$/)) {
-# TODO: quote/verse as a special case (translated arguments).
         } elsif ($asciidoc and not defined $self->{verbatim} and
-                 ($line =~ m/^(\s*)([[:alnum:]].*)(::|;;)$/)) {
+                 ($line =~ m/^\[(NOTE|TIP|IMPORTANT|WARNING|CAUTION|verse|quote)\]$/)) {
+            my $type = $1;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline($line."\n");
+            if ($type  eq "verse") {
+                $wrapped_mode = 0;
+            }
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\[(verse|quote), +(.*)\]$/)) {
+            my $type = $1;
+            my $arg = $2;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            my $t = $self->translate($arg,
+                                     $self->{ref},
+                                     "$type",
+                                     "wrap" => 0);
+            $self->pushline("[$type, $t]\n");
+            $wrapped_mode = 1;
+            if ($type  eq "verse") {
+                $wrapped_mode = 0;
+            }
+            $self->{type} = $type;
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^(\s*)([[:alnum:]].*)(::|;;|\?\?|:-)$/)) {
             my $indent = $1;
             my $label = $2;
             my $labelend = $3;
@@ -311,7 +347,7 @@ sub parse {
                                      "wrap" => 0);
             $self->pushline(":$attrname$attrsep$t\n");
         } elsif ($asciidoc and not defined $self->{verbatim} and
-                 ($line =~ m/^\.(\S.*)$/)) {
+                 ($line !~ m/^\.\./) and ($line =~ m/^\.(\S.*)$/)) {
             my $title = $1;
             # Found block title
             do_paragraph($self,$paragraph,$wrapped_mode);
@@ -332,6 +368,14 @@ sub parse {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph = $text."\n";
             $self->{indent} = $indent;
+            $self->{bullet} = $bullet;
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^((?:<?[0-9]+)?> +)(.*)$/)) {
+            my $bullet = $1;
+            my $text = $2;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph = $text."\n";
+            $self->{indent} = "";
             $self->{bullet} = $bullet;
         } elsif ($asciidoc and not defined $self->{verbatim} and
                  (defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/)) {
@@ -463,7 +507,7 @@ TEST_BULLET:
         }
     }
 
-    my $end = ""
+    my $end = "";
     if ($wrap) {
         $paragraph =~ s/^(.*?)(\n*)$/$1/s;
         $end = $2 || "";
