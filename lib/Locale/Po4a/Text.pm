@@ -187,6 +187,12 @@ sub parse {
             $wrapped_mode = 1 unless defined($self->{verbatim});
             $self->pushline($line."\n");
         } elsif ($asciidoc and (not defined($self->{verbatim})) and
+                 ($line =~ m/^(\+|--)$/)) {
+            # List Item Continuation or List Block
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $self->pushline($line."\n");
+        } elsif ($asciidoc and (not defined($self->{verbatim})) and
                  ($line =~ m/^(={4,}|-{4,}|~{4,}|\^{4,}|\+{4,})$/) and
                  (defined($paragraph) )and
                  ($paragraph =~ m/^[^\n]*\n$/s) and
