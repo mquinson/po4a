@@ -291,6 +291,17 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($paragraph eq "") and
+                 ($line =~ m/^((?:NOTE|TIP|IMPORTANT|WARNING|CAUTION):\s+)(.*)$/)) {
+            my $type = $1;
+            my $text = $2;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph=$text."\n";
+            $wrapped_mode = 1;
+            $self->pushline($type);
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif ($asciidoc and not defined $self->{verbatim} and
                  ($line =~ m/^\[(NOTE|TIP|IMPORTANT|WARNING|CAUTION|verse|quote)\]$/)) {
             my $type = $1;
             do_paragraph($self,$paragraph,$wrapped_mode);
