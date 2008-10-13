@@ -321,6 +321,23 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^(\s*)(\S.*)((?:::|;;)\s+)(.*)$/)) {
+            my $indent = $1;
+            my $label = $2;
+            my $labelend = $3;
+            my $labeltext = $4;
+            # Found Horizontal Labeled Lists
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph=$labeltext."\n";
+            $wrapped_mode = 1;
+            $self->{bullet} = "";
+            $self->{indent} = $indent;
+            my $t = $self->translate($label,
+                                     $self->{ref},
+                                     "Labeled list",
+                                     "wrap" => 0);
+            $self->pushline("$indent$t$labelend");
+        } elsif ($asciidoc and not defined $self->{verbatim} and
                  ($line =~ m/^(\s*)([[:alnum:]].*)(::|;;|\?\?|:-)$/)) {
             my $indent = $1;
             my $label = $2;
@@ -335,7 +352,7 @@ sub parse {
                                      $self->{ref},
                                      "Labeled list",
                                      "wrap" => 0);
-            $self->pushline("$t$labelend\n");
+            $self->pushline("$indent$t$labelend\n");
         } elsif ($asciidoc and not defined $self->{verbatim} and
                  ($line =~ m/^\:(\S.*?)(:\s*)(.*)$/)) {
             my $attrname = $1;
