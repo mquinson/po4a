@@ -332,6 +332,32 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\[icon="(.*)"\]$/)) {
+            my $arg = $1;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            my $t = $self->translate($arg,
+                                     $self->{ref},
+                                     "icon",
+                                     "wrap" => 0);
+            $self->pushline("[icon=\"$t\"]\n");
+            $wrapped_mode = 1;
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif ($asciidoc and not defined $self->{verbatim} and
+                 ($line =~ m/^\[icons=None, +caption="(.*)"\]$/)) {
+            my $arg = $1;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            my $t = $self->translate($arg,
+                                     $self->{ref},
+                                     "caption",
+                                     "wrap" => 0);
+            $self->pushline("[icons=None, caption=\"$t\"]\n");
+            $wrapped_mode = 1;
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif ($asciidoc and not defined $self->{verbatim} and
                  ($line =~ m/^(\s*)(\S.*)((?:::|;;)\s+)(.*)$/)) {
             my $indent = $1;
             my $label = $2;
