@@ -1451,6 +1451,13 @@ sub translate_paragraph {
 	my @paragraph = @_;
 	$translate = $self->get_translate_options($self->get_path);
 
+	while (    (scalar @paragraph)
+	       and ($paragraph[0] =~ m/^\s*\n/s)) {
+		$self->pushline($paragraph[0]);
+		shift @paragraph;
+		shift @paragraph;
+	}
+
 	my $comments;
 	while (@comments) {
 		my ($comment,$eoc);
