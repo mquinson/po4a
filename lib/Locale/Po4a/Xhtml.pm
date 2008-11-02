@@ -166,6 +166,10 @@ sub initialize {
         $self->{options}{'wrap'}=1;
         $self->{options}{'doctype'}=$self->{options}{'doctype'} || 'html';
 
+        $self->{options}{'_default_translated'}.='
+                W<pre>
+        ';
+
         $self->{options}{'_default_inline'}.='
                 <a> 
                 <abbr> 
