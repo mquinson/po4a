@@ -368,6 +368,8 @@ sub initialize {
 	}
 	# Default options set by modules. Forbidden for users.
 	$self->{options}{'_default_tags'}='';
+	$self->{options}{'_default_translated'}='';
+	$self->{options}{'_default_untranslated'}='';
 	$self->{options}{'_default_inline'}='';
 
 	#It will maintain the list of the translatable tags
@@ -1527,50 +1529,55 @@ or in the initialize function).
 sub treat_options {
 	my $self = shift;
         
-	$self->{options}{'nodefault'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'nodefault'} =~ /^\s*(.*)\s*$/s;
 	my %list_nodefault;
 	foreach (split(/\s+/s,$1)) {
 		$list_nodefault{$_} = 1;
 	}
 	$self->{nodefault} = \%list_nodefault;
 
-	my @list_tags;
-	$self->{options}{'tags'} =~ /\s*(.*)\s*/s;
-	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_tags, $tag;
-	}
-	$self->{options}{'_default_tags'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'tags'} =~ /^\s*(.*)\s*$/s;
+	my @list_tags = split(/\s+/s,$1);
+	$self->{options}{'_default_tags'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
 		push @list_tags, $tag
 			unless $list_nodefault{$tag};
 	}
 	$self->{tags} = \@list_tags;
 
-	$self->{options}{'translated'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'translated'} =~ /^\s*(.*)\s*$/s;
 	my @list_translated = split(/\s+/s,$1);
+	$self->{options}{'_default_translated'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_translated, $tag
+			unless $list_nodefault{$tag};
+	}
 	$self->{translated} = \@list_translated;
 
-	$self->{options}{'untranslated'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'untranslated'} =~ /^\s*(.*)\s*$/s;
 	my @list_untranslated = split(/\s+/s,$1);
+	$self->{options}{'_default_untranslated'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_untranslated, $tag
+			unless $list_nodefault{$tag};
+	}
 	$self->{untranslated} = \@list_untranslated;
 
-	$self->{options}{'attributes'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'attributes'} =~ /^\s*(.*)\s*$/s;
 	my @list_attr = split(/\s+/s,$1);
 	$self->{attributes} = \@list_attr;
 
 	my @list_inline;
-	$self->{options}{'inline'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'inline'} =~ /^\s*(.*)\s*$/s;
+	@list_inline = split(/\s+/s,$1);
+	$self->{options}{'_default_inline'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
 		push @list_inline, $tag
 			unless $list_nodefault{$tag};
 	}
-	$self->{options}{'_default_inline'} =~ /\s*(.*)\s*/s;
-	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_inline, $tag;
-	}
 	$self->{inline} = \@list_inline;
 
-	$self->{options}{'placeholder'} =~ /\s*(.*)\s*/s;
+	$self->{options}{'placeholder'} =~ /^\s*(.*)\s*$/s;
 	my @list_placeholder = split(/\s+/s,$1);
 	$self->{placeholder} = \@list_placeholder;
 }
