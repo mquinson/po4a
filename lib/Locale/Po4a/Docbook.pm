@@ -93,6 +93,7 @@ sub initialize {
 	$self->{options}{'doctype'}=$self->{options}{'doctype'} || 'docbook xml';
 	$self->{options}{'_default_tags'} = '
 		<abbrev>
+		<ackno>
 		W<address>
 		<affiliation>
 		<appendixinfo>
