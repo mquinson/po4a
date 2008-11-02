@@ -166,13 +166,17 @@ sub initialize {
         $self->{options}{'wrap'}=1;
         $self->{options}{'doctype'}=$self->{options}{'doctype'} || 'html';
 
+        # Default tags are translated (text rewrapped), and introduce a
+        # break.
+        # The following list indicates the list of tags which should be
+        # translated without rewrapping.
         $self->{options}{'_default_translated'}.='
                 W<pre>
         ';
-        $self->{options}{'_default_untranslated'}.='
-                <br>
-        ';
 
+        # The following list indicates the list of tags which should be
+        # translated inside the current block, whithout introducing a
+        # break.
         $self->{options}{'_default_inline'}.='
                 <a> 
                 <abbr> 
@@ -180,7 +184,6 @@ sub initialize {
                 <b> 
                 <big> 
                 <bdo> 
-                <br> 
                 <button> 
                 <cite> 
                 <code> 
