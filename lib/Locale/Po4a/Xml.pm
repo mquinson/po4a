@@ -724,7 +724,7 @@ sub tag_trans_close {
 
 sub CDATA_extract {
 	my ($self,$remove)=(shift,shift);
-        my ($eof, @tag) = $self->get_string_until(']]>',{include=>1,unquoted=>1,remove=>$remove});
+        my ($eof, @tag) = $self->get_string_until(']]>',{include=>1,unquoted=>0,remove=>$remove});
 
 	return ($eof, @tag);
 }
