@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.92 2008-07-14 19:42:01 nekral-guest Exp $
+# $Id: Po.pm,v 1.93 2008-11-12 17:13:27 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -1351,8 +1351,14 @@ set, it will return "CHARSET".
 
 sub get_charset() {
     my $self=shift;
+
     $self->{header} =~ /charset=(.*?)[\s\\]/;
-    return $1;
+
+    if (defined $1) {
+        return $1;
+    } else {
+        return "CHARSET";
+    }
 }
 
 =item set_charset($)
