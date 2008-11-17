@@ -195,6 +195,7 @@ sub initialize {
 		<constant>
 		<corpauthor>
 		<database>
+		<editor>
 		<email>
 		<emphasis>
 		<envar>
