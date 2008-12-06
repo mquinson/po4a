@@ -771,7 +771,7 @@ sub parse_file {
 
 	    # Do the substitution
 	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
-	    print STDERR "substitute $2\n" if ($debug{'entities'});
+	    print STDERR "substitute $key\n" if ($debug{'entities'});
         }
     }
     $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+)\b/$1\{PO4A-amp\}$2/gs;
