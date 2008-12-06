@@ -460,20 +460,22 @@ sub parse_file {
 			                    "tag taglist titlepag toc");
 
     } elsif ($prolog =~ /docbook/i) {
-	$self->set_tags_kind("translate" => "abbrev artheader attribution ".
+	$self->set_tags_kind("translate" => "abbrev appendixinfo artheader attribution ".
+	                                    "biblioentry biblioset ".
+	                                    "chapterinfo collab collabname confdates confgroup conftitle ".
 	                                    "date ".
-	                                    "edition editor entry ".
+	                                    "edition editor entry example ".
 	                                    "figure ".
 	                                    "glosssee glossseealso glossterm ".
 	                                    "holder ".
 	                                    "member msgaud msglevel msgorig ".
-	                                    "orgname othername ".
-	                                    "para phrase pubdate publishername primary ".
+	                                    "orgdiv orgname othername ".
+	                                    "pagenums para phrase pubdate publishername primary ".
 	                                    "refclass refdescriptor refentrytitle refmiscinfo refname refpurpose releaseinfo remark revnumber revremark ".
-	                                    "screeninfo seg secondary segtitle simpara subtitle synopfragmentref synopsis ".
+	                                    "screeninfo seg secondary see seealso segtitle simpara substeps subtitle synopfragmentref synopsis ".
 	                                    "term tertiary title titleabbrev ".
 	                                    "contrib epigraph",
-	                     "empty"     => "audiodata colspec graphic imagedata textdata sbr videodata xref",
+	                     "empty"     => "audiodata colspec graphic imagedata textdata sbr spanspec videodata xref",
 	                     "indent"    => "abstract answer appendix article articleinfo audioobject author authorgroup ".
 	                                    "bibliodiv bibliography blockquote blockinfo book bookinfo bridgehead ".
 	                                    "callout calloutlist caption caution chapter copyright ".
@@ -497,25 +499,25 @@ sub parse_file {
 	                     "verbatim"  => "address cmdsynopsis holder literallayout programlisting ".
 	                                    "refentrytitle refname refpurpose screen term title",
 	                     "ignore"    => "acronym action affiliation anchor application arg author authorinitials ".
-	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
+	                                    "city citation citerefentry citetitle classname co command computeroutput constant corpauthor country ".
 	                                    "database po4abeg po4aend ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
 	                                    "filename firstname firstterm footnote footnoteref foreignphrase function ".
 	                                    "glossterm guibutton guiicon guilabel guimenu guimenuitem guisubmenu ".
 	                                    "hardware ".
-	                                    "indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename ".
+	                                    "indexterm informalexample inlineequation inlinegraphic inlinemediaobject interface interfacename isbn ".
 	                                    "keycap keycode keycombo keysym ".
-	                                    "link literal ".
+	                                    "link lineannotation literal ".
 	                                    "manvolnum markup medialabel menuchoice methodname modespec mousebutton ".
 	                                    "nonterminal ".
 	                                    "olink ooclass ooexception oointerface option optional othercredit ".
-	                                    "parameter personname phrase productname productnumber prompt property ".
+	                                    "parameter personname phrase productname productnumber prompt property pubsnumber ".
 	                                    "quote ".
 	                                    "remark replaceable returnvalue revhistory ".
 	                                    "sgmltag sidebar structfield structname subscript superscript surname symbol systemitem ".
 	                                    "token trademark type ".
 	                                    "ulink userinput ".
-	                                    "varname ".
+	                                    "varname volumenum ".
 	                                    "wordasword ".
 	                                    "xref ".
 	                                    "year",
