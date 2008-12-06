@@ -717,68 +717,70 @@ sub parse_file {
     #   Change the entities including files in the document
     my $dosubstitution = 1;
     while ($dosubstitution) {
-    $dosubstitution = 0;
-    foreach my $key (keys %entincl) {
-        # The external entity can be referenced as &key; or &key
-        # In the second case, we must differentiate &key and &key2
-        while ($origfile =~/^(.*?)&$key(;.*$|[^-_:.A-Za-z0-9].*$|$)/s) {
-	    $dosubstitution = 1; # Since we will include a new file, we
-	                         # must do a new round of substitutions.
-	    my ($begin,$end)=($1,$2);
-	    $end = "" unless (defined $end);
-	    $end =~ s/^;//s;
+        $dosubstitution = 0;
+        foreach my $key (keys %entincl) {
+            # The external entity can be referenced as &key; or &key
+            # In the second case, we must differentiate &key and &key2
+            while ($origfile =~/^(.*?)&$key(;.*$|[^-_:.A-Za-z0-9].*$|$)/s) {
+                # Since we will include a new file, we
+                # must do a new round of substitutions.
+                $dosubstitution = 1;
+                my ($begin,$end)=($1,$2);
+                $end = "" unless (defined $end);
+                $end =~ s/^;//s;
 
-	    if ($begin =~ m/.*<!--(.*?)$/s and $1 !~ m/-->/s) {
-		# This entity is commented. Just remove it.
-		$origfile = $begin.$end;
-		next;
-	    }
+                if ($begin =~ m/.*<!--(.*?)$/s and $1 !~ m/-->/s) {
+                    # This entity is commented. Just remove it.
+                    $origfile = $begin.$end;
+                    next;
+                }
 
-	    # add the refs
-	    my $len  = $entincl{$key}{'length'}; # number added by the inclusion
-	    my $pre  = ($begin =~ tr/\n/\n/); # number of \n
-	    my $post = ($end =~ tr/\n/\n/);
-	    print "XX Add a ref. pre=$pre; len=$len; post=$post\n" if $debug{'refs'};
-	    # Keep a reference of inclusion position in main file
-	    my $main = $refs[$pre];
+                # add the refs
+                my $len  = $entincl{$key}{'length'}; # number added by the inclusion
+                my $pre  = ($begin =~ tr/\n/\n/); # number of \n
+                my $post = ($end =~ tr/\n/\n/);
+                print "XX Add a ref. pre=$pre; len=$len; post=$post\n"
+                    if $debug{'refs'};
+                # Keep a reference of inclusion position in main file
+                my $main = $refs[$pre];
 
-	    # Remove the references for the lines after the inclusion
-	    # point.
-	    my @endrefs = splice @refs, $pre+1;
+                # Remove the references for the lines after the inclusion
+                # point.
+                my @endrefs = splice @refs, $pre+1;
 
-	    # Add the references of the added lines
-	    my $i;
-	    for ($i=0; $i<$len; $i++) {
-		$refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+1);
-	    }
+                # Add the references of the added lines
+                my $i;
+                for ($i=0; $i<$len; $i++) {
+                    $refs[$i+$pre] = "$main $entincl{$key}{'filename'}:".($i+1);
+                }
 
-	    if ($begin !~ m/\n[ \t]*$/s) {
-		if ($entincl{$key}{'content'} =~ m/^[ \t]*\n/s) {
-		    # There is nothing in the first line of the included
-		    # file, and something on the line before the inclusion
-		    # The line reference will be more informative like
-		    # this:
-		    $refs[$pre] = $main;
-		}
-	    }
-	    if ($end !~ s/^[ \t]*\n//s) {
-		if ($entincl{$key}{'content'} =~ m/\n[ \t]*$/s) {
-		    # There is something on the line after the inclusion,
-		    # and there is an end of line at the end of the
-		    # included file. We must add the line reference of the
-		    # remainder on the line:
-		    push @refs, $main;
-		}
-	    }
-	    # Append the references removed earlier (lines after the
-	    # inclusion point).
-	    push @refs, @endrefs;
+                if ($begin !~ m/\n[ \t]*$/s) {
+                    if ($entincl{$key}{'content'} =~ m/^[ \t]*\n/s) {
+                        # There is nothing in the first line of the
+                        # included file, and something on the line before
+                        # the inclusion The line reference will be more
+                        # informative like this:
+                        $refs[$pre] = $main;
+                    }
+                }
+                if ($end !~ s/^[ \t]*\n//s) {
+                    if ($entincl{$key}{'content'} =~ m/\n[ \t]*$/s) {
+                        # There is something on the line after the
+                        # inclusion, and there is an end of line at the
+                        # end of the included file. We must add the line
+                        # reference of the remainder on the line:
+                        push @refs, $main;
+                    }
+                }
+                # Append the references removed earlier (lines after the
+                # inclusion point).
+                push @refs, @endrefs;
 
-	    # Do the substitution
-	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
-	    print STDERR "substitute $key\n" if ($debug{'entities'});
+                # Do the substitution
+                $origfile = "$begin".$entincl{$key}{'content'}."$end";
+                print STDERR "substitute $key\n" if ($debug{'entities'});
+            }
         }
-    }
     }
     $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+)\b/$1\{PO4A-amp\}$2/gs;
     if (defined($xmlprolog) && length($xmlprolog)) {
