@@ -460,7 +460,7 @@ sub parse_file {
 			                    "tag taglist titlepag toc");
 
     } elsif ($prolog =~ /docbook/i) {
-	$self->set_tags_kind("translate" => "abbrev acronym artheader attribution ".
+	$self->set_tags_kind("translate" => "abbrev artheader attribution ".
 	                                    "date ".
 	                                    "edition editor entry ".
 	                                    "figure ".
@@ -496,7 +496,7 @@ sub parse_file {
 	                                    "warning",
 	                     "verbatim"  => "address cmdsynopsis holder literallayout programlisting ".
 	                                    "refentrytitle refname refpurpose screen term title",
-	                     "ignore"    => "action affiliation anchor application arg author authorinitials ".
+	                     "ignore"    => "acronym action affiliation anchor application arg author authorinitials ".
 	                                    "command citation citerefentry citetitle classname co computeroutput constant corpauthor ".
 	                                    "database po4abeg po4aend ".
 	                                    "email emphasis envar errorcode errorname errortext errortype exceptionname ".
