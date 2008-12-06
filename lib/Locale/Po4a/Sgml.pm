@@ -715,10 +715,15 @@ sub parse_file {
     }
 
     #   Change the entities including files in the document
+    my $dosubstitution = 1;
+    while ($dosubstitution) {
+    $dosubstitution = 0;
     foreach my $key (keys %entincl) {
         # The external entity can be referenced as &key; or &key
         # In the second case, we must differentiate &key and &key2
         while ($origfile =~/^(.*?)&$key(;.*$|[^-_:.A-Za-z0-9].*$|$)/s) {
+	    $dosubstitution = 1; # Since we will include a new file, we
+	                         # must do a new round of substitutions.
 	    my ($begin,$end)=($1,$2);
 	    $end = "" unless (defined $end);
 	    $end =~ s/^;//s;
@@ -773,6 +778,7 @@ sub parse_file {
 	    $origfile = "$begin".$entincl{$key}{'content'}."$end";
 	    print STDERR "substitute $key\n" if ($debug{'entities'});
         }
+    }
     }
     $origfile=~s/\G(.*?)&([A-Za-z_:][-_:.A-Za-z0-9]*|#[0-9]+|#x[0-9a-fA-F]+)\b/$1\{PO4A-amp\}$2/gs;
     if (defined($xmlprolog) && length($xmlprolog)) {
