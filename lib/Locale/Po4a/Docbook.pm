@@ -106,6 +106,10 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <accel>";
 	$self->{options}{'_default_inline'} .= " <accel>";
 
+	# ackno; does not contain text; Formatted as a displayed block
+	# Replaced by acknowledgements in Docbook v5.0
+	$self->{options}{'_default_untranslated'} .= " <acknowledgements>";
+	$self->{options}{'_default_break'} .= " <acknowledgements>";
 	# acknowledgements; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <acknowledgements>";
 	$self->{options}{'_default_break'} .= " <acknowledgements>";
@@ -144,6 +148,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <appendix>";
 	$self->{options}{'_default_break'} .= " <appendix>";
 
+	# appendixinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <appendixinfo>";
+	$self->{options}{'_default_placeholder'} .= " <appendixinfo>";
+
 	# application; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <application>";
 	$self->{options}{'_default_inline'} .= " <application>";
@@ -177,6 +185,14 @@ sub initialize {
 	# article; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <article>";
 	$self->{options}{'_default_break'} .= " <article>";
+
+	# artheader; does not contain text; renamed to articleinfo in v4.0
+	$self->{options}{'_default_untranslated'} .= " <artheader>";
+	$self->{options}{'_default_placeholder'} .= " <artheader>";
+
+	# articleinfo; does not contain text; v4 only
+	$self->{options}{'_default_untranslated'} .= " <articleinfo>";
+	$self->{options}{'_default_placeholder'} .= " <articleinfo>";
 
 	# artpagenums; contains text; Formatted inline
 	# NOTE: could be in the break class
@@ -234,6 +250,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <bibliography>";
 	$self->{options}{'_default_break'} .= " <bibliography>";
 
+	# bibliographyinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <bibliographyinfo>";
+	$self->{options}{'_default_placeholder'} .= " <bibliographyinfo>";
+
 	# biblioid; contains text; Formatted inline
 	# NOTE: could be in the break class
 	$self->{options}{'_default_translated'} .= " <biblioid>";
@@ -274,6 +294,10 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <bibliosource>";
 	$self->{options}{'_default_inline'} .= " <bibliosource>";
 
+	# blockinfo; does not contain text; v4.2, not in v5
+	$self->{options}{'_default_untranslated'} .= " <blockinfo>";
+	$self->{options}{'_default_placeholder'} .= " <blockinfo>";
+
 	# blockquote; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <blockquote>";
 	$self->{options}{'_default_break'} .= " <blockquote>";
@@ -281,6 +305,11 @@ sub initialize {
 	# book; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <book>";
 	$self->{options}{'_default_break'} .= " <book>";
+
+	# bookbiblio; does not contain text; Formatted as a displayed block
+	# Removed in v4.0
+	$self->{options}{'_default_untranslated'} .= " <bookbiblio>";
+	$self->{options}{'_default_break'} .= " <bookbiblio>";
 
 	# bridgehead; contains text; Formatted as a displayed block
 	$self->{options}{'_default_translated'} .= " <bridgehead>";
@@ -312,6 +341,10 @@ sub initialize {
 	# chapter; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <chapter>";
 	$self->{options}{'_default_break'} .= " <chapter>";
+
+	# chapterinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <chapterinfo>";
+	$self->{options}{'_default_placeholder'} .= " <chapterinfo>";
 
 	# citation; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <citation>";
@@ -396,6 +429,11 @@ sub initialize {
 	# command; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <command>";
 	$self->{options}{'_default_inline'} .= " <command>";
+
+	# comment; contains text; Formatted inline or as a displayed block
+	# Renamed to remark in v4.0
+	$self->{options}{'_default_translated'} .= " <comment>";
+	$self->{options}{'_default_inline'} .= " <comment>";
 
 	# computeroutput; contains text; Formatted inline
 	# NOTE: "is not a verbatim environment, but an inline."
@@ -504,6 +542,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " W<destructorsynopsis>";
 	$self->{options}{'_default_placeholder'} .= " <destructorsynopsis>";
 
+	# docinfo; does not contain text; removed in v4.0
+	$self->{options}{'_default_untranslated'} .= " <docinfo>";
+	$self->{options}{'_default_placeholder'} .= " <docinfo>";
+
 # EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 	# edition; contains text; Formatted inline or as a displayed block
@@ -511,10 +553,10 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <edition>";
 	$self->{options}{'_default_inline'} .= " <edition>";
 
-	# author; does not contain text; Formatted inline or as a
+	# editor; does not contain text; Formatted inline or as a
 	# displayed block depending on context
-	$self->{options}{'_default_untranslated'} .= " <author>";
-	$self->{options}{'_default_inline'} .= " <author>";
+	$self->{options}{'_default_untranslated'} .= " <editor>";
+	$self->{options}{'_default_inline'} .= " <editor>";
 
 	# email; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <email>";
@@ -649,6 +691,10 @@ sub initialize {
 	# glossary; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <glossary>";
 	$self->{options}{'_default_break'} .= " <glossary>";
+
+	# glossaryinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <glossaryinfo>";
+	$self->{options}{'_default_placeholder'} .= " <glossaryinfo>";
 
 	# glossdef; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <glossdef>";
@@ -792,6 +838,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <indexentry>";
 	$self->{options}{'_default_break'} .= " <indexentry>";
 
+	# indexinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <indexinfo>";
+	$self->{options}{'_default_placeholder'} .= " <indexinfo>";
+
 	# indexterm; does not contain text; 
 	$self->{options}{'_default_untranslated'} .= " <indexterm>";
 	$self->{options}{'_default_placeholder'} .= " <indexterm>";
@@ -830,6 +880,11 @@ sub initialize {
 	# inlinemediaobject; does not contain text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <inlinemediaobject>";
 	$self->{options}{'_default_placeholder'} .= " <inlinemediaobject>";
+
+	# interfacedefinition; contains text; Formatted inline
+	# Removed in v4.0
+	$self->{options}{'_default_translated'} .= " <interfacedefinition>";
+	$self->{options}{'_default_inline'} .= " <interfacedefinition>";
 
 	# interfacename; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <interfacename>";
@@ -947,6 +1002,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <mediaobject>";
 	$self->{options}{'_default_placeholder'} .= " <mediaobject>";
 
+	# mediaobjectco; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <mediaobjectco>";
+	$self->{options}{'_default_placeholder'} .= " <mediaobjectco>";
+
 	# member; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <member>";
 	$self->{options}{'_default_inline'} .= " <member>";
@@ -1036,6 +1095,10 @@ sub initialize {
 
 # OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
+	# objectinfo; does not contain text; v3.1 -> v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <objectinfo>";
+	$self->{options}{'_default_placeholder'} .= " <objectinfo>";
+
 	# olink; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <olink>";
 	$self->{options}{'_default_inline'} .= " <olink>";
@@ -1116,6 +1179,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <part>";
 	$self->{options}{'_default_break'} .= " <part>";
 
+	# partinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <partinfo>";
+	$self->{options}{'_default_placeholder'} .= " <partinfo>";
+
 	# partintro; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <partintro>";
 	$self->{options}{'_default_break'} .= " <partintro>";
@@ -1152,6 +1219,10 @@ sub initialize {
 	# preface; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <preface>";
 	$self->{options}{'_default_break'} .= " <preface>";
+
+	# prefaceinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <prefaceinfo>";
+	$self->{options}{'_default_placeholder'} .= " <prefaceinfo>";
 
 	# primary; contains text;
 	$self->{options}{'_default_translated'} .= " <primary>";
@@ -1259,6 +1330,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <refentry>";
 	$self->{options}{'_default_break'} .= " <refentry>";
 
+	# refentryinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refentryinfo>";
+	$self->{options}{'_default_placeholder'} .= " <refentryinfo>";
+
 	# refentrytitle; contains text; Formatted as a displayed block
 # FIXME: do not seems to be a block
 	$self->{options}{'_default_translated'} .= " <refentrytitle>";
@@ -1267,6 +1342,10 @@ sub initialize {
 	# reference; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <reference>";
 	$self->{options}{'_default_break'} .= " <reference>";
+
+	# referenceinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <referenceinfo>";
+	$self->{options}{'_default_placeholder'} .= " <referenceinfo>";
 
 	# refmeta; does not contains text; 
 	# NOTE: could be in the inline class
@@ -1409,6 +1488,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <section>";
 	$self->{options}{'_default_break'} .= " <section>";
 
+	# sectioninfo; does not contain text; v3.1 -> v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sectioninfo>";
+	$self->{options}{'_default_placeholder'} .= " <sectioninfo>";
+
 	# see; contains text; 
 	$self->{options}{'_default_translated'} .= " <see>";
 	$self->{options}{'_default_break'} .= " <see>";
@@ -1441,6 +1524,11 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <segtitle>";
 	$self->{options}{'_default_break'} .= " <segtitle>";
 
+	# seriesinfo; does not contain text;
+	# Removed in v4.0
+	$self->{options}{'_default_untranslated'} .= " <seriesinfo>";
+	$self->{options}{'_default_placeholder'} .= " <seriesinfo>";
+
 	# seriesvolnums; contains text; Formatted inline
 	# NOTE: could be in the break class
 	$self->{options}{'_default_translated'} .= " <seriesvolnums>";
@@ -1454,6 +1542,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <setindex>";
 	$self->{options}{'_default_break'} .= " <setindex>";
 
+	# setindexinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <setindexinfo>";
+	$self->{options}{'_default_placeholder'} .= " <setindexinfo>";
+
 	# shortaffil; contains text; Formatted inline or as a
 	# displayed block depending on context
 	$self->{options}{'_default_translated'} .= " <shortaffil>";
@@ -1466,6 +1558,10 @@ sub initialize {
 	# sidebar; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <sidebar>";
 	$self->{options}{'_default_break'} .= " <sidebar>";
+
+	# sidebarinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sidebarinfo>";
+	$self->{options}{'_default_placeholder'} .= " <sidebarinfo>";
 
 	# simpara; contains text; Formatted as a displayed block.
 	$self->{options}{'_default_translated'} .= " <simpara>";
