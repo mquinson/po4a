@@ -85,7 +85,7 @@ sub initialize {
 #TODO: <include href="..."> includes a file
 	$self->SUPER::initialize(%options);
 	$self->{options}{'tagsonly'}=1;
-	$self->{options}{'_default_tags'}.='
+	$self->{options}{'_default_translated'}.='
 		w<abstract>
 		<author>
 		<b>
