@@ -11,6 +11,7 @@
 # XML-based documents.
 #
 # Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
+# Copyright (c) 2008 by Nicolas François  <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -343,6 +344,7 @@ sub initialize {
 	$self->{options}{'caseinsensitive'}=0;
 	$self->{options}{'tagsonly'}=0;
 	$self->{options}{'tags'}='';
+	$self->{options}{'break'}='';
 	$self->{options}{'translated'}='';
 	$self->{options}{'untranslated'}='';
 	$self->{options}{'defaulttranslateoption'}='';
@@ -367,10 +369,11 @@ sub initialize {
 		}
 	}
 	# Default options set by modules. Forbidden for users.
-	$self->{options}{'_default_tags'}='';
 	$self->{options}{'_default_translated'}='';
 	$self->{options}{'_default_untranslated'}='';
+	$self->{options}{'_default_break'}='';
 	$self->{options}{'_default_inline'}='';
+	$self->{options}{'_default_placeholder'}='';
 
 	#It will maintain the list of the translatable tags
 	$self->{tags}=();
@@ -378,8 +381,11 @@ sub initialize {
 	$self->{untranslated}=();
 	#It will maintain the list of the translatable attributes
 	$self->{attributes}=();
+	#It will maintain the list of the breaking tags
+	$self->{break}=();
 	#It will maintain the list of the inline tags
 	$self->{inline}=();
+	#It will maintain the list of the placeholder tags
 	$self->{placeholder}=();
 	#list of the tags that must not be set in the tags or inline category
 	#by this module or sub-module (unless specified in an option)
@@ -698,8 +704,9 @@ sub tag_trans_doctype {
 
 sub tag_break_close {
 	my ($self,@tag)=@_;
-	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
-	if ($self->get_translate_options($struct) =~ m/i/) {
+	my $struct = $self->get_path;
+	my $options = $self->get_translate_options($struct);
+	if ($options =~ m/[ip]/) {
 		return 0;
 	} else {
 		return 1;
@@ -760,7 +767,8 @@ sub tag_trans_alone {
 sub tag_break_open {
 	my ($self,@tag)=@_;
 	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
-	if ($self->get_translate_options($struct) =~ m/i/) {
+	my $options = $self->get_translate_options($struct);
+	if ($options =~ m/[ip]/) {
 		return 0;
 	} else {
 		return 1;
@@ -1085,6 +1093,9 @@ sub treat_attributes {
 #   w: the content shall be re-wrapped
 #   W: the content shall not be re-wrapped
 #   i: the tag shall be inlined
+#   p: a placeholder shall replace the tag (and its content)
+#
+# A translatable inline tag in an untranslated tag is treated as a translatable breaking tag.
 sub get_translate_options {
 	my $self = shift;
 	my $path = shift;
@@ -1112,12 +1123,6 @@ sub get_translate_options {
 		$translate = 1;
 	}
 
-	$tag = $self->get_tag_from_list($path, @{$self->{inline}});
-	if (defined $tag) {
-		$usedefault = 0;
-		$options .= "i";
-	}
-
 # TODO: a less precise set of tags should not override a more precise one
 	# The tags and tagsonly options are deprecated.
 	# The translated and untranslated options have an higher priority.
@@ -1140,8 +1145,31 @@ sub get_translate_options {
 		$translate = 0;
 	}
 
+	$tag = $self->get_tag_from_list($path, @{$self->{inline}});
+	if (defined $tag) {
+		$usedefault = 0;
+		$options .= "i";
+	}
+
+	$tag = $self->get_tag_from_list($path, @{$self->{placeholder}});
+	if (defined $tag) {
+		$usedefault = 0;
+		$options .= "p";
+	}
+
 	if ($usedefault) {
 		$options = $self->{options}{'defaulttranslateoption'};
+	}
+
+	# A translatable inline tag in an untranslated tag is treated as a
+	# translatable breaking tag.
+	if ($options =~ m/i/) {
+		my $ppath = $path;
+		$ppath =~ s/<[^>]*>$//;
+		my $poptions = $self->get_translate_options ($ppath);
+		if ($poptions eq "") {
+			$options =~ s/i//;
+		}
 	}
 
 	return $options;
@@ -1222,9 +1250,7 @@ sub treat_content {
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
-					my $placeholder_regex = join("|", @{$self->{placeholder}});
-					if (length($placeholder_regex) and
-					    $self->get_tag_name(@tag) =~ m/($placeholder_regex)/) { # FIXME
+					if ($self->get_translate_options($self->get_path."<".$self->get_tag_name(@tag).">") =~ m/p/) {
 						# We enter a new holder.
 						# Append a <placeholder#> tag to the current
 						# paragraph, and save the @paragraph in the
@@ -1234,7 +1260,8 @@ sub treat_content {
 						my $sub_translations_ref = $old_holder{'sub_translations'};
 						my @sub_translations = @$sub_translations_ref;
 
-						push @paragraph, ("<placeholder".($#sub_translations+1).">", $text[1]);
+						my $placeholder_str = "<placeholder".($#sub_translations+1).">";
+						push @paragraph, ($placeholder_str, $text[1]);
 						my @saved_paragraph = @paragraph;
 
 						$old_holder{'paragraph'} = \@saved_paragraph;
@@ -1244,9 +1271,12 @@ sub treat_content {
 						my @new_paragraph = ();
 						@sub_translations = ();
 						my %new_holder = ('paragraph' => \@new_paragraph,
+						                  'open' => $text[0],
 						                  'translation' => "",
+						                  'close' => undef,
 						                  'sub_translations' => \@sub_translations);
 						push @save_holders, \%new_holder;
+						@text = ();
 
 						# The current @paragraph
 						# (for the current holder)
@@ -1271,26 +1301,24 @@ sub treat_content {
 						}
 					}
 
-					my $placeholder_regex = join("|", @{$self->{placeholder}});
-					if (length($placeholder_regex) and
-					    $self->get_tag_name(@tag) =~ m/($placeholder_regex)/) {
+					if ($self->get_translate_options($self->get_path."<".$self->get_tag_name(@tag).">") =~ m/p/) {
 						# This closes the current holder.
 
-						# We keep the closing tag in the holder paragraph.
-						push @paragraph, @text;
-						@text = ();
-
+						push @path, $self->get_tag_name(@tag);
 						# Now translate this paragraph if needed.
 						# This will call pushline and append the
 						# translation to the current holder's translation.
 						$self->translate_paragraph($translate, @paragraph);
+						pop @path;
 
 						# Now that this holder is closed, we can remove
 						# the holder from the stack.
 						my $holder_ref = pop @save_holders;
 						# We need to keep the translation of this holder
 						my %holder = %$holder_ref;
-						my $translation = $holder{'translation'};
+						$holder{'close'} = $text[0];
+						@text = ();
+						my $translation = $holder{'open'}.$holder{'translation'}.$holder{'close'};
 						# Then we store the translation in the previous
 						# holder's sub_translations array
 						my $old_holder_ref = pop @save_holders;
@@ -1302,7 +1330,6 @@ sub treat_content {
 						# it was before we encountered the holder.
 						my $paragraph_ref = $old_holder{'paragraph'};
 						@paragraph = @$paragraph_ref;
-
 						# restore the holder in the stack
 						$old_holder{'sub_translations'} = \@sub_translations;
 						push @save_holders, \%old_holder;
@@ -1318,27 +1345,6 @@ sub treat_content {
 			# Check if text (extracted after the inline tag)
 			# has to be translated
 			push @paragraph, @text;
-		}
-
-		# If the next tag closes the last inline tag, we loop again
-		# (In the case of <foo><bar> being the inline tag, we can't
-		# loop back with the "while" because breaking_tag will check
-		# for <foo><bar><bar>, hence the goto)
-		$type = $self->tag_type;
-		if (    ($tag_types[$type]->{'end'} eq "")
-		    and ($tag_types[$type]->{'beginning'} eq "/") ) {
-			my ($tmpeof, @tag) = $self->extract_tag($type,0);
-			if ($self->get_tag_name(@tag) eq $path[$#path]) {
-				# The next tag closes the last inline tag.
-				# We need to temporarily remove the tag from
-				# the path before calling breaking_tag
-				my $t = pop @path;
-				if (!$tmpeof and !$self->breaking_tag) {
-					push @path, $t;
-					goto NEXT_TAG;
-				}
-				push @path, $t;
-			}
 		}
 	}
 
@@ -1391,49 +1397,6 @@ sub treat_content {
 	# This will either push the translation in the translated document or
 	# in the current holder translation.
 	$self->translate_paragraph($translate, @paragraph);
-
-	# Now the paragraph is fully translated.
-	# If we have all the holders' translation, we can replace the
-	# placeholders by their translations.
-	# We must wait to have all the translations because the holders are
-	# numbered.
-	if (scalar @save_holders) {
-		my $holder_ref = pop @save_holders;
-		my %holder = %$holder_ref;
-		my $sub_translations_ref = $holder{'sub_translations'};
-		my $translation = $holder{'translation'};
-		my @sub_translations = @$sub_translations_ref;
-
-		# Count the number of <placeholder\d+> in $translation
-		my $count = 0;
-		my $str = $translation;
-		while ($str =~ m/^.*?<placeholder\d+>(.*)$/s) {
-			$count += 1;
-			$str = $1;
-		}
-
-		if (scalar(@sub_translations) == $count) {
-			# OK, all the holders of the current paragraph are
-			# closed (and translated).
-			# Replace them by their translation.
-			while ($translation =~ m/^(.*?)<placeholder(\d+)>(.*)$/s) {
-				# FIXME: we could also check that
-				#          * the holder exists
-				#          * all the holders are used
-				$translation = $1.$sub_translations[$2].$3;
-			}
-			# We have our translation
-			$holder{'translation'} = $translation;
-			# And there is no need for any holder in it.
-			@sub_translations = ();
-			$holder{'sub_translations'} = \@sub_translations;
-# FIXME: is it alright if a document ends by a placeholder?
-		}
-		# Either we don't have all the holders, either we have the
-		# final translation.
-		# We must keep the current holder at the top of the stack.
-		push @save_holders, \%holder;
-	}
 
 	# Push the trailing blanks
 	if ($blank ne "") {
@@ -1515,6 +1478,54 @@ sub translate_paragraph {
 			$self->pushline($self->recode_skipped_text($para));
 		}
 	}
+	# Now the paragraph is fully translated.
+	# If we have all the holders' translation, we can replace the
+	# placeholders by their translations.
+	# We must wait to have all the translations because the holders are
+	# numbered.
+	if (scalar @save_holders) {
+		my $holder_ref = pop @save_holders;
+		my %holder = %$holder_ref;
+		my $sub_translations_ref = $holder{'sub_translations'};
+		my $translation = $holder{'translation'};
+		my @sub_translations = @$sub_translations_ref;
+
+		# Count the number of <placeholder\d+> in $translation
+		my $count = 0;
+		my $str = $translation;
+		while (    (defined $str)
+		       and ($str =~ m/^.*?<placeholder(\d+)>(.*)$/s)) {
+			$count += 1;
+			$str = $2;
+			if ($sub_translations[$1] =~ m/<placeholder\d+>/s) {
+				$count = -1;
+				last;
+			}
+		}
+
+		if (    (defined $translation)
+		    and (scalar(@sub_translations) == $count)) {
+			# OK, all the holders of the current paragraph are
+			# closed (and translated).
+			# Replace them by their translation.
+			while ($translation =~ m/^(.*?)<placeholder(\d+)>(.*)$/s) {
+				# FIXME: we could also check that
+				#          * the holder exists
+				#          * all the holders are used
+				$translation = $1.$sub_translations[$2].$3;
+			}
+			# We have our translation
+			$holder{'translation'} = $translation;
+			# And there is no need for any holder in it.
+			@sub_translations = ();
+			$holder{'sub_translations'} = \@sub_translations;
+		}
+		# Either we don't have all the holders, either we have the
+		# final translation.
+		# We must keep the current holder at the top of the stack.
+		push @save_holders, \%holder;
+	}
+
 }
 
 
@@ -1545,12 +1556,16 @@ sub treat_options {
 
 	$self->{options}{'tags'} =~ /^\s*(.*)\s*$/s;
 	my @list_tags = split(/\s+/s,$1);
-	$self->{options}{'_default_tags'} =~ /^\s*(.*)\s*$/s;
+	$self->{tags} = \@list_tags;
+
+	$self->{options}{'break'} =~ /^\s*(.*)\s*$/s;
+	my @list_break = split(/\s+/s,$1);
+	$self->{options}{'_default_break'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_tags, $tag
+		push @list_break, $tag
 			unless $list_nodefault{$tag};
 	}
-	$self->{tags} = \@list_tags;
+	$self->{break} = \@list_break;
 
 	$self->{options}{'translated'} =~ /^\s*(.*)\s*$/s;
 	my @list_translated = split(/\s+/s,$1);
@@ -1586,6 +1601,11 @@ sub treat_options {
 
 	$self->{options}{'placeholder'} =~ /^\s*(.*)\s*$/s;
 	my @list_placeholder = split(/\s+/s,$1);
+	$self->{options}{'_default_placeholder'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		push @list_placeholder, $tag
+			unless $list_nodefault{$tag};
+	}
 	$self->{placeholder} = \@list_placeholder;
 }
 
@@ -1762,10 +1782,12 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>
 =head1 AUTHORS
 
  Jordi Vilalta <jvprat@gmail.com>
+ Nicolas François <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2004 by Jordi Vilalta  E<lt>jvprat@gmail.comE<gt>
+ Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
+ Copyright (c) 2008 by Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
