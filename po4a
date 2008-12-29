@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.82 2008-06-01 16:16:33 nekral-guest Exp $
+# $Id: po4a,v 1.83 2008-12-29 13:16:39 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -93,6 +93,22 @@ be created for each document specified in the po4a configuration file.
 See the B<Splitted mode> section.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
+
+=head2 Autodetection of the paths and languages
+
+Another command can be used to specify the name of a directory where the
+PO and POT files are located.
+When it is used, po4a will detect the POT file as the only "*.pot" file
+from the specified directory.
+Po4a will also use the list of "*.po" files to define the list of
+languages (by stripping out the extension).
+These languages will be used for the substitution of the $lang variable in
+the rest of the configuration file.
+
+This command should not be used together with the po4a_langs or po4a_paths
+commands.
+
+ [po_directory] po4a/po/
 
 =head2 Specifying the documents to translate
 
@@ -639,6 +655,44 @@ while (<CONFIG>) {
 	    gettext("'%s' redeclared"), "po4a_langs")
 	  if (@langs);
 	@langs = split(/ /,$main." ".$args);
+
+    } elsif ($cmd eq "po_directory") {
+	die wrap_ref_mod("$config_file:$nb", "",
+	                 gettext("The list of languages cannot be set twice."))
+	    if scalar @langs;
+	die wrap_ref_mod("$config_file:$nb", "",
+	                 gettext("The POT file cannot be set twice."))
+	    if length $pot_filename;
+
+	my $po_directory = $main;
+	die wrap_ref_mod("$config_file:$nb", "",
+	    gettext("'%s' is not a directory"), $po_directory)
+	    unless (-d $po_directory);
+	opendir PO_DIR, $po_directory
+	    or die wrap_ref_mod("$config_file:$nb", "",
+	           gettext("Cannot list the '%s' directory"), $po_directory);
+
+	foreach my $f (readdir PO_DIR) {
+	    next unless -f "$po_directory/$f";
+	    if ($f =~ m/^(.*)\.po$/) {
+		push @langs, $1;
+		$po_filename{$1} = "$po_directory/$f";
+	    }
+	    if ($f =~ m/\.pot$/) {
+		if (length $pot_filename) {
+		    die wrap_ref_mod("$config_file:$nb", "",
+		        gettext("too many POT files: %s %s"),
+		        $pot_filename, "$po_directory/$f");
+		} else {
+		    $pot_filename = "$po_directory/$f";
+		}
+	    }
+	}
+
+	if (not @langs) {
+	    warn wrap_ref_mod("$config_file:$nb", "",
+	         gettext("no PO files found in %s"), $po_directory);
+	}
 
     } elsif ($cmd =~ m/type: *(.*)/) {
 	if (defined $document{$main}{'format'}) {
