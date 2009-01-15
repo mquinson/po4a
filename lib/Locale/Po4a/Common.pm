@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.17 2009-01-15 22:04:26 nekral-guest Exp $
+# $Id: Common.pm,v 1.18 2009-01-15 22:11:11 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -56,7 +56,7 @@ sub import {
 
     return if defined &wrapi18n;
 
-    if ($wrapi18n && eval { require Text::WrapI18N }) {
+    if ($wrapi18n && -t STDERR && -t STDOUT && eval { require Text::WrapI18N }) {
     
         # Don't bother determining the wrap column if we cannot wrap.
         my $col=$ENV{COLUMNS};
