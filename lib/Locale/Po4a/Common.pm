@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.16 2008-01-13 15:37:17 nekral-guest Exp $
+# $Id: Common.pm,v 1.17 2009-01-15 22:04:26 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -17,6 +17,20 @@ Locale::Po4a::Common - Common parts of the po4a scripts and utils
 Locale::Po4a::Common contains common parts of the po4a scripts and some useful
 functions used along the other modules.
 
+In order to use Locale::Po4a programatically, one may want to disable
+the use of Text::WrapI18N, by writing e.g.
+
+    use Locale::Po4a::Common qw(nowrapi18n);
+    use Locale::Po4a::Text;
+
+instead of:
+
+    use Locale::Po4a::Text;
+
+Ordering is important here: as most Locale::Po4a modules themselves
+load Locale::Po4a::Common, the first time this module is loaded
+determines whether Text::WrapI18N is used.
+
 =cut
 
 package Locale::Po4a::Common;
@@ -30,8 +44,19 @@ use 5.006;
 use strict;
 use warnings;
 
-BEGIN {
-    if (eval { require Text::WrapI18N }) {
+sub import {
+    my $class=shift;
+
+    my $wrapi18n=1;
+    if (exists $_[0] && defined $_[0] && $_[0] eq 'nowrapi18n') {
+        shift;
+        $wrapi18n=0;
+    }
+    $class->export_to_level(1, $class, @_);
+
+    return if defined &wrapi18n;
+
+    if ($wrapi18n && eval { require Text::WrapI18N }) {
     
         # Don't bother determining the wrap column if we cannot wrap.
         my $col=$ENV{COLUMNS};
