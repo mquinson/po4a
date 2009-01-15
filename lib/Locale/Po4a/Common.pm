@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.18 2009-01-15 22:11:11 nekral-guest Exp $
+# $Id: Common.pm,v 1.19 2009-01-15 22:24:19 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -60,7 +60,7 @@ sub import {
     
         # Don't bother determining the wrap column if we cannot wrap.
         my $col=$ENV{COLUMNS};
-        if (!defined $col && -t STDOUT) {
+        if (!defined $col) {
             my @term=eval "use Term::ReadKey; Term::ReadKey::GetTerminalSize()";
             $col=$term[0] if (!$@);
             # If GetTerminalSize() failed we will fallback to a safe default.
