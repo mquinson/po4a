@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# aptitude: cmdsynopsis => missing removal of leading spaces
 
 # Po4a::Docbook.pm 
 # 
@@ -8,7 +9,7 @@
 # documents.
 #
 # Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
-# Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>
+# Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -65,7 +66,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>
 =head1 COPYRIGHT AND LICENSE
 
  Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
- Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>
+ Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
@@ -108,8 +109,8 @@ sub initialize {
 
 	# ackno; does not contain text; Formatted as a displayed block
 	# Replaced by acknowledgements in Docbook v5.0
-	$self->{options}{'_default_untranslated'} .= " <acknowledgements>";
-	$self->{options}{'_default_break'} .= " <acknowledgements>";
+	$self->{options}{'_default_untranslated'} .= " <ackno>";
+	$self->{options}{'_default_break'} .= " <ackno>";
 	# acknowledgements; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <acknowledgements>";
 	$self->{options}{'_default_break'} .= " <acknowledgements>";
@@ -117,6 +118,10 @@ sub initialize {
 	# acronym; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <acronym>";
 	$self->{options}{'_default_inline'} .= " <acronym>";
+
+	# action; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <action>";
+	$self->{options}{'_default_inline'} .= " <action>";
 
 	# address; contains text; Formatted as a displayed block; verbatim
 	$self->{options}{'_default_translated'} .= " W<address>";
@@ -182,13 +187,13 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <arg>";
 	$self->{options}{'_default_inline'} .= " <arg>";
 
-	# article; does not contain text; Formatted as a displayed block
-	$self->{options}{'_default_untranslated'} .= " <article>";
-	$self->{options}{'_default_break'} .= " <article>";
-
 	# artheader; does not contain text; renamed to articleinfo in v4.0
 	$self->{options}{'_default_untranslated'} .= " <artheader>";
 	$self->{options}{'_default_placeholder'} .= " <artheader>";
+
+	# article; does not contain text; Formatted as a displayed block
+	$self->{options}{'_default_untranslated'} .= " <article>";
+	$self->{options}{'_default_break'} .= " <article>";
 
 	# articleinfo; does not contain text; v4 only
 	$self->{options}{'_default_untranslated'} .= " <articleinfo>";
@@ -220,6 +225,11 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <author>";
 	$self->{options}{'_default_inline'} .= " <author>";
 
+	# authorblurb; does not contain text; Formatted as a displayed block.
+	# v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <authorblurb>";
+	$self->{options}{'_default_placeholder'} .= " <authorblurb>";
+
 	# authorgroup; does not contain text; Formatted inline or as a
 	# displayed block depending on context
 	# NOTE: given the possible parents, it is probably very rarely
@@ -232,6 +242,10 @@ sub initialize {
 	$self->{options}{'_default_inline'} .= " <authorinitials>";
 
 # BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+
+	# beginpage; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <beginpage>";
+	$self->{options}{'_default_break'} .= " <beginpage>";
 
 	# bibliocoverage; contains text; Formatted inline
 	# NOTE: could be in the break class
@@ -311,6 +325,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <bookbiblio>";
 	$self->{options}{'_default_break'} .= " <bookbiblio>";
 
+	# bookinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <bookinfo>";
+	$self->{options}{'_default_placeholder'} .= " <bookinfo>";
+
 	# bridgehead; contains text; Formatted as a displayed block
 	$self->{options}{'_default_translated'} .= " <bridgehead>";
 	$self->{options}{'_default_break'} .= " <bridgehead>";
@@ -387,7 +405,7 @@ sub initialize {
 	# cmdsynopsis; does not contain text; may be in a para
 	# NOTE: It may be clearer as a verbatim block
 	# XXX: since it is in untranslated class, does the W flag takes
-	#      effect?
+	#      effect? => not completely. Rewrap afterward?
 	$self->{options}{'_default_untranslated'} .= " W<cmdsynopsis>";
 	$self->{options}{'_default_placeholder'} .= " <cmdsynopsis>";
 
@@ -417,14 +435,19 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <collab>";
 	$self->{options}{'_default_inline'} .= " <collab>";
 
+	# collabname; contains text; Formatted inline or as a
+	# displayed block depending on context; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <collabname>";
+	$self->{options}{'_default_inline'} .= " <collabname>";
+
 	# colophon; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <colophon>";
 	$self->{options}{'_default_break'} .= " <colophon>";
 
 	# colspec; does not contain text;
 	# NOTE: could be translated to change the layout in a translation
-	$self->{options}{'_default_untranslated'} .= " <colophon>";
-	$self->{options}{'_default_break'} .= " <colophon>";
+	$self->{options}{'_default_untranslated'} .= " <colspec>";
+	$self->{options}{'_default_break'} .= " <colspec>";
 
 	# command; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <command>";
@@ -512,6 +535,21 @@ sub initialize {
 	# XXX: tranlsated or not? (label attribute)
 	$self->{options}{'_default_translated'} .= " <coref>";
 	$self->{options}{'_default_inline'} .= " <coref>";
+
+	# corpauthor; contains text; Formatted inline or as a
+	# displayed block depending on context; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <corpauthor>";
+	$self->{options}{'_default_inline'} .= " <corpauthor>";
+
+	# corpcredit; contains text; Formatted inline or as a
+	# displayed block depending on context; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <corpcredit>";
+	$self->{options}{'_default_inline'} .= " <corpcredit>";
+
+	# corpname; contains text; Formatted inline or as a
+	# displayed block depending on context; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <corpname>";
+	$self->{options}{'_default_inline'} .= " <corpname>";
 
 	# country; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <country>";
@@ -724,6 +762,17 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <glossterm>";
 	$self->{options}{'_default_inline'} .= " <glossterm>";
 
+	# graphic; does not contain text; Formatted as a displayed block
+	# v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <graphic>";
+	$self->{options}{'_default_inline'} .= " <graphic>";
+	$self->{options}{'attributes'}.=' <graphic>fileref';
+
+	# graphicco; does not contain text; Formatted as a displayed block.
+	# v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <graphicco>";
+	$self->{options}{'_default_placeholder'} .= " <graphicco>";
+
 	# group; does not contain text; Formatted inline
 	$self->{options}{'_default_untranslated'} .= " W<group>";
 	$self->{options}{'_default_inline'} .= " <group>";
@@ -757,6 +806,11 @@ sub initialize {
 	# hardware; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <hardware>";
 	$self->{options}{'_default_inline'} .= " <hardware>";
+
+	# highlights; does not contain text; Formatted inline
+	# v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <highlights>";
+	$self->{options}{'_default_break'} .= " <highlights>";
 
 	# holder; contains text;
 	# NOTE: may depend on the copyright container
@@ -877,9 +931,18 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " W<inlineequation>";
 	$self->{options}{'_default_placeholder'} .= " <inlineequation>";
 
+	# inlinegraphic; does not contain text; Formatted inline
+	# empty; v4, not in v5
+	$self->{options}{'_default_translated'} .= " W<inlinegraphic>";
+	$self->{options}{'_default_inline'} .= " <inlinegraphic>";
+
 	# inlinemediaobject; does not contain text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <inlinemediaobject>";
 	$self->{options}{'_default_placeholder'} .= " <inlinemediaobject>";
+
+	# interface; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <interface>";
+	$self->{options}{'_default_inline'} .= " <interface>";
 
 	# interfacedefinition; contains text; Formatted inline
 	# Removed in v4.0
@@ -889,6 +952,18 @@ sub initialize {
 	# interfacename; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <interfacename>";
 	$self->{options}{'_default_inline'} .= " <interfacename>";
+
+	# invpartnumber; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <invpartnumber>";
+	$self->{options}{'_default_inline'} .= " <invpartnumber>";
+
+	# isbn; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <isbn>";
+	$self->{options}{'_default_inline'} .= " <isbn>";
+
+	# issn; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <issn>";
+	$self->{options}{'_default_inline'} .= " <issn>";
 
 	# issuenum; contains text; Formatted inline or as a displayed block
 	# NOTE: could be in the break class
@@ -984,6 +1059,16 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <locator>";
 	$self->{options}{'_default_inline'} .= " <locator>";
 
+	# lot; does not contain text; Formatted as a displayed block.
+	# v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <lot>";
+	$self->{options}{'_default_break'} .= " <lot>";
+
+	# lotentry; contains text; Formatted as a displayed block.
+	# v4, not in v5
+	$self->{options}{'_default_translated'} .= " <lotentry>";
+	$self->{options}{'_default_break'} .= " <lotentry>";
+
 # MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 
 	# manvolnum; contains text;
@@ -997,6 +1082,11 @@ sub initialize {
 	# mathphrase; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <mathphrase>";
 	$self->{options}{'_default_inline'} .= " <mathphrase>";
+
+	# medialabel; contains text; Formatted inline
+	# v4, not in v5
+	$self->{options}{'_default_translated'} .= " <medialabel>";
+	$self->{options}{'_default_inline'} .= " <medialabel>";
 
 	# mediaobject; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <mediaobject>";
@@ -1088,10 +1178,10 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <nonterminal>";
 	$self->{options}{'_default_inline'} .= " <nonterminal>";
 
-	# nonterminal; does not contain text; Formatted inline
+	# note; does not contain text; Formatted inline
 	# NOTE: can be in a para
-	$self->{options}{'_default_untranslated'} .= " <nonterminal>";
-	$self->{options}{'_default_inline'} .= " <nonterminal>";
+	$self->{options}{'_default_untranslated'} .= " <note>";
+	$self->{options}{'_default_inline'} .= " <note>";
 
 # OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 
@@ -1374,21 +1464,41 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <refsect1>";
 	$self->{options}{'_default_break'} .= " <refsect1>";
 
+	# refsect1info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refsect1info>";
+	$self->{options}{'_default_placeholder'} .= " <refsect1info>";
+
 	# refsect2; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <refsect2>";
 	$self->{options}{'_default_break'} .= " <refsect2>";
+
+	# refsect2info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refsect2info>";
+	$self->{options}{'_default_placeholder'} .= " <refsect2info>";
 
 	# refsect3; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <refsect3>";
 	$self->{options}{'_default_break'} .= " <refsect3>";
 
+	# refsect3info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refsect3info>";
+	$self->{options}{'_default_placeholder'} .= " <refsect3info>";
+
 	# refsection; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <refsection>";
 	$self->{options}{'_default_break'} .= " <refsection>";
 
+	# refsectioninfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refsectioninfo>";
+	$self->{options}{'_default_placeholder'} .= " <refsectioninfo>";
+
 	# refsynopsisdiv; does not contain text; Formatted as a displayed block
 	$self->{options}{'_default_untranslated'} .= " <refsynopsisdiv>";
 	$self->{options}{'_default_break'} .= " <refsynopsisdiv>";
+
+	# refsynopsisdivinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <refsynopsisdivinfo>";
+	$self->{options}{'_default_placeholder'} .= " <refsynopsisdivinfo>";
 
 	# releaseinfo; contains text; Formatted inline or as a displayed block
 	# NOTE: could be in the inline class
@@ -1452,6 +1562,10 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <screenco>";
 	$self->{options}{'_default_placeholder'} .= " <screenco>";
 
+	# screeninfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <screeninfo>";
+	$self->{options}{'_default_placeholder'} .= " <screeninfo>";
+
 	# screenshot; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <screenshot>";
 	$self->{options}{'_default_placeholder'} .= " <screenshot>";
@@ -1468,21 +1582,41 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <sect1>";
 	$self->{options}{'_default_break'} .= " <sect1>";
 
+	# sect1info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sect1info>";
+	$self->{options}{'_default_placeholder'} .= " <sect1info>";
+
 	# sect2; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <sect2>";
 	$self->{options}{'_default_break'} .= " <sect2>";
+
+	# sect2info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sect2info>";
+	$self->{options}{'_default_placeholder'} .= " <sect2info>";
 
 	# sect3; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <sect3>";
 	$self->{options}{'_default_break'} .= " <sect3>";
 
+	# sect3info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sect3info>";
+	$self->{options}{'_default_placeholder'} .= " <sect3info>";
+
 	# sect4; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <sect4>";
 	$self->{options}{'_default_break'} .= " <sect4>";
 
+	# sect4info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sect4info>";
+	$self->{options}{'_default_placeholder'} .= " <sect4info>";
+
 	# sect5; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <sect5>";
 	$self->{options}{'_default_break'} .= " <sect5>";
+
+	# sect5info; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <sect5info>";
+	$self->{options}{'_default_placeholder'} .= " <sect5info>";
 
 	# section; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <section>";
@@ -1546,6 +1680,14 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <setindexinfo>";
 	$self->{options}{'_default_placeholder'} .= " <setindexinfo>";
 
+	# setinfo; does not contain text; v4, not in v5
+	$self->{options}{'_default_untranslated'} .= " <setinfo>";
+	$self->{options}{'_default_placeholder'} .= " <setinfo>";
+
+	# sgmltag; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <sgmltag>";
+	$self->{options}{'_default_inline'} .= " <sgmltag>";
+
 	# shortaffil; contains text; Formatted inline or as a
 	# displayed block depending on context
 	$self->{options}{'_default_translated'} .= " <shortaffil>";
@@ -1599,6 +1741,14 @@ sub initialize {
 	$self->{options}{'_default_translated'} .= " <street>";
 	$self->{options}{'_default_inline'} .= " <street>";
 
+	# structfield; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <structfield>";
+	$self->{options}{'_default_inline'} .= " <structfield>";
+
+	# structname; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <structname>";
+	$self->{options}{'_default_inline'} .= " <structname>";
+
 	# subject; does not contain text; Formatted inline or as a displayed block
 	# NOTE: could be in the inline class
 	$self->{options}{'_default_untranslated'} .= " <subject>";
@@ -1633,6 +1783,8 @@ sub initialize {
 	# surname; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <surname>";
 	$self->{options}{'_default_inline'} .= " <surname>";
+
+#svg:svg
 
 	# symbol; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <symbol>";
@@ -1748,6 +1900,14 @@ sub initialize {
 	$self->{options}{'_default_untranslated'} .= " <toc>";
 	$self->{options}{'_default_break'} .= " <toc>";
 
+	# tocback; contains text; Formatted as a displayed block.
+	$self->{options}{'_default_translated'} .= " <tocback>";
+	$self->{options}{'_default_break'} .= " <tocback>";
+
+	# tocchap; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_translated'} .= " <tocchap>";
+	$self->{options}{'_default_break'} .= " <tocchap>";
+
 	# tocdiv; does not contain text; Formatted as a displayed block.
 	$self->{options}{'_default_untranslated'} .= " <tocdiv>";
 	$self->{options}{'_default_break'} .= " <tocdiv>";
@@ -1755,6 +1915,34 @@ sub initialize {
 	# tocentry; contains text; Formatted as a displayed block.
 	$self->{options}{'_default_translated'} .= " <tocentry>";
 	$self->{options}{'_default_break'} .= " <tocentry>";
+
+	# tocfront; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_translated'} .= " <tocfront>";
+	$self->{options}{'_default_break'} .= " <tocfront>";
+
+	# toclevel1; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <toclevel1>";
+	$self->{options}{'_default_break'} .= " <toclevel1>";
+
+	# toclevel2; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <toclevel2>";
+	$self->{options}{'_default_break'} .= " <toclevel2>";
+
+	# toclevel3; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <toclevel3>";
+	$self->{options}{'_default_break'} .= " <toclevel3>";
+
+	# toclevel4; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <toclevel4>";
+	$self->{options}{'_default_break'} .= " <toclevel4>";
+
+	# toclevel5; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <toclevel5>";
+	$self->{options}{'_default_break'} .= " <toclevel5>";
+
+	# tocpart; does not contain text; Formatted as a displayed block.
+	$self->{options}{'_default_untranslated'} .= " <tocpart>";
+	$self->{options}{'_default_break'} .= " <tocpart>";
 
 	# token; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <token>";
@@ -1773,6 +1961,10 @@ sub initialize {
 	$self->{options}{'_default_inline'} .= " <type>";
 
 # UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+
+	# ulink; contains text; Formatted inline; v4, not in v5
+	$self->{options}{'_default_translated'} .= " <ulink>";
+	$self->{options}{'_default_inline'} .= " <ulink>";
 
 	# uri; contains text; Formatted inline
 	$self->{options}{'_default_translated'} .= " <uri>";
