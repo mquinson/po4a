@@ -1083,9 +1083,15 @@ sub treat_attributes {
 #   p: a placeholder shall replace the tag (and its content)
 #
 # A translatable inline tag in an untranslated tag is treated as a translatable breaking tag.
+my %translate_options_cache;
 sub get_translate_options {
 	my $self = shift;
 	my $path = shift;
+
+	if (defined $translate_options_cache{$path}) {
+		return $translate_options_cache{$path};
+	}
+
 	my $options = "";
 	my $translate = 0;
 	my $usedefault = 1;
@@ -1161,6 +1167,7 @@ sub get_translate_options {
 		}
 	}
 
+	$translate_options_cache{$path} = $options;
 	return $options;
 }
 
