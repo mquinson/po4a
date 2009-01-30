@@ -725,7 +725,10 @@ sub shiftline   {
 		     shift @{$_[0]->{TT}{doc_in}}); 
     return ($line,$ref);
 }
-sub unshiftline {  unshift @{$_[0]->{TT}{doc_in}},($_[1],$_[2]);  }
+sub unshiftline {
+	my $self = shift;
+	unshift @{$self->{TT}{doc_in}},@_;
+}
 
 sub pushline    {  push @{$_[0]->{TT}{doc_out}}, $_[1] if defined $_[1]; }
 sub popline     {  return pop @{$_[0]->{TT}{doc_out}};            }

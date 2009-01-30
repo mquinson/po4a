@@ -98,10 +98,7 @@ sub shiftline {
             push @textentries, ($after, $ref);
             $line = $before.(shift @textentries);
             $ref .= " ".(shift @textentries);
-            while (@textentries) {
-                my ($r, $l) = (pop @textentries, pop @textentries);
-                $self->unshiftline($l,$r);
-            }
+            $self->unshiftline(@textentries);
         }
     }
 
@@ -1713,11 +1710,7 @@ sub get_string_until {
 		}
 	}
 	if (!$remove) {
-		my $i = $#text;
-		while ($i > 0) {
-			$self->unshiftline ($text[$i-1],$text[$i]);
-			$i -= 2;
-		}
+		$self->unshiftline (@text);
 	}
 
 	#If we get to the end of the file, we return the whole paragraph
