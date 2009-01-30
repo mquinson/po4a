@@ -959,39 +959,25 @@ doesn't have options).
 =back
 
 =cut
-
-sub tag_in_list {
-	my ($self,$tag,@list) = @_;
-	my $found = 0;
-	my $i = 0;
-	
-	while (!$found && $i < @list) {
-		my $options;
-		my $element;
-		if ($list[$i] =~ /(.*?)(<.*)/) {
-			$options = $1;
-			$element = $2;
-		} else {
-			$element = $list[$i];
-		}
-		if ($self->{options}{'caseinsensitive'}) {
-			if ( $tag =~ /\Q$element\E$/i ) {
-				$found = 1;
-			}
-		} else {
-			if ( $tag =~ /\Q$element\E$/ ) {
-				$found = 1;
-			}
-		}
-		if ($found) {
-			if ($options) {
-				$found = $options;
-			}
-		} else {
-			$i++;
-		}
+sub tag_in_list ($$$) {
+	my ($self,$path,$list) = @_;
+	if ($self->{options}{'caseinsensitive'}) {
+		$path = lc $path;
 	}
-	return $found;
+
+	while (1) {
+		if (defined $list->{$path}) {
+			if (length $list->{$path}) {
+				return $list->{$path};
+			} else {
+				return 1;
+			}
+		}
+		last unless ($path =~ m/</);
+		$path =~ s/^<.*?>//;
+	} 
+
+	return 0;
 }
 
 =head2 WORKING WITH ATTRIBUTES
@@ -1062,7 +1048,7 @@ sub treat_attributes {
 							$tag[0] = $2;
 						}
 						$complete = 1;
-						if ($self->tag_in_list($self->get_path.$name,@{$self->{attributes}})) {
+						if ($self->tag_in_list($self->get_path.$name,$self->{attributes})) {
 							$text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
 						} else {
 							print wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Content of attribute %s excluded: %s"), $self->get_path.$name, $value)
@@ -1105,7 +1091,7 @@ sub get_translate_options {
 	my $usedefault = 1;
 
 	my $inlist = 0;
-	my $tag = $self->get_tag_from_list($path, @{$self->{tags}});
+	my $tag = $self->get_tag_from_list($path, $self->{tags});
 	if (defined $tag) {
 		$inlist = 1;
 	}
@@ -1127,7 +1113,7 @@ sub get_translate_options {
 # TODO: a less precise set of tags should not override a more precise one
 	# The tags and tagsonly options are deprecated.
 	# The translated and untranslated options have an higher priority.
-	$tag = $self->get_tag_from_list($path, @{$self->{translated}});
+	$tag = $self->get_tag_from_list($path, $self->{translated});
 	if (defined $tag) {
 		$usedefault = 0;
 		$options = $tag;
@@ -1139,23 +1125,25 @@ sub get_translate_options {
 		$options .= ($self->{options}{'wrap'})?"w":"W";
 	}
 
-	$tag = $self->get_tag_from_list($path, @{$self->{untranslated}});
-	if (defined $tag) {
-		$usedefault = 0;
-		$options = "";
-		$translate = 0;
+	if (not defined $tag) {
+		$tag = $self->get_tag_from_list($path, $self->{untranslated});
+		if (defined $tag) {
+			$usedefault = 0;
+			$options = "";
+			$translate = 0;
+		}
 	}
 
-	$tag = $self->get_tag_from_list($path, @{$self->{inline}});
+	$tag = $self->get_tag_from_list($path, $self->{inline});
 	if (defined $tag) {
 		$usedefault = 0;
 		$options .= "i";
-	}
-
-	$tag = $self->get_tag_from_list($path, @{$self->{placeholder}});
-	if (defined $tag) {
-		$usedefault = 0;
-		$options .= "p";
+	} else {
+		$tag = $self->get_tag_from_list($path, $self->{placeholder});
+		if (defined $tag) {
+			$usedefault = 0;
+			$options .= "p";
+		}
 	}
 
 	if ($usedefault) {
@@ -1183,35 +1171,20 @@ sub get_translate_options {
 # The tag (or set of tags) is returned with its options.
 #
 # If no tags could match the path, undef is returned.
-sub get_tag_from_list {
-	my ($self,$path,@list) = @_;
-	my $found = 0;
-	my $i = 0;
-	
-	while (!$found && $i < @list) {
-		my $options;
-		my $element;
-		if ($list[$i] =~ /(.*?)(<.*)/) {
-			$options = $1;
-			$element = $2;
-		} else {
-			$element = $list[$i];
-		}
-		if ($self->{options}{'caseinsensitive'}) {
-			if ( $path =~ /\Q$element\E$/i ) {
-				$found = 1;
-			}
-		} else {
-			if ( $path =~ /\Q$element\E$/ ) {
-				$found = 1;
-			}
-		}
-		if ($found) {
-			return $list[$i];
-		} else {
-			$i++;
-		}
+sub get_tag_from_list ($$$) {
+	my ($self,$path,$list) = @_;
+	if ($self->{options}{'caseinsensitive'}) {
+		$path = lc $path;
 	}
+
+	while (1) {
+		if (defined $list->{$path}) {
+			return $list->{$path}.$path;
+		}
+		last unless ($path =~ m/</);
+		$path =~ s/^<.*?>//;
+	}
+
 	return undef;
 }
 
@@ -1547,7 +1520,23 @@ or in the initialize function).
 
 sub treat_options {
 	my $self = shift;
-        
+
+	if ($self->{options}{'caseinsensitive'}) {
+		$self->{options}{'nodefault'}             = lc $self->{options}{'nodefault'};
+		$self->{options}{'tags'}                  = lc $self->{options}{'tags'};
+		$self->{options}{'break'}                 = lc $self->{options}{'break'};
+		$self->{options}{'_default_break'}        = lc $self->{options}{'_default_break'};
+		$self->{options}{'translated'}            = lc $self->{options}{'translated'};
+		$self->{options}{'_default_translated'}   = lc $self->{options}{'_default_translated'};
+		$self->{options}{'untranslated'}          = lc $self->{options}{'untranslated'};
+		$self->{options}{'_default_untranslated'} = lc $self->{options}{'_default_untranslated'};
+		$self->{options}{'attributes'}            = lc $self->{options}{'attributes'};
+		$self->{options}{'inline'}                = lc $self->{options}{'inline'};
+		$self->{options}{'_default_inline'}       = lc $self->{options}{'_default_inline'};
+		$self->{options}{'placeholder'}           = lc $self->{options}{'placeholder'};
+		$self->{options}{'_default_placeholder'}  = lc $self->{options}{'_default_placeholder'};
+	}
+
 	$self->{options}{'nodefault'} =~ /^\s*(.*)\s*$/s;
 	my %list_nodefault;
 	foreach (split(/\s+/s,$1)) {
@@ -1556,58 +1545,80 @@ sub treat_options {
 	$self->{nodefault} = \%list_nodefault;
 
 	$self->{options}{'tags'} =~ /^\s*(.*)\s*$/s;
-	my @list_tags = split(/\s+/s,$1);
-	$self->{tags} = \@list_tags;
+	foreach (split(/\s+/s,$1)) {
+		$_ =~ m/^(.*?)(<.*)$/;
+		$self->{tags}->{$2} = $1 || "";
+	}
 
 	$self->{options}{'break'} =~ /^\s*(.*)\s*$/s;
-	my @list_break = split(/\s+/s,$1);
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{break}->{$2} = $1 || "";
+	}
 	$self->{options}{'_default_break'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_break, $tag
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{break}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
-	$self->{break} = \@list_break;
 
 	$self->{options}{'translated'} =~ /^\s*(.*)\s*$/s;
-	my @list_translated = split(/\s+/s,$1);
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{translated}->{$2} = $1 || "";
+	}
 	$self->{options}{'_default_translated'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_translated, $tag
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{translated}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
-	$self->{translated} = \@list_translated;
 
 	$self->{options}{'untranslated'} =~ /^\s*(.*)\s*$/s;
-	my @list_untranslated = split(/\s+/s,$1);
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{untranslated}->{$2} = $1 || "";
+	}
 	$self->{options}{'_default_untranslated'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_untranslated, $tag
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{untranslated}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
-	$self->{untranslated} = \@list_untranslated;
 
 	$self->{options}{'attributes'} =~ /^\s*(.*)\s*$/s;
-	my @list_attr = split(/\s+/s,$1);
-	$self->{attributes} = \@list_attr;
+	foreach my $tag (split(/\s+/s,$1)) {
+		if ($tag =~ m/^(.*?)(<.*)$/) {
+			$self->{attributes}->{$2} = $1 || "";
+		} else {
+			$self->{attributes}->{$tag} = "";
+		}
+	}
 
 	my @list_inline;
 	$self->{options}{'inline'} =~ /^\s*(.*)\s*$/s;
-	@list_inline = split(/\s+/s,$1);
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{inline}->{$2} = $1 || "";
+	}
 	$self->{options}{'_default_inline'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_inline, $tag
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{inline}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
-	$self->{inline} = \@list_inline;
 
 	$self->{options}{'placeholder'} =~ /^\s*(.*)\s*$/s;
-	my @list_placeholder = split(/\s+/s,$1);
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{placeholder}->{$2} = $1 || "";
+	}
 	$self->{options}{'_default_placeholder'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
-		push @list_placeholder, $tag
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{placeholder}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
-	$self->{placeholder} = \@list_placeholder;
 }
 
 =head2 GETTING TEXT FROM THE INPUT DOCUMENT
