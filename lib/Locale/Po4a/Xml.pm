@@ -827,12 +827,12 @@ sub tag_type {
 	if (!defined($line)) { return -1; }
 
 	$self->unshiftline($line,$ref);
+	my ($eof,@lines) = $self->get_string_until(">",{include=>1,unquoted=>1});
+	my $line2 = $self->join_lines(@lines);
 	while (!$found && $i < @tag_types) {
 		($match1,$match2) = ($tag_types[$i]->{beginning},$tag_types[$i]->{end});
 		if ($line =~ /^<\Q$match1\E/) {
 			if (!defined($tag_types[$i]->{f_extract})) {
-				my ($eof,@lines) = $self->get_string_until(">",{include=>1,unquoted=>1});
-				my $line2 = $self->join_lines(@lines);
 #print substr($line2,length($line2)-1-length($match2),1+length($match2))."\n";
 				if (defined($line2) and $line2 =~ /\Q$match2\E>$/) {
 					$found = 1;
