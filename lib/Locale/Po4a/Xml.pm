@@ -1677,11 +1677,11 @@ sub get_string_until {
 		push @text, ($line,$ref);
 		$paragraph .= $line;
 		if ($unquoted) {
-			if ( $paragraph =~ /^((\".*?\")|(\'.*?\')|[^\"\'])*$search.*/s ) {
+			if ( $paragraph =~ /^((\".*?\")|(\'.*?\')|[^\"\'])*$search/s ) {
 				$found = 1;
 			}
 		} else {
-			if ( $paragraph =~ /.*$search.*/s ) {
+			if ( $paragraph =~ /$search/s ) {
 				$found = 1;
 			}
 		}
@@ -1704,7 +1704,7 @@ sub get_string_until {
 			$text[$#text-1] =~ s/\Q$line\E$//s;
 		}
 		if(!$include) {
-			$text[$#text-1] =~ /(.*)($search.*)/s;
+			$text[$#text-1] =~ /^(.*)($search.*)$/s;
 			$text[$#text-1] = $1;
 			$line = $2.$line;
 		}
