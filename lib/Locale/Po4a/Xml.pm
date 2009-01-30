@@ -745,7 +745,7 @@ sub CDATA_trans {
 
 sub tag_break_alone {
 	my ($self,@tag)=@_;
-	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
+	my $struct = $self->get_path($self->get_tag_name(@tag));
 	if ($self->get_translate_options($struct) =~ m/i/) {
 		return 0;
 	} else {
@@ -766,7 +766,7 @@ sub tag_trans_alone {
 
 sub tag_break_open {
 	my ($self,@tag)=@_;
-	my $struct = $self->get_path."<".$self->get_tag_name(@tag).">";
+	my $struct = $self->get_path($self->get_tag_name(@tag));
 	my $options = $self->get_translate_options($struct);
 	if ($options =~ m/[ip]/) {
 		return 0;
@@ -802,8 +802,9 @@ in the form E<lt>htmlE<gt>E<lt>bodyE<gt>E<lt>pE<gt>.
 
 sub get_path {
 	my $self = shift;
-	if ( @path > 0 ) {
-		return "<".join("><",@path).">";
+	my @add = @_;
+	if ( @path > 0 or @add > 0 ) {
+		return "<".join("><",@path,@add).">";
 	} else {
 		return "outside any tag (error?)";
 	}
@@ -1250,7 +1251,7 @@ sub treat_content {
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
-					if ($self->get_translate_options($self->get_path."<".$self->get_tag_name(@tag).">") =~ m/p/) {
+					if ($self->get_translate_options($self->get_path($self->get_tag_name(@tag))) =~ m/p/) {
 						# We enter a new holder.
 						# Append a <placeholder#> tag to the current
 						# paragraph, and save the @paragraph in the
@@ -1301,7 +1302,7 @@ sub treat_content {
 						}
 					}
 
-					if ($self->get_translate_options($self->get_path."<".$self->get_tag_name(@tag).">") =~ m/p/) {
+					if ($self->get_translate_options($self->get_path($self->get_tag_name(@tag))) =~ m/p/) {
 						# This closes the current holder.
 
 						push @path, $self->get_tag_name(@tag);
