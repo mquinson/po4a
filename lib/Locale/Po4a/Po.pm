@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.93 2008-11-12 17:13:27 nekral-guest Exp $
+# $Id: Po.pm,v 1.94 2009-01-31 19:04:46 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -658,7 +658,8 @@ sub gettextize {
                          'flags'     => $flags,
                          'type'      => $typeorig,
                          'reference' => $reforig,
-                         'conflict'  => 1)
+                         'conflict'  => 1,
+                         'transref'  => $potrans->{po}{$trans}{'reference'})
             unless (defined($pores->{po}{$orig})
                     and ($pores->{po}{$orig}{'msgstr'} eq $trans))
         # FIXME: maybe we should be smarter about what reference should be
@@ -1164,10 +1165,10 @@ sub push {
 sub push_raw {
     my $self=shift;
     my %entry=@_;
-    my ($msgid,$msgstr,$reference,$comment,$automatic,$flags,$type)=
+    my ($msgid,$msgstr,$reference,$comment,$automatic,$flags,$type,$transref)=
         ($entry{'msgid'},$entry{'msgstr'},
          $entry{'reference'},$entry{'comment'},$entry{'automatic'},
-         $entry{'flags'},$entry{'type'});
+         $entry{'flags'},$entry{'type'},$entry{'transref'});
     my $keep_conflict = $entry{'conflict'};
 
 #    print STDERR "Push_raw\n";
@@ -1217,12 +1218,21 @@ sub push_raw {
                  quote_text($msgstr));
 
             if ($keep_conflict) {
-                $msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".
-                          $self->{po}{$msgid}{'msgstr'}."\\n".
-                          "#-#-#-#-#  choice  #-#-#-#-#\\n".
-                          "$msgstr";
-                $msgstr = "#-#-#-#-#  choice  #-#-#-#-#\\n".$msgstr
-                    unless ($msgstr =~ m/^#-#-#-#-#  choice  #-#-#-#-#\\n/s);
+                if ($self->{po}{$msgid}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s) {
+                    $msgstr = $self->{po}{$msgid}{'msgstr'}.
+                              "\\n#-#-#-#-#  $transref  #-#-#-#-#\\n".
+                              $msgstr;
+                } else {
+                    $msgstr = "#-#-#-#-#  ".
+                              $self->{po}{$msgid}{'transref'}.
+                              "  #-#-#-#-#\\n".
+                              $self->{po}{$msgid}{'msgstr'}."\\n".
+                              "#-#-#-#-#  $transref  #-#-#-#-#\\n".
+                              $msgstr;
+                }
+                # Every msgid will have the same list of references.
+                # Only keep the last list.
+                $self->{po}{$msgid}{'reference'} = "";
             } else {
             warn wrap_msg(dgettext("po4a",
                                    "Translations don't match for:\n".
@@ -1235,6 +1245,9 @@ sub push_raw {
                           $txt,$first,$second);
             }
         }
+    }
+    if (defined $transref) {
+        $self->{po}{$msgid}{'transref'} = $transref;
     }
     if (defined $reference) {
         if (defined $self->{po}{$msgid}{'reference'}) {
