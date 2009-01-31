@@ -2034,7 +2034,8 @@ sub initialize {
 # ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
 	$self->{options}{'attributes'}.='
-		lang';
+		lang
+		xml:lang';
 
 	$self->treat_options;
 }
