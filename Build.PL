@@ -26,7 +26,17 @@ my $builder = Module::Build->subclass
 	    require ExtUtils::Install;
 #	    $self->depends_on('build');
 
-	    ExtUtils::Install::install($self->install_map, 1, 0, $self->{args}{uninst}||0); 
+	    my %install_map = %{$self->install_map};
+
+	    my $mandir = $self->install_map->{'blib/bindoc'};
+	    $mandir =~ s/\/man1$//;
+	    $install_map{'blib/man'} = $mandir;
+
+	    my $localedir = $mandir;
+	    $localedir =~ s/\/man$/\/locale/;
+	    $install_map{'blib/po'} = $localedir;
+
+	    ExtUtils::Install::install(\%install_map, 1, 0, $self->{args}{uninst}||0); 
 	}
 	sub ACTION_binpo {
 	    my $self = shift;
@@ -121,6 +131,7 @@ my $builder = Module::Build->subclass
 	    system("cp doc/po4a.7.pod blib/man/man7") and die;
 
 	    foreach $file (@{$self->rscan_dir('blib/man',qr{\.pod$})}) {
+		next if $file =~ m/^man7/;
 		my $out = $file;
 		$out =~ s/\.pod$//;
 		$section = $2;
@@ -135,15 +146,17 @@ my $builder = Module::Build->subclass
 		my $lang = $out;
 		$lang =~ s/^blib\/man\/([^\/]*)\/.*$/$1/;
 
-		my $command;
-		$command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
-		$command .= "msgconv -t UTF-8 | ";
-		$command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
-		$command .= "&& cat || cat > /dev/null'";
+		unless ($lang eq "man7") {
+			my $command;
+			$command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
+			$command .= "msgconv -t UTF-8 | ";
+			$command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
+			$command .= "&& cat || cat > /dev/null'";
 
-		my $title = `$command 2> /dev/null`;
-		$title = "Po4a Tools" unless length $title;
-		$parser->{release} = $parser->{center} = $title;
+			my $title = `$command 2> /dev/null`;
+			$title = "Po4a Tools" unless length $title;
+			$parser->{release} = $parser->{center} = $title;
+		}
 		$parser->parse_from_file ($file, $out);
 
 		system("gzip -9 -f $out") and die;
@@ -223,14 +236,6 @@ my $b = $builder->new
       dist_author => ['Martin Quinson (mquinson#debian.org)',
 	  'Denis Barbier <barbier@linuxfr.org>']
   );
-
-# Tweak the installation path
-#  Retrieve the prefix (There should be a better way)
-my $base = $b->install_destination("bindoc");
-$base =~ s/\/man\/man1//;
-#  Set the paths for the manpages and MO files
-$b->{properties}{install_sets}{$b->installdirs}{man} = $base.'/man';
-$b->{properties}{install_sets}{$b->installdirs}{po} = $base.'/locale';
 
 $b->create_build_script;
 
