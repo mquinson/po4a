@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.21 2006-06-13 19:57:17 nekral-guest Exp $
+# $Id: Pod.pm,v 1.22 2009-02-09 23:11:56 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -145,6 +145,14 @@ sub parse {
 }
 
 sub docheader {
+    my $self=shift;
+    my $encoding = $self->{TT}{file_out_charset};
+    if (defined $encoding) {
+        $encoding = "\n=encoding $encoding\n";
+    } else {
+        $encoding = "";
+    }
+
     return <<EOT;
 
         *****************************************************
@@ -157,7 +165,7 @@ but store the po file used as source file by po4a-translate.
 
 In fact, consider this as a binary, and the po file as a regular .c file:
 If the po get lost, keeping this translation up-to-date will be harder.
-
+$encoding
 EOT
 }
 1;
