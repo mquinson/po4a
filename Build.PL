@@ -123,7 +123,9 @@ my $builder = Module::Build->subclass
 	    use Pod::Man;
 
 	    # Translate binaries manpages
-	    my $parser = Pod::Man->new ();
+	    my %options;
+	    $options{utf8} = 1;
+	    my $parser = Pod::Man->new (%options);
 
 	    system("PERL5LIB=lib perl po4a --previous po/pod.cfg") and die;
 	    system("mkdir -p blib/man/man7") and die;
