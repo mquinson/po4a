@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.83 2008-12-29 13:16:39 nekral-guest Exp $
+# $Id: po4a,v 1.84 2009-02-10 21:07:58 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -783,11 +783,16 @@ die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and p
 
 sub split_opts {
     my $options = shift;
+    my $options_orig = $options;
     my @opts = ();
     $options =~ s/\\"/"/g;
     while (length $options) {
         my $o = "";
         while (length $options and $options !~ /^ /s) {
+            if (    ($options =~ m/^(["'])/)
+                and ($options !~ m/^(["'])(?:\\.|(?!\1)[^\\])*\1/)) {
+                die wrap_msg(gettext("Cannot parse option line (missing >%s<?): %s"), $1, $options_orig);
+            }
             # Extract non quoted parts
             $options =~ s/^([^\\"' ]*)//s;
             $o .= $1 if defined $1;
