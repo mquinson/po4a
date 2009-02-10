@@ -328,6 +328,9 @@ sub initialize {
 	my $self = shift;
 	my %options = @_;
 
+	# Reset the path
+	@path = ();
+
 	# Initialize the stack of holders
 	my @paragraph = ();
 	my @sub_translations = ();
