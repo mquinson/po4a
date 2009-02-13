@@ -132,7 +132,7 @@ sub parse {
 my @save_holders;
 
 
-# If we are at the bottom of the stack and there is no <placeholder\d+> in
+# If we are at the bottom of the stack and there is no <placeholder ...> in
 # the current translation, we can push the translation in the translated
 # document.
 # Otherwise, we keep the translation in the current holder.
@@ -144,7 +144,7 @@ sub pushline {
 	my $translation = $holder{'translation'};
 	$translation .= $line;
 	if (   (scalar @save_holders)
-	    or ($translation =~ m/<placeholder\d+>/s)) {
+	    or ($translation =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s)) {
 		$holder{'translation'} = $translation;
 	} else {
 		$self->SUPER::pushline($translation);
@@ -1231,9 +1231,10 @@ sub treat_content {
 			if ($tag_types[$type]->{'end'} eq "") {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
-					if ($self->get_translate_options($self->get_path($self->get_tag_name(@tag))) =~ m/p/) {
+					my $cur_tag_name = $self->get_tag_name(@tag);
+					if ($self->get_translate_options($self->get_path($cur_tag_name)) =~ m/p/) {
 						# We enter a new holder.
-						# Append a <placeholder#> tag to the current
+						# Append a <placeholder ...> tag to the current
 						# paragraph, and save the @paragraph in the
 						# current holder.
 						my $holder_ref = pop @save_holders;
@@ -1241,7 +1242,7 @@ sub treat_content {
 						my $sub_translations_ref = $old_holder{'sub_translations'};
 						my @sub_translations = @$sub_translations_ref;
 
-						my $placeholder_str = "<placeholder".($#sub_translations+1).">";
+						my $placeholder_str = "<placeholder type=\"".$cur_tag_name."\" id=\"".($#sub_translations+1)."\"/>";
 						push @paragraph, ($placeholder_str, $text[1]);
 						my @saved_paragraph = @paragraph;
 
@@ -1264,7 +1265,7 @@ sub treat_content {
 						# is empty.
 						@paragraph = ();
 					}
-					push @path, $self->get_tag_name(@tag);
+					push @path, $cur_tag_name;
 				} elsif ($tag_types[$type]->{'beginning'} eq "/") {
 					# Closing inline tag
 
@@ -1471,14 +1472,14 @@ sub translate_paragraph {
 		my $translation = $holder{'translation'};
 		my @sub_translations = @$sub_translations_ref;
 
-		# Count the number of <placeholder\d+> in $translation
+		# Count the number of <placeholder ...> in $translation
 		my $count = 0;
 		my $str = $translation;
 		while (    (defined $str)
-		       and ($str =~ m/^.*?<placeholder(\d+)>(.*)$/s)) {
+		       and ($str =~ m/^.*?<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>(.*)$/s)) {
 			$count += 1;
 			$str = $2;
-			if ($sub_translations[$1] =~ m/<placeholder\d+>/s) {
+			if ($sub_translations[$1] =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s) {
 				$count = -1;
 				last;
 			}
@@ -1489,7 +1490,7 @@ sub translate_paragraph {
 			# OK, all the holders of the current paragraph are
 			# closed (and translated).
 			# Replace them by their translation.
-			while ($translation =~ m/^(.*?)<placeholder(\d+)>(.*)$/s) {
+			while ($translation =~ m/^(.*?)<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>(.*)$/s) {
 				# FIXME: we could also check that
 				#          * the holder exists
 				#          * all the holders are used
