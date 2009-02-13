@@ -1516,91 +1516,25 @@ sub splitargs {
     $arguments =~ s/\\ /$nbs/g;
     $arguments =~ s/^ +//;
     $arguments =~ s/\\&"/\\(dq/g;
-    foreach my $elem (split (/ +/,$arguments)) {
-        print STDERR ">>Seen $elem(buffer=$buffer;esc=$escaped)\n"
-            if ($debug{'splitargs'});
-
-        if (length $buffer && !($elem=~ /\\$/) ) {
-            $buffer .= " ".$elem;
-            print STDERR "Continuation of a quote\n"
-                if ($debug{'splitargs'});
-            # Inside a quoted argument, "" indicates a double quote
-            while ($buffer =~ s/^"([^"]*?)""/"$1\\(dq/) {}
-            # print "buffer=$buffer.\n";
-            if ($buffer =~ m/^"(.*)"(.+)$/) {
-                print STDERR "End of quote, with stuff after it\n"
-                    if ($debug{'splitargs'});
-                my ($a,$b)=($1,$2);
-                $a =~ s/\Q$nbs/\\ /g;
-                $b =~ s/\Q$nbs/\\ /g;
-                push @args,$a;
-                push @args,$b;
-                $buffer = "";
-            } elsif ($buffer =~ m/^"(.*)"$/) {
-                print STDERR "End of a quote\n"
-                    if ($debug{'splitargs'});
-                my $a = $1;
-                $a =~ s/\Q$nbs/\\ /g;
-                push @args,$a;
-                $buffer = "";
-            } elsif ($escaped) {
-                print STDERR "End of an escaped sequence\n"
-                    if ($debug{'splitargs'});
-                unless(length($elem)){
-                    die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
-                        "Escaped space at the end of macro arg. With high probability, it won't do the trick with po4a (because of wrapping). You may want to remove it and use the .nf/.fi groff macro to control the wrapping."));
-                }
-                $buffer =~ s/\Q$nbs/\\ /g;
-                push @args,$buffer;
-                $buffer = "";
-                $escaped = 0;
-            } else {
-                print STDERR "Quotes: Oops\n"
-                    if ($debug{'splitargs'});
-            }
-        } elsif ($elem =~ m/^"(.*?(?<!")(?:"")*)"(?!")(.+)$/) {
-            print STDERR "Quoted: quote without space\n"
-                if ($debug{'splitargs'});
+    $arguments =~ s/^ *//;
+    while (length $arguments) {
+        if ($arguments =~ s/^"((?:[^"]|"")*)"(?!") *//) {
             my $a = $1;
-            my $b = $2;
-            $a =~ s/""/\\(dq/g;
-            $a =~ s/\Q$nbs/\\ /g;
-            $b =~ s/""/\\(dq/g;
-            $b =~ s/\Q$nbs/\\ /g;
+            $a =~ s/""/"/g if defined $a;
             push @args,$a;
-            push @args,$b;
-        } elsif ($elem =~ m/^"(.*)"$/) {
-            print STDERR "Quoted, no space\n"
-                if ($debug{'splitargs'});
+        } elsif ($arguments =~ s/^"((?:[^"]|"")*) *$//) {
+            # Unterminated quote, but this seems to be handled by removing
+            # the trailing spaces and closing the quotes.
             my $a = $1;
-            # Inside a quoted argument, "" indicates a double quote
-            $a =~ s/""/\\(dq/g;
-            $a =~ s/\Q$nbs/\\ /g;
+            $a =~ s/""/"/g if defined $a;
             push @args,$a;
-        } elsif ($elem =~ m/^"/) { #") {
-            print STDERR "Begin of a quoting arg\n"
-                if ($debug{'splitargs'});
-            $buffer=$elem;
-        } elsif ($elem =~ m/^(.*)\\$/) {
-            print STDERR "escaped space after $1\n"
-                if ($debug{'splitargs'});
-            # escaped space
-            $buffer = (length($buffer)?$buffer:'').$1." ";
-            $escaped = 1;
+        } elsif ($arguments =~ s/^([^ ]+) *//) {
+            push @args,$1;
         } else {
-            print STDERR "Unquoted arg, nothing to declare\n"
-                if ($debug{'splitargs'});
-            $elem =~ s/\Q$nbs/\\ /g;
-            push @args,$elem;
-            $buffer="";
+            die wrap_ref_mod($ref, "po4a::man", dgettext("po4a",
+                             "Cannot parse command arguments: %s"),
+                             $arguments)
         }
-    }
-    if (length($buffer)) {
-        # Inside a quoted argument, "" indicates a double quote
-        while ($buffer =~ s/^"([^"]*?)""/"$1\\(dq/) {}
-        $buffer=~ s/"//g;
-        $buffer =~ s/\Q$nbs/\\ /g;
-        push @args,$buffer;
     }
     if ($debug{'splitargs'}) {
         print STDERR "ARGS=";
