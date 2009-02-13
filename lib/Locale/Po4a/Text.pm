@@ -99,7 +99,18 @@ Handle some special markup in Markdown-formatted texts.
 =cut
 
 my $markdown = 0;
+
+=item B<asciidoc>
+
+Handle documents in the asciidoc format.
+
+=cut
+
 my $asciidoc = 0;
+
+=back
+
+=cut
 
 sub initialize {
     my $self = shift;

@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.19 2009-01-15 22:24:19 nekral-guest Exp $
+# $Id: Common.pm,v 1.20 2009-02-13 23:16:44 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -228,9 +228,6 @@ BEGIN {
        '
     }
 }
-
-
-=cut
 
 1;
 __END__

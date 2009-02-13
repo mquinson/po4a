@@ -503,8 +503,6 @@ sub stats   {
     return $_[0]->{TT}{po_in}->stats_get(); 
 }
 
-=cut
-
 =head2 Manipulating addenda
 
 =over 4
