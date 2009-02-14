@@ -235,41 +235,52 @@ The following schema gives an overview of the process of translating
 documentation using po4a. Do not be afraid by its apparent complexity, it
 comes from the fact that the I<whole> process is represented here. Once you
 converted your project to po4a, only the right part of the graphic is
-relevant. Note that sgml is taken as example here, but the same remains true
-for all modules. Each part of the picture will be detailed in the next
-sections.
+relevant. 
 
-  fr.sgml  original.sgml ---->--------+------>----------->-------+
-     |         |                      |                          |
-     V         V           { update of original }                |
-     |         |                      |                          |
-     +--<---<--+                      V                          |
-     |         |              original.new.sgml----->------->----+
-     V         V                      |                          |
-  [po4a-gettextize]      +--->---->---+                          |
-     |         |         |            V                          |
-     |         |         |     [po4a-updatepo]                   |
-     |         V         ^            |                          V
-     V    original.pot   |            V                          |
-     |         |         |          fr.po                        |
-     |         |         |         (fuzzy)                       |
-     |  { translation }  |            |                          |
-     |         |         ^            V                          V
-     |         |         |     {manual editing}                  |
-     V         V         |            |                          |
-     |         |         |            V                          V
-     |         |         +--<---    fr.po       addendum   original.sgml
-     +---->----+---->------->---> (up-to-date) (optional)  (up-to-date) 
-                                      |            |             |
-                                      v            v             v
-                                      +------>-----+------<------+
-                                                   |
-                                                   v
+Note that "master.doc" is taken as an example for the documentation to be
+translated and "translation.doc" is the corresponding translated text.  The suffix
+could be ".pod", ".xml", or ".sgml" depending on its format. Each part of the
+picture will be detailed in the next sections.
+
+                                   master.doc
+                                       |
+                                       V
+     +<-----<----+<-----<-----<--------+------->-------->-------+
+     :           |                     |                        :
+{translaion}     |            { update of master.doc }          :
+     :           |                     |                        :
+   XX.doc        |                     V                        V
+(optional)       |                  master.doc ------->-------->+
+     :           |                   (new)                      |
+     V           V                     |                        |
+  [po4a-gettextize]   doc.XX.po--->+   |                        |
+          |            (old)       |   |                        |
+          |              ^         V   V                        |
+          |              |     [po4a-updatepo]                  |
+          V              |           |                          V
+   translation.pot       ^           V                          |
+          |              |         doc.XX.po                    |
+          |              |         (fuzzy)                      |
+   { translation }       |           |                          |
+          |              ^           V                          V
+          |              |     {manual editing}                 |
+          |              |           |                          |
+          V              |           V                          V
+      doc.XX.po --->---->+<---<---- doc.XX.po   addendum     master.doc
+      (initial)                   (up-to-date) (optional)   (up-to-date) 
+          :                          |            |             |
+          :                          V            |             |
+          +----->----->----->------> +            |             |
+                                     |            |             |
+                                     V            V             V
+                                     +------>-----+------<------+
+                                                  |
+                                                  V
                                            [po4a-translate]
-                                                   |
-                                                   V
-                                                fr.sgml
-                                             (up-to-date)
+                                                  |
+                                                  V
+                                                XX.doc
+                                            (up-to-date)
 
 
 On the left part, the conversion of a translation not using po4a to this
@@ -298,14 +309,14 @@ To begin a new translation using po4a, you have to do the following steps:
 
 =item -
 
-Extract the text which have to be translated from the original document into
-a new pot file (the gettext format). For that, use the I<po4a-gettextize>
-program that way:
+Extract the text which have to be translated from the original E<lt>master.docE<gt> document into
+a new translation template E<lt>translation.potE<gt> file (the gettext format). For that, use the I<po4a-gettextize>
+program this way:
 
   $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>
 
-E<lt>formatE<gt> is naturally the format used in the E<lt>master.docE<gt>
-document. As expected, the output goes into E<lt>translation.potE<gt>.
+E<lt>formatE<gt> is naturally the format used in the master.doc
+document. As expected, the output goes into translation.pot.
 Please refer to L<po4a-gettextize(1)> for more details about the existing
 options.
 
@@ -337,18 +348,18 @@ language code):
 
   $ po4a-translate -f <format> -m <master.doc> -p <doc.XX.po> -l <XX.doc>
 
-As before, E<lt>formatE<gt> is the format used in the E<lt>master.docE<gt> document. But
+As before, E<lt>formatE<gt> is the format used in the master.doc document. But
 this time, the po file provided with the -p flag is part of the input. This
-is your translation. The output goes into E<lt>XX.docE<gt>.
+is your translation. The output goes into XX.doc.
 
 Please refer to L<po4a-translate(1)> for more details.
 
 =head2 HOWTO update a po4a translation?
 
-To update your translation when the original file has changed, use the
+To update your translation when the original master.doc file has changed, use the
 L<po4a-updatepo(1)> program like that:
 
-  $ po4a-updatepo -f <format> -m <new_original.doc> -p <existing.XX.po>
+  $ po4a-updatepo -f <format> -m <new_master.doc> -p <old_doc.XX.po>
 
 (Please refer to L<po4a-updatepo(1)> for more details)
 
@@ -369,7 +380,7 @@ in the previous section.
 =head2 HOWTO convert a pre-existing translation to po4a?
 
 Often, you used to translate manually the document happily until a major
-reorganization of the original document happened. Then, after some
+reorganization of the original master.doc document happened. Then, after some
 unpleasant tries with diff or similar tools, you want to convert to po4a.
 But of course, you don't want to loose your existing translation in the
 process. Don't worry, this case is also handled by po4a tools and is called
@@ -404,13 +415,14 @@ things B<did> went wrong. That was more than two megabytes of text, and a
 new translation would have lasted months or more. 
 
 Let me explain the basis of the procedure first and I will come back on
-hints to achieve it when the process goes wrong. To ease comprehension, the
-sgml module is taken as an example once again, but the format used doesn't
-really matter.
+hints to achieve it when the process goes wrong. To ease comprehension, 
+let's use above example once again.
 
-Once you have the old original again, the gettextization may be as easy as:
+Once you have the old master.doc again which matches with the translation
+XX.doc, the gettextization can be done directly to the po file doc.XX.po
+without manual translation of translate.pot file:
 
- $ po4a-gettextize -f <format> -m <old.original> -l <old.translation> -p <doc.XX.po>
+ $ po4a-gettextize -f <format> -m <old_master.doc> -l <XX.doc> -p <doc.XX.po>
 
 When you're lucky, that's it. You converted your old translation to po4a and
 can begin with the updating task right away. Just follow the procedure
