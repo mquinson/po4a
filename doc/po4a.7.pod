@@ -48,6 +48,8 @@ documentation of the specific tools.
 
 =item HOWTO do all this in one program invocation?
 
+=item HOWTO customize po4a?
+
 =back
 
  
@@ -750,6 +752,19 @@ generated properly. Of course, you will want to call this program twice:
 once before editing the po file to update them and once afterward to get
 completely updated translated document. But you only need to remember one
 command line.
+
+=head2 HOWTO customize po4a?
+
+po4a modules have options (specified with the -o options) that can be used
+to change the module behavior.
+
+It is also possible to customize a module or new / derivative / modified
+modules by putting a module in F<lib/Locale/Po4a/>, and adding F<lib> to
+the paths specified by the PERLLIB or PERL5LIB environment. For example:
+
+   PERLLIB=$PWD/lib po4a --previous po4a/po4a.cfg
+
+Note: the actual name of the lib directory is not important.
 
 =head1 How does it work?
 
