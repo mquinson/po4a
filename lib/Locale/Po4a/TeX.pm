@@ -907,8 +907,8 @@ sub read {
 =item read_file
 
 Recursively read a file, appending included files which are not listed in the
-@exclude_include array.  Included files are searched in the directory of the
-input document or in a directory listed in the TEXINPUTS environment variable.
+@exclude_include array.  Included files are searched using the B<kpsewhich>
+command from the Kpathsea library.
 
 Except from the file inclusion part, it is a cut and paste from
 Transtractor's read.
@@ -955,18 +955,9 @@ sub read_file {
             }
             if ($include) {
                 # search the file
-                foreach (($my_dirname,
-                          defined($ENV{"TEXINPUTS"})?
-                              split(/:/, $ENV{"TEXINPUTS"}):
-                              ".")) {
-                    if      (-r "$_/$newfilename") {
-                        $newfilename = "$_/$newfilename";
-                        last;
-                    } elsif (-r "$_/$newfilename.tex") {
-                        $newfilename = "$_/$newfilename.tex";
-                        last;
-                    }
-                }
+                open (KPSEA, "kpsewhich " . $newfilename . " |");
+                $newfilename = <KPSEA>;
+
                 push @entries, read_file($self,
                                          $newfilename);
                 if ($tag eq "include") {
@@ -1015,18 +1006,8 @@ newcommands).
 sub parse_definition_file {
     my ($self,$filename,$only_try)=@_;
 
-    foreach (($my_dirname,
-              defined($ENV{"TEXINPUTS"})?
-                  split(/:/, $ENV{"TEXINPUTS"}):
-                  ".")) {
-        if ((not defined $_) or (not length $_)) {
-            $_ = ".";
-        }
-        if (-r $_."/".$filename) {
-            $filename = $_."/".$filename;
-            last;
-        }
-    }
+    open (KPSEA, "kpsewhich " . $filename . " |");
+    $filename = <KPSEA>;
 
     if (! open (IN,"<$filename")) {
         warn wrap_mod("po4a::tex",
