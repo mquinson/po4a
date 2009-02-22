@@ -3,7 +3,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.84 2009-02-10 21:07:58 nekral-guest Exp $
+# $Id: po4a,v 1.85 2009-02-22 10:17:24 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -767,9 +767,13 @@ while (<CONFIG>) {
 	my %options;
 	my $o = $line;
 	$o =~ s/.*?\[options\] +//;
+	if (defined $document{''}{"options"}) {
+		%options = %{$document{''}{"options"}};
+	}
 	parse_config_options("$config_file:$nb",
 	                     $o,
-	                     $document{''}{"options"});
+	                     \%options);
+	%{$document{''}{"options"}} = %options;
     } else {
 	die wrap_ref_mod("$config_file:$nb", "",
 	    gettext("Unparsable command '%s'."), $cmd);
