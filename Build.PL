@@ -4,6 +4,8 @@ use Module::Build;
 use strict;
 use warnings;
 
+use Encode;
+
 my $builder = Module::Build->subclass
 (
     class => 'My::Builder',
@@ -148,7 +150,9 @@ my $builder = Module::Build->subclass
 		my $lang = $out;
 		$lang =~ s/^blib\/man\/([^\/]*)\/.*$/$1/;
 
-		unless ($lang eq "man7") {
+		if ($lang eq "man7") {
+			$parser->{release} = $parser->{center} = "Po4a Tools";
+		} else {
 			my $command;
 			$command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
 			$command .= "msgconv -t UTF-8 | ";
@@ -157,6 +161,7 @@ my $builder = Module::Build->subclass
 
 			my $title = `$command 2> /dev/null`;
 			$title = "Po4a Tools" unless length $title;
+			$title = Encode::decode_utf8($title);
 			$parser->{release} = $parser->{center} = $title;
 		}
 		$parser->parse_from_file ($file, $out);
