@@ -1702,6 +1702,31 @@ sub treat_options {
 		$self->{placeholder}->{$2} = $1 || ""
 			unless $list_nodefault{$tag};
 	}
+
+	# There should be no translated and untranslated tags
+	foreach my $tag (keys %{$self->{translated}}) {
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "translated", "untranslated")
+			if $self->{untranslated}->{$tag};
+	}
+	# There should be no inline, break, and placeholder tags
+	foreach my $tag (keys %{$self->{inline}}) {
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "inline", "break")
+			if $self->{break}->{$tag};
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "inline", "placeholder")
+			if $self->{placeholder}->{$tag};
+	}
+	foreach my $tag (keys %{$self->{break}}) {
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "break", "placeholder")
+			if $self->{placeholder}->{$tag};
+	}
 }
 
 =head2 GETTING TEXT FROM THE INPUT DOCUMENT
