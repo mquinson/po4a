@@ -195,7 +195,6 @@ sub initialize {
                 <input> 
                 <kbd> 
                 <label> 
-                <map> 
                 <object> 
                 <q> 
                 <samp> 
@@ -217,6 +216,8 @@ sub initialize {
         # write text (in which case you have bigger problems than this
         # program not inlining img: you now have to translate all your
         # images. That'll teach you).
+        # If you choose to translate images, you may also want to set
+        # <map> as placeholder and <area> as inline.
 
         $self->{options}{'attributes'}.='
                 alt
