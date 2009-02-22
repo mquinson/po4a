@@ -9,7 +9,7 @@
 # XML-based documents.
 #
 # Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
-# Copyright (c) 2008 by Nicolas François  <nicolas.francois@centraliens.net>
+# Copyright (c) 2008-2009 by Nicolas François  <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -191,29 +191,29 @@ These are this module's particular options:
 
 =over 4
 
-=item nostrip
+=item B<nostrip>
 
 Prevents it to strip the spaces around the extracted strings.
 
-=item wrap
+=item B<wrap>
 
 Canonizes the string to translate, considering that whitespaces are not
 important, and wraps the translated document. This option can be overridden
 by custom tag options. See the "tags" option below.
 
-=item caseinsensitive
+=item B<caseinsensitive>
 
 It makes the tags and attributes searching to work in a case insensitive
 way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang as E<lt>bookE<gt>lang.
 
-=item includeexternal
+=item B<includeexternal>
 
 When defined, external entities are included in the generated (translated)
 document, and for the extraction of strings.  If it's not defined, you
 will have to translate external entities separately as independent
 documents.
 
-=item ontagerror
+=item B<ontagerror>
 
 This option defines the behavior of the module when it encounter a invalid
 Xml syntax (a closing tag which does not match the last opening tag, or a
@@ -240,19 +240,20 @@ The module will continue without any warnings.
 Be careful when using this option.
 It is generally recommended to fix the input file.
 
-=item tagsonly
+=item B<tagsonly>
 
 Extracts only the specified tags in the "tags" option.  Otherwise, it
 will extract all the tags except the ones specified.
 
 Note: This option is deprecated.
 
-=item doctype
+=item B<doctype>
 
 String that will try to match with the first line of the document's doctype
-(if defined). If it doesn't, the document will be considered of a bad type.
+(if defined). If it doesn't, a warning will indicate that the document
+might be of a bad type.
 
-=item tags
+=item B<tags>
 
 Space-separated list of the tags you want to translate or skip.  By default,
 the specified tags will be excluded, but if you use the "tagsonly" option,
@@ -269,7 +270,7 @@ Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 Note: This option is deprecated.
 You should use the B<translated> and B<untranslated> options instead.
 
-=item attributes
+=item B<attributes>
 
 Space-separated list of the tag's attributes you want to translate.  You can
 specify the attributes by their name (for example, "lang"), but you can
@@ -278,17 +279,45 @@ translated when it's into the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE
 specifies that the lang attribute will only be translated if it's into an
 E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
 
-=item inline
+=item B<break>
 
-Space-separated list of the tags you want to treat as inline.  By default,
-all tags break the sequence.  This follows the same syntax as the tags option.
+Space-separated list of the tags which should break the sequence.
+By default, all tags break the sequence.
 
-=item nodefault
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered 
+when it's into another tag (<bbb>).
+
+=item B<inline>
+
+Space-separated list of the tags which should be treated as inline.
+By default, all tags break the sequence.
+
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered 
+when it's into another tag (<bbb>).
+
+=item B<placeholder>
+
+Space-separated list of the tags which should be treated as placeholders.
+Placeholders do not break the sequence, but the content of placeholders is
+translated separately.
+
+The location of the placeholder in its blocks will be marked with a string
+similar to:
+
+  <placeholder type=\"footnote\" id=\"0\"/>
+
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered 
+when it's into another tag (<bbb>).
+
+=item B<nodefault>
 
 Space separated list of tags that the module should not try to set by
-default in the "tags" or "inline" category.
+default in any category.
 
-=item cpp
+=item B<cpp>
 
 Support C preprocessor directives.
 When this option is set, po4a will consider preprocessor directives as
@@ -300,12 +329,13 @@ preprocessor.
 Note: the preprocessor directives must only appear between tags
 (they must not break a tag).
 
-=item translated
+=item B<translated>
 
 Space-separated list of the tags you want to translate.
-The tags must be in the form <aaa>, but you can join some (<bbb><aaa>) to
-indicate that the content of the tag <aaa> will only be translated when
-it's into a <bbb> tag.
+
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered 
+when it's into another tag (<bbb>).
 
 You can also specify some tag options putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
@@ -313,10 +343,40 @@ to overide the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
-=item untranslated
+=item B<untranslated>
 
-Space-separated list of the tags you do not want to translate or not. It
-uses the same format as the B<translated> option.
+Space-separated list of the tags you do not want to translate.
+
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered 
+when it's into another tag (<bbb>).
+
+=item B<defaulttranslateoption>
+
+The default categories for tags that are not in any of the translated,
+untranslated, break, inline, or placeholder.
+
+This is a set of letters:
+
+=over
+
+=item I<w>
+
+Tags should be translated and content can be re-wrapped.
+
+=item I<W>
+
+Tags should be translated and content should not be re-wrapped.
+
+=item I<i>
+
+Tags should be translated inline.
+
+=item I<p>
+
+Tags should be translated as placeholders.
+
+=back
 
 =back
 
@@ -405,10 +465,15 @@ calling the main initialize:
 
   $self->{options}{'new_option'}='';
   $self->SUPER::initialize(%options);
-  $self->{options}{'tags'}.=' <p> <head><title>';
+  $self->{options}{'_default_translated'}.=' <p> <head><title>';
   $self->{options}{'attributes'}.=' <p>lang id';
-  $self->{options}{'inline'}.=' <br>';
+  $self->{options}{'_default_inline'}.=' <br>';
   $self->treat_options;
+
+You should use the B<_default_inline>, B<_default_break>,
+B<_default_placeholder>, B<_default_translated>, B<_default_untranslated>
+options in derivated modules. This allow users to override the default
+behavior defined in your module with command line options.
 
 =head2 OVERRIDING THE found_string FUNCTION
 
@@ -795,6 +860,9 @@ sub tag_trans_open {
 
 This function returns the path to the current tag from the document's root,
 in the form E<lt>htmlE<gt>E<lt>bodyE<gt>E<lt>pE<gt>.
+
+An additional array of tags (without brackets) can be passed in argument.
+These path elements are added to the end of the current path.
 
 =cut
 
@@ -1780,10 +1848,6 @@ sub join_lines {
 
 This module can translate tags and attributes.
 
-Support for entities and included files is in the TODO list.
-
-The writing of derivate modules is rather limited.
-
 =head1 TODO LIST
 
 DOCTYPE (ENTITIES)
@@ -1793,12 +1857,8 @@ translated as a whole, and tags are not taken into account. Multilines
 entities are not supported and entities are always rewrapped during the
 translation.
 
-INCLUDED FILES
-
 MODIFY TAG TYPES FROM INHERITED MODULES
 (move the tag_types structure inside the $self hash?)
-
-breaking tag inside non-breaking tag (possible?) causes ugly comments
 
 =head1 SEE ALSO
 
@@ -1812,7 +1872,7 @@ L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>
 =head1 COPYRIGHT AND LICENSE
 
  Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
- Copyright (c) 2008 by Nicolas François <nicolas.francois@centraliens.net>
+ Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
