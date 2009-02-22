@@ -621,7 +621,6 @@ sub tag_trans_procins {
 }
 
 sub tag_extract_doctype {
-#TODO
 	my ($self,$remove)=(shift,shift);
 
 	# Check if there is an internal subset (between []).
@@ -643,12 +642,13 @@ sub tag_extract_doctype {
 }
 
 sub tag_trans_doctype {
-#TODO
+# This check is not really reliable.  There are system and public
+# identifiers.  Only the public one could be checked reliably.
 	my ($self,@tag)=@_;
 	if (defined $self->{options}{'doctype'} ) {
 		my $doctype = $self->{options}{'doctype'};
 		if ( $tag[0] !~ /\Q$doctype\E/i ) {
-			die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Bad document type. '%s' expected."), $doctype);
+			warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Bad document type. '%s' expected. You can fix this warning with a -o doctype option, or ignore this check with -o doctype=\"\"."), $doctype);
 		}
 	}
 	my $i = 0;
