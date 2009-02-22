@@ -1356,7 +1356,7 @@ sub treat_content {
 						# Now translate this paragraph if needed.
 						# This will call pushline and append the
 						# translation to the current holder's translation.
-						$self->translate_paragraph($translate, @paragraph);
+						$self->translate_paragraph(@paragraph);
 						pop @path;
 
 						# Now that this holder is closed, we can remove
@@ -1444,7 +1444,7 @@ sub treat_content {
 	# Translate the string when needed
 	# This will either push the translation in the translated document or
 	# in the current holder translation.
-	$self->translate_paragraph($translate, @paragraph);
+	$self->translate_paragraph(@paragraph);
 
 	# Push the trailing blanks
 	if ($blank ne "") {
@@ -1457,10 +1457,9 @@ sub treat_content {
 # The $translate argument indicates if the strings must be translated or
 # just pushed
 sub translate_paragraph {
-# TODO: remove the translate parameter
-	my ($self, $translate) = (shift, shift);
+	my $self = shift;
 	my @paragraph = @_;
-	$translate = $self->get_translate_options($self->get_path);
+	my $translate = $self->get_translate_options($self->get_path);
 
 	while (    (scalar @paragraph)
 	       and ($paragraph[0] =~ m/^\s*\n/s)) {
@@ -1496,8 +1495,7 @@ sub translate_paragraph {
 			# Thus do not try to match "include ".
 			if ($t =~ m/^#[ \t]*(if |endif|undef |include|else|ifdef |ifndef |define )/si) {
 				if (@paragraph) {
-					$self->translate_paragraph($translate,
-					                           @paragraph);
+					$self->translate_paragraph(@paragraph);
 					@paragraph = ();
 					$self->pushline("\n");
 				}
