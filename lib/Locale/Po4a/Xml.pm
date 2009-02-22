@@ -1,6 +1,4 @@
 #!/usr/bin/perl
-#TODO:
-#Warn if tags / tagsonly / inline is used
 
 # Po4a::Xml.pm 
 # 
@@ -1553,9 +1551,20 @@ sub treat_options {
 	$self->{nodefault} = \%list_nodefault;
 
 	$self->{options}{'tags'} =~ /^\s*(.*)\s*$/s;
+	if (length $self->{options}{'tags'}) {
+		warn wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "The '%s' option is deprecated. Please use the translated/untranslated and/or break/inline/placeholder categories."), "tags");
+	}
 	foreach (split(/\s+/s,$1)) {
 		$_ =~ m/^(.*?)(<.*)$/;
 		$self->{tags}->{$2} = $1 || "";
+	}
+
+	if ($self->{options}{'tagsonly'}) {
+		warn wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "The '%s' option is deprecated. Please use the translated/untranslated and/or break/inline/placeholder categories."), "tagsonly");
 	}
 
 	$self->{options}{'break'} =~ /^\s*(.*)\s*$/s;
