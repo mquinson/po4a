@@ -4,8 +4,6 @@ use Module::Build;
 use strict;
 use warnings;
 
-use Encode;
-
 my $builder = Module::Build->subclass
 (
     class => 'My::Builder',
@@ -123,6 +121,7 @@ my $builder = Module::Build->subclass
 	    my $self = shift;
 
 	    use Pod::Man;
+	    use Encode;
 
 	    # Translate binaries manpages
 	    my %options;
