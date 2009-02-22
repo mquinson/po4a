@@ -255,7 +255,7 @@ might be of a bad type.
 
 =item B<tags>
 
-Space-separated list of the tags you want to translate or skip.  By default,
+Space-separated list of tags you want to translate or skip.  By default,
 the specified tags will be excluded, but if you use the "tagsonly" option,
 the specified tags will be the only ones included.  The tags must be in the
 form E<lt>aaaE<gt>, but you can join some (E<lt>bbbE<gt>E<lt>aaaE<gt>) to say that the content of
@@ -272,7 +272,7 @@ You should use the B<translated> and B<untranslated> options instead.
 
 =item B<attributes>
 
-Space-separated list of the tag's attributes you want to translate.  You can
+Space-separated list of tag's attributes you want to translate.  You can
 specify the attributes by their name (for example, "lang"), but you can
 prefix it with a tag hierarchy, to specify that this attribute will only be
 translated when it's into the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE<gt>lang
@@ -281,7 +281,7 @@ E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
 
 =item B<break>
 
-Space-separated list of the tags which should break the sequence.
+Space-separated list of tags which should break the sequence.
 By default, all tags break the sequence.
 
 The tags must be in the form <aaa>, but you can join some
@@ -290,7 +290,7 @@ when it's into another tag (<bbb>).
 
 =item B<inline>
 
-Space-separated list of the tags which should be treated as inline.
+Space-separated list of tags which should be treated as inline.
 By default, all tags break the sequence.
 
 The tags must be in the form <aaa>, but you can join some
@@ -299,7 +299,7 @@ when it's into another tag (<bbb>).
 
 =item B<placeholder>
 
-Space-separated list of the tags which should be treated as placeholders.
+Space-separated list of tags which should be treated as placeholders.
 Placeholders do not break the sequence, but the content of placeholders is
 translated separately.
 
@@ -331,7 +331,7 @@ Note: the preprocessor directives must only appear between tags
 
 =item B<translated>
 
-Space-separated list of the tags you want to translate.
+Space-separated list of tags you want to translate.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered 
@@ -345,7 +345,7 @@ Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
 =item B<untranslated>
 
-Space-separated list of the tags you do not want to translate.
+Space-separated list of tags you do not want to translate.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered 
