@@ -119,7 +119,7 @@ sub initialize {
 		<var>
 		<version>
 		w<warn>';
-	$self->{options}{'attributes'}.='
+	$self->{options}{'_default_attributes'}.='
 		<author>title
 		<figure>caption
 		<figure>link

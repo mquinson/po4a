@@ -219,7 +219,7 @@ sub initialize {
         # If you choose to translate images, you may also want to set
         # <map> as placeholder and <area> as inline.
 
-        $self->{options}{'attributes'}.='
+        $self->{options}{'_default_attributes'}.='
                 alt
                 lang
                 title

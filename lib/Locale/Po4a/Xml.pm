@@ -381,6 +381,10 @@ Tags should be translated as placeholders.
 =back
 
 =cut
+# TODO: defaulttranslateoption
+# w => indicate that it is only valid for translatable tags and do not
+#      care about inline/break/placeholder?
+# ...
 
 sub initialize {
 	my $self = shift;
@@ -471,9 +475,10 @@ calling the main initialize:
   $self->treat_options;
 
 You should use the B<_default_inline>, B<_default_break>,
-B<_default_placeholder>, B<_default_translated>, B<_default_untranslated>
-options in derivated modules. This allow users to override the default
-behavior defined in your module with command line options.
+B<_default_placeholder>, B<_default_translated>, B<_default_untranslated>,
+and B<_default_attributes> options in derivated modules. This allow users
+to override the default behavior defined in your module with command line
+options.
 
 =head2 OVERRIDING THE found_string FUNCTION
 
@@ -1642,7 +1647,8 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{break}->{$2} = $1 || ""
-			unless $list_nodefault{$tag};
+			unless    $list_nodefault{$tag}
+			       or defined $self->{break}->{$2};
 	}
 
 	$self->{options}{'translated'} =~ /^\s*(.*)\s*$/s;
@@ -1654,7 +1660,8 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{translated}->{$2} = $1 || ""
-			unless $list_nodefault{$tag};
+			unless    $list_nodefault{$tag}
+			       or defined $self->{translated}->{$2};
 	}
 
 	$self->{options}{'untranslated'} =~ /^\s*(.*)\s*$/s;
@@ -1666,7 +1673,8 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{untranslated}->{$2} = $1 || ""
-			unless $list_nodefault{$tag};
+			unless    $list_nodefault{$tag}
+			       or defined $self->{untranslated}->{$2};
 	}
 
 	$self->{options}{'attributes'} =~ /^\s*(.*)\s*$/s;
@@ -1675,6 +1683,18 @@ sub treat_options {
 			$self->{attributes}->{$2} = $1 || "";
 		} else {
 			$self->{attributes}->{$tag} = "";
+		}
+	}
+	$self->{options}{'_default_attributes'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		if ($tag =~ m/^(.*?)(<.*)$/) {
+			$self->{attributes}->{$2} = $1 || ""
+				unless    $list_nodefault{$2}
+				       or defined $self->{attributes}->{$2};
+		} else {
+			$self->{attributes}->{$tag} = ""
+				unless    $list_nodefault{$tag}
+				       or defined $self->{attributes}->{$tag};
 		}
 	}
 
@@ -1688,7 +1708,8 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{inline}->{$2} = $1 || ""
-			unless $list_nodefault{$tag};
+			unless    $list_nodefault{$tag}
+			       or defined $self->{inline}->{$2};
 	}
 
 	$self->{options}{'placeholder'} =~ /^\s*(.*)\s*$/s;
@@ -1700,7 +1721,8 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{placeholder}->{$2} = $1 || ""
-			unless $list_nodefault{$tag};
+			unless    $list_nodefault{$tag}
+			       or defined $self->{placeholder}->{$2};
 	}
 
 	# There should be no translated and untranslated tags
