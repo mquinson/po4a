@@ -98,6 +98,7 @@ sub initialize {
 
 sub found_string {
 	my ($self,$text,$ref,$options)=@_;
+	return $text if $text =~ m/^\s*$/s;
 
 	#We skip the paper type string
 	if ( $self->get_path() !~ /<dia:diagramdata>/ ) {
