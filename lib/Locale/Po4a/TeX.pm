@@ -1005,9 +1005,20 @@ newcommands).
 
 sub parse_definition_file {
     my ($self,$filename,$only_try)=@_;
+    my $filename_org = $filename;
 
     open (KPSEA, "kpsewhich " . $filename . " |");
     $filename = <KPSEA>;
+
+    if (not defined $filename) {
+        warn wrap_mod("po4a::tex",
+            dgettext("po4a", "kpsewhich cannot find %s"), $filename_org);
+        if (defined $only_try && $only_try) {
+            return;
+        } else {
+            exit 1;
+        }
+    }
 
     if (! open (IN,"<$filename")) {
         warn wrap_mod("po4a::tex",
