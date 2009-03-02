@@ -436,6 +436,7 @@ sub initialize {
 	$self->{options}{'_default_break'}='';
 	$self->{options}{'_default_inline'}='';
 	$self->{options}{'_default_placeholder'}='';
+	$self->{options}{'_default_attributes'}='';
 
 	#It will maintain the list of the translatable tags
 	$self->{tags}=();
@@ -1608,6 +1609,7 @@ sub treat_options {
 		$self->{options}{'untranslated'}          = lc $self->{options}{'untranslated'};
 		$self->{options}{'_default_untranslated'} = lc $self->{options}{'_default_untranslated'};
 		$self->{options}{'attributes'}            = lc $self->{options}{'attributes'};
+		$self->{options}{'_default_attributes'}   = lc $self->{options}{'_default_attributes'};
 		$self->{options}{'inline'}                = lc $self->{options}{'inline'};
 		$self->{options}{'_default_inline'}       = lc $self->{options}{'_default_inline'};
 		$self->{options}{'placeholder'}           = lc $self->{options}{'placeholder'};
