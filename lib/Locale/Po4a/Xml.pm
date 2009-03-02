@@ -115,15 +115,21 @@ sub parse {
 }
 
 # @save_holders is a stack of references to ('paragraph', 'translation',
-# 'sub_translations') hashes, where:
-# paragraph is a reference to an array (see paragraph in the
-#           treat_content() subroutine) of strings followed by references.
-#           It contains the @paragraph array as it was before the
-#           processing was interrupted by a tag instroducing a
-#           placeholder.
-# translation is the translation of this level up to now
-# sub_translations is a reference to an array of strings containing the
-#                  translations which must replace the placeholders.
+# 'sub_translations', 'open', 'close', 'folded_attributes') hashes, where:
+# paragraph         is a reference to an array (see paragraph in the
+#                   treat_content() subroutine) of strings followed by
+#                   references.  It contains the @paragraph array as it was
+#                   before the processing was interrupted by a tag instroducing
+#                   a placeholder.
+# translation       is the translation of this level up to now
+# sub_translations  is a reference to an array of strings containing the
+#                   translations which must replace the placeholders.
+# open              is the tag which opened the placeholder.
+# close             is the tag which closed the placeholder.
+# folded_attributes is an hash of tags with their attributes (<tag attrs=...>
+#                   strings), referenced by the folded tag id, which should
+#                   replace the <tag po4a-id=id> strings in the current
+#                   translation.
 #
 # If @save_holders only has 1 holder, then we are not processing the
 # content of an holder, we are translating the document.
@@ -141,6 +147,26 @@ sub pushline {
 	my %holder = %$holder_ref;
 	my $translation = $holder{'translation'};
 	$translation .= $line;
+
+	while (    %{$holder{folded_attributes}}
+	       and $translation =~ m/^(.*)<([^>]+) po4a-id=([0-9]+)>(.*)$/s) {
+		my $begin = $1;
+		my $tag = $2;
+		my $id = $3;
+		my $end = $4;
+		if (defined $holder{folded_attributes}->{$id}) {
+			# TODO: check if the tag is the same
+			$translation = $begin.$holder{folded_attributes}->{$id}.$end;
+			delete $holder{folded_attributes}->{$id};
+		} else {
+			# TODO: It will be hard to identify the location.
+			#       => find a way to retrieve the reference.
+			die wrap_mod("po4a::xml", dgettext("po4a", "'po4a-id=$id' in the translation does not exist in the original string (or 'po4a-id=$id' used twice in the translation)."));
+		}
+	}
+# TODO: check that %folded_attributes is empty at some time
+# => in translate_paragraph?
+
 	if (   (scalar @save_holders)
 	    or ($translation =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s)) {
 		$holder{'translation'} = $translation;
@@ -279,6 +305,14 @@ translated when it's into the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE
 specifies that the lang attribute will only be translated if it's into an
 E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
 
+=item B<foldattributes>
+
+Do not translate attributes in inline tags.
+Instead, replace all attributes of a tag by po4a-id=<id>.
+
+This is useful when attributes shall not be translated, as this simplifies the
+strings for translators, and avoids typos.
+
 =item B<break>
 
 Space-separated list of tags which should break the sequence.
@@ -396,9 +430,11 @@ sub initialize {
 	# Initialize the stack of holders
 	my @paragraph = ();
 	my @sub_translations = ();
+	my %folded_attributes;
 	my %holder = ('paragraph' => \@paragraph,
 	              'translation' => "",
-	              'sub_translations' => \@sub_translations);
+	              'sub_translations' => \@sub_translations,
+	              'folded_attributes' => \%folded_attributes);
 	@save_holders = (\%holder);
 
 	$self->{options}{'nostrip'}=0;
@@ -411,6 +447,7 @@ sub initialize {
 	$self->{options}{'untranslated'}='';
 	$self->{options}{'defaulttranslateoption'}='';
 	$self->{options}{'attributes'}='';
+	$self->{options}{'foldattributes'}=0;
 	$self->{options}{'inline'}='';
 	$self->{options}{'placeholder'}='';
 	$self->{options}{'doctype'}='';
@@ -1239,6 +1276,10 @@ sub get_translate_options {
 		}
 	}
 
+	if ($options =~ m/i/ and $self->{options}{'foldattributes'}) {
+		$options .= "f";
+	}
+
 	$translate_options_cache{$path} = $options;
 	return $options;
 }
@@ -1304,7 +1345,8 @@ sub treat_content {
 				if ($tag_types[$type]->{'beginning'} eq "") {
 					# Opening inline tag
 					my $cur_tag_name = $self->get_tag_name(@tag);
-					if ($self->get_translate_options($self->get_path($cur_tag_name)) =~ m/p/) {
+					my $t_opts = $self->get_translate_options($self->get_path($cur_tag_name));
+					if ($t_opts =~ m/p/) {
 						# We enter a new holder.
 						# Append a <placeholder ...> tag to the current
 						# paragraph, and save the @paragraph in the
@@ -1324,11 +1366,13 @@ sub treat_content {
 						# Then we must push a new holder
 						my @new_paragraph = ();
 						@sub_translations = ();
+						my %folded_attributes;
 						my %new_holder = ('paragraph' => \@new_paragraph,
 						                  'open' => $text[0],
 						                  'translation' => "",
 						                  'close' => undef,
-						                  'sub_translations' => \@sub_translations);
+						                  'sub_translations' => \@sub_translations,
+						                  'folded_attributes' => \%folded_attributes);
 						push @save_holders, \%new_holder;
 						@text = ();
 
@@ -1336,6 +1380,20 @@ sub treat_content {
 						# (for the current holder)
 						# is empty.
 						@paragraph = ();
+					} elsif ($t_opts =~ m/f/) {
+						my $tag_full = $self->join_lines(@text);
+						my $tag_ref = $text[1];
+						if ($tag_full =~ m/^<\s*\S+\s+\S.*>$/s) {
+							my $holder = pop @save_holders;
+							my $id = 0;
+							foreach (keys %{$holder->{folded_attributes}}) {
+								$id = $_ + 1 if ($_ >= $id);
+							}
+							$holder->{folded_attributes}->{$id} = $tag_full;
+							push @save_holders, $holder;
+
+							@text = ("<$cur_tag_name po4a-id=$id>", $tag_ref);
+						}
 					}
 					push @path, $cur_tag_name;
 				} elsif ($tag_types[$type]->{'beginning'} eq "/") {
