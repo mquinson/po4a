@@ -114,7 +114,8 @@ sub parse {
       # Mask mp4h cruft         
       while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
         my $line = $1;
-        print STDERR "PROTECT HEADER: $line\n";
+        print STDERR "PROTECT HEADER: $line\n"
+          if $self->debug();
         if ($line =~ m/title="([^"]*)"/) { #) {#"){
           warn "FIXME: We should translate the page title: $1\n";
         }          
