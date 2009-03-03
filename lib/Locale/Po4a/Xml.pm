@@ -161,7 +161,7 @@ sub pushline {
 		} else {
 			# TODO: It will be hard to identify the location.
 			#       => find a way to retrieve the reference.
-			die wrap_mod("po4a::xml", dgettext("po4a", "'po4a-id=$id' in the translation does not exist in the original string (or 'po4a-id=$id' used twice in the translation)."));
+			die wrap_mod("po4a::xml", dgettext("po4a", "'po4a-id=%d' in the translation does not exist in the original string (or 'po4a-id=%d' used twice in the translation)."), $id, $id);
 		}
 	}
 # TODO: check that %folded_attributes is empty at some time
