@@ -143,21 +143,20 @@ my @save_holders;
 sub pushline {
 	my ($self, $line) = (shift, shift);
 
-	my $holder_ref = pop @save_holders;
-	my %holder = %$holder_ref;
-	my $translation = $holder{'translation'};
+	my $holder = $save_holders[$#save_holders];
+	my $translation = $holder->{'translation'};
 	$translation .= $line;
 
-	while (    %{$holder{folded_attributes}}
+	while (    %{$holder->{folded_attributes}}
 	       and $translation =~ m/^(.*)<([^>]+) po4a-id=([0-9]+)>(.*)$/s) {
 		my $begin = $1;
 		my $tag = $2;
 		my $id = $3;
 		my $end = $4;
-		if (defined $holder{folded_attributes}->{$id}) {
+		if (defined $holder->{folded_attributes}->{$id}) {
 			# TODO: check if the tag is the same
-			$translation = $begin.$holder{folded_attributes}->{$id}.$end;
-			delete $holder{folded_attributes}->{$id};
+			$translation = $begin.$holder->{folded_attributes}->{$id}.$end;
+			delete $holder->{folded_attributes}->{$id};
 		} else {
 			# TODO: It will be hard to identify the location.
 			#       => find a way to retrieve the reference.
@@ -167,14 +166,13 @@ sub pushline {
 # TODO: check that %folded_attributes is empty at some time
 # => in translate_paragraph?
 
-	if (   (scalar @save_holders)
+	if (   ($#save_holders > 0)
 	    or ($translation =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s)) {
-		$holder{'translation'} = $translation;
+		$holder->{'translation'} = $translation;
 	} else {
 		$self->SUPER::pushline($translation);
-		$holder{'translation'} = '';
+		$holder->{'translation'} = '';
 	}
-	push @save_holders, \%holder;
 }
 
 =head1 TRANSLATING WITH PO4A::XML
@@ -1351,21 +1349,16 @@ sub treat_content {
 						# Append a <placeholder ...> tag to the current
 						# paragraph, and save the @paragraph in the
 						# current holder.
-						my $holder_ref = pop @save_holders;
-						my %old_holder = %$holder_ref;
-						my $sub_translations_ref = $old_holder{'sub_translations'};
-						my @sub_translations = @$sub_translations_ref;
-
-						my $placeholder_str = "<placeholder type=\"".$cur_tag_name."\" id=\"".($#sub_translations+1)."\"/>";
+						my $last_holder = $save_holders[$#save_holders];
+						my $placeholder_str = "<placeholder type=\"".$cur_tag_name."\" id=\"".($#{$last_holder->{'sub_translations'}}+1)."\"/>";
 						push @paragraph, ($placeholder_str, $text[1]);
 						my @saved_paragraph = @paragraph;
 
-						$old_holder{'paragraph'} = \@saved_paragraph;
-						push @save_holders, \%old_holder;
+						$last_holder->{'paragraph'} = \@saved_paragraph;
 
 						# Then we must push a new holder
 						my @new_paragraph = ();
-						@sub_translations = ();
+						my @sub_translations = ();
 						my %folded_attributes;
 						my %new_holder = ('paragraph' => \@new_paragraph,
 						                  'open' => $text[0],
@@ -1384,13 +1377,12 @@ sub treat_content {
 						my $tag_full = $self->join_lines(@text);
 						my $tag_ref = $text[1];
 						if ($tag_full =~ m/^<\s*\S+\s+\S.*>$/s) {
-							my $holder = pop @save_holders;
+							my $holder = $save_holders[$#save_holders];
 							my $id = 0;
 							foreach (keys %{$holder->{folded_attributes}}) {
 								$id = $_ + 1 if ($_ >= $id);
 							}
 							$holder->{folded_attributes}->{$id} = $tag_full;
-							push @save_holders, $holder;
 
 							@text = ("<$cur_tag_name po4a-id=$id>", $tag_ref);
 						}
@@ -1425,26 +1417,20 @@ sub treat_content {
 
 						# Now that this holder is closed, we can remove
 						# the holder from the stack.
-						my $holder_ref = pop @save_holders;
+						my $holder = pop @save_holders;
 						# We need to keep the translation of this holder
-						my %holder = %$holder_ref;
-						$holder{'close'} = $text[0];
+						my $translation = $holder->{'open'}.$holder->{'translation'}.$text[0];
+						# FIXME: @text could be multilines.
+
 						@text = ();
-						my $translation = $holder{'open'}.$holder{'translation'}.$holder{'close'};
+
 						# Then we store the translation in the previous
 						# holder's sub_translations array
-						my $old_holder_ref = pop @save_holders;
-						my %old_holder = %$old_holder_ref;
-						my $sub_translations_ref = $old_holder{'sub_translations'};
-						my @sub_translations = @$sub_translations_ref;
-						push @sub_translations, $translation;
+						my $previous_holder = $save_holders[$#save_holders];
+						push @{$previous_holder->{'sub_translations'}}, $translation;
 						# We also need to restore the @paragraph array, as
 						# it was before we encountered the holder.
-						my $paragraph_ref = $old_holder{'paragraph'};
-						@paragraph = @$paragraph_ref;
-						# restore the holder in the stack
-						$old_holder{'sub_translations'} = \@sub_translations;
-						push @save_holders, \%old_holder;
+						@paragraph = @{$previous_holder->{'paragraph'}};
 					}
 				}
 			}
@@ -1593,12 +1579,9 @@ sub translate_paragraph {
 	# placeholders by their translations.
 	# We must wait to have all the translations because the holders are
 	# numbered.
-	if (scalar @save_holders) {
-		my $holder_ref = pop @save_holders;
-		my %holder = %$holder_ref;
-		my $sub_translations_ref = $holder{'sub_translations'};
-		my $translation = $holder{'translation'};
-		my @sub_translations = @$sub_translations_ref;
+	{
+		my $holder = $save_holders[$#save_holders];
+		my $translation = $holder->{'translation'};
 
 		# Count the number of <placeholder ...> in $translation
 		my $count = 0;
@@ -1607,14 +1590,14 @@ sub translate_paragraph {
 		       and ($str =~ m/^.*?<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>(.*)$/s)) {
 			$count += 1;
 			$str = $2;
-			if ($sub_translations[$1] =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s) {
+			if ($holder->{'sub_translations'}->[$1] =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s) {
 				$count = -1;
 				last;
 			}
 		}
 
 		if (    (defined $translation)
-		    and (scalar(@sub_translations) == $count)) {
+		    and (scalar(@{$holder->{'sub_translations'}}) == $count)) {
 			# OK, all the holders of the current paragraph are
 			# closed (and translated).
 			# Replace them by their translation.
@@ -1622,18 +1605,14 @@ sub translate_paragraph {
 				# FIXME: we could also check that
 				#          * the holder exists
 				#          * all the holders are used
-				$translation = $1.$sub_translations[$2].$3;
+				$translation = $1.$holder->{'sub_translations'}->[$2].$3;
 			}
 			# We have our translation
-			$holder{'translation'} = $translation;
+			$holder->{'translation'} = $translation;
 			# And there is no need for any holder in it.
-			@sub_translations = ();
-			$holder{'sub_translations'} = \@sub_translations;
+			my @sub_translations = ();
+			$holder->{'sub_translations'} = \@sub_translations;
 		}
-		# Either we don't have all the holders, either we have the
-		# final translation.
-		# We must keep the current holder at the top of the stack.
-		push @save_holders, \%holder;
 	}
 
 }
