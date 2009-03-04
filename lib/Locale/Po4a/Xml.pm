@@ -1686,7 +1686,7 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{break}->{$2} = $1 || ""
-			unless    $list_nodefault{$tag}
+			unless    $list_nodefault{$2}
 			       or defined $self->{break}->{$2};
 	}
 
@@ -1699,7 +1699,7 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{translated}->{$2} = $1 || ""
-			unless    $list_nodefault{$tag}
+			unless    $list_nodefault{$2}
 			       or defined $self->{translated}->{$2};
 	}
 
@@ -1712,7 +1712,7 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{untranslated}->{$2} = $1 || ""
-			unless    $list_nodefault{$tag}
+			unless    $list_nodefault{$2}
 			       or defined $self->{untranslated}->{$2};
 	}
 
@@ -1747,7 +1747,7 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{inline}->{$2} = $1 || ""
-			unless    $list_nodefault{$tag}
+			unless    $list_nodefault{$2}
 			       or defined $self->{inline}->{$2};
 	}
 
@@ -1760,7 +1760,7 @@ sub treat_options {
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
 		$self->{placeholder}->{$2} = $1 || ""
-			unless    $list_nodefault{$tag}
+			unless    $list_nodefault{$2}
 			       or defined $self->{placeholder}->{$2};
 	}
 
