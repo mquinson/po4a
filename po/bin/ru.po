@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.33-1\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2009-01-31 22:29+0100\n"
+"POT-Creation-Date: 2009-03-03 21:26+0100\n"
 "PO-Revision-Date: 2008-03-15 15:55+0300\n"
 "Last-Translator: Yuri Kozlov <kozlov.y@gmail.com>\n"
 "Language-Team: Russian <debian-l10n-russian@lists.debian.org>\n"
@@ -127,8 +127,8 @@ msgid "Syntax error"
 msgstr "Синтаксическая ошибка"
 
 #: ../../lib/Locale/Po4a/Man.pm:490 ../../lib/Locale/Po4a/Po.pm:159
-#: ../../lib/Locale/Po4a/Sgml.pm:248 ../../lib/Locale/Po4a/TeX.pm:1637
-#: ../../lib/Locale/Po4a/Xml.pm:363
+#: ../../lib/Locale/Po4a/Sgml.pm:248 ../../lib/Locale/Po4a/TeX.pm:1629
+#: ../../lib/Locale/Po4a/Xml.pm:463
 #, perl-format
 msgid "Unknown option: %s"
 msgstr "Неизвестный параметр: %s"
@@ -269,22 +269,18 @@ msgstr ""
 "Неизвестный макрос '%s'. Удалите его из документа или прочтите документацию "
 "на странице Locale::Po4a::Man о том, как обрабатывать новые макросы в po4a."
 
-#: ../../lib/Locale/Po4a/Man.pm:1551
-msgid ""
-"Escaped space at the end of macro arg. With high probability, it won't do "
-"the trick with po4a (because of wrapping). You may want to remove it and use "
-"the .nf/.fi groff macro to control the wrapping."
-msgstr ""
-"Управляемое пространство в конце параметра макроса. Скорее всего этот трюк "
-"не сработает в po4a (так как это свёртка). Для управления свёрткой лучше "
-"удалить это и использовать groff макрос .nf/.fi."
+#: ../../lib/Locale/Po4a/Man.pm:1535
+#, fuzzy, perl-format
+#| msgid "Unparsable argument '%s'."
+msgid "Cannot parse command arguments: %s"
+msgstr "Невозможно разобрать аргумент '%s'."
 
-#: ../../lib/Locale/Po4a/Man.pm:1725
+#: ../../lib/Locale/Po4a/Man.pm:1659
 #, perl-format
 msgid "Unsupported font in: '%s'."
 msgstr "Неподдерживаемый шрифт в: '%s'."
 
-#: ../../lib/Locale/Po4a/Man.pm:2074
+#: ../../lib/Locale/Po4a/Man.pm:2008
 msgid ""
 "This page defines a new macro with '.de'. Since po4a is not a real groff "
 "parser, this is not supported."
@@ -292,11 +288,11 @@ msgstr ""
 "В этой странице определяется новый макрос с помощью '.de'. Данная команда не "
 "поддерживается, так как po4a неполноценный groff парсер."
 
-#: ../../lib/Locale/Po4a/Man.pm:2140
+#: ../../lib/Locale/Po4a/Man.pm:2074
 msgid "The .ie macro must be followed by a .el macro."
 msgstr "После макроса .ie должен быть макрос .el."
 
-#: ../../lib/Locale/Po4a/Man.pm:2166
+#: ../../lib/Locale/Po4a/Man.pm:2100
 #, perl-format
 msgid ""
 "This page uses conditionals with '%s'. Since po4a is not a real groff "
@@ -305,7 +301,7 @@ msgstr ""
 "В этой странице используются условия '%s'. Данная команда не поддерживается, "
 "так как po4a неполноценный groff парсер."
 
-#: ../../lib/Locale/Po4a/Man.pm:2207
+#: ../../lib/Locale/Po4a/Man.pm:2141
 #, perl-format
 msgid ""
 "This page includes another file with '%s'. Do not forget to translate this "
@@ -314,7 +310,7 @@ msgstr ""
 "В эту страницу включается другой файл с помощью '%s'. Не забудьте его "
 "перевести ('%s')."
 
-#: ../../lib/Locale/Po4a/Man.pm:2323
+#: ../../lib/Locale/Po4a/Man.pm:2257
 #, perl-format
 msgid ""
 "This page uses the '%s' request with the number of lines in argument. This "
@@ -323,7 +319,7 @@ msgstr ""
 "В данной странице выполняется запрос '%s' с параметром, который содержит "
 "несколько строк. Это пока не поддерживается."
 
-#: ../../lib/Locale/Po4a/Man.pm:2338
+#: ../../lib/Locale/Po4a/Man.pm:2272
 #, perl-format
 msgid ""
 "This page uses the '%s' request. This request is only supported when no "
@@ -351,8 +347,8 @@ msgstr "Введите непустое имя файла"
 
 #: ../../lib/Locale/Po4a/Po.pm:227 ../../lib/Locale/Po4a/TeX.pm:929
 #: ../../lib/Locale/Po4a/TransTractor.pm:396
-#: ../../lib/Locale/Po4a/TransTractor.pm:530
-#: ../../lib/Locale/Po4a/Xhtml.pm:136 ../../lib/Locale/Po4a/Xml.pm:86
+#: ../../lib/Locale/Po4a/TransTractor.pm:528
+#: ../../lib/Locale/Po4a/Xhtml.pm:136 ../../lib/Locale/Po4a/Xml.pm:84
 #, perl-format
 msgid "Can't read from %s: %s"
 msgstr "Не удалось прочитать из %s: %s"
@@ -387,13 +383,13 @@ msgstr ""
 msgid "Can't unlink %s: %s."
 msgstr "Не удалось удалить %s: %s."
 
-#: ../../lib/Locale/Po4a/Po.pm:500 ../../po4a:1065
+#: ../../lib/Locale/Po4a/Po.pm:500 ../../po4a:1074
 #, perl-format
 msgid "Can't copy %s to %s: %s."
 msgstr "Не удалось скопировать %s в %s: %s."
 
 #: ../../lib/Locale/Po4a/Po.pm:505 ../../lib/Locale/Po4a/Po.pm:510
-#: ../../po4a:1072
+#: ../../po4a:1081
 #, perl-format
 msgid "Can't move %s to %s: %s."
 msgstr "Не удалось переместить %s в %s: %s."
@@ -638,23 +634,28 @@ msgstr "Неизвестная команда: '%s'"
 msgid "Can't read from file without having a filename"
 msgstr "Не удалось прочитать из файла без указания имени файла"
 
-#: ../../lib/Locale/Po4a/TeX.pm:998 ../../lib/Locale/Po4a/TransTractor.pm:417
-#: ../../lib/Locale/Po4a/Xhtml.pm:145 ../../lib/Locale/Po4a/Xml.pm:95
+#: ../../lib/Locale/Po4a/TeX.pm:989 ../../lib/Locale/Po4a/TransTractor.pm:417
+#: ../../lib/Locale/Po4a/Xhtml.pm:145 ../../lib/Locale/Po4a/Xml.pm:93
 #, perl-format
 msgid "Can't close %s after reading: %s"
 msgstr "Не удалось закрыть %s после чтения: %s"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1033 ../../po4a:594
+#: ../../lib/Locale/Po4a/TeX.pm:1015
+#, perl-format
+msgid "kpsewhich cannot find %s"
+msgstr ""
+
+#: ../../lib/Locale/Po4a/TeX.pm:1025 ../../po4a:594
 #, perl-format
 msgid "Can't open %s: %s"
 msgstr "Не удалось открыть %s: %s"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1071
+#: ../../lib/Locale/Po4a/TeX.pm:1063
 #, perl-format
 msgid "Cannot use an alias to the unknown command '%s'"
 msgstr "Невозможно использовать псевдоним на неизвестную команду '%s'"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1077
+#: ../../lib/Locale/Po4a/TeX.pm:1069
 #, perl-format
 msgid ""
 "You are using the old definitions format (%s).  Please update this "
@@ -662,37 +663,37 @@ msgid ""
 msgstr ""
 "Вы используете старый формат определений (%s). Обновите строку определения."
 
-#: ../../lib/Locale/Po4a/TeX.pm:1281 ../../lib/Locale/Po4a/TeX.pm:1543
+#: ../../lib/Locale/Po4a/TeX.pm:1273 ../../lib/Locale/Po4a/TeX.pm:1535
 #, perl-format
 msgid "unknown environment: '%s'"
 msgstr "неизвестное окружение: '%s'"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1304
+#: ../../lib/Locale/Po4a/TeX.pm:1296
 #, perl-format
 msgid "unmatched end of environment '%s'"
 msgstr "несовпадающий конец окружения '%s'"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1352 ../../lib/Locale/Po4a/TeX.pm:1467
+#: ../../lib/Locale/Po4a/TeX.pm:1344 ../../lib/Locale/Po4a/TeX.pm:1459
 #, perl-format
 msgid "Wrong number of arguments for the '%s' command."
 msgstr "Некорректное число аргументов команды '%s'."
 
-#: ../../lib/Locale/Po4a/TeX.pm:1365 ../../lib/Locale/Po4a/TeX.pm:1480
-#: ../../lib/Locale/Po4a/TeX.pm:1570
+#: ../../lib/Locale/Po4a/TeX.pm:1357 ../../lib/Locale/Po4a/TeX.pm:1472
+#: ../../lib/Locale/Po4a/TeX.pm:1562
 msgid "An optional argument was provided, but a mandatory one is expected."
 msgstr "Указан необязательный аргумент, но ожидается сначала обязательный."
 
-#: ../../lib/Locale/Po4a/TeX.pm:1369 ../../lib/Locale/Po4a/TeX.pm:1484
+#: ../../lib/Locale/Po4a/TeX.pm:1361 ../../lib/Locale/Po4a/TeX.pm:1476
 #, perl-format
 msgid "Command '%s': %s"
 msgstr "Команда '%s': %s"
 
-#: ../../lib/Locale/Po4a/TeX.pm:1425
+#: ../../lib/Locale/Po4a/TeX.pm:1417
 #, perl-format
 msgid "register_generic_command: unsupported format: '%s'."
 msgstr "register_generic_command: неподдерживаемый формат: '%s'."
 
-#: ../../lib/Locale/Po4a/TeX.pm:1537
+#: ../../lib/Locale/Po4a/TeX.pm:1529
 msgid "The first argument of \\begin is mandatory."
 msgstr "Первый аргумент для \\begin обязателен."
 
@@ -701,32 +702,32 @@ msgstr "Первый аргумент для \\begin обязателен."
 msgid "Can't close %s after writing: %s"
 msgstr "Не удалось закрыть %s после записи: %s"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:535
+#: ../../lib/Locale/Po4a/TransTractor.pm:533
 #, perl-format
 msgid "Can't read Po4a header from %s."
 msgstr "Не удалось прочитать заголовок Po4a из %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:540
+#: ../../lib/Locale/Po4a/TransTractor.pm:538
 #, perl-format
 msgid "First line of %s does not look like a Po4a header."
 msgstr "Первая строка %s не является началом заголовка Po4a."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:545
+#: ../../lib/Locale/Po4a/TransTractor.pm:543
 #, perl-format
 msgid "Syntax error in Po4a header of %s, near \"%s\""
 msgstr "Синтаксическая ошибка в заголовке Po4a %s, рядом с \"%s\""
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:559
+#: ../../lib/Locale/Po4a/TransTractor.pm:557
 #, perl-format
 msgid "Invalid argument in the Po4a header of %s: %s"
 msgstr "Неправильный аргумент в заголовке Po4a %s: %s"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:565
+#: ../../lib/Locale/Po4a/TransTractor.pm:563
 #, perl-format
 msgid "The Po4a header of %s does not define the mode."
 msgstr "В заголовке Po4a %s не определён режим."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:569
+#: ../../lib/Locale/Po4a/TransTractor.pm:567
 #, perl-format
 msgid ""
 "Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s."
@@ -734,53 +735,53 @@ msgstr ""
 "Неправильный режим в заголовке Po4a %s: должно быть 'before' или 'after', а "
 "не %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:574
+#: ../../lib/Locale/Po4a/TransTractor.pm:572
 #, perl-format
 msgid "The Po4a header of %s does not define the position."
 msgstr "В заголовке Po4a %s не определена позиция."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:578
+#: ../../lib/Locale/Po4a/TransTractor.pm:576
 msgid "No ending boundary given in the Po4a header, but mode=after."
 msgstr ""
 "Не указана конечная граница в заголовке Po4a при заданном режиме after."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:604
+#: ../../lib/Locale/Po4a/TransTractor.pm:602
 msgid "Can't apply addendum when not given the filename"
 msgstr "Невозможно применить дополнение, если не задано имя файла"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:607
+#: ../../lib/Locale/Po4a/TransTractor.pm:605
 #, perl-format
 msgid "Addendum %s does not exist."
 msgstr "Дополнение %s не существует."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:628
+#: ../../lib/Locale/Po4a/TransTractor.pm:626
 #, perl-format
 msgid "No candidate position for the addendum %s."
 msgstr "Не указана позиция для дополнения %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:633
+#: ../../lib/Locale/Po4a/TransTractor.pm:631
 #, perl-format
 msgid "More than one candidate position found for the addendum %s."
 msgstr "Найдено более одной позиции для дополнения %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:639
-#: ../../lib/Locale/Po4a/TransTractor.pm:662
+#: ../../lib/Locale/Po4a/TransTractor.pm:637
+#: ../../lib/Locale/Po4a/TransTractor.pm:660
 #, perl-format
 msgid "Addendum '%s' applied before this line: %s"
 msgstr "Дополнение '%s' применено перед строкой: %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:669
+#: ../../lib/Locale/Po4a/TransTractor.pm:667
 #, perl-format
 msgid "Addendum '%s' applied after the line: %s."
 msgstr "Дополнение '%s' применено после строки: %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:676
+#: ../../lib/Locale/Po4a/TransTractor.pm:674
 #, perl-format
 msgid "Addendum '%s' applied at the end of the file."
 msgstr "Дополнение '%s' применено в конце файла."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:839
-#: ../../lib/Locale/Po4a/TransTractor.pm:1023
+#: ../../lib/Locale/Po4a/TransTractor.pm:837
+#: ../../lib/Locale/Po4a/TransTractor.pm:1021
 #, perl-format
 msgid ""
 "Couldn't determine the input document's charset. Please specify it on the "
@@ -794,17 +795,26 @@ msgstr ""
 msgid "Can't create a temporary xml file: %s"
 msgstr "Не удалось создать временный xml файл: %s"
 
-#: ../../lib/Locale/Po4a/Xml.pm:481
+#: ../../lib/Locale/Po4a/Xml.pm:163
+#, perl-format
+msgid ""
+"'po4a-id=%d' in the translation does not exist in the original string (or "
+"'po4a-id=%d' used twice in the translation)."
+msgstr ""
+
+#: ../../lib/Locale/Po4a/Xml.pm:588
 #, perl-format
 msgid "Internal error: unknown type identifier '%s'."
 msgstr "Внутренняя ошибка: неизвестный тип идентификатора '%s'."
 
-#: ../../lib/Locale/Po4a/Xml.pm:648
+#: ../../lib/Locale/Po4a/Xml.pm:755
 #, perl-format
-msgid "Bad document type. '%s' expected."
-msgstr "Неверный тип документа. Должен быть '%s'."
+msgid ""
+"Bad document type. '%s' expected. You can fix this warning with a -o doctype "
+"option, or ignore this check with -o doctype=\"\"."
+msgstr ""
 
-#: ../../lib/Locale/Po4a/Xml.pm:721 ../../lib/Locale/Po4a/Xml.pm:1279
+#: ../../lib/Locale/Po4a/Xml.pm:828 ../../lib/Locale/Po4a/Xml.pm:1402
 #, perl-format
 msgid ""
 "Unexpected closing tag </%s> found. The main document may be wrong.  "
@@ -813,30 +823,43 @@ msgstr ""
 "Обнаружен неожиданный закрывающий тег </%s>. Вероятно, ошибка в мастер "
 "документе. Продолжаем..."
 
-#: ../../lib/Locale/Po4a/Xml.pm:723 ../../lib/Locale/Po4a/Xml.pm:1281
+#: ../../lib/Locale/Po4a/Xml.pm:830 ../../lib/Locale/Po4a/Xml.pm:1404
 #, perl-format
 msgid "Unexpected closing tag </%s> found. The main document may be wrong."
 msgstr ""
 "Обнаружен неожиданный закрывающий тег </%s>. Вероятно, ошибка в мастер "
 "документе."
 
-#: ../../lib/Locale/Po4a/Xml.pm:1051
+#: ../../lib/Locale/Po4a/Xml.pm:1161
 #, perl-format
 msgid "Content of attribute %s excluded: %s"
 msgstr "Из атрибута %s исключено значение: %s"
 
-#: ../../lib/Locale/Po4a/Xml.pm:1063
+#: ../../lib/Locale/Po4a/Xml.pm:1173
 msgid "Bad attribute syntax.  Continuing..."
 msgstr "Неправильный синтаксис атрибута. Продолжаем..."
 
-#: ../../lib/Locale/Po4a/Xml.pm:1065
+#: ../../lib/Locale/Po4a/Xml.pm:1175
 msgid "Bad attribute syntax"
 msgstr "Неправильный синтаксис атрибута"
 
-#: ../../lib/Locale/Po4a/Xml.pm:1457
+#: ../../lib/Locale/Po4a/Xml.pm:1572
 #, perl-format
 msgid "Content of tag %s excluded: %s"
 msgstr "Из тега %s исключено значение: %s"
+
+#: ../../lib/Locale/Po4a/Xml.pm:1667 ../../lib/Locale/Po4a/Xml.pm:1677
+#, perl-format
+msgid ""
+"The '%s' option is deprecated. Please use the translated/untranslated and/or "
+"break/inline/placeholder categories."
+msgstr ""
+
+#: ../../lib/Locale/Po4a/Xml.pm:1771 ../../lib/Locale/Po4a/Xml.pm:1778
+#: ../../lib/Locale/Po4a/Xml.pm:1782 ../../lib/Locale/Po4a/Xml.pm:1788
+#, perl-format
+msgid "Tag '%s' both in the %s and %s categories."
+msgstr ""
 
 #: ../../po4a:528 ../../po4a:742
 #, perl-format
@@ -941,81 +964,86 @@ msgstr "Мастер файл и файл перевода один и тот ж
 msgid "Translation of %s in %s redefined"
 msgstr "Перевод %s в %s переопределён"
 
-#: ../../po4a:775
+#: ../../po4a:779
 #, perl-format
 msgid "Unparsable command '%s'."
 msgstr "Невозможно разобрать команду '%s'."
 
-#: ../../po4a:781
+#: ../../po4a:785
 msgid "po4a_paths not declared. Dunno where to find the pot and po files"
 msgstr "Не объявлены пути для po4a. Неизвестно где искать pot и po файлы"
 
-#: ../../po4a:818
+#: ../../po4a:798
+#, perl-format
+msgid "Cannot parse option line (missing >%s<?): %s"
+msgstr ""
+
+#: ../../po4a:827
 msgid "Splitted mode, creating a temporary POT"
 msgstr "Раздельный режим, создание временного POT"
 
-#: ../../po4a:853 ../../po4a:992 ../../po4a-updatepo:220
+#: ../../po4a:862 ../../po4a:1001 ../../po4a-updatepo:220
 #, perl-format
 msgid "Updating %s:"
 msgstr "Обновление %s:"
 
-#: ../../po4a:856 ../../po4a:1002 ../../po4a-updatepo:228
+#: ../../po4a:865 ../../po4a:1011 ../../po4a-updatepo:228
 #, perl-format
 msgid "Creating %s:"
 msgstr "Создание %s:"
 
-#: ../../po4a:909 ../../po4a:939 ../../po4a:1026 ../../po4a-updatepo:202
+#: ../../po4a:918 ../../po4a:948 ../../po4a:1035 ../../po4a-updatepo:202
 #, perl-format
 msgid "Can't create a temporary pot file: %s"
 msgstr "Не удалось создать временный pot файл: %s"
 
-#: ../../po4a:920
+#: ../../po4a:929
 #, perl-format
 msgid " (%d entries)"
 msgstr " (%d записей)"
 
-#: ../../po4a:946 ../../po4a:1052
+#: ../../po4a:955 ../../po4a:1061
 #, perl-format
 msgid "Can't create directory '%s': %s"
 msgstr "Не удалось создать каталог '%s': %s"
 
-#: ../../po4a:966 ../../scripts/msguntypot:208
+#: ../../po4a:975 ../../scripts/msguntypot:208
 #, perl-format
 msgid "Can't create a temporary po file: %s"
 msgstr "Не удалось создать временный po файл: %s"
 
-#: ../../po4a:1116
+#: ../../po4a:1125
 #, perl-format
 msgid "%s doesn't need to be updated."
 msgstr "%s не требует обновления."
 
-#: ../../po4a:1157
+#: ../../po4a:1166
 #, perl-format
 msgid "Discard %s (%s of %s strings; only %s%% translated; need %s%%)."
 msgstr ""
 "Отброшено %s (%s из %s строк; переведено только %s%%; необходимо %s%%)."
 
-#: ../../po4a:1164
+#: ../../po4a:1173
 #, perl-format
 msgid "Timestamp %s created."
 msgstr "Создана временная метка %s."
 
-#: ../../po4a:1174
+#: ../../po4a:1183
 #, perl-format
 msgid "Timestamp %s removed."
 msgstr "Удалена временная метка %s."
 
-#: ../../po4a:1183
+#: ../../po4a:1192
 #, perl-format
 msgid "Addendum %s does NOT apply to %s (translation discarded)."
 msgstr "Дополнение %s НЕ применено к %s (перевод отброшен)."
 
-#: ../../po4a:1192
+#: ../../po4a:1201
 #, perl-format
 msgid "%s is %s%% translated (%s strings)."
 msgstr "%s переведено %s%% (%s строк)."
 
-#: ../../po4a:1195 ../../po4a-translate:236
+#: ../../po4a:1204 ../../po4a-translate:236
 #, perl-format
 msgid "%s is %s%% translated (%s of %s strings)."
 msgstr "%s переведено %s%% (%s из %s строк)."
@@ -1082,6 +1110,18 @@ msgstr "Обработка %s"
 #, perl-format
 msgid "Modified %d entries in %d files."
 msgstr "Изменено %d записей в %d файлах."
+
+#~ msgid ""
+#~ "Escaped space at the end of macro arg. With high probability, it won't do "
+#~ "the trick with po4a (because of wrapping). You may want to remove it and "
+#~ "use the .nf/.fi groff macro to control the wrapping."
+#~ msgstr ""
+#~ "Управляемое пространство в конце параметра макроса. Скорее всего этот "
+#~ "трюк не сработает в po4a (так как это свёртка). Для управления свёрткой "
+#~ "лучше удалить это и использовать groff макрос .nf/.fi."
+
+#~ msgid "Bad document type. '%s' expected."
+#~ msgstr "Неверный тип документа. Должен быть '%s'."
 
 #~ msgid "Can't run nsgmls -p: %s"
 #~ msgstr "Не удалось запустить nsgmls -p: %s"
