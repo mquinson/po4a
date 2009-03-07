@@ -58,6 +58,8 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 use Carp qw(croak);
+use File::Basename;
+use File::Spec;
 
 #It will mantain the path from the root tag to the current one
 my @path;
@@ -756,6 +758,10 @@ sub tag_trans_doctype {
 		}
 	}
 	my $i = 0;
+	my $basedir = $tag[1];
+	$basedir =~ s/:[0-9]+$//;
+	$basedir = dirname($basedir);
+
 	while ( $i < $#tag ) {
 		my $t = $tag[$i];
 		my $ref = $tag[$i+1];
@@ -781,6 +787,7 @@ sub tag_trans_doctype {
 				if ($self->{options}{'includeexternal'}) {
 					$entities{$name} = $part2;
 					$entities{$name} =~ s/^"?(.*?)".*$/$1/s;
+					$entities{$name} = File::Spec->catfile($basedir, $entities{$name});
 				}
 			}
 			if ((not $file) and (not $includenow)) {
