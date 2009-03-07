@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2009-03-03 21:25+0100\n"
-"PO-Revision-Date: 2009-02-22 15:29+0100\n"
+"PO-Revision-Date: 2009-03-07 16:43+0100\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -158,7 +158,7 @@ msgstr "Comment automatiser tout S<ceci ?>"
 #. type: =head2
 #: doc/po4a.7.pod:51 doc/po4a.7.pod:756
 msgid "HOWTO customize po4a?"
-msgstr ""
+msgstr "Comment personaliser po4a ?"
 
 #. type: verbatim
 #: doc/po4a.7.pod:55
@@ -170,7 +170,7 @@ msgstr " \n"
 #. type: =item
 #: doc/po4a.7.pod:57
 msgid "3 How does it work?"
-msgstr "3 Comment ça S<marche ?>"
+msgstr "3 Comment ça marche ?"
 
 # type: textblock
 #. type: textblock
@@ -689,40 +689,7 @@ msgstr ""
 # type: verbatim
 #. type: verbatim
 #: doc/po4a.7.pod:247
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  fr.sgml  original.sgml ---->--------+------>----------->-------+\n"
-#| "     |         |                      |                          |\n"
-#| "     V         V           { update of original }                |\n"
-#| "     |         |                      |                          |\n"
-#| "     +--<---<--+                      V                          |\n"
-#| "     |         |              original.new.sgml----->------->----+\n"
-#| "     V         V                      |                          |\n"
-#| "  [po4a-gettextize]      +--->---->---+                          |\n"
-#| "     |         |         |            V                          |\n"
-#| "     |         |         |     [po4a-updatepo]                   |\n"
-#| "     |         V         ^            |                          V\n"
-#| "     V    original.pot   |            V                          |\n"
-#| "     |         |         |          fr.po                        |\n"
-#| "     |         |         |         (fuzzy)                       |\n"
-#| "     |  { translation }  |            |                          |\n"
-#| "     |         |         ^            V                          V\n"
-#| "     |         |         |     {manual editing}                  |\n"
-#| "     V         V         |            |                          |\n"
-#| "     |         |         |            V                          V\n"
-#| "     |         |         +--<---    fr.po       addendum   original.sgml\n"
-#| "     +---->----+---->------->---> (up-to-date) (optional)  (up-to-date) \n"
-#| "                                      |            |             |\n"
-#| "                                      v            v             v\n"
-#| "                                      +------>-----+------<------+\n"
-#| "                                                   |\n"
-#| "                                                   v\n"
-#| "                                           [po4a-translate]\n"
-#| "                                                   |\n"
-#| "                                                   V\n"
-#| "                                                fr.sgml\n"
-#| "                                             (up-to-date)\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "                                   master.doc\n"
 "                                       |\n"
@@ -765,36 +732,44 @@ msgid ""
 "                                            (up-to-date)\n"
 "\n"
 msgstr ""
-"  fr.sgml  original.sgml ---->--------+------>----------->-------+\n"
-"     |         |                      |                          |\n"
-"     V         V       { mise à jour de l'original }             |\n"
-"     |         |                      |                          |\n"
-"     +--<---<--+                      V                          |\n"
-"     |         |              original.new.sgml----->------->----+\n"
-"     V         V                      |                          |\n"
-"  [po4a-gettextize]      +--->---->---+                          |\n"
-"     |         |         |            V                          |\n"
-"     |         |         |     [po4a-updatepo]                   |\n"
-"     |         V         ^            |                          V\n"
-"     V    original.pot   |            V                          |\n"
-"     |         |         |          fr.po                        |\n"
-"     |         |         |       (approximé)                     |\n"
-"     |  { traduction }   |            |                          |\n"
-"     |         |         ^            V                          V\n"
-"     |         |         |    {édition manuelle}                 |\n"
-"     V         V         |            |                          |\n"
-"     |         |         |            V                          V\n"
-"     |         |         +--<---    fr.po       addendum   original.sgml\n"
-"     +---->----+---->------->--->  (à jour)   (optionnel)     (à jour)\n"
-"                                      |            |             |\n"
-"                                      v            v             v\n"
-"                                      +------>-----+------<------+\n"
-"                                                   |\n"
-"                                                   v\n"
+"                                   maitre.doc\n"
+"                                       |\n"
+"                                       V\n"
+"     +<-----<----+<-----<-----<--------+------->-------->-------+\n"
+"     :           |                     |                        :\n"
+"{traduction}     |        { mise à jour de maitre.doc }         :\n"
+"     :           |                     |                        :\n"
+"   XX.doc        |                     V                        V\n"
+"(optionnel)      |                 maitre.doc ->-------->------>+\n"
+"     :           |                 (nouveau)                    |\n"
+"     V           V                     |                        |\n"
+"  [po4a-gettextize]   doc.XX.po--->+   |                        |\n"
+"          |           (ancien)     |   |                        |\n"
+"          |              ^         V   V                        |\n"
+"          |              |     [po4a-updatepo]                  |\n"
+"          V              |           |                          V\n"
+"    traduction.pot       ^           V                          |\n"
+"          |              |       doc.XX.po                      |\n"
+"          |              |        (fuzzy)                       |\n"
+"   { traduction }        |           |                          |\n"
+"          |              ^           V                          V\n"
+"          |              |  {édition manuelle}                  |\n"
+"          |              |           |                          |\n"
+"          V              |           V                          V\n"
+"      doc.XX.po --->---->+<---<-- doc.XX.po    addendum     maitre.doc\n"
+"      (initial)                   (à jour)   (optionnel)     (à jour) \n"
+"          :                          |            |             |\n"
+"          :                          V            |             |\n"
+"          +----->----->----->------> +            |             |\n"
+"                                     |            |             |\n"
+"                                     V            V             V\n"
+"                                     +------>-----+------<------+\n"
+"                                                  |\n"
+"                                                  V\n"
 "                                           [po4a-translate]\n"
-"                                                   |\n"
-"                                                   V\n"
-"                                                fr.sgml\n"
+"                                                  |\n"
+"                                                  V\n"
+"                                                XX.doc\n"
 "                                               (à jour)\n"
 "\n"
 
@@ -870,20 +845,15 @@ msgstr "-"
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:314
-#, fuzzy
-#| msgid ""
-#| "Extract the text which have to be translated from the original document "
-#| "into a new pot file (the gettext format). For that, use the I<po4a-"
-#| "gettextize> program that way:"
 msgid ""
 "Extract the text which have to be translated from the original E<lt>master."
 "docE<gt> document into a new translation template E<lt>translation.potE<gt> "
 "file (the gettext format). For that, use the I<po4a-gettextize> program this "
 "way:"
 msgstr ""
-"Extraction du texte du document d'origine qui doit être traduit dans un "
+"Extraction du texte du document d'origine E<lt>maitre.docE<gt> qui doit être traduit dans E<lt>traduction.potE<gt>, un "
 "nouveau fichier pot (le format utilisé par gettext). Pour ceci, utilisez "
-"I<po4a-gettextize> de cette S<façon :>"
+"I<po4a-gettextize> de cette façon :"
 
 #. type: verbatim
 #: doc/po4a.7.pod:318
@@ -898,19 +868,13 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:320
-#, fuzzy
-#| msgid ""
-#| "E<lt>formatE<gt> is naturally the format used in the E<lt>master.docE<gt> "
-#| "document. As expected, the output goes into E<lt>translation.potE<gt>.  "
-#| "Please refer to L<po4a-gettextize(1)> for more details about the existing "
-#| "options."
 msgid ""
 "E<lt>formatE<gt> is naturally the format used in the master.doc document. As "
 "expected, the output goes into translation.pot.  Please refer to L<po4a-"
 "gettextize(1)> for more details about the existing options."
 msgstr ""
-"Naturellement, E<lt>formatE<gt> est le format du document E<lt>maitre."
-"docE<gt> et la sortie est placée dans E<lt>traduction.potE<gt>. Veuillez "
+"Naturellement, E<lt>formatE<gt> est le format du document maitre."
+"doc et la sortie est placée dans traduction.pot. Veuillez "
 "consulter L<po4a-gettextize(1)> pour plus de détails concernant les options "
 "existantes."
 
@@ -984,21 +948,15 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:353
-#, fuzzy
-#| msgid ""
-#| "As before, E<lt>formatE<gt> is the format used in the E<lt>master."
-#| "docE<gt> document. But this time, the po file provided with the -p flag "
-#| "is part of the input. This is your translation. The output goes into "
-#| "E<lt>XX.docE<gt>."
 msgid ""
 "As before, E<lt>formatE<gt> is the format used in the master.doc document. "
 "But this time, the po file provided with the -p flag is part of the input. "
 "This is your translation. The output goes into XX.doc."
 msgstr ""
-"Comme précédemment, E<lt>formatE<gt> est le format du document E<lt>maitre."
-"docE<gt>. Mais cette fois-ci, le fichier po fourni en paramètre de l'option -"
+"Comme précédemment, E<lt>formatE<gt> est le format du document maitre."
+"doc. Mais cette fois-ci, le fichier po fourni en paramètre de l'option -"
 "p est un fichier d'entrée. Il s'agit de votre traduction. La sortie se "
-"trouve dans le fichier E<lt>XX.docE<gt>."
+"trouve dans le fichier XX.doc."
 
 # type: textblock
 #. type: textblock
@@ -1009,28 +967,21 @@ msgstr "Veuillez consulter L<po4a-translate(1)> pour plus de détails."
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:361
-#, fuzzy
-#| msgid ""
-#| "To update your translation when the original file has changed, use the "
-#| "L<po4a-updatepo(1)> program like that:"
 msgid ""
 "To update your translation when the original master.doc file has changed, "
 "use the L<po4a-updatepo(1)> program like that:"
 msgstr ""
-"Pour mettre à jour votre traduction lorsque l'original a changé, utilisez "
-"L<po4a-updatepo(1)> comme S<ceci :>"
+"Pour mettre à jour votre traduction lorsque l'original maitre.doc a changé, utilisez "
+"L<po4a-updatepo(1)> comme ceci :"
 
 #. type: verbatim
 #: doc/po4a.7.pod:364
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-updatepo -f <format> -m <new_original.doc> -p <existing.XX.po>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  $ po4a-updatepo -f <format> -m <new_master.doc> -p <old_doc.XX.po>\n"
 "\n"
 msgstr ""
-"  $ po4a-updatepo -f <format> -m <nouvel_original.doc> -p <courant.XX.po>\n"
+"  $ po4a-updatepo -f <format> -m <nouveau_maitre.doc> -p <ancien.XX.po>\n"
 "\n"
 
 # type: textblock
@@ -1075,14 +1026,6 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:384
-#, fuzzy
-#| msgid ""
-#| "Often, you used to translate manually the document happily until a major "
-#| "reorganization of the original document happened. Then, after some "
-#| "unpleasant tries with diff or similar tools, you want to convert to "
-#| "po4a.  But of course, you don't want to loose your existing translation "
-#| "in the process. Don't worry, this case is also handled by po4a tools and "
-#| "is called gettextization."
 msgid ""
 "Often, you used to translate manually the document happily until a major "
 "reorganization of the original master.doc document happened. Then, after "
@@ -1092,7 +1035,7 @@ msgid ""
 "called gettextization."
 msgstr ""
 "Souvent, vous traduisez manuellement le document sans difficulté, jusqu'à ce "
-"qu'une réorganisation majeure du document d'origine apparaisse. Alors, après "
+"qu'une réorganisation majeure du document d'origine maitre.doc apparaisse. Alors, après "
 "quelques essais infructueux en utilisant diff ou des outils similaires, vous "
 "voulez convertir la traduction à po4a. Mais bien sûr, vous ne souhaitez pas "
 "perdre votre traduction existante dans le même temps. Pas de panique, ce cas "
@@ -1206,15 +1149,12 @@ msgstr ""
 
 #. type: verbatim
 #: doc/po4a.7.pod:427
-#, fuzzy, no-wrap
-#| msgid ""
-#| " $ po4a-gettextize -f <format> -m <old.original> -l <old.translation> -p <doc.XX.po>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " $ po4a-gettextize -f <format> -m <old_master.doc> -l <XX.doc> -p <doc.XX.po>\n"
 "\n"
 msgstr ""
-" $ po4a-gettextize -f <format> -m <original.anc> -l <traduction.anc> -p <doc.XX.po>\n"
+" $ po4a-gettextize -f <format> -m <ancien_maitre.doc> -l <XX.doc> -p <doc.XX.po>\n"
 "\n"
 
 # type: textblock
@@ -2152,12 +2092,14 @@ msgid ""
 "   PERLLIB=$PWD/lib po4a --previous po4a/po4a.cfg\n"
 "\n"
 msgstr ""
+"   PERLLIB=$PWD/lib po4a --previous po4a/po4a.cfg\n"
+"\n"
 
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:767
 msgid "Note: the actual name of the lib directory is not important."
-msgstr ""
+msgstr "Note : le nom du répertoire « lib » n'est pas important."
 
 # type: =head1
 #. type: =head1
@@ -3547,28 +3489,26 @@ msgid ""
 "In order to use Locale::Po4a programatically, one may want to disable the "
 "use of Text::WrapI18N, by writing e.g."
 msgstr ""
+"Pour utiliser Locale::Po4a dans un programme, on peut désactiver "
+"l'utilisation de Text::WrapI18N, en utilisant par exemple :"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:23
-#, fuzzy, no-wrap
-#| msgid ""
-#| "    use Locale::Po4a::Po;\n"
-#| "    my $pofile=Locale::Po4a::Po->new();\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "    use Locale::Po4a::Common qw(nowrapi18n);\n"
 "    use Locale::Po4a::Text;\n"
 "\n"
 msgstr ""
-"    use Locale::Po4a::Po;\n"
-"    my $pofile=Locale::Po4a::Po->new();\n"
+"    use Locale::Po4a::Common qw(nowrapi18n);\n"
+"    use Locale::Po4a::Text;\n"
 "\n"
 
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:26
 msgid "instead of:"
-msgstr ""
+msgstr "au lieu de :"
 
 # type: verbatim
 #. type: verbatim
@@ -3578,6 +3518,8 @@ msgid ""
 "    use Locale::Po4a::Text;\n"
 "\n"
 msgstr ""
+"    use Locale::Po4a::Text;\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -3587,6 +3529,9 @@ msgid ""
 "Locale::Po4a::Common, the first time this module is loaded determines "
 "whether Text::WrapI18N is used."
 msgstr ""
+"L'ordre est important ici puisque la plupart des modules Locale::Po4a "
+"chargent eux-même Locale::Po4a::Common et que la première fois que ce "
+"module est chargé détermine si Text::WrapI18N est utilisé."
 
 #. type: =head1
 #: lib/Locale/Po4a/Common.pm:88
@@ -3899,16 +3844,14 @@ msgstr ""
 # type: textblock
 #. type: verbatim
 #: lib/Locale/Po4a/Docbook.pm:68
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
-" Copyright 2005-2008 par Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
+" Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 # type: textblock
@@ -4018,6 +3961,9 @@ msgid ""
 "  \\c bar\n"
 "\n"
 msgstr ""
+"  \\c foo\n"
+"  \\c bar\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -4943,7 +4889,7 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:282
 msgid "Hiding text to po4a"
-msgstr ""
+msgstr "Cacher du texte à po4a"
 
 # type: textblock
 #. type: textblock
@@ -4972,12 +4918,14 @@ msgid ""
 " .if !'po4a'hide' .B other\n"
 "\n"
 msgstr ""
+" .if !'po4a'hide' .B other\n"
+"\n"
 
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:295
 msgid "(this will require the B<-o groff_code=verbatim> option)"
-msgstr ""
+msgstr "(ceci nécessite l'option B<-o groff_code=verbatim>)"
 
 # type: verbatim
 #. type: verbatim
@@ -4990,6 +4938,11 @@ msgid ""
 " ..\n"
 "\n"
 msgstr ""
+"On peut aussi définir une nouvelle macro pour automatiser ceci :\n"
+" .de IR_untranslated\n"
+" .    IR \\\\$@\n"
+" ..\n"
+"\n"
 
 # type: verbatim
 #. type: verbatim
@@ -4999,6 +4952,8 @@ msgid ""
 " .IR_untranslated \\-q \", \" \\-\\-quiet\n"
 "\n"
 msgstr ""
+" .IR_untranslated \\-q \", \" \\-\\-quiet\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -5019,6 +4974,9 @@ msgid ""
 " .als IR_untranslated IR\n"
 "\n"
 msgstr ""
+"or en utilisant un alias :\n"
+" .als IR_untranslated IR\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -7670,10 +7628,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:103
-#, fuzzy
-#| msgid "B<mdoc>"
 msgid "B<asciidoc>"
-msgstr "B<mdoc>"
+msgstr "B<asciidoc>"
 
 # type: textblock
 #. type: textblock
@@ -8877,18 +8833,14 @@ msgstr ""
 # type: verbatim
 #. type: verbatim
 #: lib/Locale/Po4a/Xhtml.pm:86
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Yves Rütschlé <po4a@rutschle.net>\n"
-#| " Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2004 by Yves Rütschlé <po4a@rutschle.net>\n"
 " Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
-" Yves Rütschlé <po4a@rutschle.net>\n"
-" Nicolas François <nicolas.francois@centraliens.net>\n"
+" Copyright (c) 2004 by Yves Rütschlé <po4a@rutschle.net>\n"
+" Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 # type: textblock
@@ -8944,10 +8896,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:218
-#, fuzzy
-#| msgid "nostrip"
 msgid "B<nostrip>"
-msgstr "nostrip"
+msgstr "B<nostrip>"
 
 # type: textblock
 #. type: textblock
@@ -8959,10 +8909,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:222
-#, fuzzy
-#| msgid "B<no_wrap>"
 msgid "B<wrap>"
-msgstr "B<no_wrap>"
+msgstr "B<wrap>"
 
 # type: textblock
 #. type: textblock
@@ -8980,10 +8928,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:228
-#, fuzzy
-#| msgid "caseinsensitive"
 msgid "B<caseinsensitive>"
-msgstr "caseinsensitive"
+msgstr "B<caseinsensitive>"
 
 # type: textblock
 #. type: textblock
@@ -9000,10 +8946,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:233
-#, fuzzy
-#| msgid "includeexternal"
 msgid "B<includeexternal>"
-msgstr "includeexternal"
+msgstr "B<includeexternal>"
 
 # type: textblock
 #. type: textblock
@@ -9021,10 +8965,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:240
-#, fuzzy
-#| msgid "ontagerror"
 msgid "B<ontagerror>"
-msgstr "ontagerror"
+msgstr "B<ontagerror>"
 
 # type: textblock
 #. type: textblock
@@ -9082,10 +9024,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:267
-#, fuzzy
-#| msgid "tagsonly"
 msgid "B<tagsonly>"
-msgstr "tagsonly"
+msgstr "B<tagsonly>"
 
 # type: textblock
 #. type: textblock
@@ -9101,14 +9041,12 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:272
 msgid "Note: This option is deprecated."
-msgstr ""
+msgstr "Note : Cette option est obsolète."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:274
-#, fuzzy
-#| msgid "doctype"
 msgid "B<doctype>"
-msgstr "doctype"
+msgstr "B<doctype>"
 
 # type: textblock
 #. type: textblock
@@ -9129,10 +9067,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:280
-#, fuzzy
-#| msgid "tags"
 msgid "B<tags>"
-msgstr "tags"
+msgstr "B<tags>"
 
 # type: textblock
 #. type: textblock
@@ -9187,14 +9123,14 @@ msgid ""
 "Note: This option is deprecated.  You should use the B<translated> and "
 "B<untranslated> options instead."
 msgstr ""
+"Note : Cette option est obsolète. Vous devriez utiliser les options "
+"B<translated> et B<untranslated> à la place."
 
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:297
-#, fuzzy
-#| msgid "attributes"
 msgid "B<attributes>"
-msgstr "attributes"
+msgstr "B<attributes>"
 
 # type: textblock
 #. type: textblock
@@ -9229,10 +9165,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:306
-#, fuzzy
-#| msgid "attributes"
 msgid "B<foldattributes>"
-msgstr "attributes"
+msgstr "B<foldattributes>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:308
@@ -9251,10 +9185,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:314
-#, fuzzy
-#| msgid "breaking"
 msgid "B<break>"
-msgstr "breaking"
+msgstr "B<break>"
 
 # type: textblock
 #. type: textblock
@@ -9310,7 +9242,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:332
 msgid "B<placeholder>"
-msgstr ""
+msgstr "B<placeholder>"
 
 # type: textblock
 #. type: textblock
@@ -9345,14 +9277,14 @@ msgid ""
 "  <placeholder type=\\\"footnote\\\" id=\\\"0\\\"/>\n"
 "\n"
 msgstr ""
+"  <placeholder type=\\\"footnote\\\" id=\\\"0\\\"/>\n"
+"\n"
 
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:347
-#, fuzzy
-#| msgid "nodefault"
 msgid "B<nodefault>"
-msgstr "nodefault"
+msgstr "B<nodefault>"
 
 # type: textblock
 #. type: textblock
@@ -9371,10 +9303,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:352
-#, fuzzy
-#| msgid "cpp"
 msgid "B<cpp>"
-msgstr "cpp"
+msgstr "B<cpp>"
 
 # type: textblock
 #. type: textblock
@@ -9391,10 +9321,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:364
-#, fuzzy
-#| msgid "B<untranslated>"
 msgid "B<translated>"
-msgstr "B<untranslated>"
+msgstr "B<translated>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:366
@@ -9440,10 +9368,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:386
-#, fuzzy
-#| msgid "B<translate_joined>"
 msgid "B<defaulttranslateoption>"
-msgstr "B<translate_joined>"
+msgstr "B<defaulttranslateoption>"
 
 # type: textblock
 #. type: textblock
@@ -9462,10 +9388,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:395
-#, fuzzy
-#| msgid "I<warn>"
 msgid "I<w>"
-msgstr "I<warn>"
+msgstr "I<w>"
 
 # type: textblock
 #. type: textblock
@@ -9477,7 +9401,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:399
 msgid "I<W>"
-msgstr ""
+msgstr "I<W>"
 
 # type: textblock
 #. type: textblock
@@ -9492,10 +9416,8 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:403
-#, fuzzy
-#| msgid "I<fail>"
 msgid "I<i>"
-msgstr "I<fail>"
+msgstr "I<i>"
 
 # type: textblock
 #. type: textblock
@@ -9507,7 +9429,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:407
 msgid "I<p>"
-msgstr ""
+msgstr "I<p>"
 
 # type: textblock
 #. type: textblock
@@ -9543,15 +9465,7 @@ msgstr ""
 # type: verbatim
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:506
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $self->{options}{'new_option'}='';\n"
-#| "  $self->SUPER::initialize(%options);\n"
-#| "  $self->{options}{'tags'}.=' <p> <head><title>';\n"
-#| "  $self->{options}{'attributes'}.=' <p>lang id';\n"
-#| "  $self->{options}{'inline'}.=' <br>';\n"
-#| "  $self->treat_options;\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  $self->{options}{'new_option'}='';\n"
 "  $self->SUPER::initialize(%options);\n"
@@ -9563,9 +9477,9 @@ msgid ""
 msgstr ""
 "  $self->{options}{'new_option'}='';\n"
 "  $self->SUPER::initialize(%options);\n"
-"  $self->{options}{'tags'}.=' <p> <head><title>';\n"
+"  $self->{options}{'_default_translated'}.=' <p> <head><title>';\n"
 "  $self->{options}{'attributes'}.=' <p>lang id';\n"
-"  $self->{options}{'inline'}.=' <br>';\n"
+"  $self->{options}{'_default_inline'}.=' <br>';\n"
 "  $self->treat_options;\n"
 "\n"
 
@@ -10162,31 +10076,27 @@ msgstr ""
 # type: verbatim
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:1953
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Jordi Vilalta <jvprat@gmail.com>\n"
 " Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
+" Jordi Vilalta <jvprat@gmail.com>\n"
 " Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 # type: textblock
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:1958
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
-" Copyright 2005-2008 par Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
+" Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 # type: textblock
@@ -10485,6 +10395,8 @@ msgid ""
 " [po_directory] po4a/po/\n"
 "\n"
 msgstr ""
+" [po_directory] po4a/po/\n"
+"\n"
 
 #. type: =head2
 #: po4a:113
@@ -11225,14 +11137,14 @@ msgid ""
 "docE<gt>] -p E<lt>XX.poE<gt>"
 msgstr ""
 "po4a-gettextize -f E<lt>formatE<gt> -m E<lt>maitre.docE<gt> [-l "
-"E<lt>traduction.docE<gt>] -p E<lt>fichier.poE<gt>"
+"E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
 
 # type: textblock
 #. type: textblock
 #: po4a-gettextize:21
 msgid "(XX.po is the output, all others are inputs)"
 msgstr ""
-"(traduction.doc est le fichier de sortie, tous les autres sont des entrées)"
+"(XX.doc est le fichier de sortie, tous les autres sont des entrées)"
 
 #. type: textblock
 #: po4a-gettextize:29
@@ -11412,7 +11324,7 @@ msgstr ""
 #. type: textblock
 #: po4a-normalize:19
 msgid "po4a-normalize -f E<lt>fmtE<gt> E<lt>master.docE<gt>"
-msgstr "po4a-normalize -f E<lt>formatE<gt> E<lt>original.docE<gt>"
+msgstr "po4a-normalize -f E<lt>formatE<gt> E<lt>maitre.docE<gt>"
 
 #. type: textblock
 #: po4a-normalize:27
@@ -11441,7 +11353,7 @@ msgstr ""
 #. type: =item
 #: po4a-normalize:45
 msgid "-b, --blank"
-msgstr ""
+msgstr "-b, --blank"
 
 # type: textblock
 #. type: textblock
@@ -11476,14 +11388,14 @@ msgid ""
 "po4a-translate -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> -p E<lt>XX.poE<gt> -"
 "l E<lt>XX.docE<gt>"
 msgstr ""
-"po4a-translate -f E<lt>formatE<gt> -m E<lt>maitre.docE<gt> -p E<lt>fichier."
-"poE<gt> -l E<lt>traduction.docE<gt>"
+"po4a-translate -f E<lt>formatE<gt> -m E<lt>maitre.docE<gt> -p E<lt>XX."
+"poE<gt> -l E<lt>XX.docE<gt>"
 
 # type: textblock
 #. type: textblock
 #: po4a-translate:21
 msgid "(XX.doc is the output, all others are inputs)"
-msgstr "(traduction.doc est le fichier de sortie, les autres sont des entrées)"
+msgstr "(XX.doc est le fichier de sortie, les autres sont des entrées)"
 
 #. type: textblock
 #: po4a-translate:29
@@ -11617,14 +11529,14 @@ msgid ""
 "poE<gt>)+"
 msgstr ""
 "po4a-updatepo -f E<lt>formatE<gt> (-m E<lt>maitre.docE<gt>)+ (-p "
-"E<lt>traduction.poE<gt>)+"
+"E<lt>XX.poE<gt>)+"
 
 # type: textblock
 #. type: textblock
 #: po4a-updatepo:21
 msgid "(XX.po are the outputs, all others are inputs)"
 msgstr ""
-"(traduction.po sont les fichiers de sortie, tous les autres sont des entrées)"
+"(XX.po sont les fichiers de sortie, tous les autres sont des entrées)"
 
 #. type: textblock
 #: po4a-updatepo:29
