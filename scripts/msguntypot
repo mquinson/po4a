@@ -6,7 +6,7 @@ eval 'exec /usr/bin/perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # msg untypo pot -- Update the po files when you remove a typo in pot file not needing any translation update
-# $Id: msguntypot,v 1.3 2005-12-04 16:56:34 nekral-guest Exp $
+# $Id: msguntypot,v 1.4 2009-03-07 12:22:35 nekral-guest Exp $
 #
 # Copyright 2005 by Martin Quinson (mquinson#debian.fr)
 #
@@ -126,11 +126,7 @@ use Pod::Usage qw(pod2usage);
 
 use File::Temp;
 
-use Locale::gettext;
-use POSIX;     # Needed for setlocale()
-
-setlocale(LC_MESSAGES, "");
-textdomain('po4a');
+Locale::Po4a::Common::textdomain('po4a');
 
 sub show_version {
     Locale::Po4a::Common::show_version("msguntypot");
