@@ -150,7 +150,7 @@ sub pushline {
 	$translation .= $line;
 
 	while (    %{$holder->{folded_attributes}}
-	       and $translation =~ m/^(.*)<([^>]+) po4a-id=([0-9]+)>(.*)$/s) {
+	       and $translation =~ m/^(.*)<([^>]+?)\s+po4a-id=([0-9]+)>(.*)$/s) {
 		my $begin = $1;
 		my $tag = $2;
 		my $id = $3;
