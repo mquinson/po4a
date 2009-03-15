@@ -337,7 +337,7 @@ Space-separated list of tags which should be treated as placeholders.
 Placeholders do not break the sequence, but the content of placeholders is
 translated separately.
 
-The location of the placeholder in its blocks will be marked with a string
+The location of the placeholder in its block will be marked with a string
 similar to:
 
   <placeholder type=\"footnote\" id=\"0\"/>
