@@ -1079,9 +1079,9 @@ sub parse_definition_line {
         if ($line =~ m/^\s*((?:\{_?\}|\[_?\])*)\s*$/) {
             register_generic_environment("$env,$1");
         }
-    } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\]))\s+\"(.*)\"\s*$/) {
+    } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\])?)\s+\"(.*)\"\s*$/) {
         my $env = $1; # This is not necessarily an environment.
-                      # It can also be smth like 'title{#1}'.
+                      # It can also be smth like 'title[#1]'.
         $env_separators{$env} = $2;
     } elsif ($line =~ /^verbatim\s+environment\s+(\w+)\s+$/) {
         register_verbatim_environment($1);
