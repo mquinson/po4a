@@ -360,6 +360,7 @@ foreach (qw(abstract align align* cases center description displaymath document 
 }
 register_generic_environment("tabular,[]{}");
 register_generic_environment("tabular*,{}{}");
+register_generic_environment("tabularx,{}{}");
 register_generic_environment("multicols,{}");
 register_generic_environment("list,{_}{}");
 register_generic_environment("array,[]{}");
@@ -374,8 +375,9 @@ register_generic_environment("thebibliography,{_}");
 
 # & is the cell separator, \\ is the line separator
 # '\' is escaped twice
-$env_separators{'array'} =
-  $env_separators{'tabular'} = "(?:&|\\\\\\\\)";
+$env_separators{'array'} = 
+  $env_separators{'tabular'} =
+  $env_separators{'tabularx'} = "(?:&|\\\\\\\\|\\\\hline)";
 
 $env_separators{'trivlist'} =
   $env_separators{'list'} =
