@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.22 2009-02-09 23:11:56 nekral-guest Exp $
+# $Id: Pod.pm,v 1.23 2009-03-23 20:43:50 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -147,7 +147,7 @@ sub parse {
 sub docheader {
     my $self=shift;
     my $encoding = $self->{TT}{file_out_charset};
-    if (defined $encoding) {
+    if (defined $encoding and length $encoding) {
         $encoding = "\n=encoding $encoding\n";
     } else {
         $encoding = "";
