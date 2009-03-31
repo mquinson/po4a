@@ -477,7 +477,7 @@ sub get_leading_command {
         $variant = $2;
         $buffer  = $3;
         # read the arguments (if any)
-        while ($buffer =~ m/^\s*([\[\{])(.*)$/s) {
+        while ($buffer =~ m/^\s*$RE_PRE_COMMENT([\[\{])(.*)$/s) {
             my $type = $1;
             my $arg = "";
             my $count = 1;
@@ -485,7 +485,7 @@ sub get_leading_command {
             # stop reading the buffer when the number of ] (or }) matches the
             # the number of [ (or {).
             while ($count > 0) {
-                if ($buffer =~ m/^(.*?)([\[\]\{\}])(.*)$/s) {
+                if ($buffer =~ m/^(.*?$RE_PRE_COMMENT)([\[\]\{\}])(.*)$/s) {
                     $arg .= $1;
                     $buffer = $3;
                     if ($2 eq $type) {
@@ -556,8 +556,8 @@ sub get_trailing_command {
 
     # While the buffer ends by }, consider it is a mandatory argument
     # and extract this argument.
-    while (   $buffer =~ m/^(.*(\{).*)\}$/s
-           or $buffer =~ m/^(.*(\[).*)\]$/s) {
+    while (   $buffer =~ m/^(.*$RE_PRE_COMMENT(\{).*)$RE_PRE_COMMENT\}$/s
+           or $buffer =~ m/^(.*$RE_PRE_COMMENT(\[).*)$RE_PRE_COMMENT\]$/s) {
         my $arg = "";
         my $count = 1;
         $buffer = $1;
@@ -565,7 +565,7 @@ sub get_trailing_command {
         # stop reading the buffer when the number of } (or ]) matches the
         # the number of { (or [).
         while ($count > 0) {
-            if ($buffer =~ m/^(.*)([\{\}\[\]])(.*)$/s) {
+            if ($buffer =~ m/^(.*$RE_PRE_COMMENT)([\{\}\[\]])(.*)$/s) {
                  $arg = $3.$arg;
                  $buffer = $1;
                  if ($2 eq $type) {
@@ -588,7 +588,7 @@ sub get_trailing_command {
     }
 
     # There should now be a command, maybe followed by an asterisk.
-    if ($buffer =~ m/^(.*)$RE_ESCAPE([[:alnum:]]+)(\*?)\s*$/s
+    if ($buffer =~ m/^(.*$RE_PRE_COMMENT)$RE_ESCAPE([[:alnum:]]+)(\*?)\s*$/s
         && defined $separated_command{$2}) {
         $buffer = $1;
         $command = $2;
@@ -1100,15 +1100,15 @@ sub is_closed {
     my $opening = 0;
     # FIXME: { and } should not be counted in verbatim blocks
     # Remove comments
-    $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?(?<!$RE_ESCAPE)(?:$RE_ESCAPE$RE_ESCAPE)*\{(.*)$/s) {
+    $tmp =~ s/$RE_PRE_COMMENT$RE_COMMENT.*//mg;
+    while ($tmp =~ /^.*?$RE_PRE_COMMENT\{(.*)$/s) {
         $opening += 1;
         $tmp = $1;
     }
     $tmp = $paragraph;
     # Remove comments
-    $tmp =~ s/($RE_PRE_COMMENT)$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?(?<!$RE_ESCAPE)(?:$RE_ESCAPE$RE_ESCAPE)*\}(.*)$/s) {
+    $tmp =~ s/$RE_PRE_COMMENT$RE_COMMENT.*//mg;
+    while ($tmp =~ /^.*?$RE_PRE_COMMENT\}(.*)$/s) {
         $closing += 1;
         $tmp = $1;
     }

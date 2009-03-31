@@ -342,7 +342,7 @@ sub translate_buffer_ignore {
 }
 $translate_buffer_env{"ignore"} = \&translate_buffer_ignore;
 
-foreach (qw(appendix section cindex findex kindex pindex vindex subsection
+foreach (qw(appendix section cindex findex kindex opindex pindex vindex subsection
             dircategory subtitle include
             exdent center unnumberedsec
             heading unnumbered unnumberedsubsec
@@ -392,9 +392,9 @@ foreach (qw(defcvx deffnx defivarx defmacx defmethodx defopx defoptx
 foreach (qw(titlefont w i r b sansserif sc slanted strong t cite email
             footnote indicateurl emph ref xref pxref inforef kbd key
             acronym),
-# The following commands could cause problems since the their arguments
-# has a semantic and a translator could decide not to translate code but
-# still translate thses short words if they appear in another context.
+# The following commands could cause problems since their arguments
+# have a semantic and a translator could decide not to translate code but
+# still translate theses short words if they appear in another context.
          qw(file command dfn dmn option math code samp var)) {
     register_generic_command("-$_,{_}");
 }

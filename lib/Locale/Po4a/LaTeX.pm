@@ -375,7 +375,7 @@ register_generic_environment("thebibliography,{_}");
 
 # & is the cell separator, \\ is the line separator
 # '\' is escaped twice
-$env_separators{'array'} = 
+$env_separators{'array'} =
   $env_separators{'tabular'} =
   $env_separators{'tabularx'} = "(?:&|\\\\\\\\|\\\\hline)";
 
