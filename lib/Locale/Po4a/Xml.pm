@@ -69,17 +69,41 @@ my %entities;
 
 my @comments;
 
+my $_shiftline_in_comment = 0;
 sub shiftline {
     my $self = shift;
     # call Transtractor's shiftline
     my ($line,$ref) = $self->SUPER::shiftline();
     return ($line,$ref) if (not defined $line);
 
+    if ($self->{options}{'includeexternal'}) {
+        my $tmp;
+
     for my $k (keys %entities) {
         if ($line =~ m/^(.*?)&$k;(.*)$/s) {
             my ($before, $after) = ($1, $2);
             my $linenum=0;
             my @textentries;
+
+            $tmp = $before;
+            my $tmp_in_comment = 0;
+            if ($_shiftline_in_comment) {
+                if ($before =~ m/^.*?-->(.*)$/s) {
+                    $tmp = $1;
+                    $tmp_in_comment = 0;
+                } else {
+                    $tmp_in_comment = 1;
+                }
+            }
+            if ($tmp_in_comment == 0) {
+                while ($tmp =~ m/^.*?<!--.*?-->(.*)$/s) {
+                    $tmp = $1;
+                }
+                if ($tmp =~ m/<!--/s) {
+                    $tmp_in_comment = 1;
+                }
+            }
+            next if ($tmp_in_comment);
 
             open (my $in, $entities{$k})
                 or croak wrap_mod("po4a::xml",
@@ -99,6 +123,25 @@ sub shiftline {
             $line = $before.(shift @textentries);
             $ref .= " ".(shift @textentries);
             $self->unshiftline(@textentries);
+        }
+    }
+
+        $tmp = $line;
+        if ($_shiftline_in_comment) {
+            if ($line =~ m/^.*?-->(.*)$/s) {
+                $tmp = $1;
+                $_shiftline_in_comment = 0;
+            } else {
+                $_shiftline_in_comment = 1;
+            }
+        }
+        if ($_shiftline_in_comment == 0) {
+            while ($tmp =~ m/^.*?<!--.*?-->(.*)$/s) {
+                $tmp = $1;
+            }
+            if ($tmp =~ m/<!--/s) {
+                $_shiftline_in_comment = 1;
+            }
         }
     }
 
