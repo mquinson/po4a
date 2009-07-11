@@ -131,8 +131,12 @@ sub parse {
       close OUTFILE or die "Cannot write $tmp_filename: $!\n";
       
       # Build the XML TransTractor which will do the job for us
+      # FIXME: This is a hack. Wml should inherit from Xhtml if this is
+      # FIXME: needed.
       my $xmlizer = Locale::Po4a::Chooser::new("xhtml");
+      # FIXME: There might be more TT properties to be copied
       $xmlizer->{TT}{'file_in_charset'}=$self->{TT}{'file_in_charset'};
+      $xmlizer->{TT}{'file_in_encoder'}=$self->{TT}{'file_in_encoder'};
       $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
       $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
       
