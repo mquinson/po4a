@@ -143,6 +143,7 @@ sub parse {
     my $paragraph="";
     my $wrapped_mode = 1;
     my $expect_header = 1;
+    my $end_of_paragraph = 0;
     ($line,$ref)=$self->shiftline();
     my $file = $ref;
     $file =~ s/:[0-9]+$//;
@@ -152,6 +153,8 @@ sub parse {
             $file = $1;
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
+            $wrapped_mode = 1;
+            $expect_header = 1;
         }
 
         chomp($line);
@@ -464,37 +467,53 @@ sub parse {
                 $self->{indent} = $indent;
                 $self->{bullet} = "";
             }
-        } elsif (   $line =~ /^=*$/
-                 or $line =~ /^_*$/
-                 or $line =~ /^-*$/) {
+        } elsif ($line =~ /^-- $/) {
+            # Break paragraphs on email signature hint
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline($line."\n");
+        } elsif (   $line =~ /^=+$/
+                 or $line =~ /^_+$/
+                 or $line =~ /^-+$/) {
             $wrapped_mode = 0;
             $paragraph .= $line."\n";
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
+        } elsif ($markdown and
+                 (   $line =~ /^\s*\[\[\!\S+\s*$/     # macro begin
+                 or $line =~ /^\s*"""\s*\]\]\s*$/)) { # """ textblock inside macro end
+            # Avoid translating Markdown lines containing only markup
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline("$line\n");
         } elsif ($markdown and
                  (   $line =~ /^#/            # headline
                   or $line =~ /^\s*\[\[\!\S[^\]]*\]\]\s*$/)) { # sole macro
-            # Found Markdown markup that should be preserved as a single line
+            # Preserve some Markdown markup as a single line
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="$line\n";
             $wrapped_mode = 0;
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $wrapped_mode = 1;
-            $paragraph="";
+            $end_of_paragraph = 1;
         } elsif ($markdown and
-                 (   $paragraph =~ m/^>/       # blockquote
-                  or $paragraph =~ m/[<>]/     # maybe html
-                  or $paragraph =~ m/^"""/     # textblock inside macro end
-                  or $paragraph =~ m/"""$/)) { # textblock inside macro begin
-            # Found Markdown markup that might not survive wrapping
-            $wrapped_mode = 0;
-            $paragraph .= $line."\n";
+                 (   $line =~ /^"""/)) { # """ textblock inside macro end
+            # Markdown markup needing separation _before_ this line
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="$line\n";
+            $wrapped_mode = 1;
         } else {
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
                 $wrapped_mode = 0;
+            }
+            if ($markdown and
+                     (   $line =~ /\S  $/    # explicit newline
+                      or $line =~ /"""$/)) { # """ textblock inside macro begin
+                # Markdown markup needing separation _after_ this line
+                $end_of_paragraph = 1;
             } else {
                 undef $self->{bullet};
                 undef $self->{indent};
@@ -510,7 +529,24 @@ sub parse {
         # (more than 3)
         # are considered as verbatim paragraphs
         $wrapped_mode = 0 if (   $paragraph =~ m/^(\*|[0-9]+[.)] )/s
-                              or $paragraph =~ m/[ \t][ \t][ \t]/s);
+                          or $paragraph =~ m/[ \t][ \t][ \t]/s);
+        if ($markdown) {
+            # Some Markdown markup can (or might) not survive wrapping
+            $wrapped_mode = 0 if (
+                   $paragraph =~ /^>/ms                  # blockquote
+                or $paragraph =~ /^( {8}|\t)/ms          # monospaced
+                or $paragraph =~ /^\$(\S+[{}]\S*\s*)+/ms # Xapian macro
+                or $paragraph =~ /<(?![a-z]+[:@])/ms     # maybe html (tags but not wiki <URI>)
+                or $paragraph =~ /^[^<]+>/ms             # maybe html (tag with vertical space)
+                or $paragraph =~ /\[\[\!\S[^\]]+$/ms     # macro begin
+            );
+        }
+        if ($end_of_paragraph) {
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $end_of_paragraph = 0;
+        }
         ($line,$ref)=$self->shiftline();
     }
     if (length $paragraph) {
