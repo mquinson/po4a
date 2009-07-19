@@ -467,6 +467,50 @@ sub parse {
                 $self->{indent} = $indent;
                 $self->{bullet} = "";
             }
+        } elsif ($markdown and
+                 (not defined($self->{verbatim})) and
+                 ($line =~ m/^(={4,}|-{4,})$/) and
+                 (defined($paragraph) )and
+                 ($paragraph =~ m/^[^\n]*\n$/s) and
+                 (length($paragraph) == (length($line)+1))) {
+            # XXX: There can be any number of underlining according
+            #      to the documentation. This detection, which avoid
+            #      translating the formatting, is only supported if
+            #      the underlining has the same size as the herder text.
+            # Found title
+            $wrapped_mode = 0;
+            my $level = $line;
+            $level =~ s/^(.).*$/$1/;
+            my $t = $self->translate($paragraph,
+                                     $self->{ref},
+                                     "Title $level",
+                                     "wrap" => 0);
+            $self->pushline($t);
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->pushline(($level x (length($t)-1))."\n");
+        } elsif ($markdown and
+                 ($line =~ m/^(#{1,6})( +)(.*?)( +\1)?$/)) {
+            my $titlelevel1 = $1;
+            my $titlespaces = $2;
+            my $title = $3;
+            my $titlelevel2 = $4||"";
+            # Found one line title
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $wrapped_mode = 0;
+            $paragraph="";
+            my $t = $self->translate($title,
+                                     $self->{ref},
+                                     "Title $titlelevel1",
+                                     "wrap" => 0);
+            $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
+            $wrapped_mode = 1;
+        } elsif ($markdown and
+                 ($paragraph eq "") and
+                 ($line =~ /^((\*\s*){3,}|(-\s*){3,}|(_\s*){3,})$/)) {
+            # Horizontal rule
+            $wrapped_mode = 1;
+            $self->pushline($line."\n");
         } elsif ($line =~ /^-- $/) {
             # Break paragraphs on email signature hint
             do_paragraph($self,$paragraph,$wrapped_mode);
