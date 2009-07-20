@@ -1,0 +1,56 @@
+#!/bin/sh
+
+MASTER=""
+NAME=""
+SECTION=""
+PO=""
+UTF8=""
+
+function usage () {
+	echo "Usage : $(basename $0) -m POD_FILE -p PO_FILE"
+}
+
+while getopts m:p:uh option; do
+	case $option in
+	m)
+	    MASTER=$OPTARG
+	    ;;
+	p)
+	    PO=$OPTARG
+	    ;;
+	h)
+	    usage
+	    exit 0
+	    ;;
+	[?])
+	    usage 1>&2
+	    exit 1
+	    ;;
+    esac
+done
+
+if [[ -z $PO ||  -z $MASTER ]]; then
+    usage
+    exit 1
+fi
+
+if [ ! -f $PO ]; then
+    echo "Error: unable to find the file $PO."
+    usage 
+    exit 1
+fi
+
+if [ ! -f $MASTER ]; then
+    echo "Error: unable to find the file $MASTER."
+    usage
+    exit 1
+fi
+
+# Can fail to retrieve the expected result with various files...
+#NAME=$(basename $MASTER .pod | sed -e 's/\..//')
+#SECTION=$(basename $MASTER .pod | sed -e 's/.*\.//')
+
+po4a-translate -f pod -m $MASTER -p $PO \
+	| pod2man -r '' -c TRANSLATED -n $MASTER  \
+	| man -l -
+
