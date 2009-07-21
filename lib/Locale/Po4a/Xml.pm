@@ -356,6 +356,11 @@ Instead, replace all attributes of a tag by po4a-id=<id>.
 This is useful when attributes shall not be translated, as this simplifies the
 strings for translators, and avoids typos.
 
+=item B<customtag>
+
+Space-separated list of tags which should not be treated as tags.
+These tags are treated as inline, and do not need to be closed.
+
 =item B<break>
 
 Space-separated list of tags which should break the sequence.
@@ -493,6 +498,7 @@ sub initialize {
 	$self->{options}{'foldattributes'}=0;
 	$self->{options}{'inline'}='';
 	$self->{options}{'placeholder'}='';
+	$self->{options}{'customtag'}='';
 	$self->{options}{'doctype'}='';
 	$self->{options}{'nodefault'}='';
 	$self->{options}{'includeexternal'}=0;
@@ -517,6 +523,7 @@ sub initialize {
 	$self->{options}{'_default_inline'}='';
 	$self->{options}{'_default_placeholder'}='';
 	$self->{options}{'_default_attributes'}='';
+	$self->{options}{'_default_customtag'}='';
 
 	#It will maintain the list of the translatable tags
 	$self->{tags}=();
@@ -530,6 +537,8 @@ sub initialize {
 	$self->{inline}=();
 	#It will maintain the list of the placeholder tags
 	$self->{placeholder}=();
+	#It will maintain the list of the customtag tags
+	$self->{customtag}=();
 	#list of the tags that must not be set in the tags or inline category
 	#by this module or sub-module (unless specified in an option)
 	$self->{nodefault}=();
@@ -1238,6 +1247,7 @@ sub treat_attributes {
 #   W: the content shall not be re-wrapped
 #   i: the tag shall be inlined
 #   p: a placeholder shall replace the tag (and its content)
+#   n: a custom tag
 #
 # A translatable inline tag in an untranslated tag is treated as a translatable breaking tag.
 my %translate_options_cache;
@@ -1307,6 +1317,12 @@ sub get_translate_options {
 			$usedefault = 0;
 			$options .= "p";
 		}
+	}
+
+	$tag = $self->get_tag_from_list($path, $self->{customtag});
+	if (defined $tag) {
+		$usedefault = 0;
+		$options = "in"; # This erase any other setting
 	}
 
 	if ($usedefault) {
@@ -1437,7 +1453,9 @@ sub treat_content {
 							@text = ("<$cur_tag_name po4a-id=$id>", $tag_ref);
 						}
 					}
-					push @path, $cur_tag_name;
+					unless ($t_opts =~ m/n/) {
+						push @path, $cur_tag_name;
+					}
 				} elsif ($tag_types[$type]->{'beginning'} eq "/") {
 					# Closing inline tag
 
@@ -1701,6 +1719,8 @@ sub treat_options {
 		$self->{options}{'_default_inline'}       = lc $self->{options}{'_default_inline'};
 		$self->{options}{'placeholder'}           = lc $self->{options}{'placeholder'};
 		$self->{options}{'_default_placeholder'}  = lc $self->{options}{'_default_placeholder'};
+		$self->{options}{'customtag'}             = lc $self->{options}{'customtag'};
+		$self->{options}{'_default_customtag'}    = lc $self->{options}{'_default_customtag'};
 	}
 
 	$self->{options}{'nodefault'} =~ /^\s*(.*)\s*$/s;
@@ -1787,7 +1807,6 @@ sub treat_options {
 		}
 	}
 
-	my @list_inline;
 	$self->{options}{'inline'} =~ /^\s*(.*)\s*$/s;
 	foreach my $tag (split(/\s+/s,$1)) {
 		$tag =~ m/^(.*?)(<.*)$/;
@@ -1814,6 +1833,19 @@ sub treat_options {
 			       or defined $self->{placeholder}->{$2};
 	}
 
+	$self->{options}{'customtag'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{customtag}->{$2} = $1 || "";
+	}
+	$self->{options}{'_default_customtag'} =~ /^\s*(.*)\s*$/s;
+	foreach my $tag (split(/\s+/s,$1)) {
+		$tag =~ m/^(.*?)(<.*)$/;
+		$self->{customtag}->{$2} = $1 || ""
+			unless    $list_nodefault{$2}
+			       or defined $self->{customtag}->{$2};
+	}
+
 	# There should be no translated and untranslated tags
 	foreach my $tag (keys %{$self->{translated}}) {
 		die wrap_mod("po4a::xml",
@@ -1821,7 +1853,7 @@ sub treat_options {
 		                      "Tag '%s' both in the %s and %s categories."), $tag, "translated", "untranslated")
 			if defined $self->{untranslated}->{$tag};
 	}
-	# There should be no inline, break, and placeholder tags
+	# There should be no inline, break, placeholder, and customtag tags
 	foreach my $tag (keys %{$self->{inline}}) {
 		die wrap_mod("po4a::xml",
 		             dgettext("po4a",
@@ -1831,12 +1863,26 @@ sub treat_options {
 		             dgettext("po4a",
 		                      "Tag '%s' both in the %s and %s categories."), $tag, "inline", "placeholder")
 			if defined $self->{placeholder}->{$tag};
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "inline", "customtag")
+			if defined $self->{customtag}->{$tag};
 	}
 	foreach my $tag (keys %{$self->{break}}) {
 		die wrap_mod("po4a::xml",
 		             dgettext("po4a",
 		                      "Tag '%s' both in the %s and %s categories."), $tag, "break", "placeholder")
 			if defined $self->{placeholder}->{$tag};
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "break", "customtag")
+			if defined $self->{customtag}->{$tag};
+	}
+	foreach my $tag (keys %{$self->{placeholder}}) {
+		die wrap_mod("po4a::xml",
+		             dgettext("po4a",
+		                      "Tag '%s' both in the %s and %s categories."), $tag, "placeholder", "customtag")
+			if defined $self->{customtag}->{$tag};
 	}
 }
 
