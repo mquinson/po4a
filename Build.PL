@@ -170,7 +170,7 @@ my $builder = Module::Build->subclass
 	    }
 
 	    # Install the manpages of the Shell scripts
-	    system ("cp scripts/po4aman-display-po.1 blib/man/man1/") and die;
+	    system ("cp scripts/po4aman-display-po.1 scripts/po4apod-display-po.1 blib/man/man1/") and die;
 	    foreach $file (@{$self->rscan_dir('blib/man',qr{\.1$})}) {
 		system ("gzip -9 -f $file") and die;
 	    }
@@ -235,7 +235,7 @@ my $b = $builder->new
                     },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
 	  'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
-	  'scripts/po4aman-display-po'],
+	  'scripts/po4aman-display-po', 'scripts/po4apod-display-po'],
       add_to_cleanup => ['t/tmp','messages.mo', 'blib',
 	  'po/pod/po4a-pod.pot~', 'po4a.log'],
       dist_abstract => 'Tools for helping translation of documentation',
