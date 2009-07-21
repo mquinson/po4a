@@ -343,10 +343,14 @@ sub new {
     ## Create our private data
     my %po_options;
     $po_options{'porefs'} = $self->{options}{'porefs'};
+    $po_options{'copyright-holder'} = $options{'copyright-holder'};
+    $po_options{'msgid-bugs-address'} = $options{'msgid-bugs-address'};
+    $po_options{'package-name'} = $options{'package-name'};
+    $po_options{'package-version'} = $options{'package-version'};
     
     # private data
     $self->{TT}=(); 
-    $self->{TT}{po_in}=Locale::Po4a::Po->new();
+    $self->{TT}{po_in}=Locale::Po4a::Po->new(\%po_options);
     $self->{TT}{po_out}=Locale::Po4a::Po->new(\%po_options);
     # Warning, this is an array of array:
     #  The document is splited on lines, and for each
