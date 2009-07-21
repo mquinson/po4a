@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Po4a::Wml.pm
-# 
+#
 # extract and translate translatable strings from a wml (web markup language) documents
 #
 # This program is free software; you can redistribute it and/or modify
@@ -52,12 +52,6 @@ handle documents that contain non-XML inline tags such as <email
 will be added in the future releases.
 
 =cut
-#
-#=head1 TODO
-# (translation from an IRC session)
-#(12:11:26) adn: What about the # at the beginning?
-#(12:11:57) adn: If there is a way to just extract the pagetitle="foo" into a <title>foo</title>, that would be even better.
-#(00:42:51) adn: #use wml::debian::mainpage title="The universal operating system"
 
 package Locale::Po4a::Wml;
 
@@ -67,103 +61,98 @@ use warnings;
 
 require Exporter;
 use vars qw(@ISA @EXPORT);
-@ISA = qw(Locale::Po4a::TransTractor);
+@ISA = qw(Locale::Po4a::Xhtml);
 @EXPORT = qw();
 
-use Locale::Po4a::TransTractor;
-use Locale::Po4a::Common;
+use Locale::Po4a::Xhtml;
 use File::Temp;
 
-sub initialize {}
+sub initialize {
+    my $self = shift;
+    my %options = @_;
+
+    $self->SUPER::initialize(%options);
+
+    $self->treat_options;
+}
 
 sub read {
     my ($self,$filename)=@_;
-    
-    push @{$self->{DOCWML}{infile}}, $filename;
+    my $tmp_filename;
+    (undef,$tmp_filename)=File::Temp->tempfile("po4aXXXX",
+                                                DIR    => "/tmp",
+                                                SUFFIX => ".xml",
+                                                OPEN   => 0,
+                                                UNLINK => 0)
+        or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
+     my $file;
+     open FILEIN,"$filename" or die "Cannot read $filename: $!\n";
+     {
+         $/ = undef;
+         $file=<FILEIN>;
+     }
+     $/ = "\n";
+
+     # Mask perl cruft out of XML sight
+     while (   ($file =~ m|^(.*?)<perl>(.*?)</perl>(.*?)$|ms)
+            or ($file =~ m|^(.*?)<:(.*?):>(.*)$|ms)) {
+         my ($pre,$in,$post) = ($1,$2,$3);
+         $in =~ s/</PO4ALT/g;
+         $in =~ s/>/PO4AGT/g;
+         $file = "${pre}<!--PO4ABEGINPERL${in}PO4AENDPERL-->$post";
+     }
+
+     # Mask mp4h cruft
+     while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
+         my $line = $1;
+         print STDERR "PROTECT HEADER: $line\n"
+             if $self->debug();
+         if ($line =~ m/title="([^"]*)"/) { #) {#"){
+             warn "FIXME: We should translate the page title: $1\n";
+         }
+     }
+
+     # Validate define-tag tag's argument
+     $file =~ s|(<define-tag\s+)([^\s>]+)|$1PO4ADUMMYATTR="$2"|g;
+
+     # Flush the result to disk
+     open OUTFILE,">$tmp_filename";
+     print OUTFILE $file;
+     close INFILE;
+     close OUTFILE or die "Cannot write $tmp_filename: $!\n";
+
+     push @{$self->{DOCXML}{infile}}, $tmp_filename;
+     $self->{DOCWML}{$tmp_filename} = $filename;
+     $self->Locale::Po4a::TransTractor::read($tmp_filename);
+     unlink "$tmp_filename";
 }
-    
 
 sub parse {
     my $self = shift;
 
-    my $tmp_filename;
-    (undef,$tmp_filename)=File::Temp->tempfile("po4aXXXX",
-                                                DIR    => "/tmp",
-					        SUFFIX => ".xml",
-                                                OPEN   => 0,
-						UNLINK => 0)
-        or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
-    foreach my $filename (@{$self->{DOCWML}{infile}}) {
-#      print STDERR "TMP: $tmp_filename\n";
-      my $file;
-      open FILEIN,"$filename" or die "Cannot read $filename: $!\n";
-      {
-        $/ = undef; 
-        $file=<FILEIN>;
-      }
-      $/ = "\n"; 
-      
-      # Mask perl cruft out of XML sight
-      while ($file =~ m|^(.*?)<perl>(.*?)</perl>(.*?)$|ms || $file =~ m|^(.*?)<:(.*?):>(.*)$|ms) {
-        my ($pre,$in,$post) = ($1,$2,$3);
-        $in =~ s/</PO4ALT/g;
-        $in =~ s/>/PO4AGT/g;
-        $file = "${pre}<!--PO4ABEGINPERL${in}PO4AENDPERL-->$post";
-      }
+    foreach my $filename (@{$self->{DOCXML}{infile}}) {
+        $self->Locale::Po4a::Xml::parse_file($filename);
+        my $org_filename = $self->{DOCWML}{$filename};
 
-      # Mask mp4h cruft         
-      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
-        my $line = $1;
-        print STDERR "PROTECT HEADER: $line\n"
-          if $self->debug();
-        if ($line =~ m/title="([^"]*)"/) { #) {#"){
-          warn "FIXME: We should translate the page title: $1\n";
-        }          
-      }
+        # Fix the references
+        foreach my $msgid (keys %{$self->{TT}{po_out}{po}}) {
+            $self->{TT}{po_out}{po}{$msgid}{'reference'} =~
+               s|$filename(:\d+)|$org_filename$1|o;
+        }
 
-      # Validate define-tag tag's argument
-      $file =~ s|(<define-tag\s+)([^\s>]+)|$1PO4ADUMMYATTR="$2"|g;
-                
-      # Flush the result to disk          
-      open OUTFILE,">$tmp_filename";
-      print OUTFILE $file;
-      close INFILE;
-      close OUTFILE or die "Cannot write $tmp_filename: $!\n";
-      
-      # Build the XML TransTractor which will do the job for us
-      # FIXME: This is a hack. Wml should inherit from Xhtml if this is
-      # FIXME: needed.
-      my $xmlizer = Locale::Po4a::Chooser::new("xhtml");
-      # FIXME: There might be more TT properties to be copied
-      $xmlizer->{TT}{'file_in_charset'}=$self->{TT}{'file_in_charset'};
-      $xmlizer->{TT}{'file_in_encoder'}=$self->{TT}{'file_in_encoder'};
-      $xmlizer->{TT}{po_in}=$self->{TT}{po_in};
-      $xmlizer->{TT}{po_out}=$self->{TT}{po_out};
-      
-      # Let it do the job
-      $xmlizer->read("$tmp_filename");
-      $xmlizer->parse();
-      my ($percent,$hit,$queries) = $xmlizer->stats();
-      print "We found translations for $percent\%  ($hit from $queries) of strings.\n";
-                        
-      # Get the output po file back
-      $self->{TT}{po_out}=$xmlizer->{TT}{po_out};
-      foreach my $msgid (keys %{$self->{TT}{po_out}{po}}) {
-        $self->{TT}{po_out}{po}{$msgid}{'reference'} =~
-           s|$tmp_filename(:\d+)|$filename$1|o;
-      }
-      
-      # Get the document back (undoing our wml masking)
-      $file = join("",@{$xmlizer->{TT}{doc_out}});
-      $file =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
-      $file =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/msg;
-      $file =~ s|(<define-tag\s+)PO4ADUMMYATTR="([^"]*)"|$1$2|g;
-      $file =~ s/PO4ALT/</msg;
-      $file =~ s/PO4AGT/>/msg;
-
-      map { push @{$self->{TT}{doc_out}},"$_\n" } split(/\n/,$file);
+        # Get the document back (undoing our wml masking)
+        # FIXME: need to join the file first, and then split?
+        my @doc_out;
+        foreach my $line (@{$self->{TT}{doc_out}}) {
+            $line =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
+            $line =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/sg;
+            $line =~ s/(<define-tag\s+)PO4ADUMMYATTR="([^"]*)"/$1$2/g;
+            $line =~ s/PO4ALT/</sg;
+            $line =~ s/PO4AGT/>/sg;
+            push @doc_out, $line;
+        }
+        $self->{TT}{doc_out} = \@doc_out;
     }
-    unlink "$tmp_filename";
 }
 
 1;
