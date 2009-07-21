@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-gettextize -- Convert an original file to a po file
-# $Id: po4a-gettextize,v 1.38 2009-03-07 12:33:10 nekral-guest Exp $
+# $Id: po4a-gettextize,v 1.39 2009-07-21 08:39:28 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -113,6 +113,24 @@ Increase the verbosity of the program.
 
 Output some debugging information.
 
+=item --msgid-bugs-address email@address
+
+Set the report address for msgid bugs. By default, the created POT files
+have no Report-Msgid-Bugs-To fields.
+
+=item --copyright-holder string
+
+Set the copyright holder in the POT header. The default value is
+"Free Software Foundation, Inc."
+
+=item --package-name string
+
+Set the package name for the POT header. The default is "PACKAGE".
+
+=item --package-version string
+
+Set the package version for the POT header. The default is "VERSION".
+
 =back
 
 =head1 SEE ALSO
@@ -153,8 +171,16 @@ sub show_version {
     exit 0;
 }
 
+my %opts = (
+    "verbose"             => 0,
+    "debug"               => 0,
+    "copyright-holder"    => undef,
+    "msgid-bugs-address"  => undef,
+    "package-name"        => undef,
+    "package-version"     => undef);
+
 my ($pofile)=('-');
-my (@masterfile,@locfile,$help_fmt,$help,$type,$debug,$verbose,@options);
+my (@masterfile,@locfile,$help_fmt,$help,$type,@options);
 my ($mastchar,$locchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
@@ -169,11 +195,16 @@ GetOptions(
 	'master-charset|M=s'    => \$mastchar,
 	'localized-charset|L=s' => \$locchar,
 
-	'option|o=s'    => \@options,
+	'option|o=s'            => \@options,
 
-	'verbose|v'     => \$verbose,
-	'debug|d'       => \$debug,
-	'version|V'     => \&show_version
+	'copyright-holder=s'    => \$opts{"copyright-holder"},
+	'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
+	'package-name=s'        => \$opts{"package-name"},
+	'package-version=s'     => \$opts{"package-version"},
+
+	'verbose|v'             => \$opts{"verbose"},
+	'debug|d'               => \$opts{"debug"},
+	'version|V'             => \&show_version
 ) or pod2usage();
 
 # Argument check
@@ -181,15 +212,11 @@ $help && pod2usage (-verbose => 1, -exitval => 0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () if (scalar @ARGV > 1) || (scalar @masterfile < 1);
 
-my %options = (
-    "verbose" => $verbose,
-    "debug" => $debug);
-
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
-	$options{$1}="$2";
+	$opts{$1}="$2";
     } else {
-	$options{$_}=1;
+	$opts{$_}=1;
     }
 }
 # Check file existence
@@ -198,8 +225,8 @@ foreach my $file (@masterfile, @locfile) {
 }
 
 # Declare the TransTractor parsers
-my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%options),
-			 Locale::Po4a::Chooser::new($type,%options));
+my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%opts),
+			 Locale::Po4a::Chooser::new($type,%opts));
 
 # Parse master file forcing conversion to utf if it's not in ascii
 foreach my $file (@masterfile) {
