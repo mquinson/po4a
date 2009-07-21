@@ -307,7 +307,7 @@ register_generic_command("*textcolor,{}{_}");
 register_generic_command("*colorbox,{}{_}");
 register_generic_command("*fcolorbox,{}{}{_}");
 register_generic_command("*pagecolor,{_}");
-register_generic_command("*color,{_}");
+register_generic_command("*color,{}");
 
 # equations/theorems
 register_generic_command("*qedhere,");
