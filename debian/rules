@@ -74,16 +74,4 @@ binary-arch: build install
 
 binary: binary-indep binary-arch 
 
-#     Shortcuts
-tar: clean
-	version=`sed -e 's/.* (//' -e 's/-.*//' -e 1q debian/changelog`; \
-	echo Creating ../$(package)_$$version.orig.tar.gz; \
-	#tar cf - * | tarcust -p $(package)-$$version -x '.*CVS.*' -x '.*.cvsignore' -x 'debian/.*' | gzip --best > ../$(package)_$$version.orig.tar.gz
-	perl Build.PL
-	perl Build dist
-	#$(MAKE) tar
-
-deb:
-	dpkg-buildpackage -rfakeroot -i'/CVS|/\.cvsignore|/mantmp|testsuite|lib/Locale/Po4a|po/pod'
-
 .PHONY: build clean binary-indep binary-arch binary install
