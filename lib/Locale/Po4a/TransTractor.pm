@@ -337,6 +337,10 @@ sub new {
     ## initialize the plugin
     # prevent the plugin from croaking on the options intended for Po.pm
     $self->{options}{'porefs'} = '';
+    $self->{options}{'copyright-holder'} = '';
+    $self->{options}{'msgid-bugs-address'} = '';
+    $self->{options}{'package-name'} = '';
+    $self->{options}{'package-version'} = '';
     # let the plugin parse the options and such
     $self->initialize(%options);
 
