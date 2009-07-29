@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.44 2009-03-07 12:33:10 nekral-guest Exp $
+# $Id: po4a-updatepo,v 1.45 2009-07-29 14:32:25 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -97,6 +97,24 @@ Increase the verbosity of the program.
 
 Output some debugging information.
 
+=item --msgid-bugs-address email@address
+
+Set the report address for msgid bugs. By default, the created POT files
+have no Report-Msgid-Bugs-To fields.
+
+=item --copyright-holder string
+
+Set the copyright holder in the POT header. The default value is
+"Free Software Foundation, Inc."
+
+=item --package-name string
+
+Set the package name for the POT header. The default is "PACKAGE".
+
+=item --package-version string
+
+Set the package version for the POT header. The default is "VERSION".
+
 =back
 
 =head1 SEE ALSO
@@ -146,6 +164,7 @@ Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 # Parse our options
 my (@masterfiles,@pofiles);
 my ($help,$help_fmt,$verbose,$debug,$format,@options);
+my ($copyright_holder, $msgid_bugs_address, $package_name, $package_version);
 my $mastchar;
 my $previous;
 my $msgmerge_opt = "";
@@ -161,7 +180,11 @@ GetOptions('help|h'      => \$help,
 	   'option|o=s'  => \@options,
 
 	   'previous'    => \$previous,
-	   'msgmerge-opt=s' => \$msgmerge_opt,
+	   'msgmerge-opt=s'      => \$msgmerge_opt,
+	   'copyright-holder=s'  => \$copyright_holder,
+	   'msgid-bugs-address=s'=> \$msgid_bugs_address,
+	   'package-name=s'      => \$package_name,
+	   'package-version=s'   => \$package_version,
     
 	   'verbose|v'   => \$verbose,
 	   'debug|d'     => \$debug,
@@ -175,8 +198,12 @@ pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
 $msgmerge_opt .= " --previous" if $previous;
 
 my %options = (
-    "verbose" => $verbose,
-    "debug" => $debug);
+    "verbose"            => $verbose,
+    "debug"              => $debug,
+    "copyright-holder"   => $copyright_holder,
+    "msgid-bugs-address" => $msgid_bugs_address,
+    "package-name"       => $package_name,
+    "package-version"    => $package_version);
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
