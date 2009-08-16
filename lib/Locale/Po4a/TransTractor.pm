@@ -292,6 +292,8 @@ sub process {
     }
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
+    chdir $params{'srcdir'}
+	if (defined $params{'srcdir'});
     foreach my $file (@{$params{'po_in_name'}}) {
 	print STDERR "readpo($file)... " if $self->debug();
 	$self->readpo($file);
@@ -310,18 +312,24 @@ sub process {
 	$self->addendum($file) || die "An addendum failed\n";
 	print STDERR "done.\n" if $self->debug();
     }
+    chdir $params{'destdir'}
+	if (defined $params{'destdir'});
     if (defined $params{'file_out_name'}) {
 	print STDERR "write(".$params{'file_out_name'}.")... " 
 	    if $self->debug();
 	$self->write($params{'file_out_name'});
 	print STDERR "done.\n" if $self->debug();
     }
+    chdir $params{'srcdir'}
+	if (defined $params{'srcdir'});
     if (defined $params{'po_out_name'}) {
 	print STDERR "writepo(".$params{'po_out_name'}.")... "
 	     if $self->debug();
 	$self->writepo($params{'po_out_name'});
 	print STDERR "done.\n" if $self->debug();
     }
+    chdir $params{'calldir'}
+	if (defined $params{'calldir'});
     return $self;
 }
 

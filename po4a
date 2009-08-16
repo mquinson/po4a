@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.86 2009-03-07 12:33:10 nekral-guest Exp $
+# $Id: po4a,v 1.87 2009-08-16 22:35:15 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -340,6 +340,16 @@ Extra options for msgmerge.
 This option adds '--previous' to the options passed to msgmerge.
 It requires gettext 0.16 or later.
 
+=item --srcdir I<SRCDIR>
+
+Set the base directory for all input documents specified in the po4a
+configuration file.
+
+=item --destdir I<DESTDIR>
+
+Set the base directory for all the output documents specified in the po4a
+configuration file.
+
 =back
 
 =head1 SHORTCOMINGS
@@ -388,7 +398,9 @@ use Pod::Usage qw(pod2usage);
 use File::Temp;
 use File::Basename;
 use File::Copy;
+use File::Spec;
 use Fcntl; # sysopen flags
+use Cwd; # cwd
 
 Locale::Po4a::Common::textdomain('po4a');
 
@@ -437,7 +449,10 @@ sub get_options {
         "msgid-bugs-address"=> undef,
         "package-name"    => undef,
         "package-version" => undef,
-        "msgmerge-opt"    => ""
+        "msgmerge-opt"    => "",
+        "srcdir"          => undef,
+        "destdir"         => undef,
+        "calldir"         => cwd()
     );
     Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
     GetOptions(
@@ -465,7 +480,9 @@ sub get_options {
         'package-name=s'        => \$opts{"package-name"},
         'package-version=s'     => \$opts{"package-version"},
         'previous'              => \$previous,
-        'msgmerge-opt=s'        => \$opts{"msgmerge-opt"}
+        'msgmerge-opt=s'        => \$opts{"msgmerge-opt"},
+        'srcdir=s'              => \$opts{"srcdir"},
+        'destdir=s'             => \$opts{"destdir"}
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -495,6 +512,15 @@ sub get_options {
     # The rm- options imply the no-
     $opts{"no-translations"} = 1 if $opts{"rm-translations"};
     $opts{"no-backups"} = 1 if $opts{"rm-backups"};
+
+    if (defined $opts{"srcdir"} and not -d $opts{"srcdir"}) {
+        die wrap_msg(gettext("Invalid %s. Directory %s does not exist."),
+                     "srcdir", $opts{"srcdir"});
+    }
+    if (defined $opts{"destdir"} and not -d $opts{"destdir"}) {
+        die wrap_msg(gettext("Invalid %s. Directory %s does not exist."),
+                     "destdir", $opts{"destdir"});
+    }
 
     return %opts;
 }
@@ -591,7 +617,7 @@ my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
 my $doc_count = 0;
-open CONFIG,"$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
+open CONFIG,"<","$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
     $nb++;
@@ -664,6 +690,8 @@ while (<CONFIG>) {
 	                 gettext("The POT file cannot be set twice."))
 	    if length $pot_filename;
 
+	chdir $po4a_opts{"srcdir"}
+	    if (defined $po4a_opts{"srcdir"});
 	my $po_directory = $main;
 	die wrap_ref_mod("$config_file:$nb", "",
 	    gettext("'%s' is not a directory"), $po_directory)
@@ -694,6 +722,8 @@ while (<CONFIG>) {
 	         gettext("no PO files found in %s"), $po_directory);
 	}
 
+	chdir $po4a_opts{"calldir"}
+	    if (defined $po4a_opts{"srcdir"});
     } elsif ($cmd =~ m/type: *(.*)/) {
 	if (defined $document{$main}{'format'}) {
 	    warn wrap_ref_mod("$config_file:$nb", "",
@@ -837,6 +867,8 @@ if ($pot_filename =~ m/\$master/) {
     $update_pot_file = 1;
     $po4a_opts{"split"} = 1;
 } else {
+chdir $po4a_opts{"srcdir"}
+    if (defined $po4a_opts{"srcdir"});
 if (-e $pot_filename) {
     my $modtime = (stat $pot_filename)[9];
     # The POT needs to be re-generated if a master document is more recent
@@ -849,6 +881,8 @@ if (-e $pot_filename) {
         }
     }
 
+    chdir $po4a_opts{"calldir"}
+        if (defined $po4a_opts{"srcdir"});
     if ((stat $config_file)[9] > $modtime) {
         # The configuration file was modified after the POT.
         # Maybe a new document, or new options
@@ -866,6 +900,8 @@ if (-e $pot_filename) {
 	if $po4a_opts{"verbose"};
     $update_pot_file = 1;
 }
+chdir $po4a_opts{"calldir"}
+    if (defined $po4a_opts{"srcdir"});
 }
 
 my %Po_opts;
@@ -881,7 +917,11 @@ if (defined $po4a_opts{'package-name'}) {
 if (defined $po4a_opts{'package-version'}) {
     $Po_opts{'package-version'} = $po4a_opts{'package-version'};
 }
+chdir $po4a_opts{"srcdir"}
+    if (defined $po4a_opts{"srcdir"});
 my $potfile=Locale::Po4a::Po->new(\%Po_opts);
+chdir $po4a_opts{"calldir"}
+    if (defined $po4a_opts{"srcdir"});
 if ($update_pot_file) {
     foreach my $master (sort { return -1 if ($a eq "");
                                return 1 if ($b eq "");
@@ -906,9 +946,14 @@ if ($update_pot_file) {
         my @file_in_name;
         push @file_in_name, $master;
         $doc->process('file_in_name'     => \@file_in_name,
-                      'file_in_charset'  => $file_opts{"mastchar"});
+                      'file_in_charset'  => $file_opts{"mastchar"},
+                      'srcdir'           => $po4a_opts{"srcdir"},
+                      'destdir'          => $po4a_opts{"destdir"},
+                      'calldir'          => $po4a_opts{"calldir"});
         $potfile = $doc->getpoout();
     }
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
     if ($po4a_opts{"split"}) {
         (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
                                                    DIR    => "/tmp",
@@ -925,11 +970,17 @@ if ($update_pot_file) {
         $potfile->write_if_needed($pot_filename);
     }
     }
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 
     print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
         unless ($po4a_opts{"quiet"});
 } else {
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
     $potfile->read($pot_filename);
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 }
 
 if ($po4a_opts{"split"}) {
@@ -949,6 +1000,8 @@ if ($po4a_opts{"split"}) {
                                 $!);
         }
 
+        chdir $po4a_opts{"srcdir"}
+            if (defined $po4a_opts{"srcdir"});
         my $dir = dirname($splitted_pot{$master});
         if (not -d $dir) {
             mkdir $dir
@@ -963,6 +1016,8 @@ if ($po4a_opts{"split"}) {
         unless ($po4a_opts{"force"}) {
             move_po_if_needed($tmp_file, $splitted_pot{$master}, 0);
         }
+        chdir $po4a_opts{"calldir"}
+            if (defined $po4a_opts{"srcdir"});
     }
     # Generate a complete .po
     foreach my $lang (sort keys %po_filename) {
@@ -997,6 +1052,8 @@ if ($po4a_opts{"split"}) {
 # update all po files
 my $lang;
 foreach $lang (sort keys %po_filename) {
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
     if (-e $po_filename{$lang}) {
 	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
@@ -1013,9 +1070,13 @@ foreach $lang (sort keys %po_filename) {
 	my $cmd = "msginit -i $pot_filename --locale $lang -o ".$po_filename{$lang}." --no-translator";
 	run_cmd($cmd);
     }
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 }
 
 if ($po4a_opts{"split"}) {
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
     # We don't need the tmp big POT anymore
     unlink($pot_filename);
 
@@ -1085,14 +1146,21 @@ if ($po4a_opts{"split"}) {
             }
         }
     }
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 }
 
 if ($po4a_opts{"rm-backups"}) {
-    # Delete the .po~ backup files generated by msgmerge
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
 
-	foreach $lang (sort keys %po_filename) {
-	    unlink $po_filename{$lang}."~";
-	}
+    # Delete the .po~ backup files generated by msgmerge
+    foreach $lang (sort keys %po_filename) {
+	unlink $po_filename{$lang}."~";
+    }
+
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 }
 
 if (not $po4a_opts{"no-translations"}) {
@@ -1101,7 +1169,11 @@ if (not $po4a_opts{"no-translations"}) {
     foreach $lang (sort keys %po_filename) {
 	# Read the $lang PO once, no options for the creation
 	my $po = Locale::Po4a::Po->new();
+	chdir $po4a_opts{"srcdir"}
+	    if (defined $po4a_opts{"srcdir"});
 	$po->read($po_filename{$lang});
+	chdir $po4a_opts{"calldir"}
+	    if (defined $po4a_opts{"srcdir"});
 
 	DOC: foreach my $master (sort { return -1 if ($a eq "");
 	                                return 1 if ($b eq "");
@@ -1111,22 +1183,35 @@ if (not $po4a_opts{"no-translations"}) {
 	    next unless defined $document{$master}{$lang};
 
             unless ($po4a_opts{"force"}) {
+                chdir $po4a_opts{"destdir"}
+                    if (defined $po4a_opts{"destdir"});
                 my $stampfile = $document{$master}{$lang};
                 unless (-e $document{$master}{$lang}) {
                     $stampfile = $document{$master}{$lang}.".po4a-stamp";
                 }
+                $stampfile = File::Spec->rel2abs($stampfile);
+                chdir $po4a_opts{"calldir"}
+                    if (defined $po4a_opts{"destdir"});
 
-                my @files = ($master, $po_filename{$lang}, $config_file);
+                my @files = ($master,
+                             $po_filename{$lang},
+                             File::Spec->rel2abs($config_file));
                 if (defined $document{$master}{"add_$lang"}) {
                     push @files, @{$document{$master}{"add_$lang"}};
                 }
 
+                chdir $po4a_opts{"srcdir"}
+                    if (defined $po4a_opts{"srcdir"});
                 unless (is_older($stampfile, @files)) {
                     print wrap_msg(gettext("%s doesn't need to be updated."),
                                    $document{$master}{$lang})
                         if ($po4a_opts{"verbose"});
+                    chdir $po4a_opts{"calldir"}
+                        if (defined $po4a_opts{"srcdir"});
                     next DOC;
                 }
+                chdir $po4a_opts{"calldir"}
+                    if (defined $po4a_opts{"srcdir"});
             }
 
 	    my %file_opts = %po4a_opts;
@@ -1158,7 +1243,10 @@ if (not $po4a_opts{"no-translations"}) {
 	                  'file_out_name' => $document{$master}{$lang},
 	                  'file_in_charset'  => $file_opts{"mastchar"},
 	                  'file_out_charset' => $file_opts{"locchar"},
-	                  'addendum_charset' => $file_opts{"addchar"});
+	                  'addendum_charset' => $file_opts{"addchar"},
+	                  'srcdir'           => $po4a_opts{"srcdir"},
+	                  'destdir'          => $po4a_opts{"destdir"},
+	                  'calldir'          => $po4a_opts{"calldir"});
 
 	    my ($percent,$hit,$queries) = $doc->stats();
 
@@ -1166,6 +1254,8 @@ if (not $po4a_opts{"no-translations"}) {
 		print wrap_msg(gettext("Discard %s (%s of %s strings; only %s%% translated; need %s%%)."),
 		    $document{$master}{$lang}, $hit, $queries,
 		    $percent, $file_opts{"threshold"});
+		chdir $po4a_opts{"destdir"}
+		    if (defined $po4a_opts{"destdir"});
 		unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
 		unless ($po4a_opts{"force"}) {
 		    if ($po4a_opts{"stamp"}) {
@@ -1175,26 +1265,40 @@ if (not $po4a_opts{"no-translations"}) {
 			if ($po4a_opts{"verbose"});
 		    }
 		}
+		chdir $po4a_opts{"calldir"}
+		    if (defined $po4a_opts{"destdir"});
 		next DOC;
 	    }
 	    unless ($po4a_opts{"force"}) {
+		chdir $po4a_opts{"destdir"}
+		    if (defined $po4a_opts{"destdir"});
 		if (-e $document{$master}{$lang}.".po4a-stamp") {
 		    unlink $document{$master}{$lang}.".po4a-stamp";
 		    print wrap_msg(gettext("Timestamp %s removed."),
 		                   $document{$master}{$lang}.".po4a-stamp")
 			if ($po4a_opts{"verbose"});
 		}
+		chdir $po4a_opts{"calldir"}
+		    if (defined $po4a_opts{"destdir"});
 	    }
 
 	    if (defined ($document{$master}{"add_$lang"})) {
+		chdir $po4a_opts{"srcdir"}
+		    if (defined $po4a_opts{"srcdir"});
 		foreach my $add (@{$document{$master}{"add_$lang"}}) {
 		    if ( !$doc->addendum($add) ) {
 			die wrap_msg(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
 			    $add, $document{$master}{$lang});
+			chdir $po4a_opts{"destdir"}
+			    if (defined $po4a_opts{"destdir"});
 			unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+			chdir $po4a_opts{"calldir"}
+			    if (defined $po4a_opts{"destdir"});
 			next DOC;
 		    }
 		}
+		chdir $po4a_opts{"calldir"}
+		    if (defined $po4a_opts{"srcdir"});
 	    }
 	    if ($file_opts{"verbose"}) {
 		if ($percent == 100) {
@@ -1206,20 +1310,30 @@ if (not $po4a_opts{"no-translations"}) {
 		}
 	    }
 
+	    chdir $po4a_opts{"destdir"}
+		if (defined $po4a_opts{"destdir"});
 	    $doc->write($document{$master}{$lang});
+	    chdir $po4a_opts{"calldir"}
+		if (defined $po4a_opts{"destdir"});
 	}
     }
 }
 
 if ($po4a_opts{"split"}) {
+    chdir $po4a_opts{"srcdir"}
+	if (defined $po4a_opts{"srcdir"});
     # We don't need the tmp big POs anymore
     foreach $lang (keys %po_filename) {
         unlink $po_filename{$lang};
     }
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"srcdir"});
 }
 
 if ($po4a_opts{"rm-translations"}) {
     # Delete the translated documents
+    chdir $po4a_opts{"destdir"}
+	if (defined $po4a_opts{"destdir"});
     foreach $lang (keys %po_filename) {
 	foreach my $master (keys %document) {
 	    next if ($master eq '');
@@ -1227,6 +1341,8 @@ if ($po4a_opts{"rm-translations"}) {
 	    unlink $document{$master}{$lang}.".po4a-stamp";
 	}
     }
+    chdir $po4a_opts{"calldir"}
+	if (defined $po4a_opts{"destdir"});
 }
 
 sub touch {
