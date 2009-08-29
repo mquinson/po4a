@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2009-08-18 14:56+0300\n"
-"PO-Revision-Date: 2009-07-17 22:34+0200\n"
+"PO-Revision-Date: 2009-08-18 18:11+0200\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -594,15 +594,6 @@ msgstr "Résumé graphique"
 
 #. type: textblock
 #: doc/po4a.7.pod:236
-#, fuzzy
-#| msgid ""
-#| "The following schema gives an overview of the process of translating "
-#| "documentation using po4a. Do not be afraid by its apparent complexity, it "
-#| "comes from the fact that the I<whole> process is represented here. Once "
-#| "you converted your project to po4a, only the right part of the graphic is "
-#| "relevant. Note that sgml is taken as example here, but the same remains "
-#| "true for all modules. Each part of the picture will be detailed in the "
-#| "next sections."
 msgid ""
 "The following schema gives an overview of the process of translating "
 "documentation using po4a. Do not be afraid by its apparent complexity, it "
@@ -614,9 +605,7 @@ msgstr ""
 "traduction de documents avec po4a. Ne soyez pas effrayé par son apparente "
 "complexité, qui est due au fait que le processus I<complet> y est présenté. "
 "Une fois que vous avez converti votre projet à po4a, seule la partie de "
-"droite du graphique est utilisée. Remarquez que l'exemple considère le "
-"format sgml, mais que tout reste identique avec les autres modules. Chaque "
-"partie de la figure sera détaillée dans les sections suivantes."
+"droite du graphique est utilisée."
 
 #. type: textblock
 #: doc/po4a.7.pod:242
@@ -1915,10 +1904,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:758
-#, fuzzy
-#| msgid ""
-#| "po4a modules have options (specified with the -o options) that can be "
-#| "used to change the module behavior."
 msgid ""
 "po4a modules have options (specified with the -o option) that can be used to "
 "change the module behavior."
@@ -4529,6 +4514,12 @@ msgid ""
 "first case, I<other> should be not be translatable. And in the second case, "
 "I<other> should be translated."
 msgstr ""
+"Parfois, un auteur sait que certaines parties ne peuvent pas être "
+"traduite, et ne doivent pas être extraites par po4a. Par exemple, une "
+"option peut recevoir un paramètre I<other>, qui ne doit pas être traduit "
+"et I<other> est également le dernier élément d'une liste. Dans le premier "
+"cas, I<other> ne doit pas être traduit et dans le second, il doit être "
+"traduit."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:290
@@ -4536,6 +4527,8 @@ msgid ""
 "In such case, the author can avoid po4a to extract some strings, using some "
 "special groff constructs:"
 msgstr ""
+"Dans ce cas, l'auteur peut éviter l'extraction de certaines chaînes par "
+"po4a en utilisant une construction groff particulière :"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:293
@@ -4586,6 +4579,10 @@ msgid ""
 "conditional is not strictly needed since po4a will not parse the internal of "
 "the macro definition)"
 msgstr ""
+"ceci nécessitera les options B<-o groff_code=verbatim> et B<-o "
+"untranslated=IR_untranslated> ; avec cette construction, la condition "
+"B<.if !'po4a'hide'> n'est pas strictement nécessaire puisque po4a "
+"n'analysera pas le contenu de la définition de la macro."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:309
@@ -5705,6 +5702,9 @@ msgid ""
 "installed.  Also make sure that the DTD of the SGML files are installed in "
 "the system."
 msgstr ""
+"Ce module utilise B<nsgmls> pour analyser les fichiers SGML. Assurez vous "
+"qu'il est bien installé et que le DTD des fichiers SGML est bien installé "
+"sur le système."
 
 #. type: =item
 #: lib/Locale/Po4a/Sgml.pm:53 lib/Locale/Po4a/TeX.pm:127
@@ -6645,6 +6645,9 @@ msgid ""
 "environment, this function will be used to translate the buffer instead of "
 "translate_buffer()."
 msgstr ""
+"Si une fonction est définie dans %translate_buffer_env pour "
+"l'environnement en cours, cette fonction sera utilisée pour traduire le "
+"bloc au lieu d'utiliser translate_buffer()."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:891
@@ -8072,6 +8075,9 @@ msgid ""
 "which also relies upon the Locale::Po4a::Xml module.  This means that all "
 "tags for web page expressions are assumed to be written in the XHTML syntax."
 msgstr ""
+"Veuillez noter que ce module hérite du module Locale::Po4a::Xhtml, qui "
+"lui même hérite du module Locale::Po4a::Xml. Ceci signifie que toutes les "
+"balises des pages web doivent respecter la syntaxe XHTML."
 
 #. type: textblock
 #: lib/Locale/Po4a/Wml.pm:48
@@ -8082,6 +8088,11 @@ msgid ""
 "are often defined in the Wml.  Improvements will be added in the future "
 "releases."
 msgstr ""
+"Ce module fonctionne pour des documents simples, mais est encore jeune. "
+"Actuellement le plus gros problème du module est principalement qu'il ne "
+"peut pas prendre en charge les balises en ligne incorrecte pour le XML, "
+"comme <email \"foo@example.org\">, qui est souvent utilisé en Wml. Des "
+"améliorations viendront dans les versions suivantes."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Wml.pm:162
@@ -8416,14 +8427,6 @@ msgstr "B<tags>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:327
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of the tags you want to translate or skip.  By "
-#| "default, the specified tags will be excluded, but if you use the "
-#| "\"tagsonly\" option, the specified tags will be the only ones included.  "
-#| "The tags must be in the form E<lt>aaaE<gt>, but you can join some "
-#| "(E<lt>bbbE<gt>E<lt>aaaE<gt>) to say that the content of the tag "
-#| "E<lt>aaaE<gt> will only be translated when it's into a E<lt>bbbE<gt> tag."
 msgid ""
 "Space-separated list of tags you want to translate or skip.  By default, the "
 "specified tags will be excluded, but if you use the \"tagsonly\" option, the "
@@ -8473,15 +8476,6 @@ msgstr "B<attributes>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:344
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of the tag's attributes you want to translate.  You "
-#| "can specify the attributes by their name (for example, \"lang\"), but you "
-#| "can prefix it with a tag hierarchy, to specify that this attribute will "
-#| "only be translated when it's into the specified tag. For example: "
-#| "E<lt>bbbE<gt>E<lt>aaaE<gt>lang specifies that the lang attribute will "
-#| "only be translated if it's into an E<lt>aaaE<gt> tag, and it's into a "
-#| "E<lt>bbbE<gt> tag."
 msgid ""
 "Space-separated list of tag's attributes you want to translate.  You can "
 "specify the attributes by their name (for example, \"lang\"), but you can "
@@ -8526,23 +8520,18 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:359
-#, fuzzy
-#| msgid "B<tags>"
 msgid "B<customtag>"
-msgstr "B<tags>"
+msgstr "B<customtag>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:361
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of tags which should be treated as inline.  By "
-#| "default, all tags break the sequence."
 msgid ""
 "Space-separated list of tags which should not be treated as tags.  These "
 "tags are treated as inline, and do not need to be closed."
 msgstr ""
-"Liste de balises (séparées par des espaces) que vous voulez voir traitées en "
-"ligne. Par défaut, toutes les balises introduisent une césure."
+"Liste de balises (séparées par des espaces) qui ne doivent pas être "
+"traitées comme des balises. Ces balises sont prisent en charge comme des "
+"balises en ligne, et n'ont pas besoin d'être fermées."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:364
@@ -8551,18 +8540,12 @@ msgstr "B<break>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:366
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of the tags you want to treat as inline.  By "
-#| "default, all tags break the sequence.  This follows the same syntax as "
-#| "the tags option."
 msgid ""
 "Space-separated list of tags which should break the sequence.  By default, "
 "all tags break the sequence."
 msgstr ""
-"Liste de balises (séparées par des espaces) que vous voulez voir traitées en "
-"ligne. Par défaut, toutes les balises introduisent une césure. La même "
-"syntaxe que celle de l'option tags est utilisée."
+"Liste de balises (séparées par des espaces) qui doivent inetrrompre les "
+"séquences. Par défaut, toutes les balises introduisent une césure."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:369 lib/Locale/Po4a/Xml.pm:378
@@ -8592,19 +8575,14 @@ msgstr "B<placeholder>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:384
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of the tags you want to treat as inline.  By "
-#| "default, all tags break the sequence.  This follows the same syntax as "
-#| "the tags option."
 msgid ""
 "Space-separated list of tags which should be treated as placeholders.  "
 "Placeholders do not break the sequence, but the content of placeholders is "
 "translated separately."
 msgstr ""
-"Liste de balises (séparées par des espaces) que vous voulez voir traitées en "
-"ligne. Par défaut, toutes les balises introduisent une césure. La même "
-"syntaxe que celle de l'option tags est utilisée."
+"Liste de balises (séparées par des espaces) qui servent à conserver un "
+"emplacement. Ces balises n'introduisent pas de césure, mais leur contenu "
+"est traduit séparément."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:388
@@ -8632,16 +8610,12 @@ msgstr "B<nodefault>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:399
-#, fuzzy
-#| msgid ""
-#| "Space separated list of tags that the module should not try to set by "
-#| "default in the \"tags\" or \"inline\" category."
 msgid ""
 "Space separated list of tags that the module should not try to set by "
 "default in any category."
 msgstr ""
-"Liste de balises (séparées par des espaces) que le module ne doit pas "
-"placer, par défaut, dans les catégories S<« tags »> ou S<« inline »>."
+"Liste de balises (séparées par des espaces) que le module doit "
+"placer par défaut dans aucune catégorie."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:402
@@ -8659,6 +8633,14 @@ msgid ""
 "preprocessor directives must only appear between tags (they must not break a "
 "tag)."
 msgstr ""
+"Prise en charge des directives du préprocesseur C. Quand cette option est "
+"activée, po4a considérera les directives du préprocesseur comme des "
+"césures de paragraphe. C'est important si le préprocesseur est utilisé "
+"pour le fichier XML car sinon, les directives pourraient être insérées au "
+"milieu de lignes si po4a considère qu'elles appartiennent au paragraphe en "
+"cours, et elles ne seraient plus reconnues par le préprocesseur. Note : "
+"les directive du préprocesseur ne doivent apparaître qu'entre des balises "
+"(elles ne doivent pas introduire de césure)."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:414
@@ -8701,11 +8683,13 @@ msgid ""
 "The default categories for tags that are not in any of the translated, "
 "untranslated, break, inline, or placeholder."
 msgstr ""
+"Les catégories par défaut pour les balises qui ne sont dans aucune des "
+"catégories translated, untranslated, break, inline ou placeholder."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:441
 msgid "This is a set of letters:"
-msgstr ""
+msgstr "Il s'agit d'un ensemble de lettres :"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:445
@@ -8715,7 +8699,7 @@ msgstr "I<w>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:447
 msgid "Tags should be translated and content can be re-wrapped."
-msgstr ""
+msgstr "Les balises doivent être traduites et leur contenu peut être remis en forme."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:449
@@ -8724,12 +8708,8 @@ msgstr "I<W>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:451
-#, fuzzy
-#| msgid "Coma-separated list of environments which should not be re-wrapped."
 msgid "Tags should be translated and content should not be re-wrapped."
-msgstr ""
-"Liste d'environnements, séparés par des virgules, dont les retours à la "
-"ligne ne doivent pas être modifiés."
+msgstr "Les balises doivent être traduites et leur contenu ne doit pas être remis en forme."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:453
@@ -8739,7 +8719,7 @@ msgstr "I<i>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:455
 msgid "Tags should be translated inline."
-msgstr ""
+msgstr "Les balises doivent être traduites en ligne."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:457
@@ -8749,7 +8729,7 @@ msgstr "I<p>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:459
 msgid "Tags should be translated as placeholders."
-msgstr ""
+msgstr "Les balise doivent être traduites comme moyen de conserver un emplacement."
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:551
@@ -8803,6 +8783,11 @@ msgid ""
 "override the default behavior defined in your module with command line "
 "options."
 msgstr ""
+"Voud devriez utiliser les options B<_default_inline>, B<_default_break>, "
+"B<_default_placeholder>, B<_default_translated>, "
+"B<_default_untranslated>et B<_default_attributes> dans les modules "
+"dérivés. Ceci permet aux utilisateurs de surcharger en ligne de commande "
+"le comportement par défaut défini par votre module."
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:573
@@ -9050,6 +9035,9 @@ msgid ""
 "An additional array of tags (without brackets) can be passed in argument.  "
 "These path elements are added to the end of the current path."
 msgstr ""
+"Un tableau supplémentaire de balises (sans chevrons) peut être fourni en "
+"paramètre. Ces éléments du chemin sont ajoutés à la fin du chemin en "
+"cours."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:979
@@ -9586,10 +9574,8 @@ msgstr ""
 
 #. type: =head2
 #: po4a:97
-#, fuzzy
-#| msgid "Automatic detection of new commands"
 msgid "Autodetection of the paths and languages"
-msgstr "Détection automatique des nouvelles commandes"
+msgstr "Détection automatique des chemins et langues"
 
 #. type: textblock
 #: po4a:99
@@ -9601,6 +9587,13 @@ msgid ""
 "the extension).  These languages will be used for the substitution of the "
 "$lang variable in the rest of the configuration file."
 msgstr ""
+"Une autre commande peut être utilisée pour indiquer le nom d'un "
+"répertoire où se trouvent les fichiers PO et POT. Quand elle est utilisée, "
+"po4a détectera le fichier POT comme le seule fichier « *.pot » du "
+"répertoire indiqué. po4a utilisera aussi la liste de tous les fichiers "
+"« *.po » pour définir la liste des langues (en enlevant l'extension). Ces "
+"langues seront utilisées pour la substitution de la variable $lang dans le "
+"reste du fichier de configuration."
 
 #. type: textblock
 #: po4a:108
@@ -9608,6 +9601,8 @@ msgid ""
 "This command should not be used together with the po4a_langs or po4a_paths "
 "commands."
 msgstr ""
+"Cette commande ne doit pas être utilisée avec les commandes po4a_langs ou "
+"po4a_paths."
 
 #. type: verbatim
 #: po4a:111
@@ -10257,46 +10252,30 @@ msgstr ""
 #. type: =item
 #: po4a:343
 msgid "--srcdir I<SRCDIR>"
-msgstr ""
+msgstr "--srcdir I<RÉP_SRC>"
 
 #. type: textblock
 #: po4a:345
-#, fuzzy
-#| msgid ""
-#| "You can also set options for all the documents specified in the\n"
-#| "configuration file:\n"
-#| " [options] opt:\"...\" opt_fr:\"...\"\n"
-#| "\n"
 msgid ""
 "Set the base directory for all input documents specified in the po4a "
 "configuration file."
 msgstr ""
-"Vous pouvez aussi définir des options pour tous les documents du fichier de "
-"configuration :\n"
-" [options] opt:\"...\" opt_fr:\"...\"\n"
-"\n"
+"Définir le répertoire de base pour tous les documents d'entrée indiqués "
+"dans le fichier de configuration de po4a."
 
 #. type: =item
 #: po4a:348
 msgid "--destdir I<DESTDIR>"
-msgstr ""
+msgstr "--destdir I<RÉP_DEST>"
 
 #. type: textblock
 #: po4a:350
-#, fuzzy
-#| msgid ""
-#| "You can also set options for all the documents specified in the\n"
-#| "configuration file:\n"
-#| " [options] opt:\"...\" opt_fr:\"...\"\n"
-#| "\n"
 msgid ""
 "Set the base directory for all the output documents specified in the po4a "
 "configuration file."
 msgstr ""
-"Vous pouvez aussi définir des options pour tous les documents du fichier de "
-"configuration :\n"
-" [options] opt:\"...\" opt_fr:\"...\"\n"
-"\n"
+"Définir le répertoire de base pour tous les documents de sortie indiqués "
+"dans le fichier de configuration de po4a."
 
 #. type: =head1
 #: po4a:355
@@ -10556,12 +10535,17 @@ msgid ""
 "Create an blank translated document.  The generated translated document will "
 "be generated assuming all messages are translated by a space or new line."
 msgstr ""
+"Crée une traduction «  blanche » du document. Le document traduit généré "
+"sera généré en supposant que tous les messages sont traduits en une espace "
+"ou une nouvelle ligne."
 
 #. type: textblock
 #: po4a-normalize:51
 msgid ""
 "This is useful to check what parts of the document cannot be translated."
 msgstr ""
+"C'est utile pour vérifier les parties d'un document qui ne peuvent pas "
+"être traduites."
 
 #. type: textblock
 #: po4a-normalize:78
@@ -11095,6 +11079,9 @@ msgid ""
 "module.  The manual page can be provided on the command line, or installed "
 "on the system."
 msgstr ""
+"La page de manuel doit être dans un des formats pris en charge par le "
+"module I<man> de po4a. La page de manuel peut être fournie en ligne de "
+"commande ou peut être installée sur le système."
 
 #. type: Plain text
 #: scripts/po4aman-display-po.1:27
@@ -11103,6 +11090,9 @@ msgid ""
 "supported.  See B<po4apod-display-po> for an equivalent supporting I<pod> "
 "documents."
 msgstr ""
+"Les pages de manuel générées depuis d'autres formats, comme docbook ou "
+"pod, ne sont pas prises en charge. Consultez B<po4apod-display-po> pour un "
+"équivalent prenant en charge les documents I<pod>."
 
 #. type: TP
 #: scripts/po4aman-display-po.1:29 scripts/po4apod-display-po.1:21
@@ -11158,7 +11148,7 @@ msgstr "Des options à passer à B<po4a-translate>."
 #. type: Plain text
 #: scripts/po4aman-display-po.1:48
 msgid "B<po4apod-display-po>.(1)"
-msgstr ""
+msgstr "B<po4apod-display-po>.(1)"
 
 #. type: SH
 #: scripts/po4aman-display-po.1:49 scripts/po4apod-display-po.1:35
@@ -11173,45 +11163,33 @@ msgstr "Thomas Huriaux"
 
 #. type: TH
 #: scripts/po4apod-display-po.1:1
-#, fuzzy, no-wrap
-#| msgid "PO4AMAN-DISPLAY-PO"
+#, no-wrap
 msgid "PO4APOD-DISPLAY-PO"
-msgstr "PO4AMAN-DISPLAY-PO"
+msgstr "PO4APOD-DISPLAY-PO"
 
 #. type: TH
 #: scripts/po4apod-display-po.1:1
-#, fuzzy, no-wrap
-#| msgid "2006-04-08"
+#, no-wrap
 msgid "2009-03-16"
-msgstr "2006-04-08"
+msgstr "2009-03-16"
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:4
-#, fuzzy
-#| msgid "po4aman-display-po - display a translated man page according to a PO"
 msgid ""
 "po4apod-display-po - man display of a translated pod file according to a PO"
 msgstr ""
-"po4aman-display-po - Afficher une page de manuel traduite à partir d'un PO."
+"po4apod-display-po - Afficher un document POD traduit à partir d'un PO."
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:13
-#, fuzzy
-#| msgid ""
-#| "B<po4aman-display-po> B<-p> I<PO_FILE> [B<-m> I<MASTER_FILE>] [B<-o> "
-#| "I<PO4A_OPT>]"
 msgid ""
 "B<po4apod-display-po> B<-p> I<PO_FILE> B<-m> I<POD_FILE> [B<-o> I<PO4A_OPT>]"
 msgstr ""
-"B<po4aman-display-po> B<-p> I<FICHIER_PO> [B<-m> I<FICHIER_ORIGINAL>] [B<-o> "
+"B<po4apod-display-po> B<-p> I<FICHIER_PO> B<-m> I<FICHIER_POD> [B<-o> "
 "I<OPTIONS_PO4A>]"
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:19
-#, fuzzy
-#| msgid ""
-#| "B<po4aman-display-po> can be used by a translator who wants to check how "
-#| "the man page being translated in a PO will be displayed."
 msgid ""
 "B<po4apod-display-po> can be used by a translator who wants to check how the "
 "man page, generated from a pod file, being translated in a PO will be "
@@ -11219,29 +11197,30 @@ msgid ""
 "embedded in Perl script."
 msgstr ""
 "B<po4aman-display-po> permet à un traducteur de visualiser comment sera "
-"affichée une page de manuel qu'il vient de traduire dans un fichier PO."
+"affichée une page de manuel, générée à partir d'un document POD et qu'il "
+"vient de traduire dans un fichier PO. Généralement, le fichier POD n'est "
+"disponible que dans le paquet source ou inclu dans le script Perl."
 
 #. type: TP
 #: scripts/po4apod-display-po.1:24
-#, fuzzy, no-wrap
-#| msgid "B<-p >I<PO_FILE>"
+#, no-wrap
 msgid "B<-m >I<POD_FILE>"
-msgstr "B<-p> I<FICHIER_PO>"
+msgstr "B<-m> I<FICHIER_POD>"
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:27
 msgid "The original pod file used by po4a to generate PO file."
-msgstr ""
+msgstr "Le fichier POD original utilisé par po4a pour produite le fichier PO."
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:34
 msgid "B<po4aman-display-po>.(1)"
-msgstr ""
+msgstr "B<po4aman-display-po>.(1)"
 
 #. type: Plain text
 #: scripts/po4apod-display-po.1:37
 msgid "Florentin Duneau"
-msgstr ""
+msgstr "Florentin Duneau"
 
 #~ msgid ""
 #~ "Once you have the old original again, the gettextization may be as easy "
