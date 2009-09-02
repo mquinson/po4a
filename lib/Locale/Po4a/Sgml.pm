@@ -638,7 +638,7 @@ sub parse_file {
 	    next PROLOGENTITY;
 	    }
 	}
-	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)"\s>(.*)$/is) {  #})"{ (Stupid editor)
+	while ($prolog =~ /(.*?)<!ENTITY\s*%\s*(\S*)\s*"([^>"]*)"\s*>(.*)$/is) {  #})"{ (Stupid editor)
 	    print STDERR "Seen the definition entity of prolog definition '$2' (=$3)\n"
 	      if ($debug{'entities'});
 	    # Preload the content of the entity.
