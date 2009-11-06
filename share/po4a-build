@@ -1,0 +1,251 @@
+#!/bin/sh
+set -e
+
+#  Copyright (C) 2006-2009  Neil Williams <codehelp@debian.org>
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# pull in /usr/bin/gettext.sh
+. gettext.sh
+
+TEXTDOMAIN="po4a"
+export TEXTDOMAIN
+# this DIR might need to be configurable.
+TEXTDOMAINDIR="/usr/share/locale"
+export TEXTDOMAINDIR
+
+# DEFAULTS:
+# name and location of the config file
+# relative to the top level source directory of the translations
+# i.e. the directory containing ./po/
+CONFIG="po4a.config"
+# PODIR po directory for manpages/docs
+PODIR="po"
+# POTFILE path
+POTFILE=""
+# base directory for generated files, e.g. doc
+BASEDIR=""
+# the binary packages that will contain generated manpages
+BINARIES=""
+# the binary packages with manpages in Section 3.
+HASMAN3=""
+# the binary packages using DocBook XML & xsltproc
+XMLPACKAGES=""
+# the DocBook XML files (TODO: let this take paths)
+XMLFILE=""
+# the pattern to find the XML files
+XMLDIR=""
+# the pattern to find the .docbook files
+DOCBOOKDIR=""
+# the XSL file to use for Docbook XSL
+XSLFILE="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"
+# the POD files (TODO: let this take paths)
+PODFILE=""
+# the binary packages using POD
+PODPACKAGES=""
+# html output (subdirectory of BASEDIR)
+HTMLDIR=""
+# html DocBook file
+HTMLFILE=""
+# the XSL file to use for Docbook XSL
+HTMLXSL="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
+
+# remember to add something to the clean:: rule in debian/rules
+# to remove each binary package sub-directory.
+# $(RM) -r doc/emdebian-rootfs doc/multistrap
+
+# below this point, no changes should be needed.
+
+# use a default manpages.cnf in the current directory.
+FILE="manpages.conf"
+
+wrap_langs () {
+	if [ -z "$LANGS" ]; then
+		echo "$1 $2" >> $CONFIG
+	else
+		echo "$1 $2 $3" >> $CONFIG
+	fi
+}
+
+usagehelp () {
+	# print out help message
+	eval_gettext "
+genmanpages - po4a frontend
+
+Syntax: genmanpages
+        genmanpages --pot-only
+
+Commands:
+-?|-h|--help|-version:      print this help message and exit
+--pot-only:                 only create the POT file
+
+Options:
+-f|--file FILE:             manpages.conf config file path
+
+"; echo
+}
+
+while [ -n "$1" ]; do
+case "$1" in
+	--help|-h|-\?|--version)
+		echo usagehelp
+		exit;
+	;;
+	--pot-only)
+		POTONLY=1
+		break;
+	;;
+	-f|--file)
+		shift
+		FILE=$1
+		break;
+	;;
+	*)
+		com=$1
+		eval_gettext "Unrecognised command: \$com"; echo
+	exit;
+	;;
+esac
+done
+
+if [ ! -f "debian/changelog" ]; then
+	eval_gettext "genmanpages started from the wrong directory."; echo
+	exit 2
+fi
+
+if [ ! -f "$FILE" ]; then
+	# without config, there's nothing to do.
+	eval_gettext "Cannot find config file! '\$FILE'"; echo
+	exit 3
+else
+	. ./$FILE
+fi
+
+# calculate the langs, automatically.
+LANGS=`ls $PODIR/*.po 2>/dev/null || true`
+if [ ! -z "$LANGS" ]; then
+	LANGS=`ls $PODIR/*.po | sed -e 's/.*\/\(.*\)\.po/\1 /' || true`
+fi
+if [ ! -z "$LANGS" ]; then
+	LANGS=`echo $LANGS|tr -d '\n'`
+	echo "[po4a_langs] $LANGS" > $CONFIG
+	else
+	echo > $CONFIG
+fi
+wrap_langs "[po4a_paths]" "$POTFILE" "\$lang:$PODIR/\$lang.po"
+
+for file in $XMLDIR/*.xml; do
+	LOCAL=`basename $file`
+	wrap_langs "[type:docbook]" "$file" "\$lang:$XMLDIR/\$lang/$LOCAL"
+done
+for file in $DOCBOOKDIR; do
+	LOCAL=`basename $file`
+	wrap_langs "[type:docbook]" "$file" "\$lang:$BASEDIR/\$lang/$LOCAL"
+done
+if [ -n "$PODFILE" ]; then
+	for file in "$PODFILE"; do
+		wrap_langs "[type:pod]" "$file" "\$lang:$BASEDIR/pod/\$lang/$file"
+	done
+fi
+
+if [ "$POTONLY" = "1" ]; then
+	po4a --no-translations $CONFIG
+	exit
+fi
+
+for d in $BINARIES; do
+	for l in $LANGS; do
+		mkdir -p $BASEDIR/$d/man/$l/man1/
+		if [ "$d" = "$HASMAN3" ]; then
+			mkdir -p $BASEDIR/$d/man/$l/man3/
+		fi
+		mkdir -p $BASEDIR/$d/$l/$HTMLDIR/
+	done
+	mkdir -p $BASEDIR/$d/man/man1/
+	if [ "$d" = "$HASMAN3" ]; then
+		mkdir -p $BASEDIR/$d/man/man3/
+	fi
+	mkdir -p $BASEDIR/pod/$l/
+done
+
+# use -k to create all XML even if untranslated or the XSL breaks the build.
+po4a -k 0 $CONFIG
+
+for d in $BINARIES; do
+	for P in $XMLPACKAGES; do
+		if [ $d = $P ]; then
+			for X in $XMLFILE; do
+				eval_gettext "Processing untranslated files for $d . . ."; echo
+				XML_CATALOG_FILES="/etc/xml/catalog" \
+				xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$X
+				if [ "$d" = "$HASMAN3" ]; then
+					mv $BASEDIR/$P/man/*.3 $BASEDIR/$P/man/man3/
+				else
+					rm -f $BASEDIR/$P/man/*.3
+				fi
+				mv $BASEDIR/$P/man/*.1 $BASEDIR/$P/man/man1/
+			done
+		fi
+	done
+	for POD in $PODPACKAGES; do
+		if [ $d = "$POD" ]; then
+			eval_gettext "Processing untranslated files for $POD . . ."; echo
+			pod2man $PODFILE > $BASEDIR/$POD/man/man1/$PODFILE.1
+		fi
+	done
+	if [ -n "$HTMLDIR" ]; then
+		xsltproc -o $BASEDIR/$d/$HTMLDIR/ --nonet $HTMLXSL $XMLDIR/$HTMLFILE
+	fi
+	for l in $LANGS; do
+		for P in $XMLPACKAGES; do
+			if [ $d = "$P" ]; then
+				eval_gettext "Processing $l translations for $d . . ."; echo
+				for X in $XMLFILE; do
+					XML_CATALOG_FILES="/etc/xml/catalog" \
+					xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$l/$X
+				done
+				if [ "$d" = "$HASMAN3" ]; then
+					mv $BASEDIR/$P/man/*.3 $BASEDIR/$P/man/$l/man3/
+				else
+					rm -f $BASEDIR/$P/man/*.3
+				fi
+				mv $BASEDIR/$P/man/*.1 $BASEDIR/$P/man/$l/man1/
+			fi
+		done
+		for POD in $PODPACKAGES; do
+			if [ $d = "$POD" ]; then
+				eval_gettext "Processing $l translations for $POD . . ."; echo
+				pod2man $BASEDIR/pod/$l/$PODFILE > $BASEDIR/$POD/man/$l/man1/$PODFILE.1
+			fi
+		done
+		if [ -n "$HTMLDIR" ]; then
+			mkdir -p $BASEDIR/$d/$HTMLDIR/$l/
+			xsltproc -o $BASEDIR/$d/$HTMLDIR/$l/ --nonet $HTMLXSL $XMLDIR/$l/$HTMLFILE
+		fi
+		done
+		if [ -n "$HTMLDIR" ]; then
+			for i in `ls $BASEDIR/$d/$HTMLDIR/*.html`; do
+				iconv -t utf-8 -f iso8859-1 $i > $BASEDIR/$HTMLDIR/tmp
+				sed < $BASEDIR/$HTMLDIR/tmp > $i -e 's:charset=ISO-8859-1:charset=UTF-8:'
+			done
+		fi
+	if [ -n "$HTMLDIR" ]; then
+		rm -f $BASEDIR/$HTMLDIR/tmp
+	fi
+done
+
+for l in $LANGS; do
+	rm -rf $XMLDIR/$l
+done
+rm -rf $BASEDIR/pod/
