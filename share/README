@@ -1,0 +1,39 @@
+			po4a-build - one-stop translation
+			=================================
+
+po4a allows translations to be merged into the source documents for
+the generation of translated content but does not then go on to prepare
+the translated output documents - typically the XML is translated but
+no translated manpage is built.
+
+The main reason is that the system to prepare that translated manpage
+can be build-specific.
+
+po4a-build is an attempt to provide a one-stop method for building both
+translated and untranslated content *and* putting that content into the
+final installation locations in a simple and flexible manner.
+
+There is a lot to do to let po4a-build fit in with po4a itself more
+easily. Currently, po4a-build is used as 'genmanpages' in two Debian
+packages (svn-buildpackage and emdebian-rootfs) but some changes may
+be needed to fit with a wider range of uses, particularly upstream rather
+than native packages.
+
+For now, the po4a-build manpage can be created just by running
+po4a-build in this directory. The reliance on 'debian/changelog' is,
+obviously, an inheritance from the 'genmanpages' script used in Debian
+packages that formed the basis for po4a-build. In time, a better check
+may be needed or po4a-build might become sufficiently intelligent that
+it can work out what it needs to do.
+
+Other files
+===========
+
+Packages wanting to use po4a-build often are not using autotools but
+may be using just make. po4a-build has example files that can support
+adding program output translation and these files can be made available
+via po4a. Files include a Makefile suitable for use in the top level
+po/ directory, to build, maintain and install translations of the
+files described in po/POTFILES.in using variables defined in the
+Makevars file, of which po4a-build provides two examples. (More to be
+added, as necessary.)

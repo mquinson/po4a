@@ -67,8 +67,8 @@ HTMLXSL="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
 
 # below this point, no changes should be needed.
 
-# use a default manpages.cnf in the current directory.
-FILE="manpages.conf"
+# use a default po4a-build.cnf in the current directory.
+FILE="po4a-build.conf"
 
 wrap_langs () {
 	if [ -z "$LANGS" ]; then
@@ -81,17 +81,17 @@ wrap_langs () {
 usagehelp () {
 	# print out help message
 	eval_gettext "
-genmanpages - po4a frontend
+po4a-build - po4a frontend
 
-Syntax: genmanpages
-        genmanpages --pot-only
+Syntax: po4a-build
+        po4a-build --pot-only
 
 Commands:
 -?|-h|--help|-version:      print this help message and exit
 --pot-only:                 only create the POT file
 
 Options:
--f|--file FILE:             manpages.conf config file path
+-f|--file FILE:             po4a-build.conf config file path
 
 "; echo
 }
@@ -119,10 +119,11 @@ case "$1" in
 esac
 done
 
-if [ ! -f "debian/changelog" ]; then
-	eval_gettext "genmanpages started from the wrong directory."; echo
-	exit 2
-fi
+#if [ ! -f "debian/changelog" ]; then
+#	eval_gettext "po4a-build started from the wrong directory."; echo
+#	# FIXME: reinstate a test like this, once testing improves.
+#	exit 2
+#fi
 
 if [ ! -f "$FILE" ]; then
 	# without config, there's nothing to do.
