@@ -74,6 +74,37 @@ rewrap this paragraph in the generated PO file and in the translation.
 
 my $bullets = 1;
 
+=item B<tabs>=I<mode>
+
+Specify how tabulations shall be handled. The I<mode> can be any of:
+
+=over
+
+=item B<split>
+
+Lines with tabulations introduce breaks in the current paragraph.
+
+=item B<verbatim>
+
+Paragraph containing tabulations will not be re-wrapped.
+
+=back
+
+By default, tabulations are considered as spaces.
+
+=cut
+
+my $tabs = "";
+
+=item B<breaks>=I<regex>
+
+A regular expression matching lines which introduce breaks.
+The regular expression will be anchored so that the whole line must match.
+
+=cut
+
+my $breaks;
+
 =item B<debianchangelog>
 
 Handle the header and footer of
@@ -116,10 +147,16 @@ sub initialize {
     my $self = shift;
     my %options = @_;
 
-    $self->{options}{'nobullets'}='';
-
     if (defined $options{'nobullets'}) {
         $bullets = 0;
+    }
+
+    if (defined $options{'tabs'}) {
+        $tabs = $options{'tabs'};
+    }
+
+    if (defined $options{'breaks'}) {
+        $breaks = $options{'breaks'};
     }
 
     if (defined $options{'debianchangelog'}) {
@@ -194,7 +231,9 @@ sub parse {
                 undef $self->{type};
                 $wrapped_mode = 1;
             }
-        } elsif ($line =~ /^\s*$/) {
+        } elsif (   ($line =~ /^\s*$/)
+                 or (    defined $breaks
+                     and $line =~ m/^$breaks$/)) {
             # Break paragraphs on lines containing only spaces
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
@@ -547,6 +586,15 @@ sub parse {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="$line\n";
             $wrapped_mode = 1;
+        } elsif ($tabs eq "split" and $line =~ m/\t/ and $paragraph !~ m/\t/s) {
+            $wrapped_mode = 0;
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph = "$line\n";
+            $wrapped_mode = 0;
+        } elsif ($tabs eq "split" and $line !~ m/\t/ and $paragraph =~ m/\t/s) {
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph = "$line\n";
+            $wrapped_mode = 1;
         } else {
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
@@ -574,6 +622,8 @@ sub parse {
         # are considered as verbatim paragraphs
         $wrapped_mode = 0 if (   $paragraph =~ m/^(\*|[0-9]+[.)] )/s
                           or $paragraph =~ m/[ \t][ \t][ \t]/s);
+        $wrapped_mode = 0 if (    $tabs eq "verbatim"
+                              and $paragraph =~ m/\t/s);
         if ($markdown) {
             # Some Markdown markup can (or might) not survive wrapping
             $wrapped_mode = 0 if (
