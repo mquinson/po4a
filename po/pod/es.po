@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: po4a pod\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2009-11-07 13:51+0100\n"
-"PO-Revision-Date: 2009-11-02 16:16+0100\n"
+"PO-Revision-Date: 2009-11-07 15:48+0100\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -7658,60 +7658,59 @@ msgid ""
 msgstr ""
 "Por omisión, cuando se detecta un «bullet», el párrafo del «bullet» no se toma "
 "como un párrafo literal (con la marca no-wrap en el fichero PO), pero el "
-"módulo justifica este párrafo en el fichero PO generado y en la  traducción."
+"módulo justifica este párrafo en el fichero PO generado y en la traducción."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:77
 msgid "B<tabs>=I<mode>"
-msgstr ""
+msgstr "B<tabs>=I<mode>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:79
 msgid "Specify how tabulations shall be handled. The I<mode> can be any of:"
 msgstr ""
+"Especificar como se tratan las tabulaciones. El modo (I<mode>) puede ser"
+"cualquiera de los siguientes:"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:83
 msgid "B<split>"
-msgstr ""
+msgstr "B<split>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:85
 msgid "Lines with tabulations introduce breaks in the current paragraph."
-msgstr ""
+msgstr "Las líneas con tabulaciones insertan líneas nuevas en el párrafo"
+"actual."
 
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:87
-#, fuzzy
 #| msgid "I<verbatim>"
 msgid "B<verbatim>"
-msgstr "I<verbatim>"
+msgstr "B<verbatim>"
 
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:89
-#, fuzzy
 #| msgid ""
 #| "If a paragraph contains a line starting by a space (or tabulation), this "
 #| "paragraph won't be rewrapped."
 msgid "Paragraph containing tabulations will not be re-wrapped."
 msgstr ""
-"Si un párrafo contiene una línea que empieza con un espacio (o tabulado), "
-"este párrafo no se justificará."
+"El párrafo que contiene tabulaciones que no se justificarán."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:93
 msgid "By default, tabulations are considered as spaces."
-msgstr ""
+msgstr "Por omisión, las tabulaciones se consideran espacios."
 
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:99
-#, fuzzy
 #| msgid "B<break>"
 msgid "B<breaks>=I<regex>"
-msgstr "B<break>"
+msgstr "B<breaks>=I<regex>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:101
@@ -7719,6 +7718,9 @@ msgid ""
 "A regular expression matching lines which introduce breaks.  The regular "
 "expression will be anchored so that the whole line must match."
 msgstr ""
+"Una expresión regular que coincide con las líneas que introducen nuevas "
+"líneas. La expresión será anclada para que la línea completa "
+"tenga que coincidir con el patrón."
 
 # type: =item
 #. type: =item
@@ -7943,7 +7945,7 @@ msgid ""
 msgstr ""
 "Esta función devuelve la cabecera que debemos añadir al documento creado, "
 "tratada de forma que sea un comentario para el lenguaje destino. Para ver "
-"las ventajas de esto, véase la sección «Educando a los programadores sobre "
+"las ventajas de esto, véase la sección «Educar a los programadores sobre "
 "las traducciones», en L<po4a(7)|po4a.7>."
 
 # type: textblock
@@ -7990,16 +7992,16 @@ msgid ""
 "\t       $self->unshiftline($line,$lref);\n"
 "\t      \n"
 msgstr ""
-"   PARRAFO: while (1) {\n"
-"       $my ($parrafo,$parraref)=(\"\",\"\");\n"
+"   PÁRRAFO: while (1) {\n"
+"       $my ($párrafo,$párraref)=(\"\",\"\");\n"
 "       $my $primera=1;\n"
-"       my ($linea,$lref)=$self->shiftline();\n"
-"       while (defined($linea)) {\n"
+"       my ($línea,$lref)=$self->shiftline();\n"
+"       while (defined($línea)) {\n"
 "\t   if ($linea =~ m/<p>/ && !$primera--; ) {\n"
 "\t       # No es la primera vez que vemos <p>. \n"
-"\t       # Reinsertar la línea actual en la entrada,\n"
+"\t       # Re-insertar la línea actual en la entrada,\n"
 "\t       #  y poner el párrafo construido en la salida\n"
-"\t       $self->unshiftline($linea,$lref);\n"
+"\t       $self->unshiftline($línea,$lref);\n"
 "\t      \n"
 
 # type: verbatim
@@ -8014,7 +8016,7 @@ msgid ""
 msgstr ""
 "\t       # Ahora que tenemos el documento creado, lo traducimos:\n"
 "\t       #   - Eliminamos el tag principal\n"
-"\t       $parrafo =~ s/^<p>//s;\n"
+"\t       $párrafo =~ s/^<p>//s;\n"
 "\n"
 
 # type: verbatim
@@ -8029,9 +8031,9 @@ msgid ""
 "                               );\n"
 "\n"
 msgstr ""
-"\t       #   - ponemos en la salida el tag inicial (sin traducir) y el resto\n"
-"\t       #     del párrafo (traducido)\n"
-"\t       $documento->pushline(  \"<p>\"\n"
+"\t       #   - Ponemos en la salida la etiqueta inicial (sin traducir) y el \n"
+"\t       #     resto del párrafo (traducido)\n"
+"\t       $self>pushline(  \"<p>\"\n"
 "                                   . $documento->translate($parrafo,$parraref)\n"
 "                                   );\n"
 "\n"
@@ -8049,11 +8051,11 @@ msgid ""
 "\t   }\n"
 "\n"
 msgstr ""
-" \t       next PARRAFO;\n"
+" \t       next PÁRRAFO;\n"
 "\t   } else {\n"
 "\t       # Añadimos al párrafo\n"
-"\t       $parrafo .= $linea;\n"
-"\t       $parraref = $lref unless(length($parraref));\n"
+"\t       $párrafo .= $línea;\n"
+"\t       $párraref = $lref unless(length($párraref));\n"
 "\t   }\n"
 "\n"
 
@@ -8485,7 +8487,7 @@ msgid ""
 "translated document, simply pass its filename to this function and you are "
 "done ;)"
 msgstr ""
-"Consulte L<po4a(7)|po4a.7> para más información sobre qué son los apéndices, "
+"Consulte L<po4a(7)|po4a.7> para más información acerca de los apéndices, "
 "y cómo los traductores deben escribirlos. Para aplicar un apéndice a un "
 "documento traducido, simplemente introduzca su nombre de fichero en ésta "
 "función y ya está ;)"
@@ -8651,7 +8653,7 @@ msgid ""
 "not important. If yes, the function canonizes the string before looking for "
 "a translation or extracting it, and wraps the translation."
 msgstr ""
-"booleano que indica si podemos considerar que los espacios en blanco de la "
+"Booleano que indica si podemos considerar que los espacios en blanco de la "
 "cadena carecen de importancia. En ese caso, la función canoniza la cadena "
 "antes de buscar su traducción o extraerla, y justifica la traducción."
 
