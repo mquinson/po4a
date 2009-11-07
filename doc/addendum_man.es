@@ -1,4 +1,4 @@
-PO4A-HEADER:mode=after;position=^\.SH AUTORES;beginboundary=^\.SH
+PO4A-HEADER:mode=after;position=^\.SH AUTOR;beginboundary=^\.SH
 
 .SH TRADUCCION
 
