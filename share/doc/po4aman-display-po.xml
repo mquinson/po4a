@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                   "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<!-- lifted from troff+man by doclifter -->
+<refentry id='po4amandisplaypo1'>
+<refentryinfo><date>2006-04-08</date></refentryinfo>
+<refmeta>
+<refentrytitle>PO4AMAN-DISPLAY-PO</refentrytitle>
+<manvolnum>1</manvolnum>
+<refmiscinfo class='date'>2006-04-08</refmiscinfo>
+<refmiscinfo class='source'>Po4a Tools</refmiscinfo>
+<refmiscinfo class='manual'>Po4a Tools</refmiscinfo>
+</refmeta>
+<refnamediv id='name'>
+<refname>po4aman-display-po</refname>
+<refpurpose>display a translated man page according to a PO</refpurpose>
+</refnamediv>
+<!-- body begins here -->
+<refsynopsisdiv id='synopsis'>
+<cmdsynopsis>
+  <command>po4aman-display-po</command>    
+    <arg choice='plain'>-p </arg>
+    <arg choice='plain'><replaceable>PO_FILE</replaceable></arg>
+    <arg choice='opt'><arg choice='plain'>-m </arg><arg choice='plain'><replaceable>MASTER_FILE</replaceable></arg></arg>
+    <arg choice='opt'><arg choice='plain'>-o </arg><arg choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>
+    <sbr/>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+
+<refsect1 id='description'><title>DESCRIPTION</title>
+<para><command>po4aman-display-po</command> can be used by a translator who wants to check
+how the man page being translated in a PO will be displayed.</para>
+
+<para>The manual page must be in one of the formats supported by the po4a's
+<emphasis remap='I'>man</emphasis> module.
+The manual page can be provided on the command line, or installed on the
+system.</para>
+
+<para>Manual pages generated from other formats, like docbook or pod, are not
+supported.
+See <emphasis remap='B'>po4apod-display-po</emphasis> for an equivalent supporting <emphasis remap='I'>pod</emphasis>
+documents.</para>
+
+</refsect1>
+
+<refsect1 id='options'><title>OPTIONS</title>
+<variablelist remap='TP'>
+  <varlistentry>
+  <term><option>-p </option><emphasis remap='I'>PO_FILE</emphasis></term>
+  <listitem>
+<para>The PO file containing the translations.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>-m </option><emphasis remap='I'>MASTER_FILE</emphasis></term>
+  <listitem>
+<para>The original man page.
+It can be the absolute or relative path to the original man page (gzipped
+or not), the name the man page or the name and section of the man page
+(using the man.section format).
+<!-- .br -->
+When the master document is not provided with the <option>-m</option> option,
+<command>po4aman-display-po</command> tries to find the original man page
+based on the line reference of the first string in the PO.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+  <term><option>-o </option><emphasis remap='I'>PO4A_OPT</emphasis></term>
+  <listitem>
+<para>Some options to pass to <emphasis remap='B'>po4a-translate</emphasis>.</para>
+
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1 id='see_also'><title>SEE ALSO</title>
+<para><emphasis remap='B'>po4apod-display-po</emphasis>.(1)</para>
+
+</refsect1>
+
+<refsect1 id='author'><title>AUTHOR</title>
+<para>Thomas Huriaux</para>
+</refsect1>
+</refentry>
+
