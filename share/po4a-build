@@ -104,12 +104,12 @@ case "$1" in
 	;;
 	--pot-only)
 		POTONLY=1
-		break;
+		shift
 	;;
 	-f|--file)
 		shift
 		FILE=$1
-		break;
+		shift
 	;;
 	*)
 		com=$1
@@ -119,12 +119,6 @@ case "$1" in
 esac
 done
 
-#if [ ! -f "debian/changelog" ]; then
-#	eval_gettext "po4a-build started from the wrong directory."; echo
-#	# FIXME: reinstate a test like this, once testing improves.
-#	exit 2
-#fi
-
 if [ ! -f "$FILE" ]; then
 	# without config, there's nothing to do.
 	eval_gettext "Cannot find config file! '\$FILE'"; echo
@@ -132,6 +126,8 @@ if [ ! -f "$FILE" ]; then
 else
 	. ./$FILE
 fi
+OURS=`pwd|tr -d '\n'`
+cd `dirname $FILE`
 
 # calculate the langs, automatically.
 LANGS=`ls $PODIR/*.po 2>/dev/null || true`
@@ -146,22 +142,44 @@ if [ ! -z "$LANGS" ]; then
 fi
 wrap_langs "[po4a_paths]" "$POTFILE" "\$lang:$PODIR/\$lang.po"
 
-for file in $XMLDIR/*.xml; do
-	LOCAL=`basename $file`
-	wrap_langs "[type:docbook]" "$file" "\$lang:$XMLDIR/\$lang/$LOCAL"
-done
-for file in $DOCBOOKDIR; do
-	LOCAL=`basename $file`
-	wrap_langs "[type:docbook]" "$file" "\$lang:$BASEDIR/\$lang/$LOCAL"
-done
+if [ -n "$XMLDIR" ]; then
+	for file in $XMLDIR/*.xml; do
+		LOCAL=`basename $file`
+		wrap_langs "[type:docbook]" "$file" "\$lang:$XMLDIR/\$lang/$LOCAL"
+	done
+fi
+if [ -n "$DOCBOOKDIR" ]; then
+	for file in $DOCBOOKDIR; do
+		LOCAL=`basename $file`
+		wrap_langs "[type:docbook]" "$file" "\$lang:$BASEDIR/\$lang/$LOCAL"
+	done
+fi
 if [ -n "$PODFILE" ]; then
-	for file in "$PODFILE"; do
-		wrap_langs "[type:pod]" "$file" "\$lang:$BASEDIR/pod/\$lang/$file"
+	for file in $PODFILE; do
+		LOCAL=`basename $file`
+		wrap_langs "[type:pod]" "$file" "\$lang:$BASEDIR/pod/1/\$lang/$LOCAL"
+	done
+fi
+if [ -n "$POD7FILES" ]; then
+	for file in $POD7FILES; do
+		LOCAL=`basename $file`
+		wrap_langs "[type:pod]" "$file" "\$lang:$BASEDIR/pod/7/\$lang/$LOCAL"
+	done
+fi
+if [ -n "$PODMODULES" ]; then
+	for file in $PODMODULES; do
+		wrap_langs "[type:pod]" "$file" "\$lang:$BASEDIR/pod/3/\$lang/$file"
 	done
 fi
 
 if [ "$POTONLY" = "1" ]; then
-	po4a --no-translations $CONFIG
+	# Allow internal builds within po4a
+	if [ "$USE_INTERNAL_PO4A" = "yes" ]; then
+		eval_gettext "Internal po4a from $OURS being used instead of /usr/bin/"; echo
+		PERL5LIB=$OURS/lib perl $OURS/po4a --no-translations $CONFIG
+	else
+		po4a --no-translations $CONFIG
+	fi
 	exit
 fi
 
@@ -171,17 +189,41 @@ for d in $BINARIES; do
 		if [ "$d" = "$HASMAN3" ]; then
 			mkdir -p $BASEDIR/$d/man/$l/man3/
 		fi
-		mkdir -p $BASEDIR/$d/$l/$HTMLDIR/
+		if [ -n "$PODMODULES" ]; then
+			mkdir -p $BASEDIR/$d/man/$l/man3/
+		fi
+		if [ -n "$HTMLDIR" ]; then
+			mkdir -p $BASEDIR/$d/$l/$HTMLDIR/
+		fi
+		if [ -n "$POD7FILES" ]; then
+			mkdir -p $BASEDIR/$d/man/$l/man7/
+		fi
 	done
 	mkdir -p $BASEDIR/$d/man/man1/
 	if [ "$d" = "$HASMAN3" ]; then
 		mkdir -p $BASEDIR/$d/man/man3/
 	fi
 	mkdir -p $BASEDIR/pod/$l/
+	if [ -n "$PODMODULES" ]; then
+		mkdir -p $BASEDIR/$d/man/man3/
+	fi
+	if [ -n "$POD7FILES" ]; then
+		mkdir -p $BASEDIR/$d/man/man7/
+	fi
 done
 
 # use -k to create all XML even if untranslated or the XSL breaks the build.
-po4a -k 0 $CONFIG
+if [ -n "$KEEP" ]; then
+	K="-k $KEEP"
+fi
+
+# Allow internal builds within po4a
+if [ "$USE_INTERNAL_PO4A" = "yes" ]; then
+	eval_gettext "Internal po4a from $OURS being used instead of /usr/bin/"; echo
+	PERL5LIB=$OURS/lib perl $OURS/po4a $K $CONFIG
+else
+	po4a $K $CONFIG
+fi
 
 for d in $BINARIES; do
 	for P in $XMLPACKAGES; do
@@ -201,8 +243,32 @@ for d in $BINARIES; do
 	done
 	for POD in $PODPACKAGES; do
 		if [ $d = "$POD" ]; then
-			eval_gettext "Processing untranslated files for $POD . . ."; echo
-			pod2man $PODFILE > $BASEDIR/$POD/man/man1/$PODFILE.1
+			for file in $PODFILE; do
+				LOCAL=`basename $file`
+				eval_gettext "Processing untranslated files for $file (1) . . ."; echo
+				pod2man $file $BASEDIR/$POD/man/man1/$LOCAL.1
+			done
+			if [ -n "$PODMODULES" ]; then
+				for file in $PODMODULES; do
+					# a bit of sed magic to convert a path to a module name.
+					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
+					eval_gettext "Processing untranslated files for $name (3) . . ."; echo
+					pod2man $file $BASEDIR/$POD/man/man3/$name.3
+				done
+			fi
+			if [ -n "$POD7FILES" ]; then
+				for file in $POD7FILES; do
+					LOCAL=`basename $file`
+					eval_gettext "Processing untranslated files for $file (7) . . ."; echo
+					# shorten names that already contain the 7.
+					SHORT=`echo $LOCAL|cut -d'7' -f1|tr -d .`
+					if [ -n "$SHORT" ]; then
+						pod2man -s 7 $file $BASEDIR/$POD/man/man7/${SHORT}.7
+					else
+						pod2man -s 7 $file $BASEDIR/$POD/man/man7/${LOCAL}.7
+					fi
+				done
+			fi
 		fi
 	done
 	if [ -n "$HTMLDIR" ]; then
@@ -211,10 +277,12 @@ for d in $BINARIES; do
 	for l in $LANGS; do
 		for P in $XMLPACKAGES; do
 			if [ $d = "$P" ]; then
-				eval_gettext "Processing $l translations for $d . . ."; echo
 				for X in $XMLFILE; do
-					XML_CATALOG_FILES="/etc/xml/catalog" \
-					xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$l/$X
+					if [ -f $XMLDIR/$l/$X ]; then
+					eval_gettext "Processing $l translations for $d . . ."; echo
+						XML_CATALOG_FILES="/etc/xml/catalog" \
+						xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$l/$X
+					fi
 				done
 				if [ "$d" = "$HASMAN3" ]; then
 					mv $BASEDIR/$P/man/*.3 $BASEDIR/$P/man/$l/man3/
@@ -226,8 +294,38 @@ for d in $BINARIES; do
 		done
 		for POD in $PODPACKAGES; do
 			if [ $d = "$POD" ]; then
-				eval_gettext "Processing $l translations for $POD . . ."; echo
-				pod2man $BASEDIR/pod/$l/$PODFILE > $BASEDIR/$POD/man/$l/man1/$PODFILE.1
+				for file in $PODFILE; do
+					LOCAL=`basename $file`
+					if [ -f $BASEDIR/pod/1/$l/$LOCAL ]; then
+						eval_gettext "Processing $l translations for $file (1). . ."; echo
+						pod2man $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
+					fi
+				done
+			fi
+			if [ -n "$PODMODULES" ]; then
+				for file in $PODMODULES; do
+					# a bit of sed magic to convert a path to a module name.
+					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
+					if [ -f $BASEDIR/pod/3/$l/$file ]; then
+						eval_gettext "Processing $l translations for $name (3). . ."; echo
+						pod2man $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
+					fi
+				done
+			fi
+			if [ -n "$POD7FILES" ]; then
+				for file in $POD7FILES; do
+					LOCAL=`basename $file`
+					if [ -f $BASEDIR/pod/7/$l/$LOCAL ]; then
+						eval_gettext "Processing $l translations for $file (7). . ."; echo
+						# shorten names that already contain the 7.
+						SHORT=`echo $LOCAL|cut -d'7' -f1|tr -d .`
+						if [ -n "$SHORT" ]; then
+							pod2man -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/${SHORT}.7
+						else
+							pod2man -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/$LOCAL.7
+						fi
+					fi
+				done
 			fi
 		done
 		if [ -n "$HTMLDIR" ]; then
