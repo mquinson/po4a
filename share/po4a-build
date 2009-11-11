@@ -38,20 +38,24 @@ POTFILE=""
 BASEDIR=""
 # the binary packages that will contain generated manpages
 BINARIES=""
-# the binary packages with manpages in Section 3.
-HASMAN3=""
+# the Docbook XML manpages for Section 3.
+XMLMAN3=""
 # the binary packages using DocBook XML & xsltproc
 XMLPACKAGES=""
-# the DocBook XML files (TODO: let this take paths)
-XMLFILE=""
+# the DocBook XML files for Section 1.
+XMLMAN1=""
 # the pattern to find the XML files
 XMLDIR=""
 # the pattern to find the .docbook files
 DOCBOOKDIR=""
 # the XSL file to use for Docbook XSL
 XSLFILE="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"
-# the POD files (TODO: let this take paths)
+# the POD files for man1
 PODFILE=""
+# the POD files for man3/ - module names regenerated from the path.
+PODMODULES=""
+# POD files for section 7
+POD7FILES=""
 # the binary packages using POD
 PODPACKAGES=""
 # html output (subdirectory of BASEDIR)
@@ -60,6 +64,8 @@ HTMLDIR=""
 HTMLFILE=""
 # the XSL file to use for Docbook XSL
 HTMLXSL="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
+# Minimal threshold for translation percentage to keep
+KEEP=
 
 # remember to add something to the clean:: rule in debian/rules
 # to remove each binary package sub-directory.
@@ -186,7 +192,7 @@ fi
 for d in $BINARIES; do
 	for l in $LANGS; do
 		mkdir -p $BASEDIR/$d/man/$l/man1/
-		if [ "$d" = "$HASMAN3" ]; then
+		if [ "$d" = "$XMLsMAN3" ]; then
 			mkdir -p $BASEDIR/$d/man/$l/man3/
 		fi
 		if [ -n "$PODMODULES" ]; then
@@ -200,7 +206,7 @@ for d in $BINARIES; do
 		fi
 	done
 	mkdir -p $BASEDIR/$d/man/man1/
-	if [ "$d" = "$HASMAN3" ]; then
+	if [ "$d" = "$XMLMAN3" ]; then
 		mkdir -p $BASEDIR/$d/man/man3/
 	fi
 	mkdir -p $BASEDIR/pod/$l/
@@ -228,16 +234,17 @@ fi
 for d in $BINARIES; do
 	for P in $XMLPACKAGES; do
 		if [ $d = $P ]; then
-			for X in $XMLFILE; do
-				eval_gettext "Processing untranslated files for $d . . ."; echo
+			for X in $XMLMAN1; do
+				eval_gettext "Processing untranslated files for $X (1). . ."; echo
+				MANDIR=$BASEDIR/$P/man/man1/
 				XML_CATALOG_FILES="/etc/xml/catalog" \
-				xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$X
-				if [ "$d" = "$HASMAN3" ]; then
-					mv $BASEDIR/$P/man/*.3 $BASEDIR/$P/man/man3/
-				else
-					rm -f $BASEDIR/$P/man/*.3
-				fi
-				mv $BASEDIR/$P/man/*.1 $BASEDIR/$P/man/man1/
+				xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X
+			done
+			for X3 in $XMLMAN3; do
+				eval_gettext "Processing untranslated files for $X3 (3). . ."; echo
+					MANDIR=$BASEDIR/$P/man/man3/
+				XML_CATALOG_FILES="/etc/xml/catalog" \
+				xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X3
 			done
 		fi
 	done
@@ -277,19 +284,22 @@ for d in $BINARIES; do
 	for l in $LANGS; do
 		for P in $XMLPACKAGES; do
 			if [ $d = "$P" ]; then
-				for X in $XMLFILE; do
+				for X in $XMLMAN1; do
 					if [ -f $XMLDIR/$l/$X ]; then
-					eval_gettext "Processing $l translations for $d . . ."; echo
+						eval_gettext "Processing $l translations for $X (1). . ."; echo
+						MANDIR=$BASEDIR/$P/man/$l/man1/
 						XML_CATALOG_FILES="/etc/xml/catalog" \
-						xsltproc -o $BASEDIR/$P/man/ --nonet $XSLFILE $XMLDIR/$l/$X
+						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X
 					fi
 				done
-				if [ "$d" = "$HASMAN3" ]; then
-					mv $BASEDIR/$P/man/*.3 $BASEDIR/$P/man/$l/man3/
-				else
-					rm -f $BASEDIR/$P/man/*.3
-				fi
-				mv $BASEDIR/$P/man/*.1 $BASEDIR/$P/man/$l/man1/
+				for X3 in $XMLMAN3; do
+					if [ -f $XMLDIR/$l/$X3 ]; then
+						eval_gettext "Processing $l translations for $X3 (3). . ."; echo
+						MANDIR=$BASEDIR/$P/man/$l/man3/
+						XML_CATALOG_FILES="/etc/xml/catalog" \
+						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X3
+					fi
+				done
 			fi
 		done
 		for POD in $PODPACKAGES; do
