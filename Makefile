@@ -13,6 +13,7 @@ clean: Build
 	@./Build realclean
 	$(MAKE) -C share clean
 	$(MAKE) -C po/bin clean
+	$(RM) po4a-build.sh
 
 dist: Build
 	./share/po4a-build --pot-only -f ./po4a-build.conf

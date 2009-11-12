@@ -1,5 +1,19 @@
 2009-11-12  Neil Williams  <linux@codehelp.co.uk>
 
+	* Build.PL: OK, this is a hack but gettext really doesn't
+	like mixing shell and perl without one of the formats
+	having a file extension, so make a temporary po4a-build.sh
+	symlink which gets cleaned up later.
+	* Makefile: Clean up the temporary symlink.
+	* po/bin/Makevars: Let xgettext use the default Lang
+	now that the symlink solves the other confusion.
+	* po/bin/POTFILES.in: Get POTFILES to look at the symlink.
+	* po/bin/po4a.pot: Updated with new strings from po4a-build.
+	* share/po4a-build: Fix the string markup so that xgettext
+	finds all 14 strings.
+
+2009-11-12  Neil Williams  <linux@codehelp.co.uk>
+
 	* Build.PL: Convert to the po4a-build build system.
 	* MANIFEST: Add po4a-build support files.
 	* Makefile: Generate translated content via po4a-build.

@@ -181,7 +181,8 @@ fi
 if [ "$POTONLY" = "1" ]; then
 	# Allow internal builds within po4a
 	if [ "$USE_INTERNAL_PO4A" = "yes" ]; then
-		eval_gettext "Internal po4a from $OURS being used instead of /usr/bin/"; echo
+		# test
+		eval_gettext "Internal po4a from \$OURS being used instead of /usr/bin/"; echo
 		PERL5LIB=$OURS/lib perl $OURS/po4a --no-translations $CONFIG
 	else
 		po4a --no-translations $CONFIG
@@ -225,7 +226,7 @@ fi
 
 # Allow internal builds within po4a
 if [ "$USE_INTERNAL_PO4A" = "yes" ]; then
-	eval_gettext "Internal po4a from $OURS being used instead of /usr/bin/"; echo
+	eval_gettext "Internal po4a from \$OURS being used instead of /usr/bin/"; echo
 	PERL5LIB=$OURS/lib perl $OURS/po4a $K $CONFIG
 else
 	po4a $K $CONFIG
@@ -235,13 +236,13 @@ for d in $BINARIES; do
 	for P in $XMLPACKAGES; do
 		if [ $d = $P ]; then
 			for X in $XMLMAN1; do
-				eval_gettext "Processing untranslated files for $X (1). . ."; echo
+				eval_gettext "Processing untranslated files for \$X (1). . ."; echo
 				MANDIR=$BASEDIR/$P/man/man1/
 				XML_CATALOG_FILES="/etc/xml/catalog" \
 				xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X
 			done
 			for X3 in $XMLMAN3; do
-				eval_gettext "Processing untranslated files for $X3 (3). . ."; echo
+				eval_gettext "Processing untranslated files for \$X3 (3). . ."; echo
 					MANDIR=$BASEDIR/$P/man/man3/
 				XML_CATALOG_FILES="/etc/xml/catalog" \
 				xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X3
@@ -252,21 +253,21 @@ for d in $BINARIES; do
 		if [ $d = "$POD" ]; then
 			for file in $PODFILE; do
 				LOCAL=`basename $file`
-				eval_gettext "Processing untranslated files for $file (1) . . ."; echo
+				eval_gettext "Processing untranslated files for \$file (1) . . ."; echo
 				pod2man $file $BASEDIR/$POD/man/man1/$LOCAL.1
 			done
 			if [ -n "$PODMODULES" ]; then
 				for file in $PODMODULES; do
 					# a bit of sed magic to convert a path to a module name.
 					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
-					eval_gettext "Processing untranslated files for $name (3) . . ."; echo
+					eval_gettext "Processing untranslated files for \$name (3) . . ."; echo
 					pod2man $file $BASEDIR/$POD/man/man3/$name.3
 				done
 			fi
 			if [ -n "$POD7FILES" ]; then
 				for file in $POD7FILES; do
 					LOCAL=`basename $file`
-					eval_gettext "Processing untranslated files for $file (7) . . ."; echo
+					eval_gettext "Processing untranslated files for \$file (7) . . ."; echo
 					# shorten names that already contain the 7.
 					SHORT=`echo $LOCAL|cut -d'7' -f1|tr -d .`
 					if [ -n "$SHORT" ]; then
@@ -286,7 +287,7 @@ for d in $BINARIES; do
 			if [ $d = "$P" ]; then
 				for X in $XMLMAN1; do
 					if [ -f $XMLDIR/$l/$X ]; then
-						eval_gettext "Processing $l translations for $X (1). . ."; echo
+						eval_gettext "Processing \$l translations for \$X (1). . ."; echo
 						MANDIR=$BASEDIR/$P/man/$l/man1/
 						XML_CATALOG_FILES="/etc/xml/catalog" \
 						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X
@@ -294,7 +295,7 @@ for d in $BINARIES; do
 				done
 				for X3 in $XMLMAN3; do
 					if [ -f $XMLDIR/$l/$X3 ]; then
-						eval_gettext "Processing $l translations for $X3 (3). . ."; echo
+						eval_gettext "Processing \$l translations for \$X3 (3). . ."; echo
 						MANDIR=$BASEDIR/$P/man/$l/man3/
 						XML_CATALOG_FILES="/etc/xml/catalog" \
 						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X3
@@ -307,7 +308,7 @@ for d in $BINARIES; do
 				for file in $PODFILE; do
 					LOCAL=`basename $file`
 					if [ -f $BASEDIR/pod/1/$l/$LOCAL ]; then
-						eval_gettext "Processing $l translations for $file (1). . ."; echo
+						eval_gettext "Processing \$l translations for \$file (1). . ."; echo
 						pod2man $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
 					fi
 				done
@@ -317,7 +318,7 @@ for d in $BINARIES; do
 					# a bit of sed magic to convert a path to a module name.
 					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
 					if [ -f $BASEDIR/pod/3/$l/$file ]; then
-						eval_gettext "Processing $l translations for $name (3). . ."; echo
+						eval_gettext "Processing \$l translations for \$name (3). . ."; echo
 						pod2man $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
 					fi
 				done
@@ -326,7 +327,7 @@ for d in $BINARIES; do
 				for file in $POD7FILES; do
 					LOCAL=`basename $file`
 					if [ -f $BASEDIR/pod/7/$l/$LOCAL ]; then
-						eval_gettext "Processing $l translations for $file (7). . ."; echo
+						eval_gettext "Processing \$l translations for \$file (7). . ."; echo
 						# shorten names that already contain the 7.
 						SHORT=`echo $LOCAL|cut -d'7' -f1|tr -d .`
 						if [ -n "$SHORT" ]; then

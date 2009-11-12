@@ -4,6 +4,7 @@ use Module::Build;
 use strict;
 use warnings;
 
+symlink ("share/po4a-build", "po4a-build.sh");
 my $builder = Module::Build->subclass
 (
     class => 'My::Builder',
