@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.36.5\n"
-"Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2009-11-07 13:51+0100\n"
+"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"POT-Creation-Date: 2009-11-12 21:42+0000\n"
 "PO-Revision-Date: 2009-09-30 19:31+0100\n"
 "Last-Translator: Michal Simunek <michal.simunek@gmail.com>\n"
 "Language-Team: Czech <debian-l10n-czech@lists.debian.org>\n"
@@ -35,6 +35,7 @@ msgstr "Nezdařilo se načíst modul: %s"
 msgid "List of valid formats:"
 msgstr "Seznam platných formátů:"
 
+#. ."\n  - ".gettext("bibtex: BibTex bibliography format.")
 #: ../../lib/Locale/Po4a/Chooser.pm:61
 msgid "dia: uncompressed Dia diagrams."
 msgstr "dia: nekomprimované diagramy Dia."
@@ -47,6 +48,7 @@ msgstr "docbook: XML docbook."
 msgid "guide: Gentoo Linux's xml documentation format."
 msgstr "guide: xml dokumentační formát Gentoo Linux."
 
+#. ."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
 #: ../../lib/Locale/Po4a/Chooser.pm:65
 msgid "ini: .INI format."
 msgstr "ini: formát .INI."
@@ -380,13 +382,13 @@ msgid "Can't unlink %s: %s."
 msgstr "Není možné oddělit %s: %s."
 
 #: ../../lib/Locale/Po4a/Po.pm:500 ../../po4a:1135
-#, perl-format
+#, c-format, perl-format
 msgid "Can't copy %s to %s: %s."
 msgstr "Nelze zkopírovat %s do %s: %s."
 
 #: ../../lib/Locale/Po4a/Po.pm:505 ../../lib/Locale/Po4a/Po.pm:510
 #: ../../po4a:1142
-#, perl-format
+#, c-format, perl-format
 msgid "Can't move %s to %s: %s."
 msgstr "Nelze přesunout %s do %s: %s."
 
@@ -641,7 +643,7 @@ msgid "kpsewhich cannot find %s"
 msgstr "kpsewhich nenalezl %s"
 
 #: ../../lib/Locale/Po4a/TeX.pm:1025 ../../po4a:620
-#, perl-format
+#, c-format, perl-format
 msgid "Can't open %s: %s"
 msgstr "Nelze otevřít %s: %s"
 
@@ -774,6 +776,8 @@ msgstr "Dodatek '%s' byl aplikován po tomto řádku: %s"
 msgid "Addendum '%s' applied at the end of the file."
 msgstr "Dodatek '%s' byl aplikován na konec souboru."
 
+#. FYI, the document charset have to be determined *before* we see the first
+#. string to recode.
 #: ../../lib/Locale/Po4a/TransTractor.pm:853
 #: ../../lib/Locale/Po4a/TransTractor.pm:1037
 #, perl-format
@@ -789,6 +793,8 @@ msgstr ""
 msgid "Can't create a temporary xml file: %s"
 msgstr "Nelze vytvořit dočasný xml soubor: %s"
 
+#. TODO: It will be hard to identify the location.
+#. => find a way to retrieve the reference.
 #: ../../lib/Locale/Po4a/Xml.pm:208
 #, perl-format
 msgid ""
@@ -841,6 +847,7 @@ msgstr "Špatná syntaxe atributu.  Pokračuji..."
 msgid "Bad attribute syntax"
 msgstr "Špatná syntaxe atributu"
 
+#. Inform that this tag isn't translated in debug mode
 #: ../../lib/Locale/Po4a/Xml.pm:1640
 #, perl-format
 msgid "Content of tag %s excluded: %s"
@@ -864,65 +871,58 @@ msgid "Tag '%s' both in the %s and %s categories."
 msgstr "Označit '%s' v obou (%s a %s) kategoriích."
 
 #: ../../po4a:517 ../../po4a:521
-#, fuzzy, perl-format
-#| msgid "File %s does not exist."
+#, fuzzy, c-format
 msgid "Invalid %s. Directory %s does not exist."
 msgstr "Soubor %s neexistuje."
 
 #: ../../po4a:554 ../../po4a:772
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s' (%s)."
 msgstr "Neanalyzovatelný argument '%s' (%s)."
 
 #: ../../po4a:588
-#, perl-format
+#, c-format
 msgid "failed to execute '%s': %s."
 msgstr "chyba při vykonávání: '%s': %s."
 
-#: ../../po4a:592
-#, perl-format
-msgid "'%s' died with signal %d, with coredump."
+#: ../../po4a:592 ../../po4a:596
+#, fuzzy, c-format
+msgid "'%s' died with signal %d, "
 msgstr "'%s' odumřel se signálem %d, s výpisem jádra."
 
-#: ../../po4a:596
-#, perl-format
-msgid "'%s' died with signal %d, without coredump."
-msgstr "'%s' odumřel se signálem %d, bez výpisu jádra."
-
 #: ../../po4a:601
-#, perl-format
+#, c-format
 msgid "'%s' exited with value %d."
 msgstr "'%s' skončil s hodnotou %d."
 
 #: ../../po4a:605
-#, perl-format
+#, c-format
 msgid "Error: %s"
 msgstr "Chyba: %s"
 
 #: ../../po4a:611 ../../po4a-gettextize:224 ../../po4a-normalize:150
 #: ../../po4a-translate:204 ../../po4a-translate:205 ../../po4a-updatepo:219
-#: ../../scripts/msguntypot:167 ../../scripts/msguntypot:169
-#, perl-format
+#, c-format
 msgid "File %s does not exist."
 msgstr "Soubor %s neexistuje."
 
 #: ../../po4a:633
-#, perl-format
+#, c-format
 msgid "Unknown variable: %s"
 msgstr "Neznámá proměnná: %s"
 
 #: ../../po4a:642
-#, perl-format
+#, c-format
 msgid "Syntax error: %s"
 msgstr "Chybná syntaxe: %s"
 
 #: ../../po4a:669 ../../po4a:681
-#, perl-format
+#, c-format
 msgid "'%s' redeclared"
 msgstr "'%s' byl předeklarován"
 
 #: ../../po4a:674
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s'."
 msgstr "Neanalyzovatelný argument '%s'."
 
@@ -935,30 +935,28 @@ msgid "The POT file cannot be set twice."
 msgstr "Soubor POT nemůže být nastaven dvakrát."
 
 #: ../../po4a:697
-#, perl-format
+#, c-format
 msgid "'%s' is not a directory"
 msgstr "'%s' není složka"
 
 #: ../../po4a:701
-#, perl-format
+#, c-format
 msgid "Cannot list the '%s' directory"
 msgstr "Nelze procházet složku '%s'"
 
 #: ../../po4a:712
-#, perl-format
+#, c-format
 msgid "too many POT files: %s %s"
 msgstr "Příliš mnoho souborů POT: %s %s"
 
 #: ../../po4a:722
-#, perl-format
+#, c-format
 msgid "no PO files found in %s"
 msgstr "v %s nenalezeny soubory PO"
 
 #: ../../po4a:730
-#, perl-format
-msgid ""
-"The '%s' master file was specified earlier in the configuration file.  This "
-"may cause problems with options."
+#, fuzzy, c-format
+msgid "The '%s' master file was specified earlier in the "
 msgstr ""
 "Hlavní soubor '%s' byl v konfiguračním souboru nastaven již dříve. To může "
 "způsobit problémy s volbami."
@@ -968,12 +966,12 @@ msgid "The translated and master file are the same."
 msgstr "Původní a přeložený soubor jsou shodné."
 
 #: ../../po4a:783
-#, perl-format
+#, c-format
 msgid "Translation of %s in %s redefined"
 msgstr "Překlad %s v %s předefinován."
 
 #: ../../po4a:809
-#, perl-format
+#, c-format
 msgid "Unparsable command '%s'."
 msgstr "Neanalyzovatelný příkaz '%s'."
 
@@ -983,7 +981,7 @@ msgstr ""
 "cesty po4a_paths nejsou deklarovány. Nelze určit, kde hledat soubory pot a po"
 
 #: ../../po4a:828
-#, perl-format
+#, c-format
 msgid "Cannot parse option line (missing >%s<?): %s"
 msgstr "Nelze zpracovat volbu (chybí >%s<?): %s"
 
@@ -992,78 +990,78 @@ msgid "Splitted mode, creating a temporary POT"
 msgstr "Mód dělení, vytvářím dočasný soubor POT"
 
 #: ../../po4a:896 ../../po4a:1058 ../../po4a-updatepo:247
-#, perl-format
+#, c-format
 msgid "Updating %s:"
 msgstr "Aktualizuji %s:"
 
 #: ../../po4a:899 ../../po4a:1068 ../../po4a-updatepo:255
-#, perl-format
+#, c-format
 msgid "Creating %s:"
 msgstr "Vytvářím %s:"
 
 #: ../../po4a:963 ../../po4a:999 ../../po4a:1096 ../../po4a-updatepo:229
-#, perl-format
+#, c-format
 msgid "Can't create a temporary pot file: %s"
 msgstr "Nelze vytvořit dočasný soubor pot: %s"
 
 #: ../../po4a:976
-#, perl-format
+#, c-format
 msgid " (%d entries)"
 msgstr " (%d položek)"
 
 #: ../../po4a:1008 ../../po4a:1122
-#, perl-format
+#, c-format
 msgid "Can't create directory '%s': %s"
 msgstr "Nelze vytvořit složku '%s': %s"
 
-#: ../../po4a:1030 ../../scripts/msguntypot:204
-#, perl-format
+#: ../../po4a:1030
+#, c-format
 msgid "Can't create a temporary po file: %s"
 msgstr "Nelze vytvořit dočasný soubor po: %s"
 
 #: ../../po4a:1206
-#, perl-format
+#, c-format
 msgid "%s doesn't need to be updated."
 msgstr "%s není třeba aktualizovat."
 
 #: ../../po4a:1254
-#, perl-format
+#, c-format
 msgid "Discard %s (%s of %s strings; only %s%% translated; need %s%%)."
 msgstr ""
 "Zahazuji %s (%s z %s řetězců; přeloženo pouze %s%%; je potřeba alespoň %s%%)."
 
 #: ../../po4a:1263
-#, perl-format
+#, c-format
 msgid "Timestamp %s created."
 msgstr "Časový údaj %s vytvořen."
 
 #: ../../po4a:1277
-#, perl-format
+#, c-format
 msgid "Timestamp %s removed."
 msgstr "Časový údaj %s odstraněn."
 
 #: ../../po4a:1290
-#, perl-format
+#, c-format
 msgid "Addendum %s does NOT apply to %s (translation discarded)."
 msgstr "Dodatek %s nebude aplikován na %s (překlad zahozen)."
 
 #: ../../po4a:1305
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s strings)."
 msgstr "%s je %s%% přeloženo (%s řetězců)."
 
 #: ../../po4a:1308 ../../po4a-translate:236
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s of %s strings)."
 msgstr "%s je %s%% přeloženo (%s z %s řetězců)."
 
 #: ../../po4a-translate:242
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (only %s%% translated; need %s%%)."
 msgstr "Překlad %s zahozen (pouze %s%% přeloženo; bylo potřeba %s%%)."
 
 #: ../../po4a-translate:249
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (addendum %s does not apply)."
 msgstr "Překlad %s zahozen (dodatek %s nebyl aplikován)."
 
@@ -1079,44 +1077,127 @@ msgstr "Zpracovávám vstupní soubory... "
 msgid "done."
 msgstr "dokončeno."
 
-#: ../../po4a-updatepo:251 ../../scripts/msguntypot:213
-#, perl-format
+#: ../../po4a-updatepo:251
+#, c-format
 msgid "Error while running msgmerge: %s"
 msgstr "Chyba v průběhu vykonávání msgmerge: %s"
 
 #: ../../po4a-updatepo:258
-#, perl-format
+#, c-format
 msgid "Error while copying the po file: %s"
 msgstr "Chyba při kopírování po souboru: %s"
 
-#: ../../scripts/msguntypot:166 ../../scripts/msguntypot:168
-#, perl-format
-msgid "Mandatory argument '%s' missing."
-msgstr "Chybí povinný argument %s."
-
-#: ../../scripts/msguntypot:177
-#, perl-format
+#. print out help message
+#: ../../share/po4a-build.sh:89
+#, sh-format
 msgid ""
-"The new and old pot files have different amount of strings (%d != %d). "
-"Something's seriously wrong here."
+"\n"
+"po4a-build - po4a frontend\n"
+"\n"
+"Syntax: po4a-build\n"
+"        po4a-build --pot-only\n"
+"\n"
+"Commands:\n"
+"-?|-h|--help|-version:      print this help message and exit\n"
+"--pot-only:                 only create the POT file\n"
+"\n"
+"Options:\n"
+"-f|--file FILE:             po4a-build.conf config file path\n"
+"\n"
 msgstr ""
-"Nový a původní soubor pot mají odlišný počet řetězců (%d != %d). Něco je "
-"vážně špatně."
 
-#: ../../scripts/msguntypot:195
-#, perl-format
-msgid "Found %d modified entries."
-msgstr "Nalezeno %d změněných položek."
+#: ../../share/po4a-build.sh:122
+#, sh-format
+msgid "Unrecognised command: $com"
+msgstr ""
 
-#: ../../scripts/msguntypot:209
-#, perl-format
-msgid "Handling %s"
-msgstr "Zpracovávám %s"
+#. without config, there's nothing to do.
+#: ../../share/po4a-build.sh:130
+#, sh-format
+msgid "Cannot find config file! '$FILE'"
+msgstr ""
 
-#: ../../scripts/msguntypot:234
-#, perl-format
-msgid "Modified %d entries in %d files."
-msgstr "Změněno %d položek v %d souborech."
+#. test
+#: ../../share/po4a-build.sh:185 ../../share/po4a-build.sh:229
+#, sh-format
+msgid "Internal po4a from $OURS being used instead of /usr/bin/"
+msgstr ""
+
+#: ../../share/po4a-build.sh:239
+#, sh-format
+msgid "Processing untranslated files for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:245
+#, sh-format
+msgid "Processing untranslated files for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:256
+#, sh-format
+msgid "Processing untranslated files for $file (1) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:263
+#, sh-format
+msgid "Processing untranslated files for $name (3) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:270
+#, sh-format
+msgid "Processing untranslated files for $file (7) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:290
+#, sh-format
+msgid "Processing $l translations for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:298
+#, sh-format
+msgid "Processing $l translations for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:311
+#, sh-format
+msgid "Processing $l translations for $file (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:321
+#, sh-format
+msgid "Processing $l translations for $name (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:330
+#, sh-format
+msgid "Processing $l translations for $file (7). . ."
+msgstr ""
+
+#, fuzzy
+#~ msgid "'%s' died with signal %d, with coredump."
+#~ msgstr "'%s' odumřel se signálem %d, bez výpisu jádra."
+
+#~ msgid "'%s' died with signal %d, without coredump."
+#~ msgstr "'%s' odumřel se signálem %d, bez výpisu jádra."
+
+#~ msgid "Mandatory argument '%s' missing."
+#~ msgstr "Chybí povinný argument %s."
+
+#~ msgid ""
+#~ "The new and old pot files have different amount of strings (%d != %d). "
+#~ "Something's seriously wrong here."
+#~ msgstr ""
+#~ "Nový a původní soubor pot mají odlišný počet řetězců (%d != %d). Něco je "
+#~ "vážně špatně."
+
+#~ msgid "Found %d modified entries."
+#~ msgstr "Nalezeno %d změněných položek."
+
+#~ msgid "Handling %s"
+#~ msgstr "Zpracovávám %s"
+
+#~ msgid "Modified %d entries in %d files."
+#~ msgstr "Změněno %d položek v %d souborech."
 
 #~ msgid ""
 #~ "Escaped space at the end of macro arg. With high probability, it won't do "

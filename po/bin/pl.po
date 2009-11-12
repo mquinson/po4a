@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.36\n"
-"Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2009-08-18 14:56+0200\n"
+"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"POT-Creation-Date: 2009-11-12 21:42+0000\n"
 "PO-Revision-Date: 2009-03-12 21:49+0100\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
@@ -32,6 +32,7 @@ msgstr "Błąd ładowania modułu :%s"
 msgid "List of valid formats:"
 msgstr "Lista poprawnych formatów:"
 
+#. ."\n  - ".gettext("bibtex: BibTex bibliography format.")
 #: ../../lib/Locale/Po4a/Chooser.pm:61
 msgid "dia: uncompressed Dia diagrams."
 msgstr "dia: niespakowane diagramy Dia."
@@ -44,6 +45,7 @@ msgstr "docbook: docbook XML."
 msgid "guide: Gentoo Linux's xml documentation format."
 msgstr "guide: format dokumentacji xml dystrybucji Gentoo Linux."
 
+#. ."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
 #: ../../lib/Locale/Po4a/Chooser.pm:65
 msgid "ini: .INI format."
 msgstr "ini: format pliku .INI"
@@ -381,13 +383,13 @@ msgid "Can't unlink %s: %s."
 msgstr "Nie można usunąć %s: %s."
 
 #: ../../lib/Locale/Po4a/Po.pm:500 ../../po4a:1135
-#, perl-format
+#, c-format, perl-format
 msgid "Can't copy %s to %s: %s."
 msgstr "Nie można skopiować %s do %s: %s."
 
 #: ../../lib/Locale/Po4a/Po.pm:505 ../../lib/Locale/Po4a/Po.pm:510
 #: ../../po4a:1142
-#, perl-format
+#, c-format, perl-format
 msgid "Can't move %s to %s: %s."
 msgstr "Nie można przenieść %s do %s: %s."
 
@@ -647,7 +649,7 @@ msgid "kpsewhich cannot find %s"
 msgstr "kpsewhich nie może znaleźć %s"
 
 #: ../../lib/Locale/Po4a/TeX.pm:1025 ../../po4a:620
-#, perl-format
+#, c-format, perl-format
 msgid "Can't open %s: %s"
 msgstr "Nie można otworzyć %s: %s"
 
@@ -780,6 +782,8 @@ msgstr "Załącznik %s dodany po tej linii: %s."
 msgid "Addendum '%s' applied at the end of the file."
 msgstr "Załącznik %s dodany po na końcu pliku."
 
+#. FYI, the document charset have to be determined *before* we see the first
+#. string to recode.
 #: ../../lib/Locale/Po4a/TransTractor.pm:853
 #: ../../lib/Locale/Po4a/TransTractor.pm:1037
 #, perl-format
@@ -795,6 +799,8 @@ msgstr ""
 msgid "Can't create a temporary xml file: %s"
 msgstr "Nie można utworzyć tymczasowego pliku XML: %s"
 
+#. TODO: It will be hard to identify the location.
+#. => find a way to retrieve the reference.
 #: ../../lib/Locale/Po4a/Xml.pm:208
 #, perl-format
 msgid ""
@@ -848,6 +854,7 @@ msgstr "Zła składnia atrybutu. Kontynuowanie..."
 msgid "Bad attribute syntax"
 msgstr "Zła składnia atrybutu"
 
+#. Inform that this tag isn't translated in debug mode
 #: ../../lib/Locale/Po4a/Xml.pm:1640
 #, perl-format
 msgid "Content of tag %s excluded: %s"
@@ -871,65 +878,58 @@ msgid "Tag '%s' both in the %s and %s categories."
 msgstr "Element \"%s\" zarówno w kategorii %s, jak i %s."
 
 #: ../../po4a:517 ../../po4a:521
-#, fuzzy, perl-format
-#| msgid "File %s does not exist."
+#, fuzzy, c-format
 msgid "Invalid %s. Directory %s does not exist."
 msgstr "Plik %s nie istnieje."
 
 #: ../../po4a:554 ../../po4a:772
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s' (%s)."
 msgstr "Nieznany argument \"%s\" (%s)."
 
 #: ../../po4a:588
-#, perl-format
+#, c-format
 msgid "failed to execute '%s': %s."
 msgstr "nie można uruchomić \"%s\": %s."
 
-#: ../../po4a:592
-#, perl-format
-msgid "'%s' died with signal %d, with coredump."
+#: ../../po4a:592 ../../po4a:596
+#, fuzzy, c-format
+msgid "'%s' died with signal %d, "
 msgstr "\"%s\" zostało przerwane sygnałem \"%d\", wystąpił zrzut pamięci."
 
-#: ../../po4a:596
-#, perl-format
-msgid "'%s' died with signal %d, without coredump."
-msgstr "\"%s\" zostało przerwane sygnałem \"%d\", bez zrzutu pamięci."
-
 #: ../../po4a:601
-#, perl-format
+#, c-format
 msgid "'%s' exited with value %d."
 msgstr "\"%s\" zakończył się z kodem %d."
 
 #: ../../po4a:605
-#, perl-format
+#, c-format
 msgid "Error: %s"
 msgstr "Błąd: %s"
 
 #: ../../po4a:611 ../../po4a-gettextize:224 ../../po4a-normalize:150
 #: ../../po4a-translate:204 ../../po4a-translate:205 ../../po4a-updatepo:219
-#: ../../scripts/msguntypot:167 ../../scripts/msguntypot:169
-#, perl-format
+#, c-format
 msgid "File %s does not exist."
 msgstr "Plik %s nie istnieje."
 
 #: ../../po4a:633
-#, perl-format
+#, c-format
 msgid "Unknown variable: %s"
 msgstr "Nieznana zmienna: %s"
 
 #: ../../po4a:642
-#, perl-format
+#, c-format
 msgid "Syntax error: %s"
 msgstr "Błąd składni: %s"
 
 #: ../../po4a:669 ../../po4a:681
-#, perl-format
+#, c-format
 msgid "'%s' redeclared"
 msgstr "\"%s\" powtórnie zadeklarowany"
 
 #: ../../po4a:674
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s'."
 msgstr "Nieznany argument \"%s\""
 
@@ -942,30 +942,28 @@ msgid "The POT file cannot be set twice."
 msgstr "Nie można dwukrotnie podać pliku POT."
 
 #: ../../po4a:697
-#, perl-format
+#, c-format
 msgid "'%s' is not a directory"
 msgstr "\"%s\" nie jest katalogiem"
 
 #: ../../po4a:701
-#, perl-format
+#, c-format
 msgid "Cannot list the '%s' directory"
 msgstr "Nie można wyświetlić zawartości katalogu \"%s\""
 
 #: ../../po4a:712
-#, perl-format
+#, c-format
 msgid "too many POT files: %s %s"
 msgstr "za dużo plików POT: %s %s"
 
 #: ../../po4a:722
-#, perl-format
+#, c-format
 msgid "no PO files found in %s"
 msgstr "%s nie zawiera żadnego pliku PO"
 
 #: ../../po4a:730
-#, perl-format
-msgid ""
-"The '%s' master file was specified earlier in the configuration file.  This "
-"may cause problems with options."
+#, fuzzy, c-format
+msgid "The '%s' master file was specified earlier in the "
 msgstr ""
 "Plik główny \"%s\" został już wcześniej podany w pliku konfiguracyjnym. Może "
 "to powodować problemy z opcjami."
@@ -975,12 +973,12 @@ msgid "The translated and master file are the same."
 msgstr "Pliki przetłumaczony i oryginalny są takie same."
 
 #: ../../po4a:783
-#, perl-format
+#, c-format
 msgid "Translation of %s in %s redefined"
 msgstr "Tłumaczenie %s w %s jest powtórnie zdefiniowane"
 
 #: ../../po4a:809
-#, perl-format
+#, c-format
 msgid "Unparsable command '%s'."
 msgstr "Nieparsowalne polecenie \"%s\":"
 
@@ -990,7 +988,7 @@ msgstr ""
 "Niezadeklarowane po4a_paths. Nie wiadomo, gdzie znajdują się pliki POT i PO"
 
 #: ../../po4a:828
-#, perl-format
+#, c-format
 msgid "Cannot parse option line (missing >%s<?): %s"
 msgstr "Nie można przetworzyć linii opcji (brakujący >%s<?): %s"
 
@@ -999,79 +997,79 @@ msgid "Splitted mode, creating a temporary POT"
 msgstr "Tryb dzielenia, tworzenie tymczasowego POT"
 
 #: ../../po4a:896 ../../po4a:1058 ../../po4a-updatepo:247
-#, perl-format
+#, c-format
 msgid "Updating %s:"
 msgstr "Aktualizowanie %s:"
 
 #: ../../po4a:899 ../../po4a:1068 ../../po4a-updatepo:255
-#, perl-format
+#, c-format
 msgid "Creating %s:"
 msgstr "Tworzenie %s:"
 
 #: ../../po4a:963 ../../po4a:999 ../../po4a:1096 ../../po4a-updatepo:229
-#, perl-format
+#, c-format
 msgid "Can't create a temporary pot file: %s"
 msgstr "Nie można utworzyć tymczasowego pliku pot: %s"
 
 #: ../../po4a:976
-#, perl-format
+#, c-format
 msgid " (%d entries)"
 msgstr " (%d wpisów)"
 
 #: ../../po4a:1008 ../../po4a:1122
-#, perl-format
+#, c-format
 msgid "Can't create directory '%s': %s"
 msgstr "Nie można utworzyć katalogu \"%s\": %s"
 
-#: ../../po4a:1030 ../../scripts/msguntypot:204
-#, perl-format
+#: ../../po4a:1030
+#, c-format
 msgid "Can't create a temporary po file: %s"
 msgstr "Nie można utworzyć tymczasowego pliku po: %s"
 
 #: ../../po4a:1206
-#, perl-format
+#, c-format
 msgid "%s doesn't need to be updated."
 msgstr "Nie jest wymagana aktualizacja %s."
 
 #: ../../po4a:1254
-#, perl-format
+#, c-format
 msgid "Discard %s (%s of %s strings; only %s%% translated; need %s%%)."
 msgstr ""
 "Wyrzucenie %s (%s z %s komunikatów; tylko %s%% przetłumaczonych; potrzeba %s%"
 "%)."
 
 #: ../../po4a:1263
-#, perl-format
+#, c-format
 msgid "Timestamp %s created."
 msgstr "Utworzono znacznik czasowy %s."
 
 #: ../../po4a:1277
-#, perl-format
+#, c-format
 msgid "Timestamp %s removed."
 msgstr "Usunięto znacznik czasowy %s."
 
 #: ../../po4a:1290
-#, perl-format
+#, c-format
 msgid "Addendum %s does NOT apply to %s (translation discarded)."
 msgstr "NIE MOŻNA zastosować załącznika %s do %s (tłumaczenie odrzucone)."
 
 #: ../../po4a:1305
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s strings)."
 msgstr "%s jest przetłumaczony w %s%% (%s komunikatów)."
 
 #: ../../po4a:1308 ../../po4a-translate:236
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s of %s strings)."
 msgstr "%s jest przetłumaczony w %s%% (%s z %s komunikatów)."
 
 #: ../../po4a-translate:242
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (only %s%% translated; need %s%%)."
 msgstr "Odrzucenie tłumaczenia %s (przetłumaczono tylko %s%%, potrzeba %s%%)."
 
 #: ../../po4a-translate:249
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (addendum %s does not apply)."
 msgstr "Odrzucenie tłumaczenia %s (nie można zastosować załącznika %s )."
 
@@ -1087,41 +1085,124 @@ msgstr "Przetwarzanie plików wejściowych... "
 msgid "done."
 msgstr "gotowe."
 
-#: ../../po4a-updatepo:251 ../../scripts/msguntypot:213
-#, perl-format
+#: ../../po4a-updatepo:251
+#, c-format
 msgid "Error while running msgmerge: %s"
 msgstr "Błąd podczas działania msgmerge: %s"
 
 #: ../../po4a-updatepo:258
-#, perl-format
+#, c-format
 msgid "Error while copying the po file: %s"
 msgstr "Błąd kopiowania pliku po: %s"
 
-#: ../../scripts/msguntypot:166 ../../scripts/msguntypot:168
-#, perl-format
-msgid "Mandatory argument '%s' missing."
-msgstr "Nie podano wymaganego argumentu \"%s\"."
-
-#: ../../scripts/msguntypot:177
-#, perl-format
+#. print out help message
+#: ../../share/po4a-build.sh:89
+#, sh-format
 msgid ""
-"The new and old pot files have different amount of strings (%d != %d). "
-"Something's seriously wrong here."
+"\n"
+"po4a-build - po4a frontend\n"
+"\n"
+"Syntax: po4a-build\n"
+"        po4a-build --pot-only\n"
+"\n"
+"Commands:\n"
+"-?|-h|--help|-version:      print this help message and exit\n"
+"--pot-only:                 only create the POT file\n"
+"\n"
+"Options:\n"
+"-f|--file FILE:             po4a-build.conf config file path\n"
+"\n"
 msgstr ""
-"Nowy i stary plik pot różnią się liczbą komunikatów (%d != %d). Coś tutaj "
-"jest poważnie popsute."
 
-#: ../../scripts/msguntypot:195
-#, perl-format
-msgid "Found %d modified entries."
-msgstr "Znaleziono %d zmodyfikowanych wpisów."
+#: ../../share/po4a-build.sh:122
+#, sh-format
+msgid "Unrecognised command: $com"
+msgstr ""
 
-#: ../../scripts/msguntypot:209
-#, perl-format
-msgid "Handling %s"
-msgstr "Przetwarzanie %s"
+#. without config, there's nothing to do.
+#: ../../share/po4a-build.sh:130
+#, sh-format
+msgid "Cannot find config file! '$FILE'"
+msgstr ""
 
-#: ../../scripts/msguntypot:234
-#, perl-format
-msgid "Modified %d entries in %d files."
-msgstr "Zmodyfikowano %d wpisów w %d plikach."
+#. test
+#: ../../share/po4a-build.sh:185 ../../share/po4a-build.sh:229
+#, sh-format
+msgid "Internal po4a from $OURS being used instead of /usr/bin/"
+msgstr ""
+
+#: ../../share/po4a-build.sh:239
+#, sh-format
+msgid "Processing untranslated files for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:245
+#, sh-format
+msgid "Processing untranslated files for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:256
+#, sh-format
+msgid "Processing untranslated files for $file (1) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:263
+#, sh-format
+msgid "Processing untranslated files for $name (3) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:270
+#, sh-format
+msgid "Processing untranslated files for $file (7) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:290
+#, sh-format
+msgid "Processing $l translations for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:298
+#, sh-format
+msgid "Processing $l translations for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:311
+#, sh-format
+msgid "Processing $l translations for $file (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:321
+#, sh-format
+msgid "Processing $l translations for $name (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:330
+#, sh-format
+msgid "Processing $l translations for $file (7). . ."
+msgstr ""
+
+#, fuzzy
+#~ msgid "'%s' died with signal %d, with coredump."
+#~ msgstr "\"%s\" zostało przerwane sygnałem \"%d\", bez zrzutu pamięci."
+
+#~ msgid "'%s' died with signal %d, without coredump."
+#~ msgstr "\"%s\" zostało przerwane sygnałem \"%d\", bez zrzutu pamięci."
+
+#~ msgid "Mandatory argument '%s' missing."
+#~ msgstr "Nie podano wymaganego argumentu \"%s\"."
+
+#~ msgid ""
+#~ "The new and old pot files have different amount of strings (%d != %d). "
+#~ "Something's seriously wrong here."
+#~ msgstr ""
+#~ "Nowy i stary plik pot różnią się liczbą komunikatów (%d != %d). Coś tutaj "
+#~ "jest poważnie popsute."
+
+#~ msgid "Found %d modified entries."
+#~ msgstr "Znaleziono %d zmodyfikowanych wpisów."
+
+#~ msgid "Handling %s"
+#~ msgstr "Przetwarzanie %s"
+
+#~ msgid "Modified %d entries in %d files."
+#~ msgstr "Zmodyfikowano %d wpisów w %d plikach."

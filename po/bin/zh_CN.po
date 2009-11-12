@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a\n"
-"Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2009-08-18 14:56+0200\n"
+"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"POT-Creation-Date: 2009-11-12 21:42+0000\n"
 "PO-Revision-Date: 2007-08-12 21:48+0200\n"
 "Last-Translator: rainofchaos <rainofchaos@gmail.com>\n"
 "Language-Team: Simplified Chinese\n"
@@ -34,6 +34,7 @@ msgstr "模块加载错误：%s"
 msgid "List of valid formats:"
 msgstr "可用格式列表："
 
+#. ."\n  - ".gettext("bibtex: BibTex bibliography format.")
 #: ../../lib/Locale/Po4a/Chooser.pm:61
 msgid "dia: uncompressed Dia diagrams."
 msgstr "dia：未解压缩Dia表格"
@@ -46,6 +47,7 @@ msgstr "docbook: Docbook XML."
 msgid "guide: Gentoo Linux's xml documentation format."
 msgstr "guide：Gentoo Linux的xml文档格式"
 
+#. ."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
 #: ../../lib/Locale/Po4a/Chooser.pm:65
 msgid "ini: .INI format."
 msgstr ""
@@ -289,8 +291,9 @@ msgid ""
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Po.pm:219
+#, fuzzy
 msgid "Please provide a non-null filename"
-msgstr ""
+msgstr "需提供模块名"
 
 #: ../../lib/Locale/Po4a/Po.pm:227 ../../lib/Locale/Po4a/TeX.pm:929
 #: ../../lib/Locale/Po4a/TransTractor.pm:412
@@ -329,13 +332,13 @@ msgid "Can't unlink %s: %s."
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Po.pm:500 ../../po4a:1135
-#, perl-format
+#, c-format, perl-format
 msgid "Can't copy %s to %s: %s."
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Po.pm:505 ../../lib/Locale/Po4a/Po.pm:510
 #: ../../po4a:1142
-#, perl-format
+#, c-format, perl-format
 msgid "Can't move %s to %s: %s."
 msgstr ""
 
@@ -486,9 +489,9 @@ msgid "Can't run nsgmls: %s"
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Sgml.pm:925
-#, perl-format
+#, fuzzy, perl-format
 msgid "Unknown tag %s"
-msgstr ""
+msgstr "未知选项: %s"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:959
 #, perl-format
@@ -501,9 +504,9 @@ msgid "Closing tag for a translation container missing before %s"
 msgstr ""
 
 #: ../../lib/Locale/Po4a/Sgml.pm:1175
-#, perl-format
+#, fuzzy, perl-format
 msgid "Unknown SGML event type: %s"
-msgstr ""
+msgstr "未知格式类型：%s"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:1184
 msgid ""
@@ -524,9 +527,9 @@ msgid "Error while checking the number of arguments of the '%s' command: %s"
 msgstr ""
 
 #: ../../lib/Locale/Po4a/TeX.pm:776 ../../lib/Locale/Po4a/TeX.pm:877
-#, perl-format
+#, fuzzy, perl-format
 msgid "Unknown command: '%s'"
-msgstr ""
+msgstr "未知选项: %s"
 
 #: ../../lib/Locale/Po4a/TeX.pm:923 ../../lib/Locale/Po4a/TransTractor.pm:408
 msgid "Can't read from file without having a filename"
@@ -544,7 +547,7 @@ msgid "kpsewhich cannot find %s"
 msgstr ""
 
 #: ../../lib/Locale/Po4a/TeX.pm:1025 ../../po4a:620
-#, perl-format
+#, c-format, perl-format
 msgid "Can't open %s: %s"
 msgstr ""
 
@@ -561,9 +564,9 @@ msgid ""
 msgstr ""
 
 #: ../../lib/Locale/Po4a/TeX.pm:1273 ../../lib/Locale/Po4a/TeX.pm:1535
-#, perl-format
+#, fuzzy, perl-format
 msgid "unknown environment: '%s'"
-msgstr ""
+msgstr "未知选项: %s"
 
 #: ../../lib/Locale/Po4a/TeX.pm:1296
 #, perl-format
@@ -674,6 +677,8 @@ msgstr ""
 msgid "Addendum '%s' applied at the end of the file."
 msgstr ""
 
+#. FYI, the document charset have to be determined *before* we see the first
+#. string to recode.
 #: ../../lib/Locale/Po4a/TransTractor.pm:853
 #: ../../lib/Locale/Po4a/TransTractor.pm:1037
 #, perl-format
@@ -687,6 +692,8 @@ msgstr ""
 msgid "Can't create a temporary xml file: %s"
 msgstr ""
 
+#. TODO: It will be hard to identify the location.
+#. => find a way to retrieve the reference.
 #: ../../lib/Locale/Po4a/Xml.pm:208
 #, perl-format
 msgid ""
@@ -731,6 +738,7 @@ msgstr ""
 msgid "Bad attribute syntax"
 msgstr ""
 
+#. Inform that this tag isn't translated in debug mode
 #: ../../lib/Locale/Po4a/Xml.pm:1640
 #, perl-format
 msgid "Content of tag %s excluded: %s"
@@ -752,64 +760,58 @@ msgid "Tag '%s' both in the %s and %s categories."
 msgstr ""
 
 #: ../../po4a:517 ../../po4a:521
-#, perl-format
+#, c-format
 msgid "Invalid %s. Directory %s does not exist."
 msgstr ""
 
 #: ../../po4a:554 ../../po4a:772
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s' (%s)."
 msgstr ""
 
 #: ../../po4a:588
-#, perl-format
+#, c-format
 msgid "failed to execute '%s': %s."
 msgstr ""
 
-#: ../../po4a:592
-#, perl-format
-msgid "'%s' died with signal %d, with coredump."
-msgstr ""
-
-#: ../../po4a:596
-#, perl-format
-msgid "'%s' died with signal %d, without coredump."
+#: ../../po4a:592 ../../po4a:596
+#, c-format
+msgid "'%s' died with signal %d, "
 msgstr ""
 
 #: ../../po4a:601
-#, perl-format
+#, c-format
 msgid "'%s' exited with value %d."
 msgstr ""
 
 #: ../../po4a:605
-#, perl-format
+#, c-format
 msgid "Error: %s"
 msgstr ""
 
 #: ../../po4a:611 ../../po4a-gettextize:224 ../../po4a-normalize:150
 #: ../../po4a-translate:204 ../../po4a-translate:205 ../../po4a-updatepo:219
-#: ../../scripts/msguntypot:167 ../../scripts/msguntypot:169
-#, perl-format
+#, c-format
 msgid "File %s does not exist."
 msgstr ""
 
 #: ../../po4a:633
-#, perl-format
+#, fuzzy, c-format
 msgid "Unknown variable: %s"
-msgstr ""
+msgstr "未知选项: %s"
 
 #: ../../po4a:642
-#, perl-format
+#, fuzzy, c-format
 msgid "Syntax error: %s"
-msgstr ""
+msgstr "语法错误"
 
 #: ../../po4a:669 ../../po4a:681
-#, perl-format
+#, c-format
 msgid "'%s' redeclared"
 msgstr ""
 
 #: ../../po4a:674
-#, perl-format
+#, c-format
 msgid "Unparsable argument '%s'."
 msgstr ""
 
@@ -822,30 +824,28 @@ msgid "The POT file cannot be set twice."
 msgstr ""
 
 #: ../../po4a:697
-#, perl-format
+#, c-format
 msgid "'%s' is not a directory"
 msgstr ""
 
 #: ../../po4a:701
-#, perl-format
+#, c-format
 msgid "Cannot list the '%s' directory"
 msgstr ""
 
 #: ../../po4a:712
-#, perl-format
+#, c-format
 msgid "too many POT files: %s %s"
 msgstr ""
 
 #: ../../po4a:722
-#, perl-format
+#, c-format
 msgid "no PO files found in %s"
 msgstr ""
 
 #: ../../po4a:730
-#, perl-format
-msgid ""
-"The '%s' master file was specified earlier in the configuration file.  This "
-"may cause problems with options."
+#, c-format
+msgid "The '%s' master file was specified earlier in the "
 msgstr ""
 
 #: ../../po4a:776
@@ -853,12 +853,12 @@ msgid "The translated and master file are the same."
 msgstr ""
 
 #: ../../po4a:783
-#, perl-format
+#, c-format
 msgid "Translation of %s in %s redefined"
 msgstr ""
 
 #: ../../po4a:809
-#, perl-format
+#, c-format
 msgid "Unparsable command '%s'."
 msgstr ""
 
@@ -867,7 +867,7 @@ msgid "po4a_paths not declared. Dunno where to find the pot and po files"
 msgstr ""
 
 #: ../../po4a:828
-#, perl-format
+#, c-format
 msgid "Cannot parse option line (missing >%s<?): %s"
 msgstr ""
 
@@ -876,77 +876,77 @@ msgid "Splitted mode, creating a temporary POT"
 msgstr ""
 
 #: ../../po4a:896 ../../po4a:1058 ../../po4a-updatepo:247
-#, perl-format
+#, c-format
 msgid "Updating %s:"
 msgstr ""
 
 #: ../../po4a:899 ../../po4a:1068 ../../po4a-updatepo:255
-#, perl-format
+#, c-format
 msgid "Creating %s:"
 msgstr ""
 
 #: ../../po4a:963 ../../po4a:999 ../../po4a:1096 ../../po4a-updatepo:229
-#, perl-format
+#, c-format
 msgid "Can't create a temporary pot file: %s"
 msgstr ""
 
 #: ../../po4a:976
-#, perl-format
+#, c-format
 msgid " (%d entries)"
 msgstr ""
 
 #: ../../po4a:1008 ../../po4a:1122
-#, perl-format
+#, c-format
 msgid "Can't create directory '%s': %s"
 msgstr ""
 
-#: ../../po4a:1030 ../../scripts/msguntypot:204
-#, perl-format
+#: ../../po4a:1030
+#, c-format
 msgid "Can't create a temporary po file: %s"
 msgstr ""
 
 #: ../../po4a:1206
-#, perl-format
+#, c-format
 msgid "%s doesn't need to be updated."
 msgstr ""
 
 #: ../../po4a:1254
-#, perl-format
+#, c-format
 msgid "Discard %s (%s of %s strings; only %s%% translated; need %s%%)."
 msgstr ""
 
 #: ../../po4a:1263
-#, perl-format
+#, c-format
 msgid "Timestamp %s created."
 msgstr ""
 
 #: ../../po4a:1277
-#, perl-format
+#, c-format
 msgid "Timestamp %s removed."
 msgstr ""
 
 #: ../../po4a:1290
-#, perl-format
+#, c-format
 msgid "Addendum %s does NOT apply to %s (translation discarded)."
 msgstr ""
 
 #: ../../po4a:1305
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s strings)."
 msgstr ""
 
 #: ../../po4a:1308 ../../po4a-translate:236
-#, perl-format
+#, c-format
 msgid "%s is %s%% translated (%s of %s strings)."
 msgstr ""
 
 #: ../../po4a-translate:242
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (only %s%% translated; need %s%%)."
 msgstr ""
 
 #: ../../po4a-translate:249
-#, perl-format
+#, c-format
 msgid "Discard the translation of %s (addendum %s does not apply)."
 msgstr ""
 
@@ -962,39 +962,98 @@ msgstr ""
 msgid "done."
 msgstr ""
 
-#: ../../po4a-updatepo:251 ../../scripts/msguntypot:213
-#, perl-format
+#: ../../po4a-updatepo:251
+#, c-format
 msgid "Error while running msgmerge: %s"
 msgstr ""
 
 #: ../../po4a-updatepo:258
-#, perl-format
+#, c-format
 msgid "Error while copying the po file: %s"
 msgstr ""
 
-#: ../../scripts/msguntypot:166 ../../scripts/msguntypot:168
-#, perl-format
-msgid "Mandatory argument '%s' missing."
-msgstr ""
-
-#: ../../scripts/msguntypot:177
-#, perl-format
+#. print out help message
+#: ../../share/po4a-build.sh:89
+#, sh-format
 msgid ""
-"The new and old pot files have different amount of strings (%d != %d). "
-"Something's seriously wrong here."
+"\n"
+"po4a-build - po4a frontend\n"
+"\n"
+"Syntax: po4a-build\n"
+"        po4a-build --pot-only\n"
+"\n"
+"Commands:\n"
+"-?|-h|--help|-version:      print this help message and exit\n"
+"--pot-only:                 only create the POT file\n"
+"\n"
+"Options:\n"
+"-f|--file FILE:             po4a-build.conf config file path\n"
+"\n"
 msgstr ""
 
-#: ../../scripts/msguntypot:195
-#, perl-format
-msgid "Found %d modified entries."
+#: ../../share/po4a-build.sh:122
+#, sh-format
+msgid "Unrecognised command: $com"
 msgstr ""
 
-#: ../../scripts/msguntypot:209
-#, perl-format
-msgid "Handling %s"
+#. without config, there's nothing to do.
+#: ../../share/po4a-build.sh:130
+#, sh-format
+msgid "Cannot find config file! '$FILE'"
 msgstr ""
 
-#: ../../scripts/msguntypot:234
-#, perl-format
-msgid "Modified %d entries in %d files."
+#. test
+#: ../../share/po4a-build.sh:185 ../../share/po4a-build.sh:229
+#, sh-format
+msgid "Internal po4a from $OURS being used instead of /usr/bin/"
+msgstr ""
+
+#: ../../share/po4a-build.sh:239
+#, sh-format
+msgid "Processing untranslated files for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:245
+#, sh-format
+msgid "Processing untranslated files for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:256
+#, sh-format
+msgid "Processing untranslated files for $file (1) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:263
+#, sh-format
+msgid "Processing untranslated files for $name (3) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:270
+#, sh-format
+msgid "Processing untranslated files for $file (7) . . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:290
+#, sh-format
+msgid "Processing $l translations for $X (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:298
+#, sh-format
+msgid "Processing $l translations for $X3 (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:311
+#, sh-format
+msgid "Processing $l translations for $file (1). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:321
+#, sh-format
+msgid "Processing $l translations for $name (3). . ."
+msgstr ""
+
+#: ../../share/po4a-build.sh:330
+#, sh-format
+msgid "Processing $l translations for $file (7). . ."
 msgstr ""
