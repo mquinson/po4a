@@ -27,16 +27,15 @@ build-stamp:
 	fi;
 
 	$(PERL) Build.PL installdirs=vendor create_packlist=0
-	$(PERL) Build
+	$(MAKE)
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
-
-	-$(PERL) Build clean
+	$(RM) -r html t/tmp po/www
 	rm -rf _build build-stamp Build
-
+	$(MAKE) clean
 	dh_clean
 
 install: build
@@ -44,14 +43,8 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-
+	$(MAKE) install DESTDIR=$(DESTDIR) prefix=/usr
 #	$(PERL) Build test
-	$(PERL) Build install destdir=$(DESTDIR)
-
-	for man in $(DESTDIR)/usr/share/man/man3/*.3pm; do \
-	    sed -i -e "s/ç/\\[,c]/g;s/Ç/\\[,C]/g" \
-	           -e "s/ü/\\[:u]/g;s/é/\\['e]/g" $$man; \
-	done
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -60,6 +53,9 @@ binary-indep: build install
 	dh_installdocs NEWS
 	dh_installchangelogs changelog
 	dh_installexamples
+	dh_installman
+	dh_install
+	dh_lintian
 	dh_compress
 	dh_fixperms
 	dh_installdeb
