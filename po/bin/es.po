@@ -491,12 +491,12 @@ msgstr ""
 "msgstr[0] (%s)."
 
 #: ../../lib/Locale/Po4a/Po.pm:993
-#, fuzzy, perl-format
+#, perl-format
 msgid ""
 "'%s' is the plural form of a message, po4a will use the msgstr[1] "
 "translation (%s)."
 msgstr ""
-"«s» es la forma del plural de un mensaje, po4a usará la traducción presente "
+"«%s» es la forma plural de un mensaje, po4a usará la traducción presente "
 "en msgstr[1] (%s)."
 
 #: ../../lib/Locale/Po4a/Po.pm:1206
@@ -521,32 +521,33 @@ msgstr ""
 "%s\n"
 " Segunda traducción:\n"
 "%s\n"
-" Se ha descartado la traducción vieja."
+" Se ha descartado la traducción anterior."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:214
 msgid ""
 "The needed module SGMLS.pm was not found and needs to be installed. It can "
 "be found on the CPAN, in package libsgmls-perl on debian, etc."
 msgstr ""
-"No se ha encontrado el módulo SGMLS.pm y su instalación es necesaria. Puede "
+"No se encontró el módulo SGMLS.pm, y debe estar instalado. Puede "
 "encontrarlo en el CPAN, en el paquete libsgmls-perl de debian, etc."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:282
 msgid "msgid skipped to help translators (contains only an entity)"
 msgstr ""
-"msgid saltado para ayudar a los traductores (sólo contiene una entidad)"
+"el msgid se omitió para ayudar a los traductores (sólo contiene una entidad)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:289
 msgid "msgid skipped to help translators (contains only tags)"
-msgstr "msgid saltado para ayudar a los traductores (sólo contiene etiquetas)"
+msgstr "el msgid se omitió para ayudar a los traductores (sólo contiene "
+"etiquetas)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:297
 msgid ""
 "msgid skipped to help translators (contains only opening or closing tags of "
 "marked sections)"
 msgstr ""
-"msgid saltado para ayudar a los traductores (sólo contiene marcas de inicio "
-"y final de sección)"
+"el msgid se omitió para ayudar a los traductores (sólo contiene marcas de "
+"inicio y final de sección)"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:381 ../../lib/Locale/Po4a/Sgml.pm:804
 #, perl-format
@@ -917,9 +918,9 @@ msgid "failed to execute '%s': %s."
 msgstr "no se ha podido ejecutar «%s»: %s."
 
 #: ../../po4a:592 ../../po4a:596
-#, fuzzy, c-format
+#, c-format
 msgid "'%s' died with signal %d, "
-msgstr "«%s» murió con la señal %d, con coredump."
+msgstr "«%s» murió con la señal %d,"
 
 #: ../../po4a:601
 #, c-format
@@ -986,11 +987,10 @@ msgid "no PO files found in %s"
 msgstr "no se encontraron ficheros PO en «%s»"
 
 #: ../../po4a:730
-#, fuzzy, c-format
+#, c-format
 msgid "The '%s' master file was specified earlier in the "
 msgstr ""
-"El fichero principal «%s» ya se ha especificado antes en el fichero de "
-"configuración. Esto puede causar problemas con las opciones."
+"El fichero principal «%s» ya se ha especificado antes en el "
 
 #: ../../po4a:776
 msgid "The translated and master file are the same."
@@ -1033,7 +1033,7 @@ msgstr "Creando %s:"
 #: ../../po4a:963 ../../po4a:999 ../../po4a:1096 ../../po4a-updatepo:229
 #, c-format
 msgid "Can't create a temporary pot file: %s"
-msgstr "No se ha podido crear el fichero pot temporal: %s"
+msgstr "No se pudo crear el fichero pot temporal: %s"
 
 #: ../../po4a:976
 #, c-format
@@ -1043,12 +1043,12 @@ msgstr " (%d entradas)"
 #: ../../po4a:1008 ../../po4a:1122
 #, c-format
 msgid "Can't create directory '%s': %s"
-msgstr "No se ha podido crear el directorio «%s»: %s"
+msgstr "No se pudo crear el directorio «%s»: %s"
 
 #: ../../po4a:1030
 #, c-format
 msgid "Can't create a temporary po file: %s"
-msgstr "No se ha podido crear el fichero po temporal: %s"
+msgstr "No se pudo crear el fichero po temporal: %s"
 
 #: ../../po4a:1206
 #, c-format
@@ -1141,73 +1141,86 @@ msgid ""
 "-f|--file FILE:             po4a-build.conf config file path\n"
 "\n"
 msgstr ""
+"\n"
+"po4a-build - Un frontal para po4a.\n"
+"\n"
+"Sintaxis: po4a-build\n"
+"        po4a-build --pot-only\n"
+"\n"
+"Órdenes:\n"
+"-?|-h|--help|-version:      Mostrar este mensaje de ayuda y cerrar.\n"
+"--pot-only:                 Crear sólo el fichero pot\n"
+"\n"
+"Options:\n"
+"-f|--file fichero:          Ruta al fichero de configuración po4a-build.conf\n"
+"\n"
 
 #: ../../share/po4a-build.sh:122
 #, sh-format
 msgid "Unrecognised command: $com"
-msgstr ""
+msgstr "Orden desconocida: $com"
 
 #. without config, there's nothing to do.
 #: ../../share/po4a-build.sh:130
 #, sh-format
 msgid "Cannot find config file! '$FILE'"
-msgstr ""
+msgstr "¡No se encontró el fichero de configuración! '$FILE'"
 
 #. test
 #: ../../share/po4a-build.sh:185 ../../share/po4a-build.sh:229
 #, sh-format
 msgid "Internal po4a from $OURS being used instead of /usr/bin/"
-msgstr ""
+msgstr "Se está usando el po4a interno de $OURS en lugar de z/usr/bin/»"
 
 #: ../../share/po4a-build.sh:239
 #, sh-format
 msgid "Processing untranslated files for $X (1). . ."
-msgstr ""
+msgstr "Procesando ficheros sin traducir de $X (1). . ."
 
 #: ../../share/po4a-build.sh:245
 #, sh-format
 msgid "Processing untranslated files for $X3 (3). . ."
-msgstr ""
+msgstr "Procesando ficheros sin traducir de $X3 (3). . ."
 
 #: ../../share/po4a-build.sh:256
 #, sh-format
 msgid "Processing untranslated files for $file (1) . . ."
-msgstr ""
+msgstr "Procesando ficheros sin traducir de $file (1). . ."
 
 #: ../../share/po4a-build.sh:263
 #, sh-format
 msgid "Processing untranslated files for $name (3) . . ."
-msgstr ""
+msgstr "Procesando ficheros sin traducir de $name (3). . ."
 
 #: ../../share/po4a-build.sh:270
 #, sh-format
 msgid "Processing untranslated files for $file (7) . . ."
-msgstr ""
+msgstr "Procesando ficheros sin traducir para $file (7). . ."
 
 #: ../../share/po4a-build.sh:290
 #, sh-format
 msgid "Processing $l translations for $X (1). . ."
-msgstr ""
+msgstr "Procesando $l traducciones de $X (1). . ."
 
 #: ../../share/po4a-build.sh:298
 #, sh-format
 msgid "Processing $l translations for $X3 (3). . ."
-msgstr ""
+msgstr "Procesando $l traducciones de $X3 (3). . ."
 
 #: ../../share/po4a-build.sh:311
 #, sh-format
 msgid "Processing $l translations for $file (1). . ."
-msgstr ""
+msgstr "Procesando $l traducciones de $file (1). . ."
 
 #: ../../share/po4a-build.sh:321
 #, sh-format
 msgid "Processing $l translations for $name (3). . ."
-msgstr ""
+msgstr "Procesando $l traducciones de $name (3). . ."
 
 #: ../../share/po4a-build.sh:330
 #, sh-format
 msgid "Processing $l translations for $file (7). . ."
-msgstr ""
+msgstr "Procesando $l traducciones de $file (7). . ."
 
 #, fuzzy
 #~ msgid "'%s' died with signal %d, with coredump."
