@@ -42,8 +42,9 @@
     produce translated documentation as it can be to produce the current
     untranslated content.
     </para>
-    <para>Documentation in a format supported by <command>po4a</command>
-    can be built using <command>po4a-build</command>. Both the untranslated
+    <para>When <command>po4a</command> prepares the translated content
+    as POD or DocBook XML, the final documentation can then be built
+    using <command>po4a-build</command>. Both the untranslated
     and translated content is built as a single process, updating the POT
     files at the same time.
     </para>
@@ -74,13 +75,34 @@ doc/foo/html/* ./usr/share/doc/foo/
     added and adding a second binary package (bar) allows the content for
     that package to kept separate.
     </para>
+    <refsect2 id="formats">
+      <title>Supported formats</title>
+      <para>Currently, <command>po4a-build</command> supports the
+      following combinations:
+      </para>
+      <orderedlist>
+        <listitem>Docbook XML for Section 1.</listitem>
+        <listitem>Docbook XML for Section 3.</listitem>
+        <listitem>DocBook XML for HTML.</listitem>
+        <listitem>POD for Section 1.</listitem>
+        <listitem>POD for Section 3.</listitem>
+        <listitem>POD for Section 5.</listitem>
+        <listitem>POD for Section 7.</listitem>
+      </orderedlist>
+      <para>All supported formats, in all supported combinations, can be
+      handled in a single <filename>po4a-build.conf</filename>
+      configuration file and in a single call to
+      <command>po4a-build</command>.
+      See <emphasis>po4a-build.conf (5)</emphasis>
+      </para>
+    </refsect2>
   </refsect1>
   <refsect1 id="config">
     <title>CONFIGURATION</title>
     <para><command>po4a-build</command> uses a default configuration file,
     <filename>po4a-build.conf</filename> which should be in the top level
     directory of your package VCS. (Use the <option>-f</option> option to
-    specify a different file.)
+    specify a different file.) See <emphasis>po4a-build.conf (5)</emphasis>
     </para>
     <example id="config">
     <title>example configuration file</title>

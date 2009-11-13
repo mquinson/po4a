@@ -8,6 +8,7 @@ Build: Build.PL
 install: Build
 	@./Build install destdir=$(DESTDIR)
 	make -C po/bin install DESTDIR=$(DESTDIR)
+	find $(DESTDIR) -type d -empty -delete
 
 clean: Build
 	@./Build realclean
