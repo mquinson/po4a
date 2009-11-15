@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: po4a pod\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2009-11-13 10:32+0000\n"
-"PO-Revision-Date: 2009-11-13 22:54+0200\n"
+"PO-Revision-Date: 2009-11-15 16:15+0100\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "Language: es\n"
@@ -3631,7 +3631,7 @@ msgstr ""
 #. type: textblock
 #: doc/po4a.7.pod:3
 msgid "po4a - framework to translate documentation and other materials"
-msgstr "po4a - Un marco de trabajo para traducir documentación y otro material"
+msgstr "po4a - Un marco de trabajo para traducir documentación y otro material."
 
 #. type: textblock
 #: doc/po4a.7.pod:11
@@ -6750,7 +6750,8 @@ msgstr ""
 #. type: textblock
 #: doc/po4a-runtime.7.pod:5
 msgid "po4a-runtime - po4a and runtime gettext translation without autotools."
-msgstr ""
+msgstr "po4a-runtime - po4a y traducción gettext  en tiempo de ejecución "
+"sin autotools."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:9
@@ -6759,6 +6760,10 @@ msgid ""
 "runtime script output messages using gettext but without requiring the "
 "package to adopt autotools and the typical F<./configure> process."
 msgstr ""
+"Gracias a F<po4a-build>, F<po4a> permite también añadir las traducciones "
+"de mensajes de salida de scripts en tiempo de ejecución, usando "
+"gettext. Ademas, se hace sin necesidad de integrar autotools y el típico "
+"proceso F<./configure>."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:13
@@ -6766,11 +6771,13 @@ msgid ""
 "Using example F<Makefile> snippets, packages can harness F<intltool> with "
 "minimal effort."
 msgstr ""
+"Usando secciones de ejemplo de F<Makefile>, los paquetes pueden usar "
+"F<intltool> con el mínimo esfuerzo."
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:16
 msgid "Layout"
-msgstr ""
+msgstr "Diseño"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:18
@@ -6779,11 +6786,15 @@ msgid ""
 "runtime translation. Whilst runtime translation can use directories other "
 "than F<po/>, it is usually easiest to go with the convention."
 msgstr ""
+"La documentación de la traducción NO debería usar el mismo directorio F<po/> "
+"que las traducciones de mensajes en tiempo de ejecución. Aunque la "
+"traducción de mensajes tiempo de ejecución puede usar otros directorios "
+"aparte de F<po/>, es más fácil seguir el uso convencional."
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:23
 msgid "Multiple languages"
-msgstr ""
+msgstr "Varios lenguajes"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:25
@@ -6793,13 +6804,19 @@ msgid ""
 "omit strings from one or other language unless file extensions are used for "
 "whichever is the least problematic language."
 msgstr ""
+"Sólo un apunte acerca de paquetes que usan scripts en varios lenguajes de "
+"programación. Una mezcla común es perl y el intérprete de consola. Nota: "
+"gettext se equivocará y omitirá cadenas de uno u otro idioma, a menos que "
+"use extensiones de fichero para el lenguaje menos problemático."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:30
 msgid ""
-"When using multiple languages, experiment with various settings in F<po/"
-"Makevars> until you get all the strings you need in the POT file."
+"When using multiple languages, experiment with various settings in "
+"F<po/Makevars> until you get all the strings you need in the POT file."
 msgstr ""
+"Al usar varios lenguajes, experimente con varias configuraciones en "
+"F<po/Makevars> hasta que obtenga las cadenas necesarias en el fichero pot."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:33
@@ -6807,6 +6824,8 @@ msgid ""
 "In particular, specifying two languages in F<po/Makevars> can be "
 "problematic. Instead of:"
 msgstr ""
+"Especificar dos lenguajes en F<po/Makevars> puede ser problemático. En lugar "
+"de:"
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:36
@@ -6816,6 +6835,9 @@ msgid ""
 " XGETTEXT_OPTIONS = -L Perl -L Shell --from-code=iso-8859-1\n"
 "\n"
 msgstr ""
+" # No hagas esto:\n"
+" XGETTEXT_OPTIONS = -L Perl -L Shell --from-code=iso-8859-1\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:39
@@ -6825,19 +6847,24 @@ msgid ""
 "only needs to exist during the time that F<po/POTFILES.in> is being "
 "processed."
 msgstr ""
+"considere renombrar (o proporcionar symlink(s)) para todos los ficheros de "
+"uno de los lenguajes implicados, y omita las opciones de -L explicitas. La "
+"extensión del fichero solo tiene que existir mientras se procese "
+"F</POTFILES.in>"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:44
 msgid ""
 "The --keywords option can also be useful - see the xgettext documentation."
 msgstr ""
+"La opción «--keywords» también puede ser de utilidad. Consulte la "
+"documentacion de xgettext."
 
 # type: =head2
 #. type: =head1
 #: doc/po4a-runtime.7.pod:47
-#, fuzzy
 msgid "Populating po/"
-msgstr "Manipular ficheros po"
+msgstr "Llenar «po/»"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:49
@@ -6845,11 +6872,14 @@ msgid ""
 "So, create your top level F<po/> directory and then use the example files in "
 "F</usr/share/po4a/examples/> to populate it."
 msgstr ""
+"Finalizando, tiene que crear su directorio F<po/> de nivel superior y "
+"después usar los ficheros de ejemplo en F</usr/share/po4a/examples/> para "
+"llenarlo."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:54
 msgid "LINGUAS"
-msgstr ""
+msgstr "LINGUAS"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:56
@@ -6859,6 +6889,10 @@ msgid ""
 "contains a single line, 'fr', an F<fr.po> file must exist alongside the "
 "LINGUAS file."
 msgstr ""
+"Este campo debe estar presente, incluso vacío. Consiste de una lista de "
+"traducciones, cada línea que no empiece con un «#» debe coincidir con un "
+"fichero po ya existente. Por ejemplo, si LINGUAS contiene una sola línea, "
+"«fr», debe tener un fichero F<fr.po> al igual que en el fichero LINGUAS."
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:61
@@ -6871,6 +6905,12 @@ msgid ""
 " $\n"
 "\n"
 msgstr ""
+" $ cat po/LINGUAS\n"
+" cs\n"
+" de\n"
+" fr\n"
+" $\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:67
@@ -6878,11 +6918,13 @@ msgid ""
 "By convention, the LINGUAS file is sorted alphabetically but that is a "
 "manual process."
 msgstr ""
+"Por convención, el fichero LINGUAS está organizado alfabéticamente, pero "
+"este es un proceso manual."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:70
 msgid "POTFILES.in"
-msgstr ""
+msgstr "POTFILES.in"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:72
@@ -6892,6 +6934,10 @@ msgid ""
 "the paths should be relative to the top level directory, not the F<po/> "
 "directory itself."
 msgstr ""
+"La lista de ficheros que contienen mensajes que se traducirán en tiempo de "
+"ejecución, por ejemplo, sus scripts. De emplear el directorio F<po/> de "
+"nivel superior, las rutas tendrán que ser relativas al directorio de nivel "
+"superior, no al mismo directorio F<po/>."
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:77
@@ -6910,6 +6956,18 @@ msgid ""
 " $\n"
 "\n"
 msgstr ""
+" $ ls -l\n"
+" mi_script.pl\n"
+" otro.pl\n"
+" foo/compatibilidad.pl\n"
+" po/\n"
+" po/POTFILES.in\n"
+" $ cat po/POTFILES.in\n"
+" mi_script.pl\n"
+" otro.pl\n"
+" foo/compatibilidad.pl\n"
+" $\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:89
@@ -6917,14 +6975,20 @@ msgid ""
 "Note that it is explicitly supported that the scripts themselves can contain "
 "strings for both runtime and documentation translation, e.g.  using gettext "
 "functions for runtime and embedded POD content for documentation. So it is "
-"not a problem to have the same file listed in F<po/POTFILES.in> and F<doc/"
-"po4a-build.conf>"
+"not a problem to have the same file listed in F<po/POTFILES.in> and F<doc"
+"/po4a-build.conf>"
 msgstr ""
+"Observe que se menciona explícitamente que los scripts pueden contener "
+"cadenas para la traducción de mensajes de documentación y también de "
+"mensajes en tiempo de ejecución. Por ejemplo, usar funciones de gettext para "
+"los mensajes en tiempo de ejecución y el contenido integrado de la "
+"documentación pod. Por ello, no es problema si tiene el mismo fichero listado "
+"en F<po/POTFILES.in> y F<doc/po4a-build.conf>."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:95
 msgid "Makevars-perl.example"
-msgstr ""
+msgstr "Makevars-perl.example"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:97
@@ -6932,11 +6996,13 @@ msgid ""
 "If your scripts are perl, copy this example file as F<po/Makevars> and edit "
 "it to suit."
 msgstr ""
+"Si sus scripts están escritos en perl, copie este fichero de ejemplo como "
+"F<po/Makevars> y ajústelo a sus necesidades."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:100
 msgid "Makevars-shell.example"
-msgstr ""
+msgstr "Makevars-shell.example"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:102
@@ -6944,27 +7010,33 @@ msgid ""
 "If your scripts are shell, copy this example file as F<po/Makevars> and edit "
 "it to suit."
 msgstr ""
+"Si sus scripts son de intérprete de órdenes, cope este fichero de ejemplo "
+"como F<po/Makevars> y ajústelo a sus necesidades."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:105
-#, fuzzy
 msgid "po4a-build.make"
-msgstr "po4a-build"
+msgstr "po4a-build.make"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:107
 msgid ""
 "Copy this example file as F<po/Makefile> - it shouldn't need editing but you "
 "may prefer to symlink it to F</usr/share/doc/po4a/examples/po4a-build.make> "
-"as it may need to be updated within po4a releases as the underlying intltool "
-"support changes. (The file itself was generated from another project using "
-"autotools and intltool.)"
+"as it may need to be updated within po4a releases as the underlying "
+"intltool support changes. (The file itself was generated from another "
+"project using autotools and intltool.)"
 msgstr ""
+"Copie este fichero de ejemplo como F<po>. No tendría porqué editarlo, pero "
+"puede que quiera crear un symlink con F</usr/share/doc/po4a/examples/po4a-"
+"build.make>, ya que puede que precise actualización en futuras publicaciones "
+"de po4a, a medida cambia el elemento subyacente de apoyo intltool. (El "
+"fichero en si mismo se generó en otro proyecto usando autotools e intltool.)"
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:116
 msgid "Building"
-msgstr ""
+msgstr "Construir"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:118
@@ -6972,6 +7044,8 @@ msgid ""
 "These snippets need to be added to your top level Makefile or whatever other "
 "method you use to prepare your sources for distribution."
 msgstr ""
+"Necesita añadir estas partes a su Makefile de nivel superior, o a cualquier "
+"otro método que use para preparar las fuentes para su distribución."
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:121
@@ -6981,6 +7055,9 @@ msgid ""
 "\t$(MAKE) -C po/ clean\n"
 "\n"
 msgstr ""
+" clean:\n"
+"\t$(MAKE) -C po/ clean\n"
+"\n"
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:124
@@ -6990,6 +7067,9 @@ msgid ""
 "\t$(MAKE) -C po/ install DESTDIR=$(DESTDIR)\n"
 "\n"
 msgstr ""
+" install:\n"
+"\t$(MAKE) -C po/ install DESTDIR=$(DESTDIR)\n"
+"\n"
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:127
@@ -6999,6 +7079,9 @@ msgid ""
 "\t$(MAKE) -C po/ pot\n"
 "\n"
 msgstr ""
+" dist:\n"
+"\t$(MAKE) -C po/ pot\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:130
@@ -7006,13 +7089,14 @@ msgid ""
 "(In an autotools project, this would happen automatically by simply adding "
 "F<po> to the C<SUBDIRS> value in F<Makefile.am>.)"
 msgstr ""
+"(En un proyecto con autotools, esto ocurre automáticamente si añade F<po> al "
+"valor de <SUBDIRS> en <Makefile.am>.)"
 
 # type: =item
 #. type: =head1
 #: doc/po4a-runtime.7.pod:133
-#, fuzzy
 msgid "Maintenance"
-msgstr "sentence"
+msgstr "Actualización"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:135
@@ -7022,6 +7106,10 @@ msgid ""
 "updating translations is merely a case of replacing the relevant PO file "
 "with the new version."
 msgstr ""
+"La traducción en tiempo de ejecución no es tan sencilla como con F<po4a-"
+"build>, ya que necesita editar F<po/LINGUAS> para añadir una nueva "
+"traducción. Pero aparte de esto, actualizar traducciones es tan fácil como "
+"reemplazar el fichero po relevante con la nueva versión."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:140
@@ -7030,16 +7118,20 @@ msgid ""
 "new PO files in the MANIFEST file or add to the script(s) that prepare the "
 "tarball. (That also applies to F<po4a-build>.)"
 msgstr ""
+"Dependiendo de como prepare su tarball de fuentes, puede que también "
+"necesite listar los nuevos ficheros po en el fichero MANIFEST o añadir "
+"el/los script(s) que preparan el tarball (esto también afecta a F<po4a-"
+"build>)."
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:144
 msgid "Any F<*.mo> or F<*.gmo> files in po can be deleted / cleaned up."
-msgstr ""
+msgstr "Puede borrar todo fichero F<*.mo> o F<*.gmo> del directorio «po/»."
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:146
 msgid "Copyright"
-msgstr ""
+msgstr "Copyright"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:148
@@ -7050,6 +7142,11 @@ msgid ""
 "same manner as other build tools like automake itself.  If you want to "
 "mention po4a, that is fine too."
 msgstr ""
+"Aunque los ficheros de ejemplo sean parte del proyecto po4a, es libre de "
+"usar, modificar o distribuir los mismos en sus proyectos sin necesidad de "
+"remitirse a po4a o incluir al equipo de po4a en sus notas de derechos de "
+"autor, al igual que con otras herramientas de compilación como el mismo "
+"automake. No pondremos objeciones si desea mencionar po4a en su proyecto."
 
 # type: textblock
 #. type: textblock
