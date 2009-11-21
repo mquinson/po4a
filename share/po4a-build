@@ -317,7 +317,7 @@ for d in $BINARIES; do
 						eval_gettext "Processing \$l translations for \$X (1). . ."; echo
 						MANDIR=$BASEDIR/$P/man/$l/man1/
 						XML_CATALOG_FILES="/etc/xml/catalog" \
-						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X
+						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$l/$X
 					fi
 				done
 				for X3 in $XMLMAN3; do
@@ -325,7 +325,7 @@ for d in $BINARIES; do
 						eval_gettext "Processing \$l translations for \$X3 (3). . ."; echo
 						MANDIR=$BASEDIR/$P/man/$l/man3/
 						XML_CATALOG_FILES="/etc/xml/catalog" \
-						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$X3
+						xsltproc -o $MANDIR --nonet $XSLFILE $XMLDIR/$l/$X3
 					fi
 				done
 			fi
