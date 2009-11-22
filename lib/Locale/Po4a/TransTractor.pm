@@ -15,7 +15,7 @@ $VERSION="0.37.0";
 @ISA = qw(DynaLoader);
 @EXPORT = qw(new process translate 
              read write readpo writepo
-             getpoout setpoout);
+             getpoout setpoout get_out_charset);
 
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::TransTractor $VERSION");
