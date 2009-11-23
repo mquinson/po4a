@@ -336,7 +336,7 @@ for d in $BINARIES; do
 					LOCAL=`basename $file`
 					if [ -f $BASEDIR/pod/1/$l/$LOCAL ]; then
 						eval_gettext "Processing \$l translations for \$file (1). . ."; echo
-						pod2man -s 1 $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
+						pod2man --utf8 -s 1 $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
 					fi
 				done
 			fi
@@ -346,7 +346,7 @@ for d in $BINARIES; do
 					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
 					if [ -f $BASEDIR/pod/3/$l/$file ]; then
 						eval_gettext "Processing \$l translations for \$name (3). . ."; echo
-						pod2man -n $name -s 3 $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
+						pod2man --utf8 -n $name -s 3 $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
 					fi
 				done
 			fi
@@ -358,9 +358,9 @@ for d in $BINARIES; do
 						# shorten names that already contain the 5.
 						SHORT=`echo $LOCAL|cut -d'5' -f1|sed -e 's/\.$//'`
 						if [ -n "$SHORT" ]; then
-							pod2man -s 5 $BASEDIR/pod/5/$l/$LOCAL $BASEDIR/$POD/man/$l/man5/${SHORT}.5
+							pod2man --utf8 -s 5 $BASEDIR/pod/5/$l/$LOCAL $BASEDIR/$POD/man/$l/man5/${SHORT}.5
 						else
-							pod2man -s 5 $BASEDIR/pod/5/$l/$LOCAL $BASEDIR/$POD/man/$l/man5/$LOCAL.5
+							pod2man --utf8 -s 5 $BASEDIR/pod/5/$l/$LOCAL $BASEDIR/$POD/man/$l/man5/$LOCAL.5
 						fi
 					fi
 				done
@@ -373,9 +373,9 @@ for d in $BINARIES; do
 						# shorten names that already contain the 7.
 						SHORT=`echo $LOCAL|cut -d'7' -f1|sed -e 's/\.$//'`
 						if [ -n "$SHORT" ]; then
-							pod2man -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/${SHORT}.7
+							pod2man --utf8 -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/${SHORT}.7
 						else
-							pod2man -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/$LOCAL.7
+							pod2man --utf8 -s 7 $BASEDIR/pod/7/$l/$LOCAL $BASEDIR/$POD/man/$l/man7/$LOCAL.7
 						fi
 					fi
 				done
