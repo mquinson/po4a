@@ -268,14 +268,14 @@ for d in $BINARIES; do
 			for file in $PODFILE; do
 				LOCAL=`basename $file`
 				eval_gettext "Processing untranslated files for \$file (1) . . ."; echo
-				pod2man $file $BASEDIR/$POD/man/man1/$LOCAL.1
+				pod2man -s 1 $file $BASEDIR/$POD/man/man1/$LOCAL.1
 			done
 			if [ -n "$PODMODULES" ]; then
 				for file in $PODMODULES; do
 					# a bit of sed magic to convert a path to a module name.
 					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
 					eval_gettext "Processing untranslated files for \$name (3) . . ."; echo
-					pod2man $file $BASEDIR/$POD/man/man3/$name.3
+					pod2man -s 3 $file $BASEDIR/$POD/man/man3/$name.3
 				done
 			fi
 			if [ -n "$POD5FILES" ]; then
@@ -336,7 +336,7 @@ for d in $BINARIES; do
 					LOCAL=`basename $file`
 					if [ -f $BASEDIR/pod/1/$l/$LOCAL ]; then
 						eval_gettext "Processing \$l translations for \$file (1). . ."; echo
-						pod2man $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
+						pod2man -s 1 $BASEDIR/pod/1/$l/$LOCAL $BASEDIR/$POD/man/$l/man1/$LOCAL.1
 					fi
 				done
 			fi
@@ -346,7 +346,7 @@ for d in $BINARIES; do
 					name=`echo $file| sed -e 's/^lib\///'|sed -e 's/\//::/g'|sed -e 's/\.pm$//'`
 					if [ -f $BASEDIR/pod/3/$l/$file ]; then
 						eval_gettext "Processing \$l translations for \$name (3). . ."; echo
-						pod2man $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
+						pod2man -n $name -s 3 $BASEDIR/pod/3/$l/$file $BASEDIR/$POD/man/$l/man3/$name.3
 					fi
 				done
 			fi
