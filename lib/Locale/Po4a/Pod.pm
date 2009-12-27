@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.25 2009-12-27 01:16:03 nekral-guest Exp $
+# $Id: Pod.pm,v 1.26 2009-12-27 03:43:52 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -77,6 +77,11 @@ sub command {
 	$self->pushline("=$command\n\n");
     } elsif ($command eq 'over') {
 	$self->pushline("=$command $paragraph".(length($paragraph)?"":"\n\n"));
+    } elsif ($command eq 'encoding') {
+	my $charset = $paragraph;
+	$charset =~ s/^\s*(.*?)\s*$/$1/s;
+	$self->detected_charset($charset)
+	# The =encoding line will be added by docheader
     } else {
 	$paragraph=$self->translate($paragraph,
 				    $self->input_file().":$line_num",
@@ -151,10 +156,8 @@ sub docheader {
         and (length $encoding)
         and ($encoding ne "ascii")) {
         $encoding = "\n=encoding $encoding\n";
-# FIXME: Remove any old =encoding specification
     } else {
         $encoding = "";
-# FIXME: Keep any old =encoding specification?
     }
 
     return <<EOT;
