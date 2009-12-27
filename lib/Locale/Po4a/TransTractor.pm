@@ -970,6 +970,9 @@ sub detected_charset {
         $self->{TT}{'file_in_charset'}=$charset;
         if (defined $charset) {
             $self->{TT}{'file_in_encoder'}=find_encoding($charset);
+        } else {
+            $self->{TT}{ascii_input}=1;
+            $self->{TT}{utf_mode}=0;
         }
     }
 
