@@ -1427,7 +1427,7 @@ sub treat_content {
 						my @sub_translations = ();
 						my %folded_attributes;
 						my %new_holder = ('paragraph' => \@new_paragraph,
-						                  'open' => $text[0],
+						                  'open' => $self->join_lines(@text),
 						                  'translation' => "",
 						                  'close' => undef,
 						                  'sub_translations' => \@sub_translations,
@@ -1487,8 +1487,8 @@ sub treat_content {
 						# the holder from the stack.
 						my $holder = pop @save_holders;
 						# We need to keep the translation of this holder
-						my $translation = $holder->{'open'}.$holder->{'translation'}.$text[0];
-						# FIXME: @text could be multilines.
+						my $translation = $holder->{'open'}.$holder->{'translation'};
+						$translation .= $self->join_lines(@text);
 
 						@text = ();
 
