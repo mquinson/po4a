@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Man - Convert manual pages from/to PO files

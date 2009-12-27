@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.95 2009-02-28 22:18:39 nekral-guest Exp $
+# $Id: Po.pm,v 1.96 2009-12-27 01:16:03 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -7,6 +7,8 @@
 ############################################################################
 # Modules and declarations
 ############################################################################
+
+=encoding UTF-8
 
 =head1 NAME
 

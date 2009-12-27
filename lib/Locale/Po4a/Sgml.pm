@@ -29,6 +29,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Sgml - Convert sgml documents from/to PO files

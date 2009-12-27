@@ -21,6 +21,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Texinfo - Convert Texinfo documents and derivates from/to PO files

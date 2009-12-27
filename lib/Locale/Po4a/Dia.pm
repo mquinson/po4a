@@ -26,6 +26,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Dia - Convert uncompressed Dia diagrams from/to PO files

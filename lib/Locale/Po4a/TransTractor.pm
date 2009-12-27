@@ -29,6 +29,8 @@ use File::Path; # mkdir before write
 use Encode;
 use Encode::Guess;
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::TransTractor - Generic trans(lator ex)tractor.

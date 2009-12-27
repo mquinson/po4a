@@ -28,6 +28,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Docbook - Convert Docbook XML documents from/to PO files

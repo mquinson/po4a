@@ -25,6 +25,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Html - Convert html documents from/to PO files

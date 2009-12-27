@@ -21,6 +21,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Halibut - Convert Halibut documents and derivates from/to PO files

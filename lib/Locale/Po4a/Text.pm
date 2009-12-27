@@ -21,6 +21,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Text - Convert text documents from/to PO files

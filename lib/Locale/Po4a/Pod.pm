@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Pod.pm,v 1.24 2009-11-22 21:01:59 nekral-guest Exp $
+# $Id: Pod.pm,v 1.25 2009-12-27 01:16:03 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
@@ -151,8 +151,10 @@ sub docheader {
         and (length $encoding)
         and ($encoding ne "ascii")) {
         $encoding = "\n=encoding $encoding\n";
+# FIXME: Remove any old =encoding specification
     } else {
         $encoding = "";
+# FIXME: Keep any old =encoding specification?
     }
 
     return <<EOT;
@@ -178,6 +180,8 @@ EOT
 
 1;
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 

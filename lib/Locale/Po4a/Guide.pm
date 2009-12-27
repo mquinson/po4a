@@ -26,6 +26,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Guide - Convert Guide XML documents from/to PO files

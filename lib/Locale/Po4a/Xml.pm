@@ -28,6 +28,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Xml - Convert XML documents and derivates from/to PO files

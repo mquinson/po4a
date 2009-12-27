@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.41 2008-07-20 16:31:55 nekral-guest Exp $
+# $Id: Chooser.pm,v 1.42 2009-12-27 01:16:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -83,6 +83,8 @@ sub list {
 
 1;
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 

@@ -1,5 +1,5 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
-# $Id: Common.pm,v 1.20 2009-02-13 23:16:44 nekral-guest Exp $
+# $Id: Common.pm,v 1.21 2009-12-27 01:16:02 nekral-guest Exp $
 #
 # Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
 #
@@ -7,6 +7,8 @@
 # under the terms of GPL (see COPYING).
 #
 # This module has common utilities for the various scripts of po4a
+
+=encoding UTF-8
 
 =head1 NAME
 

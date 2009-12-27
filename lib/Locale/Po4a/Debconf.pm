@@ -20,6 +20,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Debconf - Convert debconf templates from/to PO files

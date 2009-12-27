@@ -1,5 +1,5 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: KernelHelp.pm,v 1.13 2005-05-30 07:15:19 mquinson Exp $
+# $Id: KernelHelp.pm,v 1.14 2009-12-27 01:16:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -133,6 +133,8 @@ EOT
 
 1;
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 

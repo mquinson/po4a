@@ -20,6 +20,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::Wml - Convert wml (web markup language) documents from/to PO files

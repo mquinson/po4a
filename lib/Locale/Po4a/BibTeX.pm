@@ -21,6 +21,8 @@
 #
 ########################################################################
 
+=encoding UTF-8
+
 =head1 NAME
 
 Locale::Po4a::BibTeX - Convert BibTeX documents from/to PO files

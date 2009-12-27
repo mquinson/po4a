@@ -1,5 +1,5 @@
 # Locale::Po4a::Ini -- Convert ini files to PO file, for translation.
-# $Id: Ini.pm,v 1.2 2006-08-23 19:30:30 nekral-guest Exp $
+# $Id: Ini.pm,v 1.3 2009-12-27 01:16:02 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -82,6 +82,8 @@ sub parse {
 
 1;
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 
