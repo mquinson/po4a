@@ -64,7 +64,7 @@ These are this module's particular options:
 
 =over
 
-=item B<nobullet>
+=item B<nobullets>
 
 Deactivate detection of bullets.
 
@@ -148,6 +148,23 @@ my $asciidoc = 0;
 sub initialize {
     my $self = shift;
     my %options = @_;
+
+    my %valid = (
+        asciidoc => 1,
+        breaks => 1,
+        debianchangelog => 1,
+        debug => 1,
+        fortunes => 1,
+        markdown => 1,
+        nobullets => 1,
+        tabs => 1,
+        verbose => 1,
+    );
+    foreach my $opt (keys %options) {
+        die wrap_mod("po4a::text",
+                     dgettext("po4a", "Unknown option: %s"), $opt)
+            unless exists $valid{$opt};
+    }
 
     if (defined $options{'nobullets'}) {
         $bullets = 0;
