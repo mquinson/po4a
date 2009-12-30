@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # pod-updatepo -- Update the po translation of POD data.
-# $Id: po4a-updatepo,v 1.46 2009-12-27 01:16:01 nekral-guest Exp $
+# $Id: po4a-updatepo,v 1.47 2009-12-30 21:12:31 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -70,10 +70,15 @@ Extra option(s) to pass to the format plugin and other po4a internal module.
 Specify each option in the 'name=value' format. See the documentation of
 each plugin for more information about the valid options and their meanings.
 
+=item --no-previous
+
+This option removes '--previous' from the options passed to msgmerge.
+This permits to support versions of gettext earlier than 0.16.
+
 =item --previous
 
 This option adds '--previous' to the options passed to msgmerge.
-It requires gettext 0.16 or later.
+It requires gettext 0.16 or later, and is activated by default.
 
 =item --msgmerge-opt options
 
@@ -169,6 +174,7 @@ my ($help,$help_fmt,$verbose,$debug,$format,@options);
 my ($copyright_holder, $msgid_bugs_address, $package_name, $package_version);
 my $mastchar;
 my $previous;
+my $noprevious;
 my $msgmerge_opt = "";
 GetOptions('help|h'      => \$help,
 	   'help-format' => \$help_fmt,
@@ -181,6 +187,7 @@ GetOptions('help|h'      => \$help,
 
 	   'option|o=s'  => \@options,
 
+	   'no-previous' => \$noprevious,
 	   'previous'    => \$previous,
 	   'msgmerge-opt=s'      => \$msgmerge_opt,
 	   'copyright-holder=s'  => \$copyright_holder,
@@ -197,7 +204,7 @@ $help && pod2usage (-verbose => 1, -exitval => 0);
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
-$msgmerge_opt .= " --previous" if $previous;
+$msgmerge_opt .= " --no-previous" if $noprevious;
 
 my %options = (
     "verbose"            => $verbose,

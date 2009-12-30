@@ -324,6 +324,12 @@ String that will try to match with the first line of the document's doctype
 (if defined). If it doesn't, a warning will indicate that the document
 might be of a bad type.
 
+=item B<addlang>
+
+String indicating the path (e.g. E<lt>bbbE<gt>E<lt>aaaE<gt>) of a tag
+where a lang="..." attribute shall be added. The language will be defined
+as the basename of the PO file without any .po extension.
+
 =item B<tags>
 
 Space-separated list of tags you want to translate or skip.  By default,
@@ -487,6 +493,7 @@ sub initialize {
 	              'folded_attributes' => \%folded_attributes);
 	@save_holders = (\%holder);
 
+	$self->{options}{'addlang'}=0;
 	$self->{options}{'nostrip'}=0;
 	$self->{options}{'wrap'}=0;
 	$self->{options}{'caseinsensitive'}=0;
@@ -946,6 +953,13 @@ sub tag_trans_open {
 	push @path, $name;
 
 	$name = $self->treat_attributes(@tag);
+
+	if (defined $self->{options}{'addlang'}) {
+		my $struct = $self->get_path();
+		if ($struct eq $self->{options}{'addlang'}) {
+			$name .= ' lang="'.$self->{TT}{po_in}->{lang}.'"';
+		}
+	}
 
 	return $name;
 }

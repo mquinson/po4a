@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.88 2009-12-27 01:16:01 nekral-guest Exp $
+# $Id: po4a,v 1.89 2009-12-30 21:12:31 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -337,10 +337,15 @@ Set the package version for the POT header. The default is "VERSION".
 
 Extra options for msgmerge.
 
+=item --no-previous
+
+This option removes '--previous' from the options passed to msgmerge.
+This permits to support versions of gettext earlier than 0.16.
+
 =item --previous
 
 This option adds '--previous' to the options passed to msgmerge.
-It requires gettext 0.16 or later.
+It requires gettext 0.16 or later, and is activated by default.
 
 =item --srcdir I<SRCDIR>
 
@@ -430,6 +435,7 @@ sub get_options {
     my @options = ();
     my @variables = ();
     my $previous;
+    my $noprevious;
 
     my %opts = (
         "help"            => 0,
@@ -481,6 +487,7 @@ sub get_options {
         'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
         'package-name=s'        => \$opts{"package-name"},
         'package-version=s'     => \$opts{"package-version"},
+        'no-previous'           => \$noprevious,
         'previous'              => \$previous,
         'msgmerge-opt=s'        => \$opts{"msgmerge-opt"},
         'srcdir=s'              => \$opts{"srcdir"},
@@ -490,7 +497,7 @@ sub get_options {
     $opts{"verbose"} = scalar @verbose;
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
-    $opts{"msgmerge-opt"} .= " --previous" if $previous;
+    $opts{"msgmerge-opt"} .= " --previous" unless $noprevious;
 
     # options to transmit to the modules
     $opts{"options"} = {

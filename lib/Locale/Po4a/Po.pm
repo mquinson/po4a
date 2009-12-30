@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.96 2009-12-27 01:16:03 nekral-guest Exp $
+# $Id: Po.pm,v 1.97 2009-12-30 21:12:31 nekral-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -87,6 +87,7 @@ use strict;
 use warnings;
 
 use Carp qw(croak);
+use File::Basename;
 use File::Path; # mkdir before write
 use File::Copy; # move
 use POSIX qw(strftime floor);
@@ -219,6 +220,10 @@ sub read {
         or croak wrap_mod("po4a::po",
                           dgettext("po4a",
                                    "Please provide a non-null filename"));
+
+    my $lang = basename($filename);
+    $lang =~ s/\.po$//;
+    $self->{lang} = $lang;
 
     my $fh;
     if ($filename eq '-') {
