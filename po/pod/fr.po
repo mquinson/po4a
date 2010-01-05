@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2009-12-30 22:13+0100\n"
-"PO-Revision-Date: 2009-12-30 16:38+0100\n"
+"PO-Revision-Date: 2010-01-02 20:16+0100\n"
 "Last-Translator: Nicolas François <nicolas.francois@centraliens.net>\n"
 "Language-Team: french <debian-l10n-french@lists.debian.org>\n"
 "MIME-Version: 1.0\n"
@@ -461,6 +461,12 @@ msgid ""
 "choice='opt'><arg choice='plain'>-o </arg><arg "
 "choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
 msgstr ""
+"<command>po4aman-display-po</command> <arg choice='plain'>-p </arg> <arg "
+"choice='plain'><replaceable>FICHIER_PO</replaceable></arg> <arg "
+"choice='opt'><arg choice='plain'>-m </arg><arg "
+"choice='plain'><replaceable>FICHIER_ORIGINAL</replaceable></arg></arg> <arg "
+"choice='opt'><arg choice='plain'>-o </arg><arg "
+"choice='plain'><replaceable>OPTIONS_PO4A</replaceable></arg></arg>"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:32
@@ -500,7 +506,7 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:49 share/doc//po4apod-display-po.xml:43
 msgid "<option>-p </option><replaceable>PO_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-p </option><replaceable>FICHIER_PO</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:51 share/doc//po4apod-display-po.xml:45
@@ -510,12 +516,11 @@ msgstr "Le fichier po contenant les traductions."
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:55
 msgid "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-m </option><replaceable>FICHIER_ORIGINAL</replaceable>"
 
 #.  .br 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:57
-#, fuzzy
 msgid ""
 "The original man page.  It can be the absolute or relative path to the "
 "original man page (gzipped or not), the name the man page or the name and "
@@ -527,12 +532,15 @@ msgstr ""
 "La page de manuel d'origine. Il peut s'agir d'un chemin absolu ou relatif "
 "vers la page de manuel (qui peut être compressé avec gzip ou non), le nom de "
 "la page ou le nom et la section de la page de manuel (en utilisant le format "
-"nom.section)."
+"nom.section). Lorsque le document d'origine n'est pas fourni avec "
+"l'option <option>-m</option>, <command>po4aman-display-po</command> essaie "
+"de trouver la page originale en fonction de la référence de ligne de la "
+"première chaîne du fichier PO."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:68 share/doc//po4apod-display-po.xml:55
 msgid "<option>-o </option><replaceable>PO4A_OPT</replaceable>"
-msgstr ""
+msgstr "<option>-o </option><replaceable>OPTIONS_PO4A</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:70 share/doc//po4apod-display-po.xml:57
@@ -540,6 +548,8 @@ msgid ""
 "Some options to pass to <citerefentry><refentrytitle>po4a-translate</"
 "refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 msgstr ""
+"Des options à passer à <citerefentry><refentrytitle>po4a-translate</"
+"refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 
 #. type: =head1
 #: share/doc//po4aman-display-po.xml:77 share/doc//po4apod-display-po.xml:63
@@ -608,17 +618,21 @@ msgid ""
 "choice='opt'><arg choice='plain'>-o </arg><arg "
 "choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
 msgstr ""
+"<command>po4apod-display-po</command> <arg choice='plain'>-p </arg> <arg "
+"choice='plain'><replaceable>FICHIER_PO</replaceable></arg> <arg choice='plain'>-"
+"m </arg> <arg choice='plain'><replaceable>FICHIER_POD</replaceable></arg> <arg "
+"choice='opt'><arg choice='plain'>-o </arg><arg "
+"choice='plain'><replaceable>OPTIONS_PO4A</replaceable></arg></arg>"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4apod-display-po.xml:33
-#, fuzzy
 msgid ""
 "<command>po4apod-display-po</command> can be used by a translator who wants "
 "to check how the man page, generated from a pod file, being translated in a "
 "PO will be displayed. Generally, pod file is only available in source "
 "package or embedded in Perl script."
 msgstr ""
-"B<po4apod-display-po> permet à un traducteur de visualiser comment sera "
+"<command>po4apod-display-po</command> permet à un traducteur de visualiser comment sera "
 "affichée une page de manuel, générée à partir d'un document POD et qu'il "
 "vient de traduire dans un fichier PO. Généralement, le fichier POD n'est "
 "disponible que dans le paquet source ou inclut dans le script Perl."
@@ -626,7 +640,7 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4apod-display-po.xml:49
 msgid "<option>-m </option><replaceable>POD_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-m </option><replaceable>FICHIER_POD</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4apod-display-po.xml:51
@@ -1588,23 +1602,17 @@ msgstr "Options additionnelles pour msgmerge."
 
 #. type: =item
 #: po4a:340 po4a-updatepo:73
-#, fuzzy
-#| msgid "--previous"
 msgid "--no-previous"
-msgstr "--previous"
+msgstr "--no-previous"
 
 #. type: textblock
 #: po4a:342 po4a-updatepo:75
-#, fuzzy
-#| msgid ""
-#| "This option adds '--previous' to the options passed to msgmerge.  It "
-#| "requires gettext 0.16 or later."
 msgid ""
 "This option removes '--previous' from the options passed to msgmerge.  This "
 "permits to support versions of gettext earlier than 0.16."
 msgstr ""
-"Cette option ajoute « --previous » aux options passées à msgmerge. Elle "
-"nécessite une version 0.16 ou ultérieure de gettext."
+"Cette option supprime « --previous » des options passées à msgmerge. Elle "
+"premet de prendre en charge les versions de gettext antérieures à 0.16."
 
 #. type: =item
 #: po4a:345 po4a-updatepo:78
@@ -1613,16 +1621,12 @@ msgstr "--previous"
 
 #. type: textblock
 #: po4a:347 po4a-updatepo:80
-#, fuzzy
-#| msgid ""
-#| "This option adds '--previous' to the options passed to msgmerge.  It "
-#| "requires gettext 0.16 or later."
 msgid ""
 "This option adds '--previous' to the options passed to msgmerge.  It "
 "requires gettext 0.16 or later, and is activated by default."
 msgstr ""
 "Cette option ajoute « --previous » aux options passées à msgmerge. Elle "
-"nécessite une version 0.16 ou ultérieure de gettext."
+"nécessite une version 0.16 ou ultérieure de gettext et est activée par défaut."
 
 #. type: =item
 #: po4a:350
@@ -6796,7 +6800,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Debconf.pm:214 lib/Locale/Po4a/NewsDebian.pm:146
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 " Martin Quinson (mquinson#debian.org)\n"
 "\n"
@@ -8038,7 +8042,7 @@ msgid ""
 " .als IR_untranslated IR\n"
 "\n"
 msgstr ""
-"or en utilisant un alias :\n"
+"ou en utilisant un alias :\n"
 " .als IR_untranslated IR\n"
 "\n"
 
@@ -10488,10 +10492,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:67
-#, fuzzy
-#| msgid "B<nobullet>"
 msgid "B<nobullets>"
-msgstr "B<nobullet>"
+msgstr "B<nobullets>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:69
@@ -10519,7 +10521,7 @@ msgstr "B<tabs>=I<mode>"
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:81
 msgid "Specify how tabulations shall be handled. The I<mode> can be any of:"
-msgstr ""
+msgstr "Indique comment les tabulations doivent être prises en charge. Le I<mode> peut prendre une des valeurs suivantes :"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:85
@@ -10529,7 +10531,7 @@ msgstr "B<split>"
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:87
 msgid "Lines with tabulations introduce breaks in the current paragraph."
-msgstr ""
+msgstr "Les lignes avec des tabulations introduisent une césure du paragraphe en courant."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:89
@@ -10538,16 +10540,13 @@ msgstr "B<verbatim>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:91
-#, fuzzy
 msgid "Paragraph containing tabulations will not be re-wrapped."
-msgstr ""
-"Si un paragraphe contient une ligne commençant par un espace (ou une "
-"tabulation), ce paragraphe ne sera pas remis en forme."
+msgstr "Les paragraphes contenant des tabulations ne sont pas remis en forme."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:95
 msgid "By default, tabulations are considered as spaces."
-msgstr ""
+msgstr "Par défaut, les tabulations sont considérés comme des espaces."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:101
@@ -10560,6 +10559,9 @@ msgid ""
 "A regular expression matching lines which introduce breaks.  The regular "
 "expression will be anchored so that the whole line must match."
 msgstr ""
+"Les ligne correspondant à cette expression rationnelle introduisent une "
+"césure. L'expression rationnelle devra correspondre avec la ligne "
+"entière."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:110
@@ -11967,7 +11969,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:327
 msgid "B<addlang>"
-msgstr ""
+msgstr "B<addlang>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:329
@@ -11976,6 +11978,9 @@ msgid ""
 "a lang=\"...\" attribute shall be added. The language will be defined as the "
 "basename of the PO file without any .po extension."
 msgstr ""
+"Chaîne indiquant le chemin (par exemple, E<lt>bbbE<gt>E<lt>aaaE<gt>) "
+"d'une balise pour laquelle un attribut lang=\"...\" doit être ajouté. La "
+"langue sera définie comme étant le nom du fichier PO sans l'extension .po."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:333
