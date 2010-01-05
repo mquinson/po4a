@@ -41,10 +41,6 @@ areas where they were not originally expected like documentation.
 Locale::Po4a::Xhtml is a module to help the translation of Xhtml documents into
 other [human] languages.
 
-Please note that this module is still experimental. It is not distributed in
-the official po4a releases since we don't feel it to be mature enough. If you
-insist on trying, check the CVS out.
-
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
 These are this module's particular options:
@@ -67,8 +63,6 @@ path to find files included by a B<virtual> attribute.
 
 This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
 module. This only defines the translatable tags and attributes.
-
-It is derived from Jordi's DocBook module.
 
 "It works for me", which means I use it successfully on my personal Web site.
 However, YMMV: please let me know if something doesn't work for you. In
