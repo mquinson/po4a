@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.89 2009-12-30 21:12:31 nekral-guest Exp $
+# $Id: po4a,v 1.90 2010-01-13 23:51:13 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -740,6 +740,9 @@ while (<CONFIG>) {
 		        "configuration file.  This may cause problems with ".
 		        "options."), $main)
 		unless ($po4a_opts{"quiet"});
+	} elsif (not -e $main) {
+	    die wrap_ref_mod("$config_file:$nb", "",
+		gettext("The '%s' master file does not exist."), $main);
 	}
 	$document{$main}{'format'} = $1;
 	$document{$main}{'pos'} = $doc_count;
