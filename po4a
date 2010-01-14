@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.91 2010-01-14 21:40:13 barbier-guest Exp $
+# $Id: po4a,v 1.92 2010-01-14 22:02:08 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -337,6 +337,8 @@ Set the package version for the POT header. The default is "VERSION".
 
 Extra options for msgmerge.
 
+Note: $lang will be extended to the current language.
+
 =item --no-previous
 
 This option removes '--previous' from the options passed to msgmerge.
@@ -656,11 +658,11 @@ while (<CONFIG>) {
 	# Expand the $lang templates
 	my($args2) = "";
 	foreach my $arg (split(/ /,$args)) {
-	    if ( $arg =~ /\$lang/ ) {
+	    if ( $arg =~ /\$lang\b/ ) {
 		# Expand for all the langs
 		foreach my $lang (@langs) {
 		    my($arg2) = $arg;
-		    $arg2 =~ s/\$lang/$lang/g;
+		    $arg2 =~ s/\$lang\b/$lang/g;
 		    $args2 .= $arg2." ";
 		}
 	    } else {
