@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.90 2010-01-13 23:51:13 nekral-guest Exp $
+# $Id: po4a,v 1.91 2010-01-14 21:40:13 barbier-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -1069,8 +1069,9 @@ foreach $lang (sort keys %po_filename) {
     if (-e $po_filename{$lang}) {
 	print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
 	    if ($po4a_opts{"verbose"});
-	my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename ".
-	          $po4a_opts{"msgmerge-opt"}.
+	my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
+	$msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
+	my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt.
 	          (($po4a_opts{"no-backups"}||$po4a_opts{"split"})?
 	           " --backup=none":"");
 	run_cmd($cmd);
