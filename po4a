@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.93 2010-01-15 19:27:24 nekral-guest Exp $
+# $Id: po4a,v 1.94 2010-01-15 21:12:21 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -26,7 +26,50 @@ The po4a (po for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The C<po4a> program is in charge of updating both the po files (to sync
+The B<po4a> program is useful if you want to avoid calling
+L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, and L<po4a-translate(1)> in
+complex Makefiles when you have multiple files to translate, different
+format, or need to specify different options for different documents.
+
+=head1 Table of content
+
+This document is organized as follow:
+
+=head2 DESCRIPTION
+
+=head2 INTRODUCTION
+
+=head2 CONFIGURATION FILE SYNTAX
+
+=head3 Specifying the template languages
+
+=head3 Specifying the paths to translator inputs
+
+=head3 Autodetection of the paths and languages
+
+=head3 Specifying the documents to translate
+
+=head3 Specifying options for the modules
+
+=head3 Specifying aliases
+
+=head3 Split mode
+
+=head2 OPTIONS
+
+=head2 SHORTCOMINGS
+
+=head2 SEE ALSO
+
+=head2 AUTHORS
+
+=head2 COPYRIGHT AND LICENSE
+
+=head3
+
+=head1 INTRODUCTION
+
+The B<po4a> program is in charge of updating both the po files (to sync
 them to the original documents) and the translated documents (to sync
 them to the po files). The main point is to make the use of po4a easier
 without having to remember of the command line options.
@@ -63,6 +106,10 @@ All non blank lines must begin with a [] command, followed by its arguments.
 
 =head2 Specifying the template languages
 
+B<Note:> It is recommended to use [po_directory] rather than [po4a_langs]
+and [po4a_paths].
+See section B<Autodetection of the paths and languages> below.
+
 This is an optional command that can simplify the whole config file, and will
 make it more scalable. You have to specify a list of the languages in which
 you want to translate the documents. This is as simple as:
@@ -74,10 +121,15 @@ of the config file.
 
 =head2 Specifying the paths to translator inputs
 
+B<Note:> It is recommended to use [po_directory] rather than [po4a_langs]
+and [po4a_paths].
+See section B<Autodetection of the paths and languages> below.
+
 First, you have to specify where the translator input files (ie, the files
 used by translators to do their job) are located. It can be done by such a line:
 
- [po4a_paths] doc/l10n/project.doc.pot fr:doc/l10n/fr.po de:doc/l10n/de.po
+ [po4a_paths] doc/l10n/project.doc.pot \
+              fr:doc/l10n/fr.po de:doc/l10n/de.po
 
 The command is thus 'po4a_paths'. The first argument is the path to the pot
 file to use. All subsequent arguments are of the self-explanatory form:
@@ -110,6 +162,9 @@ the rest of the configuration file.
 This command should not be used together with the po4a_langs or po4a_paths
 commands.
 
+When using this command, you have to create an empty POT file on the first
+invocation of po4a to let it know the name of the POT file.
+
  [po_directory] po4a/po/
 
 =head2 Specifying the documents to translate
@@ -128,7 +183,8 @@ Please refer to po4a(7) for more information about the addenda.
 
 More formally, the format is:
 
- [type: <format>] <master_doc> <lang>:<localized_doc>* add_<lang>:<addendum>*
+ [type: <format>] <master_doc> <lang>:<localized_doc>* \
+                  add_<lang>:<addendum>*
 
 If you've defined the template languages, you can rewrite the line above this
 way:
@@ -248,18 +304,18 @@ Decrease the verbosity of the program.
 
 Output some debugging information.
 
+=item -o, --option
+
+Extra option(s) to pass to the format plugin. Specify each option in the
+'name=value' format. See the documentation of each plugin for more
+information about the valid options and their meanings.
+
 =item -f, --force
 
 Always generate the POT and PO files, even if po4a considers it is
 not necessary.
 
 The default behavior (when --force is not specified) is the following:
-
-=item -o, --option
-
-Extra option(s) to pass to the format plugin. Specify each option in the
-'name=value' format. See the documentation of each plugin for more
-information about the valid options and their meanings.
 
 =over
 
@@ -285,7 +341,7 @@ The PO files are always re-generated based on the POT with B<msgmerge -U>.
 =item --stamp
 
 Tells po4a to create stamp files when a translation is not generated
-because it it does not reach the threshold. These stamp files are named
+because it does not reach the threshold. These stamp files are named
 according to the expected translated document, with the I<.po4a-stamp>
 extension.
 
