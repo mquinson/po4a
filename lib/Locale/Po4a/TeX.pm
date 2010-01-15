@@ -201,7 +201,7 @@ As for an asterisk, the command will be extracted if it appear at an
 extremity of a block, but the parameters won't be translated separately.
 The translator will have to translate the command concatenated to all its
 parameters.
-This permits to keep more context, and is usefull for commands with small
+This permits to keep more context, and is useful for commands with small
 words in parameter, which can have multiple meanings (and translations).
 
 Note: In this case you don't have to specify which parameters are
@@ -212,7 +212,7 @@ translatable, but po4a must know the type and number of parameters.
 In this case, the command won't be extracted from any block.
 But if it appear alone on a bloc, then only the parameters marked as
 translatable will be presented to the translator.
-This is usefull for font command.  These commands should generally not be
+This is useful for font command.  These commands should generally not be
 separated from their paragraph (to keep the context), but there is no
 reason to annoy the translator with them if a whole string is enclosed in
 such a command.

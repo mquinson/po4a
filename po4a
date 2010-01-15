@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.92 2010-01-14 22:02:08 nekral-guest Exp $
+# $Id: po4a,v 1.93 2010-01-15 19:27:24 nekral-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -90,9 +90,9 @@ way:
  [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po
 
 You can also use $master to refer to the document basename. In this case,
-po4a will use a splitted mode: one POT and one PO (for each language) will
+po4a will use a split mode: one POT and one PO (for each language) will
 be created for each document specified in the po4a configuration file.
-See the B<Splitted mode> section.
+See the B<Split mode> section.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
 
@@ -188,11 +188,11 @@ This module alias can then be use like a regular module:
 
 Note that you can specify additional options on a per file basis.
 
-=head2 Splitted mode
+=head2 Split mode
 
-The splitted mode is used when $master is used in the [po4a_paths] line.
+The split mode is used when $master is used in the [po4a_paths] line.
 
-When the splitted mode is used, a temporary big POT and temporary big POs
+When the split mode is used, a temporary big POT and temporary big POs
 are used. This permits to share the translations between all the POs.
 
 If two POs have different translations for the same string, po4a will mark
@@ -862,20 +862,20 @@ if (defined $document{''}{"options"}
                               split_opts($document{''}{"options"}{"global"}));
 }
 
-my %splitted_po; # po_files: '$lang','$master' => '$path'
-my %splitted_pot; # pot_files: '$master' => '$path'
+my %split_po; # po_files: '$lang','$master' => '$path'
+my %split_pot; # pot_files: '$master' => '$path'
 
 # make a big pot
 my $update_pot_file = 0;
 if ($pot_filename =~ m/\$master/) {
-    print wrap_msg(gettext("Splitted mode, creating a temporary POT")."\n")
+    print wrap_msg(gettext("Split mode, creating a temporary POT")."\n")
         if $po4a_opts{"verbose"};
     foreach my $master (keys %document) {
         next if ($master eq '');
         my $m = basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
-        $splitted_pot{$master} = $master_pot;
+        $split_pot{$master} = $master_pot;
     }
     # The POT needs to be generated anyway.
     $update_pot_file = 1;
@@ -1016,19 +1016,19 @@ if ($po4a_opts{"split"}) {
 
         chdir $po4a_opts{"srcdir"}
             if (defined $po4a_opts{"srcdir"});
-        my $dir = dirname($splitted_pot{$master});
+        my $dir = dirname($split_pot{$master});
         if (not -d $dir) {
             mkdir $dir
                 or die wrap_msg(gettext("Can't create directory '%s': %s"),
                                 $dir, $!);
         }
         my $cmd = "msggrep -N '$master' -o ".
-                  ($po4a_opts{"force"}?$splitted_pot{$master}:$tmp_file).
+                  ($po4a_opts{"force"}?$split_pot{$master}:$tmp_file).
                   " $pot_filename";
         run_cmd($cmd);
 
         unless ($po4a_opts{"force"}) {
-            move_po_if_needed($tmp_file, $splitted_pot{$master}, 0);
+            move_po_if_needed($tmp_file, $split_pot{$master}, 0);
         }
         chdir $po4a_opts{"calldir"}
             if (defined $po4a_opts{"srcdir"});
@@ -1052,7 +1052,7 @@ if ($po4a_opts{"split"}) {
             if (-e "$master_po") {
                 $cmd_cat .= " $master_po";
             }
-            $splitted_po{$lang}{$master} = $master_po;
+            $split_po{$lang}{$master} = $master_po;
         }
         if (length $cmd_cat) {
             $cmd_cat = "msgcat -o $tmp_bigpo $cmd_cat";
@@ -1113,13 +1113,13 @@ if ($po4a_opts{"split"}) {
             my $cmd;
             # Create an empty PO or copy the original PO header.
             # This permits to keep the header.
-            if (-f $splitted_po{$lang}{$master}) {
+            if (-f $split_po{$lang}{$master}) {
                 $cmd = "msggrep --force-po -v -K -e '.'".
                        " -o ".$tmp_file.
-                       " ".$splitted_po{$lang}{$master};
+                       " ".$split_po{$lang}{$master};
             } else {
                 $cmd = "msginit --no-translator -l ".$lang.
-                       " -i ".$splitted_pot{$master}.
+                       " -i ".$split_pot{$master}.
                        " -o ".$tmp_file;
             }
             run_cmd($cmd);
@@ -1128,10 +1128,10 @@ if ($po4a_opts{"split"}) {
             # (compendium).
             $cmd = "msgmerge -U -C ".$po_filename{$lang}.
                    " --backup=none ".$po4a_opts{"msgmerge-opt"}.
-                   " $tmp_file ".$splitted_pot{$master};
+                   " $tmp_file ".$split_pot{$master};
             run_cmd($cmd);
 
-            my $dir = dirname($splitted_po{$lang}{$master});
+            my $dir = dirname($split_po{$lang}{$master});
             if (not -d $dir) {
                 mkdir $dir
                     or die wrap_msg(gettext("Can't create directory '%s': %s"),
@@ -1139,24 +1139,24 @@ if ($po4a_opts{"split"}) {
             }
             unless ($po4a_opts{"force"}) {
                 move_po_if_needed($tmp_file,
-                                  $splitted_po{$lang}{$master},
+                                  $split_po{$lang}{$master},
                                   $po4a_opts{"no-backups"}?0:1);
             } else {
-                if (    -f $splitted_po{$lang}{$master}
+                if (    -f $split_po{$lang}{$master}
                     and not $po4a_opts{"no-backups"}) {
-                    copy $splitted_po{$lang}{$master},
-                         $splitted_po{$lang}{$master}."~"
+                    copy $split_po{$lang}{$master},
+                         $split_po{$lang}{$master}."~"
                         or die wrap_msg(dgettext("po4a",
                                                  "Can't copy %s to %s: %s."),
-                                        $splitted_po{$lang}{$master},
-                                        $splitted_po{$lang}{$master}."~",
+                                        $split_po{$lang}{$master},
+                                        $split_po{$lang}{$master}."~",
                                         $!);
                 }
-                move $tmp_file, $splitted_po{$lang}{$master}
+                move $tmp_file, $split_po{$lang}{$master}
                     or die wrap_msg(dgettext("po4a",
                                              "Can't move %s to %s: %s."),
                                     $tmp_file,
-                                    $splitted_po{$lang}{$master},
+                                    $split_po{$lang}{$master},
                                     $!);
             }
         }

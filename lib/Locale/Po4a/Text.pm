@@ -36,7 +36,7 @@ areas where they were not expected like documentation.
 Locale::Po4a::Text is a module to help the translation of text documents into
 other [human] languages.
 
-Paragraphs are splitted on empty lines (or lines containing only spaces or
+Paragraphs are split on empty lines (or lines containing only spaces or
 tabulations).
 
 If a paragraph contains a line starting by a space (or tabulation), this
