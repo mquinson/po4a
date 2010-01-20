@@ -55,7 +55,7 @@ $tests[2]{'doc'}  = 'template languages';
 
 
 $tests[3]{'run'}  =
-    'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
+    'cp data-05/test2.??.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a data-05/test2.conf > tmp/err 2>&1';
 @{$tests[3]{'test'}} =
     ("diff -u data-05/test3.err tmp/err",
@@ -72,7 +72,7 @@ $tests[3]{'doc'}  = 'template languages - with translations';
 
 
 $tests[4]{'run'}  =
-    'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
+    'cp data-05/test2.??.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a -v -k 0 data-05/test2.conf >tmp/err 2>&1';
 @{$tests[4]{'test'}} =
     ("diff -u -I '^\.* done\.' data-05/test4.err tmp/err",
@@ -89,7 +89,7 @@ $tests[4]{'doc'}  = 'template languages - command line arguments';
 
 # -k 0 is specified in the file opt:
 $tests[5]{'run'}  =
-    'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
+    'cp data-05/test2.??.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a -v data-05/test3.conf > tmp/err 2>&1';
 @{$tests[5]{'test'}} =
     ("diff -u -I '^\.* done\.' data-05/test4.err tmp/err",
@@ -106,7 +106,7 @@ $tests[5]{'doc'}  = 'command line arguments + options';
 
 # -k 0 -v is specified for the alias
 $tests[6]{'run'}  =
-    'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
+    'cp data-05/test2.??.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a data-05/test4.conf > tmp/err 2>&1';
 @{$tests[6]{'test'}} =
     ("diff -u data-05/test6.err tmp/err",
@@ -123,7 +123,7 @@ $tests[6]{'doc'}  = 'module alias + options';
 
 
 $tests[7]{'run'}  =
-    'cp data-05/test2.{fr,es,it,de}.po tmp/ && '.
+    'cp data-05/test2.??.po tmp/ && '.
     'LC_ALL=C COLUMNS=80 perl ../po4a data-05/test5.conf > tmp/err 2>&1';
 @{$tests[7]{'test'}} =
     ("diff -u data-05/test7.err tmp/err",
