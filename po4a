@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.94 2010-01-15 21:12:21 nekral-guest Exp $
+# $Id: po4a,v 1.95 2010-01-20 20:37:10 barbier-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -846,7 +846,7 @@ while (<CONFIG>) {
 		gettext("The translated and master file are the same."))
 	      if ($main eq $trans);
 
-	    if ($lang =~ /add_/) {
+	    if ($lang =~ /^add_/) {
 		push @{$document{$main}{$lang}},$trans;
 	    } else {
 		die wrap_ref_mod("$config_file:$nb", "",
