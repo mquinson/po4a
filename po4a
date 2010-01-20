@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.95 2010-01-20 20:37:10 barbier-guest Exp $
+# $Id: po4a,v 1.96 2010-01-20 23:17:00 barbier-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -837,7 +837,12 @@ while (<CONFIG>) {
 	}
 	%{$document{$main}{'options'}} = %options;
 
-	foreach my $arg (split(/ /,$args)) {
+	chdir $po4a_opts{"srcdir"}
+	    if (defined $po4a_opts{"srcdir"});
+	my %discarded = ();
+	my @remaining_args = split(/ /,$args);
+	while (@remaining_args) {
+	    my $arg = shift(@remaining_args);
 	    die wrap_ref_mod("$config_file:$nb", "",
 		gettext("Unparsable argument '%s' (%s)."), $arg, $line)
 	      unless ($arg =~ /^([^:]*):(.*)/);
@@ -847,7 +852,31 @@ while (<CONFIG>) {
 	      if ($main eq $trans);
 
 	    if ($lang =~ /^add_/) {
-		push @{$document{$main}{$lang}},$trans;
+		my $modifiers;
+		$trans =~ s/^([@!?]+)// and $modifiers = $1;
+		next if defined($discarded{$trans});
+		if (defined $modifiers) {
+		    if ($modifiers =~ m/!/) {
+			$discarded{$trans} = 1;
+			next;
+		    }
+		    next if ($modifiers =~ m/\?/ and not -e $trans);
+		    if ($modifiers =~ m/@/) {
+			open LIST,"<","$trans" or die wrap_msg(gettext("Can't open %s: %s"), $trans, $!);
+			my @new_list = ();
+			while(<LIST>) {
+			    chomp;
+			    next if length($_) == 0 or $_ =~ m/^\s*#/;
+			    push(@new_list, "$lang:$_");
+			}
+			close LIST;
+			unshift(@remaining_args, @new_list);
+		    } else {
+			push @{$document{$main}{$lang}},$trans;
+		    }
+		} else {
+		    push @{$document{$main}{$lang}},$trans;
+		}
 	    } else {
 		die wrap_ref_mod("$config_file:$nb", "",
 		    gettext("Translation of %s in %s redefined"), $main, $lang)
@@ -855,6 +884,8 @@ while (<CONFIG>) {
 		$document{$main}{$lang} = $trans;
 	    }
 	}
+	chdir $po4a_opts{"calldir"}
+	    if (defined $po4a_opts{"srcdir"});
     } elsif ($cmd =~ m/po4a_alias: *(.*)/) {
 	my $name = $1;
 	my %alias = ();
