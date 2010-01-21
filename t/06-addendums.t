@@ -45,7 +45,37 @@ push @tests, {
   'doc' => 'translate with recursive @addendum'
   };
 
-use Test::More tests => 10; # tests * (run+validity)
+push @tests, {
+  'run' => 'perl ../po4a -f data-06/test0.conf',
+  'test'=> 'diff -U 50 data-06/Titles.trans.add123 tmp/Titles.trans',
+  'doc' => '(po4a) translate with addendum1, 2 and 3'
+  };
+
+push @tests, {
+  'run' => 'perl ../po4a -f data-06/test1.conf',
+  'test'=> 'diff -U 50 data-06/Titles.trans.add123 tmp/Titles.trans',
+  'doc' => '(po4a) translate with @addendum'
+  };
+
+push @tests, {
+  'run' => 'perl ../po4a -f data-06/test2.conf',
+  'test'=> 'diff -U 50 data-06/Titles.trans.add13 tmp/Titles.trans',
+  'doc' => '(po4a) translate with !addendum'
+  };
+
+push @tests, {
+  'run' => 'perl ../po4a -f data-06/test3.conf',
+  'test'=> 'diff -U 50 data-06/Titles.asciidoc tmp/Titles.trans',
+  'doc' => '(po4a) translate with non-existing ?addendum'
+  };
+
+push @tests, {
+  'run' => 'perl ../po4a -f data-06/test4.conf',
+  'test'=> 'diff -U 50 data-06/Titles.trans.add1 tmp/Titles.trans',
+  'doc' => '(po4a) translate with recursive @addendum'
+  };
+
+use Test::More tests => 20; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
