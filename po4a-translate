@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a-translate -- translate doc files using a message catalog(ie, po file)
-# $Id: po4a-translate,v 1.43 2010-01-20 23:17:00 barbier-guest Exp $
+# $Id: po4a-translate,v 1.44 2010-01-21 22:45:55 barbier-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
 #
@@ -263,6 +263,7 @@ if ($percent<$threshold)  {
 		my @new_list = ();
 		while(<LIST>) {
 		    chomp;
+		    s/\s+$//;
 		    next if length($_) == 0 or $_ =~ m/^\s*#/;
 		    push(@new_list, $_);
 		}
