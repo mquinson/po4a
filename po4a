@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.97 2010-01-21 22:45:55 barbier-guest Exp $
+# $Id: po4a,v 1.98 2010-01-30 09:38:34 barbier-guest Exp $
 #
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.fr)
 #
@@ -183,8 +183,29 @@ Please refer to po4a(7) for more information about the addenda.
 
 More formally, the format is:
 
- [type: <format>] <master_doc> <lang>:<localized_doc>* \
-                  add_<lang>:<addendum>*
+ [type: <format>] <master_doc> (<lang>:<localized_doc>)* \
+                  (add_<lang>:<modifiers>*<addendum_path>)*
+
+If there is no modifier, I<addendum_path> is a path to an addendum.
+Modifiers are
+
+=over 2
+
+=item ?
+
+Include I<addendum_path> if this file does exist, otherwise do nothing.
+
+=item @
+
+I<addendum_path> is not a regular addendum but a file containg a list of
+addenda, one by line.  Each addendum may be preceded by modifiers.
+
+=item !
+
+I<addendum_path> is discarded, it is not loaded and will not be loaded by 
+any further addendum specification.
+
+=back
 
 If you've defined the template languages, you can rewrite the line above this
 way:
