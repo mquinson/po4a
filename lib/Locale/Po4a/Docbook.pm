@@ -217,7 +217,7 @@ sub initialize {
 	$self->{options}{'_default_attributes'}.=' <audiodata>fileref';
 
 	# audioobject; does not contain text;
-	# NOTE: might be contaioned in a inlinemediaobject
+	# NOTE: might be contained in a inlinemediaobject
 	$self->{options}{'_default_translated'} .= " <audioobject>";
 	$self->{options}{'_default_placeholder'} .= " <audioobject>";
 
