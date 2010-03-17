@@ -957,10 +957,17 @@ sub read_file {
             if ($include) {
                 # search the file
                 open (KPSEA, "kpsewhich " . $newfilename . " |");
-                $newfilename = <KPSEA>;
+                my $newfilepath = <KPSEA>;
+
+                if ($newfilename ne "" and $newfilepath eq "") {
+                    die wrap_mod("po4a::tex",
+                                 dgettext("po4a",
+                                          "Can't find %s with kpsewhich"),
+                                 $filename);
+                }
 
                 push @entries, read_file($self,
-                                         $newfilename);
+                                         $newfilepath);
                 if ($tag eq "include") {
                     $textline = "\\clearpage".$end;
                 } else {
