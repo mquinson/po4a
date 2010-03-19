@@ -3,11 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# СЛОВАРЬ
+# section - категория (при указании на категорию в которой находится man-страница man1, man2...
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: 2010-03-16 12:46+0300\n"
-"PO-Revision-Date: 2010-03-17 11:43+0300\n"
+"PO-Revision-Date: 2010-03-20 01:35+0300\n"
 "Last-Translator: kruvalig <kruvalig@gmail.com>\n"
 "Language-Team: no command yet <kruvalig@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -220,7 +222,7 @@ msgstr "пример файла настройки"
 #. type: Content of: <refentry><refsect1><example><para>
 #: share/doc//po4a-build.xml:123
 msgid "An example configuration file is available at:"
-msgstr ""
+msgstr "Пример файла настройки можно прочитать тут:"
 
 #. type: Content of: <refentry><refsect1><example><programlisting>
 #: share/doc//po4a-build.xml:126
@@ -229,66 +231,70 @@ msgid ""
 "/usr/share/doc/po4a/examples/po4a-build.conf.example\n"
 "    "
 msgstr ""
+"/usr/share/doc/po4a/examples/po4a-build.conf.example\n"
+"    "
 
 #. type: Content of: <refentry><refsect1><example>
 #: share/doc//po4a-build.xml:125
 msgid "<placeholder type=\"programlisting\" id=\"0\"/>"
-msgstr ""
+msgstr "<placeholder type=\"programlisting\" id=\"0\"/>"
 
 #. type: Content of: <refentry><refsect1><refsect2><title>
 #: share/doc//po4a-build.xml:130
 msgid "configuration file layout"
-msgstr ""
+msgstr "схема файла настройки"
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:131
 msgid "The configuration file consists of several sections, general, XML/XSL support, POD support and HTML support."
-msgstr ""
+msgstr "Файл настройки состоит из нескольких секций(параграфов), основной части, настроек XML/XSL, POD и HTML."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:134
+#, fuzzy
 msgid "General includes the name and location of the po4a config file (probably best to leave this as <filename>po4a.config</filename>), the po directory containing the documentation PO files (often <filename>doc/po</filename>), the full name of the POT file used to create the translations, the BASEDIR for the generated output, whether the package contains manpages in section 3 rather than just section 1 and the names of the binary packages which are to contain the generated output."
-msgstr ""
+msgstr "Основная часть включает имя и расположение файла настройки po4a (возможно лучше всего оставить его таким <filename>po4a.config</filename>), po каталог содержащий POфайлы (как правило <filename>doc/po</filename>), полное имя POT файла используетя для создания переводов, BASEDIR для результатов работы, содержит ли пакет man-страницы в разделе 3 или только в разделе 1."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:143
+#, fuzzy
 msgid "XML/XSL support includes specifying which of the binary packages use XSL support in the XMLPACKAGES variable, the top level DocBook file to pass to <command>xsltproc</command> and the location of the XML or Docbook files. The XSLFILE can be overridden, if necessary."
-msgstr ""
+msgstr "XML/XSL поддержка включает в себя уточнение того какой бинарный пакет использует XSL с помощью переменной XMLPACKAGES, верхний уровень файла DocBook для выполнения <command>xsltproc</command> и выполнение файлов XML или Docbook. XSLFILE может быть перезаписан, при необходимости."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:148
 msgid "POD support includes specifying which of the binary packages use POD support in the PODPACKAGES variable and the full name of the POD file."
-msgstr ""
+msgstr "POD поддерживает определение того какой бинарный пакет использует POD, с помощью переменной PODPACKAGES и полного имени POD файла."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:152
 msgid "HTML support specifies the subdirectory to create below BASEDIR for the untranslated and translated HTML content and the DocBook file to generate the HTML. The HTMLXSL file can be overridden, if necessary."
-msgstr ""
+msgstr "HTML поддержка позволяет определять подкаталоги которые необходимо создавать в каталоге BASEDIR для не переведенных и переведенных HTML и DocBook файлов необходимых при создании HTML. HTMLXSL файл может быть перезаписан при необходимости."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc//po4a-build.xml:160
 msgid "COMMANDS"
-msgstr ""
+msgstr "КОМАНДЫ"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4a-build.xml:164
 msgid "<option>--pot-only</option>"
-msgstr ""
+msgstr "<option>--pot-only</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4a-build.xml:167
 msgid "Only updates the POT file(s). <option>--pot-only</option> is intended to support packages including all POT files in the package source. Packages using autotools can easily add the POT file via EXTRA_DIST but packages just using a Makefile or certain VCS build helpers can find it awkward to add the POT file (which is a generated file) without putting the POT file into the VCS. To avoid this ugly and unnecessary work, <command>po4a-build</command> can update the POT file(s) at the start of the build, so that <command>dpkg-source</command> includes them into the source tarball."
-msgstr ""
+msgstr "Обновить только POT файл(ы). <option>--pot-only</option> предназначен для поддержки пакетов исходных текстов, включающих все POT файлы. В пакетах использующих autotools можно легко добавить POT файл с помощью EXTRA_DIST, но в пакетах использующих Makefile или другие средства сборки VCS можно достаточно неудобно добавлять POT файл без размещения его в VCS. Чтобы избежать этой ненужно работы <command>po4a-build</command> может обновить POT файл(ы) в самом начале сборки, так что <command>dpkg-source</command> включит их в архив (tarball) исходных текстов."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example><title>
 #: share/doc//po4a-build.xml:179
 msgid "svn-buildpackage example"
-msgstr ""
+msgstr "пример использования svn-buildpackage"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example><para>
 #: share/doc//po4a-build.xml:180
 msgid "<command>svn-buildpackage</command> has explicit support for this kind of addition, using the <option>useNativeDist</option> SVN property and the <option>native-dist</option> Make target."
-msgstr ""
+msgstr "<command>svn-buildpackage</command> имеет явную поддержку такого рода дополнений, используя способность SVN <option>useNativeDist</option> и цель сборщика (Make) <option>native-dist</option>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example><programlisting>
 #: share/doc//po4a-build.xml:186
@@ -299,6 +305,10 @@ msgid ""
 "\tpo4a-build --pot-only\n"
 "            "
 msgstr ""
+"# добавить POT файл в архив исходных текстов\n"
+"native-dist: Makefile\n"
+"\tpo4a-build --pot-only\n"
+"            "
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example><programlisting>
 #: share/doc//po4a-build.xml:191
@@ -307,27 +317,29 @@ msgid ""
 "$ svn propset useNativeDist 1 debian\n"
 "            "
 msgstr ""
+"$ svn propset useNativeDist 1 debian\n"
+"            "
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example>
 #: share/doc//po4a-build.xml:185
 msgid "<placeholder type=\"programlisting\" id=\"0\"/> <placeholder type=\"programlisting\" id=\"1\"/>"
-msgstr ""
+msgstr "<placeholder type=\"programlisting\" id=\"0\"/> <placeholder type=\"programlisting\" id=\"1\"/>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4a-build.xml:197
 msgid "<option>-h</option>|<option>--help</option>"
-msgstr ""
+msgstr "<option>-h</option>|<option>--help</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4a-build.xml:199
 #: share/doc//po4a-build.xml:207
 msgid "print the usage message and exit."
-msgstr ""
+msgstr "распечатать инструкцию по использованию и выйти"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4a-build.xml:204
 msgid "<option>--version</option>"
-msgstr ""
+msgstr "<option>--version</option>"
 
 #. type: =head1
 #: share/doc//po4a-build.xml:213
@@ -339,47 +351,47 @@ msgstr ""
 #: po4a-normalize:37
 #: po4a-translate:36
 msgid "OPTIONS"
-msgstr ""
+msgstr "ПАРАМЕТРЫ"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4a-build.xml:216
 msgid "<option>-f</option>|<option>--file</option><replaceable> FILE</replaceable>"
-msgstr ""
+msgstr "<option>-f</option>|<option>--file</option><replaceable> FILE</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4a-build.xml:218
 msgid "Override the <command>po4a-build</command> default configuration file (<filename>po4a-build.conf</filename>)  and supply your own."
-msgstr ""
+msgstr "Указать <command>po4a-build</command> не использовать файл настройки (<filename>po4a-build.conf</filename>) по умолчанию и предоставить свой собственный."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc//po4a-build.xml:227
 msgid "Author"
-msgstr ""
+msgstr "Автор"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4a-build.xml:228
 msgid "<command>po4a-build</command> was written by Neil Williams <email>codehelp@debian.org</email>."
-msgstr ""
+msgstr "<command>po4a-build</command> был написан Нейлом Уильямсом (Neil Williams) <email>codehelp@debian.org</email>."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4a-build.xml:231
 msgid "This manual page was written by Neil Williams <email>codehelp@debian.org</email>"
-msgstr ""
+msgstr "Эта man-страница была написана Нейлом Уильямсом (Neil Williams) <email>codehelp@debian.org</email>"
 
 #. type: Content of: <refentry><refentryinfo>
 #: share/doc//po4aman-display-po.xml:6
 msgid "<date>2006-04-08</date>"
-msgstr ""
+msgstr "<date>2006-04-08</date>"
 
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc//po4aman-display-po.xml:8
 msgid "PO4AMAN-DISPLAY-PO"
-msgstr ""
+msgstr "PO4AMAN-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc//po4aman-display-po.xml:10
 msgid "2006-04-08"
-msgstr ""
+msgstr "2006-04-08"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc//po4aman-display-po.xml:11
@@ -387,72 +399,72 @@ msgstr ""
 #: share/doc//po4apod-display-po.xml:11
 #: share/doc//po4apod-display-po.xml:12
 msgid "Po4a Tools"
-msgstr ""
+msgstr "Инструменты Po4a"
 
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc//po4aman-display-po.xml:15
 msgid "po4aman-display-po"
-msgstr ""
+msgstr "po4aman-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc//po4aman-display-po.xml:16
 msgid "display a translated man page according to a PO"
-msgstr ""
+msgstr "отобразить переведенную man-страницу в соответствии с PO"
 
 #. type: Content of: <refentry><refsynopsisdiv><cmdsynopsis>
 #: share/doc//po4aman-display-po.xml:21
 msgid "<command>po4aman-display-po</command> <arg choice='plain'>-p </arg> <arg choice='plain'><replaceable>PO_FILE</replaceable></arg> <arg choice='opt'><arg choice='plain'>-m </arg><arg choice='plain'><replaceable>MASTER_FILE</replaceable></arg></arg> <arg choice='opt'><arg choice='plain'>-o </arg><arg choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
-msgstr ""
+msgstr "<command>po4aman-display-po</command> <arg choice='plain'>-p </arg> <arg choice='plain'><replaceable>PO_FILE</replaceable></arg> <arg choice='opt'><arg choice='plain'>-m </arg><arg choice='plain'><replaceable>MASTER_FILE</replaceable></arg></arg> <arg choice='opt'><arg choice='plain'>-o </arg><arg choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:32
 msgid "<command>po4aman-display-po</command> can be used by a translator who wants to check how the man page being translated in a PO will be displayed."
-msgstr ""
+msgstr "<command>po4aman-display-po</command> может использоваться переводчиком, для просмотра того, как выглядит переведенная man-страница приведенная в соответствии с PO файлом."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:35
 msgid "The manual page must be in one of the formats supported by the po4a's <emphasis remap='I'>man</emphasis> module.  The manual page can be provided on the command line, or installed on the system."
-msgstr ""
+msgstr "man-страница должна иметь один из форматов, поддерживаемых <emphasis remap='I'>man</emphasis> модулем po4a. man-страницы могут быть отображены в консоли или установлены в системе."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:40
 msgid "Manual pages generated from other formats, like docbook or pod, are not supported.  See <citerefentry><refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum></citerefentry> for an equivalent supporting <emphasis remap='I'>pod</emphasis> documents."
-msgstr ""
+msgstr "Man-страницы созданные из других форматов, таких как docbook или pod не поддерживаются.  См. <citerefentry><refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum></citerefentry> для поиска эквивалентных, поддерживающих  <emphasis remap='I'>pod</emphasis> документов."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:49
 #: share/doc//po4apod-display-po.xml:43
 msgid "<option>-p </option><replaceable>PO_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-p </option><replaceable>PO_FILE</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:51
 #: share/doc//po4apod-display-po.xml:45
 msgid "The PO file containing the translations."
-msgstr ""
+msgstr "PO файл содержащий переводы."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:55
 msgid "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
 
 #.  .br
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:57
 msgid "The original man page.  It can be the absolute or relative path to the original man page (gzipped or not), the name the man page or the name and section of the man page (using the man.section format).  When the master document is not provided with the <option>-m</option> option, <command>po4aman-display-po</command> tries to find the original man page based on the line reference of the first string in the PO."
-msgstr ""
+msgstr "Оригинальная man-страница. Это может быть абсолютный или относительный путь к оригинальной man-странице (в архиве gzip или нет), имя man-страницы или имя и раздел man-страницы (используя формат man.номер_раздела). Когда основной документ обрабатывается без указания параметра <option>-m</option>, команда <command>po4aman-display-po</command> пытается отыскать оригинальную man-страницу в строке ссылок, первой строки в PO файле."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4aman-display-po.xml:68
 #: share/doc//po4apod-display-po.xml:55
 msgid "<option>-o </option><replaceable>PO4A_OPT</replaceable>"
-msgstr ""
+msgstr "<option>-o </option><replaceable>PO4A_OPT</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4aman-display-po.xml:70
 #: share/doc//po4apod-display-po.xml:57
 msgid "Some options to pass to <citerefentry><refentrytitle>po4a-translate</refentrytitle><manvolnum>1</manvolnum></citerefentry>."
-msgstr ""
+msgstr "Некоторые параметры для выполнения <citerefentry><refentrytitle>po4a-translate</refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 
 #. type: =head1
 #: share/doc//po4aman-display-po.xml:77
@@ -479,78 +491,78 @@ msgstr ""
 #: lib/Locale/Po4a/Xhtml.pm:71
 #: lib/Locale/Po4a/Xml.pm:2059
 msgid "SEE ALSO"
-msgstr ""
+msgstr "СМ. ТАКЖЕ"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:79
 msgid "<citerefentry> <refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum> </citerefentry>"
-msgstr ""
+msgstr "<citerefentry> <refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum> </citerefentry>"
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc//po4aman-display-po.xml:86
 #: share/doc//po4apod-display-po.xml:71
 msgid "AUTHOR"
-msgstr ""
+msgstr "АВТОР"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4aman-display-po.xml:87
 msgid "Thomas Huriaux"
-msgstr ""
+msgstr "Thomas Huriaux"
 
 #. type: Content of: <refentry><refentryinfo>
 #: share/doc//po4apod-display-po.xml:6
 msgid "<date>2009-03-16</date>"
-msgstr ""
+msgstr "<date>2009-03-16</date>"
 
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc//po4apod-display-po.xml:8
 msgid "PO4APOD-DISPLAY-PO"
-msgstr ""
+msgstr "PO4APOD-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc//po4apod-display-po.xml:10
 msgid "2009-03-16"
-msgstr ""
+msgstr "2009-03-16"
 
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc//po4apod-display-po.xml:15
 msgid "po4apod-display-po"
-msgstr ""
+msgstr "po4apod-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc//po4apod-display-po.xml:16
 msgid "man display of a translated pod file according to a PO"
-msgstr ""
+msgstr "отобразить man-страницу переведенного pod файла в соответствии с PO файлом"
 
 #. type: Content of: <refentry><refsynopsisdiv><cmdsynopsis>
 #: share/doc//po4apod-display-po.xml:21
 msgid "<command>po4apod-display-po</command> <arg choice='plain'>-p </arg> <arg choice='plain'><replaceable>PO_FILE</replaceable></arg> <arg choice='plain'>-m </arg> <arg choice='plain'><replaceable>POD_FILE</replaceable></arg> <arg choice='opt'><arg choice='plain'>-o </arg><arg choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
-msgstr ""
+msgstr "<command>po4apod-display-po</command> <arg choice='plain'>-p </arg> <arg choice='plain'><replaceable>PO_FILE</replaceable></arg> <arg choice='plain'>-m </arg> <arg choice='plain'><replaceable>POD_FILE</replaceable></arg> <arg choice='opt'><arg choice='plain'>-o </arg><arg choice='plain'><replaceable>PO4A_OPT</replaceable></arg></arg>"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4apod-display-po.xml:33
 msgid "<command>po4apod-display-po</command> can be used by a translator who wants to check how the man page, generated from a pod file, being translated in a PO will be displayed. Generally, pod file is only available in source package or embedded in Perl script."
-msgstr ""
+msgstr "<command>po4apod-display-po</command> может использоваться переводчиками, при необходимости просмотреть как выглядит man-страница созданная из pod файла в соответствии с переводом из PO файла. Обычно, pod файл доступен только в пакете исходных текстов или во вложенном Perl скрипте."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc//po4apod-display-po.xml:49
 msgid "<option>-m </option><replaceable>POD_FILE</replaceable>"
-msgstr ""
+msgstr "<option>-m </option><replaceable>POD_FILE</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc//po4apod-display-po.xml:51
 msgid "The original pod file used by po4a to generate PO file."
-msgstr ""
+msgstr "Оригинальный pod файл, используемый po4a для создания PO файла."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4apod-display-po.xml:65
 msgid "<citerefentry> <refentrytitle>po4aman-display-po</refentrytitle><manvolnum>1</manvolnum> </citerefentry>"
-msgstr ""
+msgstr "<citerefentry> <refentrytitle>po4aman-display-po</refentrytitle><manvolnum>1</manvolnum> </citerefentry>"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4apod-display-po.xml:72
 msgid "Florentin Duneau"
-msgstr ""
+msgstr "Florentin Duneau"
 
 #. type: =head1
 #: po4a:15
@@ -587,12 +599,12 @@ msgstr ""
 #: lib/Locale/Po4a/Xhtml.pm:31
 #: lib/Locale/Po4a/Xml.pm:33
 msgid "NAME"
-msgstr ""
+msgstr "ИМЯ"
 
 #. type: textblock
 #: po4a:17
 msgid "po4a - update both the po files and translated documents in one shot"
-msgstr ""
+msgstr "po4a -обновление po файлов и переведенную документацию одновременно"
 
 #. type: =head1
 #: po4a:19
@@ -605,12 +617,12 @@ msgstr ""
 #: lib/Locale/Po4a/Pod.pm:193
 #: lib/Locale/Po4a/TransTractor.pm:119
 msgid "SYNOPSIS"
-msgstr ""
+msgstr "ОБЗОР"
 
 #. type: textblock
 #: po4a:21
 msgid "po4a [options] E<lt>config_fileE<gt>"
-msgstr ""
+msgstr "po4a [options] E<lt>config_fileE<gt>"
 
 #. type: textblock
 #: po4a:25
@@ -637,84 +649,84 @@ msgstr ""
 #: lib/Locale/Po4a/Wml.pm:31
 #: lib/Locale/Po4a/Xml.pm:39
 msgid "The po4a (po for anything) project goal is to ease translations (and more interestingly, the maintenance of translations) using gettext tools on areas where they were not expected like documentation."
-msgstr ""
+msgstr "Целью проекта po4a (po везде или для всего) является облегчение процесса перевода (и что более важно - поддержка переводов) использующего инструменты gettext там, где переводимые файлы не выглядят как документация."
 
 #. type: textblock
 #: po4a:29
 msgid "The B<po4a> program is useful if you want to avoid calling L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, and L<po4a-translate(1)> in complex Makefiles when you have multiple files to translate, different format, or need to specify different options for different documents."
-msgstr ""
+msgstr "Программа B<po4a> очень полезна если вы хотите избежать вызова L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, и L<po4a-translate(1)> в достаточно сложных файлах сборки (Makefiles) когда слишком много файлов для перевода, много различных форматов или необходимо определить разные параметры для разных документов."
 
 #. type: =head1
 #: po4a:34
 #: doc/po4a.7.pod:11
 msgid "Table of content"
-msgstr ""
+msgstr "Содержание"
 
 #. type: textblock
 #: po4a:36
 #: doc/po4a.7.pod:13
 msgid "This document is organized as follow:"
-msgstr ""
+msgstr "Этот документ устроен следующим образом:"
 
 #. type: =head1
 #: po4a:40
 #: po4a:70
 msgid "INTRODUCTION"
-msgstr ""
+msgstr "ВВЕДЕНИЕ"
 
 #. type: =head1
 #: po4a:42
 #: po4a:96
 msgid "CONFIGURATION FILE SYNTAX"
-msgstr ""
+msgstr "СИНТАКСИС ФАЙЛА НАСТРОЙКИ"
 
 #. type: =head2
 #: po4a:44
 #: po4a:107
 msgid "Specifying the template languages"
-msgstr ""
+msgstr "Определение шаблона языков"
 
 #. type: =head2
 #: po4a:46
 #: po4a:122
 msgid "Specifying the paths to translator inputs"
-msgstr ""
+msgstr "Определение путей ко входу переводчика"
 
 #. type: =head2
 #: po4a:48
 #: po4a:151
 msgid "Autodetection of the paths and languages"
-msgstr ""
+msgstr "Автоопределение  путей и языков"
 
 #. type: =head2
 #: po4a:50
 #: po4a:170
 msgid "Specifying the documents to translate"
-msgstr ""
+msgstr "Определение документов для преревода"
 
 #. type: =head2
 #: po4a:52
 #: po4a:222
 msgid "Specifying options for the modules"
-msgstr ""
+msgstr "Определение параметров для модулей"
 
 #. type: =head2
 #: po4a:54
 #: po4a:250
 msgid "Specifying aliases"
-msgstr ""
+msgstr "Определение ссылок (aliases)"
 
 #. type: =head2
 #: po4a:56
 #: po4a:268
 msgid "Split mode"
-msgstr ""
+msgstr "Раздельный режим"
 
 #. type: =head1
 #: po4a:60
 #: po4a:441
 msgid "SHORTCOMINGS"
-msgstr ""
+msgstr "НЕДОСТАТКИ"
 
 #. type: =head1
 #: po4a:64
@@ -752,7 +764,7 @@ msgstr ""
 #: lib/Locale/Po4a/Xhtml.pm:75
 #: lib/Locale/Po4a/Xml.pm:2063
 msgid "AUTHORS"
-msgstr ""
+msgstr "АВТОРЫ"
 
 #. type: =head1
 #: po4a:66
@@ -785,7 +797,7 @@ msgstr ""
 #: lib/Locale/Po4a/Xhtml.pm:80
 #: lib/Locale/Po4a/Xml.pm:2068
 msgid "COPYRIGHT AND LICENSE"
-msgstr ""
+msgstr "АВТОРСКИЕ ПРАВА И ЛИЦЕНЗИИ"
 
 #. type: textblock
 #: po4a:72
@@ -1553,32 +1565,32 @@ msgstr ""
 #. type: textblock
 #: po4a-gettextize:17
 msgid "po4a-gettextize - convert an original file (and its translation) to a po file"
-msgstr ""
+msgstr "po4a-gettextize - преобразовывает оригинальный файл (и его перевод) в po файл"
 
 #. type: textblock
 #: po4a-gettextize:21
 msgid "po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
-msgstr ""
+msgstr "po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
 
 #. type: textblock
 #: po4a-gettextize:23
 msgid "(XX.po is the output, all others are inputs)"
-msgstr ""
+msgstr "(XX.po является выходным параметром, все остальное является входными параметрами)"
 
 #. type: textblock
 #: po4a-gettextize:31
 msgid "The C<po4a-gettextize> script is in charge of converting documentation files to po files.  If you start a new translation, C<po4a-gettextize> will extract the translatable strings from the documentation file and write a pot file from it."
-msgstr ""
+msgstr "C<po4a-gettextize> скрипт отвечает за преобразование файлов документации в po файлы. Если вы начинаете новый перевод C<po4a-gettextize> извлечет строки, предназначенные для перевода из файла документации и создаст pot файл данного файла документации."
 
 #. type: textblock
 #: po4a-gettextize:36
 msgid "If you already have a translated file, C<po4a-gettextize> will try to extract the translations it contains and put them in place in the written po file. Be warned that very few intelligence is used in this process: the Nth string of the translated file is supposed to be the translation of the Nth string in the original. If it's not the case, you're dead. That's why it is very important that both files share exactly the same structure."
-msgstr ""
+msgstr "Если файл перевода уже существует, C<po4a-gettextize> выполнит попытку извлечь перевод, который он содержит и поместить его в соответствующее место в po файле. Заметьте, что этот процесс не слишком разумен: предполагается что N-ая строка переведенного файла имеет тот же номер в исходном файле. Если это не так, процесс все испортит. Поэтому очень важно, чтобы оба файла имели одинаковую структуру."
 
 #. type: textblock
 #: po4a-gettextize:43
 msgid "However, C<po4a-gettextize> will diagnose your death by detecting any desynchronisation between files, and reporting where they occur. In that case, you should edit manually the files to solve the reported disparity. Even if no error were reported, you should check carefully that the generated po file is correct (ie, that each msgstr is the translation of the associated msgid, and not the one before or after)."
-msgstr ""
+msgstr "Однако, C<po4a-gettextize> будет диагностировать такие случае пытаясь отыскать рассинхронизацию между файлами и сообщая о найденных случаях. В таком случае, вам необходимо вручную отредактировать файлы, что бы устранить рассогралования, о которых было сообщено. Даже если не было сообщений об ошибках, вам необходимо внимательно проверить созданный po файл (т.е., каждая строка msgstr является переводом связанным с msgid)."
 
 #. type: textblock
 #: po4a-gettextize:50
