@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: 2010-03-16 12:46+0300\n"
-"PO-Revision-Date: 2010-03-20 01:35+0300\n"
+"PO-Revision-Date: 2010-03-21 01:47+0300\n"
 "Last-Translator: kruvalig <kruvalig@gmail.com>\n"
 "Language-Team: no command yet <kruvalig@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -802,22 +802,22 @@ msgstr "АВТОРСКИЕ ПРАВА И ЛИЦЕНЗИИ"
 #. type: textblock
 #: po4a:72
 msgid "The B<po4a> program is in charge of updating both the po files (to sync them to the original documents) and the translated documents (to sync them to the po files). The main point is to make the use of po4a easier without having to remember of the command line options."
-msgstr ""
+msgstr "Программа B<po4a> отвечает за обновление po файлов (при синхронизации их с оригинальными документами) и за переведенные документы (при синхронизации их с po файлами). Главная цель состоит в том чтобы сделать использование программы po4a как можно проще, за счет того, что нет необходимости запоминать параметры командной строки."
 
 #. type: textblock
 #: po4a:77
 msgid "It also allows you to mix documents having different formats into the same pot file so that you can have only one such file per project."
-msgstr ""
+msgstr "Она также позволяет вам объединять несколько документов различных форматов в один pot файл, так что вы можете создать один файл для каждого проекта."
 
 #. type: textblock
 #: po4a:80
 msgid "This behaviour can be mimicked by the other tools of the po4a suite (for example with makefiles), but it is rather difficult to do, and exhausting to redo the same complicated makefiles for each project using po4a."
-msgstr ""
+msgstr "Такое поведение может быть повторено другими инструментами пакета po4a (например с помощью makefiles), но создавать одни и те же сложные makefiles для каждого проекта с помощью po4a сложнее и утомительнее."
 
 #. type: textblock
 #: po4a:84
 msgid "The dataflow can be summarized as follow. Any changes to the master document will be reflected in the po files, and all changes to the po files (either manual or caused by previous step) will be reflected in translation documents."
-msgstr ""
+msgstr "Работу с данными можно обобщить следующим образом. Любые изменения главного документа влияет на po файлы, и все изменения po файлов (ручные или вызванные предыдущими шагами) будут влиять на переведенный документ."
 
 #. type: verbatim
 #: po4a:89
@@ -826,32 +826,34 @@ msgid ""
 " master document --> po files --> translations\n"
 "\n"
 msgstr ""
+" master document --> po files --> translations\n"
+"\n"
 
 #. type: textblock
 #: po4a:91
 msgid "The dataflow cannot be inversed in this tool, and changes in translations are overwritten by the content of the po files. As a matter of fact, this tool cannot be used to convert existing translations to the po4a system. For that task, please refer to L<po4a-gettextize(1)>."
-msgstr ""
+msgstr "Поток данных нельзя обратить с помощью этого инструмента, поэтому все изменения в переводах перезаписывается содержимым po файлов. Данный инструмент нельзя использовать для преобразования существующего перевода в систему po4a. Для прешения этих задач смотрите L<po4a-gettextize(1)>."
 
 #. type: textblock
 #: po4a:98
 msgid "The (mandatory) argument is the path to the configuration file to use.  Its syntax aims at being simple and close to the configuration files used by the intl-tools projects."
-msgstr ""
+msgstr "(Обязательным) Параметром является путь к файлу настроек для использования.  Его синтаксис прост и максимально близок к синтаксису файлу настроек используемого в проекте intl-tools."
 
 #. type: textblock
 #: po4a:102
 msgid "Comments in this files are noted by the char '#'. It comments everything until the end of the line. Lines can be continued by escaping the end of line.  All non blank lines must begin with a [] command, followed by its arguments.  (sound difficult said that way, but it is rather easy, I hope ;)"
-msgstr ""
+msgstr "Комментарии в этом файле помечаются символом '#'. Таким образом весь текст до конца строки является комментарием. Строка может быть продолжена с помощью перехода на новую строку. Все не пустые строки должны начинаться с команды [], следующей за ее аргументами.  (звучит сложно, но на самом деле довольно просто, я надеюсь ;)"
 
 #. type: textblock
 #: po4a:109
 #: po4a:124
 msgid "B<Note:> It is recommended to use [po_directory] rather than [po4a_langs] and [po4a_paths].  See section B<Autodetection of the paths and languages> below."
-msgstr ""
+msgstr "B<Note:> рекомендуется использовать [po_directory], а не [po4a_langs] и [po4a_paths].  См. раздел B<Autodetection of the paths and languages> (автоопределение путей и языков) ниже."
 
 #. type: textblock
 #: po4a:113
 msgid "This is an optional command that can simplify the whole config file, and will make it more scalable. You have to specify a list of the languages in which you want to translate the documents. This is as simple as:"
-msgstr ""
+msgstr "Эта дополнительная команда может упростить весь файл настройки и сделать его более масштабируемым. Вам необходимо указать список языков на которые вы хотите перевести документы. Это довольно просто:"
 
 #. type: verbatim
 #: po4a:117
@@ -860,16 +862,18 @@ msgid ""
 " [po4a_langs] fr de\n"
 "\n"
 msgstr ""
+" [po4a_langs] fr de\n"
+"\n"
 
 #. type: textblock
 #: po4a:119
 msgid "This will enable you to expand $lang to all the specified languages in the rest of the config file."
-msgstr ""
+msgstr "Это позволит вам расширить $lang на все определенные в оставшейся части файла настройки."
 
 #. type: textblock
 #: po4a:128
 msgid "First, you have to specify where the translator input files (ie, the files used by translators to do their job) are located. It can be done by such a line:"
-msgstr ""
+msgstr "Сначала вам необходимо определить где находятся входные файлы переводчика (например, файлы, используемые переводчиками при выполнении работы). Это можно сделать с помощью следующей команды:"
 
 #. type: verbatim
 #: po4a:131
@@ -879,11 +883,14 @@ msgid ""
 "              fr:doc/l10n/fr.po de:doc/l10n/de.po\n"
 "\n"
 msgstr ""
+" [po4a_paths] doc/l10n/project.doc.pot \\\n"
+"              fr:doc/l10n/fr.po de:doc/l10n/de.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:134
 msgid "The command is thus 'po4a_paths'. The first argument is the path to the pot file to use. All subsequent arguments are of the self-explanatory form:"
-msgstr ""
+msgstr "Вызывается команда 'po4a_paths'. Первым аргументов которой является путь к используемому pot файлу. Следующие аргументы носят говорящие сами за себя названия:"
 
 #. type: verbatim
 #: po4a:137
@@ -892,12 +899,14 @@ msgid ""
 "    <lang>:<path to the po file for this lang>\n"
 "\n"
 msgstr ""
+"    <lang>:<path to the po file for this lang>\n"
+"\n"
 
 #. type: textblock
 #: po4a:139
 #: po4a:210
 msgid "If you've defined the template languages, you can rewrite the line above this way:"
-msgstr ""
+msgstr "Если вы определили шаблон языков, вы можете переписать строку выше следующим образом:"
 
 #. type: verbatim
 #: po4a:142
@@ -906,11 +915,13 @@ msgid ""
 " [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po\n"
 "\n"
 msgstr ""
+" [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:144
 msgid "You can also use $master to refer to the document basename. In this case, po4a will use a split mode: one POT and one PO (for each language) will be created for each document specified in the po4a configuration file.  See the B<Split mode> section."
-msgstr ""
+msgstr "Вы также можете использовать ссылку $master что бы сослаться на имя основного документа. В этом случае, po4a будет использовать раздельный режим (split mode): один POT и один PO (для каждого языка) файлы будут созданы для каждого документа определенного в файле настроек.  См. раздел B<Split mode>."
 
 #. type: verbatim
 #: po4a:149
@@ -919,6 +930,8 @@ msgid ""
 " [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
 "\n"
 msgstr ""
+" [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:153
@@ -986,7 +999,7 @@ msgstr ""
 #. type: =item
 #: po4a:194
 msgid "?"
-msgstr ""
+msgstr "?"
 
 #. type: textblock
 #: po4a:196
@@ -996,7 +1009,7 @@ msgstr ""
 #. type: =item
 #: po4a:198
 msgid "@"
-msgstr ""
+msgstr "@"
 
 #. type: textblock
 #: po4a:200
@@ -1006,7 +1019,7 @@ msgstr ""
 #. type: =item
 #: po4a:203
 msgid "!"
-msgstr ""
+msgstr "!"
 
 #. type: textblock
 #: po4a:205
