@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "POT-Creation-Date: 2010-03-16 12:46+0300\n"
-"PO-Revision-Date: 2010-03-26 23:00+0400\n"
+"PO-Revision-Date: 2010-04-01 00:17+0400\n"
 "Last-Translator: kruvalig <kruvalig@gmail.com>\n"
 "Language-Team: fedora-trans-ru\n"
 "Language: ru\n"
@@ -1217,6 +1217,13 @@ msgid ""
 "options, or an option with an argument).  You can also specify options that "
 "will only apply to a specific language by using the opt_I<lang> keyword."
 msgstr ""
+"Если вам необходимы определенные настройки для одного документа, который вы "
+"хотите переводить, то их можно определить в файле настроек. Настройки "
+"определяются с помощью I<opt> ключевого слова. Аргумент I<opt> ключевого "
+"слова должен быть заключен в двойные кавычки, если содержит пробелы "
+"(например, если определены несколько параметров или параметр в аргументом). "
+"Вы можете также задать параметры, которые будут применяться только к "
+"определенному языку с помощью ключевого слова opt_I<lang>."
 
 #. type: verbatim
 #: po4a:235
@@ -1227,6 +1234,10 @@ msgid ""
 "            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
+"Ниже приведен пример:\n"
+" [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+"            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
+"\n"
 
 #. type: verbatim
 #: po4a:239
@@ -1237,11 +1248,20 @@ msgid ""
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
 "\n"
 msgstr ""
+"Аргументы могут содержать пробелы если вы используете одинарные или двойные "
+"кавычки:\n"
+" [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:243
-msgid "If you want to specify the same options for many documents, you may want to use an alias (see the B<Specifying aliases> section below)."
+msgid ""
+"If you want to specify the same options for many documents, you may want to "
+"use an alias (see the B<Specifying aliases> section below)."
 msgstr ""
+"Если вы хотите использовать одни и те же параметры для нескольких "
+"документов, можете использовать псевдоним (см. раздел B<Specifying aliases> "
+"ниже по тексту)."
 
 #. type: verbatim
 #: po4a:246
@@ -1252,26 +1272,41 @@ msgid ""
 " [options] opt:\"...\" opt_fr:\"...\"\n"
 "\n"
 msgstr ""
+"Вы также можете установить параметры для всех документов, указанных в\n"
+"файле настроек:\n"
+" [options] opt:\"...\" opt_fr:\"...\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:252
-msgid "If you must specify the same options for multiple files, you may be interested in defining a module alias. This can be done this way:"
+msgid ""
+"If you must specify the same options for multiple files, you may be "
+"interested in defining a module alias. This can be done this way:"
 msgstr ""
+"Если вы вынуждены указывать одни и те же параметры для большого количества "
+"файлов, то может возникнуть необходимость в определении псевдонима для "
+"модуля. Это можно сделать следующим образом:"
 
 #. type: textblock
 #: po4a:255
 msgid "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
-msgstr ""
+msgstr "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
 
 #. type: textblock
 #: po4a:257
-msgid "This define a module alias named I<test>, based on the I<man> module, with the I<-k 21> apply to all the languages and with I<-o debug=splitargs> applied to the Spanish translation."
+msgid ""
+"This define a module alias named I<test>, based on the I<man> module, with "
+"the I<-k 21> apply to all the languages and with I<-o debug=splitargs> "
+"applied to the Spanish translation."
 msgstr ""
+"Таки образом определяется псевдоним модуля с именем I<test>, основанный на "
+"модуле I<man>, с ключем I<-k 21> для всех языков и с ключем I<-o "
+"debug=splitargs> только для перевода на Испанский."
 
 #. type: textblock
 #: po4a:261
 msgid "This module alias can then be use like a regular module:"
-msgstr ""
+msgstr "Данный псевдоним модуля можно затем использовать как обычный модуль:"
 
 #. type: verbatim
 #: po4a:263
@@ -1281,38 +1316,67 @@ msgid ""
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
+"[type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+"            opt_it:\"-L UTF-8\" opt_fr:-v\n"
+"\n"
 
 #. type: textblock
 #: po4a:266
 msgid "Note that you can specify additional options on a per file basis."
 msgstr ""
+"Обратите внимание, что вы можете указать дополнительные параметры для "
+"каждого файла."
 
 #. type: textblock
 #: po4a:270
 msgid "The split mode is used when $master is used in the [po4a_paths] line."
 msgstr ""
+"Раздельный режим используется при использовании $master в строке "
+"[po4a_paths]."
 
 #. type: textblock
 #: po4a:272
-msgid "When the split mode is used, a temporary big POT and temporary big POs are used. This permits to share the translations between all the POs."
+msgid ""
+"When the split mode is used, a temporary big POT and temporary big POs are "
+"used. This permits to share the translations between all the POs."
 msgstr ""
+"При использовании раздельного режима используются временный большой POT и "
+"временный большие PO файлы. Это позволяет распределить переводы во все PO "
+"файлы."
 
 #. type: textblock
 #: po4a:275
-msgid "If two POs have different translations for the same string, po4a will mark this string as fuzzy and will submit both translations in all the POs which contain this string. Then, when a translator updates the translation and removes the fuzzy tag in one PO, the translation of this string will be updated in every POs automatically."
+msgid ""
+"If two POs have different translations for the same string, po4a will mark "
+"this string as fuzzy and will submit both translations in all the POs which "
+"contain this string. Then, when a translator updates the translation and "
+"removes the fuzzy tag in one PO, the translation of this string will be "
+"updated in every POs automatically."
 msgstr ""
+"Если два PO файла имеют различные переводы для одной и той же строки, po4a "
+"будет помечать данные строчки как неточно переведенные и потребует "
+"подтвердить переводы во всех PO файлах, содержащих данную строку. Затем, "
+"когда переводчик обновит перевод и снимет пометку неточно переведенный с "
+"одного PO файла, перевод данной строки будет обновлен в каждом PO файле "
+"автоматически."
 
 #. type: =item
 #: po4a:285
 #: po4a-translate:83
 msgid "-k, --keep"
-msgstr ""
+msgstr "-k, --keep"
 
 #. type: textblock
 #: po4a:287
 #: po4a-translate:85
-msgid "Minimal threshold for translation percentage to keep (ie, write) the resulting file (default: 80). Ie, by default, files have to be translated at at least 80% to get written."
+msgid ""
+"Minimal threshold for translation percentage to keep (ie, write) the "
+"resulting file (default: 80). Ie, by default, files have to be translated at "
+"at least 80% to get written."
 msgstr ""
+"Минимальное пороговое значение, в процентах, для сохранения (например, для "
+"записи) результирующего файла (по умолчанию: 80). То есть, по умолчанию, для "
+"того чтобы файл был записан, необходимо перевести 80%."
 
 #. type: =item
 #: po4a:291
@@ -1321,7 +1385,7 @@ msgstr ""
 #: po4a-translate:93
 #: po4a-updatepo:87
 msgid "-h, --help"
-msgstr ""
+msgstr "-h, --help"
 
 #. type: textblock
 #: po4a:293
@@ -1330,7 +1394,7 @@ msgstr ""
 #: po4a-translate:95
 #: po4a-updatepo:89
 msgid "Show a short help message."
-msgstr ""
+msgstr "Отобразить короткую справку."
 
 #. type: =item
 #: po4a:295
@@ -1339,36 +1403,52 @@ msgstr ""
 #: po4a-translate:61
 #: po4a-updatepo:57
 msgid "-M, --master-charset"
-msgstr ""
+msgstr "-M, --master-charset"
 
 #. type: textblock
 #: po4a:297
-msgid "Charset of the files containing the documents to translate. Note that all master documents must use the same charset for now. This is a known limitation, and we are working on solving this."
+msgid ""
+"Charset of the files containing the documents to translate. Note that all "
+"master documents must use the same charset for now. This is a known "
+"limitation, and we are working on solving this."
 msgstr ""
+"Кодировка файла, содержащего переводимый документ. Обратите внимание на то, "
+"что все основные документы должны использовать одну и ту же кодировку, пока. "
+"Это известное ограничение, и мы работаем над его устранением."
 
 #. type: =item
 #: po4a:301
 #: po4a-gettextize:83
 #: po4a-translate:69
 msgid "-L, --localized-charset"
-msgstr ""
+msgstr "-L, --localized-charset"
 
 #. type: textblock
 #: po4a:303
-msgid "Charset of the files containing the localized documents. Note that all translated documents will use the same charset for now. This is a known limitation, and we are working on solving this."
+msgid ""
+"Charset of the files containing the localized documents. Note that all "
+"translated documents will use the same charset for now. This is a known "
+"limitation, and we are working on solving this."
 msgstr ""
+"Кодировка файла, содержащего переведенный документ. Обратите внимание на то, "
+"что все переведенные документы должны иметь одну и ту же кодировку, пока. "
+"Это известное ограничение, и мы работаем над его устранением."
 
 #. type: =item
 #: po4a:307
 #: po4a-translate:52
 msgid "-A, --addendum-charset"
-msgstr ""
+msgstr "-A, --addendum-charset"
 
 #. type: textblock
 #: po4a:309
 #: po4a-translate:54
-msgid "Charset of the addenda. Note that all the addenda should be in the same charset."
+msgid ""
+"Charset of the addenda. Note that all the addenda should be in the same "
+"charset."
 msgstr ""
+"Кодировка дополнение. Обратите внимание, что все дополнения должны иметь "
+"одну и ту же кодировку."
 
 #. type: =item
 #: po4a:312
@@ -1377,7 +1457,7 @@ msgstr ""
 #: po4a-translate:101
 #: po4a-updatepo:95
 msgid "-V, --version"
-msgstr ""
+msgstr "-V, --version"
 
 #. type: textblock
 #: po4a:314
@@ -1386,7 +1466,7 @@ msgstr ""
 #: po4a-translate:103
 #: po4a-updatepo:97
 msgid "Display the version of the script and exit."
-msgstr ""
+msgstr "Отобразить версию и завершить работу скрипта."
 
 #. type: =item
 #: po4a:316
@@ -1394,7 +1474,7 @@ msgstr ""
 #: po4a-translate:105
 #: po4a-updatepo:99
 msgid "-v, --verbose"
-msgstr ""
+msgstr "-v, --verbose"
 
 #. type: textblock
 #: po4a:318
@@ -1402,17 +1482,17 @@ msgstr ""
 #: po4a-translate:107
 #: po4a-updatepo:101
 msgid "Increase the verbosity of the program."
-msgstr ""
+msgstr "Увеличить количество выводимой пояснительной информации."
 
 #. type: =item
 #: po4a:320
 msgid "-q, --quiet"
-msgstr ""
+msgstr "-q, --quiet"
 
 #. type: textblock
 #: po4a:322
 msgid "Decrease the verbosity of the program."
-msgstr ""
+msgstr "Уменьшить количество выводимой пояснительной информации."
 
 #. type: =item
 #: po4a:324
@@ -1420,7 +1500,7 @@ msgstr ""
 #: po4a-translate:109
 #: po4a-updatepo:103
 msgid "-d, --debug"
-msgstr ""
+msgstr "-d, --debug"
 
 #. type: textblock
 #: po4a:326
@@ -1428,7 +1508,7 @@ msgstr ""
 #: po4a-translate:111
 #: po4a-updatepo:105
 msgid "Output some debugging information."
-msgstr ""
+msgstr "Вывод отладочной информации."
 
 #. type: =item
 #: po4a:328
@@ -1437,150 +1517,214 @@ msgstr ""
 #: po4a-translate:77
 #: po4a-updatepo:67
 msgid "-o, --option"
-msgstr ""
+msgstr "-o, --option"
 
 #. type: textblock
 #: po4a:330
 #: po4a-gettextize:94
 #: po4a-normalize:43
 #: po4a-translate:79
-msgid "Extra option(s) to pass to the format plugin. Specify each option in the 'name=value' format. See the documentation of each plugin for more information about the valid options and their meanings."
+msgid ""
+"Extra option(s) to pass to the format plugin. Specify each option in the "
+"'name=value' format. See the documentation of each plugin for more "
+"information about the valid options and their meanings."
 msgstr ""
+"Дополнительный параметр(ы) для перехода в формат плагина. Определяйте каждый "
+"параметр в формате  'name=value'. См. документацию на каждый плагин для "
+"получения дополнительной информации о возможных параметрах и их значениях."
 
 #. type: =item
 #: po4a:334
 msgid "-f, --force"
-msgstr ""
+msgstr "-f, --force"
 
 #. type: textblock
 #: po4a:336
-msgid "Always generate the POT and PO files, even if po4a considers it is not necessary."
+msgid ""
+"Always generate the POT and PO files, even if po4a considers it is not "
+"necessary."
 msgstr ""
+"Всегда создавать POT и PO файлы, даже если po4a считает, что это не "
+"требуется."
 
 #. type: textblock
 #: po4a:339
 msgid "The default behavior (when --force is not specified) is the following:"
 msgstr ""
+"По умолчанию ведет (когда параметр --force не установлен) себя следующим "
+"образом:"
 
 #. type: textblock
 #: po4a:343
-msgid "If the POT file already exists, it is regenerated if a master document or the configuration file is more recent.  The POT file is also written in a temporary document and po4a verifies that the changes are really needed."
+msgid ""
+"If the POT file already exists, it is regenerated if a master document or "
+"the configuration file is more recent.  The POT file is also written in a "
+"temporary document and po4a verifies that the changes are really needed."
 msgstr ""
+"Если POT файл уже существует, он создается повторно, если основной документ "
+"или файл настроек был недавно изменен. POT файл так же записывается во "
+"временный  документ и po4a подтверждает что изменения действительно "
+"необходимы."
 
 #. type: textblock
 #: po4a:348
-msgid "Also, a translation is regenerated only if its master document, the PO file, one of its addenda or the configuration file is more recent.  To avoid trying to regenerate translations which do not pass the threshold test (see B<--keep>), a file with the '.po4a-stamp' extension can be created (see B<--stamp>)."
+msgid ""
+"Also, a translation is regenerated only if its master document, the PO file, "
+"one of its addenda or the configuration file is more recent.  To avoid "
+"trying to regenerate translations which do not pass the threshold test (see "
+"B<--keep>), a file with the '.po4a-stamp' extension can be created (see "
+"B<--stamp>)."
 msgstr ""
+"Кроме того, перевод обновляется (regenerated) только если его главный "
+"документ, PO файл, один из его дополнений или файл настроек были недавно "
+"обновлены. Чтобы избежать попыток обновления переводов, которые не "
+"преодолели порогового значения (см. B<--keep>), можно создать файл с "
+"расширением '.po4a-stamp' (см. B<--stamp>)."
 
 #. type: textblock
 #: po4a:356
-msgid "If a master document includes files, you should use the B<--force> flag because the modification time of these included files are not taken into account."
+msgid ""
+"If a master document includes files, you should use the B<--force> flag "
+"because the modification time of these included files are not taken into "
+"account."
 msgstr ""
+"Если главный документ включает файлы, вам необходимо использовать флаг "
+"B<--force>, потому что время изменения включенных файлов не принимается во "
+"внимание."
 
 #. type: textblock
 #: po4a:360
-msgid "The PO files are always re-generated based on the POT with B<msgmerge -U>."
-msgstr ""
+msgid ""
+"The PO files are always re-generated based on the POT with B<msgmerge -U>."
+msgstr "PO файлы всегда обновляются из POT файлов с помощью B<msgmerge -U>."
 
 #. type: =item
 #: po4a:362
 msgid "--stamp"
-msgstr ""
+msgstr "--stamp"
 
 #. type: textblock
 #: po4a:364
-msgid "Tells po4a to create stamp files when a translation is not generated because it does not reach the threshold. These stamp files are named according to the expected translated document, with the I<.po4a-stamp> extension."
+msgid ""
+"Tells po4a to create stamp files when a translation is not generated because "
+"it does not reach the threshold. These stamp files are named according to "
+"the expected translated document, with the I<.po4a-stamp> extension."
 msgstr ""
+"Указывает po4a создать отпечаток файлов, если перевод не создается, "
+"поскольку он не преодалел порогового значения. Отпечаток файла буден "
+"называться также как и переводимый документ, с расширением I<.po4a-stamp>."
 
 #. type: textblock
 #: po4a:369
-msgid "Note: This only activates the creation of the I<.po4a-stamp> files. The stamp files are always used if they exist, and they are removed with B<--rm-translations> or when the file is finally translated."
+msgid ""
+"Note: This only activates the creation of the I<.po4a-stamp> files. The "
+"stamp files are always used if they exist, and they are removed with B<--rm-"
+"translations> or when the file is finally translated."
 msgstr ""
+"Примечание: Параметр только активирует создание файлов I<.po4a-stamp>. Файлы "
+"отпечатков используются всегда если они существуют, и удаляются с помощью B"
+"<--rm-translations> или когда файл полностью переведен."
 
 #. type: =item
 #: po4a:373
 msgid "--no-translations"
-msgstr ""
+msgstr "--no-translations"
 
 #. type: textblock
 #: po4a:375
-msgid "Do not generate the translated documents, only update the POT and PO files."
+msgid ""
+"Do not generate the translated documents, only update the POT and PO files."
 msgstr ""
+"Не регенерировать переведенные документы, только обновлять POT и PO файлы."
 
 #. type: =item
 #: po4a:377
 msgid "--rm-translations"
-msgstr ""
+msgstr "--rm-translations"
 
 #. type: textblock
 #: po4a:379
 msgid "Remove the translated files (implies --no-translations)."
-msgstr ""
+msgstr "Удалить переведенные файлы (подразумевается --no-translations)."
 
 #. type: =item
 #: po4a:381
 msgid "--no-backups"
-msgstr ""
+msgstr "--no-backups"
 
 #. type: textblock
 #: po4a:383
 msgid "Do not generate the .po~ backup files."
-msgstr ""
+msgstr "Не создавать резервные файлы .po~."
 
 #. type: =item
 #: po4a:385
 msgid "--rm-backups"
-msgstr ""
+msgstr "--rm-backups"
 
 #. type: textblock
 #: po4a:387
 msgid "Remove the .po~ backup files (implies --no-backups)."
-msgstr ""
+msgstr "Удалить резервные файлы .po~ (подразумевается --no-backups)."
 
 #. type: =item
 #: po4a:389
 msgid "--variable I<var>=I<value>"
-msgstr ""
+msgstr "--variable I<var>=I<value>"
 
 #. type: textblock
 #: po4a:391
-msgid "Define a variable that will be expanded in the po4a configuration file.  Every occurrence of I<$(var)> will be replaced by I<value>.  This option can be used multiple times."
+msgid ""
+"Define a variable that will be expanded in the po4a configuration file.  "
+"Every occurrence of I<$(var)> will be replaced by I<value>.  This option can "
+"be used multiple times."
 msgstr ""
+"Определить переменную которая будет использовано в файле настроек po4a. "
+"Каждое появление I<$(var)> будет замещено на значение I<value>. Данный "
+"параметр можно использовать несколько раз."
 
 #. type: =item
 #: po4a:395
 #: po4a-gettextize:118
 #: po4a-updatepo:107
 msgid "--msgid-bugs-address email@address"
-msgstr ""
+msgstr "--msgid-bugs-address email@address"
 
 #. type: textblock
 #: po4a:397
 #: po4a-gettextize:120
 #: po4a-updatepo:109
-msgid "Set the report address for msgid bugs. By default, the created POT files have no Report-Msgid-Bugs-To fields."
+msgid ""
+"Set the report address for msgid bugs. By default, the created POT files "
+"have no Report-Msgid-Bugs-To fields."
 msgstr ""
+"Установить адрес для сообщения об msgid ошибках. По умолчанию, созданные POT "
+"файлы не имеют поля Report-Msgid-Bugs-To."
 
 #. type: =item
 #: po4a:400
 #: po4a-gettextize:123
 #: po4a-updatepo:112
 msgid "--copyright-holder string"
-msgstr ""
+msgstr "--copyright-holder string"
 
 #. type: textblock
 #: po4a:402
 #: po4a-gettextize:125
 #: po4a-updatepo:114
-msgid "Set the copyright holder in the POT header. The default value is \"Free Software Foundation, Inc.\""
+msgid ""
+"Set the copyright holder in the POT header. The default value is \"Free "
+"Software Foundation, Inc.\""
 msgstr ""
+"Указать владельца авторских прав в заголовке POT файла. Значение по "
+"умолчанию \"Free Software Foundation, Inc.\""
 
 #. type: =item
 #: po4a:405
 #: po4a-gettextize:128
 #: po4a-updatepo:117
 msgid "--package-name string"
-msgstr ""
+msgstr "--package-name string"
 
 #. type: textblock
 #: po4a:407
@@ -1588,13 +1732,14 @@ msgstr ""
 #: po4a-updatepo:119
 msgid "Set the package name for the POT header. The default is \"PACKAGE\"."
 msgstr ""
+"Указать имя пакета в заголовке POT файла. Значение по умолчанию \"PACKAGE\"."
 
 #. type: =item
 #: po4a:409
 #: po4a-gettextize:132
 #: po4a-updatepo:121
 msgid "--package-version string"
-msgstr ""
+msgstr "--package-version string"
 
 #. type: textblock
 #: po4a:411
@@ -1602,82 +1747,104 @@ msgstr ""
 #: po4a-updatepo:123
 msgid "Set the package version for the POT header. The default is \"VERSION\"."
 msgstr ""
+"Указать версию пакета в заголовке POT файла. Значение по умолчанию "
+"\"VERSION\"."
 
 #. type: =item
 #: po4a:413
 #: po4a-updatepo:83
 msgid "--msgmerge-opt options"
-msgstr ""
+msgstr "--msgmerge-opt options"
 
 #. type: textblock
 #: po4a:415
 #: po4a-updatepo:85
 msgid "Extra options for msgmerge."
-msgstr ""
+msgstr "Дополнительные настройки для msgmerge."
 
 #. type: textblock
 #: po4a:417
 msgid "Note: $lang will be extended to the current language."
-msgstr ""
+msgstr "Примечание: $lang будет распространен на текущий язык."
 
 #. type: =item
 #: po4a:419
 #: po4a-updatepo:73
 msgid "--no-previous"
-msgstr ""
+msgstr "--no-previous"
 
 #. type: textblock
 #: po4a:421
 #: po4a-updatepo:75
-msgid "This option removes '--previous' from the options passed to msgmerge.  This permits to support versions of gettext earlier than 0.16."
+msgid ""
+"This option removes '--previous' from the options passed to msgmerge.  This "
+"permits to support versions of gettext earlier than 0.16."
 msgstr ""
+"Данный параметр удалает параметр '--previous' из настроек msgmerge. Что "
+"позволяет использовать версии gettext более ранние чем 0.16."
 
 #. type: =item
 #: po4a:424
 #: po4a-updatepo:78
 msgid "--previous"
-msgstr ""
+msgstr "--previous"
 
 #. type: textblock
 #: po4a:426
 #: po4a-updatepo:80
-msgid "This option adds '--previous' to the options passed to msgmerge.  It requires gettext 0.16 or later, and is activated by default."
+msgid ""
+"This option adds '--previous' to the options passed to msgmerge.  It "
+"requires gettext 0.16 or later, and is activated by default."
 msgstr ""
+"Данный параметр добавляет '--previous' к настройкам msgmerge. Что требует "
+"gettext версии 0.16 или выше, и активирован по умолчанию."
 
 #. type: =item
 #: po4a:429
 msgid "--srcdir I<SRCDIR>"
-msgstr ""
+msgstr "--srcdir I<SRCDIR>"
 
 #. type: textblock
 #: po4a:431
-msgid "Set the base directory for all input documents specified in the po4a configuration file."
+msgid ""
+"Set the base directory for all input documents specified in the po4a "
+"configuration file."
 msgstr ""
+"Указывает базовый каталог для всех входных документов указанных в файле "
+"настроек po4a."
 
 #. type: =item
 #: po4a:434
 msgid "--destdir I<DESTDIR>"
-msgstr ""
+msgstr "--destdir I<DESTDIR>"
 
 #. type: textblock
 #: po4a:436
-msgid "Set the base directory for all the output documents specified in the po4a configuration file."
+msgid ""
+"Set the base directory for all the output documents specified in the po4a "
+"configuration file."
 msgstr ""
+"Указывает базовый каталог для всех выходных документов указанных в файле "
+"настроек po4a."
 
 #. type: textblock
 #: po4a:447
 msgid "Duplicates some code with the po4a-* programs."
-msgstr ""
+msgstr "Дублирует некоторый код в программах po4a-*."
 
 #. type: textblock
 #: po4a:451
 msgid "Patch welcome ;)"
-msgstr ""
+msgstr "Заплатки (patch) приветствуются ;)"
 
 #. type: textblock
 #: po4a:455
-msgid "L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
+msgid ""
+"L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-"
+"translate(1)>, L<po4a-normalize(1)>."
 msgstr ""
+"L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-"
+"translate(1)>, L<po4a-normalize(1)>."
 
 #. type: verbatim
 #: po4a:459
@@ -1696,6 +1863,9 @@ msgid ""
 " Martin Quinson (mquinson#debian.org)\n"
 "\n"
 msgstr ""
+" Denis Barbier <barbier@linuxfr.org>\n"
+" Martin Quinson (mquinson#debian.org)\n"
+"\n"
 
 #. type: textblock
 #: po4a:464
@@ -1703,7 +1873,7 @@ msgstr ""
 #: po4a-normalize:89
 #: po4a-translate:146
 msgid "Copyright 2002, 2003, 2004 by SPI, inc."
-msgstr ""
+msgstr "Copyright 2002, 2003, 2004 by SPI, inc."
 
 #. type: textblock
 #: po4a:466
@@ -1731,42 +1901,91 @@ msgstr ""
 #: lib/Locale/Po4a/Wml.pm:171
 #: lib/Locale/Po4a/Xhtml.pm:85
 #: lib/Locale/Po4a/Xml.pm:2073
-msgid "This program is free software; you may redistribute it and/or modify it under the terms of GPL (see the COPYING file)."
+msgid ""
+"This program is free software; you may redistribute it and/or modify it "
+"under the terms of GPL (see the COPYING file)."
 msgstr ""
+"This program is free software; you may redistribute it and/or modify it "
+"under the terms of GPL (see the COPYING file)."
 
 #. type: textblock
 #: po4a-gettextize:17
-msgid "po4a-gettextize - convert an original file (and its translation) to a po file"
-msgstr "po4a-gettextize - преобразовывает оригинальный файл (и его перевод) в po файл"
+msgid ""
+"po4a-gettextize - convert an original file (and its translation) to a po "
+"file"
+msgstr ""
+"po4a-gettextize - преобразовывает оригинальный файл (и его перевод) в po "
+"файл"
 
 #. type: textblock
 #: po4a-gettextize:21
-msgid "po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
-msgstr "po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
+msgid ""
+"po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l "
+"E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
+msgstr ""
+"po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l "
+"E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>"
 
 #. type: textblock
 #: po4a-gettextize:23
 msgid "(XX.po is the output, all others are inputs)"
-msgstr "(XX.po является выходным параметром, все остальное является входными параметрами)"
+msgstr ""
+"(XX.po является выходным параметром, все остальное является входными "
+"параметрами)"
 
 #. type: textblock
 #: po4a-gettextize:31
-msgid "The C<po4a-gettextize> script is in charge of converting documentation files to po files.  If you start a new translation, C<po4a-gettextize> will extract the translatable strings from the documentation file and write a pot file from it."
-msgstr "C<po4a-gettextize> скрипт отвечает за преобразование файлов документации в po файлы. Если вы начинаете новый перевод C<po4a-gettextize> извлечет строки, предназначенные для перевода из файла документации и создаст pot файл данного файла документации."
+msgid ""
+"The C<po4a-gettextize> script is in charge of converting documentation files "
+"to po files.  If you start a new translation, C<po4a-gettextize> will "
+"extract the translatable strings from the documentation file and write a pot "
+"file from it."
+msgstr ""
+"C<po4a-gettextize> скрипт отвечает за преобразование файлов документации в "
+"po файлы. Если вы начинаете новый перевод C<po4a-gettextize> извлечет "
+"строки, предназначенные для перевода из файла документации и создаст pot "
+"файл данного файла документации."
 
 #. type: textblock
 #: po4a-gettextize:36
-msgid "If you already have a translated file, C<po4a-gettextize> will try to extract the translations it contains and put them in place in the written po file. Be warned that very few intelligence is used in this process: the Nth string of the translated file is supposed to be the translation of the Nth string in the original. If it's not the case, you're dead. That's why it is very important that both files share exactly the same structure."
-msgstr "Если файл перевода уже существует, C<po4a-gettextize> выполнит попытку извлечь перевод, который он содержит и поместить его в соответствующее место в po файле. Заметьте, что этот процесс не слишком разумен: предполагается что N-ая строка переведенного файла имеет тот же номер в исходном файле. Если это не так, процесс все испортит. Поэтому очень важно, чтобы оба файла имели одинаковую структуру."
+msgid ""
+"If you already have a translated file, C<po4a-gettextize> will try to "
+"extract the translations it contains and put them in place in the written po "
+"file. Be warned that very few intelligence is used in this process: the Nth "
+"string of the translated file is supposed to be the translation of the Nth "
+"string in the original. If it's not the case, you're dead. That's why it is "
+"very important that both files share exactly the same structure."
+msgstr ""
+"Если файл перевода уже существует, C<po4a-gettextize> выполнит попытку "
+"извлечь перевод, который он содержит и поместить его в соответствующее место "
+"в po файле. Заметьте, что этот процесс не слишком разумен: предполагается "
+"что N-ая строка переведенного файла имеет тот же номер в исходном файле. "
+"Если это не так, процесс все испортит. Поэтому очень важно, чтобы оба файла "
+"имели одинаковую структуру."
 
 #. type: textblock
 #: po4a-gettextize:43
-msgid "However, C<po4a-gettextize> will diagnose your death by detecting any desynchronisation between files, and reporting where they occur. In that case, you should edit manually the files to solve the reported disparity. Even if no error were reported, you should check carefully that the generated po file is correct (ie, that each msgstr is the translation of the associated msgid, and not the one before or after)."
-msgstr "Однако, C<po4a-gettextize> будет диагностировать такие случае пытаясь отыскать рассинхронизацию между файлами и сообщая о найденных случаях. В таком случае, вам необходимо вручную отредактировать файлы, что бы устранить рассогралования, о которых было сообщено. Даже если не было сообщений об ошибках, вам необходимо внимательно проверить созданный po файл (т.е., каждая строка msgstr является переводом связанным с msgid)."
+msgid ""
+"However, C<po4a-gettextize> will diagnose your death by detecting any "
+"desynchronisation between files, and reporting where they occur. In that "
+"case, you should edit manually the files to solve the reported disparity. "
+"Even if no error were reported, you should check carefully that the "
+"generated po file is correct (ie, that each msgstr is the translation of the "
+"associated msgid, and not the one before or after)."
+msgstr ""
+"Однако, C<po4a-gettextize> будет диагностировать такие случае пытаясь "
+"отыскать рассинхронизацию между файлами и сообщая о найденных случаях. В "
+"таком случае, вам необходимо вручную отредактировать файлы, что бы устранить "
+"рассогралования, о которых было сообщено. Даже если не было сообщений об "
+"ошибках, вам необходимо внимательно проверить созданный po файл (т.е., "
+"каждая строка msgstr является переводом связанным с msgid)."
 
 #. type: textblock
 #: po4a-gettextize:50
-msgid "Even if the script manages to do its job without any apparent problem, it still marks all extracted translations as fuzzy, to make sure that the translator will have a look at them, and detect any remaining problem."
+msgid ""
+"Even if the script manages to do its job without any apparent problem, it "
+"still marks all extracted translations as fuzzy, to make sure that the "
+"translator will have a look at them, and detect any remaining problem."
 msgstr ""
 
 #. type: textblock
