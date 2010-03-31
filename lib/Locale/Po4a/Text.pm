@@ -149,21 +149,21 @@ sub initialize {
     my $self = shift;
     my %options = @_;
 
-    my %valid = (
-        asciidoc => 1,
-        breaks => 1,
-        debianchangelog => 1,
-        debug => 1,
-        fortunes => 1,
-        markdown => 1,
-        nobullets => 1,
-        tabs => 1,
-        verbose => 1,
-    );
+    $self->{options}{'asciidoc'} = 1;
+    $self->{options}{'breaks'} = 1;
+    $self->{options}{'debianchangelog'} = 1;
+    $self->{options}{'debug'} = 1;
+    $self->{options}{'fortunes'} = 1;
+    $self->{options}{'markdown'} = 1;
+    $self->{options}{'nobullets'} = 1;
+    $self->{options}{'tabs'} = 1;
+    $self->{options}{'verbose'} = 1;
+
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::text",
                      dgettext("po4a", "Unknown option: %s"), $opt)
-            unless exists $valid{$opt};
+            unless exists $self->{options}{$opt};
+        $self->{options}{$opt} = $options{$opt};
     }
 
     if (defined $options{'nobullets'}) {
