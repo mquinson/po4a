@@ -881,6 +881,7 @@ msgstr "エイリアスの指定"
 # type: =head2
 #. type: =head2
 #: po4a:56 po4a:268
+#| msgid "Splitted mode"
 msgid "Split mode"
 msgstr "分割モード"
 
@@ -931,6 +932,11 @@ msgstr "著作権・ライセンス"
 # type: textblock
 #. type: textblock
 #: po4a:72
+#| msgid ""
+#| "The C<po4a> program is in charge of updating both the po files (to sync "
+#| "them to the original documents) and the translated documents (to sync "
+#| "them to the po files). The main point is to make the use of po4a easier "
+#| "without having to remember of the command line options."
 msgid ""
 "The B<po4a> program is in charge of updating both the po files (to sync them "
 "to the original documents) and the translated documents (to sync them to the "
@@ -1084,6 +1090,9 @@ msgstr ""
 #. type: verbatim
 #: po4a:131
 #, no-wrap
+#| msgid ""
+#| " [po4a_paths] doc/l10n/project.doc.pot fr:doc/l10n/fr.po de:doc/l10n/de.po\n"
+#| "\n"
 msgid ""
 " [po4a_paths] doc/l10n/project.doc.pot \\\n"
 "              fr:doc/l10n/fr.po de:doc/l10n/de.po\n"
@@ -1138,6 +1147,11 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: po4a:144
+#| msgid ""
+#| "You can also use $master to refer to the document basename. In this case, "
+#| "po4a will use a splitted mode: one POT and one PO (for each language) "
+#| "will be created for each document specified in the po4a configuration "
+#| "file.  See the B<Splitted mode> section."
 msgid ""
 "You can also use $master to refer to the document basename. In this case, "
 "po4a will use a split mode: one POT and one PO (for each language) will be "
@@ -1257,6 +1271,9 @@ msgstr "もっと形式張って言うとフォーマットは以下のように
 #. type: verbatim
 #: po4a:186
 #, no-wrap
+#| msgid ""
+#| " [type: <format>] <master_doc> <lang>:<localized_doc>* add_<lang>:<addendum>*\n"
+#| "\n"
 msgid ""
 " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
 "                  (add_<lang>:<modifiers>*<addendum_path>)*\n"
@@ -1488,12 +1505,17 @@ msgstr "ファイルごとの追加オプションも指定できることに注
 # type: textblock
 #. type: textblock
 #: po4a:270
+#| msgid ""
+#| "The splitted mode is used when $master is used in the [po4a_paths] line."
 msgid "The split mode is used when $master is used in the [po4a_paths] line."
 msgstr "分割モードは、[po4a_paths] に $master を使うことで使用できます。"
 
 # type: textblock
 #. type: textblock
 #: po4a:272
+#| msgid ""
+#| "When the splitted mode is used, a temporary big POT and temporary big POs "
+#| "are used. This permits to share the translations between all the POs."
 msgid ""
 "When the split mode is used, a temporary big POT and temporary big POs are "
 "used. This permits to share the translations between all the POs."
@@ -1745,6 +1767,11 @@ msgstr "--stamp"
 # type: textblock
 #. type: textblock
 #: po4a:364
+#| msgid ""
+#| "Tells po4a to create stamp files when a translation is not generated "
+#| "because it it does not reach the threshold. These stamp files are named "
+#| "according to the expected translated document, with the I<.po4a-stamp> "
+#| "extension."
 msgid ""
 "Tells po4a to create stamp files when a translation is not generated because "
 "it does not reach the threshold. These stamp files are named according to "
@@ -1913,12 +1940,16 @@ msgstr "注意: $lang は現在の言語へ展開されます。"
 # type: =item
 #. type: =item
 #: po4a:419 po4a-updatepo:73
+#| msgid "--previous"
 msgid "--no-previous"
 msgstr "--no-previous"
 
 # type: textblock
 #. type: textblock
 #: po4a:421 po4a-updatepo:75
+#| msgid ""
+#| "This option adds '--previous' to the options passed to msgmerge.  It "
+#| "requires gettext 0.16 or later."
 msgid ""
 "This option removes '--previous' from the options passed to msgmerge.  This "
 "permits to support versions of gettext earlier than 0.16."
@@ -1935,6 +1966,9 @@ msgstr "--previous"
 # type: textblock
 #. type: textblock
 #: po4a:426 po4a-updatepo:80
+#| msgid ""
+#| "This option adds '--previous' to the options passed to msgmerge.  It "
+#| "requires gettext 0.16 or later."
 msgid ""
 "This option adds '--previous' to the options passed to msgmerge.  It "
 "requires gettext 0.16 or later, and is activated by default."
@@ -4804,6 +4838,13 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:474
+#| msgid ""
+#| "Sometimes, the paragraph content does match, but their types don't. "
+#| "Fixing it is rather format-dependant. In pod and nroff, it often comes "
+#| "from the fact that one of the two contains a line beginning with a white "
+#| "space where the other doesn't. In those formats, such paragraph cannot be "
+#| "wrapped and thus become a different type. Just remove the space and you "
+#| "are fine. It may also be a typo in the tag name."
 msgid ""
 "Sometimes, the paragraph content does match, but their types don't. Fixing "
 "it is rather format-dependant. In pod and man, it often comes from the fact "
@@ -5214,6 +5255,15 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: doc/po4a.7.pod:629
+#| msgid ""
+#| "Both forms exist because documentation formats are different. In some of "
+#| "them, there is a way to mark the end of a section (just like the C<E<lt>/"
+#| "sectionE<gt>> we just used), while some other don't explicitly mark the "
+#| "end of section (like in nroff). In the former case, you want to make a "
+#| "I<boundary> matching the I<end of a section>, so that the I<insertion "
+#| "point> comes after it. In the latter case, you want to make a I<boundary> "
+#| "matching the I<beginning of next section>, so that the I<insertion point> "
+#| "comes just before it."
 msgid ""
 "Both forms exist because documentation formats are different. In some of "
 "them, there is a way to mark the end of a section (just like the C<E<lt>/"
@@ -10683,6 +10733,13 @@ msgstr "プラス (+)"
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:200
+#| msgid ""
+#| "As for an asterisk, the command will be extracted if it appear at an "
+#| "extremity of a block, but the parameters won't be translated separately.  "
+#| "The translator will have to translate the command concatenated to all its "
+#| "parameters.  This permits to keep more context, and is usefull for "
+#| "commands with small words in parameter, which can have multiple meanings "
+#| "(and translations)."
 msgid ""
 "As for an asterisk, the command will be extracted if it appear at an "
 "extremity of a block, but the parameters won't be translated separately.  "
@@ -10715,6 +10772,13 @@ msgstr "マイナス (-)"
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:212
+#| msgid ""
+#| "In this case, the command won't be extracted from any block.  But if it "
+#| "appear alone on a bloc, then only the parameters marked as translatable "
+#| "will be presented to the translator.  This is usefull for font command.  "
+#| "These commands should generally not be separated from their paragraph (to "
+#| "keep the context), but there is no reason to annoy the translator with "
+#| "them if a whole string is enclosed in such a command."
 msgid ""
 "In this case, the command won't be extracted from any block.  But if it "
 "appear alone on a bloc, then only the parameters marked as translatable will "
@@ -11352,6 +11416,9 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:39
+#| msgid ""
+#| "Paragraphs are splitted on empty lines (or lines containing only spaces "
+#| "or tabulations)."
 msgid ""
 "Paragraphs are split on empty lines (or lines containing only spaces or "
 "tabulations)."
@@ -11370,6 +11437,7 @@ msgstr ""
 # type: =item
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:67
+#| msgid "B<nobullet>"
 msgid "B<nobullets>"
 msgstr "B<nobullets>"
 
