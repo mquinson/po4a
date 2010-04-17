@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.100 2010-04-17 09:26:50 barbier-guest Exp $
+# $Id: po4a,v 1.101 2010-04-17 20:53:33 barbier-guest Exp $
 #
 # Copyright 2002-2010 by SPI, inc.
 #
@@ -386,11 +386,11 @@ Do not generate the .po~ backup files.
 
 Remove the .po~ backup files (implies --no-backups).
 
-=item --build-only I<translated-file>
+=item --translate-only I<translated-file>
 
 Translate only the specified file.  It may be useful to speed up
 processing if configuration file contains a lot of files.  Note that this
-option reorders entries in PO and POT files, it should be used with care.
+option does not update PO and POT files.
 This option can be used multiple times.
 
 =item --variable I<var>=I<value>
@@ -566,7 +566,7 @@ sub get_options {
         'keep|k=s'              => \$opts{"threshold"},
         'no-translations'       => \$opts{"no-translations"},
         'rm-translations'       => \$opts{"rm-translations"},
-        'build-only=s'          => \@{$opts{"partial"}},
+        'translate-only=s'      => \@{$opts{"partial"}},
         'no-backups'            => \$opts{"no-backups"},
         'rm-backups'            => \$opts{"rm-backups"},
         'version|V'             => \&show_version,
@@ -715,7 +715,7 @@ my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
 my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
 my $doc_count = 0;
-my %partial = ( 'skip' => [], 'master' => {}, 'files' => {}, 'lang' => {} );
+my %partial = ( 'master' => {}, 'files' => {}, 'lang' => {} );
 open CONFIG,"<","$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
 my ($line,$nb) = ("",0);
 while (<CONFIG>) {
@@ -835,17 +835,14 @@ while (<CONFIG>) {
 		gettext("The '%s' master file does not exist."), $main);
 	}
 	if (scalar @{$po4a_opts{"partial"}}) {
-		my $found = 0;
 		foreach my $file (@{$po4a_opts{"partial"}}) {
 			if ($args =~ m/(\S+):\Q$file\E\b/) {
 				$partial{'lang'}{$1} = 1;
 				$partial{'master'}{$main} = 1;
 				$partial{'files'}{$file} = 1;
-				$found = 1;
 				last;
 			}
 		}
-		push (@{$partial{'skip'}}, $main) unless $found;
 	}
 	$document{$main}{'format'} = $1;
 	$document{$main}{'pos'} = $doc_count;
@@ -1004,7 +1001,7 @@ if ($pot_filename =~ m/\$master/) {
     print wrap_msg(gettext("Split mode, creating a temporary POT")."\n")
         if $po4a_opts{"verbose"};
     if (scalar @{$po4a_opts{"partial"}}) {
-        print wrap_msg(gettext("Disabling --build-only option, it is not supported in split mode")."\n");
+        print wrap_msg(gettext("Disabling --translate-only option, it is not supported in split mode")."\n");
         $po4a_opts{"partial"} = [];
     }
     foreach my $master (keys %document) {
@@ -1024,12 +1021,13 @@ if ($pot_filename =~ m/\$master/) {
             next unless length $master;
             delete $document{$master} unless exists $partial{'master'}{$master};
         }
-        # Do not touch PO files if no file is processed for this language 
+        # Do not read PO files if no file is processed for this language 
         foreach my $lang (keys %po_filename) {
             delete $po_filename{$lang} unless exists $partial{'lang'}{$lang};
         }
     }
 
+if (not scalar @{$po4a_opts{"partial"}}) {
 chdir $po4a_opts{"srcdir"}
     if (defined $po4a_opts{"srcdir"});
 if (-e $pot_filename) {
@@ -1066,6 +1064,7 @@ if (-e $pot_filename) {
 chdir $po4a_opts{"calldir"}
     if (defined $po4a_opts{"srcdir"});
 }
+}
 
 my %Po_opts;
 if (defined $po4a_opts{'msgid-bugs-address'}) {
@@ -1080,24 +1079,12 @@ if (defined $po4a_opts{'package-name'}) {
 if (defined $po4a_opts{'package-version'}) {
     $Po_opts{'package-version'} = $po4a_opts{'package-version'};
 }
-chdir $po4a_opts{"srcdir"}
-    if (defined $po4a_opts{"srcdir"});
-my $potfile=Locale::Po4a::Po->new(\%Po_opts);
-if (scalar @{$po4a_opts{"partial"}} and -e $pot_filename) {
-	print wrap_msg(gettext("Partial update, reading %s first")." ", $pot_filename)
-	    if ($po4a_opts{"verbose"});
-	$potfile->read($pot_filename);
-	$potfile = $potfile->filter("(reference=\"(^| )(".join("|", @{$partial{'skip'}})."):\")");
-	#  FIXME: We have to modify $potfile internals to remove references, there
-	#         should be a $potfile->remove_references($foo) method instead.
-	my $re = "(".join('|', keys %{$partial{'master'}})."):\\d+\\s*";
-	foreach my $msgid (keys %{$potfile->{po}}) {
-		$potfile->{po}{$msgid}{'reference'} =~ s/$re//go;
-	}
-}
-chdir $po4a_opts{"calldir"}
-    if (defined $po4a_opts{"srcdir"});
 if ($update_pot_file) {
+    chdir $po4a_opts{"srcdir"}
+        if (defined $po4a_opts{"srcdir"});
+    my $potfile=Locale::Po4a::Po->new(\%Po_opts);
+    chdir $po4a_opts{"calldir"}
+        if (defined $po4a_opts{"srcdir"});
     foreach my $master (sort { return -1 if ($a eq "");
                                return 1 if ($b eq "");
                                $document{$a}{'pos'} <=> $document{$b}{'pos'}
@@ -1150,12 +1137,6 @@ if ($update_pot_file) {
 
     print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
         unless ($po4a_opts{"quiet"});
-} else {
-    chdir $po4a_opts{"srcdir"}
-	if (defined $po4a_opts{"srcdir"});
-    $potfile->read($pot_filename);
-    chdir $po4a_opts{"calldir"}
-	if (defined $po4a_opts{"srcdir"});
 }
 
 if ($po4a_opts{"split"}) {
@@ -1226,6 +1207,7 @@ if ($po4a_opts{"split"}) {
 
 # update all po files
 my $lang;
+if (not scalar @{$po4a_opts{"partial"}}) {
 foreach $lang (sort keys %po_filename) {
     chdir $po4a_opts{"srcdir"}
 	if (defined $po4a_opts{"srcdir"});
@@ -1248,6 +1230,7 @@ foreach $lang (sort keys %po_filename) {
     }
     chdir $po4a_opts{"calldir"}
 	if (defined $po4a_opts{"srcdir"});
+}
 }
 
 if ($po4a_opts{"split"}) {
