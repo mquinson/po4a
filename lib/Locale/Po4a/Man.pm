@@ -2457,6 +2457,14 @@ sub define_mdoc_macros {
     $macro{'In'} = \&translate_mdoc;
     # NetBSD Macro
     $inline{'Nx'} = 1;
+    # Curly brackets
+    $inline{'Brq'} = 1;
+    # Corporate name
+    $inline{'%Q'} = 1;
+    # Math symbol
+    $inline{'Ms'} = 1;
+    # Prints 'under development'
+    $inline{'Ud'} = 1;
 
     # This macro is a groff macro. I don't know if ot is valid in an mdoc page.
     # But this is used in some pages and seems to work
