@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.97 2009-12-30 21:12:31 nekral-guest Exp $
+# $Id: Po.pm,v 1.98 2010-04-17 08:42:38 barbier-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -392,7 +392,7 @@ sub write{
     print $fh "msgstr ".quote_text($self->{header})."\n\n";
 
 
-    my $buf_msgstr_plural; # USed to keep the first msgstr of plural forms
+    my $buf_msgstr_plural; # Used to keep the first msgstr of plural forms
     my $first=1;
     foreach my $msgid ( sort { ($self->{po}{"$a"}{'pos'}) <=>
                                ($self->{po}{"$b"}{'pos'})
@@ -849,7 +849,7 @@ sub filter {
                 $pos++;
             }
             # and now, add the code to check this equality
-            $code .= "(\$_[$fieldpos] =~ m/$arg/)";
+            $code .= "(\$_[$fieldpos] =~ m{$arg})";
 
         }
         showmethecode("End of expression")
