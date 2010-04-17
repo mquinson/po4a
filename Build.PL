@@ -101,6 +101,7 @@ my $b = $builder->new
       dist_abstract => 'Tools for helping translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',
 	  'Denis Barbier <barbier@linuxfr.org>',
+	  'Nicolas Francois <nicolas.francois@centraliens.net>',
 	  'Neil Williams <linux@codehelp.co.uk>']
   );
 
