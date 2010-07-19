@@ -728,7 +728,7 @@ NEW_LINE:
                 $insert_font = "\\f$font$insert_font";
                 $line = $l2;
                 $ref = $r2;
-            } elsif ($l2 =~ /^[.'][\t ]*(SH|TP|P|PP|LP)(?:[\t ]|\s*$)/) {
+            } elsif ($l2 =~ /^[.'][\t ]*(SH|TP|TQ|P|PP|LP)(?:[\t ]|\s*$)/) {
                 $line =~ s/^\.([BI])\s*$/$insert_font\\f$1/;
                 $self->SUPER::unshiftline($l2,$r2);
             } elsif ($l2 =~ /^([.'][\t ]*(?:IP)[\t ]+"?)(.*)$/) {
@@ -1051,7 +1051,7 @@ sub post_trans {
                     )?
                     [.']
                    )/\\&$1/mgx;
-    } elsif ($self->{type} =~ m/^(TP)$/) {
+    } elsif ($self->{type} =~ m/^(TP|TQ)$/) {
         # But it is also needed for some type (e.g. TP, if followed by a
         # font macro)
         # This regular expression is the same as above
@@ -1846,10 +1846,7 @@ $macro{'LP'}=$macro{'P'}=$macro{'PP'}=sub {
 $macro{'RE'}=\&noarg;
 $macro{'RS'}=\&untranslated;
 
-#Indented Paragraph Macros
-#  .TP i    Begin  paragraph  with  hanging tag.  The tag is given on the next line,
-#           but its results are like those of the .IP command.
-$macro{'TP'}=sub {
+sub parse_tp_tq {
     my $self=shift;
     my ($line,$l2,$ref2);
     $line .= $_[0] if defined($_[0]);
@@ -1882,12 +1879,29 @@ $macro{'TP'}=sub {
     } else {
 	$self->pushline($self->t($l2, "wrap" => 0)."\n");
     }
+}
+
+#Indented Paragraph Macros
+#  .TP i    Begin  paragraph  with  hanging tag.  The tag is given on the next line,
+#           but its results are like those of the .IP command.
+$macro{'TP'}=sub {
+    parse_tp_tq(@_);
 
     # From info groff:
     # Note that neither font shape nor font size of the label [i.e. argument
     # or first line] is set to a default value; on the other hand, the rest of
     # the text has default font settings.
     set_font("R");
+};
+
+# Indented Paragraph Macros
+# .TQ  Indicates continuation of the .TP labels that precede the indented
+#      paragraph.
+$macro{'TQ'}=sub {
+    warn "Macro $_[1] does not accept any argument\n"
+	if (defined ($_[2]));
+
+    parse_tp_tq(@_);
 };
 
 #   Indented Paragraph Macros
