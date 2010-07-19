@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
-# $Id: po4a,v 1.101 2010-04-17 20:53:33 barbier-guest Exp $
+# $Id: po4a,v 1.102 2010-07-19 22:46:00 barbier-guest Exp $
 #
 # Copyright 2002-2010 by SPI, inc.
 #
@@ -56,6 +56,8 @@ This document is organized as follow:
 =head3 Split mode
 
 =head2 OPTIONS
+
+=head2 EXAMPLE
 
 =head2 SHORTCOMINGS
 
@@ -444,6 +446,57 @@ Set the base directory for all the output documents specified in the po4a
 configuration file.
 
 =back
+
+=head2 EXAMPLE
+
+Let's assume you maintain a program named B<foo> which has a man page F<man/foo.1>
+which naturally is maintained in English only. Now you as the upstream or
+downstream maintainer want to create and maintain the translation.
+First you need to create the pot file necessary to send to translators
+using L<po4a-gettextize(1)>.
+
+So for our case we would call
+
+ cd man && po4a-gettextize -f man -m foo.1 -p foo.pot
+
+You would then send this file to the appropriate language lists or offer
+it for download somewhere on your website.
+
+Now let's assume you received three translations before your next release:
+F<de.po> (including an addendum F<de.add>), F<sv.po> and F<pt.po>.
+Since you don't want to change your makefile(s) whenever a new translation
+arrives you can use po4a with an appropriate configuration file in your makefile.
+Let's call it F<po4a.cfg>. In our example it would look like the following:
+
+ [po_directory] man/
+
+ [type: man] foo.1 $lang:man/foo.$lang.1 \
+            add_$lang:?man/foo.$lang.add opt:"-k 80"
+
+In this example we assume that your generated man pages (and all po and add
+files) should be stored in F<man/> below the current directory. In our example
+this directory would include F<de.po>, F<de.add>, F<pt.po> and F<sv.po>.
+
+Note the use of the modifier '?' as only the German translation (F<de.po>) is 
+accompanied by an addendum.
+
+To actually build the translated man pages you would then (once!) add the
+following line in the build target of the appropriate makefile:
+
+        po4a po4a.cfg
+
+Once this is set up you don't need to touch the makefile when a new 
+translation arrives, i.e. if the French team sends you F<fr.po> and F<fr.add>
+then you simply drop it in F<man/> and the next time the programm is build the 
+French translation is automatically build as well.
+
+Note that you still need an appropriate target to install localized manual
+pages with English ones.
+
+Finally if you do not store generated files into your version control system,
+you will need a line in your clean target as well:
+        -rm -f man/foo.*.1
+        -rm -f man/foo.pot
 
 =head1 SHORTCOMINGS
 
