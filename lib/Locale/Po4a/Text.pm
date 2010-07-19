@@ -202,7 +202,7 @@ sub parse {
     my $end_of_paragraph = 0;
     ($line,$ref)=$self->shiftline();
     my $file = $ref;
-    $file =~ s/:[0-9]+$//;
+    $file =~ s/:[0-9]+$// if defined($line);
     while (defined($line)) {
         $ref =~ m/^(.*):[0-9]+$/;
         if ($1 ne $file) {

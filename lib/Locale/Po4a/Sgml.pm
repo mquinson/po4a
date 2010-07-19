@@ -366,7 +366,7 @@ sub parse_file {
     #   - protect entities from expansion (ie "&release;")
     my $origfile="";
     my $i=0;
-    while ($i < @{$self->{TT}{doc_in}}) {
+    while (defined(@{$self->{TT}{doc_in}}) && $i < @{$self->{TT}{doc_in}}) {
         $origfile .= ${$self->{TT}{doc_in}}[$i];
         $i+=2;
     }
