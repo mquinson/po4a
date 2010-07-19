@@ -12,7 +12,7 @@ unless (-e "t/tmp") {
     mkdir "t/tmp" or die "Can't create test directory t/tmp: $!\n";
 }
 
-my $diff_po_flags = "";
+my $diff_po_flags = "-I '^\"Language: '";
 
 push @tests, {
   'run' => 'cp ../data-28/test1.po . && chmod u+w test1.po && perl ../../scripts/msguntypot -o ../data-28/test1.old.pot -n ../data-28/test1.new.pot test1.po > /dev/null',
