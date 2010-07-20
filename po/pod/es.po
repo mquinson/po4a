@@ -7,7 +7,7 @@
 #       Jordi Vilalta <jvprat@gmail.com>, 2004, 2006
 #
 #   - Updates
-#       Omar Campagne <ocampagne@gmail.com>, 2009
+#       Omar Campagne <ocampagne@gmail.com>, 2009, 2010
 #
 # Traductores, si no conocen el formato PO, merece la pena leer la
 # de gettext, especialmente las secciones dedicadas a este
@@ -29,10 +29,10 @@
 # #
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a pod 0.37\n"
+"Project-Id-Version: po4a pod 0.40\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2010-07-20 01:19+0300\n"
-"PO-Revision-Date: 2010-02-02 16:30+0100\n"
+"PO-Revision-Date: 2010-07-20 19:39+0200\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "Language: es\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.5.2\n"
+"X-Generator: Virtaal 0.6.1\n"
 
 #. type: Content of: <refentry><refentryinfo>
 #: share/doc//po4a-build.xml:4
@@ -127,11 +127,10 @@ msgid ""
 "build</command>. Both the untranslated and translated content is built as a "
 "single process, updating the POT files at the same time."
 msgstr ""
-"Puede usar la orden <command>po4a-build</command> para construir la "
-"documentación final a la vez que <command>po4a</command> prepara el "
-"contenido traducido bien como POD o DocBookXML. El contenido ya traducido y "
-"sin traducir se generan en un sólo proceso, actualizando los ficheros pot a "
-"la vez."
+"Cuando <command>po4a</command> prepara el contenido traducido bien como POD "
+"o DocBookXML puede usar la orden <command>po4a-build</command> para generar "
+"la documentación final. El contenido ya traducido y sin traducir se genera "
+"en un sólo proceso, actualizando los ficheros pot a la vez."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4a-build.xml:51
@@ -141,10 +140,11 @@ msgid ""
 "<command>po4a-build</command> how to build each element and which binary "
 "packages will include the translated and untranslated content."
 msgstr ""
-"Puede reemplazar las instrucciones de compilación con una sola invocación a "
-"<command>po4a-build</command> y un fichero de configuración, empleado para "
-"decir a <command>po4a-build</command> cómo generar cada elemento y qué "
-"paquetes binarios incluirán el contenido y sin traducir."
+"Puede reemplazar las instrucciones de construcción existentes con una sola "
+"invocación a <command>po4a-build</command> y un sencillo fichero de "
+"configuración usado para decir a <command>po4a-build</command> cómo "
+"construir cada elemento y qué paquetes binarios incluirán el contenido "
+"traducido y sin traducir."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc//po4a-build.xml:57
@@ -179,7 +179,7 @@ msgid ""
 "package with a single install location:"
 msgstr ""
 "Esto facilita incluir todo el contenido generado dentro de los paquetes "
-"binarios, con una sola ubicación al instalar."
+"binarios, con una sola ubicación de instalación."
 
 #. type: Content of: <refentry><refsect1><programlisting>
 #: share/doc//po4a-build.xml:71
@@ -262,11 +262,11 @@ msgid ""
 "<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
 "manvolnum></citerefentry>."
 msgstr ""
-"Puede gestionar con un solo fichero de configuración <filename>po4a-build."
-"conf</filename> y una sola invocación de <command>po4a-build</command> todos "
-"los formatos compatibles, en todas las combinaciones compatibles. Consulte "
-"<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
-"manvolnum></citerefentry>."
+"Puede gestionar todos los formatos compatibles y combinaciones posibles con "
+"un solo fichero de configuración, <filename>po4a-build.conf</filename>, y "
+"una sola invocación de <command>po4a-build</command>. Consulte "
+"<citerefentry><refentrytitle>po4a-"
+"build.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>."
 
 # type: =head1
 #. type: Content of: <refentry><refsect1><title>
@@ -285,10 +285,10 @@ msgid ""
 msgstr ""
 "Por omisión, <command>po4a-build</command> usa un fichero de configuración, "
 "<filename>po4a-build.conf</filename>, el cual debería estar en el directorio "
-"superior de su paquete VCS. (Use la opción <option>-f</option> para "
-"especificar un fichero diferente.) Consulte "
-"<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
-"manvolnum></citerefentry>."
+"superior del sistema de control de versiones de su paquete. (Use la opción "
+"<option>-f</option> para especificar un fichero diferente.) Consulte "
+"<citerefentry><refentrytitle>po4a-"
+"build.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>."
 
 #. type: Content of: <refentry><refsect1><example><title>
 #: share/doc//po4a-build.xml:122
@@ -341,14 +341,14 @@ msgid ""
 "rather than just section 1 and the names of the binary packages which are to "
 "contain the generated output."
 msgstr ""
-"La sección general incluye el nombre y ubicación del fichero de "
-"configuración de po4a (quizá sea mejor nombrarlo <filename>po4a.config</"
-"filename>), el directorio de ficheros po que contiene la documentación en "
-"formato po, (a menudo <filename>doc/po</filename>), el nombre completo del "
-"fichero pot empleado para generar las traducciones, el BASEDIR para la "
-"salida generada, si el paquete contiene páginas de manual en la sección 3, "
-"en lugar de sólo en la sección 1, y los nombres de los paquetes binarios que "
-"contendrán la salida generada."
+"La sección general incluye el nombre y la ubicación del fichero de "
+"configuración de po4a (quizá sea mejor nombrarlo "
+"<filename>po4a.config</filename>), el directorio de ficheros po que contiene "
+"la documentación en formato po, (a menudo <filename>doc/po</filename>), el "
+"nombre completo del fichero pot empleado para generar las traducciones, el "
+"«BASEDIR» para la salida generada, si el paquete contiene páginas de manual "
+"en la sección 3, en lugar de sólo en la sección 1, y los nombres de los "
+"paquetes binarios que contendrán la salida generada."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:143
@@ -358,11 +358,11 @@ msgid ""
 "<command>xsltproc</command> and the location of the XML or Docbook files. "
 "The XSLFILE can be overridden, if necessary."
 msgstr ""
-"La compatibilidad con XML incluye especificar qué paquetes binarios usan "
-"compatibilidad con XSL, a través de la variable XMLPACKAGES. También debe "
+"La compatibilidad con XML incluye especificar qué paquetes binarios usan la "
+"compatibilidad con XSL a través de la variable «XMLPACKAGES». También debe "
 "especificar el fichero de DocBook en el nivel superior para introducirlo a "
 "<command>xsltproc</command>, y la ubicación de los ficheros XML o DocBook. "
-"De ser necesario, puede invalidar XSLFILE."
+"Si es necesario, puede anular «XSLFILE»."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc//po4a-build.xml:148
@@ -370,8 +370,8 @@ msgid ""
 "POD support includes specifying which of the binary packages use POD support "
 "in the PODPACKAGES variable and the full name of the POD file."
 msgstr ""
-"La compatibilidad con POD incluye especificar qué paquetes binarios usan "
-"compatibilidad con POD, a través de la variable PODPACKAGES y el nombre "
+"La compatibilidad con POD incluye especificar qué paquetes binarios usan la "
+"compatibilidad con POD a través de la variable «PODPACKAGES» y el nombre "
 "completo del fichero POD."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
@@ -381,10 +381,10 @@ msgid ""
 "untranslated and translated HTML content and the DocBook file to generate "
 "the HTML. The HTMLXSL file can be overridden, if necessary."
 msgstr ""
-"Para obtener compatibilidad con HTML, tendrá que especificar el sub-"
-"directorio a crear, por debajo de BASEDIR, para el HTML traducido y sin "
-"traducir, y el fichero DocBook para generar el HTML. Puede invalidar el "
-"fichero HTMLXSL, de ser necesario."
+"Para obtener la compatibilidad con HTML, tendrá que especificar el "
+"subdirectorio a crear, por debajo de «BASEDIR» para el contenido HTML "
+"traducido y sin traducir, y el fichero DocBook para generar el HTML. Si es "
+"necesario, puede invalidar el fichero «HTMLXSL»."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc//po4a-build.xml:160
@@ -408,14 +408,17 @@ msgid ""
 "can update the POT file(s) at the start of the build, so that <command>dpkg-"
 "source</command> includes them into the source tarball."
 msgstr ""
-"Sólo actualizar uno o varios ficheros POT. La opción <option>--pot-only</"
-"option> está diseñada para ofrecer compatibilidad con paquetes que incluyen "
-"todos los ficheros POT en el paquete de fuentes. Aquellos paquetes que usan "
-"autotools pueden añadir el fichero POT a través de EXTRA_DIST, pero aquellos "
-"paquetes que emplean un makefile, o algunos asistentes de compilación de "
-"sistemas de control de versiones, encontrarán raro añadir el fichero POT "
-"(que es un fichero generado) sin poner el fichero POT en el sistema de "
-"control de versiones."
+"Sólo actualiza uno o varios ficheros POT. La opción <option>--pot-"
+"only</option> está diseñada para ofrecer la compatibilidad con paquetes que "
+"incluyen todos los ficheros POT en el paquete de fuentes. Aquellos paquetes "
+"que usan autotools pueden añadir el fichero POT a través de «EXTRA_DIST», "
+"pero aquellos paquetes que emplean un «makefile», o algunos asistentes de "
+"compilación de sistemas de control de versiones, encontrarán raro añadir el "
+"fichero POT (que es un fichero generado) sin poner el fichero POT en el "
+"sistema de control de versiones. Para evitar este trabajo feo e innecesario, "
+"<command>po4a-build</command> puede actualizar el o los ficheros POT al "
+"principio de la construcción, de forma que <command>dpkg-source</command> "
+"los incluye en el archivo tar de fuentes."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><example><title>
 #: share/doc//po4a-build.xml:179
@@ -920,7 +923,7 @@ msgstr "Modo dividido"
 #. type: =head2
 #: po4a:60 po4a:450
 msgid "EXAMPLE"
-msgstr ""
+msgstr "EJEMPLO"
 
 # type: =head1
 #. type: =head1
@@ -1885,7 +1888,7 @@ msgstr "Eliminar las copias de seguridad «.po~» (implica «--no-backups»)."
 #. type: =item
 #: po4a:391
 msgid "--translate-only I<translated-file>"
-msgstr ""
+msgstr "--translate-only I<fichero-traducido>"
 
 #. type: textblock
 #: po4a:393
@@ -1894,6 +1897,10 @@ msgid ""
 "if configuration file contains a lot of files.  Note that this option does "
 "not update PO and POT files.  This option can be used multiple times."
 msgstr ""
+"Traduce sólo el fichero especificado. Puede ser útil para agilizar el "
+"procesado si el fichero de configuración contiene muchos ficheros. Tenga en "
+"cuenta que esta opción no actualiza los ficheros PO y POT. Puede usar esta "
+"opción varias veces."
 
 # type: =item
 #. type: =item
@@ -2059,19 +2066,23 @@ msgid ""
 "translation.  First you need to create the pot file necessary to send to "
 "translators using L<po4a-gettextize(1)>."
 msgstr ""
+"Supongamos que es el responsable de un programa llamado B<foo>, que tiene "
+"una página de manual F<man/foo.1> que naturalmente sólo se mantiene en "
+"inglés. Ahora, al ser el mantenedor o encargado, desea crear y gestionar la "
+"traducción. Primero, cree el fichero pot, necesario para su envío a los "
+"traductores, usando L<po4a-gettextize(1)>."
 
 # type: textblock
 #. type: textblock
 #: po4a:458
-#, fuzzy
 #| msgid "In our case, we would have:"
 msgid "So for our case we would call"
-msgstr "En nuestro caso tendríamos:"
+msgstr "En nuestro caso, invocaríamos:"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:460
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| "  $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>\n"
 #| "\n"
@@ -2079,7 +2090,7 @@ msgid ""
 " cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize -f <formato> -m <original.doc> -p <traducción.pot>\n"
+" cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 
 #. type: textblock
@@ -2088,6 +2099,8 @@ msgid ""
 "You would then send this file to the appropriate language lists or offer it "
 "for download somewhere on your website."
 msgstr ""
+"Ahora puede enviar este fichero a las listas de idioma apropiados u "
+"ofrecerlo para su descarga en su página web."
 
 #. type: textblock
 #: po4a:465
@@ -2098,11 +2111,17 @@ msgid ""
 "you can use po4a with an appropriate configuration file in your makefile.  "
 "Let's call it F<po4a.cfg>. In our example it would look like the following:"
 msgstr ""
+"Supongamos ahora que ha recibido tres traducciones antes de su siguiente "
+"publicación: F<de.po> (incluyendo el apéndice, «addendum», F<de.add>), "
+"F<sv.po> y F<pt.po>. Ya que no desea modificar el o los ficheros «makefile» "
+"cada vez que recibe una traducción nueva, puede usar po4a dentro de su "
+"«makefile» creando un fichero de configuración adecuado. Le llamaremos "
+"F<po4a.cfg>. En nuestro ejemplo, presentaría el siguiente aspecto:"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:471
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " [po_directory] po4a/po/\n"
 #| "\n"
@@ -2110,13 +2129,13 @@ msgid ""
 " [po_directory] man/\n"
 "\n"
 msgstr ""
-" [po_directory] po4a/po/\n"
+" [po_directory] man/\n"
 "\n"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:473
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " [type: pod] script $lang:doc/$lang/script.1 \\\n"
 #| "             add_$lang:doc/l10n/script.$lang.add\n"
@@ -2126,8 +2145,8 @@ msgid ""
 "            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 msgstr ""
-" [type: pod] script $lang:doc/$lang/script.1 \\\n"
-"             add_$lang:doc/l10n/script.$lang.add\n"
+" [type: man] foo.1 $lang:man/foo.$lang.1 \\\n"
+"            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 
 #. type: textblock
@@ -2138,6 +2157,10 @@ msgid ""
 "example this directory would include F<de.po>, F<de.add>, F<pt.po> and F<sv."
 "po>."
 msgstr ""
+"En este ejemplo, suponemos que sus páginas de manual generados (y todos los "
+"ficheros po y de apéndice) se guardan en F<man/>, bajo el directorio actual. "
+"En nuestro ejemplo, este directorio incluiría F<de.po>, F<de.add>, F<pt.po> "
+"y F<sv.po>."
 
 #. type: textblock
 #: po4a:480
@@ -2145,6 +2168,8 @@ msgid ""
 "Note the use of the modifier '?' as only the German translation (F<de.po>) "
 "is accompanied by an addendum."
 msgstr ""
+"Note el uso del modificador «?», ya que sólo la traducción al alemán "
+"(F<de.po>) viene acompañado de un apéndice."
 
 #. type: textblock
 #: po4a:483
@@ -2152,6 +2177,9 @@ msgid ""
 "To actually build the translated man pages you would then (once!) add the "
 "following line in the build target of the appropriate makefile:"
 msgstr ""
+"Para generar realmente las páginas de manual tendría que añadir (¡una sola "
+"vez!) la siguiente línea en el «target» de construcción del fichero "
+"«makefile» adecuado:"
 
 #. type: verbatim
 #: po4a:486
@@ -2160,6 +2188,8 @@ msgid ""
 "        po4a po4a.cfg\n"
 "\n"
 msgstr ""
+"        po4a po4a.cfg\n"
+"\n"
 
 #. type: textblock
 #: po4a:488
@@ -2169,6 +2199,11 @@ msgid ""
 "add> then you simply drop it in F<man/> and the next time the programm is "
 "build the French translation is automatically build as well."
 msgstr ""
+"Una vez que configure esto, no tendrá que tocar el «makefile» cada vez que "
+"reciba una traducción nueva. Por ejemplo, el equipo francés envía F<fr.po> y "
+"F<fr.add>. Simplemente tendría que guardarlo en F<man/> y la siguiente vez "
+"que construya el programa la traducción al francés se generará "
+"automáticamente."
 
 #. type: textblock
 #: po4a:493
@@ -2176,6 +2211,8 @@ msgid ""
 "Note that you still need an appropriate target to install localized manual "
 "pages with English ones."
 msgstr ""
+"Tenga en cuenta que es aún necesario un destino adecuado dónde instalar las "
+"páginas de manual traducidas con las páginas en inglés."
 
 #. type: verbatim
 #: po4a:496
@@ -2187,6 +2224,11 @@ msgid ""
 "        -rm -f man/foo.pot\n"
 "\n"
 msgstr ""
+"Por último, si no guarda los ficheros generados en su sistema de control\n"
+"de versiones, necesitara también una línea en «clean target»:\n"
+"         -rm -f man/foo.*.1\n"
+"        -rm -f man/foo.pot\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -2230,10 +2272,9 @@ msgstr ""
 #. type: textblock
 #: po4a:525 po4a-gettextize:150 po4a-normalize:90 po4a-translate:147
 #: po4a-updatepo:139
-#, fuzzy
 #| msgid "Copyright 2002-2008 by SPI, inc."
 msgid "Copyright 2002-2010 by SPI, inc."
-msgstr "Copyright 2002-2008 by SPI, inc."
+msgstr "Copyright 2002-2010 by SPI, inc."
 
 # type: textblock
 #. type: textblock
