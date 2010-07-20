@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.98 2010-04-17 08:42:38 barbier-guest Exp $
+# $Id: Po.pm,v 1.99 2010-07-20 18:24:32 barbier-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -635,6 +635,13 @@ sub gettextize {
         #
         if ($typeorig ne $typetrans){
             $pores->write("gettextization.failed.po");
+            eval {
+               # Recode $trans into current charset, if possible
+               require I18N::Langinfo;
+               I18N::Langinfo->import(qw(langinfo CODESET));
+               my $codeset = langinfo(CODESET());
+               Encode::from_to($trans, $potrans->get_charset, $codeset);
+            };
             die wrap_msg(dgettext("po4a",
                          "po4a gettextization: Structure disparity between ".
                          "original and translated files:\n".
