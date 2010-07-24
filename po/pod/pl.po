@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.39\n"
+"Project-Id-Version: po4a 0.40\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2010-07-20 01:19+0300\n"
-"PO-Revision-Date: 2010-03-19 22:42+0100\n"
+"PO-Revision-Date: 2010-07-24 09:29+0200\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
 "Language: pl\n"
@@ -893,7 +893,7 @@ msgstr "Tryb rozdzielony"
 #. type: =head2
 #: po4a:60 po4a:450
 msgid "EXAMPLE"
-msgstr ""
+msgstr "PRZYKŁAD"
 
 # type: =head1
 #. type: =head1
@@ -1225,7 +1225,7 @@ msgid ""
 " [po_directory] po4a/po/\n"
 "\n"
 msgstr ""
-" [katalog_po] po4a/po/\n"
+" [po_directory] po4a/po/\n"
 "\n"
 
 # type: textblock
@@ -1855,7 +1855,7 @@ msgstr "Usuwa kopie zapasowe .po~ (wymusza --no-backups)."
 #. type: =item
 #: po4a:391
 msgid "--translate-only I<translated-file>"
-msgstr ""
+msgstr "--translate-only I<plik_przetłumaczony>"
 
 #. type: textblock
 #: po4a:393
@@ -1864,6 +1864,9 @@ msgid ""
 "if configuration file contains a lot of files.  Note that this option does "
 "not update PO and POT files.  This option can be used multiple times."
 msgstr ""
+"Tłumaczy tylko podany plik. Może być to użyteczne do przyspieszenia "
+"przetwarzania, gdy plik konfiguracyjny zawiera wiele plików Proszę zauważyć, "
+"że ta opcja nie aktualizuje plików PO i POT. Możne tej opcji użyć wiele razy."
 
 # type: =item
 #. type: =item
@@ -2030,27 +2033,27 @@ msgid ""
 "translation.  First you need to create the pot file necessary to send to "
 "translators using L<po4a-gettextize(1)>."
 msgstr ""
+"Załóżmy, że opiekujemy się programem o nazwie B<foo>, który zawiera stronę "
+"podręcznika ekranowego F<man/foo.1> napisaną tylko w języku angielskim, i "
+"chcemy dodać tłumaczenia. Pierwszą rzeczą, którą musimy zrobić, "
+"jest utworzenie pliku POT, niezbędnego do wysłania go do tłumaczy, używając "
+"w tym celu L<po4a-gettextize(1)>."
 
 # type: textblock
 #. type: textblock
 #: po4a:458
-#, fuzzy
-#| msgid "In our case, we would have:"
 msgid "So for our case we would call"
-msgstr "W naszym przypadku byłoby to:"
+msgstr "W naszym przypadku wywołalibyśmy:"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:460
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize -f <format> -m <master.doc> -p <tłumaczenie.pot>\n"
+" cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 
 #. type: textblock
@@ -2059,6 +2062,8 @@ msgid ""
 "You would then send this file to the appropriate language lists or offer it "
 "for download somewhere on your website."
 msgstr ""
+"Następnie wygenerowany plik należałoby wysłać na odpowiednią listę "
+"dystrybucyjną dotyczącą tłumaczeń lub umieścić na stronach www do pobrania."
 
 #. type: textblock
 #: po4a:465
@@ -2069,36 +2074,35 @@ msgid ""
 "you can use po4a with an appropriate configuration file in your makefile.  "
 "Let's call it F<po4a.cfg>. In our example it would look like the following:"
 msgstr ""
+"Następnie załóżmy, że otrzymaliśmy trzy tłumaczenia: F<de.po> (wraz z "
+"załącznikiem F<de.add>), F<sv.po> oraz F<pt.po>. Ponieważ nie chcemy "
+"zmieniać plików Makefile za każdym razem, gdy dodawane jest nowe "
+"tłumaczenie, możemy w Makefile'u użyć po4a z odpowiednim plikiem "
+"konfiguracyjnym - nazwijmy go F<po4a.cfg>. W naszym przypadku wyglądałby on "
+"tak:"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:471
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] po4a/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/\n"
 "\n"
 msgstr ""
-" [katalog_po] po4a/po/\n"
+" [po_directory] man/\n"
 "\n"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:473
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: pod] script $lang:doc/$lang/script.1 \\\n"
-#| "             add_$lang:doc/l10n/script.$lang.add\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: man] foo.1 $lang:man/foo.$lang.1 \\\n"
 "            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 msgstr ""
-" [type: pod] script $lang:doc/$lang/script.1 \\\n"
-"             add_$lang:doc/l10n/script.$lang.add\n"
+" [type: man] foo.1 $lang:man/foo.$lang.1 \\\n"
+"            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 
 #. type: textblock
@@ -2109,6 +2113,10 @@ msgid ""
 "example this directory would include F<de.po>, F<de.add>, F<pt.po> and F<sv."
 "po>."
 msgstr ""
+"W tym przykładzie założyliśmy, że wygenerowane strony podręcznika ekranowego "
+"(wraz z wszystkimi plikami PO i załącznikami) będą przechowywane w "
+"podkatalogu F<man/> katalogu bieżącego. Tak więc ten katalog by zawierał "
+"pliki F<de.po>, F<de.add>, F<pt.po> i F<sv.po>."
 
 #. type: textblock
 #: po4a:480
@@ -2116,6 +2124,8 @@ msgid ""
 "Note the use of the modifier '?' as only the German translation (F<de.po>) "
 "is accompanied by an addendum."
 msgstr ""
+"Proszę zwrócić uwagę na użycie modyfikatora \"?\". Jest potrzebny, ponieważ "
+"załącznik występuje tylko dla tłumaczenia na język niemiecki (F<de.po>)."
 
 #. type: textblock
 #: po4a:483
@@ -2123,6 +2133,8 @@ msgid ""
 "To actually build the translated man pages you would then (once!) add the "
 "following line in the build target of the appropriate makefile:"
 msgstr ""
+"Aby zbudować przetłumaczone strony podręcznika, należy (jednokrotnie!) dodać "
+"następującą linię w celu \"build\" odpowiedniego pliku Makefile:"
 
 #. type: verbatim
 #: po4a:486
@@ -2131,6 +2143,8 @@ msgid ""
 "        po4a po4a.cfg\n"
 "\n"
 msgstr ""
+"        po4a po4a.cfg\n"
+"\n"
 
 #. type: textblock
 #: po4a:488
@@ -2140,6 +2154,11 @@ msgid ""
 "add> then you simply drop it in F<man/> and the next time the programm is "
 "build the French translation is automatically build as well."
 msgstr ""
+"Dzięki takiej konfiguracji, nie będzie trzeba zmieniać Makefile'a, gdy "
+"przybędzie nowe tłumaczenie. Jeżeli na przykład zespół francuski przyśle "
+"pliki F<fr.po> i F<fr.add>, to jedyne co trzeba zrobić, to umieścić jest w "
+"katalogu F<man/> - podczas następnego budowania programu, automatycznie "
+"zbudują się tłumaczenia na francuski."
 
 #. type: textblock
 #: po4a:493
@@ -2147,6 +2166,8 @@ msgid ""
 "Note that you still need an appropriate target to install localized manual "
 "pages with English ones."
 msgstr ""
+"Proszę zauważyć, że wciąż będzie potrzebny odpowiedni cel w makefile'u  "
+"instalujący przetłumaczone strony podręcznika razem z ich angielską wersją."
 
 #. type: verbatim
 #: po4a:496
@@ -2158,6 +2179,11 @@ msgid ""
 "        -rm -f man/foo.pot\n"
 "\n"
 msgstr ""
+"W końcu, jeżeli wygenerowane pliki nie są przechowywane w systemie\n"
+"kontroli wersji, to należy dodać odpowiednie linie w celu \"clean\", np.:\n"
+"        -rm -f man/foo.*.1\n"
+"        -rm -f man/foo.pot\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -2201,10 +2227,8 @@ msgstr ""
 #. type: textblock
 #: po4a:525 po4a-gettextize:150 po4a-normalize:90 po4a-translate:147
 #: po4a-updatepo:139
-#, fuzzy
-#| msgid "Copyright 2002-2008 by SPI, inc."
 msgid "Copyright 2002-2010 by SPI, inc."
-msgstr "Copyright 2002-2008 by SPI, inc."
+msgstr "Copyright 2002-2010 by SPI, inc."
 
 # type: textblock
 #. type: textblock
@@ -14488,11 +14512,3 @@ msgstr ""
 " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
-
-# type: textblock
-#~ msgid "Copyright 2002, 2003, 2004 by SPI, inc."
-#~ msgstr "Copyright 2002, 2003, 2004 by SPI, inc."
-
-# type: textblock
-#~ msgid "Copyright 2002, 2003, 2004, 2005 by SPI, inc."
-#~ msgstr "Copyright 2002, 2003, 2004, 2005 by SPI, inc."
