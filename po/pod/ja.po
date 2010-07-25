@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2010-07-20 01:19+0300\n"
-"PO-Revision-Date: 2010-07-03 14:03+0900\n"
-"Last-Translator: KURASAWA Nozomu <nabetaro@debian.or.jp>\n"
+"PO-Revision-Date: 2010-07-25 23:08+0900\n"
+"Last-Translator: KURASAWA Nozomu <nabetaro@caldron.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -889,7 +889,7 @@ msgstr "分割モード"
 #. type: =head2
 #: po4a:60 po4a:450
 msgid "EXAMPLE"
-msgstr ""
+msgstr "例"
 
 # type: =head1
 #. type: =head1
@@ -1827,7 +1827,7 @@ msgstr "バックアップファイル .po~ を削除します (暗黙的に --n
 #. type: =item
 #: po4a:391
 msgid "--translate-only I<translated-file>"
-msgstr ""
+msgstr "--translate-only I<translated-file>"
 
 #. type: textblock
 #: po4a:393
@@ -1836,6 +1836,10 @@ msgid ""
 "if configuration file contains a lot of files.  Note that this option does "
 "not update PO and POT files.  This option can be used multiple times."
 msgstr ""
+"指定したファイルに対して、翻訳のみ行います。設定ファイル内にファイルがたくさ"
+"ん指定されている場合、処理の高速化に役立つことでしょう。このオプションは、PO "
+"ファイルと POT ファイルの更新を行わないことに注意してください。このオプション"
+"は複数回指定できます。"
 
 # type: =item
 #. type: =item
@@ -2001,27 +2005,27 @@ msgid ""
 "translation.  First you need to create the pot file necessary to send to "
 "translators using L<po4a-gettextize(1)>."
 msgstr ""
+"あなたは B<foo> というプログラムを保守しており、そのプログラムには、当然のよ"
+"うに英語のみで書かれている、 F<man/foo.1> という man ページがあると仮定しま"
+"しょう。今、上流ないし下流のメンテナとしてのあなたは、翻訳を作成し、保守した"
+"いと考えています。まず、L<po4a-gettextize(1)> を使用して、翻訳者に送るために"
+"必要な pot ファイルを作成する必要があります。"
 
 # type: textblock
 #. type: textblock
 #: po4a:458
-#, fuzzy
-#| msgid "In our case, we would have:"
 msgid "So for our case we would call"
-msgstr "この場合、以下のようになります。"
+msgstr "この場合、以下のように実行します。"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:460
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>\n"
+" cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
 "\n"
 
 #. type: textblock
@@ -2030,6 +2034,8 @@ msgid ""
 "You would then send this file to the appropriate language lists or offer it "
 "for download somewhere on your website."
 msgstr ""
+"次にこのファイルを、適切な言語のメーリングリストに送るか、ダウンロードできる"
+"ようウェブサイトのどこかに用意することになります。"
 
 #. type: textblock
 #: po4a:465
@@ -2040,36 +2046,34 @@ msgid ""
 "you can use po4a with an appropriate configuration file in your makefile.  "
 "Let's call it F<po4a.cfg>. In our example it would look like the following:"
 msgstr ""
+"ここで、次のリリースまでの間に、F<de.po> (追加内容 F<de.add> を含む), F<sv."
+"po>, F<pt.po> の三つの翻訳を受け取ったとしましょう。新しい翻訳が届いたからと"
+"いって、makefile を変更したくはありません。この場合、適切な設定ファイルを用意"
+"した po4a を、makefile 内で利用できます。これを F<po4a.cfg> と呼びましょう。"
+"先ほどの例は、以下のようになります。"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:471
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] po4a/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/\n"
 "\n"
 msgstr ""
-" [po_directory] po4a/po/\n"
+" [po_directory] man/\n"
 "\n"
 
 # type: verbatim
 #. type: verbatim
 #: po4a:473
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: pod] script $lang:doc/$lang/script.1 \\\n"
-#| "             add_$lang:doc/l10n/script.$lang.add\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: man] foo.1 $lang:man/foo.$lang.1 \\\n"
 "            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 msgstr ""
-" [type: pod] script $lang:doc/$lang/script.1 \\\n"
-"             add_$lang:doc/l10n/script.$lang.add\n"
+" [type: man] foo.1 $lang:man/foo.$lang.1 \\\n"
+"            add_$lang:?man/foo.$lang.add opt:\"-k 80\"\n"
 "\n"
 
 #. type: textblock
@@ -2080,6 +2084,9 @@ msgid ""
 "example this directory would include F<de.po>, F<de.add>, F<pt.po> and F<sv."
 "po>."
 msgstr ""
+"この例では、生成された man ページ (とすべての po ファイルと add ファイル) "
+"は、カレントディレクトリの F<man/> に格納しています。このサンプルディレクトリ"
+"には、F<de.po>, F<de.add>, F<pt.po>, F<sv.po> があります。"
 
 #. type: textblock
 #: po4a:480
@@ -2087,6 +2094,8 @@ msgid ""
 "Note the use of the modifier '?' as only the German translation (F<de.po>) "
 "is accompanied by an addendum."
 msgstr ""
+"追加内容を添付されたドイツ語翻訳 (F<de.po>) でのみ、修飾子 '?' の使用に注意が"
+"必要です。"
 
 #. type: textblock
 #: po4a:483
@@ -2094,6 +2103,8 @@ msgid ""
 "To actually build the translated man pages you would then (once!) add the "
 "following line in the build target of the appropriate makefile:"
 msgstr ""
+"その後、実際に翻訳済み man ページを構築するため、適切な makefile の構築ター"
+"ゲットに以下の行を (一度だけ!) 追加します。"
 
 #. type: verbatim
 #: po4a:486
@@ -2102,6 +2113,8 @@ msgid ""
 "        po4a po4a.cfg\n"
 "\n"
 msgstr ""
+"        po4a po4a.cfg\n"
+"\n"
 
 #. type: textblock
 #: po4a:488
@@ -2111,6 +2124,10 @@ msgid ""
 "add> then you simply drop it in F<man/> and the next time the programm is "
 "build the French translation is automatically build as well."
 msgstr ""
+"一度この設定をしておけば、新しい翻訳が届いても makefile に触れる必要はありま"
+"せん。言い換えると、フランス語チームが F<fr.po> と F<fr.add> を送って来た時"
+"に、単に F<man/> に置いてください。次回プログラム構築時に、フランス語翻訳が自"
+"動的に構築されます。"
 
 #. type: textblock
 #: po4a:493
@@ -2118,6 +2135,8 @@ msgid ""
 "Note that you still need an appropriate target to install localized manual "
 "pages with English ones."
 msgstr ""
+"英語のマニュアルページと翻訳されたマニュアルページを同時にインストールするた"
+"めに、適切なターゲットが必要なことに注意してください。"
 
 #. type: verbatim
 #: po4a:496
@@ -2129,6 +2148,11 @@ msgid ""
 "        -rm -f man/foo.pot\n"
 "\n"
 msgstr ""
+"最後に、生成したファイルをバージョン管理システムに格納したくなければ、\n"
+"clean ターゲットに以下のような行が必要になるでしょう。\n"
+"        -rm -f man/foo.*.1\n"
+"        -rm -f man/foo.pot\n"
+"\n"
 
 # type: textblock
 #. type: textblock
@@ -2172,10 +2196,8 @@ msgstr ""
 #. type: textblock
 #: po4a:525 po4a-gettextize:150 po4a-normalize:90 po4a-translate:147
 #: po4a-updatepo:139
-#, fuzzy
-#| msgid "Copyright 2002-2008 by SPI, inc."
 msgid "Copyright 2002-2010 by SPI, inc."
-msgstr "Copyright 2002-2008 by SPI, inc."
+msgstr "Copyright 2002-2010 by SPI, inc."
 
 # type: textblock
 #. type: textblock
@@ -14108,114 +14130,3 @@ msgstr ""
 " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
-
-# type: textblock
-#~ msgid "Copyright 2002, 2003, 2004 by SPI, inc."
-#~ msgstr "Copyright 2002, 2003, 2004 by SPI, inc."
-
-# type: textblock
-#~ msgid "Copyright 2002, 2003, 2004, 2005 by SPI, inc."
-#~ msgstr "Copyright 2002, 2003, 2004, 2005 by SPI, inc."
-
-# type: =item
-#~ msgid "6 Known bugs and feature requests"
-#~ msgstr "6 既知のバグと機能要望"
-
-# type: textblock
-#~ msgid "Quite a few already :("
-#~ msgstr "既にたくさんあります。:("
-
-# type: =head3
-#~ msgid "nroff"
-#~ msgstr "nroff"
-
-# type: =head1
-#~ msgid "Known bugs and feature requests"
-#~ msgstr "既知のバグと機能のリクエスト"
-
-# type: textblock
-#~ msgid ""
-#~ "The biggest issue (besides missing modules) is the encoding handling. "
-#~ "Adding a UTF8 perl pragma and then recoding the strings on output is the "
-#~ "way to go, but it's not done yet."
-#~ msgstr ""
-#~ "(モジュールが足りない以外で) もっとも大きな問題は文字コードの取り扱いで"
-#~ "す。UTF8 perl pragma を追加して、出力時に再度コード変換する方針ですが、ま"
-#~ "だ実装していません。"
-
-# type: textblock
-#~ msgid ""
-#~ "We would also like to factorise some code (about file insertion) of the "
-#~ "sgml module back into the TransTractor so that all modules can benefit "
-#~ "from this, but this is not user visible."
-#~ msgstr ""
-#~ "また、sgml モジュールの (ファイル挿入に関する) コードを、全モジュールが享"
-#~ "受できるように TransTractor に導入したいと思いますが、これはユーザには見え"
-#~ "ません。"
-
-# type: textblock
-#~ msgid ""
-#~ "Please note that this module is still experimental. It is not distributed "
-#~ "in the official po4a releases since we don't feel it to be mature enough. "
-#~ "If you insist on trying, check the CVS out."
-#~ msgstr ""
-#~ "このモジュールはまだ実験段階であることに注意してください。まだ十分成熟して"
-#~ "いないため、公式 po4a リリースでは配布していません。どうしても試したけれ"
-#~ "ば、CVS からチェックアウトしてください。"
-
-# type: textblock
-#~ msgid "It is derived from Jordi's DocBook module."
-#~ msgstr "Jordi の DocBook モジュールから派生しました。"
-
-# type: Plain text
-#~ msgid ""
-#~ "Some options to pass to <emphasis remap='B'>po4a-translate</emphasis>."
-#~ msgstr "B<po4a-translate> に渡すいくつかのオプションです。"
-
-#~ msgid "<emphasis remap='B'>po4apod-display-po</emphasis>.(1)"
-#~ msgstr "B<po4apod-display-po>.(1)"
-
-#~ msgid "<emphasis remap='B'>po4aman-display-po</emphasis>.(1)"
-#~ msgstr "B<po4aman-display-po>.(1)"
-
-# type: Plain text
-#~ msgid ""
-#~ "B<po4aman-display-po> B<-p> I<PO_FILE> [B<-m> I<MASTER_FILE>] [B<-o> "
-#~ "I<PO4A_OPT>]"
-#~ msgstr ""
-#~ "B<po4aman-display-po> B<-p> I<PO_FILE> [B<-m> I<MASTER_FILE>] [B<-o> "
-#~ "I<PO4A_OPT>]"
-
-# type: TP
-#~ msgid "B<-p >I<PO_FILE>"
-#~ msgstr "B<-p >I<PO_FILE>"
-
-# type: TP
-#~ msgid "B<-m >I<MASTER_FILE>"
-#~ msgstr "B<-m >I<MASTER_FILE>"
-
-# type: Plain text
-#~ msgid ""
-#~ "When the master document is not provided with the B<-m> option, B<po4aman-"
-#~ "display-po> tries to find the original man page based on the line "
-#~ "reference of the first string in the PO."
-#~ msgstr ""
-#~ "マスタードキュメントが B<-m> オプションで与えられない場合、B<po4aman-"
-#~ "display-po> はオリジナルの man ページを PO の最初の文字列が参照する行を元"
-#~ "に探します。"
-
-# type: TP
-#~ msgid "B<-o >I<PO4A_OPT>"
-#~ msgstr "B<-o >I<PO4A_OPT>"
-
-# type: Plain text
-#~ msgid ""
-#~ "B<po4apod-display-po> B<-p> I<PO_FILE> B<-m> I<POD_FILE> [B<-o> "
-#~ "I<PO4A_OPT>]"
-#~ msgstr ""
-#~ "B<po4apod-display-po> B<-p> I<PO_FILE> B<-m> I<POD_FILE> [B<-o> "
-#~ "I<PO4A_OPT>]"
-
-# type: TP
-#~ msgid "B<-m >I<POD_FILE>"
-#~ msgstr "B<-m >I<POD_FILE>"
