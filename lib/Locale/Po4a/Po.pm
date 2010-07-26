@@ -1,5 +1,4 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.100 2010-07-26 19:39:38 barbier-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).

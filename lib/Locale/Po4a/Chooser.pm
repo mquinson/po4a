@@ -1,5 +1,4 @@
-# Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
-# $Id: Chooser.pm,v 1.42 2009-12-27 01:16:02 nekral-guest Exp $
+# Locale::Po4a::Chooser -- Manage po4a modules
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
