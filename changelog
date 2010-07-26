@@ -1,3 +1,16 @@
+2010-07-26  Denis Barbier <barbier-guest@alioth.debian.org>
+
+	* lib/Locale/Po4a/Po.pm: Let read() handle previous
+	strings, which are flagged by '#|'.  They were
+	previously managed like translator's comments, and
+	calling write() after read()ing a PO file containing
+	such comments generated an invalid PO file.
+	This happened only with msgsearch or msguntypot, and
+	not po4a* tools.
+	* scripts/msguntypot: Call msgmerge with the
+	--previous option; add a --no-previous option to
+	disable this new behavior.
+
 2010-07-20  Denis Barbier <barbier-guest@alioth.debian.org>
 
 	* lib/Locale/Po4a/Po.pm: When gettextize() fails,
