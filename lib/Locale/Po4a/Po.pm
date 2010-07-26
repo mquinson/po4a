@@ -1,5 +1,5 @@
 # Locale::Po4a::Po -- manipulation of po files
-# $Id: Po.pm,v 1.99 2010-07-20 18:24:32 barbier-guest Exp $
+# $Id: Po.pm,v 1.100 2010-07-26 19:39:38 barbier-guest Exp $
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -249,7 +249,7 @@ sub read {
     my $linenum=0;
 
     foreach my $msg (split (/\n\n/,$pofile)) {
-        my ($msgid,$msgstr,$comment,$automatic,$reference,$flags,$buffer);
+        my ($msgid,$msgstr,$comment,$previous,$automatic,$reference,$flags,$buffer);
         my ($msgid_plural, $msgstr_plural);
         foreach my $line (split (/\n/,$msg)) {
             $linenum++;
@@ -261,6 +261,9 @@ sub read {
 
             } elsif ($line =~ /^#, ?(.*)$/) { # flags
                 $flags .= (defined($flags) ? "\n" : "").$1;
+
+            } elsif ($line =~ /^#\| ?(.*)$/) { # previous translation
+                $previous .= (defined($previous) ? "\n" : "").($1||"");
 
             } elsif ($line =~ /^#(.*)$/) {  # Translator comments
                 $comment .= (defined($comment) ? "\n" : "").($1||"");
@@ -324,6 +327,7 @@ sub read {
                              'reference' => $reference,
                              'flags'     => $flags,
                              'comment'   => $comment,
+                             'previous'  => $previous,
                              'automatic' => $automatic,
                              'plural'    => 0);
 
@@ -337,6 +341,7 @@ sub read {
                              'reference' => $reference,
                              'flags'     => $flags,
                              'comment'   => $comment,
+                             'previous'  => $previous,
                              'automatic' => $automatic,
                              'plural'    => 1);
         } else {
@@ -350,6 +355,7 @@ sub read {
                              'reference' => $reference,
                              'flags'     => $flags,
                              'comment'   => $comment,
+                             'previous'  => $previous,
                              'automatic' => $automatic);
         }
     }
@@ -424,6 +430,9 @@ sub write{
         $output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
             if    defined($self->{po}{$msgid}{'flags'})
                && length ($self->{po}{$msgid}{'flags'});
+        $output .= format_comment($self->{po}{$msgid}{'previous'},"| ")
+            if    defined($self->{po}{$msgid}{'previous'})
+               && length ($self->{po}{$msgid}{'previous'});
 
         if (exists $self->{po}{$msgid}{'plural'}) {
             if ($self->{po}{$msgid}{'plural'} == 0) {
@@ -796,7 +805,7 @@ sub filter {
             # check that we've got a valid field name,
             # and the number it referes to
             # DO NOT CHANGE THE ORDER
-            my @names=qw(msgid msgstr reference flags comment automatic);
+            my @names=qw(msgid msgstr reference flags comment previous automatic);
             my $fieldpos;
             for ($fieldpos = 0;
                  $fieldpos < scalar @names && $field ne $names[$fieldpos];
@@ -884,7 +893,7 @@ sub filter {
          $cpt<$self->count_entries();
          $cpt++) {
 
-        my ($msgid,$ref,$msgstr,$flags,$type,$comment,$automatic);
+        my ($msgid,$ref,$msgstr,$flags,$type,$comment,$previous,$automatic);
 
         $msgid = $self->msgid($cpt);
         $ref=$self->{po}{$msgid}{'reference'};
@@ -893,6 +902,7 @@ sub filter {
         $flags =  $self->{po}{$msgid}{'flags'};
         $type = $self->{po}{$msgid}{'type'};
         $comment = $self->{po}{$msgid}{'comment'};
+        $previous = $self->{po}{$msgid}{'previous'};
         $automatic = $self->{po}{$msgid}{'automatic'};
 
         # DO NOT CHANGE THE ORDER
@@ -902,8 +912,9 @@ sub filter {
                        'type'  => $type,
                        'reference' => $ref,
                        'comment' => $comment,
+                       'previous' => $previous,
                        'automatic' => $automatic)
-               if (apply($msgid,$msgstr,$ref,$flags,$comment,$automatic));
+               if (apply($msgid,$msgstr,$ref,$flags,$comment,$previous,$automatic));
     }
     # delete the apply subroutine
     # otherwise it will be redefined.
@@ -1146,7 +1157,7 @@ sub push {
     my $self=shift;
     my %entry=@_;
 
-    my $validoption="wrap wrapcol type msgid msgstr automatic flags reference";
+    my $validoption="wrap wrapcol type msgid msgstr automatic previous flags reference";
     my %validoption;
 
     map { $validoption{$_}=1 } (split(/ /,$validoption));
@@ -1179,10 +1190,10 @@ sub push {
 sub push_raw {
     my $self=shift;
     my %entry=@_;
-    my ($msgid,$msgstr,$reference,$comment,$automatic,$flags,$type,$transref)=
+    my ($msgid,$msgstr,$reference,$comment,$automatic,$previous,$flags,$type,$transref)=
         ($entry{'msgid'},$entry{'msgstr'},
          $entry{'reference'},$entry{'comment'},$entry{'automatic'},
-         $entry{'flags'},$entry{'type'},$entry{'transref'});
+         $entry{'previous'},$entry{'flags'},$entry{'type'},$entry{'transref'});
     my $keep_conflict = $entry{'conflict'};
 
 #    print STDERR "Push_raw\n";
@@ -1273,6 +1284,7 @@ sub push_raw {
     $self->{po}{$msgid}{'msgstr'} = $msgstr;
     $self->{po}{$msgid}{'comment'} = $comment;
     $self->{po}{$msgid}{'automatic'} = $automatic;
+    $self->{po}{$msgid}{'previous'} = $previous;
     if (defined($self->{po}{$msgid}{'pos_doc'})) {
         $self->{po}{$msgid}{'pos_doc'} .= " ".$self->{count_doc}++;
     } else {
