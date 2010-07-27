@@ -57,7 +57,7 @@ Thus we recommend the following architecture:
   /doc/po4a/po/
   /doc/po4a/po/<pkg>.pot
   /doc/po4a/po/<ll>.po
-  /doc/<ll>/
+  /doc/translated/<ll>/
 
 Or, if you want to avoid a big POT and split it according to the packages,
 documents, formats, or subjects, you can use the following architecture:
@@ -72,12 +72,12 @@ documents, formats, or subjects, you can use the following architecture:
   /doc/po4a/<pkg1>/po/
   /doc/po4a/<pkg1>/po/<pkg1>.pot
   /doc/po4a/<pkg1>/po/<ll>.po
-  /doc/<ll>/
+  /doc/translated/<ll>/
 
 
 It is important to avoid a build failure if a generated
 translation cannot be generated (the PO is too outdated, an addendum
-cannot be applied, ...). You should therefore use wildcards or test if the file
+cannot be applied, etc.). You should therefore use wildcards or test if the file
 was generated in the 'install' or 'dist' rules
 
 
@@ -122,6 +122,8 @@ of debian/rules. The translated documents can be generated in the 'build'
 clean:
 	# Update the POT and POs
 	cd <...>/po4a && po4a --no-translations --rm-backups <package>.cfg
+	# Delete translated documentation
+	rm -rf <...>/translated
 
 build:
 	# Generate the translations

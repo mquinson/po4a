@@ -469,7 +469,7 @@ Let's call it F<po4a.cfg>. In our example it would look like the following:
 
  [po_directory] man/po4a/po/
 
- [type: man] foo.1 $lang:man/foo.$lang.1 \
+ [type: man] foo.1 $lang:man/translted/$lang/foo.1 \
             add_$lang:?man/po4a/add_$lang/$lang.add opt:"-k 80"
 
 In this example we assume that your generated man pages (and all PO and add
@@ -497,8 +497,7 @@ pages with English ones.
 
 Finally if you do not store generated files into your version control system,
 you will need a line in your clean target as well:
-        -rm -f man/foo.*.1
-        -rm -f man/po4a/po/foo.pot
+        -rm -rf man/translted
 
 =head1 SHORTCOMINGS
 
