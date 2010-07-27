@@ -33,11 +33,11 @@
 
 =head1 NAME
 
-Locale::Po4a::Sgml - Convert sgml documents from/to PO files
+Locale::Po4a::Sgml - convert SGML documents from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
@@ -62,12 +62,12 @@ Give more information about what's going on.
 
 =item translate
 
-Space separated list of extra tags (beside the dtd provided ones) whose
+Space separated list of extra tags (beside the DTD provided ones) whose
 content should form an extra msgid.
 
 =item section
 
-Space separated list of extra tags (beside the dtd provided ones)
+Space separated list of extra tags (beside the DTD provided ones)
 containing other tags, some of them being of category 'translate'.
 
 =item indent
@@ -155,8 +155,8 @@ prevent us from detecting that the document is badly formatted.
 
 =item *
 
-It does work only with the debiandoc and docbook dtd. Adding support for a
-new dtd should be very easy. The mechanism is the same for every dtd, you just
+It does work only with the DebianDoc and DocBook DTD. Adding support for a
+new DTD should be very easy. The mechanism is the same for every DTD, you just
 have to give a list of the existing tags and some of their characteristics.
 
 I agree, this needs some more documentation, but it is still considered as
@@ -164,21 +164,21 @@ beta, and I hate to document stuff which may/will change.
 
 =item *
 
-Warning, support for dtds is quite experimental. I did not read any
+Warning, support for DTDs is quite experimental. I did not read any
 reference manual to find the definition of every tag. I did add tag
 definition to the module 'till it works for some documents I found on the
 net. If your document use more tags than mine, it won't work. But as I said
 above, fixing that should be quite easy.
 
-I did test docbook against the SAG (System Administrator Guide) only, but
-this document is quite big, and should use most of the docbook
+I did test DocBook against the SAG (System Administrator Guide) only, but
+this document is quite big, and should use most of the DocBook
 specificities.
 
-For debiandoc, I tested some of the manuals from the DDP, but not all yet.
+For DebianDoc, I tested some of the manuals from the DDP, but not all yet.
 
 =item *
 
-In case of file inclusion, string reference of messages in po files (ie,
+In case of file inclusion, string reference of messages in PO files (ie,
 lines like C<#: en/titletoc.sgml:9460>) will be wrong.
 
 This is because I preprocess the file to protect the conditional inclusion
@@ -531,7 +531,7 @@ sub parse_file {
 	    $self->set_tags_kind();
 	} else {
 	    die wrap_mod("po4a::sgml", dgettext("po4a",
-		"DTD of this file is unknown. (supported: debiandoc, docbook). The prolog follows:")."\n$prolog");
+		"DTD of this file is unknown. (supported: DebianDoc, DocBook). The prolog follows:")."\n$prolog");
 	}
     }
 

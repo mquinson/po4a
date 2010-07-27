@@ -86,7 +86,7 @@ __END__
 
 =head1 NAME
 
-Locale::Po4a::Ini - Convert ini files from/to PO files
+Locale::Po4a::Ini - convert INI files from/to PO files
 
 =head1 DESCRIPTION
 

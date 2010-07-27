@@ -58,15 +58,15 @@ sub list {
     warn wrap_msg(gettext("List of valid formats:")
 #	."\n  - ".gettext("bibtex: BibTex bibliography format.")
 	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
-	."\n  - ".gettext("docbook: Docbook XML.")
-	."\n  - ".gettext("guide: Gentoo Linux's xml documentation format.")
+	."\n  - ".gettext("docbook: DocBook XML.")
+	."\n  - ".gettext("guide: Gentoo Linux's XML documentation format.")
 #	."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
-	."\n  - ".gettext("ini: .INI format.")
+	."\n  - ".gettext("ini: INI format.")
 	."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
 	."\n  - ".gettext("latex: LaTeX format.")
 	."\n  - ".gettext("man: Good old manual page format.")
 	."\n  - ".gettext("pod: Perl Online Documentation format.")
-	."\n  - ".gettext("sgml: either debiandoc or docbook DTD.")
+	."\n  - ".gettext("sgml: either DebianDoc or DocBook DTD.")
 	."\n  - ".gettext("texinfo: The info page format.")
 	."\n  - ".gettext("tex: generic TeX documents (see also latex).")
 	."\n  - ".gettext("text: simple text document.")
@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-Locale::Po4a::Chooser - Manage po4a modules
+Locale::Po4a::Chooser -manage po4a modules
 
 =head1 DESCRIPTION
 

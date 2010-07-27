@@ -2,9 +2,9 @@
 
 # Po4a::Html.pm 
 # 
-# extract and translate translatable strings from a html document.
+# extract and translate translatable strings from a HTML document.
 # 
-# This code extracts plain text between html tags and some "alt" or
+# This code extracts plain text between HTML tags and some "alt" or
 # "title" attributes.
 #
 # Copyright (c) 2003 by Laurent Hausermann  <laurent@hausermann.org>
@@ -29,11 +29,11 @@
 
 =head1 NAME
 
-Locale::Po4a::Html - Convert html documents from/to PO files
+Locale::Po4a::Html - convert HTML documents from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 

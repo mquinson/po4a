@@ -3,9 +3,9 @@
 
 # Po4a::Docbook.pm 
 # 
-# extract and translate translatable strings from Docbook XML documents.
+# extract and translate translatable strings from DocBook XML documents.
 # 
-# This code extracts plain text from tags and attributes on Docbook XML
+# This code extracts plain text from tags and attributes on DocBook XML
 # documents.
 #
 # Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
@@ -32,11 +32,11 @@
 
 =head1 NAME
 
-Locale::Po4a::Docbook - Convert Docbook XML documents from/to PO files
+Locale::Po4a::Docbook - convert DocBook XML documents from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
@@ -109,7 +109,7 @@ sub initialize {
 	$self->{options}{'_default_inline'} .= " <accel>";
 
 	# ackno; does not contain text; Formatted as a displayed block
-	# Replaced by acknowledgements in Docbook v5.0
+	# Replaced by acknowledgements in DocBook v5.0
 	$self->{options}{'_default_untranslated'} .= " <ackno>";
 	$self->{options}{'_default_break'} .= " <ackno>";
 	# acknowledgements; does not contain text; Formatted as a displayed block

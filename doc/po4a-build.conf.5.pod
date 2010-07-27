@@ -16,16 +16,13 @@ single call to C<po4a-build>. However, you can also choose to
 separate the F<po/> directories and have one configuration file for
 each run. (Call C<po4a-build -f FILE> for each one.)
 
-(See also KEEP below for some limitations of combining lots of files
-into one POT file and one C<po4a-build> run.
-
 Note that although F<po4a-build> includes support for adding gettext
 support for translation of script output messages, F<po4a-build.conf>
 itself has no bearing on such translations. F<po4a-build.conf> only
 relates to translating static content like manpages.
 
 For F<po4a-build> support of runtime message translation, see
-F<po4a-runtime (7)>.
+L<po4a-runtime(7)>.
 
 =head1 Supported formats
 
@@ -33,7 +30,7 @@ Currently, C<po4a-build> supports the following combinations:
 
 =over
 
-=item Docbook XML for Sections 1 and 3
+=item DocBook XML for sections 1 and 3
 
 Typically used for manpages for shell scripts or other interpreters that
 do not have their own documentation format like POD. Suitable XML can
@@ -51,23 +48,23 @@ the C<po4a-build> configuration file.
 
 =item DocBook XML for HTML
 
-The stylesheet used to prepare the final HTML can be left as the default
-(or overridden using the C<HTMLXSL> setting in the C<po4a-build>
+The default stylesheet used to prepare the final HTML can be 
+overridden using the C<HTMLXSL> setting in the C<po4a-build>
 configuration file.
 
-=item POD for Sections 1, 3, 5 and 7.
+=item POD for sections 1, 3, 5 and 7
 
 pod2man is used to convert POD content for each of the supported sections.
 
 Use C<PODFILE> for section 1, C<PODMODULES> for section 3,
 C<POD5FILES> for section 5 and C<POD7FILES> for section 7.
 
-For content in sections 5 or 7, (which tends to need a filename which is
+For content in sections 5 or 7 (which tends to need a filename which is
 also used for section 1 content), if the filename includes the 5 or 7 as
 part of the filename, this (and any filename extension) will be
 automatically stripped.
 
-e.g. to prepare F</usr/share/man/man7/po4a.7.gz> :
+e.g. to prepare F</usr/share/man/man7/po4a.7.gz>:
 
  # POD files for section 7
  POD7FILES="doc/po4a.7.pod"
@@ -91,37 +88,37 @@ with nothing to do if required fields are empty.
 
 Required.
 
- # name and location of the config file
- CONFIG="_build/po4a.config"
-
 Name and location of the (temporary) C<po4a> configuration file that
 C<po4a-build> will generate and maintain. This file does not need to
 live in your version control system and can be safely cleaned up
 during the package build.
 
+ # name and location of the config file
+ CONFIG="_build/po4a.config"
+
 =item PODIR
 
 Required.
 
- # PODIR po directory for manpages/docs
- PODIR="po/pod"
-
-The directory containing the PO files for ALL translations handled by
+Directory containing the PO files for ALL translations handled by
 this configuration file. All strings will be merged into a POT file
 in this directory and all PO files merged with that POT file. Any
 KEEP threshold (see below) will be applied across all strings from
 all input files specified in this file and all PO files in this
 directory. The directory does not need to be called 'po'.
 
+ # po directory for manpages/docs
+ PODIR="po/pod"
+
 =item POTFILE
 
 Required.
 
-Path to the POTFILE (relative to the location of this configuration
+Path to the POT file (relative to the location of this configuration
 file) that will be generated, maintained and updated by C<po4a-build>
 for these translations.
 
- # POTFILE path
+ # POT file path
  POTFILE="po/pod/po4a-pod.pot"
 
 =item BASEDIR
@@ -140,7 +137,7 @@ Required.
 Even if only one package is built, at least one value is required here.
 
 The string itself is arbitrary but typically consists of the package
-name. Generated content will then appear in sub-directories of
+name. Generated content will then appear in subdirectories of
 F<BASEDIR/BINARIES>:
 
  _build/po4a/man/man1/foo.1
@@ -152,12 +149,12 @@ build process.
 
 Separate strings with a space.
  
- # the binary packages that will contain generated manpages
+ # binary packages that will contain generated manpages
  BINARIES="po4a"
 
 =item KEEP
 
-A value to be passed directly to C<po4a -k> to specify the
+Value to be passed directly to C<po4a -k> to specify the
 threshold for correctly translated content before a particular
 translation is omitted from the build. Leave empty or remove
 to use the default (80%) or specify zero to force the inclusion
@@ -165,23 +162,18 @@ of all content, even if completely untranslated.
 
 For full control over such behaviour, consider carefully which
 files are assigned to which F<po4a-build.conf> configuration file.
-Every file listed in any one F<po4a-build.conf> file will be included
-in the calculation for the percentage of strings correctly
-translated. If there is one large file that is poorly translated,
-this will prevent other, smaller, files from being included in
-the build even if those individual files are 100% translated.
 
-On the other hand, having lots of files in one POT file can be
+Note that having lots of files in one POT file can be
 more convenient for translators, especially if files have strings in
 common. Conversely, POT files with thousands of long strings are
 daunting for translators, leading to long string freezes.
 
- # Minimal threshold for translation percentage to keep
+ # minimal threshold for translation percentage to keep
  KEEP=
 
 =item XMLMAN1
 
-DocBook XML files to generate manpages in Section 1. Separate filenames
+DocBook XML files to generate manpages in section 1. Separate filenames
 with spaces. All files need to be in the XMLDIR directory.
 
 It is common practice to fold multiple XML files into one book, in
@@ -190,12 +182,12 @@ also specified in XMLMAN3, only specify the XML files for section 1
 here, not the book itself. If the book only contains content for this
 section, only specify the book file.
 
- # the DocBook XML files for Section 1.
+ # DocBook XML files for section 1
  XMLMAN1="po4a-build.xml po4aman-display-po.xml po4apod-display-po.xml"
 
 =item XMLMAN3
 
-DocBook XML files to generate manpages in Section 3. Separate filenames
+DocBook XML files to generate manpages in section 3. Separate filenames
 with spaces. All files need to be in the XMLDIR directory.
 
 It is common practice to fold multiple XML files into one book, in
@@ -204,19 +196,19 @@ also specified in XMLMAN1, only specify the XML files for section 3
 here, not the book itself. If the book only contains content for this
 section, only specify the book file.
 
- # the Docbook XML manpages for Section 3.
+ # DocBook XML files for section 3
  XMLMAN3=""
 
 =item XMLDIR
 
-Location of all the Docbook XML files. Currently, C<po4a-build> expects
+Location of all the DocBook XML files. Currently, C<po4a-build> expects
 to be able to find all files listed in XMLMAN1 and XMLMAN3 by looking
 for *.xml files in this directory.
 
 Must be specified if XMLMAN1 or XMLMAN3 are used. Paths are relative to
 the location of the configuration file.
 
- # the location of the XML files
+ # location of the XML files
  XMLDIR="share/doc/"
 
 =item XMLPACKAGES
@@ -226,7 +218,7 @@ Which packages, out of the list in BINARIES, use XML source content.
 If any values are given in XMLMAN1 or XMLMAN3, a value must be given
 here as well.
 
- # the binary packages using DocBook XML & xsltproc
+ # binary packages using DocBook XML & xsltproc
  XMLPACKAGES="po4a"
 
 =item DOCBOOKDIR
@@ -235,34 +227,34 @@ Similar to XMLDIR but only used to prepare the translated DocBook
 files. If your package wants to use .sgml files, please discuss
 how these should be built on the po4a-devel mailing list.
 
- # the pattern to find the .docbook files
+ # pattern to find the .docbook files
  DOCBOOKDIR=""
 
 =item XSLFILE
 
-The XSL stylesheet used to prepare the translated and untranslated
+XSL stylesheet used to prepare the translated and untranslated
 content from the DocBook XML files.
 
- # the XSL file to use for Docbook XSL
+ # XSL file to use for DocBook XSL
  XSLFILE="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"
 
 =item PODFILE
 
-The POD file(s) for generating manpage content in section 1. Separate
+POD files for generating manpage content in section 1. Separate
 POD files with spaces. Paths, if used, need to be relative to the
 location of the specified configuration file.
 
- # the POD files for man1
+ # POD files for section 1
  PODFILE="po4a po4a-gettextize po4a-normalize scripts/msguntypot"
 
 =item PODMODULES
 
-Specialised support for perl modules containing POD content - the
+Specialised support for Perl modules containing POD content - the
 module name will be reconstructed from the path (so this should
-be the typical perl layout) and manpages are automatically put into
+be the typical Perl layout) and manpages are automatically put into
 section 3.
 
- # the POD files for man3/ - module names regenerated from the path.
+ # POD files for section 3 - module names regenerated from the path
  PODMODULES="lib/Locale/Po4a/*.pm"
 
 =item POD5FILES
@@ -299,25 +291,25 @@ Similar to XMLPACKAGES - any package expecting content to be built from
 POD files needs to include a value in PODPACKAGES. Required if any
 values are specified for PODFILE, PODMODULES, POD5FILES or POD7FILES.
 
- # the binary packages using POD
+ # binary packages using POD
  PODPACKAGES="po4a"
 
 =item HTMLDIR
 
-A subdirectory of BASEDIR to be used to output the untranslated and
+Subdirectory of BASEDIR to be used to output the untranslated and
 translated HTML output.
 
- # html output (subdirectory of BASEDIR)
+ # HTML output (subdirectory of BASEDIR)
  HTMLDIR=""
 
 =item HTMLFILE
 
-The DocBook file to be converted to HTML (may be the same as
-one of the files in XMLFILE). Sections are not relevant to HTML
+DocBook files to be converted to HTML (may be the same as
+one of the files in XMLMAN1 or XMLMAN3). Sections are not relevant to HTML
 output, so feel free to use the single book file here so that the
 HTML has a table of contents etc.
 
- # html DocBook file
+ # HTML DocBook file
  HTMLFILE=""
  
 =item HTMLXSL
@@ -325,7 +317,7 @@ HTML has a table of contents etc.
 The default is to use a chunked XSL stylesheet. It is not currently
 supported to use more than one stylesheet per HTML run.
 
- # the XSL file to use for Docbook XSL
+ # XSL file to use for DocBook XSL
  HTMLXSL="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"
 
 =back

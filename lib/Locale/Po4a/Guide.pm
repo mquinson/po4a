@@ -30,11 +30,11 @@
 
 =head1 NAME
 
-Locale::Po4a::Guide - Convert Guide XML documents from/to PO files
+Locale::Po4a::Guide - convert Guide XML documents from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 

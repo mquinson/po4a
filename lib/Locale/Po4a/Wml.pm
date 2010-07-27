@@ -2,7 +2,7 @@
 
 # Po4a::Wml.pm
 #
-# extract and translate translatable strings from a wml (web markup language) documents
+# extract and translate translatable strings from a WML (web markup language) documents
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,15 +24,15 @@
 
 =head1 NAME
 
-Locale::Po4a::Wml - Convert wml (web markup language) documents from/to PO files
+Locale::Po4a::Wml - convert WML (web markup language) documents from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-Locale::Po4a::Wml is a module to help the translation of wml documents into
+Locale::Po4a::Wml is a module to help the translation of WML documents into
 other [human] languages. Do not mixup the WML we are speaking about here
 (web markup language) and the WAP crap used on cell phones.
 
@@ -50,7 +50,7 @@ NONE.
 This module works for some simple documents, but is still young.
 Currently, the biggest issue of the module is probably that it cannot
 handle documents that contain non-XML inline tags such as <email
-"foo@example.org">, which are often defined in the Wml.  Improvements
+"foo@example.org">, which are often defined in the WML.  Improvements
 will be added in the future releases.
 
 =cut
@@ -142,7 +142,7 @@ sub parse {
                s|$filename(:\d+)|$org_filename$1|o;
         }
 
-        # Get the document back (undoing our wml masking)
+        # Get the document back (undoing our WML masking)
         # FIXME: need to join the file first, and then split?
         my @doc_out;
         foreach my $line (@{$self->{TT}{doc_out}}) {

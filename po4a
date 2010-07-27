@@ -13,7 +13,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 
 =head1 NAME
 
-po4a - update both the po files and translated documents in one shot
+po4a - update both the PO files and translated documents in one shot
 
 =head1 SYNOPSIS
 
@@ -21,7 +21,7 @@ po4a [options] E<lt>config_fileE<gt>
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
@@ -70,27 +70,27 @@ This document is organized as follow:
 
 =head1 INTRODUCTION
 
-The B<po4a> program is in charge of updating both the po files (to sync
+The B<po4a> program is in charge of updating both the PO files (to sync
 them to the original documents) and the translated documents (to sync
-them to the po files). The main point is to make the use of po4a easier
+them to the PO files). The main point is to make the use of po4a easier
 without having to remember of the command line options.
 
 It also allows you to mix documents having different formats into the same
-pot file so that you can have only one such file per project.
+POT file so that you can have only one such file per project.
 
 This behaviour can be mimicked by the other tools of the po4a suite (for
-example with makefiles), but it is rather difficult to do, and exhausting to
-redo the same complicated makefiles for each project using po4a.
+example with Makefiles), but it is rather difficult to do, and exhausting to
+redo the same complicated Makefiles for each project using po4a.
 
 The dataflow can be summarized as follow. Any changes to the master document
-will be reflected in the po files, and all changes to the po files (either
+will be reflected in the PO files, and all changes to the PO files (either
 manual or caused by previous step) will be reflected in translation
 documents.
 
- master document --> po files --> translations
+ master document --> PO files --> translations
 
 The dataflow cannot be inversed in this tool, and changes in translations
-are overwritten by the content of the po files. As a matter of fact, this
+are overwritten by the content of the PO files. As a matter of fact, this
 tool cannot be used to convert existing translations to the po4a system. For
 that task, please refer to L<po4a-gettextize(1)>.
 
@@ -132,10 +132,10 @@ used by translators to do their job) are located. It can be done by such a line:
  [po4a_paths] doc/l10n/project.doc.pot \
               fr:doc/l10n/fr.po de:doc/l10n/de.po
 
-The command is thus 'po4a_paths'. The first argument is the path to the pot
+The command is thus 'po4a_paths'. The first argument is the path to the POT
 file to use. All subsequent arguments are of the self-explanatory form:
 
-    <lang>:<path to the po file for this lang>
+    <lang>:<path to the PO file for this lang>
 
 If you've defined the template languages, you can rewrite the line above this
 way:
@@ -451,7 +451,7 @@ configuration file.
 Let's assume you maintain a program named B<foo> which has a man page F<man/foo.1>
 which naturally is maintained in English only. Now you as the upstream or
 downstream maintainer want to create and maintain the translation.
-First you need to create the pot file necessary to send to translators
+First you need to create the POT file necessary to send to translators
 using L<po4a-gettextize(1)>.
 
 So for our case we would call
@@ -463,30 +463,33 @@ it for download somewhere on your website.
 
 Now let's assume you received three translations before your next release:
 F<de.po> (including an addendum F<de.add>), F<sv.po> and F<pt.po>.
-Since you don't want to change your makefile(s) whenever a new translation
-arrives you can use po4a with an appropriate configuration file in your makefile.
+Since you don't want to change your Makefile(s) whenever a new translation
+arrives you can use po4a with an appropriate configuration file in your Makefile.
 Let's call it F<po4a.cfg>. In our example it would look like the following:
 
- [po_directory] man/
+ [po_directory] man/po4a/po/
 
  [type: man] foo.1 $lang:man/foo.$lang.1 \
-            add_$lang:?man/foo.$lang.add opt:"-k 80"
+            add_$lang:?man/po4a/add_$lang/$lang.add opt:"-k 80"
 
-In this example we assume that your generated man pages (and all po and add
-files) should be stored in F<man/> below the current directory. In our example
-this directory would include F<de.po>, F<de.add>, F<pt.po> and F<sv.po>.
+In this example we assume that your generated man pages (and all PO and add
+files) should be stored in F<man/> (respectively in F<man/po4a/po/> and
+F<man/po4a/add_$lang/>) below the current directory. In our example
+the F<man/po4a/po/> directory would include F<de.po>, F<pt.po> and F<sv.po>,
+and the F<man/po4a/add_de/> directory would include F<de.add>.
 
 Note the use of the modifier '?' as only the German translation (F<de.po>) is 
 accompanied by an addendum.
 
 To actually build the translated man pages you would then (once!) add the
-following line in the build target of the appropriate makefile:
+following line in the build target of the appropriate Makefile:
 
         po4a po4a.cfg
 
-Once this is set up you don't need to touch the makefile when a new 
+Once this is set up you don't need to touch the Makefile when a new 
 translation arrives, i.e. if the French team sends you F<fr.po> and F<fr.add>
-then you simply drop it in F<man/> and the next time the programm is build the 
+then you simply drop them respectively in F<man/po4a/po/> and
+F<man/po4a/add_fr/> and the next time the programm is build the 
 French translation is automatically build as well.
 
 Note that you still need an appropriate target to install localized manual
@@ -495,7 +498,7 @@ pages with English ones.
 Finally if you do not store generated files into your version control system,
 you will need a line in your clean target as well:
         -rm -f man/foo.*.1
-        -rm -f man/foo.pot
+        -rm -f man/po4a/po/foo.pot
 
 =head1 SHORTCOMINGS
 
@@ -511,7 +514,8 @@ Patch welcome ;)
 
 =head1 SEE ALSO
 
-L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>.
+L<po4a(7)>, L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, L<po4a-translate(1)>,
+L<po4a-normalize(1)>, L<po4a-build(1)>, L<po4a-build.conf(5)>.
 
 =head1 AUTHORS
 
@@ -1008,7 +1012,7 @@ while (<CONFIG>) {
     $line = "";
 }
 close CONFIG; # don't care about error here
-die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the pot and po files"))
+die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the POT and PO files"))
   unless (length $pot_filename);
 
 sub split_opts {
@@ -1174,7 +1178,7 @@ if ($update_pot_file) {
                                                    SUFFIX => ".pot",
                                                    OPEN   => 0,
                                                    UNLINK => 0)
-            or die wrap_msg(gettext("Can't create a temporary pot file: %s"),
+            or die wrap_msg(gettext("Can't create a temporary POT file: %s"),
                             $!);
         $potfile->write($pot_filename);
     } else {
@@ -1204,7 +1208,7 @@ if ($po4a_opts{"split"}) {
                                                    SUFFIX => ".pot",
                                                    OPEN   => 0,
                                                    UNLINK => 0)
-                or die wrap_msg(gettext("Can't create a temporary pot file: %s"),
+                or die wrap_msg(gettext("Can't create a temporary POT file: %s"),
                                 $!);
         }
 
@@ -1235,7 +1239,7 @@ if ($po4a_opts{"split"}) {
                                                 SUFFIX => "-$lang.po",
                                                 OPEN   => 0,
                                                 UNLINK => 0)
-            or die wrap_msg(gettext("Can't create a temporary po file: %s"),
+            or die wrap_msg(gettext("Can't create a temporary PO file: %s"),
                             $!);
         my $cmd_cat = "";
         foreach my $master (keys %document) {
@@ -1304,7 +1308,7 @@ if ($po4a_opts{"split"}) {
                                                    OPEN   => 0,
                                                    UNLINK => 0)
                 or die wrap_msg(
-                    gettext("Can't create a temporary pot file: %s"), $!);
+                    gettext("Can't create a temporary POT file: %s"), $!);
 
             my $cmd;
             # Create an empty PO or copy the original PO header.

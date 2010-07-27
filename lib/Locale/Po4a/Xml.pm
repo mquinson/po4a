@@ -32,7 +32,7 @@
 
 =head1 NAME
 
-Locale::Po4a::Xml - Convert XML documents and derivates from/to PO files
+Locale::Po4a::Xml - convert XML documents and derivates from/to PO files
 
 =head1 DESCRIPTION
 
@@ -287,7 +287,7 @@ documents.
 =item B<ontagerror>
 
 This option defines the behavior of the module when it encounter a invalid
-Xml syntax (a closing tag which does not match the last opening tag, or a
+XML syntax (a closing tag which does not match the last opening tag, or a
 tag's attribute without value).
 It can take the following values:
 

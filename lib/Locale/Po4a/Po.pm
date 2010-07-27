@@ -1,4 +1,4 @@
-# Locale::Po4a::Po -- manipulation of po files
+# Locale::Po4a::Po -- manipulation of PO files
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -11,14 +11,14 @@
 
 =head1 NAME
 
-Locale::Po4a::Po - po file manipulation module
+Locale::Po4a::Po - PO file manipulation module
 
 =head1 SYNOPSIS
 
     use Locale::Po4a::Po;
     my $pofile=Locale::Po4a::Po->new();
 
-    # Read po file
+    # Read PO file
     $pofile->read('file.po');
 
     # Add an entry
@@ -38,10 +38,10 @@ catalogs. You can load and write from/to a file (which extension is often
 I<po>), you can build new entries on the fly or request for the translation
 of a string.
 
-For a more complete description of message catalogs in the po format and
+For a more complete description of message catalogs in the PO format and
 their use, please refer to the documentation of the gettext program.
 
-This module is part of the PO4A project, which objective is to use po files
+This module is part of the PO4A project, which objective is to use PO files
 (designed at origin to ease the translation of program messages) to
 translate everything, including documentation (man page, info manual),
 package description, debconf templates, and everything which may benefit
@@ -109,7 +109,7 @@ our %debug=('canonize'  => 0,
 =item new()
 
 Creates a new message catalog. If an argument is provided, it's the name of
-a po file we should load.
+a PO file we should load.
 
 =cut
 
@@ -207,7 +207,7 @@ sub initialize {
 
 =item read($)
 
-Reads a po file (which name is given as argument).  Previously existing
+Reads a PO file (which name is given as argument).  Previously existing
 entries in self are not removed, the new ones are added to the end of the
 catalog.
 
@@ -923,9 +923,9 @@ sub filter {
 
 =item to_utf8()
 
-Recodes to utf-8 the po's msgstrs. Does nothing if the charset is not
-specified in the po file ("CHARSET" value), or if it's already utf-8 or
-ascii.
+Recodes to UTF-8 the PO's msgstrs. Does nothing if the charset is not
+specified in the PO file ("CHARSET" value), or if it's already UTF-8 or
+ASCII.
 
 =cut
 
@@ -968,7 +968,7 @@ a translation, and wraps the result.
 
 =item wrapcol
 
-The column at which we should wrap (default: 76).
+the column at which we should wrap (default: 76).
 
 =back
 
@@ -1041,10 +1041,10 @@ sub gettext {
 Returns statistics about the hit ratio of gettext since the last time that
 stats_clear() was called. Please note that it's not the same
 statistics than the one printed by msgfmt --statistic. Here, it's statistics
-about recent usage of the po file, while msgfmt reports the status of the
+about recent usage of the PO file, while msgfmt reports the status of the
 file.  Example of use:
 
-    [some use of the po file to translate stuff]
+    [some use of the PO file to translate stuff]
 
     ($percent,$hit,$queries) = $pofile->stats_get();
     print "So far, we found translations for $percent\%  ($hit of $queries) of strings.\n";
@@ -1123,16 +1123,16 @@ See the gettext documentation for their meaning.
 
 =item type
 
-This is mostly an internal argument: it is used while gettextizing
+this is mostly an internal argument: it is used while gettextizing
 documents. The idea here is to parse both the original and the translation
-into a po object, and merge them, using one's msgid as msgid and the
-other's msgid as msgstr. To make sure that things get ok, each msgid in po
+into a PO object, and merge them, using one's msgid as msgid and the
+other's msgid as msgstr. To make sure that things get ok, each msgid in PO
 objects are given a type, based on their structure (like "chapt", "sect1",
-"p" and so on in docbook). If the types of strings are not the same, that
+"p" and so on in DocBook). If the types of strings are not the same, that
 means that both files do not share the same structure, and the process
 reports an error.
 
-This information is written as automatic comment in the po file since this
+This information is written as automatic comment in the PO file since this
 gives to translators some context about the strings to translate.
 
 =item wrap
@@ -1140,13 +1140,13 @@ gives to translators some context about the strings to translate.
 boolean indicating whether whitespaces can be mangled in cosmetic
 reformattings. If true, the string is canonized before use.
 
-This information is written to the po file using the 'wrap' or 'no-wrap' flag.
+This information is written to the PO file using the 'wrap' or 'no-wrap' flag.
 
 =item wrapcol
 
-The column at which we should wrap (default: 76).
+the column at which we should wrap (default: 76).
 
-This information is not written to the po file.
+This information is not written to the PO file.
 
 =back
 
@@ -1382,7 +1382,7 @@ sub msgid_doc($$) {
 
 =item get_charset()
 
-Returns the character set specified in the po header. If it hasn't been
+Returns the character set specified in the PO header. If it hasn't been
 set, it will return "CHARSET".
 
 =cut
@@ -1401,7 +1401,7 @@ sub get_charset() {
 
 =item set_charset($)
 
-This sets the character set of the po header to the value specified in its
+This sets the character set of the PO header to the value specified in its
 first argument. If you never call this function (and no file with a specified
 character set is read), the default value is left to "CHARSET". This value
 doesn't change the behavior of this module, it's just used to fill that field
@@ -1422,7 +1422,7 @@ sub set_charset() {
 
 #----[ helper functions ]---------------------------------------------------
 
-# transforme the string from its po file representation to the form which
+# transforme the string from its PO file representation to the form which
 #   should be used to print it
 sub unescape_text {
     my $text = shift;
@@ -1458,7 +1458,7 @@ sub unescape_text {
     return $text;
 }
 
-# transform the string to its representation as it should be written in po
+# transform the string to its representation as it should be written in PO
 # files
 sub escape_text {
     my $text = shift;
@@ -1580,7 +1580,7 @@ sub wrap {
     return $res;
 }
 
-# outputs properly a '# ... ' line to be put in the po file
+# outputs properly a '# ... ' line to be put in the PO file
 sub format_comment {
     my $comment=shift;
     my $char=shift;

@@ -4,7 +4,7 @@ po4a - framework to translate documentation and other materials
 
 =head1 Introduction
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on areas
 where they were not expected like documentation.
 
@@ -167,9 +167,9 @@ reveal to be a real nightmare. diff reveals often useless when the original
 text was re-indented after update. Fortunately, po4a can help you in that
 process.
 
-Currently, only the debiandoc and docbook DTD are supported, but adding
+Currently, only the DebianDoc and DocBook DTD are supported, but adding
 support to a new one is really easy. It is even possible to use po4a on an
-unknown sgml dtd without changing the code by providing the needed
+unknown SGML DTD without changing the code by providing the needed
 information on the command line. See L<Locale::Po4a::Sgml(3pm)> for details.
 
 =head3 TeX / LaTeX
@@ -190,7 +190,7 @@ Please report bugs and feature requests.
 
 The XML format is a base format for many documentation formats.
 
-Currently, the docbook DTD is supported by po4a. See
+Currently, the DocBook DTD is supported by po4a. See
 L<Locale::Po4a::Docbook(3pm)> for details.
 
 =head3 others
@@ -314,13 +314,13 @@ options.
 =item -
 
 Actually translate what should be translated. For that, you have to rename
-the pot file for example to doc.XX.po (where XX is the ISO639 code of the
+the POT file for example to doc.XX.po (where XX is the ISO639 code of the
 language you are translating to, e.g. "fr" for French), and edit the
 resulting file. It is often a good idea to not name the file XX.po to avoid
 confusion with the translation of the program messages, but this your call.
-Don't forget to update the po file headers, they are important.
+Don't forget to update the PO file headers, they are important.
 
-The actual translation can be done using the Emacs po mode or kbabel (KDE
+The actual translation can be done using the Emacs' PO mode or Lokalize (KDE
 based) or gtranslator (GNOME based), or whichever program you prefer to use
 them. A good ol' vi could do the trick too, even if there is no specialized
 mode for this task.
@@ -355,15 +355,15 @@ L<po4a-updatepo(1)> program like that:
 (Please refer to L<po4a-updatepo(1)> for more details)
 
 Naturally, the new paragraph in the document won't get magically translated
-in the C<po> file with this operation, and you'll need to update the C<po>
+in the C<PO> file with this operation, and you'll need to update the C<PO>
 file manually. Likewise, you may have to rework the translation for
 paragraphs which were modified a bit. To make sure you won't miss any of
 them, they are marked as "fuzzy" during the process and you have to remove
 this marker before the translation can be used by po4a-translate.
-As for the initial translation, the best is to use your favorite po editor
+As for the initial translation, the best is to use your favorite PO editor
 here.
 
-Once your C<po> file is up-to-date again, without any untranslated or fuzzy
+Once your C<PO> file is up-to-date again, without any untranslated or fuzzy
 string left, you can generate a translated documentation file, as explained
 in the previous section.
 
@@ -410,14 +410,14 @@ hints to achieve it when the process goes wrong. To ease comprehension,
 let's use above example once again.
 
 Once you have the old master.doc again which matches with the translation
-XX.doc, the gettextization can be done directly to the po file doc.XX.po
+XX.doc, the gettextization can be done directly to the PO file doc.XX.po
 without manual translation of translation.pot file:
 
  $ po4a-gettextize -f <format> -m <old_master.doc> -l <XX.doc> -p <doc.XX.po>
 
 When you're lucky, that's it. You converted your old translation to po4a and
 can begin with the updating task right away. Just follow the procedure
-explained a few section ago to synchronize your po file with the newest
+explained a few section ago to synchronize your PO file with the newest
 original document, and update the translation accordingly. 
 
 Please note that even when things seem to work properly, there is still room
@@ -435,7 +435,7 @@ Understanding the internal process will help you to make this work. The good
 point is that po4a-gettextize is rather verbose about what went wrong when
 it happens. First, it pinpoints where in the documents the structures'
 discrepancies are. You will learn the strings that don't match, their positions
-in the text, and the type of each of them. Moreover, the po file generated
+in the text, and the type of each of them. Moreover, the PO file generated
 so far will be dumped to gettextization.failed.po. 
 
 =over
@@ -450,7 +450,7 @@ you to re-add them afterward.
 =item -
 
 Do not hesitate to edit both the original and the translation. The most
-important thing is to get the po file. You will be able to update it
+important thing is to get the PO file. You will be able to update it
 afterward. That being said, editing the translation should be preferred when
 both are possible since it makes things easier when the gettextization is
 done.
@@ -458,7 +458,7 @@ done.
 =item -
 
 If needed, kill some parts of the original if they happen to not be
-translated. When synchronizing the po with the document afterward, they will
+translated. When synchronizing the PO with the document afterward, they will
 come back from themselves.
 
 =item -
@@ -472,13 +472,13 @@ po4a ;)
 =item - 
 
 Sometimes, the paragraph content does match, but their types don't. Fixing it
-is rather format-dependant. In pod and man, it often comes from the fact
+is rather format-dependant. In POD and man, it often comes from the fact
 that one of the two contains a line beginning with a white space where the
 other doesn't. In those formats, such paragraph cannot be wrapped and thus
 become a different type. Just remove the space and you are fine. It may also
 be a typo in the tag name.
 
-Likewise, two paragraphs may get merged together in pod when the separating
+Likewise, two paragraphs may get merged together in POD when the separating
 line contains some spaces, or when there is no empty line before the =item
 line and the content of the item.
 
@@ -500,7 +500,7 @@ after (or before) the right one, as if the right one disappeared. Curse po4a
 as I did when it first happened to me. Generously.
 
 This unfortunate situation happens when the same paragraph is repeated over
-the document. In that case, no new entry is created in the po file, but a
+the document. In that case, no new entry is created in the PO file, but a
 new reference is added to the existing one instead.
 
 So, when the same paragraph appears twice in the original but are not
@@ -520,15 +520,15 @@ but you don't really care since all strings are fuzzy after gettextization).
 =back
 
 Hopefully, those tips will help you making your gettextization work and
-obtain your precious po file. You are now ready to synchronize your file and
+obtain your precious PO file. You are now ready to synchronize your file and
 begin your translation. Please note that on large text, it may happen that
 the first synchronization takes a long time. 
 
 For example, the first po4a-updatepo of the Perl documentation's French
-translation (5.5 Mb po file) took about two days full on a 1Ghz G5 computer.
+translation (5.5 Mb PO file) took about two days full on a 1Ghz G5 computer.
 Yes, 48 hours. But the subsequent ones only take a dozen of seconds on my
-old laptop. This is because the first time, most of the msgid of the po file
-don't match any of the pot file ones. This forces gettext to search for the
+old laptop. This is because the first time, most of the msgid of the PO file
+don't match any of the POT file ones. This forces gettext to search for the
 closest one using a costly string proximity algorithm.
 
 =head2 HOWTO add extra text to translations (like translator's name)?
@@ -643,7 +643,7 @@ This can seem obscure, but hopefully, the next examples will enlighten you.
 
 =item 
 To sum up the example we used so far, in order to add a section called
-"About this translation" after the "About this document" one in a sgml
+"About this translation" after the "About this document" one in a SGML
 document, you can use either of those header lines:
 
  PO4A-HEADER: mode=after; position=About this document; endboundary=</section>
@@ -694,7 +694,7 @@ addendum.
 
 =head3 More detailed example
 
-Original document (pod formatted):
+Original document (POD formatted):
 
  |=head1 NAME
  |
@@ -727,18 +727,18 @@ authors. So, the addendum will be put between both sections.
 The use of po4a proved to be a bit error prone for the users since you have
 to call two different programs in the right order (po4a-updatepo and
 then po4a-translate), each of them needing more than 3 arguments. Moreover,
-it was difficult with this system to use only one po file for all your
+it was difficult with this system to use only one PO file for all your
 documents when more than one format was used.
 
 The L<po4a(1)> program was designed to solve those difficulties. Once your
 project is converted to the system, you write a simple configuration file
-explaining where your translation files are (po and pot), where the original
+explaining where your translation files are (PO and POT), where the original
 documents are, their formats and where their translations should be placed.
 
-Then, calling po4a(1) on this file ensure that the po files are synchronized
+Then, calling po4a(1) on this file ensure that the PO files are synchronized
 against the original document, and that the translated document are
 generated properly. Of course, you will want to call this program twice:
-once before editing the po file to update them and once afterward to get
+once before editing the PO file to update them and once afterward to get
 completely updated translated document. But you only need to remember one
 command line.
 
@@ -769,24 +769,24 @@ common ancestor to all parser classes is called TransTractor. This strange
 name comes from the fact that it is at the same time in charge of
 translating document and extracting strings.
 
-More formally, it takes a document to translate plus a po file containing
+More formally, it takes a document to translate plus a PO file containing
 the translations to use as input while producing two separate outputs:
-Another po file (resulting of the extraction of translatable strings from
+Another PO file (resulting of the extraction of translatable strings from
 the input document), and a translated document (with the same structure than
 the input one, but with all translatable strings replaced with content of
-the input po). Here is a graphical representation of this:
+the input PO). Here is a graphical representation of this:
 
    Input document --\                             /---> Output document
                      \      TransTractor::       /       (translated)
                       +-->--   parse()  --------+
                      /                           \
-   Input po --------/                             \---> Output po
+   Input PO --------/                             \---> Output PO
                                                          (extracted)
 
 
 This little bone is the core of all the po4a architecture. If you omit the
-input po and the output document, you get po4a-gettextize. If you provide
-both input and disregard the output po, you get po4a-translate.
+input PO and the output document, you get po4a-gettextize. If you provide
+both input and disregard the output PO, you get po4a-translate.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
 is a little example to show you how it works. It parses a list of paragraphs,
@@ -820,7 +820,7 @@ outputs. After removing the leading E<lt>pE<gt> of it on line 9, we push the
 concatenation of this tag with the translation of the rest of the paragraph.
 
 This translate() function is very cool. It pushes its argument into the output
-po file (extraction) and returns its translation as found in the input po
+PO file (extraction) and returns its translation as found in the input PO
 file (translation). Since it's used as part of the argument of pushline(),
 this translation lands into the output document.
 
@@ -850,7 +850,7 @@ type 'paragraph').
     paragraph          paragraph
 
 For that, po4a parsers are used on both the original and the translation
-files to extract po files, and then a third po file is built from them
+files to extract PO files, and then a third PO file is built from them
 taking strings from the second as translation of strings from the first. In
 order to check that the strings we put together are actually the
 translations of each other, document parsers in po4a should put information
@@ -927,7 +927,7 @@ know.
 =item *
 
 The translators can still use the context to translate, since the strings in
-the po file are in the same order than in the original document. Translating
+the PO file are in the same order than in the original document. Translating
 sequentially is thus rather comparable whether you use po4a or not.
 And in any case, the best way to get the context remains to convert the
 document to a printable format since the text formatting ones are not really
@@ -972,8 +972,8 @@ in a specialized file since it has to be available before the package
 installation.
 
 That's why the debconf developer decided to implement another solution,
-where translations are be placed in the same file than the original. This is
-rather appealing. One would even want to do this for xml, for example. It
+where translations are placed in the same file than the original. This is
+rather appealing. One would even want to do this for XML, for example. It
 would look like that:
 
  <section>
@@ -986,9 +986,9 @@ would look like that:
   </para>
  </section>
 
-But it was so problematic that a po-based approach is now used. Only the
+But it was so problematic that a PO-based approach is now used. Only the
 original can be edited in the file, and the translations must take place in
-po files extracted from the master template (and placed back at package
+PO files extracted from the master template (and placed back at package
 compilation time). The old system was deprecated because of several issues:
 
 =over
@@ -1000,7 +1000,7 @@ merge them together.
 
 How will you detect changes to the original, which need to be applied to
 the translations? In order to use diff, you have to note which version of
-the original you translated. I.e., you need a po file in your file ;)
+the original you translated. I.e., you need a PO file in your file ;)
 
 =item * encoding problems
 
@@ -1032,7 +1032,7 @@ As far as I know, there are only two of them:
 
 This is the tool developed by KDE people to handle DocBook XML. AFAIK, it
 was the first program to extract strings to translate from documentation to
-po files, and inject them back after translation.
+PO files, and inject them back after translation.
 
 It can only handle XML, and only a particular DTD. I'm quite unhappy with
 the handling of lists, which end in one big msgid. When the list become big,
@@ -1040,9 +1040,9 @@ the chunk becomes harder to shallow.
 
 =item po-debiandoc
 
-This program done by Denis Barbier is a sort of precursor of the po4a sgml
+This program done by Denis Barbier is a sort of precursor of the po4a SGML
 module, which more or less deprecates it. As the name says, it handles only
-the debiandoc dtd, which is more or less a deprecated dtd.
+the DebianDoc DTD, which is more or less a deprecated DTD.
 
 =back
 
@@ -1064,7 +1064,7 @@ poor developers flooded with tons of files in different languages they
 hardly speak, and help them dealing correctly with it.
 
 In the po4a project, translated documents are not source files anymore. Since
-sgml files are habitually source files, it's an easy mistake. That's why all
+SGML files are habitually source files, it's an easy mistake. That's why all
 files present this header:
 
 
@@ -1074,18 +1074,18 @@ files present this header:
  |       *****************************************************
  |
  | This file was generated by po4a-translate(1). Do not store it (in cvs,
- | for example), but store the po file used as source file by po4a-translate. 
+ | for example), but store the PO file used as source file by po4a-translate. 
  |
- | In fact, consider this as a binary, and the po file as a regular source file:
- | If the po gets lost, keeping this translation up-to-date will be harder ;)
+ | In fact, consider this as a binary, and the PO file as a regular source file:
+ | If the PO gets lost, keeping this translation up-to-date will be harder ;)
 
-Likewise, gettext's regular po files only need to be copied to the po/
+Likewise, gettext's regular PO files only need to be copied to the po/
 directory. But B<this is not the case of the ones manipulated by po4a>. The
 major risk here is that a developer erases the existing translation of his
 program with the translation of his documentation. (Both of them can't be
-stored in the same po file, because the program needs to install its
+stored in the same PO file, because the program needs to install its
 translation as an mo file while the documentation only uses its translation at
-compile time). That's why the po files produced by the po-debiandoc module
+compile time). That's why the PO files produced by the po-debiandoc module
 contain the following header:
 
  #
@@ -1137,16 +1137,16 @@ distributed is exactly the same.
 
 =item *
 
-No need for translators to learn a new file syntax and their favorite po
-file editor (like emacs' po mode, kbabel or gtranslator) will work just fine.
+No need for translators to learn a new file syntax and their favorite PO
+file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just fine.
 
 =item * 
 
-Gettext offers a simple way to get statistics about what is done, what should
+gettext offers a simple way to get statistics about what is done, what should
 be reviewed and updated, and what is still to do. Some example can be found
 at those addresses:
 
- - http://kbabel.kde.org/img/previewKonq.png
+ - http://kv-53.narod.ru/kaider1.png
  - http://www.debian.org/intl/l10n/
 
 =back
@@ -1170,9 +1170,9 @@ there is an issue with the original, it should be reported as a bug anyway.
 
 Even with an easy interface, it remains a new tool people have to learn.
 
-One of my dreams would be to integrate somehow po4a to gtranslator or
-kbabel. When an sgml file is opened, the strings are automatically extracted.
-When it's saved a translated sgml file can be written to disk. If we manage
+One of my dreams would be to integrate somehow po4a to Gtranslator or
+Lokalize. When an SGML file is opened, the strings are automatically extracted.
+When it's saved a translated SGML file can be written to disk. If we manage
 to do an MS Word (TM) module (or at least RTF) professional translators may
 even use it.
 
@@ -1185,7 +1185,7 @@ even use it.
 
 =cut
 
-LocalWords:  po gettext sgml xml texinfo perl gettextize fr kbabel KDE updatepo
-LocalWords:  gtranslator gettextization cvs regexp boundary
+LocalWords:  PO gettext SGML XML texinfo perl gettextize fr Lokalize KDE updatepo
+LocalWords:  Gtranslator gettextization cvs regexp boundary
 LocalWords:  lang TransTractor debconf diff poxml debiandoc LocalWords
 LocalWords: Denis barbier linuxfr org Quinson 

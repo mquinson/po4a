@@ -25,11 +25,11 @@
 
 =head1 NAME
 
-Locale::Po4a::TeX - Convert TeX documents and derivates from/to PO files
+Locale::Po4a::TeX - convert TeX documents and derivates from/to PO files
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
@@ -49,7 +49,7 @@ blocks, or even smaller like titles or indexes).
 There are some options (described in the next section) that can customize
 this behavior.  If this doesn't fit to your document format you're encouraged
 to write your own module derived from this, to describe your format's details.
-See the section "Writing derivate modules" below, for the process description.
+See the section B<WRITING DERIVATE MODULES> below, for the process description.
 
 This module can also be customized by lines starting with "% po4a:" in the
 TeX file.

@@ -33,16 +33,16 @@ use Encode::Guess;
 
 =head1 NAME
 
-Locale::Po4a::TransTractor - Generic trans(lator ex)tractor.
+Locale::Po4a::TransTractor - generic trans(lator ex)tractor.
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
 This class is the ancestor of every po4a parsers used to parse a document to
-search translatable strings, extract them to a po file and replace them by
+search translatable strings, extract them to a PO file and replace them by
 their translation in the output document. 
 
 More formally, it takes the following arguments as input:
@@ -55,7 +55,7 @@ a document to translate ;
 
 =item -
 
-a po file containing the translations to use.
+a PO file containing the translations to use.
 
 =back
 
@@ -65,14 +65,14 @@ As output, it produces:
 
 =item -
 
-another po file, resulting of the extraction of translatable strings from
+another PO file, resulting of the extraction of translatable strings from
 the input document ;
 
 =item -
 
 a translated document, with the same structure than the one in input, but
 with all translatable strings replaced with the translations found in the
-po file provided in input.
+PO file provided in input.
 
 =back
 
@@ -82,7 +82,7 @@ Here is a graphical representation of this:
                      \                           /       (translated)
                       +-> parse() function -----+
                      /                           \
-   Input po --------/                             \---> Output po
+   Input PO --------/                             \---> Output PO
                                                          (extracted)
 
 =head1 FUNCTIONS YOUR PARSER SHOULD OVERRIDE
@@ -94,7 +94,7 @@ Here is a graphical representation of this:
 This is where all the work takes place: the parsing of input documents, the
 generation of output, and the extraction of the translatable strings. This
 is pretty simple using the provided functions presented in the section
-"INTERNAL FUNCTIONS" below. See also the synopsis, which present an
+B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which present an
 example.
 
 This function is called by the process() function bellow, but if you choose
@@ -105,7 +105,7 @@ you will have to call this function yourself.
 
 This function returns the header we should add to the produced document,
 quoted properly to be a comment in the target language.  See the section
-"Educating developers about translations", from L<po4a(7)|po4a.7>, for what
+B<Educating developers about translations>, from L<po4a(7)|po4a.7>, for what
 it is good for.
 
 =back
@@ -180,7 +180,7 @@ invocation. Its arguments must be packed as a hash. ACTIONS:
 
 =item a.
 
-Reads all the po files specified in po_in_name
+Reads all the PO files specified in po_in_name
 
 =item b.
 
@@ -200,7 +200,7 @@ Writes the translated document to file_out_name (if given)
 
 =item f.
 
-Writes the extracted po file to po_out_name (if given)
+Writes the extracted PO file to po_out_name (if given)
 
 =back
 
@@ -224,16 +224,16 @@ Filename where we should write the output document.
 =item file_out_charset ($)
 
 Charset used in the output document (if it isn't specified, it will use
-the po file charset).
+the PO file charset).
 
 =item po_in_name (@)
 
-List of filenames where we should read the input po files from, containing
+List of filenames where we should read the input PO files from, containing
 the translation which will be used to translate the document.
 
 =item po_out_name ($)
 
-Filename where we should write the output po file, containing the strings
+Filename where we should write the output PO file, containing the strings
 extracted from the input document.
 
 =item addendum (@)
@@ -248,7 +248,7 @@ Charset for the addenda.
 
 =item new(%)
 
-Create a new Po4a document. Accepted options (but be in a hash):
+Create a new po4a document. Accepted options (but be in a hash):
 
 =over 4
 
@@ -474,26 +474,26 @@ sub write {
 
 =back
 
-=head2 Manipulating po files
+=head2 Manipulating PO files
 
 =over 4 
 
 =item readpo($)
 
 Add the content of a file (which name is passed in argument) to the
-existing input po. The old content is not discarded.
+existing input PO. The old content is not discarded.
 
 =item writepo($)
 
-Write the extracted po file to the given filename.
+Write the extracted PO file to the given filename.
 
 =item stats()
 
 Returns some statistics about the translation done so far. Please note that
 it's not the same statistics than the one printed by msgfmt
---statistic. Here, it's stats about recent usage of the po file, while
+--statistic. Here, it's stats about recent usage of the PO file, while
 msgfmt reports the status of the file. It is a wrapper to the
-Locale::Po4a::Po::stats_get function applied to the input po file. Example
+Locale::Po4a::Po::stats_get function applied to the input PO file. Example
 of use:
 
     [normal use of the po4a document...]
@@ -548,17 +548,17 @@ sub addendum_parse {
     } 
 
     unless (defined ($header=<INS>) && $header)  {
-	warn wrap_msg(dgettext("po4a", "Can't read Po4a header from %s."), $filename);
+	warn wrap_msg(dgettext("po4a", "Can't read po4a header from %s."), $filename);
 	goto END_PARSE_ADDFILE;
     }
 
     unless ($header =~ s/PO4A-HEADER://i) {
-	warn wrap_msg(dgettext("po4a", "First line of %s does not look like a Po4a header."), $filename);
+	warn wrap_msg(dgettext("po4a", "First line of %s does not look like a po4a header."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     foreach my $part (split(/;/,$header)) {
 	unless ($part =~ m/^\s*([^=]*)=(.*)$/) {
-	    warn wrap_msg(dgettext("po4a", "Syntax error in Po4a header of %s, near \"%s\""), $filename, $part);
+	    warn wrap_msg(dgettext("po4a", "Syntax error in po4a header of %s, near \"%s\""), $filename, $part);
 	    goto END_PARSE_ADDFILE;
 	}
 	my ($key,$value)=($1,$2);
@@ -572,26 +572,26 @@ sub addendum_parse {
 	    $boundary=$value;
 	    $bmode='before';
 	} else { 
-	    warn wrap_msg(dgettext("po4a", "Invalid argument in the Po4a header of %s: %s"), $filename, $key);
+	    warn wrap_msg(dgettext("po4a", "Invalid argument in the po4a header of %s: %s"), $filename, $key);
 	    goto END_PARSE_ADDFILE;
 	}
     }
 
     unless (length($mode)) {
-	warn wrap_msg(dgettext("po4a", "The Po4a header of %s does not define the mode."), $filename);
+	warn wrap_msg(dgettext("po4a", "The po4a header of %s does not define the mode."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || $mode eq "after") {
-	warn wrap_msg(dgettext("po4a", "Mode invalid in the Po4a header of %s: should be 'before' or 'after' not %s."), $filename, $mode);
+	warn wrap_msg(dgettext("po4a", "Mode invalid in the po4a header of %s: should be 'before' or 'after' not %s."), $filename, $mode);
 	goto END_PARSE_ADDFILE;
     }
 
     unless (length($position)) {
-	warn wrap_msg(dgettext("po4a", "The Po4a header of %s does not define the position."), $filename);
+	warn wrap_msg(dgettext("po4a", "The po4a header of %s does not define the position."), $filename);
 	goto END_PARSE_ADDFILE;
     }
     unless ($mode eq "before" || length($boundary)) {
-    	warn wrap_msg(dgettext("po4a", "No ending boundary given in the Po4a header, but mode=after."));
+    	warn wrap_msg(dgettext("po4a", "No ending boundary given in the po4a header, but mode=after."));
 	goto END_PARSE_ADDFILE;
     }
 
@@ -773,7 +773,7 @@ The reference of this string (ie, position in inputfile)
 
 The type of this string (ie, the textual description of its structural role
 ; used in Locale::Po4a::Po::gettextization() ; see also L<po4a(7)|po4a.7>,
-section I<Gettextization: how does it work?>)
+section B<Gettextization: how does it work?>)
 
 =back
 
@@ -793,11 +793,11 @@ a translation or extracting it, and wraps the translation.
 
 =item wrapcol
 
-The column at which we should wrap (default: 76).
+the column at which we should wrap (default: 76).
 
 =item comment
 
-An extra comment to add to the entry.
+an extra comment to add to the entry.
 
 =back
 
@@ -990,7 +990,7 @@ document (usually useful to substitute the input document's detected charset
 where it has been found).
 
 It will use the output charset specified in the command line. If it wasn't
-specified, it will use the input po's charset, and if the input po has the
+specified, it will use the input PO's charset, and if the input PO has the
 default "CHARSET", it will return the input document's charset, so that no
 encoding is performed.
 

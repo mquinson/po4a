@@ -2,7 +2,7 @@
 eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
-# pod-updatepo -- Update the po translation of POD data.
+# pod-updatepo -- update the PO translation of POD data.
 #
 # Copyright 2002-2010 by SPI, inc.
 #
@@ -13,7 +13,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 
 =head1 NAME
 
-po4a-updatepo - update the translation (in po format) of documentation
+po4a-updatepo - update the translation (in PO format) of documentation
 
 =head1 SYNOPSIS
 
@@ -23,24 +23,24 @@ po4a-updatepo -f E<lt>fmtE<gt> (-m E<lt>master.docE<gt>)+ (-p E<lt>XX.poE<gt>)+
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The C<po4a-updatepo> script is in charge of updating po files to make
+The C<po4a-updatepo> script is in charge of updating PO files to make
 them reflect the changes made to the original documentation file. For that,
-it converts the documentation file to a pot file, and call L<msgmerge(1)>
-on this new pot and on the provided po files.
+it converts the documentation file to a POT file, and call L<msgmerge(1)>
+on this new POT and on the provided PO files.
 
-It is possible to give more than one po file (if you want to update several
+It is possible to give more than one PO file (if you want to update several
 languages at once), and several documentation files (if you want to store
-the translations of several documents in the same po file).
+the translations of several documents in the same PO file).
 
-If the master document has non-ascii characters, it will convert the po files
-to utf-8 (if they weren't already), in order to allow non-standard characters
+If the master document has non-ASCII characters, it will convert the PO files
+to UTF-8 (if they weren't already), in order to allow non-standard characters
 in a culture independent way.
 
-=head1 COMMAND-LINE OPTIONS
+=head1 OPTIONS
 
 =over 4
 
@@ -60,7 +60,7 @@ files must have the same charset.
 
 =item -p, --po
 
-Po file(s) to update. If these files do not exist, they are created by
+PO file(s) to update. If these files do not exist, they are created by
 C<po4a-updatepo>.
 
 =item -o, --option
@@ -226,7 +226,7 @@ foreach (@options) {
 my ($doc)=Locale::Po4a::Chooser::new($format,%options);
 
 map { -e $_ || die wrap_msg(gettext("File %s does not exist."), $_) } @masterfiles;
-map { die wrap_msg(gettext("po4a-updatepo can't take the input po from stdin."))
+map { die wrap_msg(gettext("po4a-updatepo can't take the input PO from stdin."))
 	if $_ eq '-'  && !-e '-'} @pofiles;
 
 my ($pot_filename);
@@ -235,7 +235,7 @@ my ($pot_filename);
 					   SUFFIX => ".pot",
 					   OPEN   => 0,
 					   UNLINK => 0)
-    or die wrap_msg(gettext("Can't create a temporary pot file: %s"), $!);
+    or die wrap_msg(gettext("Can't create a temporary POT file: %s"), $!);
 
 
 print STDERR wrap_msg(gettext("Parse input files... ")) if $verbose;
@@ -264,7 +264,7 @@ while (my $po_filename=shift @pofiles) {
 	print STDERR wrap_msg(gettext("Creating %s:"), $po_filename)
 	    if $verbose;
 	system ("cp",$pot_filename,$po_filename) == 0
-	    or die wrap_msg(gettext("Error while copying the po file: %s"), $!);
+	    or die wrap_msg(gettext("Error while copying the PO file: %s"), $!);
     }
 }
 

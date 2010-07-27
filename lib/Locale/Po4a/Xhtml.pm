@@ -2,9 +2,9 @@
 
 # Po4a::Xhtml.pm 
 # 
-# extract and translate translatable strings from Xhtml documents.
+# extract and translate translatable strings from XHTML documents.
 # 
-# This code extracts plain text from tags and attributes from strict Xhtml
+# This code extracts plain text from tags and attributes from strict XHTML
 # documents.
 #
 # Copyright (c) 2005 by Yves Rütschlé <po4a@rutschle.net>
@@ -30,15 +30,15 @@
 
 =head1 NAME
 
-Locale::Po4a::Xhtml - Convert Xhtml documents from/to PO files
+Locale::Po4a::Xhtml - convert XHTML documents from/to PO files
 
 =head1 DESCRIPTION
 
-The goal of the po4a (po for anything) project is to ease translations (and
-more interestingly, the maintenance of translations) using gettext tools on
-areas where they were not originally expected like documentation.
+The po4a (PO for anything) project goal is to ease translations (and more
+interestingly, the maintenance of translations) using gettext tools on
+areas where they were not expected like documentation.
 
-Locale::Po4a::Xhtml is a module to help the translation of Xhtml documents into
+Locale::Po4a::Xhtml is a module to help the translation of XHTML documents into
 other [human] languages.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE

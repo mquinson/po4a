@@ -2,7 +2,7 @@
 eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
-# po4a-gettextize -- Convert an original file to a po file
+# po4a-gettextize -- convert an original file to a PO file
 #
 # Copyright 2002-2010 by SPI, inc.
 #
@@ -13,7 +13,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 
 =head1 NAME
 
-po4a-gettextize - convert an original file (and its translation) to a po file
+po4a-gettextize - convert an original file (and its translation) to a PO file
 
 =head1 SYNOPSIS
 
@@ -23,18 +23,18 @@ po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -
 
 =head1 DESCRIPTION
 
-The po4a (po for anything) project goal is to ease translations (and more
+The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
 The C<po4a-gettextize> script is in charge of converting documentation
-files to po files.  If you start a new translation, C<po4a-gettextize>
+files to PO files.  If you start a new translation, C<po4a-gettextize>
 will extract the translatable strings from the documentation file and
-write a pot file from it.
+write a POT file from it.
 
 If you already have a translated file, C<po4a-gettextize> will try to
 extract the translations it contains and put them in place in the written
-po file. Be warned that very few intelligence is used in this process: the
+PO file. Be warned that very few intelligence is used in this process: the
 Nth string of the translated file is supposed to be the translation of the
 Nth string in the original. If it's not the case, you're dead. That's why
 it is very important that both files share exactly the same structure.
@@ -43,17 +43,17 @@ However, C<po4a-gettextize> will diagnose your death by detecting any
 desynchronisation between files, and reporting where they occur. In that
 case, you should edit manually the files to solve the reported
 disparity. Even if no error were reported, you should check carefully that the
-generated po file is correct (ie, that each msgstr is the translation of
+generated PO file is correct (ie, that each msgstr is the translation of
 the associated msgid, and not the one before or after).
 
 Even if the script manages to do its job without any apparent problem, it still
 marks all extracted translations as fuzzy, to make sure that the translator
 will have a look at them, and detect any remaining problem.
 
-If the master document has non-ascii characters, the new generated po file
-will be in utf-8, in order to allow non-standard characters in a culture
-independent way. Else (if the master document is completely in ascii), the
-generated po will use the encoding of the translated input document.
+If the master document has non-ASCII characters, the new generated PO file
+will be in UTF-8, in order to allow non-standard characters in a culture
+independent way. Else (if the master document is completely in ASCII), the
+generated PO will use the encoding of the translated input document.
 
 =head1 OPTIONS
 
