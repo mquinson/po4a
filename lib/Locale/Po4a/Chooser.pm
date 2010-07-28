@@ -87,7 +87,7 @@ __END__
 
 =head1 NAME
 
-Locale::Po4a::Chooser -manage po4a modules
+Locale::Po4a::Chooser - manage po4a modules
 
 =head1 DESCRIPTION
 
