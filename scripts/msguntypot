@@ -5,7 +5,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
-# msg untypo pot -- Update the po files when you remove a typo in pot file not needing any translation update
+# msg untypo pot -- Update the PO files when you remove a typo in POT file not needing any translation update
 #
 # Copyright 2005 by Martin Quinson (mquinson#debian.fr)
 #
@@ -16,7 +16,7 @@ my $VERSION=$Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
-msguntypot - update po files when a typo is fixed in pot file
+msguntypot - update PO files when a typo is fixed in POT file
 
 =head1 SYNOPSIS
 
@@ -30,7 +30,7 @@ translated .po files to avoid so extra work to the translators.
 
 This task is difficult and error prone when done manually, and this tool is
 there to help doing so correctly. You just need to provide the two versions
-of the pot file: before the edition and after as marked in the above
+of the POT file: before the edition and after as marked in the above
 synopsis, and it all becomes automatic.
 
 =head1 HOW TO USE IT
@@ -40,16 +40,16 @@ following:
 
 =over 
 
-=item - Regenerate your pot and po files.
+=item - Regenerate your POT and PO files.
 
   make -C po/ update-po # for message program translations
   debconf-updatepo      # for debconf translations
   po4a po4a.conf        # for po4a based documentation translations
 
 or something else, depending on your project's building settings. You know
-how to make sure your pot an po files are uptodate, don't you??
+how to make sure your POT an PO files are uptodate, don't you??
 
-=item - Make a copy of your pot file.
+=item - Make a copy of your POT file.
 
   cp myfile.pot myfile.pot.orig
 
@@ -61,14 +61,14 @@ how to make sure your pot an po files are uptodate, don't you??
 
 $EDITOR the_file_in_which_there_is_a_typo
 
-=item - Regenerate your pot and po files.
+=item - Regenerate your POT and PO files.
 
 See above.
 
 =back
 
 At this point, the typo fix fuzzied all the translations, and this
-unfortunate change is the only one between the po files of your main
+unfortunate change is the only one between the PO files of your main
 directory and the one from the fridge. Here is how to solve this.
 
 =over
@@ -77,7 +77,7 @@ directory and the one from the fridge. Here is how to solve this.
 
   cp po_fridge/*.po .
 
-=item - Manually merge the po files with the new pot file, but taking the useless fuzzy into account
+=item - Manually merge the PO files with the new POT file, but taking the useless fuzzy into account
 
   msguntypot -o myfile.pot.orig -n myfile.pot *.po
 
@@ -87,8 +87,8 @@ directory and the one from the fridge. Here is how to solve this.
 
 =back
 
-You're done. The typo was eradicated from msgstr of both your pot and po
-files, and the po files were not fuzzyied in the process. Your translators
+You're done. The typo was eradicated from msgstr of both your POT and PO
+files, and the PO files were not fuzzyied in the process. Your translators
 love you already.
 
 =head1 SEE ALSO
@@ -174,7 +174,7 @@ my $oldpot=Locale::Po4a::Po->new();
 $newpot->read($newfile);
 $oldpot->read($oldfile);
 
-die wrap_msg(gettext("The new and old pot files have different amount of strings (%d != %d).".
+die wrap_msg(gettext("The new and old POT files have different amount of strings (%d != %d).".
                      " Something's seriously wrong here."),
     $newpot->count_entries(), $oldpot->count_entries())
   if ($newpot->count_entries() != $oldpot->count_entries());
@@ -203,7 +203,7 @@ my ($pofile);
     SUFFIX => ".po",
     OPEN   => 0,
     UNLINK => 0)
-  or die wrap_msg(gettext("Can't create a temporary po file: %s"), $!);
+  or die wrap_msg(gettext("Can't create a temporary PO file: %s"), $!);
 
 my $pocount = 0;
 while (my $poarg = shift) {
