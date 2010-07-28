@@ -231,7 +231,7 @@ written in most XML based documents.
 There are some options (described in the next section) that can customize
 this behavior.  If this doesn't fit to your document format you're encouraged
 to write your own module derived from this, to describe your format's details.
-See the section "Writing derivate modules" below, for the process description.
+See the section B<WRITING DERIVATE MODULES> below, for the process description.
 
 =cut
 
