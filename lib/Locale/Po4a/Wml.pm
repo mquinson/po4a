@@ -86,7 +86,7 @@ sub read {
                                                 SUFFIX => ".xml",
                                                 OPEN   => 0,
                                                 UNLINK => 0)
-        or die wrap_msg(gettext("Can't create a temporary xml file: %s"), $!);
+        or die wrap_msg(gettext("Can't create a temporary XML file: %s"), $!);
      my $file;
      open FILEIN,"$filename" or die "Cannot read $filename: $!\n";
      {
