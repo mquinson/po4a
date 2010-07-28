@@ -41,7 +41,7 @@ in wrapped paragraph, and I think it's worth.
 The first change is about font change specifications.  In nroff, there are
 several ways to specify if a given word should be written in small, bold or
 italics. In the text to translate, there is only one way, borrowed from the
-POD (perl online documentation) format:
+POD (Perl online documentation) format:
 
 =over
 
