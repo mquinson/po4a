@@ -108,10 +108,15 @@ uninstall:
 
 check: all $(GETTEXT_PACKAGE).pot
 	rm -f missing notexist
-	srcdir=$(srcdir) $(INTLTOOL_UPDATE) -m
+	srcdir=$(srcdir) $(INTLTOOL_UPDATE) -g $(srcdir) -m
 	if [ -r missing -o -r notexist ]; then \
 	  exit 1; \
 	fi
+
+update-po: all $(GETTEXT_PACKAGE).pot
+	$(RM) $(GETTEXT_PACKAGE).pot
+	$(GENPOT)
+	srcdir=$(srcdir) $(INTLTOOL_UPDATE) -g $(srcdir) -r
 
 mostlyclean:
 	rm -f *.pox *.old.po cat-id-tbl.tmp

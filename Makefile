@@ -5,9 +5,12 @@ all: Build
 Build: Build.PL
 	perl Build.PL
 
+update-po: Build
+	$(MAKE) -C po/bin update-po
+
 install: Build
 	@./Build install destdir=$(DESTDIR)
-	make -C po/bin install DESTDIR=$(DESTDIR)
+	$(MAKE) -C po/bin install DESTDIR=$(DESTDIR)
 	find $(DESTDIR) -type d -empty -delete
 
 clean: Build
