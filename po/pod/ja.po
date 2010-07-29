@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2010-07-28 00:49-0400\n"
+"POT-Creation-Date: 2010-07-28 23:32-0400\n"
 "PO-Revision-Date: 2010-07-25 23:08+0900\n"
 "Last-Translator: KURASAWA Nozomu <nabetaro@caldron.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
@@ -2087,10 +2087,10 @@ msgstr ""
 #| "and F<sv.po>."
 msgid ""
 "In this example we assume that your generated man pages (and all PO and add "
-"files) should be stored in F<man/> (respectively in F<man/po4a/po/> and "
-"F<man/po4a/add_$lang/>) below the current directory. In our example the "
-"F<man/po4a/po/> directory would include F<de.po>, F<pt.po> and F<sv.po>, and "
-"the F<man/po4a/add_de/> directory would include F<de.add>."
+"files) should be stored in F<man/translated/$lang/> (respectively in F<man/"
+"po4a/po/> and F<man/po4a/add_$lang/>) below the current directory. In our "
+"example the F<man/po4a/po/> directory would include F<de.po>, F<pt.po> and "
+"F<sv.po>, and the F<man/po4a/add_de/> directory would include F<de.add>."
 msgstr ""
 "この例では、生成された man ページ (とすべての PO ファイルと add ファイル) "
 "は、カレントディレクトリの F<man/> に格納しています。このサンプルディレクトリ"
@@ -2137,7 +2137,7 @@ msgid ""
 "translation arrives, i.e. if the French team sends you F<fr.po> and F<fr."
 "add> then you simply drop them respectively in F<man/po4a/po/> and F<man/"
 "po4a/add_fr/> and the next time the programm is build the French translation "
-"is automatically build as well."
+"is automatically build as well in F<man/translated/fr/>."
 msgstr ""
 "一度この設定をしておけば、新しい翻訳が届いても Makefile に触れる必要はありま"
 "せん。言い換えると、フランス語チームが F<fr.po> と F<fr.add> を送って来た時"
@@ -3137,7 +3137,8 @@ msgstr ""
 "い。"
 
 #. type: textblock
-#: doc/po4a-build.conf.5.pod:62
+#: doc/po4a-build.conf.5.pod:62 doc/po4a-build.conf.5.pod:266
+#: doc/po4a-build.conf.5.pod:280
 msgid ""
 "For content in sections 5 or 7 (which tends to need a filename which is also "
 "used for section 1 content), if the filename includes the 5 or 7 as part of "
@@ -3713,18 +3714,6 @@ msgid ""
 msgstr ""
 "セクション 5 の manpage を生成する、任意の POD 内容です。使用する場合、設定"
 "ファイルの場所からの相対パスを指定する必要があります。"
-
-#. type: textblock
-#: doc/po4a-build.conf.5.pod:266 doc/po4a-build.conf.5.pod:280
-msgid ""
-"For content in sections 5 or 7, (which tends to need a filename which is "
-"also used for section 1 content), if the filename includes the 5 or 7 as "
-"part of the filename, this (and any filename extension) will be "
-"automatically stripped."
-msgstr ""
-"(セクション 1 の内容でも使われるファイル名にしなければならない傾向がある) セ"
-"クション 5, 7 の内容向けに、ファイル名の一部に 5 や 7 が含まれる場合、(ファイ"
-"ル名の拡張子と共に) 自動的に取り除かれます。"
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:271
@@ -6910,11 +6899,9 @@ msgstr ""
 #. type: textblock
 #: doc/po4a-runtime.7.pod:44
 msgid ""
-"The --keywords option can also be useful - see the xgettext "
-"documentation."
+"The --keywords option can also be useful - see the xgettext documentation."
 msgstr ""
-"--keywords オプションも便利です - xgettext のドキュメントをご覧くださ"
-"い。"
+"--keywords オプションも便利です - xgettext のドキュメントをご覧ください。"
 
 # type: =head2
 #. type: =head1
@@ -10665,7 +10652,7 @@ msgstr ""
 
 # type: textblock
 #. type: textblock
-#: lib/Locale/Po4a/TeX.pm:49
+#: lib/Locale/Po4a/TeX.pm:49 lib/Locale/Po4a/Xml.pm:231
 #, fuzzy
 #| msgid ""
 #| "There are some options (described in the next section) that can customize "
@@ -13006,21 +12993,6 @@ msgstr ""
 
 # type: textblock
 #. type: textblock
-#: lib/Locale/Po4a/Xml.pm:231
-msgid ""
-"There are some options (described in the next section) that can customize "
-"this behavior.  If this doesn't fit to your document format you're "
-"encouraged to write your own module derived from this, to describe your "
-"format's details.  See the section \"Writing derivate modules\" below, for "
-"the process description."
-msgstr ""
-"振る舞いをカスタマイズする、(次節で説明する) オプションがあります。あなたのド"
-"キュメントフォーマットに合わない場合は、フォーマットの詳細に合わせて派生さ"
-"せ、作成するのに躊躇しないでください。その方法は、以下にある「派生モジュール"
-"の作成」節をご覧ください。"
-
-# type: textblock
-#. type: textblock
 #: lib/Locale/Po4a/Xml.pm:258
 msgid ""
 "The global debug option causes this module to show the excluded strings, in "
@@ -14183,6 +14155,29 @@ msgstr ""
 " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
+
+#~ msgid ""
+#~ "For content in sections 5 or 7, (which tends to need a filename which is "
+#~ "also used for section 1 content), if the filename includes the 5 or 7 as "
+#~ "part of the filename, this (and any filename extension) will be "
+#~ "automatically stripped."
+#~ msgstr ""
+#~ "(セクション 1 の内容でも使われるファイル名にしなければならない傾向がある) "
+#~ "セクション 5, 7 の内容向けに、ファイル名の一部に 5 や 7 が含まれる場合、"
+#~ "(ファイル名の拡張子と共に) 自動的に取り除かれます。"
+
+# type: textblock
+#~ msgid ""
+#~ "There are some options (described in the next section) that can customize "
+#~ "this behavior.  If this doesn't fit to your document format you're "
+#~ "encouraged to write your own module derived from this, to describe your "
+#~ "format's details.  See the section \"Writing derivate modules\" below, "
+#~ "for the process description."
+#~ msgstr ""
+#~ "振る舞いをカスタマイズする、(次節で説明する) オプションがあります。あなた"
+#~ "のドキュメントフォーマットに合わない場合は、フォーマットの詳細に合わせて派"
+#~ "生させ、作成するのに躊躇しないでください。その方法は、以下にある「派生モ"
+#~ "ジュールの作成」節をご覧ください。"
 
 # type: verbatim
 #~ msgid ""
