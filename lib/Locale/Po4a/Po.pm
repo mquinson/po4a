@@ -700,11 +700,11 @@ sub gettextize {
 This function extracts a catalog from an existing one. Only the entries having
 a reference in the given file will be placed in the resulting catalog.
 
-This function parses its argument, converts it to a perl function definition,
+This function parses its argument, converts it to a Perl function definition,
 eval this definition and filter the fields for which this function returns
 true.
 
-I love perl sometimes ;)
+I love Perl sometimes ;)
 
 =cut
 

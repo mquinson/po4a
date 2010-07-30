@@ -1048,7 +1048,7 @@ sub parse_definition_file {
 
 Parse a definition line of the form "% po4a: ".
 
-See the INLINE CUSTOMIZATION section for more details.
+See the B<INLINE CUSTOMIZATION> section for more details.
 
 =cut
 
