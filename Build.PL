@@ -63,7 +63,7 @@ my $builder = Module::Build->subclass
 	    $potsize =~ /(.*)/;
 	    print "$dir (pot: $1)\n";
 	    my @files = @{$self->rscan_dir($dir,qr{\.po$})};
-	    foreach (@files) {
+	    foreach (sort @files) {
 		$file = $_;
 		$file =~ /.*\/(.*)\.po$/;
 		my $lang = $1;
