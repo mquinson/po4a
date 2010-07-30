@@ -195,9 +195,10 @@ sub initialize {
                                 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n".
                                 "Last-Translator: FULL NAME <EMAIL\@ADDRESS>\n".
                                 "Language-Team: LANGUAGE <LL\@li.org>\n".
+                                "Language: \n".
                                 "MIME-Version: 1.0\n".
                                 "Content-Type: text/plain; charset=CHARSET\n".
-                                "Content-Transfer-Encoding: ENCODING");
+                                "Content-Transfer-Encoding: 8bit\n");
 
     $self->{encoder}=find_encoding("ascii");
 
