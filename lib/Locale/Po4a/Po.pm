@@ -597,7 +597,7 @@ sub gettextize {
 
     if ( $poorig->get_charset =~ /^utf-8$/i ) {
         $potrans->to_utf8;
-        $pores->set_charset("utf-8");
+        $pores->set_charset("UTF-8");
     } else {
         if ($potrans->get_charset eq "CHARSET") {
             $pores->set_charset("ascii");
@@ -939,7 +939,7 @@ sub to_utf8 {
         foreach my $msgid ( keys %{$this->{po}} ) {
             Encode::from_to($this->{po}{$msgid}{'msgstr'}, $charset, "utf-8");
         }
-        $this->set_charset("utf-8");
+        $this->set_charset("UTF-8");
     }
 }
 

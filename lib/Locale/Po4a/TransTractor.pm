@@ -887,7 +887,7 @@ sub translate {
 	# We set the output po charset 
         if ($out_charset eq "CHARSET") {
 	    if ($self->{TT}{utf_mode}) {
-		$out_charset="utf-8";
+		$out_charset="UTF-8";
 	    } else {
 		$out_charset=$in_charset;
 	    }
@@ -1006,7 +1006,7 @@ sub get_out_charset {
 	$charset=$self->{TT}{'file_out_charset'};
     } else {
 	if ($self->{TT}{utf_mode} && $self->{TT}{ascii_input}) {
-	    $charset="utf-8";
+	    $charset="UTF-8";
 	} else {
 	    $charset=$self->{TT}{po_in}->get_charset;
 	    $charset=$self->{TT}{'file_in_charset'}
