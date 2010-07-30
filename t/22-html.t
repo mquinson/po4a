@@ -10,24 +10,21 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
-
 push @tests, {
   'run' => 'perl ../../po4a-gettextize -f html -m ../data-22/html.html -p html.po',
-  'test'=> "diff -u $diff_po_flags ../data-22/html.po html.po",
+  'test'=> 'perl ../compare-po.pl ../data-22/html.po html.po',
   'doc' => 'General',
 }, {
   'run' => 'perl ../../po4a-normalize -f html ../data-22/spaces.html',
-  'test'=> "diff -u $diff_po_flags ../data-22/spaces.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-22/spaces_out.html po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl ../data-22/spaces.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-22/spaces_out.html po4a-normalize.output',
   'doc' => 'Spaces',
 }, {
   'run' => 'perl ../../po4a-gettextize -f html -m ../data-22/attribute.html -p attribute.po;'.
            'sed "s/msgstr \"\"/msgstr \"baz\"/" attribute.po > attribute2.po;'.
            'perl ../../po4a-translate -f html -m ../data-22/attribute.html -p attribute2.po -l attribute.html'
   ,
-  'test'=> "diff -u $diff_po_flags ../data-22/attribute_out.html attribute.html",
+  'test'=> 'perl ../compare-po.pl ../data-22/attribute_out.html attribute.html',
   'doc' => 'Attribute replacement'
 };
 

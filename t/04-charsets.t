@@ -10,31 +10,28 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
-
 $tests[0]{'run'}  = 'perl ../po4a-gettextize -f pod -m data-04/text-ascii.pod -M iso-8859-1 -p tmp/ascii.po';
-$tests[0]{'test'} = "diff -u $diff_po_flags data-04/ascii.po-ok tmp/ascii.po";
+$tests[0]{'test'} = 'perl compare-po.pl data-04/ascii.po-ok tmp/ascii.po';
 $tests[0]{'doc'}  = 'using ascii when it\'s enough';
 
 $tests[1]{'run'}  = 'perl ../po4a-gettextize -f pod -m data-04/text-iso8859.pod -M iso-8859-1 -p tmp/iso8859.po';
-$tests[1]{'test'} = "diff -u $diff_po_flags data-04/iso8859.po-ok tmp/iso8859.po";
+$tests[1]{'test'} = 'perl compare-po.pl data-04/iso8859.po-ok tmp/iso8859.po';
 $tests[1]{'doc'}  = 'use utf-8 when master file is non-ascii';
 
 $tests[2]{'run'}  = 'perl ../po4a-gettextize -f pod -m data-04/text-ascii.pod -l data-04/text-iso8859.pod -L iso-8859-1 -p tmp/ascii-iso8859.po';
-$tests[2]{'test'} = "diff -u $diff_po_flags data-04/ascii-iso8859.po-ok tmp/ascii-iso8859.po";
+$tests[2]{'test'} = 'perl compare-po.pl data-04/ascii-iso8859.po-ok tmp/ascii-iso8859.po';
 $tests[2]{'doc'}  = 'using translation\'s encoding when master is ascii';
 
 $tests[3]{'run'}  = 'perl ../po4a-translate -f pod -m data-04/text-ascii.pod -p data-04/trans.po -l tmp/text-iso8859.pod';
-$tests[3]{'test'} = "diff -u $diff_po_flags data-04/text-iso8859.pod-ok tmp/text-iso8859.pod";
+$tests[3]{'test'} = 'perl compare-po.pl data-04/text-iso8859.pod-ok tmp/text-iso8859.pod';
 $tests[3]{'doc'}  = 'translation without recoding output';
 
 $tests[4]{'run'}  = 'perl ../po4a-gettextize -f pod -m data-04/text-iso8859_.pod -M iso-8859-1 -l data-04/text-iso8859.pod -L iso-8859-1 -p tmp/utf.po';
-$tests[4]{'test'} = "diff -u $diff_po_flags data-04/utf.po-ok tmp/utf.po";
+$tests[4]{'test'} = 'perl compare-po.pl data-04/utf.po-ok tmp/utf.po';
 $tests[4]{'doc'}  = 'convert msgstrs to utf-8 when master file is non-ascii';
 
 $tests[5]{'run'}  = 'perl ../po4a-translate -f pod -m data-04/text-ascii.pod -p data-04/utf.po -l tmp/utf.pod';
-$tests[5]{'test'} = "diff -u $diff_po_flags data-04/utf.pod-ok tmp/utf.pod";
+$tests[5]{'test'} = 'perl compare-po.pl data-04/utf.pod-ok tmp/utf.pod';
 $tests[5]{'doc'}  = 'use input po\'s charset';
 
 use Test::More tests =>12; # tests * (run+validity)

@@ -10,22 +10,19 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
-
 push @tests, {
       'run' => 'perl ../../po4a-gettextize -f xhtml -m ../data-25/xhtml.html -p xhtml.po',
-          'test'=> "diff -u $diff_po_flags ../data-25/xhtml.po xhtml.po",
+          'test'=> 'perl ../compare-po.pl ../data-25/xhtml.po xhtml.po',
           'doc' => 'Text extraction',
   }, {
   'run' => 'perl ../../po4a-normalize -f xhtml ../data-25/xhtml.html',
-  'test'=> "diff -u $diff_po_flags ../data-25/xhtml.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-25/xhtml_normalized.html po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl ../data-25/xhtml.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-25/xhtml_normalized.html po4a-normalize.output',
   'doc' => 'normalisation test',
   }, {
   'run' => 'perl ../../po4a-normalize -f xhtml -o includessi ../data-25/includessi.html',
-  'test'=> "diff -u $diff_po_flags ../data-25/includessi.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-25/includessi_normalized.html po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl ../data-25/includessi.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-25/includessi_normalized.html po4a-normalize.output',
   'doc' => 'includessi test',
   };
 

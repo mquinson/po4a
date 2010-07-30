@@ -13,12 +13,6 @@ unless (-e "t/tmp") {
         or die "Can't create test directory t/tmp: $!\n";
 }
 
-my $diff_po_flags = "-I '^# SOME' ".
-                    "-I '^# Test' ".
-                    "-I '^\"POT-Creation-Date: ' ".
-                    "-I '^\"Content-Transfer-Encoding:' ".
-                    "-I '^\"PO-Revision-Date: ' ";
-
 my @AsciiDocTests = qw(Titles BlockTitles BlockId Paragraphs
 DelimitedBlocks Lists Footnotes Callouts Tables Attributes);
 
@@ -27,8 +21,8 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
     next if $AsciiDocTest =~ m/Tables/;
     push @tests, {
         'run' => "perl ../../po4a-normalize -f text -o asciidoc ../data-30/$AsciiDocTest.asciidoc",
-        'test'=> "diff -u $diff_po_flags ../data-30/$AsciiDocTest.po po4a-normalize.po".
-                 "&& diff -u $diff_po_flags ../data-30/$AsciiDocTest.out po4a-normalize.output",
+        'test'=> "perl ../compare-po.pl ../data-30/$AsciiDocTest.po po4a-normalize.po".
+                 "&& perl ../compare-po.pl ../data-30/$AsciiDocTest.out po4a-normalize.output",
         'doc' => "$AsciiDocTest test"
     };
 }

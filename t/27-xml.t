@@ -10,25 +10,22 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
-
 push @tests, {
   'run' => 'perl ../../po4a-normalize -f guide ../data-27/general.xml',
-  'test'=> "diff -u $diff_po_flags ../data-27/general.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-27/general-normalized.xml po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl ../data-27/general.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-27/general-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 push @tests, {
   'run' => 'perl ../../po4a-normalize -f guide ../data-27/comments.xml',
-  'test'=> "diff -u $diff_po_flags ../data-27/comments.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-27/comments-normalized.xml po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl ../data-27/comments.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-27/comments-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 push @tests, {
-  'run' => 'perl ../../po4a-normalize -f xml -o translated="w<translate1w> W<translate2W> <translate5> i<inline6> " -o untranslated="<untranslated4>" ../data-27/options.xml',
-  'test'=> "diff -u $diff_po_flags ../data-27/options.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-27/options-normalized.xml po4a-normalize.output",
+  'run' => "perl ../../po4a-normalize -f xml -o translated='w<translate1w> W<translate2W> <translate5> i<inline6> ' -o untranslated='<untranslated4>' ../data-27/options.xml",
+  'test'=> 'perl ../compare-po.pl ../data-27/options.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-27/options-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 

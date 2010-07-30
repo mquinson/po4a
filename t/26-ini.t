@@ -10,13 +10,10 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
-my $diff_po_flags = " -I '^# SOME' -I '^# Test' ".
-  "-I '^\"POT-Creation-Date: ' -I '^\"Content-Transfer-Encoding:'";
-
 push @tests, {
   'run' => 'perl ../../po4a-normalize -f ini ../data-26/test1.ini',
-  'test'=> "diff -u $diff_po_flags ../data-26/test1.po po4a-normalize.po".
-            "&& diff -u $diff_po_flags ../data-26/test1.ini po4a-normalize.output",
+  'test'=> 'perl ../compare-po.pl  ../data-26/test1.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-26/test1.ini po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 
