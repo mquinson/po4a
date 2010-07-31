@@ -852,7 +852,7 @@ sub translate {
 	} else {
 	    # FYI, the document charset have to be determined *before* we see the first
 	    # string to recode.
-	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"), $self->{TT}{non_ascii_ref})
+	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ASCII char at %s)"), $self->{TT}{non_ascii_ref})
 	}
     }
 
@@ -1039,7 +1039,7 @@ sub recode_skipped_text {
 	                           $self->{TT}{'file_in_encoder'},
 	                           find_encoding($self->get_out_charset));
 	} else {
-	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ascii char at %s)"), $self->{TT}{non_ascii_ref})
+	    die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ASCII char at %s)"), $self->{TT}{non_ascii_ref})
 	}
     }
     return $text;
