@@ -917,7 +917,7 @@ sub translate {
     if ($options{'wrap'}||0) {
         $transstring =~ s/( *)$//s;
         my $trailing_spaces = $1||"";
-        $transstring =~ s/  *$/ /gm;
+        $transstring =~ s/(?<!\\) +$//gm;
         $transstring .= $trailing_spaces;
     }
 
