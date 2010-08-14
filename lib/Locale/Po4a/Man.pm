@@ -1065,7 +1065,7 @@ sub post_trans {
     $str =~ s/\Q$nbs_out/\\ /sg if defined $nbs_out;
     # No nbsp (said "\ " in groff on the last pos of the line, or groff adds
     # an extra space
-    $str =~ s/\\ \n/\\ /sg;
+    $str =~ s/\\ \n(?:.)/\\ /sg;
 
     # Make sure we compute internal sequences right.
     # think about: B<AZE E<lt> EZA E<gt>>
@@ -1158,7 +1158,7 @@ sub post_trans {
         $str = $tmp.$str;
     }
     if (not defined $self->{type}) {
-        $str =~ s/ $//mg;
+        $str =~ s/(?<!\\) $//mg;
     }
 
     print STDERR "$str\n" if ($debug{'postrans'});
