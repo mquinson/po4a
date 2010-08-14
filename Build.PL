@@ -56,6 +56,7 @@ my $builder = Module::Build->subclass
 	    my $self = shift;
 	    $self->postats("po/bin");
 	    $self->postats("po/pod");
+	    $self->postats("po/www") if -d "po/www";
 	}
 	sub postats {
 	    my ($self,$dir) = (shift,shift);
