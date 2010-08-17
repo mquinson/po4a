@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.40\n"
+"Project-Id-Version: po4a 0.40.1\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2010-07-31 11:17-0400\n"
-"PO-Revision-Date: 2010-07-24 09:29+0200\n"
+"PO-Revision-Date: 2010-08-17 21:17+0200\n"
 "Last-Translator: Robert Luberda <robert@debian.org>\n"
 "Language-Team: Polish <debian-l10n-polish@lists.debian.org>\n"
 "Language: pl\n"
@@ -2108,12 +2108,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:475
-#, fuzzy
-#| msgid ""
-#| "In this example we assume that your generated man pages (and all po and "
-#| "add files) should be stored in F<man/> below the current directory. In "
-#| "our example this directory would include F<de.po>, F<de.add>, F<pt.po> "
-#| "and F<sv.po>."
 msgid ""
 "In this example we assume that your generated man pages (and all PO and add "
 "files) should be stored in F<man/translated/$lang/> (respectively in F<man/"
@@ -2122,9 +2116,10 @@ msgid ""
 "F<sv.po>, and the F<man/po4a/add_de/> directory would include F<de.add>."
 msgstr ""
 "W tym przykładzie założyliśmy, że wygenerowane strony podręcznika ekranowego "
-"(wraz z wszystkimi plikami PO i załącznikami) będą przechowywane w "
-"podkatalogu F<man/> katalogu bieżącego. Tak więc ten katalog by zawierał "
-"pliki F<de.po>, F<de.add>, F<pt.po> i F<sv.po>."
+"(wraz z wszystkimi plikami PO i załącznikami) będą przechowywane w katalogu "
+"F<man/translated/$lang/> (odpowiednio F<man/po4a/po/> i F<man/po4a/add_$lang/"
+">). Tak więc katalog  F<man/po4a/po/> zawierałby pliki F<de.po>, F<pt.po> i "
+"F<sv.po>, a katalog F<man/po4a/add_de/> - F<de.add>."
 
 #. type: textblock
 #: po4a:481
@@ -2156,12 +2151,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:489
-#, fuzzy
-#| msgid ""
-#| "Once this is set up you don't need to touch the Makefile when a new "
-#| "translation arrives, i.e. if the French team sends you F<fr.po> and F<fr."
-#| "add> then you simply drop it in F<man/> and the next time the programm is "
-#| "build the French translation is automatically build as well."
 msgid ""
 "Once this is set up you don't need to touch the Makefile when a new "
 "translation arrives, i.e. if the French team sends you F<fr.po> and F<fr."
@@ -2172,8 +2161,9 @@ msgstr ""
 "Dzięki takiej konfiguracji, nie będzie trzeba zmieniać Makefile'a, gdy "
 "przybędzie nowe tłumaczenie. Jeżeli na przykład zespół francuski przyśle "
 "pliki F<fr.po> i F<fr.add>, to jedyne co trzeba zrobić, to umieścić jest w "
-"katalogu F<man/> - podczas następnego budowania programu, automatycznie "
-"zbudują się tłumaczenia na francuski."
+"katalogach F<man/po4a/po/> i F<man/po4a/add_fr/> - podczas następnego "
+"budowania programu, tłumaczenia na język francuski zbudują się automatycznie "
+"i zostaną umieszczone w F<man/translated/fr/>."
 
 #. type: textblock
 #: po4a:495
@@ -3478,25 +3468,22 @@ msgid ""
 "For full control over such behaviour, consider carefully which files are "
 "assigned to which F<po4a-build.conf> configuration file."
 msgstr ""
+"Aby mieć pełny wpływ na to zachowanie. prosimy ostrożnie przypisywać pliki "
+"do zmiennych w pliku konfiguracyjnym F<po4a-build.conf>."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:166
-#, fuzzy
-#| msgid ""
-#| "On the other hand, having lots of files in one POT file can be more "
-#| "convenient for translators, especially if files have strings in common. "
-#| "Conversely, POT files with thousands of long strings are daunting for "
-#| "translators, leading to long string freezes."
 msgid ""
 "Note that having lots of files in one POT file can be more convenient for "
 "translators, especially if files have strings in common. Conversely, POT "
 "files with thousands of long strings are daunting for translators, leading "
 "to long string freezes."
 msgstr ""
-"Z drugiej strony umieszczenie wielu plików w jednym pliku POT może być "
-"wygodniejsze dla tłumaczy, zwłaszcza jeżeli pliki te mają wspólne akapity. "
-"Odwrotnie, pliki POT z tysiącami komunikatów do przetłumaczenia zniechęcają "
-"tłumaczy i prowadzą do zamrożenia komunikatów."
+"Proszę zauważyć, że umieszczenie wielu plików w jednym pliku POT może być "
+"wygodniejsze dla tłumaczy, zwłaszcza jeżeli pliki te mają wspólne akapity. Z "
+"drugiej zaś strony pliki POT z tysiącami komunikatów do przetłumaczenia "
+"zniechęcają tłumaczy i prowadzą do długotrwałego okresu wstrzymania zmian "
+"oryginalnych komunikatów."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:171
@@ -3878,12 +3865,6 @@ msgstr "HTMLFILE"
 #
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:307
-#, fuzzy
-#| msgid ""
-#| "The DocBook file to be converted to HTML (may be the same as one of the "
-#| "files in XMLFILE). Sections are not relevant to HTML output, so feel free "
-#| "to use the single book file here so that the HTML has a table of contents "
-#| "etc."
 msgid ""
 "DocBook file to be converted to HTML (may be the same as one of the files in "
 "XMLMAN1 or XMLMAN3). Sections are not relevant to HTML output, so feel free "
@@ -3891,8 +3872,9 @@ msgid ""
 "etc."
 msgstr ""
 "Plik DocBook jest konwertowany do HTML-a (może być taki sam jak jeden z "
-"plików w XMLFILE). Sekcje nie mają znaczenia w przypadku wyjścia HTML, więc "
-"można użyć tutaj pojedynczego pliku książki, tak żeby miał spis treści itp."
+"plików w XMLMAN1 lub XMLMAN3). Sekcje nie mają znaczenia w przypadku wyjścia "
+"HTML, więc można użyć tutaj pojedynczego pliku książki, tak żeby miał spis "
+"treści itp."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:312
@@ -10154,19 +10136,14 @@ msgstr ""
 # type: textblock
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:211
-#, fuzzy
-#| msgid ""
-#| "I think that this module is rock stable, and there is only one known bug:"
-#| "I have another problem with /usr/lib/perl5/Tk/MainWindow.pod (and some "
-#| "other pages, see below) which contains:"
 msgid ""
 "I think that this module is rock stable, and there is only one known bug "
 "with /usr/lib/perl5/Tk/MainWindow.pod (and some other pages, see below) "
 "which contains:"
 msgstr ""
-"Myślę, że ten moduł jest stabilny jak skała, ma tylko jeden znany błąd:Mam "
-"problem z /usr/lib/perl5/Tk/MainWindow.pod (i innymi stronami, patrz niżej) "
-"który zawiera:"
+"Myślę, że ten moduł jest stabilny jak skała. Istnieje tylko jeden znany błąd "
+"związany z /usr/lib/perl5/Tk/MainWindow.pod (i innymi stronami, patrz "
+"niżej), który zawiera:"
 
 # type: verbatim
 #. type: verbatim
