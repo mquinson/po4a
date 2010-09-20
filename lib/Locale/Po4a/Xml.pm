@@ -70,6 +70,7 @@ my @path;
 my %entities;
 
 my @comments;
+my %translate_options_cache;
 
 my $_shiftline_in_comment = 0;
 sub shiftline {
@@ -553,6 +554,9 @@ sub initialize {
 	$self->{nodefault}=();
 
 	$self->treat_options;
+
+	#  Clear cache
+	%translate_options_cache=();
 }
 
 =head1 WRITING DERIVATE MODULES
@@ -1266,7 +1270,6 @@ sub treat_attributes {
 #   n: a custom tag
 #
 # A translatable inline tag in an untranslated tag is treated as a translatable breaking tag.
-my %translate_options_cache;
 sub get_translate_options {
 	my $self = shift;
 	my $path = shift;
