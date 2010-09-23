@@ -535,7 +535,7 @@ sub parse {
             # XXX: There can be any number of underlining according
             #      to the documentation. This detection, which avoid
             #      translating the formatting, is only supported if
-            #      the underlining has the same size as the herder text.
+            #      the underlining has the same size as the header text.
             # Found title
             $wrapped_mode = 0;
             my $level = $line;
