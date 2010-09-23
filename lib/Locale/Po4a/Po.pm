@@ -1445,6 +1445,13 @@ sub unescape_text {
                 (\\\\)*    #    followed by any even number of '\'
                )\\n        # and followed by an escaped newline
               /$1\n/sgx;   # single string, match globally, allow comments
+    # unescape carriage returns
+    $text =~ s/(           # $1:
+                (\G|[^\\]) #    beginning of the line or any char
+                           #    different from '\'
+                (\\\\)*    #    followed by any even number of '\'
+               )\\r        # and followed by an escaped carriage return
+              /$1\r/sgx;   # single string, match globally, allow comments
     # unescape tabulations
     $text =~ s/(          # $1:
                 (\G|[^\\])#    beginning of the line or any char
@@ -1468,6 +1475,7 @@ sub escape_text {
     $text =~ s/\\/\\\\/g;
     $text =~ s/"/\\"/g;
     $text =~ s/\n/\\n/g;
+    $text =~ s/\r/\\r/g;
     $text =~ s/\t/\\t/g;
     print STDERR ">$text<\n" if $debug{'escape'};
 
