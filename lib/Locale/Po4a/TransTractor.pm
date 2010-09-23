@@ -415,6 +415,7 @@ sub read() {
     while (defined (my $textline = <INPUT>)) {
 	$linenum++;
 	my $ref="$filename:$linenum";
+	$textline =~ s/\r$//;
 	my @entry=($textline,$ref);
 	push @{$self->{TT}{doc_in}}, @entry;
 
