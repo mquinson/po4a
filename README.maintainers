@@ -100,13 +100,13 @@ It is important to distribute the POT and POs in the source archive.
 A typical dist rule could then be:
 
 dist:
-	po4a --rm-backups <package>.cfg
+	po4a <package>.cfg
 	...
 
 If automake is used, the following could also be used.
 
 dist-hook:
-	po4a --rm-backups <package>.cfg
+	po4a <package>.cfg
 	...
 
 
@@ -121,13 +121,13 @@ of debian/rules. The translated documents can be generated in the 'build'
 
 clean:
 	# Update the POT and POs
-	cd <...>/po4a && po4a --no-translations --rm-backups <package>.cfg
+	cd <...>/po4a && po4a --no-translations <package>.cfg
 	# Delete translated documentation
 	rm -rf <...>/translated
 
 build:
 	# Generate the translations
-	cd <...>/po4a && po4a --rm-backups <package>.cfg
+	cd <...>/po4a && po4a <package>.cfg
 
 However, you should try to avoid distribution-specific build systems, to
 ensure the portability of your software.

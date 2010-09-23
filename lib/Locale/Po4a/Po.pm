@@ -511,12 +511,6 @@ sub move_po_if_needed {
             my ($atime, $mtime) = (time,time);
             utime $atime, $mtime, $old_po;
         } else {
-            if ($backup) {
-                copy $old_po, $old_po."~"
-                    or die wrap_msg(dgettext("po4a","Can't copy %s to %s: %s."),
-                                    $old_po, $old_po."~", $!);
-            } else {
-            }
             move $new_po, $old_po
                 or die wrap_msg(dgettext("po4a","Can't move %s to %s: %s."),
                                 $new_po, $old_po, $!);
