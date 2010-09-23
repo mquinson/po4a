@@ -273,14 +273,15 @@ sub parse {
             $wrapped_mode = 0;
             my $level = $line;
             $level =~ s/^(.).*$/$1/;
+            $paragraph =~ s/\n$//s;
             my $t = $self->translate($paragraph,
                                      $self->{ref},
                                      "Title $level",
                                      "wrap" => 0);
-            $self->pushline($t);
+            $self->pushline($t."\n");
             $paragraph="";
             $wrapped_mode = 1;
-            $self->pushline(($level x (length($t)-1))."\n");
+            $self->pushline(($level x (length($t)))."\n");
         } elsif ($asciidoc and
                  ($line =~ m/^(={1,5})( +)(.*?)( +\1)?$/)) {
             my $titlelevel1 = $1;
