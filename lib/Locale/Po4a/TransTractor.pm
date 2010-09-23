@@ -97,7 +97,7 @@ is pretty simple using the provided functions presented in the section
 B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which present an
 example.
 
-This function is called by the process() function bellow, but if you choose
+This function is called by the process() function below, but if you choose
 to use the new() function, and to add content manually to your document,
 you will have to call this function yourself.
 
