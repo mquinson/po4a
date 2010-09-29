@@ -135,7 +135,7 @@ my $markdown = 0;
 
 =item B<asciidoc>
 
-Handle documents in the asciidoc format.
+Handle documents in the AsciiDoc format.
 
 =cut
 
