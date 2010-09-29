@@ -21,7 +21,7 @@ push @tests, {
         " && diff -u $diff_po_flags data-24/simple.pot tmp/simple.pot",
   'doc'  => "gettextize well a simple tex document",
 }, {
-  'run'  => "cp data-24/simple.fr.po tmp/".
+  'run'  => "cp data-24/simple.fr.po tmp/ && chmod u+w tmp/simple.fr.po".
         " && LC_ALL=C COLUMNS=80 perl ../po4a-updatepo -f latex -m data-24/simple.tex -p tmp/simple.fr.po > tmp/simple-updatepo.out 2>&1",
   'test' => "diff -u -I '^\.* done\.' data-24/simple-updatepo.out tmp/simple-updatepo.out".
         " && diff -u $diff_po_flags data-24/simple.fr.po tmp/simple.fr.po",

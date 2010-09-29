@@ -22,7 +22,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/quotes.pot tmp/quotes.pot",
   'doc'  => "gettextize well various quotes",
 }, {
-  'run'  => "cp data-23/quotes.fr.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/quotes -p tmp/quotes.fr.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/quotes.fr.po tmp/ && chmod u+w tmp/quotes.fr.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/quotes -p tmp/quotes.fr.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/quotes.fr.po tmp/quotes.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -37,7 +38,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/dot1.pot tmp/dot1.pot",
   'doc'  => "gettextize well various lines beginning by a dot (1)",
 }, {
-  'run'  => "cp data-23/dot1.fr.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/dot1 -p tmp/dot1.fr.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/dot1.fr.po tmp/ && chmod u+w tmp/dot1.fr.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/dot1 -p tmp/dot1.fr.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/dot1.fr.po tmp/dot1.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -64,7 +66,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/dot5.pot tmp/dot5.pot",
   'doc'  => "gettextize well various lines beginning by a dot (5)",
 }, {
-  'run'  => "cp data-23/dot5.it.po tmp/ && chmod u+w tmp/dot5.it.po && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/dot5.it.po tmp/ && chmod u+w tmp/dot5.it.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/dot5.it.po tmp/dot5.it.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -79,7 +82,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/null.pot tmp/null.pot",
   'doc'  => "gettextize well null argument/paragraphs",
 }, {
-  'run'  => "cp data-23/null.fr.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/null -p tmp/null.fr.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/null.fr.po tmp/ && chmod u+w tmp/null.fr.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/null -p tmp/null.fr.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/null.fr.po tmp/null.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -94,7 +98,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/escapes1.pot tmp/escapes1.pot",
   'doc'  => "gettextize well escaped newlines and tabs",
 }, {
-  'run'  => "cp data-23/escapes1.it.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/escapes1 -p tmp/escapes1.it.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/escapes1.it.po tmp/ && chmod u+w tmp/escapes1.it.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/escapes1 -p tmp/escapes1.it.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/escapes1.it.po tmp/escapes1.it.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -127,7 +132,7 @@ push @tests, {
 
 # Mixed mdoc and roff format
 push @tests, {
-    'run'  => "cp data-23/mixed.fr.po tmp/ && LC_ALL=C perl ../po4a data-23/mixed.cfg",
+    'run'  => "cp data-23/mixed.fr.po tmp/ && chmod u+w tmp/mixed.fr.po && LC_ALL=C perl ../po4a data-23/mixed.cfg",
     'test' => "diff -u $diff_po_flags  data-23/mixed.pot tmp/mixed.pot &&".
               "diff -u $diff_po_flags  data-23/mixed.fr.po tmp/mixed.fr.po &&".
               "diff -u $diff_po_flags  data-23/mixed1.fr tmp/mixed1.fr &&".
@@ -143,7 +148,8 @@ push @tests, {
   'test' => "diff -u $diff_po_flags  data-23/spaces.pot tmp/spaces.pot",
   'doc'  => "gettextize well non breaking spaces",
 }, {
-  'run'  => "cp data-23/spaces.fr_latin1.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_latin1.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/spaces.fr_latin1.po tmp/ && chmod u+w tmp/spaces.fr_latin1.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_latin1.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/spaces.fr_latin1.po tmp/spaces.fr_latin1.po",
   'doc'  => "updatepo for this document (fr ISO-8859-1)",
 }, {
@@ -151,7 +157,8 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags data-23/spaces.fr_latin1 tmp/spaces.fr_latin1",
   'doc'  => "translate this document (fr ISO-8859-1)",
 }, {
-  'run'  => "cp data-23/spaces.fr_utf8.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_utf8.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/spaces.fr_utf8.po tmp/ && chmod u+w tmp/spaces.fr_utf8.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_utf8.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/spaces.fr_utf8.po tmp/spaces.fr_utf8.po",
   'doc'  => "updatepo for this document (fr UTF-8)",
 }, {
@@ -159,7 +166,8 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags data-23/spaces.fr_utf8 tmp/spaces.fr_utf8",
   'doc'  => "translate this document (fr UTF-8)",
 }, {
-  'run'  => "cp data-23/spaces.ja.po tmp/ && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.ja.po >/dev/null 2>&1 ",
+  'run'  => "cp data-23/spaces.ja.po tmp/ && chmod u+w tmp/spaces.ja.po".
+	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.ja.po >/dev/null 2>&1 ",
   'test' => "diff -u $diff_po_flags  data-23/spaces.ja.po tmp/spaces.ja.po",
   'doc'  => "updatepo for this document (ja EUC-JP)",
 }, {
