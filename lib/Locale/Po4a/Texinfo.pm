@@ -267,6 +267,20 @@ sub line_command {
     return ($translated,@$env);
 }
 
+sub defindex_line_command {
+    my $self = shift;
+    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my $no_wrap = shift;
+    print "line_command($command,$variant,@$args,@$env,$no_wrap)="
+        if ($debug{'commands'});
+    my $idx = $$args[1]."index";
+    $commands{$idx} = \&line_command;
+    $break_line{$idx} = 1;
+    $translate_line_command{$idx} = 1;
+
+    return line_command($self,$command,$variant,$args,$env,$no_wrap);
+}
+
 sub translate_buffer_menu {
     my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
     print STDERR "translate_buffer_menu($buffer,$no_wrap,@env)="
@@ -357,10 +371,14 @@ foreach (qw(appendix section cindex findex kindex opindex pindex vindex subsecti
     $break_line{$_} = 1;
     $translate_line_command{$_} = 1;
 }
-foreach (qw(c comment set setfilename setchapternewpage vskip synindex
+foreach (qw(c comment clear set setfilename setchapternewpage vskip synindex
             syncodeindex need fonttextsize printindex headings finalout sp
-            defcodeindex defindex definfoenclose)) {
+            definfoenclose)) {
     $commands{$_} = \&line_command;
+    $break_line{$_} = 1;
+}
+foreach (qw(defcodeindex defindex)) {
+    $commands{$_} = \&defindex_line_command;
     $break_line{$_} = 1;
 }
 # definfoenclose: command definition => translate?
