@@ -1216,7 +1216,14 @@ sub t {
 # As a rule of thumb, I do not recode macro names, unless they may be
 # followed by other characters.
 sub r {
-    return $_[0]->recode_skipped_text($_[1]);
+    my $self = shift;
+    my $str  = shift;
+
+    # non-breaking spaces
+    # some non-breaking spaces may have been added during the parsing
+    $str =~ s/\Q$nbs/\\ /sg;
+
+    return $self->recode_skipped_text($str);
 }
 
 
@@ -1772,8 +1779,8 @@ sub noarg {
 
 # For macro whose arguments shouldn't be translated
 sub untranslated {
-    my $self = shift;
-    $self->pushmacro(@_);
+    my ($self,$first)= (shift,0);
+    $self->pushmacro( map { $first++ ?$self->r($_):$_ } @_);
 }
 
 ###
