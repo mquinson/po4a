@@ -17,7 +17,7 @@ po4a - update both the PO files and translated documents in one shot
 
 =head1 SYNOPSIS
 
-po4a [options] E<lt>config_fileE<gt>
+B<po4a> [I<options>] I<config_file>
 
 =head1 DESCRIPTION
 
@@ -107,8 +107,8 @@ All non blank lines must begin with a [] command, followed by its arguments.
 
 =head2 Specifying the template languages
 
-B<Note:> It is recommended to use [po_directory] rather than [po4a_langs]
-and [po4a_paths].
+B<Note:> It is recommended to use B<[po_directory]> rather than B<[po4a_langs]>
+and B<[po4a_paths]>.
 See section B<Autodetection of the paths and languages> below.
 
 This is an optional command that can simplify the whole config file, and will
@@ -122,8 +122,8 @@ of the config file.
 
 =head2 Specifying the paths to translator inputs
 
-B<Note:> It is recommended to use [po_directory] rather than [po4a_langs]
-and [po4a_paths].
+B<Note:> It is recommended to use B<[po_directory]> rather than B<[po4a_langs]>
+and B<[po4a_paths]>.
 See section B<Autodetection of the paths and languages> below.
 
 First, you have to specify where the translator input files (ie, the files
@@ -132,7 +132,7 @@ used by translators to do their job) are located. It can be done by such a line:
  [po4a_paths] doc/l10n/project.doc.pot \
               fr:doc/l10n/fr.po de:doc/l10n/de.po
 
-The command is thus 'po4a_paths'. The first argument is the path to the POT
+The command is thus B<[po4a_paths]>. The first argument is the path to the POT
 file to use. All subsequent arguments are of the self-explanatory form:
 
     <lang>:<path to the PO file for this lang>
@@ -153,14 +153,14 @@ See the B<Split mode> section.
 
 Another command can be used to specify the name of a directory where the
 PO and POT files are located.
-When it is used, po4a will detect the POT file as the only "*.pot" file
+When it is used, po4a will detect the POT file as the only F<*.pot> file
 from the specified directory.
-Po4a will also use the list of "*.po" files to define the list of
+Po4a will also use the list of F<*.po> files to define the list of
 languages (by stripping out the extension).
 These languages will be used for the substitution of the $lang variable in
 the rest of the configuration file.
 
-This command should not be used together with the po4a_langs or po4a_paths
+This command should not be used together with the B<[po4a_langs]> or B<[po4a_paths]>
 commands.
 
 When using this command, you have to create an empty POT file on the first
@@ -179,29 +179,29 @@ format, and where to put the translations. It can be made by such lines:
              add_fr:doc/l10n/script.fr.add
 
 This should be rather self-explanatory also. Note that in the second case,
-doc/l10n/script.fr.add is an addendum to add to the French version of this document.
-Please refer to po4a(7) for more information about the addenda.
+F<doc/l10n/script.fr.add> is an addendum to add to the French version of this document.
+Please refer to L<po4a(7)> for more information about the addenda.
 
 More formally, the format is:
 
  [type: <format>] <master_doc> (<lang>:<localized_doc>)* \
-                  (add_<lang>:<modifiers>*<addendum_path>)*
+                  (add_<lang>:<modifier>*<addendum_path>)*
 
 If there is no modifier, I<addendum_path> is a path to an addendum.
 Modifiers are
 
 =over 2
 
-=item ?
+=item B<?>
 
 Include I<addendum_path> if this file does exist, otherwise do nothing.
 
-=item @
+=item B<@>
 
 I<addendum_path> is not a regular addendum but a file containg a list of
 addenda, one by line.  Each addendum may be preceded by modifiers.
 
-=item !
+=item B<!>
 
 I<addendum_path> is discarded, it is not loaded and will not be loaded by 
 any further addendum specification.
@@ -222,16 +222,16 @@ something like:
 
 =head2 Specifying options for the modules
 
-po4a accepts options that will be passed to the module. These options are
-module specific and are specified with the -o switch.
+B<po4a> accepts options that will be passed to the module. These options are
+module specific and are specified with the B<-o> switch.
 
 If you need a specific option for one of the document you want to
 translate, you can also specify it in the configuration file. Options are
-introduced by the I<opt> keyword. The argument of the I<opt> keyword must be
+introduced by the B<opt> keyword. The argument of the B<opt> keyword must be
 quoted with double quotes if it contains a space (e.g. if you specify
 multiple options, or an option with an argument).
 You can also specify options that will only apply to a specific language
-by using the opt_I<lang> keyword.
+by using the B<opt_>I<lang> keyword.
 
 Here is an example:
  [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \
@@ -255,8 +255,8 @@ interested in defining a module alias. This can be done this way:
 
 [po4a_alias:test] man opt:"-k 21" opt_es:"-o debug=splitargs"
 
-This define a module alias named I<test>, based on the I<man> module, with
-the I<-k 21> apply to all the languages and with I<-o debug=splitargs>
+This define a module alias named B<test>, based on the B<man> module, with
+the B<-k 21> apply to all the languages and with B<-o debug=splitargs>
 applied to the Spanish translation.
 
 This module alias can then be use like a regular module:
@@ -268,7 +268,7 @@ Note that you can specify additional options on a per file basis.
 
 =head2 Split mode
 
-The split mode is used when $master is used in the [po4a_paths] line.
+The split mode is used when $master is used in the B<[po4a_paths]> line.
 
 When the split mode is used, a temporary big POT and temporary big POs
 are used. This permits to share the translations between all the POs.
@@ -283,67 +283,67 @@ be updated in every POs automatically.
 
 =over 4
 
-=item -k, --keep
+=item B<-k>, B<--keep>
 
 Minimal threshold for translation percentage to keep (ie, write) the
 resulting file (default: 80). Ie, by default, files have to be translated
 at at least 80% to get written.
 
-=item -h, --help
+=item B<-h>, B<--help>
 
 Show a short help message.
 
-=item -M, --master-charset
+=item B<-M>, B<--master-charset>
 
 Charset of the files containing the documents to translate. Note that all
 master documents must use the same charset for now. This is a known
 limitation, and we are working on solving this.
 
-=item -L, --localized-charset
+=item B<-L>, B<--localized-charset>
 
 Charset of the files containing the localized documents. Note that all
 translated documents will use the same charset for now. This is a known
 limitation, and we are working on solving this.
 
-=item -A, --addendum-charset
+=item B<-A>, B<--addendum-charset>
 
 Charset of the addenda. Note that all the addenda should be in the same
 charset.
 
-=item -V, --version
+=item B<-V>, B<--version>
 
 Display the version of the script and exit.
 
-=item -v, --verbose
+=item B<-v>, B<--verbose>
 
 Increase the verbosity of the program.
 
-=item -q, --quiet
+=item B<-q>, B<--quiet>
 
 Decrease the verbosity of the program.
 
-=item -d, --debug
+=item B<-d>, B<--debug>
 
 Output some debugging information.
 
-=item -o, --option
+=item B<-o>, B<--option>
 
 Extra option(s) to pass to the format plugin. Specify each option in the
-'name=value' format. See the documentation of each plugin for more
+'I<name>B<=>I<value>' format. See the documentation of each plugin for more
 information about the valid options and their meanings.
 
-=item -f, --force
+=item B<-f>, B<--force>
 
 Always generate the POT and PO files, even if po4a considers it is
 not necessary.
 
-The default behavior (when --force is not specified) is the following:
+The default behavior (when B<--force> is not specified) is the following:
 
 =over
 
 If the POT file already exists, it is regenerated if a master document
 or the configuration file is more recent.
-The POT file is also written in a temporary document and po4a verifies
+The POT file is also written in a temporary document and B<po4a> verifies
 that the changes are really needed.
 
 Also, a translation is regenerated only if its master document, the PO file,
@@ -360,88 +360,88 @@ account.
 
 The PO files are always re-generated based on the POT with B<msgmerge -U>.
 
-=item --stamp
+=item B<--stamp>
 
 Tells po4a to create stamp files when a translation is not generated
 because it does not reach the threshold. These stamp files are named
-according to the expected translated document, with the I<.po4a-stamp>
+according to the expected translated document, with the F<.po4a-stamp>
 extension.
 
-Note: This only activates the creation of the I<.po4a-stamp> files. The stamp
+Note: This only activates the creation of the F<.po4a-stamp> files. The stamp
 files are always used if they exist, and they are removed with
 B<--rm-translations> or when the file is finally translated.
 
-=item --no-translations
+=item B<--no-translations>
 
 Do not generate the translated documents, only update the POT and PO files.
 
-=item --rm-translations
+=item B<--rm-translations>
 
-Remove the translated files (implies --no-translations).
+Remove the translated files (implies B<--no-translations>).
 
-=item --no-backups
-
-This flag does nothing since 0.41, and may be removed
-in later releases.
-
-=item --rm-backups
+=item B<--no-backups>
 
 This flag does nothing since 0.41, and may be removed
 in later releases.
 
-=item --translate-only I<translated-file>
+=item B<--rm-backups>
+
+This flag does nothing since 0.41, and may be removed
+in later releases.
+
+=item B<--translate-only> I<translated-file>
 
 Translate only the specified file.  It may be useful to speed up
 processing if configuration file contains a lot of files.  Note that this
 option does not update PO and POT files.
 This option can be used multiple times.
 
-=item --variable I<var>=I<value>
+=item B<--variable> I<var>B<=>I<value>
 
 Define a variable that will be expanded in the po4a configuration file.
 Every occurrence of I<$(var)> will be replaced by I<value>.
 This option can be used multiple times.
 
-=item --msgid-bugs-address email@address
+=item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
 have no Report-Msgid-Bugs-To fields.
 
-=item --copyright-holder string
+=item B<--copyright-holder> I<string>
 
 Set the copyright holder in the POT header. The default value is
 "Free Software Foundation, Inc."
 
-=item --package-name string
+=item B<--package-name> I<string>
 
 Set the package name for the POT header. The default is "PACKAGE".
 
-=item --package-version string
+=item B<--package-version> I<string>
 
 Set the package version for the POT header. The default is "VERSION".
 
-=item --msgmerge-opt options
+=item B<--msgmerge-opt> I<options>
 
-Extra options for msgmerge.
+Extra options for B<msgmerge>.
 
 Note: $lang will be extended to the current language.
 
-=item --no-previous
+=item B<--no-previous>
 
-This option removes '--previous' from the options passed to msgmerge.
+This option removes B<--previous> from the options passed to msgmerge.
 This permits to support versions of gettext earlier than 0.16.
 
-=item --previous
+=item B<--previous>
 
-This option adds '--previous' to the options passed to msgmerge.
+This option adds B<--previous> to the options passed to msgmerge.
 It requires gettext 0.16 or later, and is activated by default.
 
-=item --srcdir I<SRCDIR>
+=item B<--srcdir> I<SRCDIR>
 
-Set the base directory for all input documents specified in the po4a
+Set the base directory for all input documents specified in the B<po4a>
 configuration file.
 
-=item --destdir I<DESTDIR>
+=item B<--destdir> I<DESTDIR>
 
 Set the base directory for all the output documents specified in the po4a
 configuration file.
@@ -480,7 +480,7 @@ F<man/po4a/add_$lang/>) below the current directory. In our example
 the F<man/po4a/po/> directory would include F<de.po>, F<pt.po> and F<sv.po>,
 and the F<man/po4a/add_de/> directory would include F<de.add>.
 
-Note the use of the modifier '?' as only the German translation (F<de.po>) is 
+Note the use of the modifier B<?> as only the German translation (F<de.po>) is 
 accompanied by an addendum.
 
 To actually build the translated man pages you would then (once!) add the

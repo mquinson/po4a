@@ -17,9 +17,9 @@ po4a-gettextize - convert an original file (and its translation) to a PO file
 
 =head1 SYNOPSIS
 
-po4a-gettextize -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> [-l E<lt>XX.docE<gt>] -p E<lt>XX.poE<gt>
+B<po4a-gettextize> B<-f> I<fmt> B<-m> I<master.doc> [B<-l> I<XX.doc>] B<-p> I<XX.po>
 
-(XX.po is the output, all others are inputs)
+(I<XX.po> is the output, all others are inputs)
 
 =head1 DESCRIPTION
 
@@ -27,19 +27,19 @@ The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The C<po4a-gettextize> script is in charge of converting documentation
-files to PO files.  If you start a new translation, C<po4a-gettextize>
+The B<po4a-gettextize> script is in charge of converting documentation
+files to PO files.  If you start a new translation, B<po4a-gettextize>
 will extract the translatable strings from the documentation file and
 write a POT file from it.
 
-If you already have a translated file, C<po4a-gettextize> will try to
+If you already have a translated file, B<po4a-gettextize> will try to
 extract the translations it contains and put them in place in the written
 PO file. Be warned that very few intelligence is used in this process: the
 Nth string of the translated file is supposed to be the translation of the
 Nth string in the original. If it's not the case, you're dead. That's why
 it is very important that both files share exactly the same structure.
 
-However, C<po4a-gettextize> will diagnose your death by detecting any
+However, B<po4a-gettextize> will diagnose your death by detecting any
 desynchronisation between files, and reporting where they occur. In that
 case, you should edit manually the files to solve the reported
 disparity. Even if no error were reported, you should check carefully that the
@@ -59,76 +59,76 @@ generated PO will use the encoding of the translated input document.
 
 =over 4
 
-=item -f, --format
+=item B<-f>, B<--format>
 
 Format of the documentation you want to handle. Use the --help-format
 option to see the list of available formats.
 
-=item -m, --master
+=item B<-m>, B<--master>
 
 File containing the master document to translate. You can use this option
 multiple times if you want to gettextize multiple documents.
 
-=item -M, --master-charset
+=item B<-M>, B<--master-charset>
 
 Charset of the file containing the document to translate.
 
-=item -l, --localized
+=item B<-l>, B<--localized>
 
 File containing the localized (translated) document. If you provided
 multiple master files, you may wish to provide multiple localized file by
 using this option more than once.
 
-=item -L, --localized-charset
+=item B<-L>, B<--localized-charset>
 
 Charset of the file containing the localized document.
 
-=item -p, --po
+=item B<-p>, B<--po>
 
 File where the message catalog should be written. If not given, the message
 catalog will be written to the standard output.
 
-=item -o, --option
+=item B<-o>, B<--option>
 
 Extra option(s) to pass to the format plugin. Specify each option in the
-'name=value' format. See the documentation of each plugin for more
+'I<name>B<=>I<value>' format. See the documentation of each plugin for more
 information about the valid options and their meanings.
 
-=item -h, --help
+=item B<-h>, B<--help>
 
 Show a short help message.
 
-=item --help-format
+=item B<--help-format>
 
 List the documentation format understood by po4a.
 
-=item -V, --version
+=item B<-V>, B<--version>
 
 Display the version of the script and exit.
 
-=item -v, --verbose
+=item B<-v>, B<--verbose>
 
 Increase the verbosity of the program.
 
-=item -d, --debug
+=item B<-d>, B<--debug>
 
 Output some debugging information.
 
-=item --msgid-bugs-address email@address
+=item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
 have no Report-Msgid-Bugs-To fields.
 
-=item --copyright-holder string
+=item B<--copyright-holder> I<string>
 
 Set the copyright holder in the POT header. The default value is
 "Free Software Foundation, Inc."
 
-=item --package-name string
+=item B<--package-name> I<string>
 
 Set the package name for the POT header. The default is "PACKAGE".
 
-=item --package-version string
+=item B<--package-version> I<string>
 
 Set the package version for the POT header. The default is "VERSION".
 

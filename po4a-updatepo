@@ -17,9 +17,9 @@ po4a-updatepo - update the translation (in PO format) of documentation
 
 =head1 SYNOPSIS
 
-po4a-updatepo -f E<lt>fmtE<gt> (-m E<lt>master.docE<gt>)+ (-p E<lt>XX.poE<gt>)+
+B<po4a-updatepo> B<-f> I<fmt> (B<-m> I<master.docE>)+ (B<-p> I<XX.po>)+
 
-(XX.po are the outputs, all others are inputs)
+(I<XX.po> are the outputs, all others are inputs)
 
 =head1 DESCRIPTION
 
@@ -27,7 +27,7 @@ The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The C<po4a-updatepo> script is in charge of updating PO files to make
+The B<po4a-updatepo> script is in charge of updating PO files to make
 them reflect the changes made to the original documentation file. For that,
 it converts the documentation file to a POT file, and call L<msgmerge(1)>
 on this new POT and on the provided PO files.
@@ -44,80 +44,80 @@ in a culture independent way.
 
 =over 4
 
-=item -f, --format
+=item B<-f>, B<--format>
 
 Format of the documentation you want to handle. Use the --help-format
 option to see the list of available formats.
 
-=item -m, --master
+=item B<-m>, B<--master>
 
 File(s) containing the master document to translate.
 
-=item -M, --master-charset
+=item B<-M>, B<--master-charset>
 
 Charset of the files containing the document to translate. Note that all
 files must have the same charset.
 
-=item -p, --po
+=item B<-p>, B<--po>
 
 PO file(s) to update. If these files do not exist, they are created by
-C<po4a-updatepo>.
+B<po4a-updatepo>.
 
-=item -o, --option
+=item B<-o>, B<--option>
 
 Extra option(s) to pass to the format plugin and other po4a internal module.
-Specify each option in the 'name=value' format. See the documentation of
+Specify each option in the 'I<name>B<=>I<value>' format. See the documentation of
 each plugin for more information about the valid options and their meanings.
 
-=item --no-previous
+=item B<--no-previous>
 
-This option removes '--previous' from the options passed to msgmerge.
+This option removes B<--previous> from the options passed to msgmerge.
 This permits to support versions of gettext earlier than 0.16.
 
-=item --previous
+=item B<--previous>
 
-This option adds '--previous' to the options passed to msgmerge.
+This option adds B<--previous> to the options passed to msgmerge.
 It requires gettext 0.16 or later, and is activated by default.
 
-=item --msgmerge-opt options
+=item B<--msgmerge-opt> I<options>
 
 Extra options for msgmerge.
 
-=item -h, --help
+=item B<-h>, B<--help>
 
 Show a short help message.
 
-=item --help-format
+=item B<--help-format>
 
 List the documentation format handled by po4a.
 
-=item -V, --version
+=item B<-V>, B<--version>
 
 Display the version of the script and exit.
 
-=item -v, --verbose
+=item B<-v>, B<--verbose>
 
 Increase the verbosity of the program.
 
-=item -d, --debug
+=item B<-d>, B<--debug>
 
 Output some debugging information.
 
-=item --msgid-bugs-address email@address
+=item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
 have no Report-Msgid-Bugs-To fields.
 
-=item --copyright-holder string
+=item B<--copyright-holder> I<string>
 
 Set the copyright holder in the POT header. The default value is
 "Free Software Foundation, Inc."
 
-=item --package-name string
+=item B<--package-name> I<string>
 
 Set the package name for the POT header. The default is "PACKAGE".
 
-=item --package-version string
+=item B<--package-version> I<string>
 
 Set the package version for the POT header. The default is "VERSION".
 

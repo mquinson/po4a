@@ -17,9 +17,9 @@ po4a-translate - convert a PO file back to documentation format
 
 =head1 SYNOPSIS
 
-po4a-translate -f E<lt>fmtE<gt> -m E<lt>master.docE<gt> -p E<lt>XX.poE<gt> -l E<lt>XX.docE<gt>
+B<po4a-translate> B<-f> I<fmt> B<-m> I<master.doc> B<-p> I<XX.po> B<-l> I<XX.doc>
 
-(XX.doc is the output, all others are inputs)
+(I<XX.doc> is the output, all others are inputs)
 
 =head1 DESCRIPTION
 
@@ -27,85 +27,85 @@ The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The C<po4a-translate> script is in charge of converting the translation
+The B<po4a-translate> script is in charge of converting the translation
 (which was done in a PO file) under the documentation format back. The
-provided C<PO> file should be the translation of the C<POT> file which were
-produced by po4a-gettextize(1).
+provided PO file should be the translation of the POT file which were
+produced by L<po4a-gettextize(1)>.
 
 =head1 OPTIONS
 
 =over 4
 
-=item -f, --format
+=item B<-f>, B<--format>
 
-Format of the documentation you want to handle. Use the --help-format
+Format of the documentation you want to handle. Use the B<--help-format>
 option to see the list of available formats.
 
-=item -a, --addendum
+=item B<-a>, B<--addendum>
 
 Add a file to the resulting file (to put translator's name or a section
 "About this translation", for example). The first line of the file to insert
 should be a PO4A header indicating where it should be added (see section
-I<HOWTO add extra text to translations> in po4a(7)).
+B<HOWTO add extra text to translations> in L<po4a(7)>).
 
-=item -A, --addendum-charset
+=item B<-A>, B<--addendum-charset>
 
 Charset of the addenda. Note that all the addenda should be in the same
 charset.
 
-=item -m, --master
+=item B<-m>, B<--master>
 
 File containing the master document to translate.
 
-=item -M, --master-charset
+=item B<-M>, B<--master-charset>
 
 Charset of the file containing the document to translate.
 
-=item -l, --localized
+=item B<-l>, B<--localized>
 
 File where the localized (translated) document should be written.
 
-=item -L, --localized-charset
+=item B<-L>, B<--localized-charset>
 
 Charset of the file containing the localized document.
 
-=item -p, --po
+=item B<-p>, B<--po>
 
 File from which the message catalog should be read.
 
-=item -o, --option
+=item B<-o>, B<--option>
 
 Extra option(s) to pass to the format plugin. Specify each option in the
-'name=value' format. See the documentation of each plugin for more
+'I<name>B<=>I<value>' format. See the documentation of each plugin for more
 information about the valid options and their meanings.
 
-=item -k, --keep
+=item B<-k>, B<--keep>
 
 Minimal threshold for translation percentage to keep (ie, write) the
 resulting file (default: 80). Ie, by default, files have to be translated
 at at least 80% to get written.
 
-=item -w, --width
+=item B<-w>, B<--width>
 
 Column at which we should wrap the resulting file.
 
-=item -h, --help
+=item B<-h>, B<--help>
 
 Show a short help message.
 
-=item --help-format
+=item B<--help-format>
 
 List the documentation format understood by po4a.
 
-=item -V, --version
+=item B<-V>, B<--version>
 
 Display the version of the script and exit.
 
-=item -v, --verbose
+=item B<-v>, B<--verbose>
 
 Increase the verbosity of the program.
 
-=item -d, --debug
+=item B<-d>, B<--debug>
 
 Output some debugging information.
 
@@ -114,8 +114,8 @@ Output some debugging information.
 =head1 Adding content (beside translations) to generated files
 
 To add some extra content to the generated document beside what you
-translated (like the name of the translator, or a "about this translation"
-section), you should use the C<--addendum> option. 
+translated (like the name of the translator, or a "About this translation"
+section), you should use the B<--addendum> option. 
 
 The first line of the addendum must be a header indicating where to put
 it in the document (it can be before or after a given part of the
@@ -128,7 +128,7 @@ the author, what would prevent the users to contact him to report bugs in
 the translation).
 
 The header has a pretty rigid syntax. For more information on how to use
-this feature and how it works, please refer to the po4a(7) man page.
+this feature and how it works, please refer to the L<po4a(7)> man page.
 
 =head1 SEE ALSO
 
