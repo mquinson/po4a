@@ -652,6 +652,7 @@ sub parse {
                 or $paragraph =~ /^\$(\S+[{}]\S*\s*)+/ms # Xapian macro
                 or $paragraph =~ /<(?![a-z]+[:@])/ms     # maybe html (tags but not wiki <URI>)
                 or $paragraph =~ /^[^<]+>/ms             # maybe html (tag with vertical space)
+                or $paragraph =~ /\S  $/ms               # explicit newline
                 or $paragraph =~ /\[\[\!\S[^\]]+$/ms     # macro begin
             );
         }
