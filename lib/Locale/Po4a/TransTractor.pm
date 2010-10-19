@@ -786,17 +786,17 @@ a hash. For example:
 
 =over
 
-=item wrap
+=item B<wrap>
 
 boolean indicating whether we can consider that whitespaces in string are
 not important. If yes, the function canonizes the string before looking for
 a translation or extracting it, and wraps the translation.
 
-=item wrapcol
+=item B<wrapcol>
 
 the column at which we should wrap (default: 76).
 
-=item comment
+=item B<comment>
 
 an extra comment to add to the entry.
 

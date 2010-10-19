@@ -668,15 +668,15 @@ define a tag type you'll have to make a hash with the following keys:
 
 =over 4
 
-=item beginning
+=item B<beginning>
 
 Specifies the beginning of the tag, after the "E<lt>".
 
-=item end
+=item B<end>
 
 Specifies the end of the tag, before the "E<gt>".
 
-=item breaking
+=item B<breaking>
 
 It says if this is a breaking tag class.  A non-breaking (inline) tag is one
 that can be taken as part of the content of another tag.  It can take the
@@ -684,12 +684,12 @@ values false (0), true (1) or undefined.  If you leave this undefined, you'll
 have to define the f_breaking function that will say whether a concrete tag of
 this class is a breaking tag or not.
 
-=item f_breaking
+=item B<f_breaking>
 
 It's a function that will tell if the next tag is a breaking one or not.  It
-should be defined if the "breaking" option is not.
+should be defined if the B<breaking> option is not.
 
-=item f_extract
+=item B<f_extract>
 
 If you leave this key undefined, the generic extraction function will have to
 extract the tag itself.  It's useful for tags that can have other tags or
@@ -697,7 +697,7 @@ special structures in them, so that the main parser doesn't get mad.  This
 function receives a boolean that says if the tag should be removed from the
 input stream or not.
 
-=item f_translate
+=item B<f_translate>
 
 This function receives the tag (in the get_string_until() format) and returns
 the translated tag (translated attributes or all needed transformations) as a
@@ -1919,15 +1919,15 @@ The valid options are:
 
 =over 4
 
-=item include
+=item B<include>
 
 This makes the returned array to contain the searched text
 
-=item remove
+=item B<remove>
 
 This removes the returned stream from the input
 
-=item unquoted
+=item B<unquoted>
 
 This ensures that the searched text is outside any quotes
 

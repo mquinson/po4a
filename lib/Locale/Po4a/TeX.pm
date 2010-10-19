@@ -125,12 +125,12 @@ our $verbatim_environments = "verbatim";
 our %separated_command = ();
 our %separated_environment = ();
 
-=item debug
+=item B<debug>
 
 Activate debugging for some internal mechanisms of this module.
 Use the source to see which parts can be debugged.
 
-=item no_wrap
+=item B<no_wrap>
 
 Coma-separated list of environments which should not be re-wrapped.
 
@@ -140,19 +140,19 @@ There is no command and comments analysis in verbatim blocks.
 If this environment was not already registered, po4a will consider that
 this environment does not take any parameters.
 
-=item exclude_include
+=item B<exclude_include>
 
 Colon-separated list of files that should not be included by \input and
 \include.
 
-=item definitions
+=item B<definitions>
 
 The name of a file containing definitions for po4a, as defined in the
 B<INLINE CUSTOMIZATION> section.
 You can use this option if it is not possible to put the definitions in
 the document being translated.
 
-=item verbatim
+=item B<verbatim>
 
 Coma-separated list of environments which should be taken as verbatim.
 
@@ -166,18 +166,18 @@ in the default lists.
 
 =head1 INLINE CUSTOMIZATION
 
-The TeX module can be customized with lines starting by "% po4a:".
+The TeX module can be customized with lines starting by B<% po4a:>.
 These lines are interpreted as commands to the parser.
 The following commands are recognized:
 
 =over 4
 
-=item % po4a: command I<command1> alias I<command2>
+=item B<% po4a: command> I<command1> B<alias> I<command2>
 
 Indicates that the arguments of the I<command1> command should be
 treated as the arguments of the I<command2> command.
 
-=item % po4a: command I<command1> I<parameters>
+=item B<% po4a: command> I<command1> I<parameters>
 
 This permit to describe in detail the parameters of the I<command1>
 command.
@@ -188,14 +188,14 @@ You can precede the I<command1> command by
 
 =over 4
 
-=item an asterisk (*)
+=item an asterisk (B<*>)
 
 po4a will extract this command from paragraphs (if it is located at
 the beginning or the end of a paragraph).
 The translators will then have to translate the parameters that are marked
 as translatable.
 
-=item a plus (+)
+=item a plus (B<+>)
 
 As for an asterisk, the command will be extracted if it appear at an
 extremity of a block, but the parameters won't be translated separately.
@@ -207,7 +207,7 @@ words in parameter, which can have multiple meanings (and translations).
 Note: In this case you don't have to specify which parameters are
 translatable, but po4a must know the type and number of parameters.
 
-=item a minus (-)
+=item a minus (B<->)
 
 In this case, the command won't be extracted from any block.
 But if it appear alone on a bloc, then only the parameters marked as
@@ -237,7 +237,7 @@ In this case, the information indicating which arguments must be
 translated is only used if a paragraph is only composed of this href
 command.
 
-=item % po4a: environment I<env> I<parameters>
+=item B<% po4a: environment> I<env> I<parameters>
 
 This permits to define the parameters accepted by the I<env> environment.
 This information is latter used to check the number of arguments of the
@@ -253,7 +253,7 @@ some examples:
 As for the commands, I<env> can be preceded by a plus (+) to indicate
 that the \begin command must be translated with all its arguments.
 
-=item % po4a: separator I<env> "I<regex>"
+=item B<% po4a: separator> I<env> B<">I<regex>B<">
 
 Indicates that an environment should be split according to the given
 regular expression.
@@ -271,7 +271,7 @@ The notion of environment is expended to the type displayed in the PO file.
 This can be used to split on "\\\\" in the first mandatory argument of the
 title command.  In this case, the environment is title{#1}.
 
-=item % po4a: verbatim environment I<env>
+=item B<% po4a: verbatim environment> I<env>
 
 Indicate that I<env> is a verbatim environment.
 Comments and commands will be ignored in this environment.
@@ -310,7 +310,7 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
 
 =over 4
 
-=item pre_trans
+=item B<pre_trans>
 
 =cut
 
@@ -338,7 +338,7 @@ sub pre_trans {
     return $str;
 }
 
-=item post_trans
+=item B<post_trans>
 
 =cut
 
@@ -369,7 +369,7 @@ sub post_trans {
 # comment with the first translated string of the paragraph.
 my @comments = ();
 
-=item translate
+=item B<translate>
 
 Wrapper around Transtractor's translate, with pre- and post-processing
 filters.
@@ -428,7 +428,7 @@ sub translate {
 ### COMMANDS SEPARATION ###
 ###########################
 
-=item get_leading_command($buffer)
+=item B<get_leading_command>($buffer)
 
 This function returns:
 
@@ -539,9 +539,9 @@ sub get_leading_command {
     return ($command,$variant,\@args,$buffer);
 }
 
-=item get_trailing_command($buffer)
+=item B<get_trailing_command>($buffer)
 
-The same as get_leading_command, but for commands at the end of a buffer.
+The same as B<get_leading_command>, but for commands at the end of a buffer.
 
 =cut
 
@@ -623,7 +623,7 @@ sub get_trailing_command {
     return ($command,$variant,\@args,$buffer);
 }
 
-=item translate_buffer
+=item B<translate_buffer>
 
 Recursively translate a buffer by separating leading and trailing
 commands (those which should be translated separately) from the
@@ -889,7 +889,7 @@ sub translate_buffer {
 #### EXTERNAL CUSTOMIZATION ####
 ################################
 
-=item read
+=item B<read>
 
 Overload Transtractor's read
 
@@ -905,7 +905,7 @@ sub read {
     push @{$self->{TT}{doc_in}}, read_file($self, $filename);
 }
 
-=item read_file
+=item B<read_file>
 
 Recursively read a file, appending included files which are not listed in the
 @exclude_include array.  Included files are searched using the B<kpsewhich>
@@ -1004,7 +1004,7 @@ sub read_file {
 
 =over 4
 
-=item parse_definition_file
+=item B<parse_definition_file>
 
 Subroutine for parsing a file with po4a directive (definitions for
 newcommands).
@@ -1044,7 +1044,7 @@ sub parse_definition_file {
     }
 }
 
-=item parse_definition_line
+=item B<parse_definition_line>
 
 Parse a definition line of the form "% po4a: ".
 
@@ -1096,7 +1096,7 @@ sub parse_definition_line {
     }
 }
 
-=item is_closed
+=item B<is_closed>
 
 =cut
 
@@ -1138,7 +1138,7 @@ sub in_verbatim {
 #############################
 #### MAIN PARSE FUNCTION ####
 #############################
-=item parse
+=item B<parse>
 
 =cut
 
@@ -1197,7 +1197,7 @@ sub parse {
     }
 } # end of parse
 
-=item docheader
+=item B<docheader>
 
 =back
 

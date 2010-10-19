@@ -51,10 +51,10 @@ from this.
 
 =over 4
 
-=item porefs
+=item B<porefs>
 
-This specifies the reference format. It can be one of 'none' to not produce
-any reference, 'noline' to not specify the line number, and 'full' to
+This specifies the reference format. It can be one of B<none> to not produce
+any reference, B<noline> to not specify the line number, and B<full> to
 include complete references.
 
 =back
@@ -955,13 +955,13 @@ arguments. Here are the valid entries:
 
 =over
 
-=item wrap
+=item B<wrap>
 
 boolean indicating whether we can consider that whitespaces in string are
 not important. If yes, the function canonizes the string before looking for
 a translation, and wraps the result.
 
-=item wrapcol
+=item B<wrapcol>
 
 the column at which we should wrap (default: 76).
 
@@ -1082,41 +1082,41 @@ form a hash table. The valid keys are:
 
 =over 4
 
-=item msgid
+=item B<msgid>
 
 the string in original language.
 
-=item msgstr
+=item B<msgstr>
 
 the translation.
 
-=item reference
+=item B<reference>
 
 an indication of where this string was found. Example: file.c:46 (meaning
 in 'file.c' at line 46). It can be a space-separated list in case of
 multiple occurrences.
 
-=item comment
+=item B<comment>
 
 a comment added here manually (by the translators). The format here is free.
 
-=item automatic
+=item B<automatic>
 
 a comment which was automatically added by the string extraction
-program. See the I<--add-comments> option of the B<xgettext> program for
+program. See the B<--add-comments> option of the B<xgettext> program for
 more information.
 
-=item flags
+=item B<flags>
 
 space-separated list of all defined flags for this entry.
 
-Valid flags are: c-text, python-text, lisp-text, elisp-text, librep-text,
-smalltalk-text, java-text, awk-text, object-pascal-text, ycp-text,
-tcl-text, wrap, no-wrap and fuzzy.
+Valid flags are: B<c-text>, B<python-text>, B<lisp-text>, B<elisp-text>, B<librep-text>,
+B<smalltalk-text>, B<java-text>, B<awk-text>, B<object-pascal-text>, B<ycp-text>,
+B<tcl-text>, B<wrap>, B<no-wrap> and B<fuzzy>.
 
 See the gettext documentation for their meaning.
 
-=item type
+=item B<type>
 
 this is mostly an internal argument: it is used while gettextizing
 documents. The idea here is to parse both the original and the translation
@@ -1130,14 +1130,14 @@ reports an error.
 This information is written as automatic comment in the PO file since this
 gives to translators some context about the strings to translate.
 
-=item wrap
+=item B<wrap>
 
 boolean indicating whether whitespaces can be mangled in cosmetic
 reformattings. If true, the string is canonized before use.
 
-This information is written to the PO file using the 'wrap' or 'no-wrap' flag.
+This information is written to the PO file using the B<wrap> or B<no-wrap> flag.
 
-=item wrapcol
+=item B<wrapcol>
 
 the column at which we should wrap (default: 76).
 
