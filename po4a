@@ -117,7 +117,7 @@ you want to translate the documents. This is as simple as:
 
  [po4a_langs] fr de
 
-This will enable you to expand $lang to all the specified languages in the rest
+This will enable you to expand B<$lang> to all the specified languages in the rest
 of the config file.
 
 =head2 Specifying the paths to translator inputs
@@ -142,9 +142,9 @@ way:
 
  [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po
 
-You can also use $master to refer to the document basename. In this case,
-po4a will use a split mode: one POT and one PO (for each language) will
-be created for each document specified in the po4a configuration file.
+You can also use B<$master> to refer to the document basename. In this case,
+B<po4a> will use a split mode: one POT and one PO (for each language) will
+be created for each document specified in the B<po4a> configuration file.
 See the B<Split mode> section.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
@@ -153,18 +153,18 @@ See the B<Split mode> section.
 
 Another command can be used to specify the name of a directory where the
 PO and POT files are located.
-When it is used, po4a will detect the POT file as the only F<*.pot> file
+When it is used, B<po4a> will detect the POT file as the only F<*.pot> file
 from the specified directory.
-Po4a will also use the list of F<*.po> files to define the list of
+B<po4a> will also use the list of F<*.po> files to define the list of
 languages (by stripping out the extension).
-These languages will be used for the substitution of the $lang variable in
+These languages will be used for the substitution of the B<$lang> variable in
 the rest of the configuration file.
 
 This command should not be used together with the B<[po4a_langs]> or B<[po4a_paths]>
 commands.
 
 When using this command, you have to create an empty POT file on the first
-invocation of po4a to let it know the name of the POT file.
+invocation of B<po4a> to let it know the name of the POT file.
 
  [po_directory] po4a/po/
 
@@ -268,12 +268,12 @@ Note that you can specify additional options on a per file basis.
 
 =head2 Split mode
 
-The split mode is used when $master is used in the B<[po4a_paths]> line.
+The split mode is used when B<$master> is used in the B<[po4a_paths]> line.
 
 When the split mode is used, a temporary big POT and temporary big POs
 are used. This permits to share the translations between all the POs.
 
-If two POs have different translations for the same string, po4a will mark
+If two POs have different translations for the same string, B<po4a> will mark
 this string as fuzzy and will submit both translations in all the POs
 which contain this string. Then, when a translator updates the translation
 and removes the fuzzy tag in one PO, the translation of this string will
@@ -334,7 +334,7 @@ information about the valid options and their meanings.
 
 =item B<-f>, B<--force>
 
-Always generate the POT and PO files, even if po4a considers it is
+Always generate the POT and PO files, even if B<po4a> considers it is
 not necessary.
 
 The default behavior (when B<--force> is not specified) is the following:
@@ -349,7 +349,7 @@ that the changes are really needed.
 Also, a translation is regenerated only if its master document, the PO file,
 one of its addenda or the configuration file is more recent.
 To avoid trying to regenerate translations which do not pass the threshold
-test (see B<--keep>), a file with the '.po4a-stamp' extension can be created
+test (see B<--keep>), a file with the F<.po4a-stamp> extension can be created
 (see B<--stamp>).
 
 =back
@@ -362,7 +362,7 @@ The PO files are always re-generated based on the POT with B<msgmerge -U>.
 
 =item B<--stamp>
 
-Tells po4a to create stamp files when a translation is not generated
+Tells B<po4a> to create stamp files when a translation is not generated
 because it does not reach the threshold. These stamp files are named
 according to the expected translated document, with the F<.po4a-stamp>
 extension.
@@ -398,7 +398,7 @@ This option can be used multiple times.
 
 =item B<--variable> I<var>B<=>I<value>
 
-Define a variable that will be expanded in the po4a configuration file.
+Define a variable that will be expanded in the B<po4a> configuration file.
 Every occurrence of I<$(var)> will be replaced by I<value>.
 This option can be used multiple times.
 
@@ -424,17 +424,17 @@ Set the package version for the POT header. The default is "VERSION".
 
 Extra options for B<msgmerge>.
 
-Note: $lang will be extended to the current language.
+Note: B<$lang> will be extended to the current language.
 
 =item B<--no-previous>
 
-This option removes B<--previous> from the options passed to msgmerge.
-This permits to support versions of gettext earlier than 0.16.
+This option removes B<--previous> from the options passed to B<msgmerge>.
+This permits to support versions of B<gettext> earlier than 0.16.
 
 =item B<--previous>
 
-This option adds B<--previous> to the options passed to msgmerge.
-It requires gettext 0.16 or later, and is activated by default.
+This option adds B<--previous> to the options passed to B<msgmerge>.
+It requires B<gettext> 0.16 or later, and is activated by default.
 
 =item B<--srcdir> I<SRCDIR>
 
@@ -443,7 +443,7 @@ configuration file.
 
 =item B<--destdir> I<DESTDIR>
 
-Set the base directory for all the output documents specified in the po4a
+Set the base directory for all the output documents specified in the B<po4a>
 configuration file.
 
 =back
@@ -465,8 +465,8 @@ it for download somewhere on your website.
 
 Now let's assume you received three translations before your next release:
 F<de.po> (including an addendum F<de.add>), F<sv.po> and F<pt.po>.
-Since you don't want to change your Makefile(s) whenever a new translation
-arrives you can use po4a with an appropriate configuration file in your Makefile.
+Since you don't want to change your F<Makefile>(s) whenever a new translation
+arrives you can use B<po4a> with an appropriate configuration file in your F<Makefile>.
 Let's call it F<po4a.cfg>. In our example it would look like the following:
 
  [po_directory] man/po4a/po/
@@ -484,11 +484,11 @@ Note the use of the modifier B<?> as only the German translation (F<de.po>) is
 accompanied by an addendum.
 
 To actually build the translated man pages you would then (once!) add the
-following line in the build target of the appropriate Makefile:
+following line in the B<build> target of the appropriate F<Makefile>:
 
         po4a po4a.cfg
 
-Once this is set up you don't need to touch the Makefile when a new 
+Once this is set up you don't need to touch the F<Makefile> when a new 
 translation arrives, i.e. if the French team sends you F<fr.po> and F<fr.add>
 then you simply drop them respectively in F<man/po4a/po/> and
 F<man/po4a/add_fr/> and the next time the programm is build the 
@@ -498,7 +498,7 @@ Note that you still need an appropriate target to install localized manual
 pages with English ones.
 
 Finally if you do not store generated files into your version control system,
-you will need a line in your clean target as well:
+you will need a line in your B<clean> target as well:
         -rm -rf man/translated
 
 =head1 SHORTCOMINGS
@@ -507,7 +507,7 @@ you will need a line in your clean target as well:
 
 =item
 
-Duplicates some code with the po4a-* programs.
+Duplicates some code with the B<po4a->I<*> programs.
 
 =back
 

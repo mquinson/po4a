@@ -209,7 +209,7 @@ the POD format (the preferred language for documenting Perl) into other
 =head1 STATUS OF THIS MODULE
 
 I think that this module is rock stable, and there is only one known bug
-with /usr/lib/perl5/Tk/MainWindow.pod (and some other
+with F</usr/lib/perl5/Tk/MainWindow.pod> (and some other
 pages, see below) which contains:
 
   C<" #n">
@@ -223,7 +223,7 @@ and mine contain
 
  "" #n""
  
-which is logic since CE<lt>foobarE<gt> is rewritten "foobar"
+which is logic since CE<lt>foobarE<gt> is rewritten "foobar".
 
 Complete list of pages having this problem on my box (from 564 pages ; note
 that it depends on the chosen wrapping column):
