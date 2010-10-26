@@ -28,10 +28,7 @@ that translators can't mess up with them.
 Unindented paragraphs are automatically rewrapped for the translator.  This
 can lead to some minor difference in the generated output, since the
 rewrapping rules used by groff aren't very clear. For example, two spaces
-after a parenthesis are sometimes preserved, while typographic rules only
-ask to preserve the two spaces after the period sign (ok, I'm not native
-speaker, and I'm not sure of that. If you have any other information,
-you're welcome). 
+after a parenthesis are sometimes preserved.
 
 Anyway, the difference will only be about the position of the extra spaces
 in wrapped paragraph, and I think it's worth.
