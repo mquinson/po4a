@@ -76,7 +76,7 @@ rewrap this paragraph in the generated PO file and in the translation.
 
 my $bullets = 1;
 
-=item B<tabs>=I<mode>
+=item B<tabs=>I<mode>
 
 Specify how tabulations shall be handled. The I<mode> can be any of:
 
@@ -98,7 +98,7 @@ By default, tabulations are considered as spaces.
 
 my $tabs = "";
 
-=item B<breaks>=I<regex>
+=item B<breaks=>I<regex>
 
 A regular expression matching lines which introduce breaks.
 The regular expression will be anchored so that the whole line must match.

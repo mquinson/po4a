@@ -52,46 +52,46 @@ Also make sure that the DTD of the SGML files are installed in the system.
 
 =over 4
 
-=item debug
+=item B<debug>
 
 Space separated list of keywords indicating which part you want to debug. Possible values are: tag, generic, entities and refs.
 
-=item verbose
+=item B<verbose>
 
 Give more information about what's going on.
 
-=item translate
+=item B<translate>
 
 Space separated list of extra tags (beside the DTD provided ones) whose
 content should form an extra msgid.
 
-=item section
+=item B<section>
 
 Space separated list of extra tags (beside the DTD provided ones)
-containing other tags, some of them being of category 'translate'.
+containing other tags, some of them being of category B<translate>.
 
-=item indent
+=item B<indent>
 
 Space separated list of tags which increase the indentation level.
 
-=item verbatim
+=item B<verbatim>
 
 The layout within those tags should not be changed. The paragraph won't get
 wrapped, and no extra indentation space or new line will be added for
 cosmetic purpose.
 
-=item empty
+=item B<empty>
 
 Tags not needing to be closed.
 
-=item ignore
+=item B<ignore>
 
 Tags ignored and considered as plain char data by po4a. That is to say that
 they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
 for this category since putting it in the translate section would create
 msgids not being whole sentences, which is bad.
 
-=item attributes
+=item B<attributes>
 
 A space separated list of attributes that need to be translated. You can
 specify the attributes by their name (for example, "lang"), but you can also
@@ -103,25 +103,25 @@ The tag names are actually regular expressions so you can also write things
 like E<lt>aaa|bbbbE<gt>lang to only translate lang attributes that are in
 an E<lt>aaaE<gt> or a E<lt>bbbE<gt> tag.
 
-=item qualify
+=item B<qualify>
 
 A space separated list of attributes for which the translation must be
 qualified by the attribute name. Note that this setting automatically adds the
 given attribute into the 'attributes' list too.
 
-=item force
+=item B<force>
 
 Proceed even if the DTD is unknown or if nsgmls finds errors in the input
 file.
 
-=item include-all
+=item B<include-all>
 
 By default, msgids containing only one entity (like '&version;') are skipped
 for the translator comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
 "<title>&Aacute;</title>", even if I doubt such things to ever happen...
 
-=item ignore-inclusion
+=item B<ignore-inclusion>
 
 Space separated list of entities that won't be inlined.
 Use this option with caution: it may cause nsgmls (used internally) to add
@@ -138,7 +138,7 @@ same. But there are still some problems:
 
 =item *
 
-the error output of nsgmls is redirected to /dev/null, which is clearly
+The error output of nsgmls is redirected to /dev/null, which is clearly
 bad. I don't know how to avoid that.
 
 The problem is that I have to "protect" the conditional inclusions (ie, the

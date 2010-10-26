@@ -134,7 +134,7 @@ split. By extracting the text to translate from the document structure, it also
 keeps you away from the text formatting complexity and reduces your chances to
 get a broken document (even if it does not completely prevent you to do so).
 
-Please also see the L<FAQ> below in this document for a more complete list
+Please also see the B<FAQ> below in this document for a more complete list
 of the advantages and disadvantages of this approach.
 
 =head2 Supported formats
@@ -163,7 +163,7 @@ unfortunately, not the translator one.
 Even if somewhat superseded by XML nowadays, this format is still used
 rather often for documents which are more than a few screens long. It allows
 you to make complete books. Updating the translation of so long documents can
-reveal to be a real nightmare. diff reveals often useless when the original
+reveal to be a real nightmare. B<diff> reveals often useless when the original
 text was re-indented after update. Fortunately, po4a can help you in that
 process.
 
@@ -228,9 +228,9 @@ comes from the fact that the I<whole> process is represented here. Once you
 converted your project to po4a, only the right part of the graphic is
 relevant. 
 
-Note that "master.doc" is taken as an example for the documentation to be
-translated and "translation.doc" is the corresponding translated text.  The suffix
-could be ".pod", ".xml", or ".sgml" depending on its format. Each part of the
+Note that F<master.doc> is taken as an example for the documentation to be
+translated and F<translation.doc> is the corresponding translated text.  The suffix
+could be F<.pod>, F<.xml>, or F<.sgml> depending on its format. Each part of the
 picture will be detailed in the next sections.
 
                                    master.doc
@@ -300,23 +300,23 @@ To begin a new translation using po4a, you have to do the following steps:
 
 =item -
 
-Extract the text which have to be translated from the original E<lt>master.docE<gt> document into
-a new translation template E<lt>translation.potE<gt> file (the gettext format). For that, use the I<po4a-gettextize>
+Extract the text which have to be translated from the original E<lt>F<master.doc>E<gt> document into
+a new translation template E<lt>F<translation.pot>E<gt> file (the gettext format). For that, use the B<po4a-gettextize>
 program this way:
 
   $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>
 
-E<lt>formatE<gt> is naturally the format used in the master.doc
-document. As expected, the output goes into translation.pot.
+E<lt>I<format>E<gt> is naturally the format used in the F<master.doc>
+document. As expected, the output goes into F<translation.pot>.
 Please refer to L<po4a-gettextize(1)> for more details about the existing
 options.
 
 =item -
 
 Actually translate what should be translated. For that, you have to rename
-the POT file for example to doc.XX.po (where XX is the ISO639 code of the
-language you are translating to, e.g. "fr" for French), and edit the
-resulting file. It is often a good idea to not name the file XX.po to avoid
+the POT file for example to F<doc.XX.po> (where I<XX> is the ISO639 code of the
+language you are translating to, e.g. B<fr> for French), and edit the
+resulting file. It is often a good idea to not name the file F<XX.po> to avoid
 confusion with the translation of the program messages, but this your call.
 Don't forget to update the PO file headers, they are important.
 
@@ -334,20 +334,20 @@ gettext documentation, available in the B<gettext-doc> package.
 
 Once you're done with the translation, you want to get the translated
 documentation and distribute it to users along with the original one.
-For that, use the L<po4a-translate(1)> program like that (where XX is the
+For that, use the L<po4a-translate(1)> program like that (where I<XX> is the
 language code):
 
   $ po4a-translate -f <format> -m <master.doc> -p <doc.XX.po> -l <XX.doc>
 
-As before, E<lt>formatE<gt> is the format used in the master.doc document. But
-this time, the PO file provided with the -p flag is part of the input. This
-is your translation. The output goes into XX.doc.
+As before, E<lt>I<format>E<gt> is the format used in the F<master.doc> document. But
+this time, the PO file provided with the B<-p> flag is part of the input. This
+is your translation. The output goes into F<XX.doc>.
 
 Please refer to L<po4a-translate(1)> for more details.
 
 =head2 HOWTO update a po4a translation?
 
-To update your translation when the original master.doc file has changed, use the
+To update your translation when the original F<master.doc> file has changed, use the
 L<po4a-updatepo(1)> program like that:
 
   $ po4a-updatepo -f <format> -m <new_master.doc> -p <old_doc.XX.po>
@@ -355,15 +355,15 @@ L<po4a-updatepo(1)> program like that:
 (Please refer to L<po4a-updatepo(1)> for more details)
 
 Naturally, the new paragraph in the document won't get magically translated
-in the C<PO> file with this operation, and you'll need to update the C<PO>
+in the PO file with this operation, and you'll need to update the PO
 file manually. Likewise, you may have to rework the translation for
 paragraphs which were modified a bit. To make sure you won't miss any of
 them, they are marked as "fuzzy" during the process and you have to remove
-this marker before the translation can be used by po4a-translate.
+this marker before the translation can be used by B<po4a-translate>.
 As for the initial translation, the best is to use your favorite PO editor
 here.
 
-Once your C<PO> file is up-to-date again, without any untranslated or fuzzy
+Once your PO file is up-to-date again, without any untranslated or fuzzy
 string left, you can generate a translated documentation file, as explained
 in the previous section.
 
@@ -371,8 +371,8 @@ in the previous section.
 =head2 HOWTO convert a pre-existing translation to po4a?
 
 Often, you used to translate manually the document happily until a major
-reorganization of the original master.doc document happened. Then, after some
-unpleasant tries with diff or similar tools, you want to convert to po4a.
+reorganization of the original F<master.doc> document happened. Then, after some
+unpleasant tries with B<diff> or similar tools, you want to convert to po4a.
 But of course, you don't want to loose your existing translation in the
 process. Don't worry, this case is also handled by po4a tools and is called
 gettextization. 
@@ -409,9 +409,9 @@ Let me explain the basis of the procedure first and I will come back on
 hints to achieve it when the process goes wrong. To ease comprehension, 
 let's use above example once again.
 
-Once you have the old master.doc again which matches with the translation
-XX.doc, the gettextization can be done directly to the PO file doc.XX.po
-without manual translation of translation.pot file:
+Once you have the old F<master.doc> again which matches with the translation
+F<XX.doc>, the gettextization can be done directly to the PO file F<doc.XX.po>
+without manual translation of F<translation.pot> file:
 
  $ po4a-gettextize -f <format> -m <old_master.doc> -l <XX.doc> -p <doc.XX.po>
 
@@ -427,16 +427,16 @@ all strings are marked as "fuzzy" in the process. You should check each of
 them carefully before removing those markers.
 
 Often the document structures don't match exactly, preventing
-po4a-gettextize from doing its job properly. At that point, the whole game
+B<po4a-gettextize> from doing its job properly. At that point, the whole game
 is about editing the files to get their damn structures matching. 
 
-It may help to read the section L<Gettextization: how does it work?> below.
+It may help to read the section B<Gettextization: how does it work?> below.
 Understanding the internal process will help you to make this work. The good
-point is that po4a-gettextize is rather verbose about what went wrong when
+point is that B<po4a-gettextize> is rather verbose about what went wrong when
 it happens. First, it pinpoints where in the documents the structures'
 discrepancies are. You will learn the strings that don't match, their positions
 in the text, and the type of each of them. Moreover, the PO file generated
-so far will be dumped to gettextization.failed.po. 
+so far will be dumped to F<gettextization.failed.po>.
 
 =over
 
@@ -487,13 +487,13 @@ line and the content of the item.
 Sometimes, there is a desynchronization between the files, and the
 translation is attached to the wrong original paragraph. It is the sign that
 the real problem was before in the files. Check
-gettextization.failed.po to see when the desynchronization begins, and
+F<gettextization.failed.po> to see when the desynchronization begins, and
 fix it there.
 
 =item -
 
 Sometimes, you get the strong feeling that po4a ate some parts of the text,
-either the original or the translation. gettextization.failed.po
+either the original or the translation. F<gettextization.failed.po>
 indicates that both of them where gently matching, and then the
 gettextization fails because it tried to match one paragraph with the one
 after (or before) the right one, as if the right one disappeared. Curse po4a
@@ -524,7 +524,7 @@ obtain your precious PO file. You are now ready to synchronize your file and
 begin your translation. Please note that on large text, it may happen that
 the first synchronization takes a long time. 
 
-For example, the first po4a-updatepo of the Perl documentation's French
+For example, the first B<po4a-updatepo> of the Perl documentation's French
 translation (5.5 Mb PO file) took about two days full on a 1Ghz G5 computer.
 Yes, 48 hours. But the subsequent ones only take a dozen of seconds on my
 old laptop. This is because the first time, most of the msgid of the PO file
@@ -554,9 +554,9 @@ rest of the addendum file will be added verbatim at the determined position of
 the resulting document.
 
 The header have a pretty rigid syntax: It must begin with the string
-"PO4A-HEADER:", followed by a semi-colon (;) separated list of "key=value"
+B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list of I<key>B<=>I<value>
 fields. White spaces ARE important. Note that you cannot use the semi-colon
-char (;) in the value, and that quoting it doesn't help.
+char (B<;>) in the value, and that quoting it doesn't help.
 
 Again, it sounds scary, but the examples given below should help you to find
 how to write the header line you need. To illustrate the discussion, assume
@@ -567,7 +567,7 @@ Here are the possible header keys:
 
 =over 4
 
-=item position (mandatory)
+=item B<position> (mandatory)
 
 a regexp. The addendum will be placed near the line matching this regexp.
 Note that we're speaking about the translated document here, not the
@@ -583,7 +583,7 @@ and explain po4a where the section ends (remember that I<position point> is
 given by a regexp which should match a unique line).
 
 The localization of the I<insertion point> with regard to the I<position point>
-is controlled by the C<mode>, C<beginboundary> and C<endboundary> fields, as
+is controlled by the B<mode>, B<beginboundary> and B<endboundary> fields, as
 explained below.
 
 In our case, we would have:
@@ -591,9 +591,9 @@ In our case, we would have:
      position=<title>About this document</title>
 
 
-=item mode (mandatory)
+=item B<mode> (mandatory)
 
-It can be either the string "before" or "after", specifying the position of
+It can be either the string B<before> or B<after>, specifying the position of
 the addendum, relative to the I<position point>.
 
 Since we want the new section to be placed below the one we are matching, we
@@ -601,17 +601,17 @@ have:
 
      mode=after
 
-=item beginboundary (used only when mode=after, and mandatory in that case)
+=item B<beginboundary> (used only when B<mode=after>, and mandatory in that case)
 
-=item endboundary (idem)
+=item B<endboundary> (idem)
 
 regexp matching the end of the section after which the addendum goes.
 
-When mode=after, the I<insertion point> is after the I<position point>, but
+When B<mode=after>, the I<insertion point> is after the I<position point>, but
 not directly after! It is placed at the end of the section beginning at the
 I<position point>, ie after or before the line matched by the
-C<???boundary> argument, depending on whether you used C<beginboundary> or
-C<endboundary>.
+I<???>B<boundary> argument, depending on whether you used B<beginboundary> or
+B<endboundary>.
 
 In our case, we can choose to indicate the end of the section we match by
 adding:
@@ -622,13 +622,13 @@ or to indicate the beginning of the next section by indicating:
 
    beginboundary=<section>
 
-In both case, our addendum will be placed after the E<lt>/sectionE<gt> and
-before the E<lt>sectionE<gt>. The first one is better since it will work
+In both case, our addendum will be placed after the B<E<lt>/sectionE<gt>> and
+before the B<E<lt>sectionE<gt>>. The first one is better since it will work
 even if the document gets reorganized.
 
 Both forms exist because documentation formats are different. In some of
 them, there is a way to mark the end of a section (just like the
-C<E<lt>/sectionE<gt>> we just used), while some other don't explicitly mark
+B<E<lt>/sectionE<gt>> we just used), while some other don't explicitly mark
 the end of section (like in man). In the former case, you want to make a
 I<boundary> matching the I<end of a section>, so that the I<insertion point>
 comes after it. In the latter case, you want to make a I<boundary> matching
@@ -655,24 +655,24 @@ If you want to add something after the following nroff section:
 
   .SH "AUTHORS"
 
-you should put a C<position> matching this line, and a C<beginboundary>
-matching the beginning of the next section (ie C<^\.SH>). The addendum will
+you should put a B<position> matching this line, and a B<beginboundary>
+matching the beginning of the next section (i.e., B<^\.SH>). The addendum will
 then be added B<after> the I<position point> and immediately B<before> the
-first line matching the C<beginboundary>. That is to say:
+first line matching the B<beginboundary>. That is to say:
 
  PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\.SH
 
 =item
 If you want to add something into a section (like after "Copyright Big Dude")
-instead of adding a whole section, give a C<position> matching this line,
-and give a C<beginboundary> matching any line.
+instead of adding a whole section, give a B<position> matching this line,
+and give a B<beginboundary> matching any line.
 
  PO4A-HEADER:mode=after;position=Copyright Big Dude, 2004;beginboundary=^
 
 =item If you want to add something at the end of the document, give a
-C<position> matching any line of your document (but only one line. Po4a
-won't proceed if it's not unique), and give an C<endboundary> matching
-nothing. Don't use simple strings here like "C<EOF>", but prefer which have
+B<position> matching any line of your document (but only one line. Po4a
+won't proceed if it's not unique), and give an B<endboundary> matching
+nothing. Don't use simple strings here like B<"EOF">, but prefer which have
 less chance to be in your document.
 
  PO4A-HEADER:mode=after;position=<title>About</title>;beginboundary=FakePo4aBoundary
@@ -684,11 +684,11 @@ match the end of a nroff section ending with the line
 
   .fi
 
-don't use C<.fi> as endboundary, because it will match with "the[ fi]le",
-which is obviously not what you expect. The correct endboundary in that case
-is: C<^\.fi$>.
+don't use B<.fi> as B<endboundary>, because it will match with "the[ fi]le",
+which is obviously not what you expect. The correct B<endboundary> in that case
+is: B<^\.fi$>.
 
-If the addendum doesn't go where you expected, try to pass the -vv argument to
+If the addendum doesn't go where you expected, try to pass the B<-vv> argument to
 the tools, so that they explain you what they do while placing the
 addendum.
 
@@ -718,15 +718,15 @@ In order to put your addendum before the AUTHOR, use the following header:
 
  PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1
 
-This works because the next line matching the beginboundary /^=head1/ after
+This works because the next line matching the B<beginboundary> /^=head1/ after
 the section "NAME" (translated to "NOM" in French), is the one declaring the
 authors. So, the addendum will be put between both sections.
 
 =head2 HOWTO do all this in one program invocation?
 
 The use of po4a proved to be a bit error prone for the users since you have
-to call two different programs in the right order (po4a-updatepo and
-then po4a-translate), each of them needing more than 3 arguments. Moreover,
+to call two different programs in the right order (B<po4a-updatepo> and
+then B<po4a-translate>), each of them needing more than 3 arguments. Moreover,
 it was difficult with this system to use only one PO file for all your
 documents when more than one format was used.
 
@@ -744,7 +744,7 @@ command line.
 
 =head2 HOWTO customize po4a?
 
-po4a modules have options (specified with the -o option) that can be used
+po4a modules have options (specified with the B<-o> option) that can be used
 to change the module behavior.
 
 It is also possible to customize a module or new / derivative / modified
@@ -785,12 +785,12 @@ the input PO). Here is a graphical representation of this:
 
 
 This little bone is the core of all the po4a architecture. If you omit the
-input PO and the output document, you get po4a-gettextize. If you provide
-both input and disregard the output PO, you get po4a-translate.
+input PO and the output document, you get B<po4a-gettextize>. If you provide
+both input and disregard the output PO, you get B<po4a-translate>.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
 is a little example to show you how it works. It parses a list of paragraphs,
-each of them beginning with <p>.
+each of them beginning with B<E<lt>pE<gt>>.
 
   1 sub parse {
   2   PARAGRAPH: while (1) {
@@ -813,10 +813,10 @@ each of them beginning with <p>.
  19   }
  20 } 
 
-On line 6, we encounter E<lt>pE<gt> for the second time. That's the signal
+On line 6, we encounter B<E<lt>pE<gt>> for the second time. That's the signal
 of the next paragraph. We should thus put the just obtained line back into
 the original document (line 7) and push the paragraph built so far into the
-outputs. After removing the leading E<lt>pE<gt> of it on line 9, we push the
+outputs. After removing the leading B<E<lt>pE<gt>> of it on line 9, we push the
 concatenation of this tag with the translation of the rest of the paragraph.
 
 This translate() function is very cool. It pushes its argument into the output
@@ -861,7 +861,7 @@ allow us to detect that string 4 is a paragraph in one case, and a chapter
 title in another case and to report the problem.
 
 In theory, it would be possible to detect the problem, and resynchronize the
-files afterward (just like diff does). But what we should do of the few
+files afterward (just like B<diff> does). But what we should do of the few
 strings before desynchronizations is not clear, and it would produce bad
 results some times. That's why the current implementation don't try to
 resynchronize anything and verbosely fail when something goes wrong,
@@ -877,9 +877,9 @@ Well, that's pretty easy here. The translated document is not written
 directly to disk, but kept in memory until all the addenda are applied. The
 algorithms involved here are rather straightforward. We look for a line
 matching the position regexp, and insert the addendum before it if we're in
-mode=before. If not, we search for the next line matching the boundary and
-insert the addendum after this line if it's an C<endboundary> or before this
-line if it's a C<beginboundary>.
+B<mode=before>. If not, we search for the next line matching the boundary and
+insert the addendum after this line if it's an B<endboundary> or before this
+line if it's a B<beginboundary>.
 
 =head1 FAQ 
 
@@ -1028,7 +1028,7 @@ As far as I know, there are only two of them:
 
 =over 
 
-=item poxml
+=item B<poxml>
 
 This is the tool developed by KDE people to handle DocBook XML. AFAIK, it
 was the first program to extract strings to translate from documentation to
@@ -1038,7 +1038,7 @@ It can only handle XML, and only a particular DTD. I'm quite unhappy with
 the handling of lists, which end in one big msgid. When the list become big,
 the chunk becomes harder to shallow.
 
-=item po-debiandoc
+=item B<po-debiandoc>
 
 This program done by Denis Barbier is a sort of precursor of the po4a SGML
 module, which more or less deprecates it. As the name says, it handles only
@@ -1079,7 +1079,7 @@ files present this header:
  | In fact, consider this as a binary, and the PO file as a regular source file:
  | If the PO gets lost, keeping this translation up-to-date will be harder ;)
 
-Likewise, gettext's regular PO files only need to be copied to the po/
+Likewise, gettext's regular PO files only need to be copied to the F<po/>
 directory. But B<this is not the case of the ones manipulated by po4a>. The
 major risk here is that a developer erases the existing translation of his
 program with the translation of his documentation. (Both of them can't be
@@ -1124,7 +1124,7 @@ their patch and at the file encoding level.
 
 =item *
 
-It is based internally on C<gettext> (but C<po4a> offers a very simple
+It is based internally on B<gettext> (but B<po4a> offers a very simple
 interface so that you don't need to understand the internals to use it).
 That way, we don't have to re-implement the wheel, and because of their
 wide use, we can think that these tools are more or less bug free.

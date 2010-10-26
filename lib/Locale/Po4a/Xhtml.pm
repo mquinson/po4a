@@ -47,7 +47,7 @@ These are this module's particular options:
 
 =over 4
 
-=item B<includessi>[=I<rootpath>]
+=item B<includessi>[B<=>I<rootpath>]
 
 Include files specified by an include SSI (Server Side Includes) element
 (e.g. <!--#include virtual="/foo/bar.html" -->).

@@ -209,10 +209,10 @@ the POD format (the preferred language for documenting Perl) into other
 =head1 STATUS OF THIS MODULE
 
 I think that this module is rock stable, and there is only one known bug
-with /usr/lib/perl5/Tk/MainWindow.pod (and some other
+with F</usr/lib/perl5/Tk/MainWindow.pod> (and some other
 pages, see below) which contains:
 
-  CE<lt>" #n"E<gt>
+  C<" #n">
 
 Lack of luck, in the po4a version, this was splited on the space by the
 wrapping. As result, in the original version, the man contain 
@@ -223,7 +223,7 @@ and mine contain
 
  "" #n""
  
-which is logic since C<foobar> is rewritten "foobar"
+which is logic since CE<lt>foobarE<gt> is rewritten "foobar".
 
 Complete list of pages having this problem on my box (from 564 pages ; note
 that it depends on the chosen wrapping column):
@@ -251,33 +251,33 @@ children are:
 
 =over 4
 
-=item alt
+=item B<alt>
 
 If set to a true value, selects an alternate output format that, among other
-things, uses a different heading style and marks C<=item> entries with a
+things, uses a different heading style and marks B<=item> entries with a
 colon in the left margin.  Defaults to false.
 
-=item code
+=item B<code>
 
 If set to a true value, the non-POD parts of the input file will be included
 in the output.  Useful for viewing code documented with POD blocks with the
 POD rendered and the code left intact.
 
-=item indent
+=item B<indent>
 
 The number of spaces to indent regular text, and the default indentation for
-C<=over> blocks.  Defaults to 4.
+B<=over> blocks.  Defaults to 4.
 
-=item loose
+=item B<loose>
 
-If set to a true value, a blank line is printed after a C<=head1> heading.
-If set to false (the default), no blank line is printed after C<=head1>,
-although one is still printed after C<=head2>.  This is the default because
+If set to a true value, a blank line is printed after a B<=head1> heading.
+If set to false (the default), no blank line is printed after B<=head1>,
+although one is still printed after B<=head2>.  This is the default because
 it's the expected formatting for manual pages; if you're formatting
 arbitrary text documents, setting this to true may result in more pleasing
 output.
 
-=item quotes
+=item B<quotes>
 
 Sets the quote marks used to surround CE<lt>> text.  If the value is a
 single character, it is used as both the left and right quote; if it is two
@@ -285,17 +285,17 @@ characters, the first character is used as the left quote and the second as
 the right quoted; and if it is four characters, the first two are used as
 the left quote and the second two as the right quote.
 
-This may also be set to the special value C<none>, in which case no quote
+This may also be set to the special value B<none>, in which case no quote
 marks are added around CE<lt>> text.
 
-=item sentence
+=item B<sentence>
 
 If set to a true value, Locale::Po4a::Pod will assume that each sentence
 ends in two spaces, and will try to preserve that spacing.  If set to
 false, all consecutive whitespace in non-verbatim paragraphs is compressed
 into a single space.  Defaults to true.
 
-=item width
+=item B<width>
 
 The column at which to wrap text on the right-hand side.  Defaults to 76.
 
