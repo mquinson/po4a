@@ -880,6 +880,9 @@ while (<CONFIG>) {
 	chdir $po4a_opts{"calldir"}
 	    if (defined $po4a_opts{"srcdir"});
     } elsif ($cmd =~ m/type: *(.*)/) {
+	chdir $po4a_opts{"srcdir"}
+	    if (defined $po4a_opts{"srcdir"});
+
 	if (defined $document{$main}{'format'}) {
 	    warn wrap_ref_mod("$config_file:$nb", "",
 		gettext("The '%s' master file was specified earlier in the ".
@@ -935,8 +938,6 @@ while (<CONFIG>) {
 	}
 	%{$document{$main}{'options'}} = %options;
 
-	chdir $po4a_opts{"srcdir"}
-	    if (defined $po4a_opts{"srcdir"});
 	my %discarded = ();
 	my @remaining_args = split(/ /,$args);
 	while (@remaining_args) {
