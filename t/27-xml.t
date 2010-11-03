@@ -28,8 +28,14 @@ push @tests, {
             ' && perl ../compare-po.pl ../data-27/options-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
+push @tests, {
+  'run' => "perl ../../po4a-normalize -f guide ../data-27/cdata.xml",
+  'test'=> 'perl ../compare-po.pl ../data-27/cdata.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../data-27/cdata.xml po4a-normalize.output',
+  'doc' => 'normalisation test',
+  };
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
