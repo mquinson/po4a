@@ -1,12 +1,11 @@
 all: Build
-	./share/po4a-build -f po4a-build.conf
 	@./Build
 
 Build: Build.PL
 	perl Build.PL
 
 update-po: Build
-	$(MAKE) -C po/bin update-po
+	./Build binpo
 
 install: Build
 	@./Build install destdir=$(DESTDIR)
@@ -17,10 +16,8 @@ clean: Build
 	@./Build realclean
 	$(MAKE) -C share clean
 	$(MAKE) -C po/bin clean
-	$(RM) po4a-build.sh
 
 dist: Build
-	./share/po4a-build --pot-only -f ./po4a-build.conf
 	$(MAKE) -C po/bin pot
 	@./Build dist
 
