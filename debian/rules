@@ -26,16 +26,17 @@ build-stamp:
 	   exit 1; \
 	fi;
 
-	$(PERL) Build.PL installdirs=vendor create_packlist=0
-	$(MAKE)
+	$(PERL) Build.PL
+	./Build create_packlist=0
+	./Build test
 	touch build-stamp
 
 clean:
 	dh_testdir
 	dh_testroot
 	$(RM) -r html t/tmp po/www
+	-./Build clean
 	rm -rf _build build-stamp Build
-	$(MAKE) clean
 	dh_clean
 
 install: build
@@ -43,8 +44,7 @@ install: build
 	dh_testroot
 	dh_prep
 	dh_installdirs
-	$(MAKE) install DESTDIR=$(DESTDIR) prefix=/usr
-#	$(PERL) Build test
+	./Build install --installdirs vendor destdir=$(DESTDIR)
 
 # Build architecture-independent files here.
 binary-indep: build install
