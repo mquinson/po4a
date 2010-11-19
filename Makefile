@@ -18,7 +18,6 @@ clean: Build
 	$(MAKE) -C po/bin clean
 
 dist: Build
-	$(MAKE) -C po/bin pot
 	@./Build dist
 
 stats: Build

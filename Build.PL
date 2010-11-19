@@ -141,6 +141,7 @@ my $builder = Module::Build->subclass
 
 	    $self->depends_on('test');
 	    $self->depends_on('distdir');
+	    $self->depends_on('binpo');
 
 	    system("./share/po4a-build --pot-only -f ./po4a-build.conf") and die;
 
