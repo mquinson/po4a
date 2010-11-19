@@ -134,6 +134,10 @@ my $builder = Module::Build->subclass
 	    $install_map{'blib/po'} = $localedir;
 
 	    ExtUtils::Install::install(\%install_map, 1, 0, $self->{args}{uninst}||0); 
+
+	    system ("cp -R _build/po4a/man/* $mandir");
+	    system ("find . -name '*.1p' -delete");
+	    system ("find . -name '*.3pm' -delete");
 	}
 
 	sub ACTION_dist {
