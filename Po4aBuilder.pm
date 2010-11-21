@@ -13,9 +13,19 @@ sub ACTION_build {
     $self->depends_on('postats');
 }
 
+sub make_files_writable {
+    my $self = shift;
+    my $dir = shift;
+    my $files = $self->rscan_dir($dir, sub {-f});
+    foreach my $file (@$files) {
+        my $current_mode = (stat $file)[2];
+        chmod $current_mode | oct(200), $file;
+    }
+}
+
 sub ACTION_po4a_build {
     my $self = shift;
-    system("chmod -R u+w po/pod") && die;
+    $self->make_files_writable("po/pod");
     system("./share/po4a-build -f po4a-build.conf") && die;
     File::Path::mkpath( File::Spec->catdir( 'blib', 'manl10n' ), 0, oct(777) );
     system ("cp -R _build/po4a/man/* blib/manl10n") && die;
@@ -35,7 +45,7 @@ sub ACTION_binpo {
     my $self = shift;
     my ($cmd, $sources);
 
-    system("chmod -R u+w po/bin") && die;
+    $self->make_files_writable("po/bin");
 
     my @perl_files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}));
     my @shell_files = sort(shell_scripts());
@@ -150,7 +160,7 @@ sub ACTION_dist {
 
     if ( -e "$dist_dir.tar.gz") {
         # Delete the distfile if it already exists
-        system ("rm $dist_dir.tar.gz") && die;
+        unlink "$dist_dir.tar.gz" || die;
     }
 
     $self->make_tarball($dist_dir);
