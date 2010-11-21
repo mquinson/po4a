@@ -27,6 +27,7 @@ sub make_files_writable {
 
 sub ACTION_po4a_build {
     my $self = shift;
+    $self->depends_on('binpo');
     $self->make_files_writable("po/pod");
     system("./share/po4a-build -f po4a-build.conf") && die;
     File::Path::mkpath( File::Spec->catdir( 'blib', 'manl10n' ), 0, oct(777) );

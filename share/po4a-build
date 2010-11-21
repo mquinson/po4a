@@ -137,6 +137,10 @@ fi
 OURS=`pwd|tr -d '\n'`
 cd `dirname $FILE`
 
+if [ "$USE_INTERNAL_PO4A" = "yes" ]; then
+	TEXTDOMAINDIR=$OURS/blib/po
+fi
+
 # calculate the langs, automatically.
 LANGS=`ls $PODIR/*.po 2>/dev/null || true`
 if [ ! -z "$LANGS" ]; then
