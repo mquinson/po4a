@@ -2,6 +2,7 @@ package Po4aBuilder;
 use Module::Build;
 use File::Path;
 use File::Spec;
+use File::stat;
 
 @ISA = qw(Module::Build);
 
@@ -18,7 +19,7 @@ sub make_files_writable {
     my $dir = shift;
     my $files = $self->rscan_dir($dir, sub {-f});
     foreach my $file (@$files) {
-        my $current_mode = (stat $file)[2];
+        my $current_mode = stat($file)->mode;
         chmod $current_mode | oct(200), $file;
     }
 }
@@ -177,9 +178,11 @@ sub ACTION_postats {
 
 sub postats {
     my ($self,$dir) = (shift,shift);
-    my $potsize = `(cd $dir;ls -sh *.pot) | sed -n -e 's/^ *\\([^[:blank:]]*\\).*\$/\\1/p'`;
-    $potsize =~ /(.*)/;
-    print "$dir (pot: $1)\n";
+    my $potfiles = $self->rscan_dir($dir,qr{\.pot$});
+    die "No POT file found in $dir" unless scalar $potfiles;
+    my $potfile = pop @$potfiles;
+    my $potsize = stat($potfile)->size;
+    print "$dir (pot: $potsize)\n";
     my @files = @{$self->rscan_dir($dir,qr{\.po$})};
     foreach (sort @files) {
         $file = $_;
