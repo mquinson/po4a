@@ -1,5 +1,6 @@
 package Po4aBuilder;
 use Module::Build;
+use File::Basename;
 use File::Path;
 use File::Spec;
 use File::stat;
@@ -103,31 +104,28 @@ sub ACTION_binpo {
 
     # update languages
     foreach (@{$self->rscan_dir('po/bin',qr{\.po$})}) {
-        next if m|/.#|;
-        $_ =~ /.*\/(.*)\.po$/;
-        my $lang = $1;
-
-        unless ($self->up_to_date("po/bin/po4a.pot","po/bin/$lang.po")) {
-            print "XX Sync po/bin/$lang.po: ";
-            system("msgmerge --previous po/bin/$lang.po po/bin/po4a.pot -o po/bin/$lang.po.new") && die;
+        my $lang = fileparse($_, qw{.po});
+        unless ($self->up_to_date("po/bin/po4a.pot", $_)) {
+            print "XX Sync $_: ";
+            system("msgmerge --previous $_ po/bin/po4a.pot -o $_.new") && die;
             # Typically all that changes was a date. I'd
             # prefer not to commit such changes, so detect
             # and ignore them.
-            $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/$lang.po po/bin/$lang.po.new);
+            $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
             if ($diff eq "") {
-                unlink "po/bin/$lang.po.new" || die;
+                unlink "$_.new" || die;
                 # touch it
                 my ($atime, $mtime) = (time,time);
-                utime $atime, $mtime, "po/bin/$lang.po";
+                utime $atime, $mtime, $_;
             } else {
-                rename "po/bin/$lang.po.new", "po/bin/$lang.po" || die;
+                rename "$_.new", $_ || die;
             }
         } else {
-            print "XX po/bin/$lang.po uptodate.\n";
+            print "XX $_ uptodate.\n";
         }
-        unless ($self->up_to_date("po/bin/$lang.po","blib/po/$lang/LC_MESSAGES/po4a.mo")) {
+        unless ($self->up_to_date($_,"blib/po/$lang/LC_MESSAGES/po4a.mo")) {
             File::Path::mkpath( File::Spec->catdir( 'blib', 'po', $lang, "LC_MESSAGES" ), 0, oct(777) );
-            system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo po/bin/$lang.po") && die;
+            system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo $_") && die;
         } 
     }
 }
@@ -138,11 +136,11 @@ sub ACTION_install {
     require ExtUtils::Install;
 #    $self->depends_on('build');
     my $mandir = $self->install_sets($self->installdirs)->{'bindoc'};
-    $mandir =~ s/\/man1$//;
+    $mandir =~ s,/man1$,,;
     $self->install_path(manl10n => $mandir);
 
     my $localedir = $mandir;
-    $localedir =~ s/\/man$/\/locale/;
+    $localedir =~ s,/man$,/locale,;
     $self->install_path(po => $localedir);
 
     ExtUtils::Install::install($self->install_map, !$self->quiet, 0, $self->{args}{uninst}||0);
@@ -186,8 +184,7 @@ sub postats {
     my @files = @{$self->rscan_dir($dir,qr{\.po$})};
     foreach (sort @files) {
         $file = $_;
-        $file =~ /.*\/(.*)\.po$/;
-        my $lang = $1;
+        my $lang = fileparse($file, qw{.po});
         my $stat = `msgfmt -o /dev/null -c -v --statistics $file 2>&1`;
         print "  $lang: $stat";
     }
