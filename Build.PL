@@ -18,6 +18,7 @@ my $builder = Module::Build->subclass
 	}
 	sub ACTION_po4a_build {
 	    my $self = shift;
+	    system("chmod -R u+w po/pod") && die;
 	    system("./share/po4a-build -f po4a-build.conf") and die;
 	}
 
@@ -31,26 +32,29 @@ my $builder = Module::Build->subclass
 	# Update po/bin/*.po files
 	sub ACTION_binpo {
 	    my $self = shift;
+	    my ($cmd, $sources);
+
+	    system("chmod -R u+w po/bin") && die;
 
 	    my @perl_files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}));
 	    my @shell_files = sort(shell_scripts());
 	    my @all_files = (@perl_files, @shell_files);
 	    unless ($self->up_to_date(\@all_files, "po/bin/po4a.pot")) {
 		print "XX Update po/bin/po4a-perl.pot\n";
-		my $podfiles = join ("", map {" ../../".$_ } @perl_files);
-		my $cmd = "cd po/bin; xgettext ";
+		$sources = join ("", map {" ../../".$_ } @perl_files);
+		$cmd = "cd po/bin; xgettext ";
 		$cmd .= "--from-code=utf-8 ";
 		$cmd .= "-L Perl ";
 		$cmd .= "--add-comments ";
 		$cmd .= "--msgid-bugs-address po4a\@packages.debian.org ";
 		$cmd .= "--package-name po4a ";
 		$cmd .= "--package-version ".$self->dist_version()." ";
-		$cmd .= "$podfiles ";
+		$cmd .= "$sources ";
 		$cmd .= "-o po4a-perl.pot";
 		system($cmd) && die;
 
 		print "XX Update po/bin/po4a-shell.pot\n";
-		$podfiles = join ("", map {" ../../".$_ } @shell_files);
+		$sources = join ("", map {" ../../".$_ } @shell_files);
 		$cmd = "cd po/bin; xgettext ";
 		$cmd .= "--from-code=utf-8 ";
 		$cmd .= "-L shell ";
@@ -58,7 +62,7 @@ my $builder = Module::Build->subclass
 		$cmd .= "--msgid-bugs-address po4a\@packages.debian.org ";
 		$cmd .= "--package-name po4a ";
 		$cmd .= "--package-version ".$self->dist_version()." ";
-		$cmd .= "$podfiles ";
+		$cmd .= "$sources ";
 		$cmd .= "-o po4a-shell.pot";
 		system($cmd) && die;
 
@@ -86,8 +90,7 @@ my $builder = Module::Build->subclass
 	    }
 
 	    # update languages
-	    my @files = @{$self->rscan_dir('po/bin',qr{\.po$})};
-	    foreach (@files) {
+	    foreach (@{$self->rscan_dir('po/bin',qr{\.po$})}) {
 		next if m|/.#|;
 		$_ =~ /.*\/(.*)\.po$/;
 		my $lang = $1;
@@ -144,8 +147,8 @@ my $builder = Module::Build->subclass
 	    my ($self) = @_;
 
 	    $self->depends_on('test');
-	    $self->depends_on('distdir');
 	    $self->depends_on('binpo');
+	    $self->depends_on('distdir');
 
 	    system("./share/po4a-build --pot-only -f ./po4a-build.conf") and die;
 
