@@ -794,9 +794,11 @@ while (<CONFIG>) {
     next if ($line =~ s/\\$//);
     next unless ($line =~ /\S/);
 
+    my $args = $line;
     die wrap_ref_mod("$config_file:$nb", "", gettext("Syntax error: %s"), $line)
-      unless ($line =~ m/^\[([^\]]*)\] (\S+) (.*)$/ || $line =~ m/^\[([^\]]*)\] (\S+)$/);
-    my ($cmd,$main,$args)=($1,$2,$3||"");
+      unless ($args =~ s/^\[([^\]]*)\] *//);
+    my $cmd = $1;
+    my $main = ($args=~ s/^(\S+) *// ? $1 : "");
 
     if (@langs) {
 	# Expand the $lang templates
@@ -828,7 +830,7 @@ while (<CONFIG>) {
 	    die wrap_ref_mod("$config_file:$nb", "",
 		gettext("Unparsable argument '%s'."), $arg)
 	      unless ($arg =~ /^([^:]*):(.*)/);
-	    $po_filename{$1}=$2;
+	    $po_filename{$1}=$2 if $1 ne '$lang';
 	}
 
     } elsif ($cmd eq "po4a_langs") {
