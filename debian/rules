@@ -28,7 +28,9 @@ build-stamp:
 
 	$(PERL) Build.PL create_packlist=0
 	./Build
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
 	./Build test
+endif
 	touch build-stamp
 
 clean:
