@@ -141,6 +141,15 @@ Handle documents in the AsciiDoc format.
 
 my $asciidoc = 0;
 
+=item B<control>[=I<tag list>]
+
+Handle control files.
+A comma separated list of tags to be translated can be provided.
+
+=cut
+
+my %control = ();
+
 =back
 
 =cut
@@ -149,6 +158,7 @@ sub initialize {
     my $self = shift;
     my %options = @_;
 
+    $self->{options}{'control'} = "";
     $self->{options}{'asciidoc'} = 1;
     $self->{options}{'breaks'} = 1;
     $self->{options}{'debianchangelog'} = 1;
@@ -190,7 +200,19 @@ sub initialize {
         $markdown=1;
     }
 
-    $asciidoc=1 if (defined $options{'asciidoc'});
+    if (defined $options{'asciidoc'}) {
+        $asciidoc=1;
+    }
+
+    if (defined $options{'control'}) {
+        if ($options{'control'} eq "1") {
+            $control{''}=1;
+        } else {
+            foreach my $tag (split(',',$options{'control'})) {
+                $control{$tag}=1;
+            }
+        }
+    }
 }
 
 sub parse {
@@ -240,6 +262,57 @@ sub parse {
             $paragraph="";
             $wrapped_mode = 1;
             $self->pushline("$line\n");
+        } elsif (    $line =~ m/^([^ :]*): *(.*)$/
+                 and %control) {
+            warn "Unrecognized section: '$paragraph'\n"
+                unless $paragraph eq "";
+            my $tag = $1;
+            my $val = $2;
+            my $t;
+            if ($control{''} or $control{$tag}) {
+                $t = $self->translate($val,
+                                      $self->{ref},
+                                      $tag.(defined $self->{controlkey}?", ".$self->{controlkey}:""),
+                                      "wrap" => 0);
+            } else {
+                $t = $val;
+            }
+            if (not defined $self->{controlkey}) {
+                $self->{controlkey} = "$tag: $val";
+            }
+            $self->pushline("$tag: $t\n");
+            $paragraph="";
+            $wrapped_mode = 1;
+            $self->{bullet} = "";
+            $self->{indent} = " ";
+        } elsif (%control and
+                 $line eq " .") {
+            do_paragraph($self,$paragraph,$wrapped_mode,
+                         "Long Description".(defined $self->{controlkey}?", ".$self->{controlkey}:""));
+            $paragraph="";
+            $self->pushline($line."\n");
+            $self->{bullet} = "";
+            $self->{indent} = " ";
+        } elsif (%control and
+                 $line =~ m/^ Link: +(.*)$/) {
+            do_paragraph($self,$paragraph,$wrapped_mode,
+                         "Long Description".(defined $self->{controlkey}?", ".$self->{controlkey}:""));
+            my $link=$1;
+            my $t1 = $self->translate("Link: ",
+                                      $self->{ref},
+                                      "Link",
+                                      "wrap" => 0);
+            my $t2 = $self->translate($link,
+                                      $self->{ref},
+                                      "Link".(defined $self->{controlkey}?", ".$self->{controlkey}:""),
+                                      "wrap" => 0);
+            $self->pushline(" $t1$t2\n");
+            $paragraph="";
+        } elsif (%control and
+                 defined $self->{indent} and
+                 $line =~ m/^$self->{indent}\S/) {
+            $paragraph .= $line."\n";
+            $self->{type} = "Long Description".(defined $self->{controlkey}?", ".$self->{controlkey}:"");
         } elsif (    (defined $self->{verbatim})
                  and ($self->{verbatim} == 2)) {
             # Untranslated blocks
@@ -258,6 +331,7 @@ sub parse {
             $paragraph="";
             $wrapped_mode = 1 unless defined($self->{verbatim});
             $self->pushline($line."\n");
+            undef $self->{controlkey};
         } elsif ($asciidoc and (not defined($self->{verbatim})) and
                  ($line =~ m/^(\+|--)$/)) {
             # List Item Continuation or List Block
