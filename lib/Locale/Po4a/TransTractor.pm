@@ -662,7 +662,7 @@ sub addendum {
 	my @newres=();
 
 	do {
-	    # make sure it doesnt whine on empty document
+	    # make sure it doesn't whine on empty document
 	    my $line = scalar @{$self->{TT}{doc_out}} ? shift @{$self->{TT}{doc_out}} : "";
 	    push @newres,$line;
 	    my $outline=mychomp($line);
