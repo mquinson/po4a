@@ -141,7 +141,7 @@ same. But there are still some problems:
 The error output of nsgmls is redirected to /dev/null, which is clearly
 bad. I don't know how to avoid that.
 
-The problem is that I have to "protect" the conditional inclusions (ie, the
+The problem is that I have to "protect" the conditional inclusions (i.e. the
 C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise
 nsgmls eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
@@ -178,11 +178,11 @@ For DebianDoc, I tested some of the manuals from the DDP, but not all yet.
 
 =item *
 
-In case of file inclusion, string reference of messages in PO files (ie,
-lines like C<#: en/titletoc.sgml:9460>) will be wrong.
+In case of file inclusion, string reference of messages in PO files
+(i.e. lines like C<#: en/titletoc.sgml:9460>) will be wrong.
 
 This is because I preprocess the file to protect the conditional inclusion
-(ie, the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
+(i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
 &version;) from nsgmls because I want them verbatim to the generated
 document. For that, I make a temp copy of the input file and do all the
 changes I want to this before passing it to nsgmls for parsing.
@@ -362,7 +362,7 @@ sub parse_file {
     my ($prolog);
 
     # Rewrite the file to:
-    #   - protect optional inclusion marker (ie, "<![ %str [" and "]]>")
+    #   - protect optional inclusion marker (i.e. "<![ %str [" and "]]>")
     #   - protect entities from expansion (ie "&release;")
     my $origfile="";
     my $i=0;

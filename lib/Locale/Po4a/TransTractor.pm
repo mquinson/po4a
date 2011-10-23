@@ -768,11 +768,11 @@ A string to translate
 
 =item -
 
-The reference of this string (ie, position in inputfile)
+The reference of this string (i.e. position in inputfile)
 
 =item -
 
-The type of this string (ie, the textual description of its structural role
+The type of this string (i.e. the textual description of its structural role
 ; used in Locale::Po4a::Po::gettextization() ; see also L<po4a(7)|po4a.7>,
 section B<Gettextization: how does it work?>)
 
