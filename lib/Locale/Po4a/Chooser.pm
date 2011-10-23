@@ -100,7 +100,7 @@ Now, you just have to call the Locale::Po4a::Chooser::new() function,
 passing the name of module as argument.
 
 You also have the Locale::Po4a::Chooser::list() function which lists the
-available format and exits on the value passed as argument.
+available formats and exits on the value passed as argument.
 
 =head1 SEE ALSO
 
