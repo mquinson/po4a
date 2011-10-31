@@ -141,7 +141,7 @@ Handle documents in the AsciiDoc format.
 
 my $asciidoc = 0;
 
-=item B<control>[=I<tag list>]
+=item B<control>[B<=>I<taglist>]
 
 Handle control files.
 A comma separated list of tags to be translated can be provided.
