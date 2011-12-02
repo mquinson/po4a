@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.41\n"
 "POT-Creation-Date: 2011-10-22 20:31-0400\n"
-"PO-Revision-Date: 2011-11-27 14:29+0100\n"
+"PO-Revision-Date: 2011-12-02 18:08+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -3771,6 +3771,9 @@ msgid ""
 " HTMLXSL=\"http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl\"\n"
 "\n"
 msgstr ""
+" # für HTML zu verwendende XSL-Datei\n"
+" HTMLXSL=\"http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl\"\n"
+"\n"
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:327 doc/po4a-runtime.7.pod:156
@@ -3878,6 +3881,10 @@ msgid ""
 "help you understanding why it does not do what you expected, and how to "
 "solve your problems."
 msgstr ""
+"Diese Kapitel gibt Ihnen einen kurzen Überblick über die Interna von Po4a, so "
+"dass Sie sich sicherer fühlen, es zu warten und zu verbessern. Es könnte "
+"Ihnen auch dabei helfen, zu verstehen, warum es nicht das tut, was Sie "
+"erwarten, und wie Sie Ihre Probleme beheben können."
 
 #. type: =item
 #: doc/po4a.7.pod:57
@@ -5840,6 +5847,11 @@ msgid ""
 "runtime translation. Whilst runtime translation can use directories other "
 "than F<po/>, it is usually easiest to go with the convention."
 msgstr ""
+"Übersetzungen von Dokumentationen sollten NICHT das gleich F<po/>-Verzeichnis "
+"wie die Übersetzungen der Programmmeldungen benutzen. Es ist zwar möglich, "
+"dass die Übersetzungen der Programmmeldungen ein von F<po/> verschiedenes "
+"Verzeichnis benutzen, allerdings ist es meistens am besten, der Konvention zu "
+"folgen."
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:23
@@ -8265,17 +8277,17 @@ msgstr "stats_clear()"
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1062
 msgid "Clears the statistics about gettext hits."
-msgstr ""
+msgstr "Bereinigt die Statistiken über Gettext-Treffer."
 
 #. type: =head1
 #: lib/Locale/Po4a/Po.pm:1074
 msgid "Functions to build a message catalog"
-msgstr ""
+msgstr "Funktionen, um einen Katalog mit Meldungen aufzubauen"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1078
 msgid "push(%)"
-msgstr ""
+msgstr "push(%)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1080
@@ -8283,31 +8295,33 @@ msgid ""
 "Push a new entry at the end of the current catalog. The arguments should "
 "form a hash table. The valid keys are:"
 msgstr ""
+"Schiebt einen neuen Eintrag an das Ende des aktuellen Katalogs. Die Argumente "
+"sollten eine Hash-Tabelle darstellen. Die gültigen Schlüssel sind:"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1085
 msgid "B<msgid>"
-msgstr ""
+msgstr "B<msgid>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1087
 msgid "the string in original language."
-msgstr ""
+msgstr "die Zeichenkette in der Ursprungssprache"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1089
 msgid "B<msgstr>"
-msgstr ""
+msgstr "B<msgstr>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1091
 msgid "the translation."
-msgstr ""
+msgstr "die Übersetzung"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1093
 msgid "B<reference>"
-msgstr ""
+msgstr "B<reference>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1095
@@ -8316,6 +8330,9 @@ msgid ""
 "'file.c' at line 46). It can be a space-separated list in case of multiple "
 "occurrences."
 msgstr ""
+"eine Angabe, wo die Zeichenkette gefunden wurde. Beispiel: Datei.c:46 (d.h. "
+"in Datei.c, Zeile 46). Es kann eine durch Leerzeichen getrennte Liste sein, "
+"falls die Zeichenkette mehrfach vorkommt."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1099 lib/Locale/Po4a/TransTractor.pm:799
@@ -8327,11 +8344,13 @@ msgstr "B<comment>"
 msgid ""
 "a comment added here manually (by the translators). The format here is free."
 msgstr ""
+"ein manuell (vom Übersetzer) hinzugefügter Kommentar. Das Format ist hier "
+"frei."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1103
 msgid "B<automatic>"
-msgstr ""
+msgstr "B<automatic>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1105
@@ -8340,16 +8359,21 @@ msgid ""
 "See the B<--add-comments> option of the B<xgettext> program for more "
 "information."
 msgstr ""
+"ein automatisch hinzugefügter Kommentar, der vom Zeichenkettenausleseprogramm "
+"hinzugefügt wurde. Lesen Sie zu der Option »B<--add-comments>« des Programms "
+"B<xgettext> für weitere Informationen hierzu."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1109
 msgid "B<flags>"
-msgstr ""
+msgstr "B<flags>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1111
 msgid "space-separated list of all defined flags for this entry."
 msgstr ""
+"durch Leerzeichen getrennte Liste aller definierten Schalter für diesen "
+"Eintrag."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1113
@@ -8358,6 +8382,10 @@ msgid ""
 "B<librep-text>, B<smalltalk-text>, B<java-text>, B<awk-text>, B<object-"
 "pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> and B<fuzzy>."
 msgstr ""
+"Gültige Schalter sind: B<c-text>, B<python-text>, B<lisp-text>, "
+"B<elisp-text>, B<librep-text>, B<smalltalk-text>, B<java-text>, B<awk-text>, "
+"B<object-pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> und "
+"B<fuzzy>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1117
@@ -11109,6 +11137,9 @@ msgid ""
 "way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and "
 "E<lt>BOOKE<gt>Lang as E<lt>bookE<gt>lang."
 msgstr ""
+"Damit funktioniert die Suche nach Markierungen und Attributen unabhängig von "
+"der Groß-/Kleinschreibung. Falls es definiert ist, wird es E<lt>BooKE<gt>laNG "
+"und E<lt>BOOKE<gt>Lang als E<lt>bookE<gt>lang behandeln."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:281
