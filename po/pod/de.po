@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.41\n"
 "POT-Creation-Date: 2011-10-22 20:31-0400\n"
-"PO-Revision-Date: 2011-12-02 18:08+0100\n"
+"PO-Revision-Date: 2011-12-09 21:19+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -3889,7 +3889,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:57
 msgid "4 FAQ"
-msgstr ""
+msgstr "4. FAQ"
 
 #. type: textblock
 #: doc/po4a.7.pod:59 doc/po4a.7.pod:886
@@ -3901,11 +3901,19 @@ msgid ""
 "does not answer your question, please contact us on the E<lt>po4a-"
 "devel@lists.alioth.debian.orgE<gt> mailing list. We love feedback."
 msgstr ""
+"Dieses Kapitel gruppiert die häufig gestellten Fragen (»Frequently Asked "
+"Questions«). In der Tat könnten derzeit die meisten dieser Fragen wie folgt "
+"formuliert werden: »Warum wurde es auf diese Weise entwickelt und nicht auf "
+"eine andere?«. Falls Sie glauben, Po4a ist nicht die richtige Lösung zur "
+"Übersetzung von Dokumentation, sollten Sie diesen Abschnitt lesen. Falls er "
+"Ihre Frage nicht beantwortet, nehmen Sie auf unserer Mailingliste "
+"E<lt>po4a-devel@lists.alioth.debian.orgE<gt> mit uns (auf Englisch) Kontakt "
+"auf. Wir freuen uns über Rückmeldungen."
 
 #. type: =item
 #: doc/po4a.7.pod:66
 msgid "5 Specific notes about modules"
-msgstr ""
+msgstr "5. Spezielle Hinweise zu Modulen"
 
 #. type: textblock
 #: doc/po4a.7.pod:68
@@ -3915,6 +3923,11 @@ msgid ""
 "encounter when translating stuff in this module, or the rules you should "
 "follow in your original document to make translators' life easier."
 msgstr ""
+"Dieses Kapitel stellt die Besonderheiten jedes Moduls vor, jeweils aus dem "
+"Blickwinkel des Übersetzers und ursprünglichen Autors. Lesen Sie diesen "
+"Abschnitt, um die Syntax kennenzulernen, die Ihnen beim Übersetzen in diesem "
+"Modul begegnen wird oder die Regeln, denen Sie in ihrem Originaldokument "
+"folgen sollten, um das Leben der Übersetzer zu erleichtern."
 
 #. type: textblock
 #: doc/po4a.7.pod:73
@@ -7967,7 +7980,7 @@ msgid ""
 "    $pofile->gettext(\"Hello\"); # returns 'bonjour'\n"
 "\n"
 msgstr ""
-"    # Extrahiere eine Übersetzung\n"
+"    # Eine Übersetzung extrahieren\n"
 "    $pofile->gettext(\"Hello\"); # liefert »bonjour«\n"
 "\n"
 
@@ -7979,7 +7992,7 @@ msgid ""
 "    $pofile->write('otherfile.po');\n"
 "\n"
 msgstr ""
-"    # Zurückschreiben in eine Datei\n"
+"    # In eine Datei zurückschreiben\n"
 "    $pofile->write('andereDatei.po');\n"
 "\n"
 
@@ -7995,6 +8008,7 @@ msgstr ""
 "schreiben (deren Erweiterung oft I<po> lautet), Sie können dynamisch neue "
 "Einträge hinzufügen oder um die Übersetzung einer Zeichenkette bitten."
 
+# FIXME: A better link should be given here
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:41
 msgid ""
@@ -8087,6 +8101,7 @@ msgstr "Schreibt den aktuellen Katalog in die übergebene Datei."
 msgid "write_if_needed($$)"
 msgstr "write_if_needed($$)"
 
+# FIXME s/check that/check if/
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:490
 msgid ""
@@ -8097,7 +8112,7 @@ msgid ""
 msgstr ""
 "Wie write, aber falls die PO- oder POT-Datei bereits existiert, wird das "
 "Objekt in eine temporäre Datei geschrieben, die mit der bestehenden Datei "
-"verglichen werden, um zu überprüfen, das eine Aktualisierung benötigt wird "
+"verglichen wird, um zu überprüfen, ob eine Aktualisierung benötigt wird "
 "(dies vermeidet eine Änderung an der POT-Datei, lediglich um eine "
 "Zeilenreferenz oder das Feld »POT-Creation-Date« zu aktualisieren)."
 
@@ -8390,12 +8405,12 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1117
 msgid "See the gettext documentation for their meaning."
-msgstr ""
+msgstr "Lesen Sie die Getttext-Dokumentation bezüglich ihrer Bedeutung."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1119
 msgid "B<type>"
-msgstr ""
+msgstr "B<type>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1121
@@ -8409,6 +8424,15 @@ msgid ""
 "that both files do not share the same structure, and the process reports an "
 "error."
 msgstr ""
+"Dies ist hauptsächlich ein internes Argument: Es wird beim Einbau von Gettext "
+"in Dokumente verwandt. Die Idee hierbei ist, sowohl das Original als auch die "
+"Übersetzung in ein PO-Objekt auszuwerten und sie dann zusammenzuführen, wobei "
+"die Mgsids des einen die Msgids werden und die Mgsgids des anderen die "
+"Msgstr. Um sicherzustellen, dass alles stimmig wird, wird jeder Msgid in "
+"PO-Objekten ein Typ vergeben, basierend auf ihrer Struktur (wie »chapt«, "
+"»sect1«, »p« und so weiter in Docbook). Falls die Typen der Zeichenketten "
+"nicht übereinstimmen, bedeutet dies, dass die beiden Dateien nicht über die "
+"gleiche Struktur verfügen. Der Prozess liefert dann eine Fehlermeldung."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1130
@@ -8416,6 +8440,9 @@ msgid ""
 "This information is written as automatic comment in the PO file since this "
 "gives to translators some context about the strings to translate."
 msgstr ""
+"Diese Information wird als automatischer Kommentare in die PO-Datei "
+"geschrieben, da dies den Übersetzern Kontext zu den zu übersetzenden "
+"Zeichenketten liefert."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1135
@@ -8423,6 +8450,9 @@ msgid ""
 "boolean indicating whether whitespaces can be mangled in cosmetic "
 "reformattings. If true, the string is canonized before use."
 msgstr ""
+"Logische Variable, die angibt, ob Leerzeichen bei kosmetischen "
+"Neuformatierungen gequetscht werden dürfen. Falls wahr wir die Zeichenkette "
+"vor der Verwendung in eine kanonische Form gebracht."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1138
@@ -8430,31 +8460,33 @@ msgid ""
 "This information is written to the PO file using the B<wrap> or B<no-wrap> "
 "flag."
 msgstr ""
+"Diese Information wird mit dem Schalter B<wrap> oder B<no-wrap> in die "
+"PO-Datei geschrieben."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1144
 msgid "This information is not written to the PO file."
-msgstr ""
+msgstr "Diese Information wird nicht in die PO-Datei geschrieben."
 
 #. type: =head1
 #: lib/Locale/Po4a/Po.pm:1317
 msgid "Miscellaneous functions"
-msgstr ""
+msgstr "Verschiedene Funktionen"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1321
 msgid "count_entries()"
-msgstr ""
+msgstr "count_entries()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1323
 msgid "Returns the number of entries in the catalog (without the header)."
-msgstr ""
+msgstr "Liefert die Anzahl an Einträgen im Katalog (ohne die Kopfzeilen)."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1332
 msgid "count_entries_doc()"
-msgstr ""
+msgstr "count_entries_doc()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1334
@@ -8462,26 +8494,28 @@ msgid ""
 "Returns the number of entries in document. If a string appears multiple "
 "times in the document, it will be counted multiple times"
 msgstr ""
+"Liefert die Anzahl der EInträge im Dokument. Falls eine Zeichenkette mehrfach "
+"im Dokument auftaucht, wird sie auch mehrfach gezählt."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1344
 msgid "msgid($)"
-msgstr ""
+msgstr "msgid($)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1346
 msgid "Returns the msgid of the given number."
-msgstr ""
+msgstr "Liefert die Msgid der angegebenen Nummer."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1360
 msgid "msgid_doc($)"
-msgstr ""
+msgstr "msgid_doc($)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:1362
 msgid "Returns the msgid with the given position in the document."
-msgstr ""
+msgstr "Liefert die Msgid mit der angegebenen Position im Dokument."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:1378
@@ -9289,6 +9323,8 @@ msgstr ""
 #: lib/Locale/Po4a/TeX.pm:135
 msgid "Coma-separated list of environments which should not be re-wrapped."
 msgstr ""
+"Durch Kommata getrennte Liste von Umgebungen, die nicht neu umgebrochen "
+"werden sollen."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:137
@@ -9296,6 +9332,9 @@ msgid ""
 "Note that there is a difference between verbatim and no_wrap environments.  "
 "There is no command and comments analysis in verbatim blocks."
 msgstr ""
+"Beachten Sie, dass es zwischen den Umgebungen »verbatim« und »no_wrap« einen "
+"Unterschied gibt. In »verbatim«-Blöcken erfolgt keine Befehls- und "
+"Inhaltsanalyse."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:140 lib/Locale/Po4a/TeX.pm:159
@@ -9304,11 +9343,13 @@ msgid ""
 "If this environment was not already registered, po4a will consider that this "
 "environment does not take any parameters."
 msgstr ""
+"Falls diese Umgebung noch nicht registriert war, wird Po4a annehmen, dass "
+"diese Umgebung keine Parameter erwartet."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:143
 msgid "B<exclude_include>"
-msgstr ""
+msgstr "B<exclude_include>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:145
@@ -9316,11 +9357,13 @@ msgid ""
 "Colon-separated list of files that should not be included by \\input and "
 "\\include."
 msgstr ""
+"Durch Doppelpunkte getrennte Liste von Dateien, die nicht von \\input und "
+"\\include eingeschlossen werden sollten."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:148
 msgid "B<definitions>"
-msgstr ""
+msgstr "B<definitions>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:150
@@ -9329,11 +9372,17 @@ msgid ""
 "B<INLINE CUSTOMIZATION> section.  You can use this option if it is not "
 "possible to put the definitions in the document being translated."
 msgstr ""
+"Der Name der Datei, die die Definitionen für Po4a enthält, wie diese im "
+"Abschnitt B<ANPASSUNGEN IM DOKUMENT> beschrieben sind. Sie können diese "
+"Option verwenden, falls es nicht möglich ist, die Definitionen in das zu "
+"übersetzende Dokument zu schreiben."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:157
 msgid "Coma-separated list of environments which should be taken as verbatim."
 msgstr ""
+"Durch Kommata getrennte Liste von Umgebungen, die »verbatim« angenommen "
+"werden sollten."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:164
@@ -10146,7 +10195,7 @@ msgstr "eine PO-Datei, die die zu verwendende Übersetzung enthält."
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:62
 msgid "As output, it produces:"
-msgstr ""
+msgstr "Als Ausgabe produziert es:"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:68
@@ -11144,7 +11193,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:281
 msgid "B<includeexternal>"
-msgstr ""
+msgstr "B<includeexternal>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:283
