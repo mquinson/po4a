@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.41\n"
 "POT-Creation-Date: 2011-10-22 20:31-0400\n"
-"PO-Revision-Date: 2011-12-09 21:19+0100\n"
+"PO-Revision-Date: 2011-12-18 17:23+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: de <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -3936,11 +3936,15 @@ msgid ""
 "placed in each module's documentation. This helps ensuring that the "
 "information is up to date by keeping the documentation and the code together."
 msgstr ""
+"Tatsächlich ist dieser Abschnitt nicht wirklich Teil dieses Dokuments. "
+"Stattdessen befindet er sich in jeder Modul-Beschreibung. Dies stellt sicher, "
+"das die Information aktuell ist, indem die Dokumentation und der Code "
+"zusammengehalten werden."
 
 #. type: =head1
 #: doc/po4a.7.pod:80
 msgid "Why should I use po4a? What it is good for?"
-msgstr ""
+msgstr "Warum sollte ich Po4a verwenden? Wofür ist es gut?"
 
 # FIXME: s/access to software and to their source/access software and its source/
 #. type: textblock
@@ -9390,6 +9394,8 @@ msgid ""
 "Using these options permits to override the behaviour of the commands "
 "defined in the default lists."
 msgstr ""
+"Die Verwendung dieser Option ermöglicht es, das Verhalten der Befehle, die in "
+"dieser Standardliste definiert werden, zu überschreiben."
 
 #. type: =head1
 #: lib/Locale/Po4a/TeX.pm:167
@@ -9403,11 +9409,14 @@ msgid ""
 "lines are interpreted as commands to the parser.  The following commands are "
 "recognized:"
 msgstr ""
+"Das TeX-Modul kann durch Zeilen, die mit B<% po4a:> beginnen, angepasst "
+"werden. Diese Zeilen werden vom Parser als Befehle interpretiert. Die "
+"folgenden Befehle werden erkannt:"
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:175
 msgid "B<% po4a: command> I<command1> B<alias> I<command2>"
-msgstr ""
+msgstr "B<% po4a: command> I<Befehl1> B<alias> I<Befehl2>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:177
@@ -9415,11 +9424,13 @@ msgid ""
 "Indicates that the arguments of the I<command1> command should be treated as "
 "the arguments of the I<command2> command."
 msgstr ""
+"Zeigt an, dass die Argumente des Befehls I<Befehl1> als Argumente des Befehls "
+"I<Befehl2> beahndelt werden sollen."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:180
 msgid "B<% po4a: command> I<command1> I<parameters>"
-msgstr ""
+msgstr "B<% po4a: command> I<Befehl1> I<Parameter>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:182
@@ -9428,16 +9439,19 @@ msgid ""
 "command.  This information will be used to check the number of arguments and "
 "their types."
 msgstr ""
+"Dies erlaubt es, die Parameter des Befehls I<Befehl1> im Detail zu "
+"beschreiben. Diese Information wird zur Überprüfung der Anzahl der "
+"Argumente und ihrer Typen verwandt."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:187
 msgid "You can precede the I<command1> command by"
-msgstr ""
+msgstr "Sie können Folgendes dem Befehl I<Befehl1> voranstellen:"
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:191
 msgid "an asterisk (B<*>)"
-msgstr ""
+msgstr "einen Stern (B<*>)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:193
@@ -9446,11 +9460,14 @@ msgid ""
 "beginning or the end of a paragraph).  The translators will then have to "
 "translate the parameters that are marked as translatable."
 msgstr ""
+"Po4a wird diesen Befehl aus Absätzen herauslesen (falls er sich am Anfang "
+"oder Ende eines Absatzes befindet). Der Übersetzer muss dann die Parameter "
+"übersetzen, die als übersetzbar markiert sind."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:198
 msgid "a plus (B<+>)"
-msgstr ""
+msgstr "ein Plus (B<+>)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:200
@@ -9462,6 +9479,12 @@ msgid ""
 "with small words in parameter, which can have multiple meanings (and "
 "translations)."
 msgstr ""
+"Wie bei einem Stern wird der Befehl herausgelesen, falls er an den Endpunkten "
+"eines Blocks erscheint, aber die Parameter werden nicht separat übersetzt. "
+"Der Übersetzer muss den Befehl, zusammengesetzt mit allen seinen Parametern, "
+"übersetzen. Dies erlaubt es, mehr Kontext zu erhalten und ist für Befehle "
+"nützlich, die kleine Wörter in ihren Parametern enthalten, die mehrere "
+"Bedeutungen (und Übersetzungen) haben können."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:207
@@ -9469,12 +9492,16 @@ msgid ""
 "Note: In this case you don't have to specify which parameters are "
 "translatable, but po4a must know the type and number of parameters."
 msgstr ""
+"Hinweis: In diesem Fall müssen Sie nicht angeben, welche Parameter "
+"übersetzbar sind, aber Po4a muss die Anzahl und den Typ der Parameter wissen."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:210
 msgid "a minus (B<->)"
-msgstr ""
+msgstr "ein Minus (B<->)"
 
+# FIXME: s/a bloc/a block/
+# FIXME: s/font command/font commands/
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:212
 msgid ""
@@ -9485,6 +9512,13 @@ msgid ""
 "context), but there is no reason to annoy the translator with them if a "
 "whole string is enclosed in such a command."
 msgstr ""
+"In diesem Fall wird der Befehl aus keinem Block herausgelesen. Falls er aber "
+"alleine in einem Block erscheint, werden nur die als übersetzbar markierten "
+"Parameter dem Übersetzer angeboten. Dies ist für Schriftsatzbefehle nützlich. "
+"Diese Befehle sollten im Allgemeinen nicht von ihrem Absatz getrennt werden "
+"(um den Kontext zu erhalten), aber es gibt keinen Grund, den Übersetzer damit "
+"zu belästigen, falls die gesamte Zeichenkette in einem solchen Befehl "
+"eingeschlossen ist."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:222
@@ -9497,6 +9531,12 @@ msgid ""
 " % po4a: command *chapter [_]{_}\n"
 "\n"
 msgstr ""
+"Das Argument I<Parameter> ist ein Satz von [] (um ein optionales Argument\n"
+"anzuzeigen) oder {} (um ein verpflichtendes Argument anzuzeigen).\n"
+"Sie können einen Unterstrich (_) zwischen diese Klammern setzen, um anzugeben,\n"
+"dass der Parameter übersetzt werden muss. Beispiel:\n"
+" % po4a: command *chapter [_]{_}\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:228
@@ -9511,6 +9551,15 @@ msgid ""
 " % po4a: command -href {}{_}\n"
 "\n"
 msgstr ""
+"Dies zeigt an, dass der Befehl »chapter« zwei Parameter erwartet: einen\n"
+"optionalen (den kurzen Titel) und einen verpflichtenden, wobei beide\n"
+"übersetzt werden müssen. Falls Sie angeben möchten, dass der Befehl »href«\n"
+"zwei verpflichtende Parameter hat, dass Sie die URL nicht übersetzen möchten\n"
+"(den ersten Parameter) und dass Sie nicht möchten, dass der Befehl von seinem\n"
+"Absatz getrennt wird (was dem Übersetzer erlaubt, den Link im Satz zu\n"
+"verschieben), können Sie folgendes verwenden:\n"
+" % po4a: command -href {}{_}\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:236
@@ -10197,12 +10246,15 @@ msgstr "eine PO-Datei, die die zu verwendende Übersetzung enthält."
 msgid "As output, it produces:"
 msgstr "Als Ausgabe produziert es:"
 
+# FIXME s/document ;/document;/
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:68
 msgid ""
 "another PO file, resulting of the extraction of translatable strings from "
 "the input document ;"
 msgstr ""
+"eine weitere PO-Datei, die aus der Auslösung der übersetzbaren Zeichenketten "
+"aus dem Eingabedokument entsteht"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:73
@@ -11202,6 +11254,10 @@ msgid ""
 "document, and for the extraction of strings.  If it's not defined, you will "
 "have to translate external entities separately as independent documents."
 msgstr ""
+"Wenn definiert, werden externe Entitäten in das erstellte (übersetzte) "
+"Dokument aufgenommen, und für die Herauslösung der Zeichenketten. Falls es "
+"nicht definiert ist, müssen Sie externe Entitäten separat als unabhängige "
+"Dokumente übersetzen."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:288
