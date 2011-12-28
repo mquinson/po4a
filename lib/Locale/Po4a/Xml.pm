@@ -981,7 +981,7 @@ sub tag_trans_open {
 This function returns the path to the current tag from the document's root,
 in the form E<lt>htmlE<gt>E<lt>bodyE<gt>E<lt>pE<gt>.
 
-An additional array of tags (without brackets) can be passed in argument.
+An additional array of tags (without brackets) can be passed as argument.
 These path elements are added to the end of the current path.
 
 =cut

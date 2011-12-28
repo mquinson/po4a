@@ -132,7 +132,7 @@ Use the source to see which parts can be debugged.
 
 =item B<no_wrap>
 
-Coma-separated list of environments which should not be re-wrapped.
+Comma-separated list of environments which should not be re-wrapped.
 
 Note that there is a difference between verbatim and no_wrap environments.
 There is no command and comments analysis in verbatim blocks.
@@ -154,7 +154,7 @@ the document being translated.
 
 =item B<verbatim>
 
-Coma-separated list of environments which should be taken as verbatim.
+Comma-separated list of environments which should be taken as verbatim.
 
 If this environment was not already registered, po4a will consider that
 this environment does not take any parameters.

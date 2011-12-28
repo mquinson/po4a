@@ -214,18 +214,18 @@ pages, see below) which contains:
 
   C<" #n">
 
-Lack of luck, in the po4a version, this was splited on the space by the
-wrapping. As result, in the original version, the man contain 
+Lack of luck, in the po4a version, this was split on the space by the
+wrapping. As result, in the original version, the man page contains 
 
  " #n"
 
-and mine contain
+and mine contains
 
  "" #n""
  
 which is logic since CE<lt>foobarE<gt> is rewritten "foobar".
 
-Complete list of pages having this problem on my box (from 564 pages ; note
+Complete list of pages having this problem on my box (from 564 pages; note
 that it depends on the chosen wrapping column):
 /usr/lib/perl5/Tk/MainWindow.pod
 /usr/share/perl/5.8.0/overload.pod
@@ -282,7 +282,7 @@ output.
 Sets the quote marks used to surround CE<lt>> text.  If the value is a
 single character, it is used as both the left and right quote; if it is two
 characters, the first character is used as the left quote and the second as
-the right quoted; and if it is four characters, the first two are used as
+the right quote; and if it is four characters, the first two are used as
 the left quote and the second two as the right quote.
 
 This may also be set to the special value B<none>, in which case no quote

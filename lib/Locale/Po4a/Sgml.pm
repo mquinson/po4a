@@ -188,7 +188,7 @@ document. For that, I make a temp copy of the input file and do all the
 changes I want to this before passing it to nsgmls for parsing.
 
 So that it works, I replace the entities asking for a file inclusion by the
-content of the given file (so that I can protect what needs to in subfile
+content of the given file (so that I can protect what needs to be in a subfile
 also). But nothing is done so far to correct the references (i.e., filename
 and line number) afterward. I'm not sure what the best thing to do is.
 

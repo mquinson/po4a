@@ -157,7 +157,7 @@ This option is only useful for mdoc pages.
 
 It selects a stricter support of the mdoc format by telling po4a not to
 translate the 'NAME' section.
-mdoc pages whose 'NAME' section is translated won't generate any header of
+mdoc pages whose 'NAME' section is translated won't generate any header or
 footer.
 
 According to the groff_mdoc page, the NAME, SYNOPSIS and DESCRIPTION
@@ -175,7 +175,7 @@ This mdoc issue can also be solved with an addendum like this one:
 
 The following options permit to specify the behavior of a new macro
 (defined with a .de request), or of a macro not supported by po4a.
-They take in argument a coma separated list of macros.
+They take as argument a comma-separated list of macros.
 For example:
 
  -o noarg=FO,OB,AR -o translate_joined=BA,ZQ,UX
@@ -207,7 +207,7 @@ translation, except that each one will be translated separately.
 
 =item B<no_wrap>
 
-This option takes in argument a list of coma-separated couples
+This option takes as argument a list of comma-separated couples
 I<begin>:I<end>, where I<begin> and I<end> are commands that delimit
 the begin and end of a section that should not be rewrapped.
 
@@ -220,7 +220,7 @@ These macros (and their arguments) wont be translated.
 
 =item B<inline>
 
-This option specifies a list of coma-separated macros that must
+This option specifies a list of comma-separated macros that must
 not split the current paragraph. The string to translate will then contain
 I<foo E<lt>.bar baz quxE<gt> quux>, where I<bar> is the command that
 should be inlined, and I<baz qux> its arguments.
@@ -229,8 +229,9 @@ should be inlined, and I<baz qux> its arguments.
 
 This option indicates how po4a should behave when an unknown macro is found.
 By default, po4a fails with a warning.
-It can take the following values: I<failed> (the default value),
-I<untranslated>, I<noarg>, I<translate_joined>, I<translate_each>.
+It can take the following values: B<failed> (the default value),
+B<untranslated>, B<noarg>, B<translate_joined>, or B<translate_each> (see above
+for an explanation of these values).
 
 =back
 
@@ -278,7 +279,7 @@ my box are inaccessible to po4a::man.
  .splitfont       .Sx             .T              .TF             .The
  .TT              .UC             .ul             .Vb             .zZ
 
-=head2 Hiding text to po4a
+=head2 Hiding text from po4a
 
 Sometimes, the author knows that some parts are not translatable, and
 should not be extracted by po4a. For example, an option may accept an

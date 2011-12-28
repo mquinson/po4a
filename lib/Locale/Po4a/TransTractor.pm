@@ -51,7 +51,7 @@ More formally, it takes the following arguments as input:
 
 =item -
 
-a document to translate ;
+a document to translate;
 
 =item -
 
@@ -66,7 +66,7 @@ As output, it produces:
 =item -
 
 another PO file, resulting of the extraction of translatable strings from
-the input document ;
+the input document;
 
 =item -
 
@@ -481,7 +481,7 @@ sub write {
 
 =item readpo($)
 
-Add the content of a file (which name is passed in argument) to the
+Add the content of a file (which name is passed as argument) to the
 existing input PO. The old content is not discarded.
 
 =item writepo($)
@@ -772,8 +772,8 @@ The reference of this string (i.e. position in inputfile)
 
 =item -
 
-The type of this string (i.e. the textual description of its structural role
-; used in Locale::Po4a::Po::gettextization() ; see also L<po4a(7)|po4a.7>,
+The type of this string (i.e. the textual description of its structural role;
+used in Locale::Po4a::Po::gettextization(); see also L<po4a(7)|po4a.7>,
 section B<Gettextization: how does it work?>)
 
 =back
