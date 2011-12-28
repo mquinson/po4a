@@ -489,7 +489,7 @@ sub write{
 
 Like write, but if the PO or POT file already exists, the object will be
 written in a temporary file which will be compared with the existing file
-to check that the update is needed (this avoids to change a POT just to
+to check if the update is needed (this avoids to change a POT just to
 update a line reference or the POT-Creation-Date field).
 
 =cut
