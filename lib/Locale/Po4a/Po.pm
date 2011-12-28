@@ -41,7 +41,7 @@ of a string.
 For a more complete description of message catalogs in the PO format and
 their use, please refer to the documentation of the gettext program.
 
-This module is part of the PO4A project, which objective is to use PO files
+This module is part of the po4a project, which objective is to use PO files
 (designed at origin to ease the translation of program messages) to
 translate everything, including documentation (man page, info manual),
 package description, debconf templates, and everything which may benefit
@@ -695,7 +695,7 @@ This function extracts a catalog from an existing one. Only the entries having
 a reference in the given file will be placed in the resulting catalog.
 
 This function parses its argument, converts it to a Perl function definition,
-eval this definition and filter the fields for which this function returns
+evals this definition and filters the fields for which this function returns
 true.
 
 I love Perl sometimes ;)
