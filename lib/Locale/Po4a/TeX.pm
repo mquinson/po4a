@@ -442,7 +442,7 @@ The %separated_command hash contains the list of these commands.
 
 =item A variant
 
-This indicate if a variant is used.  For example, an asterisk (*) can
+This indicates if a variant is used.  For example, an asterisk (*) can
 be added at the end of sections command to specify that they should
 not be numbered.  In this case, this field will contain "*".  If there
 is no variant, the field is an empty string.
@@ -1006,8 +1006,8 @@ sub read_file {
 
 =item B<parse_definition_file>
 
-Subroutine for parsing a file with po4a directive (definitions for
-newcommands).
+Subroutine for parsing a file with po4a directives (definitions for
+new commands).
 
 =cut
 
@@ -1687,7 +1687,7 @@ The TeX module could parse the newcommand arguments and try to guess the
 number of arguments, their type and whether or not they should be
 translated.
 
-=item Tranlation of the environment separator
+=item Translation of the environment separator
 
 When \item is used as an environment separator, the item argument is
 attached to the following string.
