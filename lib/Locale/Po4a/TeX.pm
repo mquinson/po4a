@@ -210,7 +210,7 @@ translatable, but po4a must know the type and number of parameters.
 =item a minus (B<->)
 
 In this case, the command won't be extracted from any block.
-But if it appear alone on a block, then only the parameters marked as
+But if it appears alone on a block, then only the parameters marked as
 translatable will be presented to the translator.
 This is useful for font commands.  These commands should generally not be
 separated from their paragraph (to keep the context), but there is no

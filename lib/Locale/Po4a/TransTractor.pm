@@ -41,9 +41,9 @@ The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-This class is the ancestor of every po4a parsers used to parse a document to
-search translatable strings, extract them to a PO file and replace them by
-their translation in the output document. 
+This class is the ancestor of every po4a parser used to parse a document, to
+search translatable strings, to extract them to a PO file and to replace them by
+their translation in the output document.
 
 More formally, it takes the following arguments as input:
 
@@ -94,7 +94,7 @@ Here is a graphical representation of this:
 This is where all the work takes place: the parsing of input documents, the
 generation of output, and the extraction of the translatable strings. This
 is pretty simple using the provided functions presented in the section
-B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which present an
+B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which presents an
 example.
 
 This function is called by the process() function below, but if you choose
