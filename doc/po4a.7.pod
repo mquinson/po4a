@@ -608,7 +608,7 @@ regexp matching the end of the section after which the addendum goes.
 
 When B<mode=after>, the I<insertion point> is after the I<position point>, but
 not directly after! It is placed at the end of the section beginning at the
-I<position point>, ie after or before the line matched by the
+I<position point>, i.e., after or before the line matched by the
 I<???>B<boundary> argument, depending on whether you used B<beginboundary> or
 B<endboundary>.
 
@@ -631,7 +631,7 @@ B<E<lt>/sectionE<gt>> we just used), while some other don't explicitly mark
 the end of section (like in man). In the former case, you want to make a
 I<boundary> matching the I<end of a section>, so that the I<insertion point>
 comes after it. In the latter case, you want to make a I<boundary> matching
-the I<beginning of next section>, so that the I<insertion point> comes just
+the I<beginning of the next section>, so that the I<insertion point> comes just
 before it. 
 
 =back
@@ -671,7 +671,7 @@ and give a B<beginboundary> matching any line.
 =item If you want to add something at the end of the document, give a
 B<position> matching any line of your document (but only one line. Po4a
 won't proceed if it's not unique), and give an B<endboundary> matching
-nothing. Don't use simple strings here like B<"EOF">, but prefer which have
+nothing. Don't use simple strings here like B<"EOF">, but prefer those which have
 less chance to be in your document.
 
  PO4A-HEADER:mode=after;position=<title>About</title>;beginboundary=FakePo4aBoundary
@@ -734,10 +734,10 @@ project is converted to the system, you write a simple configuration file
 explaining where your translation files are (PO and POT), where the original
 documents are, their formats and where their translations should be placed.
 
-Then, calling po4a(1) on this file ensure that the PO files are synchronized
+Then, calling po4a(1) on this file ensures that the PO files are synchronized
 against the original document, and that the translated document are
 generated properly. Of course, you will want to call this program twice:
-once before editing the PO file to update them and once afterward to get
+once before editing the PO file to update them and once afterward to get a
 completely updated translated document. But you only need to remember one
 command line.
 
@@ -868,7 +868,7 @@ requiring manual modification of files to fix the problem.
 
 Even with these precautions, things can go wrong very easily here. That's
 why all translations guessed this way are marked fuzzy to make sure that
-the translator review and check them.
+the translator reviews and checks them.
 
 =head2 Addendum: How does it work?
 
@@ -960,13 +960,13 @@ language has its specific syntactic rules, and there is no way to build
 sentences by aggregating parts of sentences working for all existing
 languages (or even for the 5 of the 10 most spoken ones, or even less).
 
-=head2 Why not put the original as comment along with translation (or other way)?
+=head2 Why not put the original as comment along with translation (or other way around)?
 
-At the first glance, gettext don't seem to be adapted to all kind of
+At the first glance, gettext dosn't seem to be adapted to all kind of
 translations.  For example, it didn't seemed adapted to debconf, the
 interface all Debian packages use for their interaction with the user during
 installation. In that case, the texts to translate were pretty short (a
-dozen of line for each package), and it was difficult to put the translation
+dozen lines for each package), and it was difficult to put the translation
 in a specialized file since it has to be available before the package
 installation.
 
@@ -1018,7 +1018,7 @@ gettext solves all those problems together.
 =head2 But gettext wasn't designed for that use!
 
 That's true, but until now nobody came with a better solution. The only
-known alternative is manual translation, will all the maintenance issues.
+known alternative is manual translation, with all the maintenance issues.
 
 =head2 What about the other translation tools for documentation using
 gettext?
@@ -1131,7 +1131,7 @@ wide use, we can think that these tools are more or less bug free.
 =item *
 
 Nothing changed for the end-user (beside the fact translations will
-hopefully be better maintained :). The resulting documentation file
+hopefully be better maintained). The resulting documentation file
 distributed is exactly the same.
 
 =item *
