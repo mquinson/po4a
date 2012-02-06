@@ -303,8 +303,10 @@ The column at which to wrap text on the right-hand side.  Defaults to 76.
 
 =head1 SEE ALSO
 
-L<Pod::Parser>, L<po4a(7)|po4a.7>, L<Locale::Po4a::TransTractor(3pm)>,
+L<Pod::Parser>,
 L<Locale::Po4a::Man(3pm)>,
+L<Locale::Po4a::TransTractor(3pm)>,
+L<po4a(7)|po4a.7>
 
 =head1 AUTHORS
 

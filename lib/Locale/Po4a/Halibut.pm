@@ -58,9 +58,9 @@ translated separately.
 
 =head1 SEE ALSO
 
-L<po4a(7)|po4a.7>,
+L<Locale::Po4a::TeX(3pm)|Locale::Po4a::TeX>,
 L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>,
-L<Locale::Po4a::TeX(3pm)|Locale::Po4a::TeX>.
+L<po4a(7)|po4a.7>
 
 =head1 AUTHORS
 

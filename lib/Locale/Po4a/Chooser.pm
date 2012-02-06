@@ -108,9 +108,9 @@ available formats and exits on the value passed as argument.
 
 =item About po4a:
 
-L<po4a(7)|po4a.7>, 
+L<Locale::Po4a::Po(3pm)>,
 L<Locale::Po4a::TransTractor(3pm)>,
-L<Locale::Po4a::Po(3pm)>
+L<po4a(7)|po4a.7>
 
 =item About modules:
 
