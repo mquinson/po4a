@@ -201,6 +201,7 @@ sub initialize {
                                 "Content-Transfer-Encoding: 8bit\n");
 
     $self->{encoder}=find_encoding("ascii");
+    $self->{footer}=[];
 
     # To make stats about gettext hits
     $self->stats_clear();
@@ -251,6 +252,10 @@ sub read {
     foreach my $msg (split (/\n\n/,$pofile)) {
         my ($msgid,$msgstr,$comment,$previous,$automatic,$reference,$flags,$buffer);
         my ($msgid_plural, $msgstr_plural);
+        if ($msg =~ m/^#~/m) {
+            push($self->{footer}, $msg);
+            next;
+        }
         foreach my $line (split (/\n/,$msg)) {
             $linenum++;
             if ($line =~ /^#\. ?(.*)$/) {  # Automatic comment
@@ -476,6 +481,8 @@ sub write{
 
         print $fh $output;
     }
+    print $fh join("\n\n", @{$self->{footer}}) if scalar @{$self->{footer}};
+
 #    print STDERR "$fh";
 #    if ($filename ne '-') {
 #        close $fh
