@@ -253,7 +253,7 @@ sub read {
         my ($msgid,$msgstr,$comment,$previous,$automatic,$reference,$flags,$buffer);
         my ($msgid_plural, $msgstr_plural);
         if ($msg =~ m/^#~/m) {
-            push($self->{footer}, $msg);
+            push(@{$self->{footer}}, $msg);
             next;
         }
         foreach my $line (split (/\n/,$msg)) {
