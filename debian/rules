@@ -47,6 +47,7 @@ install: build
 	dh_prep
 	dh_installdirs
 	./Build install --installdirs vendor destdir=$(DESTDIR)
+	sed -i -e '1s|^#! /usr/bin/env perl|#! /usr/bin/perl|' $(DESTDIR)/usr/bin/*
 
 # Build architecture-independent files here.
 binary-indep: build install
