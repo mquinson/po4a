@@ -2407,6 +2407,8 @@ sub define_mdoc_macros {
     $macro{'Ss'}=\&translate_mdoc;
     # .Pp   Paragraph Break.  Vertical space (one line).
     $macro{'Pp'}=\&noarg;
+    # .Lp   Same as .Pp
+    $macro{'Lp'}=\&noarg;
     # .D1   (D-one) Display-one Indent and display one text line.
     $macro{'D1'}=\&translate_mdoc;
     # .Dl   (D-ell) Display-one literal.
@@ -2427,6 +2429,8 @@ sub define_mdoc_macros {
     # FIXME: Maybe we could extract other modifiers
     #        as in .It Fl l Ar num
     $macro{'It'}=\&translate_mdoc;
+    # .Lk   html link
+    $macro{'Lk'}=\&untranslated;
 
     # Manual Domain Macros
     # ====================
@@ -2440,8 +2444,8 @@ sub define_mdoc_macros {
 
     # General Text Domain
     # ===================
-    foreach (qw(%A %B %C %D %J %N %O %P %R %T %V
-                Ac Ao Ap Aq At Bc Bf Bo Bq Bx Db Dc Do Dq Ec Ef Em Eo Fx No Ns
+    foreach (qw(%A %B %C %D %I %J %N %O %P %Q %R %T %U %V
+                Ac Ao Ap Aq At Bc Bf Bo Bq Brc Bro Brq Bx Db Dc Do Dq Ec Ef Em Eo Eq Fx No Ns
                 Pc Pf Po Pq Qc Ql Qo Qq Re Rs Rv Sc So Sq Sm Sx Sy Tn Ux Xc Xo)) {
         $inline{$_} = 1;
     }
@@ -2477,10 +2481,6 @@ sub define_mdoc_macros {
     $macro{'In'} = \&translate_mdoc;
     # NetBSD Macro
     $inline{'Nx'} = 1;
-    # Curly brackets
-    $inline{'Brq'} = 1;
-    # Corporate name
-    $inline{'%Q'} = 1;
     # Math symbol
     $inline{'Ms'} = 1;
     # Prints 'under development'
