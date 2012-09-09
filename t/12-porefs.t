@@ -10,23 +10,14 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-my $diff_po_flags = " -I '^# .* translations for .* package'".
-                    " -I '^# Copyright (C) .* Free Software Foundation, Inc.'".
-                    " -I '^# Automatically generated, '".
-                    " -I '^# *\$'".
-                    " -I '^\"Project-Id-Version: '".
-                    " -I '^\"POT-Creation-Date: '".
-                    " -I '^\"PO-Revision-Date: '".
-                    " -I '^\"Language: '";
-
 push @tests, {
   'run'  => 
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=none data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/none.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/none.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/none.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/none.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/none.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/none.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=none flag'
 },
 
@@ -35,9 +26,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/noline.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/noline.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/noline.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/noline.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/noline.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/noline.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=noline flag'
 },
 
@@ -46,9 +37,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/noline_wrap.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/noline_wrap.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/noline_wrap.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/noline_wrap.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/noline_wrap.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/noline_wrap.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=noline,wrap flag'
 },
 
@@ -57,9 +48,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline,nowrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/noline.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/noline.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/noline.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/noline.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/noline.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/noline.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=noline,nowrap flag'
 },
 
@@ -68,9 +59,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/full_wrap.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/full_wrap.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/full_wrap.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/full_wrap.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/full_wrap.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/full_wrap.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=full,wrap flag'
 },
 
@@ -79,9 +70,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,nowrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
-     "diff -u $diff_po_flags data-12/full.pot tmp/test1.pot",
-     "diff -u $diff_po_flags data-12/full.fr.po tmp/test1.fr.po",
-     "diff -u $diff_po_flags data-12/full.de.po tmp/test1.de.po"],
+     "perl compare-po.pl data-12/full.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/full.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/full.de.po tmp/test1.de.po"],
   'doc'  => 'po4a --porefs=full,nowrap flag'
 };
 
