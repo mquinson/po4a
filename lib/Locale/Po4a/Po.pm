@@ -1275,7 +1275,7 @@ sub push_raw {
     if (defined $transref) {
         $self->{po}{$msgid}{'transref'} = $transref;
     }
-    if (defined $reference) {
+    if (defined($reference) && length($reference)) {
         if (defined $self->{po}{$msgid}{'reference'}) {
             $self->{po}{$msgid}{'reference'} .= " ".$reference;
         } else {
