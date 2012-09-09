@@ -51,12 +51,19 @@ from this.
 
 =over 4
 
-=item B<porefs> I<type>
+=item B<porefs> I<type>[,B<wrap>|B<nowrap>]
 
 Specify the reference format. Argument I<type> can be one of B<none> to not
 produce any reference, B<noline> to not specify the line number (more
 accurately all line numbers are replaced by 1), and B<full> to include complete
 references.
+
+Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
+References are written by default on a single line.  The B<wrap> option wraps
+references on several lines, to mimic B<gettext> tools (B<xgettext> and
+B<msgmerge>).  This option will become the default in a future release, because
+it is more sensible.  The B<nowrap> option is available so that users who want
+to keep the old behavior can do so.
 
 =item B<--msgid-bugs-address> I<email@address>
 
@@ -169,7 +176,7 @@ sub initialize {
     chomp $date;
 #    $options = ref($options) || $options;
 
-    $self->{options}{'porefs'}= 'full';
+    $self->{options}{'porefs'}= 'full,nowrap';
     $self->{options}{'msgid-bugs-address'}= undef;
     $self->{options}{'copyright-holder'}= "Free Software Foundation, Inc.";
     $self->{options}{'package-name'}= "PACKAGE";
@@ -182,7 +189,7 @@ sub initialize {
             $self->{options}{$opt} = $options->{$opt};
         }
     }
-    $self->{options}{'porefs'} =~ /^(full|noline|none)$/ ||
+    $self->{options}{'porefs'} =~ /^(full|noline|none)(,(no)?wrap)?$/ ||
         die wrap_mod("po4a::po",
                      dgettext ("po4a",
                                "Invalid value for option 'porefs' ('%s' is ".
@@ -448,9 +455,15 @@ sub write{
         $output .= format_comment($self->{po}{$msgid}{'type'},". type: ")
             if    defined($self->{po}{$msgid}{'type'})
                && length ($self->{po}{$msgid}{'type'});
-        $output .= format_comment($self->{po}{$msgid}{'reference'},": ")
-            if    defined($self->{po}{$msgid}{'reference'})
-               && length ($self->{po}{$msgid}{'reference'});
+        if (   defined($self->{po}{$msgid}{'reference'})
+            && length ($self->{po}{$msgid}{'reference'})) {
+            my $output_ref = $self->{po}{$msgid}{'reference'};
+            if ($self->{options}{'porefs'} =~ m/,wrap$/) {
+                $output_ref = wrap($output_ref);
+                $output_ref =~ s/\s+$//mg;
+            }
+            $output .= format_comment($output_ref,": ");
+        }
         $output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
             if    defined($self->{po}{$msgid}{'flags'})
                && length ($self->{po}{$msgid}{'flags'});
@@ -1240,9 +1253,9 @@ sub push_raw {
         return;
     }
 
-    if ($self->{options}{'porefs'} eq "none") {
+    if ($self->{options}{'porefs'} =~ m/^none/) {
         $reference = "";
-    } elsif ($self->{options}{'porefs'} eq "noline") {
+    } elsif ($self->{options}{'porefs'} =~ m/^noline/) {
         $reference =~ s/:[0-9]*/:1/g;
     }
 
