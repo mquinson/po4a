@@ -140,8 +140,24 @@ $tests[7]{'run'}  =
      "test ! -e tmp/test2_man.de.1");
 $tests[7]{'doc'}  = 'module alias + options per language';
 
+$tests[8]{'run'}  =
+    'cp data-05/test2.??.po tmp/ && '.
+    'LC_ALL=C COLUMNS=80 perl ../po4a -f data-05/test8.conf > tmp/err 2>&1';
+@{$tests[8]{'test'}} =
+    ("diff -u data-05/test3.err tmp/err",
+     "diff -u $diff_po_flags data-05/test2.pot tmp/test2.pot",
+     "diff -u $diff_po_flags data-05/test2.fr.po tmp/test2.fr.po",
+     "diff -u $diff_po_flags data-05/test2.es.po tmp/test2.es.po",
+     "diff -u $diff_po_flags data-05/test2.it.po tmp/test2.it.po",
+     "diff -u $diff_po_flags data-05/test2.de.po tmp/test2.de.po",
+     "diff -u data-05/test2_man.fr.1 tmp/test2_man.fr.1",
+     "test ! -e tmp/test2_man.es.1",
+     "diff -u data-05/test2_man.it.1 tmp/test2_man.it.1",
+     "test ! -e tmp/test2_man.de.1");
+$tests[8]{'doc'}  = 'template languages in po4a_paths';
 
-use Test::More tests =>76;
+
+use Test::More tests =>87;
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
