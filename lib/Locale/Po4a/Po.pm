@@ -51,11 +51,30 @@ from this.
 
 =over 4
 
-=item B<porefs>
+=item B<porefs> I<type>
 
-This specifies the reference format. It can be one of B<none> to not produce
-any reference, B<noline> to not specify the line number, and B<full> to
-include complete references.
+Specify the reference format. Argument I<type> can be one of B<none> to not
+produce any reference, B<noline> to not specify the line number (more
+accurately all line numbers are replaced by 1), and B<full> to include complete
+references.
+
+=item B<--msgid-bugs-address> I<email@address>
+
+Set the report address for msgid bugs. By default, the created POT files
+have no Report-Msgid-Bugs-To fields.
+
+=item B<--copyright-holder> I<string>
+
+Set the copyright holder in the POT header. The default value is
+"Free Software Foundation, Inc."
+
+=item B<--package-name> I<string>
+
+Set the package name for the POT header. The default is "PACKAGE".
+
+=item B<--package-version> I<string>
+
+Set the package version for the POT header. The default is "VERSION".
 
 =back
 

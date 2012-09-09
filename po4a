@@ -402,6 +402,29 @@ Define a variable that will be expanded in the B<po4a> configuration file.
 Every occurrence of I<$(var)> will be replaced by I<value>.
 This option can be used multiple times.
 
+=item B<--srcdir> I<SRCDIR>
+
+Set the base directory for all input documents specified in the B<po4a>
+configuration file.
+
+=item B<--destdir> I<DESTDIR>
+
+Set the base directory for all the output documents specified in the B<po4a>
+configuration file.
+
+=back
+
+=head2 OPTIONS WHICH MODIFY POT HEADER
+
+=over 4
+
+=item B<porefs> I<type>
+
+Specify the reference format. Argument I<type> can be one of B<none> to not
+produce any reference, B<noline> to not specify the line number (more
+accurately all line numbers are replaced by 1), and B<full> to include complete
+references.
+
 =item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
@@ -420,6 +443,12 @@ Set the package name for the POT header. The default is "PACKAGE".
 
 Set the package version for the POT header. The default is "VERSION".
 
+=back
+
+=head2 OPTIONS TO MODIFY PO FILES
+
+=over 4
+
 =item B<--msgmerge-opt> I<options>
 
 Extra options for B<msgmerge>.
@@ -435,16 +464,6 @@ This permits to support versions of B<gettext> earlier than 0.16.
 
 This option adds B<--previous> to the options passed to B<msgmerge>.
 It requires B<gettext> 0.16 or later, and is activated by default.
-
-=item B<--srcdir> I<SRCDIR>
-
-Set the base directory for all input documents specified in the B<po4a>
-configuration file.
-
-=item B<--destdir> I<DESTDIR>
-
-Set the base directory for all the output documents specified in the B<po4a>
-configuration file.
 
 =back
 
