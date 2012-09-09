@@ -601,6 +601,7 @@ sub get_options {
         "options"         => {"verbose" => 0, "debug" => 0},
         "variables"       => {},
         "partial"         => [],
+        "porefs"          => "full",
         "copyright-holder"=> undef,
         "msgid-bugs-address"=> undef,
         "package-name"    => undef,
@@ -632,6 +633,7 @@ sub get_options {
         'version|V'             => \&show_version,
         'option|o=s'            => \@options,
         'variable=s'            => \@variables,
+        'porefs=s'              => \$opts{"porefs"},
         'copyright-holder=s'    => \$opts{"copyright-holder"},
         'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
         'package-name=s'        => \$opts{"package-name"},
@@ -1136,23 +1138,16 @@ chdir $po4a_opts{"calldir"}
 }
 }
 
-my %Po_opts;
-if (defined $po4a_opts{'msgid-bugs-address'}) {
-    $Po_opts{'msgid-bugs-address'} = $po4a_opts{'msgid-bugs-address'};
-}
-if (defined $po4a_opts{'copyright-holder'}) {
-    $Po_opts{'copyright-holder'} = $po4a_opts{'copyright-holder'};
-}
-if (defined $po4a_opts{'package-name'}) {
-    $Po_opts{'package-name'} = $po4a_opts{'package-name'};
-}
-if (defined $po4a_opts{'package-version'}) {
-    $Po_opts{'package-version'} = $po4a_opts{'package-version'};
-}
 if ($update_pot_file) {
     chdir $po4a_opts{"srcdir"}
         if (defined $po4a_opts{"srcdir"});
-    my $potfile=Locale::Po4a::Po->new(\%Po_opts);
+    my %pot_options;
+    foreach (qw(porefs msgid-bugs-address copyright-holder package-name package-version)) {
+        if (defined $po4a_opts{$_}) {
+            $pot_options{$_} = $po4a_opts{$_};
+        }
+    }
+    my $potfile=Locale::Po4a::Po->new(\%pot_options);
     chdir $po4a_opts{"calldir"}
         if (defined $po4a_opts{"srcdir"});
     foreach my $master (sort { return -1 if ($a eq "");
