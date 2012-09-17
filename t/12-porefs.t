@@ -56,6 +56,39 @@ push @tests, {
 
 {
   'run'  => 
+    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter data-12/test1.conf > tmp/err 2>&1',
+  'test' =>
+    ["diff -u data-12/test1.err tmp/err",
+     "perl compare-po.pl data-12/counter.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/counter.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/counter.de.po tmp/test1.de.po"],
+  'doc'  => 'po4a --porefs=counter flag'
+},
+
+{
+  'run'  => 
+    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,wrap data-12/test1.conf > tmp/err 2>&1',
+  'test' =>
+    ["diff -u data-12/test1.err tmp/err",
+     "perl compare-po.pl data-12/counter_wrap.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/counter_wrap.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/counter_wrap.de.po tmp/test1.de.po"],
+  'doc'  => 'po4a --porefs=counter,wrap flag'
+},
+
+{
+  'run'  => 
+    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,nowrap data-12/test1.conf > tmp/err 2>&1',
+  'test' =>
+    ["diff -u data-12/test1.err tmp/err",
+     "perl compare-po.pl data-12/counter.pot tmp/test1.pot",
+     "perl compare-po.pl data-12/counter.fr.po tmp/test1.fr.po",
+     "perl compare-po.pl data-12/counter.de.po tmp/test1.de.po"],
+  'doc'  => 'po4a --porefs=counter,nowrap flag'
+},
+
+{
+  'run'  => 
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -76,7 +109,7 @@ push @tests, {
   'doc'  => 'po4a --porefs=full,nowrap flag'
 };
 
-use Test::More tests =>30;
+use Test::More tests =>45;
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
