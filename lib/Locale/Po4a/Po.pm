@@ -55,7 +55,8 @@ from this.
 
 Specify the reference format. Argument I<type> can be one of B<none> to not
 produce any reference, B<noline> to not specify the line number (more
-accurately all line numbers are replaced by 1), and B<full> to include complete
+accurately all line numbers are replaced by 1), B<counter> to replace line
+number by an increasing counter, and B<full> to include complete
 references.
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
@@ -189,12 +190,15 @@ sub initialize {
             $self->{options}{$opt} = $options->{$opt};
         }
     }
-    $self->{options}{'porefs'} =~ /^(full|noline|none)(,(no)?wrap)?$/ ||
+    $self->{options}{'porefs'} =~ /^(full|counter|noline|none)(,(no)?wrap)?$/ ||
         die wrap_mod("po4a::po",
                      dgettext ("po4a",
                                "Invalid value for option 'porefs' ('%s' is ".
-                               "not one of 'full', 'noline' or 'none')"),
+                               "not one of 'full', 'counter', 'noline' or 'none')"),
                      $self->{options}{'porefs'});
+    if ($self->{options}{'porefs'} =~ m/^counter/) {
+        $self->{counter} = {};
+    }
 
     $self->{po}=();
     $self->{count}=0;  # number of msgids in the PO
@@ -1255,8 +1259,21 @@ sub push_raw {
 
     if ($self->{options}{'porefs'} =~ m/^none/) {
         $reference = "";
+    } elsif ($self->{options}{'porefs'} =~ m/^counter/) {
+        if ($reference =~ m/^(.+?)(?=\S+:\d+)/g) {
+            my $new_ref = $1;
+            1 while $reference =~ s{  # x modifier is added to add formatting and improve readability
+              \G(\s*)(\S+):\d+        # \G is the last match in m//g (see also the (?=) syntax above)
+                                      # $2 is the file name
+            }{
+                 $self->{counter}{$2} ||= 0, # each file has its own counter
+                 ++$self->{counter}{$2},     # increment it
+                 $new_ref .= "$1$2:".$self->{counter}{$2} # replace line number by this counter
+            }gex && pos($reference);
+            $reference = $new_ref;
+        }
     } elsif ($self->{options}{'porefs'} =~ m/^noline/) {
-        $reference =~ s/:[0-9]*/:1/g;
+        $reference =~ s/:\d+/:1/g;
     }
 
     if (defined($self->{po}{$msgid})) {
