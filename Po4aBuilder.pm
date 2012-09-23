@@ -10,8 +10,9 @@ use File::stat;
 sub ACTION_build {
     my $self = shift;
     $self->depends_on('code');
-    $self->depends_on('po4a_build');
+    $self->depends_on('docs');
     $self->depends_on('distmeta'); # regenerate META.yml
+    $self->depends_on('man');
     $self->depends_on('postats');
 }
 
@@ -23,15 +24,6 @@ sub make_files_writable {
         my $current_mode = stat($file)->mode;
         chmod $current_mode | oct(200), $file;
     }
-}
-
-sub ACTION_po4a_build {
-    my $self = shift;
-    $self->depends_on('binpo');
-    $self->make_files_writable("po/pod");
-    system("./share/po4a-build -f po4a-build.conf") && die;
-    File::Path::mkpath( File::Spec->catdir( 'blib', 'manl10n' ), 0, oct(777) );
-    system ("cp -R _build/po4a/man/* blib/manl10n") && die;
 }
 
 sub perl_scripts {
@@ -166,6 +158,87 @@ sub ACTION_dist {
     $self->make_tarball($dist_dir);
     $self->delete_filetree($dist_dir);
 } 
+
+sub ACTION_manpo {
+    my $self = shift;
+
+    my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+    $cmd .= "--previous ";
+    $cmd .= "--no-translations ";
+    $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
+    $cmd .= "--package-name po4a ";
+    $cmd .= "--package-version ".$self->dist_version()." ";
+    $cmd .= "po/pod.cfg";
+    system($cmd)
+        and die;
+}
+
+sub ACTION_man {
+    my $self = shift;
+
+    use Pod::Man;
+    use Encode;
+
+    # Translate binaries manpages
+    my %options;
+    $options{utf8} = 1;
+    my $parser = Pod::Man->new (%options);
+
+    system("PERL5LIB=lib perl po4a --previous po/pod.cfg") and die;
+    system("mkdir -p blib/man/man7") and die;
+    system("mkdir -p blib/man/man1") and die;
+    system("cp doc/po4a.7.pod blib/man/man7") and die;
+    foreach $file (perl_scripts()) {
+        $file =~ m,([^/]*)$,;
+        system ("cp $file blib/man/man1/$1.1p.pod") and die;
+    }
+
+    foreach $file (@{$self->rscan_dir('blib/man',qr{\.pod$})}) {
+        next if $file =~ m/^man7/;
+        my $out = $file;
+        $out =~ s/\.pod$//;
+        $parser->{name} = $out;
+        $parser->{name} =~ s/^.*\///;
+        $parser->{name} =~ s/^(.*).(1p|3pm|5|7)/$1/;
+        $parser->{section} = $2;
+        if ($parser->{section} ne "3pm") {
+            $parser->{name} = uc $parser->{name};
+        }
+
+        my $lang = $out;
+        $lang =~ s/^blib\/man\/([^\/]*)\/.*$/$1/;
+
+        if ($lang =~ m/man\d/) {
+                $parser->{release} = $parser->{center} = "Po4a Tools";
+        } else {
+                my $command;
+                $command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
+                $command .= "msgconv -t UTF-8 | ";
+                $command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
+                $command .= "&& cat || cat > /dev/null'";
+
+                my $title = `$command 2> /dev/null`;
+                $title = "Po4a Tools" unless length $title;
+                $title = Encode::decode_utf8($title);
+                $parser->{release} = $parser->{center} = $title;
+        }
+        $parser->parse_from_file ($file, $out);
+
+        system("gzip -9 -f $out") and die;
+        unlink "$file" || die;
+    }
+
+    # Install the manpages written in XML DocBook
+    system ("cp share/doc/po4a-build.xml share/doc/po4aman-display-po.xml share/doc/po4apod-display-po.xml blib/man/man1/") and die;
+    foreach $file (@{$self->rscan_dir('blib/man',qr{\.xml$})}) {
+        if ($file =~ m,(.*/man(.))/([^/]*)\.xml$,) {
+            my ($outdir, $section, $outfile) = ($1, $2, $3);
+            system("xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file") and die;
+            system ("gzip -9 -f $outdir/$outfile.$section") and die;
+        }
+        unlink "$file" || die;
+    }
+}
 
 sub ACTION_postats {
     my $self = shift;
