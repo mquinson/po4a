@@ -144,9 +144,8 @@ sub ACTION_dist {
 
     $self->depends_on('test');
     $self->depends_on('binpo');
+    $self->depends_on('manpo');
     $self->depends_on('distdir');
-
-    system("./share/po4a-build --pot-only -f ./po4a-build.conf") and die;
 
     my $dist_dir = $self->dist_dir;
 
@@ -163,6 +162,7 @@ sub ACTION_manpo {
     my $self = shift;
 
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+    $cmd .= "--force ";
     $cmd .= "--previous ";
     $cmd .= "--no-translations ";
     $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
