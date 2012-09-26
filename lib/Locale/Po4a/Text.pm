@@ -368,6 +368,12 @@ sub parse_control {
     return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
 }
 
+my $asciidoc_RE_STYLE_ADMONITION = "TIP|NOTE|IMPORTANT|WARNING|CAUTION";
+my $asciidoc_RE_STYLE_PARAGRAPH = "normal|literal|verse|quote|listing|abstract|partintro|comment|example|sidebar|source|music|latex|graphviz";
+my $asciidoc_RE_STYLE_NUMBERING = "arabic|loweralpha|upperalpha|lowerroman|upperroman";
+my $asciidoc_RE_STYLE_LIST = "appendix|horizontal|qanda|glossary|bibliography";
+my $asciidoc_RE_STYLES = "$asciidoc_RE_STYLE_ADMONITION|$asciidoc_RE_STYLE_PARAGRAPH|$asciidoc_RE_STYLE_NUMBERING|$asciidoc_RE_STYLE_LIST|float";
+
 sub parse_asciidoc {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
     if ((defined $self->{verbatim}) and ($self->{verbatim} == 2)) {
@@ -482,7 +488,7 @@ sub parse_asciidoc {
         undef $self->{indent};
     } elsif (not defined $self->{verbatim} and
              ($paragraph eq "") and
-             ($line =~ m/^((?:NOTE|TIP|IMPORTANT|WARNING|CAUTION):\s+)(.*)$/)) {
+             ($line =~ m/^((?:$asciidoc_RE_STYLE_ADMONITION):\s+)(.*)$/)) {
         my $type = $1;
         my $text = $2;
         do_paragraph($self,$paragraph,$wrapped_mode);
@@ -492,7 +498,7 @@ sub parse_asciidoc {
         undef $self->{bullet};
         undef $self->{indent};
     } elsif (not defined $self->{verbatim} and
-             ($line =~ m/^\[(NOTE|TIP|IMPORTANT|WARNING|CAUTION|verse|quote)\]$/)) {
+             ($line =~ m/^\[($asciidoc_RE_STYLES)\]$/)) {
         my $type = $1;
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
