@@ -339,7 +339,7 @@ the specified tags will be the only ones included.  The tags must be in the
 form E<lt>aaaE<gt>, but you can join some (E<lt>bbbE<gt>E<lt>aaaE<gt>) to say that the content of
 the tag E<lt>aaaE<gt> will only be translated when it's into a E<lt>bbbE<gt> tag.
 
-You can also specify some tag options putting some characters in front of
+You can also specify some tag options by putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to override the default behavior specified by the global "wrap" option.
 
@@ -428,9 +428,9 @@ The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered 
 when it's into another tag (<bbb>).
 
-You can also specify some tag options putting some characters in front of
+You can also specify some tag options by putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
-to overide the default behavior specified by the global "wrap" option.
+to override the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
