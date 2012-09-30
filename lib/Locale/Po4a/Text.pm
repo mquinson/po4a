@@ -368,11 +368,12 @@ sub parse_control {
     return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
 }
 
+my $asciidoc_RE_SECTION_TEMPLATES = "sect1|sect2|sect3|sect4|preface|colophon|dedication|synopsis|index";
 my $asciidoc_RE_STYLE_ADMONITION = "TIP|NOTE|IMPORTANT|WARNING|CAUTION";
 my $asciidoc_RE_STYLE_PARAGRAPH = "normal|literal|verse|quote|listing|abstract|partintro|comment|example|sidebar|source|music|latex|graphviz";
 my $asciidoc_RE_STYLE_NUMBERING = "arabic|loweralpha|upperalpha|lowerroman|upperroman";
 my $asciidoc_RE_STYLE_LIST = "appendix|horizontal|qanda|glossary|bibliography";
-my $asciidoc_RE_STYLES = "$asciidoc_RE_STYLE_ADMONITION|$asciidoc_RE_STYLE_PARAGRAPH|$asciidoc_RE_STYLE_NUMBERING|$asciidoc_RE_STYLE_LIST|float";
+my $asciidoc_RE_STYLES = "$asciidoc_RE_SECTION_TEMPLATES|$asciidoc_RE_STYLE_ADMONITION|$asciidoc_RE_STYLE_PARAGRAPH|$asciidoc_RE_STYLE_NUMBERING|$asciidoc_RE_STYLE_LIST|float";
 
 sub parse_asciidoc {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
