@@ -511,16 +511,17 @@ sub parse_asciidoc {
         undef $self->{bullet};
         undef $self->{indent};
     } elsif (not defined $self->{verbatim} and
-             ($line =~ m/^\[(verse|quote), +(.*)\]$/)) {
-        my $type = $1;
-        my $arg = $2;
+             ($line =~ m/^\[(['"]?)(verse|quote)\1, +(.*)\]$/)) {
+        my $quote = $1 || '';
+        my $type = $2;
+        my $arg = $3;
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
         my $t = $self->translate($arg,
                                  $self->{ref},
                                  "$type",
                                  "wrap" => 0);
-        $self->pushline("[$type, $t]\n");
+        $self->pushline("[$quote$type$quote, $t]\n");
         $wrapped_mode = 1;
         if ($type  eq "verse") {
             $wrapped_mode = 0;
