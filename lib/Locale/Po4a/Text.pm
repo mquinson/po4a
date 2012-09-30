@@ -375,6 +375,23 @@ my $asciidoc_RE_STYLE_NUMBERING = "arabic|loweralpha|upperalpha|lowerroman|upper
 my $asciidoc_RE_STYLE_LIST = "appendix|horizontal|qanda|glossary|bibliography";
 my $asciidoc_RE_STYLES = "$asciidoc_RE_SECTION_TEMPLATES|$asciidoc_RE_STYLE_ADMONITION|$asciidoc_RE_STYLE_PARAGRAPH|$asciidoc_RE_STYLE_NUMBERING|$asciidoc_RE_STYLE_LIST|float";
 
+BEGIN {
+    if (eval { require Unicode::GCString }) {
+        eval 'sub columns($$$) {
+            my $text = shift;
+            my $encoder = shift;
+            $text = $encoder->decode($text) if (defined($encoder) && $encoder->name ne "ascii");
+            return Unicode::GCString->new($text)->columns();
+        }';
+    } else {
+        eval 'sub columns($$$) {
+            return length($_[0]) if !defined($_[1]) || $_[1]->name eq "ascii";
+            die wrap_mod("po4a::text",
+                dgettext("po4a", "Detection of two line titles failed at %s\nInstall the Unicode::GCString module!"), $_[2])
+        }';
+    }
+}
+
 sub parse_asciidoc {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
     if ((defined $self->{verbatim}) and ($self->{verbatim} == 2)) {
@@ -394,7 +411,7 @@ sub parse_asciidoc {
              ($line =~ m/^(={4,}|-{4,}|~{4,}|\^{4,}|\+{4,})$/) and
              (defined($paragraph) )and
              ($paragraph =~ m/^[^\n]*\n$/s) and
-             (length($paragraph) == (length($line)+1))) {
+             (columns($paragraph, $self->{TT}{po_in}{encoder}, $ref) == (length($line)))) {
         # Found title
         $wrapped_mode = 0;
         my $level = $line;
@@ -407,7 +424,7 @@ sub parse_asciidoc {
         $self->pushline($t."\n");
         $paragraph="";
         $wrapped_mode = 1;
-        $self->pushline(($level x (length($t)))."\n");
+        $self->pushline(($level x (columns($t, $self->{TT}{po_in}{encoder}, $ref)))."\n");
     } elsif ($line =~ m/^(={1,5})( +)(.*?)( +\1)?$/) {
         my $titlelevel1 = $1;
         my $titlespaces = $2;
