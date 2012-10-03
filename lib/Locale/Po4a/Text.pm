@@ -152,6 +152,8 @@ my %control = ();
 
 my $parse_func = \&parse_fallback;
 
+my @comments = ();
+
 =back
 
 =cut
@@ -396,13 +398,22 @@ BEGIN {
 
 sub parse_asciidoc {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
-    if ((defined $self->{verbatim}) and ($self->{verbatim} == 2)) {
+    if ((defined $self->{verbatim}) and ($self->{verbatim} == 3)) {
         # Untranslated blocks
         $self->pushline($line."\n");
-        if ($line =~ m/^(\/{4,}|~{4,})$/) {
+        if ($line =~ m/^~{4,}$/) {
             undef $self->{verbatim};
             undef $self->{type};
             $wrapped_mode = 1;
+        }
+    } elsif ((defined $self->{verbatim}) and ($self->{verbatim} == 2)) {
+        # CommentBlock
+        if ($line =~ m/^\/{4,}$/) {
+            undef $self->{verbatim};
+            undef $self->{type};
+            $wrapped_mode = 1;
+        } else {
+            push @comments, $line;
         }
     } elsif ((not defined($self->{verbatim})) and ($line =~ m/^(\+|--)$/)) {
         # List Item Continuation or List Block
@@ -422,9 +433,11 @@ sub parse_asciidoc {
         my $t = $self->translate($paragraph,
                                  $self->{ref},
                                  "Title $level",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline($t."\n");
         $paragraph="";
+        @comments=();
         $wrapped_mode = 1;
         $self->pushline(($level x (columns($t, $self->{TT}{po_in}{encoder}, $ref)))."\n");
     } elsif ($line =~ m/^(={1,5})( +)(.*?)( +\1)?$/) {
@@ -439,8 +452,10 @@ sub parse_asciidoc {
         my $t = $self->translate($title,
                                  $self->{ref},
                                  "Title $titlelevel1",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
+        @comments=();
         $wrapped_mode = 1;
     } elsif ($line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,}|\|={4,})$/) {
         # Found one delimited block
@@ -490,13 +505,16 @@ sub parse_asciidoc {
                 } elsif ($t eq "~") {
                     # Filter blocks, TBC: not translated
                     $wrapped_mode = 0;
-                    $self->{verbatim} = 2;
+                    $self->{verbatim} = 3;
                 }
                 $self->{type} = $type;
             }
             $paragraph="";
-            $self->pushline($line."\n");
+            $self->pushline($line."\n") unless defined($self->{verbatim}) && $self->{verbatim} == 2;
         }
+    } elsif ((not defined($self->{verbatim})) and ($line =~ m/^\/\/(.*)/)) {
+        # Comment line
+        push @comments, $1;
     } elsif (not defined $self->{verbatim} and
              ($line =~ m/^\[\[([^\]]*)\]\]$/)) {
         # Found BlockId
@@ -539,8 +557,10 @@ sub parse_asciidoc {
         my $t = $self->translate($arg,
                                  $self->{ref},
                                  "$type",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline("[$quote$type$quote, $t]\n");
+        @comments=();
         $wrapped_mode = 1;
         if ($type  eq "verse") {
             $wrapped_mode = 0;
@@ -556,8 +576,10 @@ sub parse_asciidoc {
         my $t = $self->translate($arg,
                                  $self->{ref},
                                  "icon",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline("[icon=\"$t\"]\n");
+        @comments=();
         $wrapped_mode = 1;
         undef $self->{bullet};
         undef $self->{indent};
@@ -569,8 +591,10 @@ sub parse_asciidoc {
         my $t = $self->translate($arg,
                                  $self->{ref},
                                  "caption",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline("[icons=None, caption=\"$t\"]\n");
+        @comments=();
         $wrapped_mode = 1;
         undef $self->{bullet};
         undef $self->{indent};
@@ -588,8 +612,10 @@ sub parse_asciidoc {
         my $t = $self->translate($label,
                                  $self->{ref},
                                  "Labeled list",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline("$indent$t$labelend\n");
+        @comments=();
     } elsif (not defined $self->{verbatim} and
              ($line =~ m/^(\s*)(\S.*)((?:::|;;)\s+)(.*)$/)) {
         my $indent = $1;
@@ -605,8 +631,10 @@ sub parse_asciidoc {
         my $t = $self->translate($label,
                                  $self->{ref},
                                  "Labeled list",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline("$indent$t$labelend");
+        @comments=();
     } elsif (not defined $self->{verbatim} and
              ($line =~ m/^\:(\S.*?)(:\s*)(.*)$/)) {
         my $attrname = $1;
@@ -621,8 +649,10 @@ sub parse_asciidoc {
         my $t = $self->translate($attrvalue,
                                  $self->{ref},
                                  "Attribute :$attrname:",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline(":$attrname$attrsep$t\n");
+        @comments=();
     } elsif (not defined $self->{verbatim} and
              ($line !~ m/^\.\./) and ($line =~ m/^\.(\S.*)$/)) {
         my $title = $1;
@@ -635,8 +665,10 @@ sub parse_asciidoc {
         my $t = $self->translate($title,
                                  $self->{ref},
                                  "Block title",
+                                 "comment" => join("\n", @comments),
                                  "wrap" => 0);
         $self->pushline(".$t\n");
+        @comments=();
     } elsif (not defined $self->{verbatim} and
              ($line =~ m/^(\s*)((?:[-*o+]|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\)|\.|\.\.)\s+)(.*)$/)) {
         my $indent = $1||"";
@@ -866,7 +898,9 @@ TEST_BULLET:
     my $t = $self->translate($paragraph,
                              $self->{ref},
                              $type,
+                             "comment" => join("\n", @comments),
                              "wrap" => $wrap);
+    @comments = ();
     if (defined $self->{bullet}) {
         my $bullet = $self->{bullet};
         my $indent1 = $self->{indent};
