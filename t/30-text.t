@@ -22,7 +22,7 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
     push @tests, {
         'run' => "perl ../../po4a-normalize -f text -o asciidoc ../data-30/$AsciiDocTest.asciidoc",
         'test'=> "perl ../compare-po.pl ../data-30/$AsciiDocTest.po po4a-normalize.po".
-                 "&& perl ../compare-po.pl ../data-30/$AsciiDocTest.out po4a-normalize.output",
+                 "&& cmp ../data-30/$AsciiDocTest.out po4a-normalize.output",
         'doc' => "$AsciiDocTest test"
     };
 }
