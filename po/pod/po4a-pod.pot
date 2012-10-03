@@ -1,13 +1,14 @@
 # SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the po4a package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-09-28 21:34+0300\n"
+"Project-Id-Version: po4a 0.43\n"
+"Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
+"POT-Creation-Date: 2012-10-04 01:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -6307,7 +6308,7 @@ msgid ""
 " .BE              ..br            .Bu             .BUGS           .BY\n"
 " .ce              .dbmmanage      .do                             .En\n"
 " .EP              .EX             .Fi             .hw             .i\n"
-" .Id              .l              .LO             .mf             \n"
+" .Id              .l              .LO             .mf\n"
 " .N               .na             .NF             .nh             .nl\n"
 " .Nm              .ns             .NXR            .OPTIONS        .PB\n"
 " .pp              .PR             .PRE            .PU             .REq\n"
@@ -7057,7 +7058,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 " \"\" #n\"\"\n"
-" \n"
+"\n"
 msgstr ""
 
 #. type: textblock
@@ -8486,21 +8487,21 @@ msgid ""
 "       my $first=1;\n"
 "       my ($line,$lref)=$self->shiftline();\n"
 "       while (defined($line)) {\n"
-"\t   if ($line =~ m/<p>/ && !$first--; ) {\n"
-"\t       # Not the first time we see <p>. \n"
-"\t       # Reput the current line in input,\n"
-"\t       #  and put the built paragraph to output\n"
-"\t       $self->unshiftline($line,$lref);\n"
-"\t      \n"
+"           if ($line =~ m/<p>/ && !$first--; ) {\n"
+"               # Not the first time we see <p>.\n"
+"               # Reput the current line in input,\n"
+"               #  and put the built paragraph to output\n"
+"               $self->unshiftline($line,$lref);\n"
+"\n"
 msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:28
 #, no-wrap
 msgid ""
-"\t       # Now that the document is formed, translate it:\n"
-"\t       #   - Remove the leading tag\n"
-"\t       $paragraph =~ s/^<p>//s;\n"
+"               # Now that the document is formed, translate it:\n"
+"               #   - Remove the leading tag\n"
+"               $paragraph =~ s/^<p>//s;\n"
 "\n"
 msgstr ""
 
@@ -8508,9 +8509,9 @@ msgstr ""
 #: lib/Locale/Po4a/TransTractor.pm:29
 #, no-wrap
 msgid ""
-"\t       #   - push to output the leading tag (untranslated) and the\n"
-"\t       #     rest of the paragraph (translated)\n"
-"\t       $self->pushline(  \"<p>\"\n"
+"               #   - push to output the leading tag (untranslated) and the\n"
+"               #     rest of the paragraph (translated)\n"
+"               $self->pushline(  \"<p>\"\n"
 "                               . $document->translate($paragraph,$pararef)\n"
 "                               );\n"
 "\n"
@@ -8520,12 +8521,12 @@ msgstr ""
 #: lib/Locale/Po4a/TransTractor.pm:30
 #, no-wrap
 msgid ""
-" \t       next PARAGRAPH;\n"
-"\t   } else {\n"
-"\t       # Append to the paragraph\n"
-"\t       $paragraph .= $line;\n"
-"\t       $pararef = $lref unless(length($pararef));\n"
-"\t   }\n"
+"               next PARAGRAPH;\n"
+"           } else {\n"
+"               # Append to the paragraph\n"
+"               $paragraph .= $line;\n"
+"               $pararef = $lref unless(length($pararef));\n"
+"           }\n"
 "\n"
 msgstr ""
 
@@ -8539,7 +8540,7 @@ msgid ""
 "       # Did not get a defined line? End of input file.\n"
 "       return;\n"
 "   }\n"
-" } \n"
+" }\n"
 "\n"
 msgstr ""
 
@@ -8971,7 +8972,7 @@ msgstr ""
 #, no-wrap
 msgid ""
 "  $self->translate(\"string\",\"ref\",\"type\",\n"
-"\t\t   'wrap' => 1);\n"
+"                   'wrap' => 1);\n"
 "\n"
 msgstr ""
 
@@ -9132,8 +9133,8 @@ msgstr ""
 #, no-wrap
 msgid ""
 "    $self->pushline_all({ \"Description[\".$langcode.\"]=\".\n"
-"\t\t\t  $self->translate($line,$ref,$langcode) \n"
-"\t\t        });\n"
+"                          $self->translate($line,$ref,$langcode)\n"
+"                        });\n"
 "\n"
 msgstr ""
 
