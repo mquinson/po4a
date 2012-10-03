@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-# Po4a::Xhtml.pm 
-# 
+# Po4a::Xhtml.pm
+#
 # extract and translate translatable strings from XHTML documents.
-# 
+#
 # This code extracts plain text from tags and attributes from strict XHTML
 # documents.
 #
@@ -174,36 +174,36 @@ sub initialize {
         # translated inside the current block, whithout introducing a
         # break.
         $self->{options}{'_default_inline'}.='
-                <a> 
-                <abbr> 
-                <acronym> 
-                <b> 
-                <big> 
-                <bdo> 
-                <button> 
-                <cite> 
-                <code> 
+                <a>
+                <abbr>
+                <acronym>
+                <b>
+                <big>
+                <bdo>
+                <button>
+                <cite>
+                <code>
                 <del>
-                <dfn> 
-                <em> 
-                <i> 
-                <ins> 
-                <input> 
-                <kbd> 
-                <label> 
-                <object> 
-                <q> 
-                <samp> 
-                <select> 
-                <small> 
-                <span> 
-                <strong> 
-                <sub> 
-                <sup> 
-                <textarea> 
-                <tt> 
+                <dfn>
+                <em>
+                <i>
+                <ins>
+                <input>
+                <kbd>
+                <label>
+                <object>
+                <q>
+                <samp>
+                <select>
+                <small>
+                <span>
+                <strong>
+                <sub>
+                <sup>
+                <textarea>
+                <tt>
                 <u>
-                <var> 
+                <var>
         ';
 
         # Ignored tags: <img>

@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Po4a::NewsDebian.pm
-# 
+#
 # extract and translate translatable strings from a NEWS.Debian documents
 #
 # This program is free software; you can redistribute it and/or modify
@@ -42,7 +42,7 @@ NONE.
 
 =head1 STATUS OF THIS MODULE
 
-Not tested. 
+Not tested.
 
 A finer split of the entries may be preferable (search for /^ */, for
 example), but this version is more robust and NEWS.Debian entries are not
@@ -83,51 +83,51 @@ sub parse {
     print "seen >>$line<<\n" if $self->debug();
     while (defined($line)) {
 
-	# Begining of an entry
-	if ($line =~ m/^(\w[-+0-9a-z.]*) \(([^\(\) \t]+)\)((\s+[-0-9a-z]+)+)\;/i) {
+        # Begining of an entry
+        if ($line =~ m/^(\w[-+0-9a-z.]*) \(([^\(\) \t]+)\)((\s+[-0-9a-z]+)+)\;/i) {
 
-	    die wrap_ref_mod($lref, "po4a::newsdebian", dgettext("po4a", "Begin of a new entry before the end of previous one"))
-	      if (length ($body));
+            die wrap_ref_mod($lref, "po4a::newsdebian", dgettext("po4a", "Begin of a new entry before the end of previous one"))
+              if (length ($body));
 
-	    $self->pushline($line."\n");
+            $self->pushline($line."\n");
 
-	    # Signature of this entry
-	    $bodyref = $lref;
-	    $bodytype = $line;
+            # Signature of this entry
+            $bodyref = $lref;
+            $bodytype = $line;
 
-	    # eat all leading empty lines
-	    ($line,$lref)=$self->shiftline();
-	    while (defined($line) && $line =~ m/^\s*$/) {
-		print "Eat >>$line<<\n" if $self->debug();
-		($line,$lref)=$self->shiftline();
-	    }
-	    # ups, ate one line too much. Put it back.
-	    $self->unshiftline($line,$lref);
+            # eat all leading empty lines
+            ($line,$lref)=$self->shiftline();
+            while (defined($line) && $line =~ m/^\s*$/) {
+                print "Eat >>$line<<\n" if $self->debug();
+                ($line,$lref)=$self->shiftline();
+            }
+            # ups, ate one line too much. Put it back.
+            $self->unshiftline($line,$lref);
 
 
-	    # get ready to read the entry (cleanups)
-	    $blanklines = "";
+            # get ready to read the entry (cleanups)
+            $blanklines = "";
 
-	# End of current entry
-	} elsif ($line =~ m/^ \-\- (.*) <(.*)>  .*$/) { #((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?) *$/) {
+        # End of current entry
+        } elsif ($line =~ m/^ \-\- (.*) <(.*)>  .*$/) { #((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?) *$/) {
 
-	    $self->translate($body, $bodyref, $bodytype,
-		             wrap=>0);
-	    $body="";
+            $self->translate($body, $bodyref, $bodytype,
+                             wrap=>0);
+            $body="";
 
-	# non-specific line
-	} else {
+        # non-specific line
+        } else {
 
-	    if ($line =~ /^\s*$/) {
-		$blanklines .= "$line";
-	    } else {
-		$body .= $blanklines.$line;
-		$blanklines = "";
-	    }
-	}
+            if ($line =~ /^\s*$/) {
+                $blanklines .= "$line";
+            } else {
+                $body .= $blanklines.$line;
+                $blanklines = "";
+            }
+        }
 
-	($line,$lref)=$self->shiftline();
-	print "seen >>".($line || '')."<<\n" if $self->debug();
+        ($line,$lref)=$self->shiftline();
+        print "seen >>".($line || '')."<<\n" if $self->debug();
     }
 }
 

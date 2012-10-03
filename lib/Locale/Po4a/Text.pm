@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Po4a::Text.pm
-# 
+#
 # extract and translate translatable strings from a text documents
 #
 # This program is free software; you can redistribute it and/or modify

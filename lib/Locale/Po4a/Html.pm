@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
-# Po4a::Html.pm 
-# 
+# Po4a::Html.pm
+#
 # extract and translate translatable strings from a HTML document.
-# 
+#
 # This code extracts plain text between HTML tags and some "alt" or
 # "title" attributes.
 #
@@ -83,7 +83,7 @@ sub parse_file {
         || die "Couldn't read HTML file $filename : $!";
 
     $stream->unbroken_text( [1] );
-    
+
     my @type=();
     NEXT : while (my $token = $stream->get_token) {
         if($token->[0] eq 'T') {
@@ -95,9 +95,9 @@ sub parse_file {
                 $self->pushline( get_tag( $token ) );
                 next NEXT;
             }
-#  FIXME : it should be useful to encode characters 
+#  FIXME : it should be useful to encode characters
 #  in UTF8 in the po, but converting them in HTML::Entities
-#  in the doc_out, translate acts both way 
+#  in the doc_out, translate acts both way
 #  so we cant do that.
 #  use HTML::Entities ();
 #  $encoded = HTML::Entities::encode($a);
@@ -124,7 +124,7 @@ sub parse_file {
                 my $content = $attr{$a};
                 if (defined $content) {
                     $content = trim($content);
-                    my $translated = $self->translate( 
+                    my $translated = $self->translate(
                         $content,
                         "FIXME:0",
                         "${tag}_$a"
@@ -142,9 +142,9 @@ sub parse_file {
         } elsif ($token->[0] eq 'E') {
             pop @type;
             $self->pushline( get_tag( $token ) );
-        } else { 
+        } else {
             $self->pushline( get_tag( $token ) );
-        }       
+        }
     }
 }
 
@@ -155,20 +155,20 @@ sub get_tag {
     if ($token->[0] eq 'S') {
         $tag = $token->[4];
     }
-    if ( ($token->[0] eq 'C') || 
+    if ( ($token->[0] eq 'C') ||
          ($token->[0] eq 'D') ||
          ($token->[0] eq 'T') ) {
         $tag =  $token->[1];
     }
-    if ( ($token->[0] eq 'E') || 
+    if ( ($token->[0] eq 'E') ||
          ($token->[0] eq 'PI') ) {
         $tag =  $token->[2];
     }
 
-    return $tag;   
+    return $tag;
 }
 
-sub trim { 
+sub trim {
     my $s=shift;
     $s =~ s/\n/ /g;  # remove \n in text
     $s =~ s/\r/ /g;  # remove \r in text
@@ -177,10 +177,10 @@ sub trim {
     $s =~ s/^\s*//g; # remove leading spaces
     $s =~ s/\s*$//g; # remove trailing spaces
     return $s;
-} 
+}
 
 #
-# This method says if a string must be 
+# This method says if a string must be
 # translated or not.
 # To be improved with more test or regexp
 # Maybe there is a way to do this in TransTractor
@@ -197,13 +197,13 @@ sub notranslation {
     return 1 if ( ($s cmp "'")  == 0);
     # don't translate entries composed of one entity
     return 1 if ($s =~ /^&[^;]*;$/);
-    
+
 # don't translate entries with no letters
 # (happens with e.g.  <b>Hello</b>, <i>world</i> )
 #                                 ^^
 #                    ", " doesn't need translation
     return 1 unless $s =~ /\w/;
-    return 0;          
+    return 0;
 }
 
 =head1 AUTHORS

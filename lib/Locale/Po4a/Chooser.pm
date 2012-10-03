@@ -3,7 +3,7 @@
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 #
-# This module converts POD to PO file, so that it becomes possible to 
+# This module converts POD to PO file, so that it becomes possible to
 # translate POD formatted documentation. See gettext documentation for
 # more info about PO files.
 
@@ -45,9 +45,9 @@ sub new {
         if ($@) {
             my $error=$@;
             warn wrap_msg(gettext("Unknown format type: %s."), $module);
-	    warn wrap_mod("po4a::chooser",
-		gettext("Module loading error: %s"), $error)
-	      if defined $options{'verbose'} && $options{'verbose'} > 0;
+            warn wrap_mod("po4a::chooser",
+                gettext("Module loading error: %s"), $error)
+              if defined $options{'verbose'} && $options{'verbose'} > 0;
             list(1);
         }
     }
@@ -56,23 +56,23 @@ sub new {
 
 sub list {
     warn wrap_msg(gettext("List of valid formats:")
-#	."\n  - ".gettext("bibtex: BibTex bibliography format.")
-	."\n  - ".gettext("dia: uncompressed Dia diagrams.")
-	."\n  - ".gettext("docbook: DocBook XML.")
-	."\n  - ".gettext("guide: Gentoo Linux's XML documentation format.")
-#	."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
-	."\n  - ".gettext("ini: INI format.")
-	."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
-	."\n  - ".gettext("latex: LaTeX format.")
-	."\n  - ".gettext("man: Good old manual page format.")
-	."\n  - ".gettext("pod: Perl Online Documentation format.")
-	."\n  - ".gettext("sgml: either DebianDoc or DocBook DTD.")
-	."\n  - ".gettext("texinfo: The info page format.")
-	."\n  - ".gettext("tex: generic TeX documents (see also latex).")
-	."\n  - ".gettext("text: simple text document.")
-	."\n  - ".gettext("wml: WML documents.")
-	."\n  - ".gettext("xhtml: XHTML documents.")
-	."\n  - ".gettext("xml: generic XML documents (see also docbook).")
+#       ."\n  - ".gettext("bibtex: BibTex bibliography format.")
+        ."\n  - ".gettext("dia: uncompressed Dia diagrams.")
+        ."\n  - ".gettext("docbook: DocBook XML.")
+        ."\n  - ".gettext("guide: Gentoo Linux's XML documentation format.")
+#       ."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
+        ."\n  - ".gettext("ini: INI format.")
+        ."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
+        ."\n  - ".gettext("latex: LaTeX format.")
+        ."\n  - ".gettext("man: Good old manual page format.")
+        ."\n  - ".gettext("pod: Perl Online Documentation format.")
+        ."\n  - ".gettext("sgml: either DebianDoc or DocBook DTD.")
+        ."\n  - ".gettext("texinfo: The info page format.")
+        ."\n  - ".gettext("tex: generic TeX documents (see also latex).")
+        ."\n  - ".gettext("text: simple text document.")
+        ."\n  - ".gettext("wml: WML documents.")
+        ."\n  - ".gettext("xhtml: XHTML documents.")
+        ."\n  - ".gettext("xml: generic XML documents (see also docbook).")
     );
     exit shift;
 }

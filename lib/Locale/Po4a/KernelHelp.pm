@@ -3,7 +3,7 @@
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 #
-# This module converts POD to PO file, so that it becomes possible to 
+# This module converts POD to PO file, so that it becomes possible to
 # translate POD formatted documentation. See gettext documentation for
 # more info about PO files.
 
@@ -41,70 +41,70 @@ sub parse {
                     #   0             1            2        3   0
 
     my ($desc,$variable);
-    
+
   LINE:
     ($line,$ref)=$self->shiftline();
-    
+
     while (defined($line)) {
-	chomp($line);
-	print STDERR "status=$status;Seen >>$line<<:" if $debug;
+        chomp($line);
+        print STDERR "status=$status;Seen >>$line<<:" if $debug;
 
-	if ($line =~ /^\#/) {
-	    print STDERR "comment.\n" if $debug;
-	    $self->pushline("$line\n");
-	} elsif ($status == 0) {
-	    if ($line =~ /\S/) {
-		print STDERR "short desc.\n" if $debug;
-		$desc=$line;
-		$status ++;
-	    } else {
-		print STDERR "empty line.\n" if $debug;
-		$self->pushline("$line\n");
-	    }
-	} elsif ($status == 1) {
-	    print STDERR "var name.\n" if $debug;
-	    $variable=$line;
-	    $status++;
+        if ($line =~ /^\#/) {
+            print STDERR "comment.\n" if $debug;
+            $self->pushline("$line\n");
+        } elsif ($status == 0) {
+            if ($line =~ /\S/) {
+                print STDERR "short desc.\n" if $debug;
+                $desc=$line;
+                $status ++;
+            } else {
+                print STDERR "empty line.\n" if $debug;
+                $self->pushline("$line\n");
+            }
+        } elsif ($status == 1) {
+            print STDERR "var name.\n" if $debug;
+            $variable=$line;
+            $status++;
 
-	    $self->pushline($self->translate($desc,$ref,"desc_$variable").
-			    "\n$variable\n");
+            $self->pushline($self->translate($desc,$ref,"desc_$variable").
+                            "\n$variable\n");
 
-	} elsif ($status == 2) {
-	    $line =~ s/^  //;
-	    if ($line =~ /\S/) {
-		print STDERR "paragraph line.\n" if $debug;
-		$paragraph .= $line."\n";
-	    } else {
-		print STDERR "end of paragraph.\n" if $debug;
-		$status++;
-		$paragraph=$self->translate($paragraph,
-					    $ref,
-					    "helptxt_$variable");
-		$paragraph =~ s/^/  /gm;
-		$self->pushline("$paragraph\n");
-		$paragraph ="";
-	    }
-	} elsif ($status == 3) {
-	    if ($line =~ s/^  //) {
-		if ($line =~ /\S/) {
-		    print "begin of paragraph.\n" if $debug;
-		    $paragraph = $line."\n";
-		    $status--;
-		} else {
-		    print "end of config option.\n" if $debug;
-		    $status=0;
-		    $self->pushline("\n");
-		}	    
-	    } else {
-		$self->unshiftline($line,$ref);
-		$status=0;
-	    }
-	} else {
-	    die wrap_ref_mod($ref, "po4a::kernelhelp", gettext("Syntax error"));
-	}
+        } elsif ($status == 2) {
+            $line =~ s/^  //;
+            if ($line =~ /\S/) {
+                print STDERR "paragraph line.\n" if $debug;
+                $paragraph .= $line."\n";
+            } else {
+                print STDERR "end of paragraph.\n" if $debug;
+                $status++;
+                $paragraph=$self->translate($paragraph,
+                                            $ref,
+                                            "helptxt_$variable");
+                $paragraph =~ s/^/  /gm;
+                $self->pushline("$paragraph\n");
+                $paragraph ="";
+            }
+        } elsif ($status == 3) {
+            if ($line =~ s/^  //) {
+                if ($line =~ /\S/) {
+                    print "begin of paragraph.\n" if $debug;
+                    $paragraph = $line."\n";
+                    $status--;
+                } else {
+                    print "end of config option.\n" if $debug;
+                    $status=0;
+                    $self->pushline("\n");
+                }
+            } else {
+                $self->unshiftline($line,$ref);
+                $status=0;
+            }
+        } else {
+            die wrap_ref_mod($ref, "po4a::kernelhelp", gettext("Syntax error"));
+        }
 
-    	# Reinit the loop
-	($line,$ref)=$self->shiftline();
+        # Reinit the loop
+        ($line,$ref)=$self->shiftline();
     }
 }
 

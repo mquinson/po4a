@@ -58,7 +58,7 @@ sub import {
     return if defined &wrapi18n;
 
     if ($wrapi18n && -t STDERR && -t STDOUT && eval { require Text::WrapI18N }) {
-    
+
         # Don't bother determining the wrap column if we cannot wrap.
         my $col=$ENV{COLUMNS};
         if (!defined $col) {
@@ -69,14 +69,13 @@ sub import {
             # or this is a terminal-less build or such strange condition.
         }
         $col=76 if (!defined $col);
-        
+
         eval ' use Text::WrapI18N qw($columns);
                $columns = $col;
              ';
-       
+
         eval ' sub wrapi18n($$$) { Text::WrapI18N::wrap($_[0],$_[1],$_[2]) } '
     } else {
-    
         # If we cannot wrap, well, that's too bad. Survive anyway.
         eval ' sub wrapi18n($$$) { $_[0].$_[2] } '
     }
@@ -92,7 +91,7 @@ sub min($$) {
 
 =over
 
-=item 
+=item
 
 show_version($)
 
@@ -105,16 +104,16 @@ sub show_version {
     my $name = shift;
 
     print sprintf(gettext(
-	"%s version %s.\n".
-	"written by Martin Quinson and Denis Barbier.\n\n".
-	"Copyright (C) 2002, 2003, 2004 Software in the Public Interest, Inc.\n".
-	"This is free software; see source code for copying\n".
-	"conditions. There is NO warranty; not even for\n".
-	"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
-	), $name, $Locale::Po4a::TransTractor::VERSION)."\n";
+        "%s version %s.\n".
+        "written by Martin Quinson and Denis Barbier.\n\n".
+        "Copyright (C) 2002, 2003, 2004 Software in the Public Interest, Inc.\n".
+        "This is free software; see source code for copying\n".
+        "conditions. There is NO warranty; not even for\n".
+        "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+        ), $name, $Locale::Po4a::TransTractor::VERSION)."\n";
 }
 
-=item 
+=item
 
 wrap_msg($@)
 
@@ -130,7 +129,7 @@ sub wrap_msg($@) {
     return wrapi18n("", "", sprintf($msg, @args))."\n";
 }
 
-=item 
+=item
 
 wrap_mod($$@)
 
@@ -148,7 +147,7 @@ sub wrap_mod($$@) {
     return wrapi18n($mod, $spaces, sprintf($msg, @args))."\n";
 }
 
-=item 
+=item
 
 wrap_ref_mod($$$@)
 
@@ -165,21 +164,21 @@ sub wrap_ref_mod($$$@) {
     my @args = @_;
 
     if (!$mod) {
-	# If we don't get a module name, show the message like wrap_mod does
-	return wrap_mod($ref, $msg, @args);
+        # If we don't get a module name, show the message like wrap_mod does
+        return wrap_mod($ref, $msg, @args);
     } else {
-	$ref .= ": ";
-	my $spaces = " " x min(length($ref), 15);
-	$msg = "$ref($mod)\n$msg";
-	return wrapi18n("", $spaces, sprintf($msg, @args))."\n";
+        $ref .= ": ";
+        my $spaces = " " x min(length($ref), 15);
+        $msg = "$ref($mod)\n$msg";
+        return wrapi18n("", $spaces, sprintf($msg, @args))."\n";
     }
 }
 
 =head2 Wrappers for other modules
 
-=over 
+=over
 
-=item 
+=item
 
 Locale::Gettext
 
@@ -193,19 +192,19 @@ either.
 
 =over
 
-=item 
+=item
 
 bindtextdomain($$)
 
-=item 
+=item
 
 textdomain($)
 
-=item 
+=item
 
 gettext($)
 
-=item 
+=item
 
 dgettext($$)
 

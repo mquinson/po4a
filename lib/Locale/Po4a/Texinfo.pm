@@ -322,7 +322,7 @@ sub translate_buffer_menuentry {
         if ($debug{'translate_buffer'});
 
     my $translated_buffer = "";
-    
+
     if (   $buffer =~ m/^(.*?)(::)\s+(.*)$/s
         or $buffer =~ m/^(.*?: .*?)(\.)\s+(.*)$/s) {
         my ($name, $sep, $description) = ($1, $2, $3);
@@ -392,7 +392,7 @@ foreach (qw(insertcopying page bye summarycontents shortcontents contents
 foreach (qw(defcv deffn
             defivar defmac defmethod defop
             defopt defspec deftp deftypecv
-            deftypefn deftypefun 
+            deftypefn deftypefun
             deftypeivar deftypemethod
             deftypeop deftypevar deftypevr
             defun defvar defvr)) {

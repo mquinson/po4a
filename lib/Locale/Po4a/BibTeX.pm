@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Po4a::BibTeX.pm
-# 
+#
 # extract and translate translatable strings from BibTeX documents
 #
 # This program is free software; you can redistribute it and/or modify

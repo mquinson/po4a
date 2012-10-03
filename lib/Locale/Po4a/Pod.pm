@@ -3,7 +3,7 @@
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING file).
 #
-# This module converts POD to PO file, so that it becomes possible to 
+# This module converts POD to PO file, so that it becomes possible to
 # translate POD formatted documentation. See gettext documentation for
 # more info about PO files.
 
@@ -71,22 +71,22 @@ sub command {
     my ($self, $command, $paragraph, $line_num) = @_;
 #    print STDOUT "cmd: '$command' '$paragraph' at $line_num\n";
     if ($command eq 'back'
-	|| $command eq 'cut'
-	|| $command eq 'pod') {
-	$self->pushline("=$command\n\n");
+        || $command eq 'cut'
+        || $command eq 'pod') {
+        $self->pushline("=$command\n\n");
     } elsif ($command eq 'over') {
-	$self->pushline("=$command $paragraph".(length($paragraph)?"":"\n\n"));
+        $self->pushline("=$command $paragraph".(length($paragraph)?"":"\n\n"));
     } elsif ($command eq 'encoding') {
-	my $charset = $paragraph;
-	$charset =~ s/^\s*(.*?)\s*$/$1/s;
-	$self->detected_charset($charset)
-	# The =encoding line will be added by docheader
+        my $charset = $paragraph;
+        $charset =~ s/^\s*(.*?)\s*$/$1/s;
+        $self->detected_charset($charset)
+        # The =encoding line will be added by docheader
     } else {
-	$paragraph=$self->translate($paragraph,
-				    $self->input_file().":$line_num",
-				    "=$command",
-				    "wrap"=>1);
-	$self->pushline("=$command $paragraph\n\n");
+        $paragraph=$self->translate($paragraph,
+                                    $self->input_file().":$line_num",
+                                    "=$command",
+                                    "wrap"=>1);
+        $self->pushline("=$command $paragraph\n\n");
     }
 }
 
@@ -95,12 +95,12 @@ sub verbatim {
 #    print "verb: '$paragraph' at $line_num\n";
 
     if ($paragraph eq "\n") {
-	$self->pushline("$paragraph\n");
-	return;
+        $self->pushline("$paragraph\n");
+        return;
     }
     $paragraph=$self->translate($paragraph,
-				$self->input_file().":$line_num",
-				"verbatim");
+                                $self->input_file().":$line_num",
+                                "verbatim");
     $paragraph =~ s/\n$//m;
     $self->pushline("$paragraph\n");
 }
@@ -109,7 +109,7 @@ sub textblock {
     my ($self, $paragraph, $line_num) = @_;
 #    print "text: '$paragraph' at $line_num\n";
 
-    # Fix a pretty damned bug. 
+    # Fix a pretty damned bug.
     # Podlators don't wrap explicitelly the text, and groff won't seem to
     #  wrap any line begining with a space. So, we have to consider as
     #  verbatim not only the paragraphs whose first line is indented, but
@@ -118,18 +118,18 @@ sub textblock {
     #  that's harmless (only less confortable for translators).
 
     if ($paragraph eq "\n") {
-	$self->pushline("$paragraph\n");
-	return;
+        $self->pushline("$paragraph\n");
+        return;
     }
     if ($paragraph =~ m/^[ \t]/m) {
-	$self->verbatim($paragraph, $line_num) ;
-	return;
+        $self->verbatim($paragraph, $line_num) ;
+        return;
     }
 
     $paragraph=$self->translate($paragraph,
-				$self->input_file().":$line_num",
-				'textblock',
-				"wrap"=>1);
+                                $self->input_file().":$line_num",
+                                'textblock',
+                                "wrap"=>1);
     $paragraph=~ s/ +\n/\n/gm;
     $self->pushline("$paragraph\n\n");
 }
@@ -215,14 +215,14 @@ pages, see below) which contains:
   C<" #n">
 
 Lack of luck, in the po4a version, this was split on the space by the
-wrapping. As result, in the original version, the man page contains 
+wrapping. As result, in the original version, the man page contains
 
  " #n"
 
 and mine contains
 
  "" #n""
- 
+
 which is logic since CE<lt>foobarE<gt> is rewritten "foobar".
 
 Complete list of pages having this problem on my box (from 564 pages; note

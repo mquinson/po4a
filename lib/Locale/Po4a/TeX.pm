@@ -261,7 +261,7 @@ regular expression.
 The regular expression is delimited by quotes.
 It should not create any backreference.
 You should use (?:) if you need a group.
-It may also need some escapes.  
+It may also need some escapes.
 
 For example, the LaTeX module uses the "(?:&|\\\\)" regular expression to
 translate separately each cell of a table (lines are separated by '\\' and
@@ -729,7 +729,6 @@ sub translate_buffer {
         }
         $buffer =~ s/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)/$1$end/s;
     }
-    
 
     # translate leading commands.
     do {
@@ -1527,7 +1526,7 @@ sub check_arg_count {
     my $reason = "";
     my ($type, $arg);
     my @arg_types;
-    
+
     if ($command eq 'begin') {
         $type = shift @targs;
         # The name of the environment is mandatory
@@ -1547,7 +1546,7 @@ sub check_arg_count {
     } else {
         @arg_types = @{$command_parameters{$command}{'types'}};
     }
-    
+
     my $count = 0;
     while ($check and @targs) {
         $type = shift @targs;
