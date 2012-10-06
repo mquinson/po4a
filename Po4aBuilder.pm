@@ -40,6 +40,7 @@ sub ACTION_binpo {
     my $self = shift;
     my ($cmd, $sources);
 
+    $self->depends_on('code');
     $self->make_files_writable("po/bin");
 
     my @perl_files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}));
@@ -160,6 +161,7 @@ sub ACTION_dist {
 
 sub ACTION_manpo {
     my $self = shift;
+    $self->depends_on('code');
 
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
     $cmd .= "--force ";
@@ -168,6 +170,7 @@ sub ACTION_manpo {
     $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
     $cmd .= "--package-name po4a ";
     $cmd .= "--package-version ".$self->dist_version()." ";
+    $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
     $cmd .= "po/pod.cfg";
     system($cmd)
         and die;
@@ -175,6 +178,7 @@ sub ACTION_manpo {
 
 sub ACTION_man {
     my $self = shift;
+    $self->depends_on('manpo');
 
     use Pod::Man;
     use Encode;
@@ -184,7 +188,10 @@ sub ACTION_man {
     $options{utf8} = 1;
     my $parser = Pod::Man->new (%options);
 
-    system("PERL5LIB=lib perl po4a --previous po/pod.cfg") and die;
+    my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+    $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
+    $cmd .= "--previous po/pod.cfg";
+    system($cmd) and die;
     system("mkdir -p blib/man/man7") and die;
     system("mkdir -p blib/man/man1") and die;
     system("cp doc/po4a.7.pod blib/man/man7") and die;
