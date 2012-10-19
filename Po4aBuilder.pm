@@ -162,6 +162,7 @@ sub ACTION_dist {
 sub ACTION_manpo {
     my $self = shift;
     $self->depends_on('code');
+    $self->make_files_writable("po/pod");
 
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
     $cmd .= "--force ";
