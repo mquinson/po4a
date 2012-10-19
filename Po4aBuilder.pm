@@ -131,6 +131,7 @@ sub ACTION_install {
 #    $self->depends_on('build');
     my $mandir = $self->install_sets($self->installdirs)->{'bindoc'};
     $mandir =~ s,/man1$,,;
+    $self->install_path(man => $mandir);
     $self->install_path(manl10n => $mandir);
 
     my $localedir = $mandir;
@@ -200,6 +201,7 @@ sub ACTION_man {
         $file =~ m,([^/]*)$,;
         system ("cp $file blib/man/man1/$1.1p.pod") and die;
     }
+    $self->delete_filetree("blib/bindoc") || die;
 
     foreach $file (@{$self->rscan_dir('blib/man',qr{\.pod$})}) {
         next if $file =~ m/^man7/;
