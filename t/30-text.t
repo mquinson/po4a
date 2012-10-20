@@ -13,6 +13,9 @@ unless (-e "t/tmp") {
         or die "Can't create test directory t/tmp: $!\n";
 }
 
+my $UGCS = '';
+$UGCS = 'exit 0;' unless (eval { require Unicode::GCString });
+
 my @AsciiDocTests = qw(Titles BlockTitles BlockId Paragraphs
 DelimitedBlocks Lists Footnotes Callouts Comments Tables Attributes);
 
@@ -28,24 +31,24 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
 }
 
 push @tests, {
-    'run' => "perl ../../po4a-gettextize -f text -o asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesUTF8.asciidoc -L UTF-8 -p TitlesUTF8.po",
-    'test'=> "perl ../compare-po.pl ../data-30/TitlesUTF8.po TitlesUTF8.po",
-    'doc' => "test titles with UTF-8 encoding"
+    'run' => "$UGCS perl ../../po4a-gettextize -f text -o asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesUTF8.asciidoc -L UTF-8 -p TitlesUTF8.po",
+    'test'=> "$UGCS perl ../compare-po.pl ../data-30/TitlesUTF8.po TitlesUTF8.po",
+    'doc' => "$UGCS test titles with UTF-8 encoding"
 };
 push @tests, {
-    'run' => "msgattrib --clear-fuzzy -o TitlesUTF8.po TitlesUTF8.po && perl ../../po4a-translate -f text -o asciidoc -m ../data-30/Titles.asciidoc -l TitlesUTF8.asciidoc -p TitlesUTF8.po",
-    'test'=> "diff TitlesUTF8.asciidoc ../data-30/TitlesUTF8.asciidoc",
-    'doc' => "translate titles with UTF-8 encoding"
+    'run' => "$UGCS msgattrib --clear-fuzzy -o TitlesUTF8.po TitlesUTF8.po && perl ../../po4a-translate -f text -o asciidoc -m ../data-30/Titles.asciidoc -l TitlesUTF8.asciidoc -p TitlesUTF8.po",
+    'test'=> "$UGCS diff TitlesUTF8.asciidoc ../data-30/TitlesUTF8.asciidoc",
+    'doc' => "$UGCS translate titles with UTF-8 encoding"
 };
 push @tests, {
-    'run' => "perl ../../po4a-gettextize -f text -o asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesLatin1.asciidoc -L iso-8859-1 -p TitlesLatin1.po",
-    'test'=> "perl ../compare-po.pl ../data-30/TitlesLatin1.po TitlesLatin1.po",
-    'doc' => "test titles with latin1 encoding"
+    'run' => "$UGCS perl ../../po4a-gettextize -f text -o asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesLatin1.asciidoc -L iso-8859-1 -p TitlesLatin1.po",
+    'test'=> "$UGCS perl ../compare-po.pl ../data-30/TitlesLatin1.po TitlesLatin1.po",
+    'doc' => "$UGCS test titles with latin1 encoding"
 };
 push @tests, {
-    'run' => "msgattrib --clear-fuzzy -o TitlesLatin1.po TitlesLatin1.po && perl ../../po4a-translate -f text -o asciidoc -m ../data-30/Titles.asciidoc -l TitlesLatin1.asciidoc -p TitlesLatin1.po",
-    'test'=> "diff TitlesLatin1.asciidoc ../data-30/TitlesLatin1.asciidoc",
-    'doc' => "translate titles with latin1 encoding"
+    'run' => "$UGCS msgattrib --clear-fuzzy -o TitlesLatin1.po TitlesLatin1.po && perl ../../po4a-translate -f text -o asciidoc -m ../data-30/Titles.asciidoc -l TitlesLatin1.asciidoc -p TitlesLatin1.po",
+    'test'=> "$UGCS diff TitlesLatin1.asciidoc ../data-30/TitlesLatin1.asciidoc",
+    'doc' => "$UGCS translate titles with latin1 encoding"
 };
 use Test::More tests => 2 * 14;
 
