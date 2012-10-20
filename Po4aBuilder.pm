@@ -144,6 +144,7 @@ sub ACTION_install {
 sub ACTION_dist {
     my ($self) = @_;
 
+    $ENV{PO4AFLAGS} ||= '--force';
     $self->depends_on('test');
     $self->depends_on('binpo');
     $self->depends_on('manpo');
@@ -166,7 +167,6 @@ sub ACTION_manpo {
     $self->make_files_writable("po/pod");
 
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
-    $cmd .= "--force ";
     $cmd .= "--previous ";
     $cmd .= "--no-translations ";
     $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
