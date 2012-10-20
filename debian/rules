@@ -1,78 +1,15 @@
 #!/usr/bin/make -f
-# This file is public domain software, originally written by Joey Hess.
-
-package = po4a
-
-# Uncomment this to turn on verbose mode.
-#export DH_VERBOSE=1
-
-DESTDIR = $(CURDIR)/debian/$(package)
-ifndef PERL
-PERL = /usr/bin/perl
-endif
-
-build: build-arch build-indep
-build-arch: build-stamp
-build-indep: build-stamp
-build-stamp:
-	dh_testdir
 
 # Make sure the VERSION string were updated in binaries
-	@ pkgver=`dpkg-parsechangelog|\
-	          grep -m 1 Version|\
-		  sed -e 's/Version: //' -e 's/-.*//' -e 's/[[:blank:]]*//g'`;\
+override_dh_auto_build:
+	pkgver=`dpkg-parsechangelog|\
+	        grep -m 1 Version|\
+	        sed -e 's/Version: //' -e 's/-.*//' -e 's/[[:blank:]]*//g'`;\
 	libver=`grep '$$VERSION=' lib/Locale/Po4a/TransTractor.pm| \
-                sed -e 's/^.*"\([^"]*\)".*/\1/'`; \
-	if [ "x$$pkgver" != "x$$libver" ] ; then \
-	   echo "VERSION in lib/Locale/Po4a/TransTractor.pm is wrong ($$pkgver!=$$libver)";\
-	   exit 1; \
-	fi;
+	        sed -e 's/^.*"\([^"]*\)".*/\1/'`; \
+	[ "x$$pkgver" = "x$$libver" ]
+	dh_auto_build
 
-	$(PERL) Build.PL create_packlist=0
-	./Build
-ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
-	./Build test
-endif
-	touch build-stamp
+%:
+	dh $@
 
-clean:
-	dh_testdir
-	dh_testroot
-	$(RM) -r html t/tmp po/www
-	-./Build clean
-	rm -rf _build build-stamp Build
-	dh_clean
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-	./Build install --installdirs vendor destdir=$(DESTDIR)
-	sed -i -e '1s|^#! /usr/bin/env perl|#! /usr/bin/perl|' $(DESTDIR)/usr/bin/*
-
-# Build architecture-independent files here.
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installdocs NEWS
-	dh_installchangelogs changelog
-	dh_installexamples
-	dh_installman
-	dh_install
-	dh_lintian
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_perl
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-# Build architecture-dependent files here.
-binary-arch: build install
-# We have nothing to do by default.
-
-binary: binary-indep binary-arch 
-
-.PHONY: build clean binary-indep binary-arch binary install
