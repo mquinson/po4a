@@ -8,10 +8,14 @@ Uploaders: Martin Quinson <mquinson@debian.org>,
  Simon Paillard <spaillard@debian.org>,
  Denis Barbier <barbier@debian.org>
 Standards-Version: 3.9.3
-Build-Depends-Indep: perl-modules (>= 5.10.0-16), docbook-xml, docbook-xsl,
- gettext (>= 0.16), libmodule-build-perl, libterm-readkey-perl, sgmlspl, xsltproc,
+Build-Depends-Indep: perl-modules, docbook-xml, docbook-xsl, xsltproc,
+ libterm-readkey-perl,
 # unit tests
- texlive-binaries, libhtml-parser-perl, sp, docbook
+ gettext, libunicode-linebreak-perl,
+#   SGML
+ sp, docbook, libsgmls-perl,
+#   TeX
+ texlive-binaries
 Build-Depends: debhelper (>> 7.0.0)
 Homepage: http://po4a.alioth.debian.org/
 Vcs-Svn: svn://svn.debian.org/svn/po4a/trunk
@@ -20,8 +24,8 @@ Vcs-Browser: http://svn.debian.org/wsvn/po4a/trunk/
 Package: po4a
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, ${perl:Depends}, gettext (>= 0.16), perl-modules, libsgmls-perl, sp
-Recommends: libtext-wrapi18n-perl, libterm-readkey-perl, liblocale-gettext-perl
+Depends: ${misc:Depends}, ${perl:Depends}, gettext, perl-modules, libsgmls-perl, sp
+Recommends: libtext-wrapi18n-perl, libterm-readkey-perl, liblocale-gettext-perl, libunicode-linebreak-perl
 Description: tools for helping translation of documentation
  The po4a (PO for anything) project goal is to ease translations (and
  more interestingly, the maintenance of translations) using gettext
