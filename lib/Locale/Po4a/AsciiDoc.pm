@@ -20,7 +20,7 @@ languages.
 
 package Locale::Po4a::AsciiDoc;
 
-use 5.006;
+use 5.010;
 use strict;
 use warnings;
 
@@ -52,6 +52,10 @@ my $bullets = 1;
 
 my @comments = ();
 
+my %debug=('split_attributes' => 0,
+           'join_attributes'  => 0
+           );
+
 sub initialize {
     my $self = shift;
     my %options = @_;
@@ -65,6 +69,12 @@ sub initialize {
                      dgettext("po4a", "Unknown option: %s"), $opt)
             unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
+    }
+
+    if ($options{'debug'}) {
+        foreach ($options{'debug'}) {
+            $debug{$_} = 1;
+        }
     }
 
     if (defined $options{'nobullets'}) {
@@ -103,8 +113,6 @@ sub parse {
     my ($line,$ref);
     my $paragraph="";
     my $wrapped_mode = 1;
-    my $expect_header = 1;
-    my $end_of_paragraph = 0;
     ($line,$ref)=$self->shiftline();
     my $file = $ref;
     $file =~ s/:[0-9]+$// if defined($line);
@@ -115,7 +123,6 @@ sub parse {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
-            $expect_header = 1;
         }
 
         chomp($line);
@@ -321,6 +328,16 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif (not defined $self->{verbatim} and
+                 ($line =~ m/^\[.*\]$/)) {
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            my ($t) = $self->parse_style($line);
+            $self->pushline("[$t]\n");
+            @comments=();
+            $wrapped_mode = 1;
+            undef $self->{bullet};
+            undef $self->{indent};
+        } elsif (not defined $self->{verbatim} and
                  ($line =~ m/^(\s*)([*_+`'#[:alnum:]].*)((?:::|;;|\?\?|:-)(?: *\\)?)$/)) {
             my $indent = $1;
             my $label = $2;
@@ -461,12 +478,6 @@ sub parse {
         # are considered as verbatim paragraphs
         $wrapped_mode = 0 if (   $paragraph =~ m/^(\*|[0-9]+[.)] )/s
                           or $paragraph =~ m/[ \t][ \t][ \t]/s);
-        if ($end_of_paragraph) {
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            $wrapped_mode = 1;
-            $end_of_paragraph = 0;
-        }
         ($line,$ref)=$self->shiftline();
     }
     if (length $paragraph) {
@@ -553,6 +564,46 @@ TEST_BULLET:
         $t =~ s/\n(.)/\n$indent2$1/sg;
     }
     $self->pushline( $t.$end );
+}
+
+sub parse_style {
+    my ($self, $text) = (shift, shift);
+    $text =~ s/^\[//;
+    $text =~ s/\]$//;
+    my ($command, @attributes) = $self->split_attributes($text);
+    return "[".$self->join_attributes($command, @attributes)."]";
+}
+
+sub split_attributes {
+    my ($self, $text) = (shift, shift);
+
+    print STDERR "Splitting attributes in: $text\n" if $debug{split_attributes};
+    my @attributes = ();
+    while ($text =~ m/\G(
+         [^\W\d][-\w]*="(?:[^"\\]++|\\.)*+" # named attribute
+       | [^\W\d][-\w]*=None                 # undefined named attribute
+       | "(?:[^"\\]++|\\.)*+"               # quoted attribute
+       |  (?:[^,\\]++|\\.)++                # unquoted attribute
+         )(?:,\s*+)?/gx) {
+        print STDERR "  -> $1\n" if $debug{split_attributes};
+        push @attributes, $1;
+    }
+    die wrap_mod("po4a::asciidoc",
+                 dgettext("po4a", "Unable to parse attribute list: [%s]"), $text)
+            unless length(@attributes);
+    my $command = shift @attributes;
+    return ($command, @attributes);
+}
+
+sub join_attributes {
+    my ($self, $command) = (shift, shift);
+    my (@attributes) = @_;
+    my $text = $command;
+    if (length(@attributes)) {
+        $text .= ", ".join(", ", @attributes);
+    }
+    print STDERR "Joined attributes: $text\n" if $debug{join_attributes};
+    return $text;
 }
 
 1;
