@@ -100,6 +100,7 @@ sub initialize {
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'} = 1;
     $self->{options}{'attributeentry'}='';
+    $self->{options}{'definitions'}='';
 
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::asciidoc",
@@ -120,8 +121,8 @@ sub initialize {
         attributeentry => {}
     };
 
-    if ($options{'definitions'}) {
-        $self->parse_definition_file($options{'definitions'})
+    if ($self->{options}{'definitions'}) {
+        $self->parse_definition_file($self->{options}{'definitions'})
     }
     $self->{options}{attributeentry} =~ /^\s*(.*?)\s*$/s;
     foreach my $attr (split(/\s+/s,$1)) {
@@ -189,9 +190,8 @@ sub parse_definition_file {
             dgettext("po4a", "Can't open %s: %s"), $filename, $!);
     }
     while (<IN>) {
-        if (m,^\s*//po4a: ,) {
-            process_definition($self, $_);
-        }
+        chomp;
+        process_definition($self, $_);
     }
     close IN;
 }
