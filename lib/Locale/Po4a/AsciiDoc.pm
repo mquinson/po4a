@@ -14,7 +14,6 @@ areas where they were not expected like documentation.
 
 Locale::Po4a::AsciiDoc is a module to help the translation of documentation in
 the AsciiDoc format.
-languages.
 
 =cut
 
@@ -38,22 +37,59 @@ These are this module's particular options:
 
 =over
 
-=item B<nobullets>
+=item B<attributeentry>
 
-Deactivate detection of bullets.
+Space-separated list of attribute entries you want to translate.  By default,
+no attribute entries are translatable.
 
-By default, when a bullet is detected, the bullet paragraph is not considered
-as a verbatim paragraph (with the no-wrap flag in the PO file), but the module
-rewraps this paragraph in the generated PO file and in the translation.
+=item B<definitions>
+
+The name of a file containing definitions for po4a, as defined in the
+B<INLINE CUSTOMIZATION> section.
+You can use this option if it is not possible to put the definitions in
+the document being translated.
+
+=head1 INLINE CUSTOMIZATION
+
+The AsciiDoc module can be customized with lines starting by B<//po4a:>.
+These lines are interpreted as commands to the parser.
+The following commands are recognized:
+
+=over 4
+
+=item B<//po4a: macro >I<name>B<[>I<attribute list>B<]>
+
+This permits to describe in detail the parameters of a I<macro>;
+I<name> must be a valid macro name, and it ends with an underscore
+if the target must be translated.
+
+The I<attribute list> argument is a comma separated list which
+contains informations about translatable arguments.  This list contains
+either numbers, to define positional parameters, or named attributes.
+
+=item B<//po4a: style >B<[>I<attribute list>B<]>
+
+This permits to describe in detail which attributes of a style must
+be translated.
+
+The I<attribute list> argument is a comma separated list which
+contains informations about translatable arguments.  This list contains
+either numbers, to define positional parameters, or named attributes.
+The first attribute is the style name, it will not be translated.
+
+=item B<//po4a: entry >I<name>
+
+This declares an attribute entry as being translatable.  By default,
+they are not translated.
+
+=back
 
 =cut
 
-my $bullets = 1;
-
 my @comments = ();
 
-my %debug=('split_attributes' => 0,
-           'join_attributes'  => 0
+my %debug=('split_attributelist' => 0,
+           'join_attributelist'  => 0
            );
 
 sub initialize {
@@ -78,14 +114,86 @@ sub initialize {
         }
     }
 
+    $self->{translate} = {
+        macro => {},
+        style => {},
+        attributeentry => {}
+    };
+
+    if ($options{'definitions'}) {
+        $self->parse_definition_file($options{'definitions'})
+    }
     $self->{options}{attributeentry} =~ /^\s*(.*?)\s*$/s;
     foreach my $attr (split(/\s+/s,$1)) {
-        $self->{attributeentry}->{$attr} = 1;
+        $self->{translate}->{attributeentry}->{$attr} = 1;
     }
 
-    if (defined $options{'nobullets'}) {
-        $bullets = 0;
+    $self->register_attributelist('[verse,2,3,attribution,citetitle]');
+    $self->register_attributelist('[quote,2,3,attribution,citetitle]');
+    $self->register_macro('image_[1,alt,title,link]');
+}
+
+sub register_attributelist {
+    my $self = shift;
+    my $list = shift;
+    my $type = shift || 'style';
+    $list =~ s/^\[//;
+    $list =~ s/\]$//;
+    $list =~ s/\s+//;
+    $list .= ",";
+    $list =~ s/^([^,]*)//;
+    my $command = $1;
+    $self->{translate}->{$type}->{$command} = $list;
+    print STDERR "Definition: $type $command: $list\n" if $debug{definitions};
+}
+
+sub register_macro {
+    my $self = shift;
+    my $text = shift;
+    die wrap_mod("po4a::asciidoc",
+                 dgettext("po4a", "Unable to parse macro definition: %s"), $text)
+            unless $text =~ m/^([\w\d][\w\d-]*)(_?)\[(.*)\]$/;
+    my $macroname = $1;
+    my $macrotarget = $2;
+    my $macroparam = $macroname.",".$3;
+    $self->register_attributelist($macroparam, 'macro');
+    if ($macrotarget eq '_') {
+        $self->{translate}->{macro}->{$macroname} .= '_';
     }
+}
+
+sub is_translated_target {
+    my $self = shift;
+    my $macroname = shift;
+    return defined($self->{translate}->{macro}->{$macroname}) &&
+           $self->{translate}->{macro}->{$macroname} =~ m/_$/;
+}
+
+sub process_definition {
+    my $self = shift;
+    my $command = shift;
+    if ($command =~ m/^po4a: macro\s+(\w+\[.*\])\s*$/) {
+        $self->register_macro($1);
+    } elsif ($command =~ m/^po4a: style\s*(\[.*\])\s*$/) {
+        $self->register_attributelist($1);
+    } elsif ($command =~ m/^po4a: entry\s+(.+?)\s*$/) {
+        $self->{translate}->{attributeentry}->{$1} = 1;
+    }
+}
+
+sub parse_definition_file {
+    my $self = shift;
+    my $filename = shift;
+    if (! open (IN,"<", $filename)) {
+        die wrap_mod("po4a::asciidoc",
+            dgettext("po4a", "Can't open %s: %s"), $filename, $!);
+    }
+    while (<IN>) {
+        if (m,^\s*//po4a: ,) {
+            process_definition($self, $_);
+        }
+    }
+    close IN;
 }
 
 my $RE_SECTION_TEMPLATES = "sect1|sect2|sect3|sect4|preface|colophon|dedication|synopsis|index";
@@ -248,8 +356,14 @@ sub parse {
                 $self->pushline($line."\n") unless defined($self->{verbatim}) && $self->{verbatim} == 2;
             }
         } elsif ((not defined($self->{verbatim})) and ($line =~ m/^\/\/(.*)/)) {
-            # Comment line
-            push @comments, $1;
+            my $comment = $1;
+            if ($comment =~ m/^po4a: /) {
+                # Po4a command line
+                $self->process_definition($comment);
+            } else {
+                # Comment line
+                push @comments, $comment;
+            }
         } elsif (not defined $self->{verbatim} and
                  ($line =~ m/^\[\[([^\]]*)\]\]$/)) {
             # Found BlockId
@@ -337,8 +451,8 @@ sub parse {
                  ($line =~ m/^\[.*\]$/)) {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
-            my ($t) = $self->parse_style($line);
-            $self->pushline("[$t]\n");
+            my $t = $self->parse_style($line);
+            $self->pushline("$t\n");
             @comments=();
             $wrapped_mode = 1;
             undef $self->{bullet};
@@ -391,13 +505,13 @@ sub parse {
                 $line =~ s/^\s+//;
                 $attrvalue .= $line;
             }
-            # Found a Attribute entry
+            # Found an Attribute entry
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
             undef $self->{bullet};
             undef $self->{indent};
-            if (defined($self->{attributeentry}->{$attrname})) {
+            if (defined($self->{translate}->{attributeentry}->{$attrname})) {
                 my $t = $self->translate($attrvalue,
                                      $self->{ref},
                                      "Attribute :$attrname:",
@@ -407,6 +521,23 @@ sub parse {
             } else {
                 $self->pushline(":$attrname$attrsep$attrvalue\n");
             }
+            @comments=();
+        } elsif (not defined $self->{verbatim} and
+                 ($line =~ m/^([\w\d][\w\d-]*)(::)(\S+)\[(.*)\]$/)) {
+            my $macroname = $1;
+            my $macrotype = $2;
+            my $macrotarget = $3;
+            my $macroparam = $4;
+            # Found a macro
+            if ($macrotype eq '::') {
+                do_paragraph($self,$paragraph,$wrapped_mode);
+                $paragraph="";
+                $wrapped_mode = 1;
+                undef $self->{bullet};
+                undef $self->{indent};
+            }
+            my $t = $self->parse_macro($macroname, $macrotype, $macrotarget, $macroparam);
+            $self->pushline("$t\n");
             @comments=();
         } elsif (not defined $self->{verbatim} and
                  ($line !~ m/^\.\./) and ($line =~ m/^\.(\S.*)$/)) {
@@ -515,7 +646,7 @@ sub do_paragraph {
 #    }
 #    $type .= " verbatim: '".($self->{verbatim}||"NONE")."' bullet: '$b' indent: '".($self->{indent}||"NONE")."' type: '".($self->{type}||"NONE")."'";
 
-    if ($bullets and not $wrap and not defined $self->{verbatim}) {
+    if (not $wrap and not defined $self->{verbatim}) {
         # Detect bullets
         # |        * blah blah
         # |<spaces>  blah
@@ -586,39 +717,119 @@ sub parse_style {
     my ($self, $text) = (shift, shift);
     $text =~ s/^\[//;
     $text =~ s/\]$//;
-    my ($command, @attributes) = $self->split_attributes($text);
-    return "[".$self->join_attributes($command, @attributes)."]";
+    my @attributes = $self->split_attributelist($text);
+    return "[".join(", ", $self->join_attributelist("style", @attributes))."]";
 }
 
-sub split_attributes {
+sub parse_macro {
+    my ($self, $macroname, $macrotype, $macrotarget, $macroparam) = (shift, shift, shift, shift, shift);
+    my @attributes = $self->split_attributelist($macroparam);
+    unshift @attributes, $macroname;
+    my @translated_attributes = $self->join_attributelist("macro", @attributes);
+    shift @translated_attributes;
+    if ($self->is_translated_target($macroname)) {
+        my $target = unquote_space($macrotarget);
+        my $t = $self->translate($target,
+                         $self->{ref},
+                         "Target for macro $macroname",
+                         "comment" => join("\n", @comments),
+                         "wrap" => 0);
+        $macrotarget = quote_space($t);
+    }
+    return "$macroname$macrotype$macrotarget\[".join(", ", @translated_attributes)."]";
+}
+
+sub split_attributelist {
     my ($self, $text) = (shift, shift);
 
-    print STDERR "Splitting attributes in: $text\n" if $debug{split_attributes};
+    print STDERR "Splitting attributes in: $text\n" if $debug{split_attributelist};
     my @attributes = ();
     while ($text =~ m/\G(
          [^\W\d][-\w]*="(?:[^"\\]++|\\.)*+" # named attribute
        | [^\W\d][-\w]*=None                 # undefined named attribute
+       | [^\W\d][-\w]*=\S+                  # invalid, but accept it anyway
        | "(?:[^"\\]++|\\.)*+"               # quoted attribute
        |  (?:[^,\\]++|\\.)++                # unquoted attribute
          )(?:,\s*+)?/gx) {
-        print STDERR "  -> $1\n" if $debug{split_attributes};
+        print STDERR "  -> $1\n" if $debug{split_attributelist};
         push @attributes, $1;
     }
     die wrap_mod("po4a::asciidoc",
                  dgettext("po4a", "Unable to parse attribute list: [%s]"), $text)
             unless length(@attributes);
-    my $command = shift @attributes;
-    return ($command, @attributes);
+    return @attributes;
 }
 
-sub join_attributes {
-    my ($self, $command) = (shift, shift);
-    my (@attributes) = @_;
-    my $text = $command;
-    if (length(@attributes)) {
-        $text .= ", ".join(", ", @attributes);
+sub join_attributelist {
+    my ($self, $type) = (shift, shift);
+    my @attributes = @_;
+    my $command = shift(@attributes);
+    if ($command =~ m/=/) {
+        unshift @attributes, $command;
+        $command = '';
     }
-    print STDERR "Joined attributes: $text\n" if $debug{join_attributes};
+    my @text = ($command);
+    my $count = 0;
+    foreach my $attr (@attributes) {
+        $count++;
+        push @text, $self->translate_attributelist($type, $command, $count, $attr);
+    }
+    shift(@text) if $text[0] eq '';
+    print STDERR "Joined attributes: ".join(", ", @text)."\n" if $debug{join_attributelist};
+    return @text;
+}
+
+sub translate_attributelist {
+    my ($self, $type, $command, $count, $attr) = (shift, shift, shift, shift, shift);
+    return $attr unless defined $self->{translate}->{$type}->{$command};
+    if ($attr =~ m/^([^\W\d][-\w]*)=(.*)/) {
+        my $attrname = $1;
+        my $attrvalue = $2;
+        if ($self->{translate}->{$type}->{$command} =~ m/,$attrname,/) {
+            my $attrvalue = unquote($attrvalue);
+            my $t = $self->translate($attrvalue,
+                             $self->{ref},
+                             "Named '$attrname' AttributeList argument for $type $command",
+                             "comment" => join("\n", @comments),
+                             "wrap" => 0);
+            $attr = $attrname."=".quote($t);
+        }
+    } else {
+        if ($self->{translate}->{$type}->{$command} =~ m/,$count,/) {
+            my $attrvalue = unquote($attr);
+            my $t = $self->translate($attrvalue,
+                             $self->{ref},
+                             "Positional (\$$count) AttributeList argument for $type $command",
+                             "comment" => join("\n", @comments),
+                             "wrap" => 0);
+            $attr = quote($t);
+        }
+    }
+    return $attr;
+}
+
+sub unquote {
+    my ($text) = shift;
+    return $text unless $text =~ s/^"(.*)"$/$1/;
+    $text =~ s/\\"/"/g;
+    return $text;
+}
+
+sub quote {
+    my $text = shift;
+    $text =~ s/"/\\"/g;
+    return '"'.$text.'"';
+}
+
+sub quote_space {
+    my $text = shift;
+    $text =~ s/ /%20/g;
+    return $text;
+}
+
+sub unquote_space {
+    my $text = shift;
+    $text =~ s/%20/ /g;
     return $text;
 }
 
