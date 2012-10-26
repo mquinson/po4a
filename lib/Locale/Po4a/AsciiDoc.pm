@@ -291,7 +291,7 @@ sub parse {
             $paragraph="";
             $self->pushline($line."\n");
         } elsif ((not defined($self->{verbatim})) and
-                 ($line =~ m/^(={4,}|-{4,}|~{4,}|\^{4,}|\+{4,})$/) and
+                 ($line =~ m/^(={2,}|-{2,}|~{2,}|\^{2,}|\+{2,})$/) and
                  (defined($paragraph) )and
                  ($paragraph =~ m/^[^\n]*\n$/s) and
                  (columns($paragraph, $self->{TT}{po_in}{encoder}, $ref) == (length($line)))) {
