@@ -168,7 +168,7 @@ sub register_macro {
     my $text = shift;
     die wrap_mod("po4a::asciidoc",
                  dgettext("po4a", "Unable to parse macro definition: %s"), $text)
-            unless $text =~ m/^(\+?)([\w\d][\w\d-]*)(_?)\[(.*)\]$/;
+            unless $text =~ m/^(\+?)([\w\d][\w\d-]*?)(_?)\[(.*)\]$/;
     my $macroplus = $1;
     my $macroname = $2;
     my $macrotarget = $3;
