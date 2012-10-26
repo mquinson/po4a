@@ -67,6 +67,10 @@ The I<attribute list> argument is a comma separated list which
 contains informations about translatable arguments.  This list contains
 either numbers, to define positional parameters, or named attributes.
 
+If a plus sign (B<+>) is prepended to I<name>, then the macro and its
+arguments are translated as a whole.  There is no need to define
+attribute list in this case, but brackets must be present.
+
 =item B<//po4a: style >B<[>I<attribute list>B<]>
 
 This permits to describe in detail which attributes of a style must
@@ -76,6 +80,13 @@ The I<attribute list> argument is a comma separated list which
 contains informations about translatable arguments.  This list contains
 either numbers, to define positional parameters, or named attributes.
 The first attribute is the style name, it will not be translated.
+
+If a plus sign (B<+>) is prepended to the style name, then the
+attribute list is translated as a whole.  There is no need to define
+translatable attributes.
+
+If a minus sign (B<->) is prepended to the style name, then this
+attribute is not translated.
 
 =item B<//po4a: entry >I<name>
 
@@ -121,6 +132,13 @@ sub initialize {
         attributeentry => {}
     };
 
+    $self->register_attributelist('[verse,2,3,attribution,citetitle]');
+    $self->register_attributelist('[quote,2,3,attribution,citetitle]');
+    $self->register_attributelist('[icon]');
+    $self->register_attributelist('[caption]');
+    $self->register_attributelist('[-icons,caption]');
+    $self->register_macro('image_[1,alt,title,link]');
+
     if ($self->{options}{'definitions'}) {
         $self->parse_definition_file($self->{options}{'definitions'})
     }
@@ -129,9 +147,6 @@ sub initialize {
         $self->{translate}->{attributeentry}->{$attr} = 1;
     }
 
-    $self->register_attributelist('[verse,2,3,attribution,citetitle]');
-    $self->register_attributelist('[quote,2,3,attribution,citetitle]');
-    $self->register_macro('image_[1,alt,title,link]');
 }
 
 sub register_attributelist {
@@ -141,9 +156,9 @@ sub register_attributelist {
     $list =~ s/^\[//;
     $list =~ s/\]$//;
     $list =~ s/\s+//;
-    $list .= ",";
-    $list =~ s/^([^,]*)//;
-    my $command = $1;
+    $list = ",".$list.",";
+    $list =~ m/^,(-?)([^,]*)/;
+    my $command = $2;
     $self->{translate}->{$type}->{$command} = $list;
     print STDERR "Definition: $type $command: $list\n" if $debug{definitions};
 }
@@ -153,13 +168,17 @@ sub register_macro {
     my $text = shift;
     die wrap_mod("po4a::asciidoc",
                  dgettext("po4a", "Unable to parse macro definition: %s"), $text)
-            unless $text =~ m/^([\w\d][\w\d-]*)(_?)\[(.*)\]$/;
-    my $macroname = $1;
-    my $macrotarget = $2;
-    my $macroparam = $macroname.",".$3;
+            unless $text =~ m/^(\+?)([\w\d][\w\d-]*)(_?)\[(.*)\]$/;
+    my $macroplus = $1;
+    my $macroname = $2;
+    my $macrotarget = $3;
+    my $macroparam = $macroname.",".$4;
     $self->register_attributelist($macroparam, 'macro');
     if ($macrotarget eq '_') {
         $self->{translate}->{macro}->{$macroname} .= '_';
+    }
+    if ($macroplus eq '+') {
+        $self->{translate}->{macro}->{$macroname} .= '+';
     }
 }
 
@@ -170,10 +189,18 @@ sub is_translated_target {
            $self->{translate}->{macro}->{$macroname} =~ m/_$/;
 }
 
+sub is_unsplitted_attributelist {
+    my $self = shift;
+    my $name = shift;
+    my $type = shift;
+    return defined($self->{translate}->{$type}->{$name}) &&
+               $self->{translate}->{$type}->{$name} =~ m/\+$/;
+}
+
 sub process_definition {
     my $self = shift;
     my $command = shift;
-    if ($command =~ m/^po4a: macro\s+(\w+\[.*\])\s*$/) {
+    if ($command =~ m/^po4a: macro\s+(.*\[.*\])\s*$/) {
         $self->register_macro($1);
     } elsif ($command =~ m/^po4a: style\s*(\[.*\])\s*$/) {
         $self->register_attributelist($1);
@@ -397,57 +424,6 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif (not defined $self->{verbatim} and
-                 ($line =~ m/^\[(['"]?)(verse|quote)\1, +(.*)\]$/)) {
-            my $quote = $1 || '';
-            my $type = $2;
-            my $arg = $3;
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            my $t = $self->translate($arg,
-                                     $self->{ref},
-                                     "$type",
-                                     "comment" => join("\n", @comments),
-                                     "wrap" => 0);
-            $self->pushline("[$quote$type$quote, $t]\n");
-            @comments=();
-            $wrapped_mode = 1;
-            if ($type  eq "verse") {
-                $wrapped_mode = 0;
-            }
-            $self->{type} = $type;
-            undef $self->{bullet};
-            undef $self->{indent};
-        } elsif (not defined $self->{verbatim} and
-                 ($line =~ m/^\[icon="(.*)"\]$/)) {
-            my $arg = $1;
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            my $t = $self->translate($arg,
-                                     $self->{ref},
-                                     "icon",
-                                     "comment" => join("\n", @comments),
-                                     "wrap" => 0);
-            $self->pushline("[icon=\"$t\"]\n");
-            @comments=();
-            $wrapped_mode = 1;
-            undef $self->{bullet};
-            undef $self->{indent};
-        } elsif (not defined $self->{verbatim} and
-                 ($line =~ m/^\[icons=None, +caption="(.*)"\]$/)) {
-            my $arg = $1;
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            my $t = $self->translate($arg,
-                                     $self->{ref},
-                                     "caption",
-                                     "comment" => join("\n", @comments),
-                                     "wrap" => 0);
-            $self->pushline("[icons=None, caption=\"$t\"]\n");
-            @comments=();
-            $wrapped_mode = 1;
-            undef $self->{bullet};
-            undef $self->{indent};
-        } elsif (not defined $self->{verbatim} and
                  ($line =~ m/^\[.*\]$/)) {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
@@ -455,6 +431,10 @@ sub parse {
             $self->pushline("$t\n");
             @comments=();
             $wrapped_mode = 1;
+            if ($line =~ m/^\[(['"]?)(verse|quote)\1,/) {
+                $wrapped_mode = 0 if $2 eq 'verse';
+                $self->{type} = $2;
+            }
             undef $self->{bullet};
             undef $self->{indent};
         } elsif (not defined $self->{verbatim} and
@@ -717,12 +697,29 @@ sub parse_style {
     my ($self, $text) = (shift, shift);
     $text =~ s/^\[//;
     $text =~ s/\]$//;
+    $text =~ m/^([^=,]+)/;
+    if (defined($1) && $self->is_unsplitted_attributelist($1, 'style')) {
+       my $t = $self->translate($text,
+                        $self->{ref},
+                        "Unsplitted AttributeList",
+                        "comment" => join("\n", @comments),
+                        "wrap" => 0);
+       return "[$t]";
+    }
     my @attributes = $self->split_attributelist($text);
     return "[".join(", ", $self->join_attributelist("style", @attributes))."]";
 }
 
 sub parse_macro {
     my ($self, $macroname, $macrotype, $macrotarget, $macroparam) = (shift, shift, shift, shift, shift);
+    if ($self->is_unsplitted_attributelist($macroname, 'macro')) {
+        my $t = $self->translate("$macroname$macrotype$macrotarget\[$macroparam\]",
+                         $self->{ref},
+                         "Unsplitted macro call",
+                         "comment" => join("\n", @comments),
+                         "wrap" => 0);
+        return $t;
+    }
     my @attributes = $self->split_attributelist($macroparam);
     unshift @attributes, $macroname;
     my @translated_attributes = $self->join_attributelist("macro", @attributes);
@@ -764,17 +761,18 @@ sub join_attributelist {
     my ($self, $type) = (shift, shift);
     my @attributes = @_;
     my $command = shift(@attributes);
-    if ($command =~ m/=/) {
-        unshift @attributes, $command;
-        $command = '';
-    }
+    my $position = 1;
     my @text = ($command);
-    my $count = 0;
-    foreach my $attr (@attributes) {
-        $count++;
-        push @text, $self->translate_attributelist($type, $command, $count, $attr);
+    if ($command =~ m/=/) {
+        my $attr = $command;
+        $command =~ s/=.*//;
+        @text = ();
+        push @text, $self->translate_attributelist($type, $command, $position, $attr);
     }
-    shift(@text) if $text[0] eq '';
+    foreach my $attr (@attributes) {
+        $position++;
+        push @text, $self->translate_attributelist($type, $command, $position, $attr);
+    }
     print STDERR "Joined attributes: ".join(", ", @text)."\n" if $debug{join_attributelist};
     return @text;
 }
@@ -786,20 +784,24 @@ sub translate_attributelist {
         my $attrname = $1;
         my $attrvalue = $2;
         if ($self->{translate}->{$type}->{$command} =~ m/,$attrname,/) {
-            my $attrvalue = unquote($attrvalue);
-            my $t = $self->translate($attrvalue,
+            my $value = unquote($attrvalue);
+            my $t = $self->translate($value,
                              $self->{ref},
-                             "Named '$attrname' AttributeList argument for $type $command",
+                             "Named '$attrname' AttributeList argument for $type '$command'",
                              "comment" => join("\n", @comments),
                              "wrap" => 0);
-            $attr = $attrname."=".quote($t);
+            if ($attrvalue eq 'None' && $t eq 'None') {
+                $attr = $attrname."=None";
+            } else {
+                $attr = $attrname."=".quote($t);
+            }
         }
     } else {
         if ($self->{translate}->{$type}->{$command} =~ m/,$count,/) {
             my $attrvalue = unquote($attr);
             my $t = $self->translate($attrvalue,
                              $self->{ref},
-                             "Positional (\$$count) AttributeList argument for $type $command",
+                             "Positional (\$$count) AttributeList argument for $type '$command'",
                              "comment" => join("\n", @comments),
                              "wrap" => 0);
             $attr = quote($t);
