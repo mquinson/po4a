@@ -157,7 +157,7 @@ sub register_attributelist {
     $list =~ s/\]$//;
     $list =~ s/\s+//;
     $list = ",".$list.",";
-    $list =~ m/^,(-?)([^,]*)/;
+    $list =~ m/^,([-+]?)([^,]*)/;
     my $command = $2;
     $self->{translate}->{$type}->{$command} = $list;
     print STDERR "Definition: $type $command: $list\n" if $debug{definitions};
@@ -178,7 +178,7 @@ sub register_macro {
         $self->{translate}->{macro}->{$macroname} .= '_';
     }
     if ($macroplus eq '+') {
-        $self->{translate}->{macro}->{$macroname} .= '+';
+        $self->{translate}->{macro}->{$macroname} =~ s/^,/,+/;
     }
 }
 
@@ -194,7 +194,7 @@ sub is_unsplitted_attributelist {
     my $name = shift;
     my $type = shift;
     return defined($self->{translate}->{$type}->{$name}) &&
-               $self->{translate}->{$type}->{$name} =~ m/\+$/;
+               $self->{translate}->{$type}->{$name} =~ m/^,\+/;
 }
 
 sub process_definition {
