@@ -37,17 +37,30 @@ These are this module's particular options:
 
 =over
 
-=item B<attributeentry>
-
-Space-separated list of attribute entries you want to translate.  By default,
-no attribute entries are translatable.
-
 =item B<definitions>
 
 The name of a file containing definitions for po4a, as defined in the
 B<INLINE CUSTOMIZATION> section.
 You can use this option if it is not possible to put the definitions in
 the document being translated.
+
+In a definitions file, lines must not start by two slashes, but directly
+by B<po4a:>.
+
+=item B<entry>
+
+Space-separated list of attribute entries you want to translate.  By default,
+no attribute entries are translatable.
+
+=item B<macro>
+
+Space-separated list of macro definitions.
+
+=item B<style>
+
+Space-separated list of style definitions.
+
+=back
 
 =head1 INLINE CUSTOMIZATION
 
@@ -110,7 +123,9 @@ sub initialize {
     $self->{options}{'nobullets'} = 1;
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'} = 1;
-    $self->{options}{'attributeentry'}='';
+    $self->{options}{'entry'}='';
+    $self->{options}{'macro'}='';
+    $self->{options}{'style'}='';
     $self->{options}{'definitions'}='';
 
     foreach my $opt (keys %options) {
@@ -129,7 +144,7 @@ sub initialize {
     $self->{translate} = {
         macro => {},
         style => {},
-        attributeentry => {}
+        entry => {}
     };
 
     $self->register_attributelist('[verse,2,3,attribution,citetitle]');
@@ -142,9 +157,17 @@ sub initialize {
     if ($self->{options}{'definitions'}) {
         $self->parse_definition_file($self->{options}{'definitions'})
     }
-    $self->{options}{attributeentry} =~ /^\s*(.*?)\s*$/s;
-    foreach my $attr (split(/\s+/s,$1)) {
-        $self->{translate}->{attributeentry}->{$attr} = 1;
+    $self->{options}{entry} =~ s/^\s*//;
+    foreach my $attr (split(/\s+/, $self->{options}{entry})) {
+        $self->{translate}->{entry}->{$attr} = 1;
+    }
+    $self->{options}{macro} =~ s/^\s*//;
+    foreach my $attr (split(/\s+/, $self->{options}{macro})) {
+        $self->register_macro($attr);
+    }
+    $self->{options}{style} =~ s/^\s*//;
+    foreach my $attr (split(/\s+/, $self->{options}{style})) {
+        $self->register_attributelist($attr);
     }
 
 }
@@ -205,7 +228,7 @@ sub process_definition {
     } elsif ($command =~ m/^po4a: style\s*(\[.*\])\s*$/) {
         $self->register_attributelist($1);
     } elsif ($command =~ m/^po4a: entry\s+(.+?)\s*$/) {
-        $self->{translate}->{attributeentry}->{$1} = 1;
+        $self->{translate}->{entry}->{$1} = 1;
     }
 }
 
@@ -492,7 +515,7 @@ sub parse {
             $wrapped_mode = 1;
             undef $self->{bullet};
             undef $self->{indent};
-            if (defined($self->{translate}->{attributeentry}->{$attrname})) {
+            if (defined($self->{translate}->{entry}->{$attrname})) {
                 my $t = $self->translate($attrvalue,
                                      $self->{ref},
                                      "Attribute :$attrname:",
