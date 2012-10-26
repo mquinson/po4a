@@ -241,6 +241,7 @@ BEGIN {
             if ($UnicodeGCString_available) {
                 return Unicode::GCString->new($text)->columns();
             } else {
+                $text =~ s/\n$//s;
                 return length($text) if !(defined($encoder) && $encoder->name ne "ascii");
                 die wrap_mod("po4a::asciidoc",
                     dgettext("po4a", "Detection of two line titles failed at %s\nInstall the Unicode::GCString module!"), shift)
