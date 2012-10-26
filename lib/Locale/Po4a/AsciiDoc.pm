@@ -615,10 +615,12 @@ Tested successfully on simple text files and NEWS.Debian files.
 =head1 AUTHORS
 
  Nicolas François <nicolas.francois@centraliens.net>
+ Denis Barbier <barbier@linuxfr.org>
 
 =head1 COPYRIGHT AND LICENSE
 
  Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
