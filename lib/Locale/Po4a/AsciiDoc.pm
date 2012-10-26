@@ -63,6 +63,7 @@ sub initialize {
     $self->{options}{'nobullets'} = 1;
     $self->{options}{'debug'}='';
     $self->{options}{'verbose'} = 1;
+    $self->{options}{'attributeentry'}='';
 
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::asciidoc",
@@ -75,6 +76,11 @@ sub initialize {
         foreach ($options{'debug'}) {
             $debug{$_} = 1;
         }
+    }
+
+    $self->{options}{attributeentry} =~ /^\s*(.*?)\s*$/s;
+    foreach my $attr (split(/\s+/s,$1)) {
+        $self->{attributeentry}->{$attr} = 1;
     }
 
     if (defined $options{'nobullets'}) {
@@ -379,18 +385,28 @@ sub parse {
             my $attrname = $1;
             my $attrsep = $2;
             my $attrvalue = $3;
+            while ($attrvalue =~ s/ \+$//s) {
+                ($line,$ref)=$self->shiftline();
+                $ref =~ m/^(.*):[0-9]+$/;
+                $line =~ s/^\s+//;
+                $attrvalue .= $line;
+            }
             # Found a Attribute entry
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
             undef $self->{bullet};
             undef $self->{indent};
-            my $t = $self->translate($attrvalue,
+            if (defined($self->{attributeentry}->{$attrname})) {
+                my $t = $self->translate($attrvalue,
                                      $self->{ref},
                                      "Attribute :$attrname:",
                                      "comment" => join("\n", @comments),
                                      "wrap" => 0);
-            $self->pushline(":$attrname$attrsep$t\n");
+                $self->pushline(":$attrname$attrsep$t\n");
+            } else {
+                $self->pushline(":$attrname$attrsep$attrvalue\n");
+            }
             @comments=();
         } elsif (not defined $self->{verbatim} and
                  ($line !~ m/^\.\./) and ($line =~ m/^\.(\S.*)$/)) {
