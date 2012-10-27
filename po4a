@@ -279,6 +279,15 @@ which contain this string. Then, when a translator updates the translation
 and removes the fuzzy tag in one PO, the translation of this string will
 be updated in every POs automatically.
 
+If there are name conflicts because several files have the same filename,
+the name of the master file can be specified by adding a C<master:file=>I<name>
+option:
+
+ [po4a_langs] de fr ja
+ [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
+ [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui
+ [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui
+
 =head1 OPTIONS
 
 =over 4
@@ -960,7 +969,12 @@ while (<CONFIG>) {
 	%options = %{$document{$main}{'options'}}
 	  if defined $document{$main}{'options'};
 
-	# 4. Merge the document specific options
+	# 4. Handle "master:file=" flags for "$master" substitution in strings
+	if ($args =~ s/ +master:file=(\S+)//) {
+	    $document{$main}{'master'} = $1;
+	}
+
+	# 5. Merge the document specific options
 	# separate the end of the line, which contains options.
 	# Something more clever could be done to allow options in the
 	# middle of a line.
@@ -1105,7 +1119,7 @@ if ($pot_filename =~ m/\$master/) {
     }
     foreach my $master (keys %document) {
         next if ($master eq '');
-        my $m = basename $master;
+        my $m = $document{$master}{"master"} || basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
         $split_pot{$master} = $master_pot;
@@ -1280,7 +1294,7 @@ if ($po4a_opts{"split"}) {
         my $cmd_cat = "";
         foreach my $master (keys %document) {
             next if ($master eq '');
-            my $m = basename $master;
+            my $m = $document{$master}{"master"} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
             if (-e "$master_po") {
