@@ -11,7 +11,7 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=none data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -22,7 +22,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -33,7 +33,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -44,7 +44,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline,nowrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -55,7 +55,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -66,7 +66,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -77,7 +77,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,nowrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -88,7 +88,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -99,7 +99,7 @@ push @tests, {
 },
 
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,nowrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",

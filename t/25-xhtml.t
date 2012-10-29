@@ -41,17 +41,17 @@ foreach my $test ( @tests ) {
     diag($test->{'run'}) unless ($val == 0);
 
     SKIP: {
-    	skip ("Command didn't run, can't test the validity of its return",1)
-	     if $val;
-        $val=system($test->{'test'});	
-    	$name=$test->{'doc'}.' returns what is expected';
+        skip ("Command didn't run, can't test the validity of its return",1)
+          if $val;
+        $val=system($test->{'test'});
+        $name=$test->{'doc'}.' returns what is expected';
         ok($val == 0,$name);
-	unless ($val == 0) {
-	    diag ("Failed (retval=$val) on:");
-	    diag ($test->{'test'});
-	    diag ("Was created with:");
-	    diag ($test->{'run'});
-	}
+        unless ($val == 0) {
+            diag ("Failed (retval=$val) on:");
+            diag ($test->{'test'});
+            diag ("Was created with:");
+            diag ($test->{'run'});
+        }
     }
 }
 

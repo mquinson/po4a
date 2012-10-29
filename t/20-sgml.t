@@ -22,54 +22,54 @@ $tests[1]{'test'} = 'perl compare-po.pl data-20/test2.pot tmp/po4a-normalize.po'
                     ' && perl compare-po.pl data-20/test2-normalized.sgml tmp/po4a-normalize.output';
 $tests[1]{'doc'}  = 'normalisation test';
 
-use Test::More tests =>4; # $formats * $tests * 2 
+use Test::More tests =>4; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
-	chdir "t" || die "Can't chdir to my test directory";
-	
-	my ($val,$name);
-	
-	my $cmd=$tests[$i]{'run'};
-	$cmd =~ s/#format#/$format/g;
-	$val=system($cmd);
-	
-	$name=$tests[$i]{'doc'}.' runs';
-	$name =~ s/#format#/$format/g;
-	SKIP: {
-	    if (defined $tests[$i]{'requires'}) {
-		skip ($tests[$i]{'requires'}." required for this test", 1)
-		    unless eval 'require '.$tests[$i]{'requires'};
-	    }
-	    ok($val == 0,$name);
-	    diag($cmd) unless ($val == 0);
-	}
+        chdir "t" || die "Can't chdir to my test directory";
 
-	SKIP: {
-	    if (defined $tests[$i]{'requires'}) {
-		skip ($tests[$i]{'requires'}." required for this test", 1)
-		    unless eval 'require '.$tests[$i]{'requires'};
-	    }
-	    skip ("Command don't run, can't test the validity of its return",1)
-	      if $val;
-	    my $testcmd=$tests[$i]{'test'};	
-	    $testcmd =~ s/#format#/$format/g;
-	    
-	    $val=system($testcmd);
-	    $name=$tests[$i]{'doc'}.' returns what is expected';
-	    $name =~ s/#format#/$format/g;
-	    ok($val == 0,$name);
-	    unless ($val == 0) {
-		diag ("Failed (retval=$val) on:");
-		diag ($testcmd);
-		diag ("Was created with:");
-		diag ("perl -I../lib $cmd");
-	    }
-	}
-	
+        my ($val,$name);
+
+        my $cmd=$tests[$i]{'run'};
+        $cmd =~ s/#format#/$format/g;
+        $val=system($cmd);
+
+        $name=$tests[$i]{'doc'}.' runs';
+        $name =~ s/#format#/$format/g;
+        SKIP: {
+            if (defined $tests[$i]{'requires'}) {
+                skip ($tests[$i]{'requires'}." required for this test", 1)
+                    unless eval 'require '.$tests[$i]{'requires'};
+            }
+            ok($val == 0,$name);
+            diag($cmd) unless ($val == 0);
+        }
+
+        SKIP: {
+            if (defined $tests[$i]{'requires'}) {
+                skip ($tests[$i]{'requires'}." required for this test", 1)
+                    unless eval 'require '.$tests[$i]{'requires'};
+            }
+            skip ("Command don't run, can't test the validity of its return",1)
+              if $val;
+            my $testcmd=$tests[$i]{'test'};
+            $testcmd =~ s/#format#/$format/g;
+
+            $val=system($testcmd);
+            $name=$tests[$i]{'doc'}.' returns what is expected';
+            $name =~ s/#format#/$format/g;
+            ok($val == 0,$name);
+            unless ($val == 0) {
+                diag ("Failed (retval=$val) on:");
+                diag ($testcmd);
+                diag ("Was created with:");
+                diag ("perl -I../lib $cmd");
+            }
+        }
+
 #    system("rm -f tmp/* 2>&1");
-	
-	chdir ".." || die "Can't chdir back to my root";
+
+        chdir ".." || die "Can't chdir back to my root";
     }
 }
 

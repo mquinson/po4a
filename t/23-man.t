@@ -21,7 +21,7 @@ push @tests, {
   'doc'  => "gettextize well various quotes",
 }, {
   'run'  => "cp data-23/quotes.fr.po tmp/ && chmod u+w tmp/quotes.fr.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/quotes -p tmp/quotes.fr.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/quotes -p tmp/quotes.fr.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/quotes.fr.po tmp/quotes.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -37,7 +37,7 @@ push @tests, {
   'doc'  => "gettextize well various lines beginning by a dot (1)",
 }, {
   'run'  => "cp data-23/dot1.fr.po tmp/ && chmod u+w tmp/dot1.fr.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/dot1 -p tmp/dot1.fr.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/dot1 -p tmp/dot1.fr.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/dot1.fr.po tmp/dot1.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -65,7 +65,7 @@ push @tests, {
   'doc'  => "gettextize well various lines beginning by a dot (5)",
 }, {
   'run'  => "cp data-23/dot5.it.po tmp/ && chmod u+w tmp/dot5.it.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/dot5 -p tmp/dot5.it.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/dot5.it.po tmp/dot5.it.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -81,7 +81,7 @@ push @tests, {
   'doc'  => "gettextize well null argument/paragraphs",
 }, {
   'run'  => "cp data-23/null.fr.po tmp/ && chmod u+w tmp/null.fr.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/null -p tmp/null.fr.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/null -p tmp/null.fr.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/null.fr.po tmp/null.fr.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -97,7 +97,7 @@ push @tests, {
   'doc'  => "gettextize well escaped newlines and tabs",
 }, {
   'run'  => "cp data-23/escapes1.it.po tmp/ && chmod u+w tmp/escapes1.it.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/escapes1 -p tmp/escapes1.it.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/escapes1 -p tmp/escapes1.it.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/escapes1.it.po tmp/escapes1.it.po",
   'doc'  => "updatepo for this document",
 }, {
@@ -147,7 +147,7 @@ push @tests, {
   'doc'  => "gettextize well non breaking spaces",
 }, {
   'run'  => "cp data-23/spaces.fr_latin1.po tmp/ && chmod u+w tmp/spaces.fr_latin1.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_latin1.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_latin1.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/spaces.fr_latin1.po tmp/spaces.fr_latin1.po",
   'doc'  => "updatepo for this document (fr ISO-8859-1)",
 }, {
@@ -156,7 +156,7 @@ push @tests, {
   'doc'  => "translate this document (fr ISO-8859-1)",
 }, {
   'run'  => "cp data-23/spaces.fr_utf8.po tmp/ && chmod u+w tmp/spaces.fr_utf8.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_utf8.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.fr_utf8.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/spaces.fr_utf8.po tmp/spaces.fr_utf8.po",
   'doc'  => "updatepo for this document (fr UTF-8)",
 }, {
@@ -165,7 +165,7 @@ push @tests, {
   'doc'  => "translate this document (fr UTF-8)",
 }, {
   'run'  => "cp data-23/spaces.ja.po tmp/ && chmod u+w tmp/spaces.ja.po".
-	" && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.ja.po >/dev/null 2>&1 ",
+        " && perl ../po4a-updatepo -f #format# -m data-23/spaces -p tmp/spaces.ja.po >/dev/null 2>&1 ",
   'test' => "perl compare-po.pl data-23/spaces.ja.po tmp/spaces.ja.po",
   'doc'  => "updatepo for this document (ja EUC-JP)",
 }, {
@@ -193,54 +193,54 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 68; # $formats * $tests * 2 
+use Test::More tests => 68; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
-	chdir "t" || die "Can't chdir to my test directory";
-	
-	my ($val,$name);
-	
-	my $cmd=$tests[$i]{'run'};
-	$cmd =~ s/#format#/$format/g;
-	$val=system($cmd);
-	
-	$name=$tests[$i]{'doc'}.' runs';
-	$name =~ s/#format#/$format/g;
-	SKIP: {
-	    if (defined $tests[$i]{'requires'}) {
-		skip ($tests[$i]{'requires'}." required for this test", 1)
-		    unless eval 'require '.$tests[$i]{'requires'};
-	    }
-	    ok($val == 0,$name);
-	    diag($cmd) unless ($val == 0);
-	}
+        chdir "t" || die "Can't chdir to my test directory";
 
-	SKIP: {
-	    if (defined $tests[$i]{'requires'}) {
-		skip ($tests[$i]{'requires'}." required for this test", 1)
-		    unless eval 'require '.$tests[$i]{'requires'};
-	    }
-	    skip ("Command don't run, can't test the validity of its return",1)
-	      if $val;
-	    my $testcmd=$tests[$i]{'test'};	
-	    $testcmd =~ s/#format#/$format/g;
-	    
-	    $val=system($testcmd);
-	    $name=$tests[$i]{'doc'}.' returns what is expected';
-	    $name =~ s/#format#/$format/g;
-	    ok($val == 0,$name);
-	    unless ($val == 0) {
-		diag ("Failed (retval=$val) on:");
-		diag ($testcmd);
-		diag ("Was created with:");
-		diag ("perl -I../lib $cmd");
-	    }
-	}
-	
+        my ($val,$name);
+
+        my $cmd=$tests[$i]{'run'};
+        $cmd =~ s/#format#/$format/g;
+        $val=system($cmd);
+
+        $name=$tests[$i]{'doc'}.' runs';
+        $name =~ s/#format#/$format/g;
+        SKIP: {
+            if (defined $tests[$i]{'requires'}) {
+                skip ($tests[$i]{'requires'}." required for this test", 1)
+                    unless eval 'require '.$tests[$i]{'requires'};
+            }
+            ok($val == 0,$name);
+            diag($cmd) unless ($val == 0);
+        }
+
+        SKIP: {
+            if (defined $tests[$i]{'requires'}) {
+                skip ($tests[$i]{'requires'}." required for this test", 1)
+                    unless eval 'require '.$tests[$i]{'requires'};
+            }
+            skip ("Command don't run, can't test the validity of its return",1)
+              if $val;
+            my $testcmd=$tests[$i]{'test'};
+            $testcmd =~ s/#format#/$format/g;
+
+            $val=system($testcmd);
+            $name=$tests[$i]{'doc'}.' returns what is expected';
+            $name =~ s/#format#/$format/g;
+            ok($val == 0,$name);
+            unless ($val == 0) {
+                diag ("Failed (retval=$val) on:");
+                diag ($testcmd);
+                diag ("Was created with:");
+                diag ("perl -I../lib $cmd");
+            }
+        }
+
 #    system("rm -f tmp/* 2>&1");
-	
-	chdir ".." || die "Can't chdir back to my root";
+
+        chdir ".." || die "Can't chdir back to my root";
     }
 }
 

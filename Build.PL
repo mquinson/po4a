@@ -24,15 +24,15 @@ my $build = Po4aBuilder->new
                                                   # po4a's messages.
                     },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
-	  'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
-	  'scripts/po4aman-display-po', 'scripts/po4apod-display-po',
-	  'share/po4a-build'],
+          'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
+          'scripts/po4aman-display-po', 'scripts/po4apod-display-po',
+          'share/po4a-build'],
       add_to_cleanup => ['t/tmp','po/bin/*.gmo', 'blib', '_build'],
       dist_abstract => 'Tools for helping translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',
-	  'Denis Barbier <barbier@linuxfr.org>',
-	  'Nicolas Francois <nicolas.francois@centraliens.net>',
-	  'Neil Williams <linux@codehelp.co.uk>']
+          'Denis Barbier <barbier@linuxfr.org>',
+          'Nicolas Francois <nicolas.francois@centraliens.net>',
+          'Neil Williams <linux@codehelp.co.uk>']
   );
 
 $build->create_build_script;

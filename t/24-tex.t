@@ -44,12 +44,12 @@ for (my $i=0; $i<scalar @tests; $i++) {
     $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
     diag($cmd) unless ($val == 0);
-    
+
     SKIP: {
         skip ("Command don't run, can't test the validity of its return",1)
           if $val;
-        my $testcmd=$tests[$i]{'test'};    
-        
+        my $testcmd=$tests[$i]{'test'};
+
         $val=system($testcmd);
         $name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
@@ -60,11 +60,11 @@ for (my $i=0; $i<scalar @tests; $i++) {
             diag ("perl -I../lib $cmd");
         }
     }
-    
+
 #    system("rm -f tmp/* 2>&1");
-    
+
     chdir ".." || die "Can't chdir back to my root";
 }
 
 0;
-    
+

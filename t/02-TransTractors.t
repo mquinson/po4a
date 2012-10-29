@@ -29,46 +29,46 @@ $tests[3]{'test'} = "diff -u data-02/#format#.fr-normalized tmp/#format#.fr";
 $tests[3]{'doc'}  = "translate #format# document";
 
 
-use Test::More tests =>16; # $formats * $tests * 2 
+use Test::More tests =>16; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
-	chdir "t" || die "Can't chdir to my test directory";
-	
-	my ($val,$name);
-	
-	my $cmd=$tests[$i]{'run'};
-	$cmd =~ s/#format#/$format/g;
-	$val=system($cmd);
-	
-	$name=$tests[$i]{'doc'}.' runs';
-	$name =~ s/#format#/$format/g;
-	ok($val == 0,$name);
-	diag($cmd) unless ($val == 0);
-	
-	SKIP: {
-	    skip ("Command don't run, can't test the validity of its return",1)
-	      if $val;
-	    my $testcmd=$tests[$i]{'test'};
-	    $testcmd =~ s/#format#/$format/g;
-	    
-	    $val=system($testcmd);
-	    $name=$tests[$i]{'doc'}.' returns what is expected';
-	    $name =~ s/#format#/$format/g;
-	    ok($val == 0,$name);
-	    unless ($val == 0) {
-		diag ("Failed (retval=$val) on:");
-		diag ($testcmd);
-		diag ("Was created with:");
-		diag ("'$cmd', with -I../lib");
-	    }
-	}
-	
+        chdir "t" || die "Can't chdir to my test directory";
+
+        my ($val,$name);
+
+        my $cmd=$tests[$i]{'run'};
+        $cmd =~ s/#format#/$format/g;
+        $val=system($cmd);
+
+        $name=$tests[$i]{'doc'}.' runs';
+        $name =~ s/#format#/$format/g;
+        ok($val == 0,$name);
+        diag($cmd) unless ($val == 0);
+
+        SKIP: {
+            skip ("Command don't run, can't test the validity of its return",1)
+              if $val;
+            my $testcmd=$tests[$i]{'test'};
+            $testcmd =~ s/#format#/$format/g;
+
+            $val=system($testcmd);
+            $name=$tests[$i]{'doc'}.' returns what is expected';
+            $name =~ s/#format#/$format/g;
+            ok($val == 0,$name);
+            unless ($val == 0) {
+                diag ("Failed (retval=$val) on:");
+                diag ($testcmd);
+                diag ("Was created with:");
+                diag ("'$cmd', with -I../lib");
+            }
+        }
+
 #    system("rm -f tmp/* 2>&1");
-	
-	chdir ".." || die "Can't chdir back to my root";
+
+        chdir ".." || die "Can't chdir back to my root";
     }
 }
 
 0;
-    
+

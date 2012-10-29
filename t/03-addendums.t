@@ -31,32 +31,32 @@ use Test::More tests =>8; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
-    
+
     my ($val,$name);
 
     my $cmd=$tests[$i]{'run'};
     $val=system($cmd);
-    
+
     $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
     diag(%{$tests[$i]{'run'}}) unless ($val == 0);
 
     SKIP: {
-    	skip ("Command don't run, can't test the validity of its return",1)
-	     if $val;
-        $val=system($tests[$i]{'test'});	
-    	$name=$tests[$i]{'doc'}.' returns what is expected';
+            skip ("Command don't run, can't test the validity of its return",1)
+             if $val;
+        $val=system($tests[$i]{'test'});        
+            $name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
-	unless ($val == 0) {
-	    my $add = $tests[$i]{'run'};
-	    $add =~ s/.*-a (\S*) .*/$1/;
-	    $add = `cat $add | head -n 1`;
-	    diag ("Failed (retval=$val) on:");
-	    diag ($tests[$i]{'test'});
-	    diag ("Was created with:");
-	    diag ($tests[$i]{'run'});
-	    diag ("Header was: $add");
-	}
+        unless ($val == 0) {
+            my $add = $tests[$i]{'run'};
+            $add =~ s/.*-a (\S*) .*/$1/;
+            $add = `cat $add | head -n 1`;
+            diag ("Failed (retval=$val) on:");
+            diag ($tests[$i]{'test'});
+            diag ("Was created with:");
+            diag ($tests[$i]{'run'});
+            diag ("Header was: $add");
+        }
     }
 
 #    system("rm -f tmp/* 2>&1");

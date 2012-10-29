@@ -11,7 +11,7 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f data-13/test0.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-13/test0.err tmp/err",
@@ -22,7 +22,7 @@ push @tests, {
   'doc'  => 'splitted mode'
 },
 {
-  'run'  => 
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f data-13/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-13/test1.err tmp/err",

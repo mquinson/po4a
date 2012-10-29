@@ -33,17 +33,17 @@ for (my $i=0; $i<scalar @tests; $i++) {
     diag(%{$tests[$i]{'run'}}) unless ($val == 0);
 
     SKIP: {
-    	skip ("Command don't run, can't test the validity of its return",1)
-	     if $val;
-        $val=system($tests[$i]{'test'});	
-    	$name=$tests[$i]{'doc'}.' returns what is expected';
+        skip ("Command don't run, can't test the validity of its return",1)
+          if $val;
+        $val=system($tests[$i]{'test'});
+        $name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
-	unless ($val == 0) {
-	    diag ("Failed (retval=$val) on:");
-	    diag ($tests[$i]{'test'});
-	    diag ("Was created with:");
-	    diag ($tests[$i]{'run'});
-	}
+        unless ($val == 0) {
+            diag ("Failed (retval=$val) on:");
+            diag ($tests[$i]{'test'});
+            diag ("Was created with:");
+            diag ($tests[$i]{'run'});
+        }
     }
 
 #    system("rm -f tmp/* 2>&1");
