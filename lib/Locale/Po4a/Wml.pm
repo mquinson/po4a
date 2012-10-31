@@ -82,7 +82,7 @@ sub read {
     my ($self,$filename)=@_;
     my $tmp_filename;
     (undef,$tmp_filename)=File::Temp->tempfile("po4aXXXX",
-                                                DIR    => "/tmp",
+                                                DIR    => $ENV{TMPDIR} || "/tmp",
                                                 SUFFIX => ".xml",
                                                 OPEN   => 0,
                                                 UNLINK => 0)
