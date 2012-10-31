@@ -174,6 +174,7 @@ use Locale::Po4a::Common;
 use Pod::Usage qw(pod2usage);
 
 use File::Temp;
+use File::Copy qw(copy);
 
 Locale::Po4a::Common::textdomain('po4a');
 
@@ -281,7 +282,7 @@ while (my $po_filename=shift @pofiles) {
     } else {
         print STDERR wrap_msg(gettext("Creating %s:"), $po_filename)
           if $verbose;
-        system ("cp",$pot_filename,$po_filename) == 0
+        copy ($pot_filename,$po_filename)
           or die wrap_msg(gettext("Error while copying the PO file: %s"), $!);
     }
 }
