@@ -1324,7 +1324,8 @@ foreach $lang (sort keys %po_filename) {
         $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
         my $cmd = "msgmerge -U ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt." --backup=none";
         run_cmd($cmd);
-        system "msgfmt --statistics -v -o /dev/null ".$po_filename{$lang}
+        my @cmd = ("msgfmt", "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename{$lang});
+        system (@cmd)
             if $po4a_opts{"verbose"};
     } else {
         print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})

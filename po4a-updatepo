@@ -274,10 +274,11 @@ while (my $po_filename=shift @pofiles) {
     if (-e $po_filename) {
         print STDERR wrap_msg(gettext("Updating %s:"), $po_filename)
           if $verbose;
-        my $cmd = "msgmerge $msgmerge_opt -U $po_filename $pot_filename";
-        system ($cmd) == 0
+        my @cmd = ("msgmerge", $msgmerge_opt, "-U", $po_filename, $pot_filename);
+        system (@cmd) == 0
           or die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
-        system "msgfmt --statistics -v -o /dev/null $po_filename"
+        @cmd = ("msgfmt", "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename);
+        system (@cmd)
           if $verbose;
     } else {
         print STDERR wrap_msg(gettext("Creating %s:"), $po_filename)
