@@ -72,7 +72,7 @@ The following commands are recognized:
 
 =item B<//po4a: macro >I<name>B<[>I<attribute list>B<]>
 
-This permits to describe in detail the parameters of a I<macro>;
+This permits to describe in detail the parameters of a B<macro>;
 I<name> must be a valid macro name, and it ends with an underscore
 if the target must be translated.
 
