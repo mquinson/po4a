@@ -863,7 +863,7 @@ sub unquote_space {
 
 =head1 STATUS OF THIS MODULE
 
-Tested successfully on simple text files and NEWS.Debian files.
+Tested successfully on simple AsciiDoc files.
 
 =head1 AUTHORS
 
