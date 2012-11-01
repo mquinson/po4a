@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: po4a pod 0.43\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2012-11-01 10:47+0100\n"
-"PO-Revision-Date: 2012-10-06 11:48+0200\n"
+"PO-Revision-Date: 2012-11-01 18:34+0200\n"
 "Last-Translator: Omar Campagne <ocampagne@gmail.com>\n"
 "Language-Team: Debian l10n Spanish <debian-l10n-spanish@lists.debian.org>\n"
 "Language: es\n"
@@ -1137,7 +1137,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:49
-#, fuzzy
 #| msgid ""
 #| "You can also use B<$master> to refer to the document basename. In this "
 #| "case, B<po4a> will use a split mode: one POT and one PO (for each "
@@ -1149,10 +1148,11 @@ msgid ""
 "be created for each document specified in the B<po4a> configuration file.  "
 "See the B<Split mode> section."
 msgstr ""
-"También puede usar B<$master> para referirse al nombre base del documento. "
-"En este caso B<po4a> usará un modo dividido: se creará un POT y un PO (por "
-"cada idioma) por cada documento especificado en el fichero de configuración "
-"de B<po4a>. Consulte la sección B<Modo dividido> («Split Mode»)."
+"También puede usar B<$master> para referirse al nombre de fichero del "
+"documento. En este caso B<po4a> usará un modo dividido: se creará un POT y "
+"un PO (por cada idioma) por cada documento especificado en el fichero de "
+"configuración de B<po4a>. Consulte la sección B<Modo dividido> («Split "
+"Mode»)."
 
 #. type: verbatim
 #: po4a:50
@@ -1438,12 +1438,14 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:82
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
 msgid ""
 " [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n"
 "\n"
-msgstr "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
+msgstr ""
+" [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:83
@@ -1463,7 +1465,7 @@ msgstr "Este alias de módulo se puede usar como un módulo normal:"
 
 #. type: verbatim
 #: po4a:85
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| "[type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
 #| "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
@@ -1473,7 +1475,7 @@ msgid ""
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
-"[type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+" [type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 
@@ -1522,6 +1524,9 @@ msgid ""
 "the name of the master file can be specified by adding a C<master:"
 "file=>I<name> option:"
 msgstr ""
+"Si hay un conflicto porque varios ficheros tienen el mismo nombre de "
+"fichero, puede especificar el nombre del fichero maestro añadiendo la opción "
+"C<master:file=>I<nombre>."
 
 #. type: verbatim
 #: po4a:92
@@ -1533,6 +1538,11 @@ msgid ""
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
 "\n"
 msgstr ""
+" [po4a_langs] de fr ja\n"
+" [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
+"\n"
 
 #. type: =item
 #: po4a:94 po4a-translate:28
@@ -3063,7 +3073,7 @@ msgid ""
 msgstr ""
 "Puede usar la hoja de estilo predefinida usada para preparar el HTML final "
 "(o lo puede invalidar con el elemento de configuración <HTMLXSL> en el "
-"fichero de configuración C<po4a-build>). "
+"fichero de configuración C<po4a-build>)."
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:15
@@ -4357,7 +4367,7 @@ msgstr ""
 "Observe que F<original.doc> se toma como un ejemplo de la documentación a "
 "traducir, y que F<traducción.doc> es el texto traducido correspondiente. La "
 "extensión podría ser F<.pod>, F<.xml> o F<.sgml> dependiendo del formato. "
-"Cada parte del dibujo se explicará con detalle en las siguientes secciones. "
+"Cada parte del dibujo se explicará con detalle en las siguientes secciones."
 
 #. type: verbatim
 #: doc/po4a.7.pod:63
@@ -6549,7 +6559,7 @@ msgid ""
 msgstr ""
 "Para el usuario final nada ha cambiado (aparte de que, probablemente, las "
 "traducciones estarían mejor actualizadas :). El fichero de documentación "
-"resultante es exactamente el mismo. "
+"resultante es exactamente el mismo."
 
 #. type: textblock
 #: doc/po4a.7.pod:263
@@ -7047,16 +7057,14 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:2
-#, fuzzy
 #| msgid ""
 #| "Locale::Po4a::Docbook - convert DocBook XML documents from/to PO files"
 msgid "Locale::Po4a::AsciiDoc - convert AsciiDoc documents from/to PO files"
 msgstr ""
-"Locale::Po4a::Docbook - Convierte documentos DocBook XML desde/a ficheros PO."
+"Locale::Po4a::AsciiDoc - Convierte documentos AsciiDoc desde/a ficheros PO."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:5
-#, fuzzy
 #| msgid ""
 #| "Locale::Po4a::Sgml is a module to help the translation of documentation "
 #| "in the SGML format into other [human] languages."
@@ -7064,8 +7072,8 @@ msgid ""
 "Locale::Po4a::AsciiDoc is a module to help the translation of documentation "
 "in the AsciiDoc format."
 msgstr ""
-"Locale::Po4a::Sgml es un módulo que asiste en la traducción de documentación "
-"en formato SGML a otros lenguajes (humanos)."
+"Locale::Po4a::AsciiDoc es un módulo que asiste en la traducción de "
+"documentación en formato AsciiDoc."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:6 lib/Locale/Po4a/BibTeX.pm:7
@@ -7106,13 +7114,14 @@ msgid ""
 "In a definitions file, lines must not start by two slashes, but directly by "
 "B<po4a:>."
 msgstr ""
+"En un fichero de definiciones, las líneas no se deben preceder con dos "
+"barras, sino directamente con B<po4a:>."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:11
-#, fuzzy
 #| msgid "B<end>"
 msgid "B<entry>"
-msgstr "B<end>"
+msgstr "B<entry>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:12
@@ -7120,32 +7129,31 @@ msgid ""
 "Space-separated list of attribute entries you want to translate.  By "
 "default, no attribute entries are translatable."
 msgstr ""
+"Una lista separada por espacios de entradas de atributo que quiere traducir. "
+"Por omisión, ninguna entrada de atributo es traducible."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:13
-#, fuzzy
 #| msgid "B<markdown>"
 msgid "B<macro>"
-msgstr "B<markdown>"
+msgstr "B<macro>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:14
-#, fuzzy
 #| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of macro definitions."
-msgstr "Una lista separada por espacios de etiquetas que desea traducir."
+msgstr "Una lista separada por espacios de definiciones de macros."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:15
 msgid "B<style>"
-msgstr ""
+msgstr "B<style>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:16
-#, fuzzy
 #| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of style definitions."
-msgstr "Una lista separada por espacios de etiquetas que desea traducir."
+msgstr "Una lista separada por espacios de definiciones de estilo."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:17 lib/Locale/Po4a/TeX.pm:27
@@ -7154,7 +7162,6 @@ msgstr "PERSONALIZACIÓN DE OBJETOS EN LÍNEA"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:18
-#, fuzzy
 #| msgid ""
 #| "The TeX module can be customized with lines starting by B<% po4a:>.  "
 #| "These lines are interpreted as commands to the parser.  The following "
@@ -7164,18 +7171,17 @@ msgid ""
 "These lines are interpreted as commands to the parser.  The following "
 "commands are recognized:"
 msgstr ""
-"El módulo TeX se puede personalizar mediante lineas que empiecen con B<% "
-"po4a:>. Estas lineas se interpretan como órdenes para el analizador. Se "
+"El módulo AsciiDoc se puede personalizar mediante lineas que empiecen con "
+"B<//po4a:>. Estas lineas se interpretan como órdenes para el analizador. Se "
 "reconocen las siguientes órdenes:"
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:19
 msgid "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: macro >I<nombre>B<[>I<lista de atributos>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:20
-#, fuzzy
 #| msgid ""
 #| "This permit to describe in detail the parameters of the I<command1> "
 #| "command.  This information will be used to check the number of arguments "
@@ -7185,8 +7191,9 @@ msgid ""
 "must be a valid macro name, and it ends with an underscore if the target "
 "must be translated."
 msgstr ""
-"Esto permite describir en detalle los parámetros de la orden I<orden1>. Esta "
-"información se usará para revisar el número de argumentos y su tipo."
+"Esto permite describir en detalle los parámetros de la orden B<macro>; "
+"I<nombre> debe ser una macro válida, y debe finalizar con guión bajo si el "
+"objetivo se debe traducir."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:21
@@ -7195,6 +7202,9 @@ msgid ""
 "informations about translatable arguments.  This list contains either "
 "numbers, to define positional parameters, or named attributes."
 msgstr ""
+"El argumento I<lista de atributos> es una lista separada por coma que "
+"contiene información sobre argumentos traducibles. Esta lista contiene o "
+"bien números, para definir parámetros de posición, o nombres de atributos."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:22
@@ -7203,11 +7213,14 @@ msgid ""
 "arguments are translated as a whole.  There is no need to define attribute "
 "list in this case, but brackets must be present."
 msgstr ""
+"Si se prefija el signo de suma (B<+>) a I<nombre>, la macro y sus argumentos "
+"se traducen como conjunto. En este caso, no es necesario definir la lista "
+"de atributos, pero los paréntesis deben estar presentes."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:23
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: style >B<[>I<lista de atributos>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:24
@@ -7215,6 +7228,8 @@ msgid ""
 "This permits to describe in detail which attributes of a style must be "
 "translated."
 msgstr ""
+"Esto permite describir de forma detallada los atributos relativos a un "
+"estilo que se deben traducir."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:25
@@ -7224,6 +7239,10 @@ msgid ""
 "numbers, to define positional parameters, or named attributes.  The first "
 "attribute is the style name, it will not be translated."
 msgstr ""
+"El argumento I<lista de atributos> es una lista separada por coma que "
+"contiene información sobre argumentos traducibles. Esta lista contiene o "
+"bien números, para definir parámetros de posición, o nombres de atributos. "
+"El primer atributo es el nombre de estilo, y no se debe traducir."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:26
@@ -7232,6 +7251,9 @@ msgid ""
 "list is translated as a whole.  There is no need to define translatable "
 "attributes."
 msgstr ""
+"Si se prefija un signo de suma (B<+>) al nombre de estilo, la lista de "
+"atributos se traduce en conjunto. No es necesario definir atributos "
+"traducibles."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:27
@@ -7239,11 +7261,13 @@ msgid ""
 "If a minus sign (B<->) is prepended to the style name, then this attribute "
 "is not translated."
 msgstr ""
+"Si se prefija un signo de suma (B<->) al nombre de estilo, entonces este "
+"atributo no es traducible."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:28
 msgid "B<//po4a: entry >I<name>"
-msgstr ""
+msgstr "B<//po4a: entry >I<nombre>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:29
@@ -7251,6 +7275,8 @@ msgid ""
 "This declares an attribute entry as being translatable.  By default, they "
 "are not translated."
 msgstr ""
+"Esto declara una entrada de atributo como traducible. Por omisión, no se "
+"traducen."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:30 lib/Locale/Po4a/BibTeX.pm:9
@@ -7266,15 +7292,13 @@ msgstr "ESTADO DE ESTE MODULO"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:31
-#, fuzzy
 #| msgid "Tested successfully on simple text files and NEWS.Debian files."
 msgid "Tested successfully on simple AsciiDoc files."
-msgstr ""
-"Probado con éxito en ficheros de texto simple y ficheros «NEWS.Debian»."
+msgstr "Probado con éxito en ficheros simples AsciiDoc."
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:33
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " Nicolas François <nicolas.francois@centraliens.net>\n"
 #| "\n"
@@ -7284,11 +7308,12 @@ msgid ""
 "\n"
 msgstr ""
 " Nicolas François <nicolas.francois@centraliens.net>\n"
+" Denis Barbier <barbier@linuxfr.org>\n"
 "\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:35
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 #| "\n"
@@ -7297,7 +7322,9 @@ msgid ""
 " Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.\n"
 "\n"
 msgstr ""
-"Copyright 2005-2008 por Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright 2005-2008 por Nicolas FRANÇOIS "
+"<nicolas.francois@centraliens.net>.\n"
+" Copyright 2012 por Denis BARBIER <barbier@linuxfr.org>.\n"
 "\n"
 
 #. type: textblock
@@ -7866,7 +7893,7 @@ msgid ""
 "Some constructs are badly supported. The known ones are documented below."
 msgstr ""
 "La compatibilidad con algunas constructos no es de calidad. A continuación "
-"están documentados aquellos conocidos. "
+"están documentados aquellos conocidos."
 
 #. type: =head2
 #: lib/Locale/Po4a/Halibut.pm:11
@@ -8355,7 +8382,7 @@ msgid ""
 "original to the translated document."
 msgstr ""
 "Indica que las secciones .de, .ie y .if se deben copiar tal cual desde el "
-"original al documento traducido. "
+"original al documento traducido."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:46
@@ -9388,8 +9415,8 @@ msgid ""
 "pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> and B<fuzzy>."
 msgstr ""
 "Las marcas válidas son: B<c-text>, B<python-text>, B<lisp-text>, B<elisp-"
-"text>, B<librep-text>, B<smalltalk-text>, B<java-text>, B<awk-text>, "
-"B<object-pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> y "
+"text>, B<librep-text>, B<smalltalk-text>, B<java-text>, B<awk-text>, B"
+"<object-pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> y "
 "B<fuzzy>."
 
 #. type: textblock
@@ -12740,7 +12767,7 @@ msgid ""
 "similar to:"
 msgstr ""
 "La ubicación del «placeholder» dentro de su bloque se marcará con una cadena "
-"similar a: "
+"similar a:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:57
