@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2012-11-01 10:47+0100\n"
-"PO-Revision-Date: 2012-10-14 00:34+0900\n"
+"PO-Revision-Date: 2012-11-04 12:16+0900\n"
 "Last-Translator: KURASAWA Nozomu <nabetaro@debian.or.jp>\n"
 "Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
 "Language: ja\n"
@@ -592,7 +592,7 @@ msgstr "翻訳が入っている PO ファイルです。"
 msgid "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
 msgstr "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
 
-#.  .br 
+#. .br
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4aman-display-po.xml:19
 msgid ""
@@ -1093,7 +1093,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:49
-#, fuzzy
 #| msgid ""
 #| "You can also use B<$master> to refer to the document basename. In this "
 #| "case, B<po4a> will use a split mode: one POT and one PO (for each "
@@ -1105,7 +1104,7 @@ msgid ""
 "be created for each document specified in the B<po4a> configuration file.  "
 "See the B<Split mode> section."
 msgstr ""
-"ドキュメントのベース名を参照するのに B<$master> も使用できます。この場合、"
+"ドキュメントのファイル名を参照するのに B<$master> も使用できます。この場合、"
 "B<po4a> は分割モードとなります。これは B<po4a> の設定ファイルで指定した各ド"
 "キュメントについて、POT ファイルと (言語ごとの) PO ファイルを一つずつ作成しま"
 "す。B<分割モード> セクションをご覧ください。"
@@ -1386,12 +1385,14 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:82
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
 msgid ""
 " [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n"
 "\n"
-msgstr "[po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\""
+msgstr ""
+" [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:83
@@ -1413,7 +1414,7 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:85
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| "[type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
 #| "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
@@ -1423,7 +1424,7 @@ msgid ""
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
-"[type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+" [type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 
@@ -1468,6 +1469,8 @@ msgid ""
 "the name of the master file can be specified by adding a C<master:"
 "file=>I<name> option:"
 msgstr ""
+"複数のファイルで名前が同じで、名前に競合がある場合、次のように C<master:"
+"file=>I<name> オプションを追加して、マスターファイル名を指定できます。"
 
 #. type: verbatim
 #: po4a:92
@@ -1479,6 +1482,11 @@ msgid ""
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
 "\n"
 msgstr ""
+" [po4a_langs] de fr ja\n"
+" [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
+"\n"
 
 #. type: =item
 #: po4a:94 po4a-translate:28
@@ -6760,15 +6768,13 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:2
-#, fuzzy
 #| msgid ""
 #| "Locale::Po4a::Docbook - convert DocBook XML documents from/to PO files"
 msgid "Locale::Po4a::AsciiDoc - convert AsciiDoc documents from/to PO files"
-msgstr "Locale::Po4a::Docbook - PO ファイルと DocBook XML ドキュメントの変換"
+msgstr "Locale::Po4a::AsciiDoc - PO ファイルと AsciiDoc ドキュメントの変換"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:5
-#, fuzzy
 #| msgid ""
 #| "Locale::Po4a::Sgml is a module to help the translation of documentation "
 #| "in the SGML format into other [human] languages."
@@ -6776,8 +6782,8 @@ msgid ""
 "Locale::Po4a::AsciiDoc is a module to help the translation of documentation "
 "in the AsciiDoc format."
 msgstr ""
-"Locale::Po4a::Sgml は、SGML フォーマットのドキュメントを他の [自然] 言語へ翻"
-"訳するのを助けるモジュールです。"
+"Locale::Po4a::AsciiDoc は、AsciiDoc フォーマットのドキュメントを翻訳するのを"
+"助けるモジュールです。"
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:6 lib/Locale/Po4a/BibTeX.pm:7
@@ -6820,10 +6826,9 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:11
-#, fuzzy
 #| msgid "B<end>"
 msgid "B<entry>"
-msgstr "B<end>"
+msgstr "B<entry>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:12
@@ -6834,29 +6839,26 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:13
-#, fuzzy
 #| msgid "B<markdown>"
 msgid "B<macro>"
-msgstr "B<markdown>"
+msgstr "B<macro>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:14
-#, fuzzy
 #| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of macro definitions."
-msgstr "翻訳するタグの、空白区切りリストです。"
+msgstr "マクロ定義の、空白区切りリストです。"
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:15
 msgid "B<style>"
-msgstr ""
+msgstr "B<style>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:16
-#, fuzzy
 #| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of style definitions."
-msgstr "翻訳するタグの、空白区切りリストです。"
+msgstr "スタイル定義の、空白区切りリストです。"
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:17 lib/Locale/Po4a/TeX.pm:27
@@ -6881,7 +6883,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:19
 msgid "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:20
@@ -6917,7 +6919,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:23
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: style >B<[>I<attribute list>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:24
@@ -6953,7 +6955,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:28
 msgid "B<//po4a: entry >I<name>"
-msgstr ""
+msgstr "B<//po4a: entry >I<name>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:29
@@ -6976,16 +6978,13 @@ msgstr "このモジュールの状態"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:31
-#, fuzzy
 #| msgid "Tested successfully on simple text files and NEWS.Debian files."
 msgid "Tested successfully on simple AsciiDoc files."
-msgstr ""
-"シンプルなテキストファイルと、NEWS.Debian ファイルでのテストが成功していま"
-"す。"
+msgstr "シンプルな AsciiDoc ファイルでのテストが成功しています。"
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:33
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " Nicolas François <nicolas.francois@centraliens.net>\n"
 #| "\n"
@@ -6995,11 +6994,12 @@ msgid ""
 "\n"
 msgstr ""
 " Nicolas François <nicolas.francois@centraliens.net>\n"
+" Denis Barbier <barbier@linuxfr.org>\n"
 "\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:35
-#, fuzzy, no-wrap
+#, no-wrap
 #| msgid ""
 #| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 #| "\n"
@@ -7009,6 +7009,7 @@ msgid ""
 "\n"
 msgstr ""
 " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.\n"
 "\n"
 
 #. type: textblock
