@@ -571,7 +571,8 @@ sub write_if_needed {
 
     if (-e $filename) {
         my ($tmp_filename);
-        (undef,$tmp_filename)=File::Temp->tempfile($filename."XXXX",
+        my $basename = basename($filename);
+        (undef,$tmp_filename)=File::Temp::tempfile($basename."XXXX",
                                                    DIR    => $ENV{TMPDIR} || "/tmp",
                                                    OPEN   => 0,
                                                    UNLINK => 0);

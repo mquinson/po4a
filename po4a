@@ -1224,7 +1224,7 @@ if ($update_pot_file) {
     chdir $po4a_opts{"srcdir"}
         if (defined $po4a_opts{"srcdir"});
     if ($po4a_opts{"split"}) {
-        (undef,$pot_filename)=File::Temp->tempfile("po4aXXXX",
+        (undef,$pot_filename)=File::Temp::tempfile("po4aXXXX",
                                                    DIR    => $ENV{TMPDIR} || "/tmp",
                                                    SUFFIX => ".pot",
                                                    OPEN   => 0,
@@ -1254,7 +1254,7 @@ if ($po4a_opts{"split"}) {
         # Create a temporary POT, and check if the old one needs to be
         # updated (unless --force was specified).
         unless ($po4a_opts{"force"}) {
-            (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
+            (undef,$tmp_file)=File::Temp::tempfile("po4aXXXX",
                                                    DIR    => $ENV{TMPDIR} || "/tmp",
                                                    SUFFIX => ".pot",
                                                    OPEN   => 0,
@@ -1285,7 +1285,7 @@ if ($po4a_opts{"split"}) {
     # Generate a complete .po
     foreach my $lang (sort keys %po_filename) {
         my $tmp_bigpo;
-        (undef,$tmp_bigpo)=File::Temp->tempfile("po4aXXXX",
+        (undef,$tmp_bigpo)=File::Temp::tempfile("po4aXXXX",
                                                 DIR    => $ENV{TMPDIR} || "/tmp",
                                                 SUFFIX => "-$lang.po",
                                                 OPEN   => 0,
@@ -1352,7 +1352,7 @@ if ($po4a_opts{"split"}) {
             my $tmp_file;
             # Create a temporary PO, and check if the old one needs to be
             # updated (unless --force was specified).
-            (undef,$tmp_file)=File::Temp->tempfile("po4aXXXX",
+            (undef,$tmp_file)=File::Temp::tempfile("po4aXXXX",
                                                    DIR    => $ENV{TMPDIR} || "/tmp",
                                                    SUFFIX => ".po",
                                                    OPEN   => 0,
