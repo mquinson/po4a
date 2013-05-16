@@ -164,8 +164,7 @@ sub timezone {
     $diff  = floor(timelocal(@l)/60 +0.5);
     $diff -= floor(timelocal(@g)/60 +0.5);
 
-    my $h = floor($diff / 60) + $l[8]; # $l[8] indicates if we are currently
-                                       # in a daylight saving time zone
+    my $h = floor($diff / 60);
     my $m = $diff%60;
 
     return sprintf "%+03d%02d\n", $h, $m;
