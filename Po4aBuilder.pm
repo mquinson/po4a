@@ -1,7 +1,7 @@
 package Po4aBuilder;
 use Module::Build;
 use File::Basename;
-use File::Path qw(mkpath);
+use File::Path qw(mkpath rmtree);
 use File::Spec;
 use File::Copy qw(copy);
 use File::stat;
@@ -121,7 +121,7 @@ sub ACTION_binpo {
             print "XX $_ uptodate.\n";
         }
         unless ($self->up_to_date($_,"blib/po/$lang/LC_MESSAGES/po4a.mo")) {
-            mkpath( File::Spec->catdir( 'blib', 'po', $lang, "LC_MESSAGES" ), 0, oct(777) );
+            mkpath( File::Spec->catdir( 'blib', 'po', $lang, "LC_MESSAGES" ), 0, oct(755) );
             system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo $_") && die;
         } 
     }
@@ -193,21 +193,34 @@ sub ACTION_man {
     $options{utf8} = 1;
     my $parser = Pod::Man->new (%options);
 
+    my $manpath  = File::Spec->catdir( 'blib', 'man' );
+    File::Path::rmtree( $manpath, 0, 1);
+
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
     $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
     $cmd .= "--previous po/pod.cfg";
     system($cmd) and die;
-    my $manpath  = File::Spec->catdir( 'blib', 'man' );
+
     my $man1path = File::Spec->catdir( $manpath, 'man1' );
+    my $man3path = File::Spec->catdir( $manpath, 'man3' );
+    my $man5path = File::Spec->catdir( $manpath, 'man5' );
     my $man7path = File::Spec->catdir( $manpath, 'man7' );
-    File::Path::mkpath( $man1path, 0, oct(777) ) or die;
-    File::Path::mkpath( $man7path, 0, oct(777) ) or die;
+    File::Path::mkpath( $man1path, 0, oct(755) ) or die;
+    File::Path::mkpath( $man3path, 0, oct(755) ) or die;
+    File::Path::mkpath( $man5path, 0, oct(755) ) or die;
+    File::Path::mkpath( $man7path, 0, oct(755) ) or die;
+    copy ( File::Spec->catdir("doc", "po4a-build.conf.5.pod"), $man5path) or die;
     copy ( File::Spec->catdir("doc", "po4a.7.pod"), $man7path) or die;
+    copy ( File::Spec->catdir("doc", "po4a-runtime.7.pod"), $man7path) or die;
     foreach $file (perl_scripts()) {
         $file =~ m,([^/]*)$,;
         copy($file, File::Spec->catdir($man1path, "$1.1p.pod")) or die;
     }
-    $self->delete_filetree( File::Spec->catdir("blib", "bindoc") ) || die;
+    foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
+        $file =~ m,([^/]*)$,;
+        copy($file, File::Spec->catdir($man3path, "Locale::Po4a::$1.3pm.pod")) or die;
+    }
+    $self->delete_filetree( File::Spec->catdir("blib", "bindoc") );
 
     foreach $file (@{$self->rscan_dir($manpath, qr{\.pod$})}) {
         next if $file =~ m/^man7/;
