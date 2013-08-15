@@ -186,7 +186,7 @@ my %opts = (
 
 my ($pofile)=('-');
 my (@masterfile,@locfile,$help_fmt,$help,$type,@options);
-my ($mastchar,$locchar)=('ascii');
+my ($mastchar,$locchar);
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
         'help|h'        => \$help,
@@ -240,7 +240,7 @@ foreach my $file (@masterfile) {
 $mastertt->{TT}{utf_mode} = 1;
 if ($mastertt->{TT}{ascii_input}) {
     $mastertt->detected_charset('ascii');
-} else {
+} elsif (defined($mastchar)) {
     $mastertt->detected_charset($mastchar);
     $mastertt->{TT}{po_in}->set_charset($mastchar);
 }
