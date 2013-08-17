@@ -777,7 +777,7 @@ sub split_attributelist {
     }
     die wrap_mod("po4a::asciidoc",
                  dgettext("po4a", "Unable to parse attribute list: [%s]"), $text)
-            unless length(@attributes);
+            unless scalar(@attributes);
     return @attributes;
 }
 
