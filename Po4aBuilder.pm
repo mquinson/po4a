@@ -217,10 +217,11 @@ sub ACTION_man {
         copy($file, File::Spec->catdir($man1path, "$1.1p.pod")) or die;
     }
     foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
-        $file =~ m,([^/]*)$,;
+        $file =~ m,([^/]*).pm$,;
         copy($file, File::Spec->catdir($man3path, "Locale::Po4a::$1.3pm.pod")) or die;
     }
     $self->delete_filetree( File::Spec->catdir("blib", "bindoc") );
+    $self->delete_filetree( File::Spec->catdir("blib", "libdoc") );
 
     foreach $file (@{$self->rscan_dir($manpath, qr{\.pod$})}) {
         next if $file =~ m/^man7/;
