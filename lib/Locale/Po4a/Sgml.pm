@@ -44,7 +44,7 @@ areas where they were not expected like documentation.
 Locale::Po4a::Sgml is a module to help the translation of documentation in
 the SGML format into other [human] languages.
 
-This module uses B<nsgmls> to parse the SGML files. Make sure it is
+This module uses B<nsgmls>(1) to parse the SGML files. Make sure it is
 installed.
 Also make sure that the DTD of the SGML files are installed in the system.
 
@@ -147,7 +147,7 @@ nsgmls eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
 C<{PO4A-end}>.
 
-The problem with this is that the C<{PO4A-end}> and such I add are valid in
+The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
 Everything works well with nsgmls's output redirected that way, but it will

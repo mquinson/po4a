@@ -353,9 +353,9 @@ You should use the B<translated> and B<untranslated> options instead.
 Space-separated list of tag's attributes you want to translate.  You can
 specify the attributes by their name (for example, "lang"), but you can
 prefix it with a tag hierarchy, to specify that this attribute will only be
-translated when it's into the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE<gt>lang
-specifies that the lang attribute will only be translated if it's into an
-E<lt>aaaE<gt> tag, and it's into a E<lt>bbbE<gt> tag.
+translated when it's in the specified tag. For example: E<lt>bbbE<gt>E<lt>aaaE<gt>lang
+specifies that the lang attribute will only be translated if it's in an
+E<lt>aaaE<gt> tag, and it's in a E<lt>bbbE<gt> tag.
 
 =item B<foldattributes>
 
@@ -377,7 +377,7 @@ By default, all tags break the sequence.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's into another tag (<bbb>).
+when it's within another tag (<bbb>).
 
 =item B<inline>
 
@@ -386,7 +386,7 @@ By default, all tags break the sequence.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's into another tag (<bbb>).
+when it's within another tag (<bbb>).
 
 =item B<placeholder>
 
@@ -401,7 +401,7 @@ similar to:
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's into another tag (<bbb>).
+when it's within another tag (<bbb>).
 
 =item B<nodefault>
 
@@ -426,7 +426,7 @@ Space-separated list of tags you want to translate.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's into another tag (<bbb>).
+when it's within another tag (<bbb>).
 
 You can also specify some tag options by putting some characters in front of
 the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
@@ -440,7 +440,7 @@ Space-separated list of tags you do not want to translate.
 
 The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's into another tag (<bbb>).
+when it's within another tag (<bbb>).
 
 =item B<defaulttranslateoption>
 
@@ -661,7 +661,7 @@ sub found_string {
 =head2 MODIFYING TAG TYPES (TODO)
 
 This is a more complex one, but it enables a (almost) total customization.
-It's based in a list of hashes, each one defining a tag type's behavior. The
+It's based on a list of hashes, each one defining a tag type's behavior. The
 list should be sorted so that the most general tags are after the most
 concrete ones (sorted first by the beginning and then by the end keys). To
 define a tag type you'll have to make a hash with the following keys:

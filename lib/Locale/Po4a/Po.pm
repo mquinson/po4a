@@ -39,7 +39,7 @@ I<po>), you can build new entries on the fly or request for the translation
 of a string.
 
 For a more complete description of message catalogs in the PO format and
-their use, please refer to the documentation of the gettext program.
+their use, please refer to the info documentation of the gettext program (node "`PO Files"').
 
 This module is part of the po4a project, which objective is to use PO files
 (designed at origin to ease the translation of program messages) to
@@ -129,7 +129,7 @@ our %debug=('canonize'  => 0,
             'encoding'  => 0,
             'filter'    => 0);
 
-=head1 Functions about whole message catalogs
+=head1 Functions concerning entire message catalogs
 
 =over 4
 
