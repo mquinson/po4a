@@ -509,7 +509,9 @@ foreach (qw(enumerate multitable ifclear ifset)) {
     $commands{$_} = \&environment_line_command;
     $break_line{$_} = 1;
 }
-foreach (qw(quotation)) {
+foreach (qw(quotation smallquotation
+            indentedblock smallindentedblock
+            raggedright)) {
     $commands{$_} = \&environment_line_command;
     $translate_line_command{$_} = 1;
     $break_line{$_} = 1;
