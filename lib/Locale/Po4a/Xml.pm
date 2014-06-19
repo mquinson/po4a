@@ -63,7 +63,7 @@ use Carp qw(croak);
 use File::Basename;
 use File::Spec;
 
-#It will mantain the path from the root tag to the current one
+#It will maintain the path from the root tag to the current one
 my @path;
 
 #It will contain a list of external entities and their attached paths
@@ -167,20 +167,20 @@ sub parse {
 # paragraph         is a reference to an array (see paragraph in the
 #                   treat_content() subroutine) of strings followed by
 #                   references.  It contains the @paragraph array as it was
-#                   before the processing was interrupted by a tag instroducing
+#                   before the processing was interrupted by a tag introducing
 #                   a placeholder.
 # translation       is the translation of this level up to now
 # sub_translations  is a reference to an array of strings containing the
 #                   translations which must replace the placeholders.
 # open              is the tag which opened the placeholder.
 # close             is the tag which closed the placeholder.
-# folded_attributes is an hash of tags with their attributes (<tag attrs=...>
+# folded_attributes is a hash of tags with their attributes (<tag attrs=...>
 #                   strings), referenced by the folded tag id, which should
 #                   replace the <tag po4a-id=id> strings in the current
 #                   translation.
 #
 # If @save_holders only has 1 holder, then we are not processing the
-# content of an holder, we are translating the document.
+# content of a holder, we are translating the document.
 my @save_holders;
 
 
@@ -269,7 +269,7 @@ Prevents it to strip the spaces around the extracted strings.
 
 =item B<wrap>
 
-Canonizes the string to translate, considering that whitespaces are not
+Canonicalizes the string to translate, considering that whitespaces are not
 important, and wraps the translated document. This option can be overridden
 by custom tag options. See the "tags" option below.
 
@@ -287,7 +287,7 @@ documents.
 
 =item B<ontagerror>
 
-This option defines the behavior of the module when it encounter a invalid
+This option defines the behavior of the module when it encounters invalid
 XML syntax (a closing tag which does not match the last opening tag, or a
 tag's attribute without value).
 It can take the following values:
@@ -1305,7 +1305,7 @@ sub get_translate_options {
 
 # TODO: a less precise set of tags should not override a more precise one
     # The tags and tagsonly options are deprecated.
-    # The translated and untranslated options have an higher priority.
+    # The translated and untranslated options have a higher priority.
     $tag = $self->get_tag_from_list($path, $self->{translated});
     if (defined $tag) {
         $usedefault = 0;
@@ -1342,7 +1342,7 @@ sub get_translate_options {
     $tag = $self->get_tag_from_list($path, $self->{customtag});
     if (defined $tag) {
         $usedefault = 0;
-        $options = "in"; # This erase any other setting
+        $options = "in"; # This erases any other setting
     }
 
     if ($usedefault) {
