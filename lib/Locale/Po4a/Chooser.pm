@@ -102,11 +102,11 @@ in all modules, and that each of them can access the new module.
 Now, you just have to call the Locale::Po4a::Chooser::new() function,
 passing the name of module as argument.
 
-=for comment
-Next paragraph is unclear
-
-You also have the Locale::Po4a::Chooser::list() function which lists the
-available formats and exits on the value passed as argument.
+The function Locale::Po4a::Chooser::list() lists the available
+formats, and exits with the value passed as argument. So, we call
+Locale::Po4a::Chooser::list(0) when requested for the list of
+formats, and Locale::Po4a::Chooser::list(1) when passed an invalid
+format name.
 
 =head1 SEE ALSO
 
@@ -147,7 +147,7 @@ L<Locale::Po4a::Wml(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002,2003,2004,2005 by SPI, inc.
+Copyright 2002,2003,2004,2005,2014 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
