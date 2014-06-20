@@ -687,7 +687,7 @@ NEW_LINE:
         if ($line =~ m/^[.']*$/) {
             if ($c !~ m/^\s+$/) {
                 # This commentted line may be comment for the next paragraph
-                push @next_comments, $c;
+                push @next_comments, [substr($line,0,1),$c];
             }
             if ($line =~ m/^[.']+$/) {
                 # those lines are ignored
@@ -699,7 +699,7 @@ NEW_LINE:
                 goto NEW_LINE;
             }
         } else {
-            push @comments, $c;
+            push @comments, ['.', $c];
         }
     } else {
         # finally, we did not reach the end of the paragraph.  The comments
@@ -833,7 +833,7 @@ sub pushline {
         # add comments
         foreach my $c (@comments) {
             # comments are pushed (maybe at the wrong place).
-            $self->SUPER::pushline($self->r(".\\\"$c\n"));
+            $self->SUPER::pushline($self->r("$$c[0]\\\"$$c[1]\n"));
         }
         @comments = ();
     }
@@ -1188,7 +1188,7 @@ sub translate {
     }
 
     $str=pre_trans($self,$str,$ref||$self->{ref},$type);
-    $options{'comment'} .= join('\n', @comments);
+    $options{'comment'} .= join('\n', map{ $$_[1] } @comments);
     # Translate this
     $str = $self->SUPER::translate($str,
                                    $ref||$self->{ref},
@@ -1405,7 +1405,7 @@ sub parse{
     @next_comments = @comments;
     @comments = ();
     for my $c (@next_comments) {
-        $self->pushline($self->r(".\\\"$c\n"));
+        $self->pushline($self->r("$$c[0]\\\"$$c[1]\n"));
     }
 
     # reinitialize the module
