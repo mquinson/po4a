@@ -30,7 +30,7 @@ push @tests, {
   'doc'  => "translate this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m data-23/quoted-comment -p data-23/quotes.fr.po -l tmp/quoted-comment.fr",
-  'test' => "diff -u $diff_pod_flags data-23/quotes.fr tmp/quoted-comment.fr",
+  'test' => "diff -u $diff_pod_flags data-23/quoted-comment tmp/quoted-comment.fr",
   'doc'  => "Check that comment markers are not messed up during translation",
 };
 
