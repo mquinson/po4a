@@ -132,6 +132,13 @@ push @tests, {
     'doc'  => "translate this document",
 };
 
+# tbl format
+push @tests, {
+    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/tbl-textblock.1 -p tmp/tbl-textblock.pot 2>/dev/null",
+    'test' => "perl compare-po.pl data-23/tbl-textblock.pot tmp/tbl-textblock.pot",
+    'doc'  => "Right handling of text blocs in tbl macros",
+};
+
 # Mixed mdoc and roff format
 push @tests, {
     'run'  => "cp data-23/mixed.fr.po tmp/ && chmod u+w tmp/mixed.fr.po && LC_ALL=C perl ../po4a data-23/mixed.cfg",
@@ -197,7 +204,7 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 70; # $formats * $tests * 2
+use Test::More tests => 72; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
