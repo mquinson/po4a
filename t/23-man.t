@@ -197,7 +197,7 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 68; # $formats * $tests * 2
+use Test::More tests => 70; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
