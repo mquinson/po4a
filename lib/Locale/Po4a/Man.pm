@@ -2191,6 +2191,7 @@ $macro{'ti'}=\&untranslated;
 $macro{'TS'}=sub {
     my $self=shift;
     my ($in_headers,$buffer)=(1,"");
+    my ($in_textblock,$preline,$postline)=(0,"","");
     my ($line,$ref)=$self->shiftline();
 
     # Push table start
@@ -2206,18 +2207,49 @@ $macro{'TS'}=sub {
                 $in_headers = 0;
             }
             $self->pushline($self->r($line));
-        } elsif ($line =~ /\\$/) {
+        } elsif ($in_textblock && $line =~ /^T}\s*/) { # end of text block
+            $in_textblock = 0;
+            $preline = $&; # save the `T}' marker to be output later
+            $line = $';    # save the remaing part of the line
+            $self->pushline($self->translate($buffer,
+                                             $ref,
+                                            'tbl table'));
+            $buffer = "";
+            next; # continue processing with the remaining part of the line
+        } elsif ($in_textblock && $line =~ /^[.']/) {
+            # TODO: properly handle macros inside text blocks, currently we mark them
+            # for translations just like the previous version did
+            $self->pushline($self->translate($buffer,
+                                             $ref,
+                                            'tbl table'));
+            $self->pushline($self->translate($line,
+                                             $ref,
+                                            'tbl table'));
+            $buffer = "";
+        } elsif ($line =~ /\\$/ || $in_textblock) {
             # Lines are continued on \ at the end of line
             $buffer .= $line;
         } else {
+            if ($line =~ s/\s*T{\s*$//) { # start of text block
+              $in_textblock = 1;
+              $postline = $&; # save the `T{' to be outputed below
+            } elsif ($buffer eq "" && $line ne ""){ # single line data
+              chomp $line; # drop eol char from the entry to be translated
+              $postline = "\n"; # and save the eol for output below
+            }
+
             $buffer .= $line;
             # Arguments to translate are separated by \t
-            $self->pushline(join("\t",
-                                 map { $self->translate($buffer,
+            $self->pushline($preline
+                            .join("\t",
+                                 map { $self->translate($_,
                                                         $ref,
                                                         'tbl table')
-                                     } split (/\\t/,$line)));
-            $buffer = "";
+                                     } split (/\t/,$buffer))
+                           .$postline);
+
+            $buffer = $preline = $postline = "";
+ 
         }
         ($line,$ref)=$self->shiftline();
     }
