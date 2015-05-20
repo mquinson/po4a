@@ -413,7 +413,7 @@ sub parse_file {
         $lvl=1;
         while ($lvl != 0) {
             # Eat comments in the prolog, since there may be some '>' or '<' in them.
-            if ($origfile =~ m/^.{$pos}?(<!--.*?-->)/s) {
+            if ($origfile =~ m/^.{$pos}(<!--.*?-->)/s) {
                 print "Found a comment in the prolog: $1\n" if ($debug{'generic'});
                 $pos += length($1);
                 # take care of the line numbers
