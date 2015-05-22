@@ -51,7 +51,7 @@ from this.
 
 =over 4
 
-=item B<porefs> I<type>[,B<wrap>|B<nowrap>]
+=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
 Specify the reference format. Argument I<type> can be one of B<none> to not
 produce any reference, B<noline> to not specify the line number (more
