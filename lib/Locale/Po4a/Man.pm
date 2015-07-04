@@ -686,8 +686,8 @@ NEW_LINE:
 
         if ($line =~ m/^[.']*$/) {
             if ($c !~ m/^\s+$/) {
-                # This commentted line may be comment for the next paragraph
-                push @next_comments, [substr($line,0,1),$c];
+                # This commented line may be comment for the next paragraph
+                push @next_comments, [$line ? substr($line,0,1) : '.', $c];
             }
             if ($line =~ m/^[.']+$/) {
                 # those lines are ignored
