@@ -672,9 +672,9 @@ sub parse_file {
             }
         }
     }
-    $prolog =~ s/<!--{PO4A-ent-beg-(.*?)}(.*?){PO4A-ent-end}-->/<!ENTITY % $1 SYSTEM "$2">/g;
+    $prolog =~ s/<!--\{PO4A-ent-beg-(.*?)\}(.*?)\{PO4A-ent-end\}-->/<!ENTITY % $1 SYSTEM "$2">/g;
     # Unprotect undefined inclusions, and die of them
-    $prolog =~ s/{PO4A-percent}/%/sg;
+    $prolog =~ s/\{PO4A-percent\}/%/sg;
     if ($prolog =~ /%([^;\s]*);/) {
         die wrap_mod("po4a::sgml",
                      dgettext("po4a",

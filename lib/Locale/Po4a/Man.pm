@@ -2230,7 +2230,7 @@ $macro{'TS'}=sub {
             # Lines are continued on \ at the end of line
             $buffer .= $line;
         } else {
-            if ($line =~ s/\s*T{\s*$//) { # start of text block
+            if ($line =~ s/\s*T\{\s*$//) { # start of text block
               $in_textblock = 1;
               $postline = $&; # save the `T{' to be outputed below
             } elsif ($buffer eq "" && $line ne ""){ # single line data

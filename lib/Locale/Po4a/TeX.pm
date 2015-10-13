@@ -1168,7 +1168,7 @@ sub parse {
 #       environment contains an un-closed bracket)
         if (   ($closed and ($line =~ /^\s*$/ or
                              $line =~ /^\s*$RE_VERBATIM\s*$/))
-            or (in_verbatim(@env) and $line =~ /^\s*\Q$ESCAPE\Eend{$env[-1]}\s*$/)
+            or (in_verbatim(@env) and $line =~ /^\s*\Q$ESCAPE\Eend\{$env[-1]\}\s*$/)
            ) {
             # An empty line. This indicates the end of the current
             # paragraph.
