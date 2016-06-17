@@ -44,7 +44,7 @@ areas where they were not expected like documentation.
 Locale::Po4a::Sgml is a module to help the translation of documentation in
 the SGML format into other [human] languages.
 
-This module uses B<nsgmls>(1) to parse the SGML files. Make sure it is
+This module uses B<onsgmls>(1) to parse the SGML files. Make sure it is
 installed.
 Also make sure that the DTD of the SGML files are installed in the system.
 
@@ -111,7 +111,7 @@ given attribute into the 'attributes' list too.
 
 =item B<force>
 
-Proceed even if the DTD is unknown or if nsgmls finds errors in the input
+Proceed even if the DTD is unknown or if onsgmls finds errors in the input
 file.
 
 =item B<include-all>
@@ -124,7 +124,7 @@ optimisation. It can be useful if the document contains a construction like
 =item B<ignore-inclusion>
 
 Space separated list of entities that won't be inlined.
-Use this option with caution: it may cause nsgmls (used internally) to add
+Use this option with caution: it may cause onsgmls (used internally) to add
 tags and render the output document invalid.
 
 =back
@@ -138,19 +138,19 @@ same. But there are still some problems:
 
 =item *
 
-The error output of nsgmls is redirected to /dev/null, which is clearly
+The error output of onsgmls is redirected to /dev/null, which is clearly
 bad. I don't know how to avoid that.
 
 The problem is that I have to "protect" the conditional inclusions (i.e. the
-C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise
-nsgmls eats them, and I don't know how to restore them in the final
+C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from onsgmls. Otherwise
+onsgmls eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
 C<{PO4A-end}>.
 
 The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
-Everything works well with nsgmls's output redirected that way, but it will
+Everything works well with onsgmls's output redirected that way, but it will
 prevent us from detecting that the document is badly formatted.
 
 =item *
@@ -183,9 +183,9 @@ In case of file inclusion, string reference of messages in PO files
 
 This is because I preprocess the file to protect the conditional inclusion
 (i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
-&version;) from nsgmls because I want them verbatim to the generated
+&version;) from onsgmls because I want them verbatim to the generated
 document. For that, I make a temp copy of the input file and do all the
-changes I want to this before passing it to nsgmls for parsing.
+changes I want to this before passing it to onsgmls for parsing.
 
 So that it works, I replace the entities asking for a file inclusion by the
 content of the given file (so that I can protect what needs to be in a subfile
@@ -222,7 +222,7 @@ my %debug=('tag'      => 0,
            'generic'  => 0,
            'entities' => 0,
            'refs'     => 0,
-           'nsgmls'   => 0);
+           'onsgmls'   => 0);
 
 my $xmlprolog = undef; # the '<?xml ... ?>' line if existing
 
@@ -381,11 +381,11 @@ sub parse_file {
         close $tmpfh
             or die wrap_mod("po4a::sgml",
                             dgettext("po4a", "Can't close tempfile: %s"), $!);
-        if (system("nsgmls -p < $tmpfile")) {
+        if (system("onsgmls -p < $tmpfile")) {
             unlink ($tmpfile);
             die wrap_mod("po4a::sgml",
-                         dgettext("po4a", "Error while running nsgmls -p.  ".
-                                          "Please check if nsgmls and the ".
+                         dgettext("po4a", "Error while running onsgmls -p.  ".
+                                          "Please check if onsgmls and the ".
                                           "DTD are installed."));
         }
         unlink ($tmpfile);
@@ -611,13 +611,13 @@ sub parse_file {
                 my $dir=$mastername;
                 $dir =~ s%/[^/]*$%%;
                 $filename="$dir/$filename";
-                # origfile also needs to be fixed otherwise nsgmls won't
+                # origfile also needs to be fixed otherwise onsgmls won't
                 # find the file.
                 $origfile =~ s/(<!ENTITY\s*%\s*\Q$key\E\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
             }
             if (defined $ignored_inclusion{$key} or !-e $filename) {
                 # We won't expand this entity.
-                # And we avoid nsgmls to do so.
+                # And we avoid onsgmls to do so.
                 $prolog = "$begin<!--{PO4A-ent-beg-$key}$filename".
                           "{PO4A-ent-end}-->$end";
             } else {
@@ -697,7 +697,7 @@ sub parse_file {
             my $dir=$mastername;
             $dir =~ s%/[^/]*$%%;
             $filename="$dir/$filename";
-            # origfile also needs to be fixed otherwise nsgmls won't find
+            # origfile also needs to be fixed otherwise onsgmls won't find
             # the file.
             $origfile =~ s/(<!ENTITY\s+$key\s+SYSTEM\s*")\Q$origfilename\E("\s*>)/$1$filename$2/gsi;
         }
@@ -805,11 +805,11 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh or die wrap_mod("po4a::sgml", dgettext("po4a", "Can't close tempfile: %s"), $!);
 
-    my $cmd="nsgmls -l -E 0 -wno-valid < $tmpfile".
-            ($debug{'nsgmls'}?"":" 2>/dev/null")." |";
-    print STDERR "CMD=$cmd\n" if ($debug{'generic'} or $debug{'nsgmls'});
+    my $cmd="onsgmls -l -E 0 -wno-valid < $tmpfile".
+            ($debug{'onsgmls'}?"":" 2>/dev/null")." |";
+    print STDERR "CMD=$cmd\n" if ($debug{'generic'} or $debug{'onsgmls'});
 
-    open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run nsgmls: %s"), $!);
+    open (IN,$cmd) || die wrap_mod("po4a::sgml", dgettext("po4a", "Can't run onsgmls: %s"), $!);
 
     # The kind of tags
     my (%translate,%empty,%verbatim,%indent,%exist,%attribute,%qualify);
@@ -897,9 +897,9 @@ sub parse_file {
     my $lastchar = ''; #
     my $buffer= ""; # what we will soon handle
 
-    # Keep a reference to the last line indicated by nsgmls
+    # Keep a reference to the last line indicated by onsgmls
     my $line=0;
-    # Unfortunately, nsgmls do not mention all the line changes.  We have
+    # Unfortunately, onsgmls do not mention all the line changes.  We have
     # to keep track of the number of lines seen in the "record ends".
     my $adds=0;
     # If the last line received contains only spaces, do not take it into
@@ -909,7 +909,7 @@ sub parse_file {
     EVENT: while (my $event = $parse->next_event) {
         # get the line reference to build po entries
         if ($line != $parse->line) {
-            # nsgmls informs us of that the line changed. Reset $adds and
+            # onsgmls informs us of that the line changed. Reset $adds and
             # $empty_last_cdata
             $adds = 0;
             $empty_last_cdata = 0;
@@ -1183,14 +1183,14 @@ sub parse_file {
     $self->pushline($buffer);
     close(IN);
     warn wrap_mod("po4a::sgml",
-                  dgettext("po4a","Warning: nsgmls produced some errors.  ".
+                  dgettext("po4a","Warning: onsgmls produced some errors.  ".
                   "This is usually caused by po4a, which modifies the input ".
-                  "and restores it afterwards, causing the input of nsgmls ".
+                  "and restores it afterwards, causing the input of onsgmls ".
                   "to be invalid.  This is usually safe, but you may wish ".
-                  "to verify the generated document with nsgmls -wno-valid.  ".
+                  "to verify the generated document with onsgmls -wno-valid.  ".
                   "Continuing..."))
         if ($? != 0 and $self->verbose() > 0);
-    unlink ($tmpfile) unless ($debug{'refs'} or $debug{'nsgmls'});
+    unlink ($tmpfile) unless ($debug{'refs'} or $debug{'onsgmls'});
 }
 
 sub end_paragraph {
@@ -1210,7 +1210,7 @@ sub end_paragraph {
 
     # unprotect &entities;
     $para =~ s/{PO4A-amp}/&/g;
-    # remove the name"\|\|" nsgmls added as attributes
+    # remove the name"\|\|" onsgmls added as attributes
     $para =~ s/ name=\"\\\|\\\|\"//g;
     $para =~ s/ moreinfo=\"none\"//g;
 
@@ -1255,7 +1255,7 @@ sub end_paragraph {
 =head1 AUTHORS
 
 This module is an adapted version of sgmlspl (SGML postprocessor for the
-SGMLS and NSGMLS parsers) which was:
+ONSGMLS parser) which was:
 
  Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>
 
