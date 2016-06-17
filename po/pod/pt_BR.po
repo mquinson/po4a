@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.45\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2015-05-21 00:13+0200\n"
+"POT-Creation-Date: 2016-06-17 11:02+0200\n"
 "PO-Revision-Date: 2014-01-17 05:14-0300\n"
 "Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <debian-l10n-portuguese@lists.debian."
@@ -1848,7 +1848,9 @@ msgstr "OPÇÕES QUE MODIFICAM O CABEÇALHO DO POT"
 
 #. type: =item
 #: po4a:141 po4a-updatepo:38 lib/Locale/Po4a/Po.pm:14
-msgid "B<porefs> I<type>[,B<wrap>|B<nowrap>]"
+#, fuzzy
+#| msgid "B<porefs> I<type>[,B<wrap>|B<nowrap>]"
+msgid "B<--porefs> I<type>[,B<wrap>|B<nowrap>]"
 msgstr "B<porefs> I<tipo>[,B<wrap>|B<nowrap>]"
 
 #. type: textblock
@@ -6123,8 +6125,8 @@ msgstr ""
 #: doc/po4a.7.pod:224
 msgid ""
 "At the first glance, gettext doesn't seem to be adapted to all kind of "
-"translations.  For example, it didn't seem adapted to debconf, the "
-"interface all Debian packages use for their interaction with the user during "
+"translations.  For example, it didn't seem adapted to debconf, the interface "
+"all Debian packages use for their interaction with the user during "
 "installation. In that case, the texts to translate were pretty short (a "
 "dozen lines for each package), and it was difficult to put the translation "
 "in a specialized file since it has to be available before the package "
@@ -7048,9 +7050,8 @@ msgstr ""
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:6 lib/Locale/Po4a/BibTeX.pm:7
-#: lib/Locale/Po4a/Man.pm:34 lib/Locale/Po4a/Po.pm:13
-#: lib/Locale/Po4a/Sgml.pm:7 lib/Locale/Po4a/TeX.pm:11
-#: lib/Locale/Po4a/Text.pm:8 lib/Locale/Po4a/Wml.pm:7
+#: lib/Locale/Po4a/Man.pm:34 lib/Locale/Po4a/Po.pm:13 lib/Locale/Po4a/Sgml.pm:7
+#: lib/Locale/Po4a/TeX.pm:11 lib/Locale/Po4a/Text.pm:8 lib/Locale/Po4a/Wml.pm:7
 #: lib/Locale/Po4a/Xhtml.pm:6 lib/Locale/Po4a/Xml.pm:9
 msgid "OPTIONS ACCEPTED BY THIS MODULE"
 msgstr "OPÇÕES ACEITAS POR ESTE MÓDULO"
@@ -9835,7 +9836,7 @@ msgstr ""
 #| "installed.  Also make sure that the DTD of the SGML files are installed "
 #| "in the system."
 msgid ""
-"This module uses B<nsgmls>(1) to parse the SGML files. Make sure it is "
+"This module uses B<onsgmls>(1) to parse the SGML files. Make sure it is "
 "installed.  Also make sure that the DTD of the SGML files are installed in "
 "the system."
 msgstr ""
@@ -9991,8 +9992,12 @@ msgstr "B<force>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:29
+#, fuzzy
+#| msgid ""
+#| "Proceed even if the DTD is unknown or if nsgmls finds errors in the input "
+#| "file."
 msgid ""
-"Proceed even if the DTD is unknown or if nsgmls finds errors in the input "
+"Proceed even if the DTD is unknown or if onsgmls finds errors in the input "
 "file."
 msgstr ""
 "Continua ainda na eventualidade do DTD ser desconhecido ou se nsgmls "
@@ -10024,9 +10029,14 @@ msgstr "B<ignore-inclusion>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:33
+#, fuzzy
+#| msgid ""
+#| "Space separated list of entities that won't be inlined.  Use this option "
+#| "with caution: it may cause nsgmls (used internally) to add tags and "
+#| "render the output document invalid."
 msgid ""
 "Space separated list of entities that won't be inlined.  Use this option "
-"with caution: it may cause nsgmls (used internally) to add tags and render "
+"with caution: it may cause onsgmls (used internally) to add tags and render "
 "the output document invalid."
 msgstr ""
 "Lista separada por espaço de entidades que não serão acrescentadas "
@@ -10044,18 +10054,29 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:37
+#, fuzzy
+#| msgid ""
+#| "The error output of nsgmls is redirected to /dev/null, which is clearly "
+#| "bad. I don't know how to avoid that."
 msgid ""
-"The error output of nsgmls is redirected to /dev/null, which is clearly bad. "
-"I don't know how to avoid that."
+"The error output of onsgmls is redirected to /dev/null, which is clearly "
+"bad. I don't know how to avoid that."
 msgstr ""
 "A saída de erro do nsgmls é redirecionada para /dev/null, o que obviamente é "
 "ruim. Eu não sei como evitar isso."
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:38
+#, fuzzy
+#| msgid ""
+#| "The problem is that I have to \"protect\" the conditional inclusions (i."
+#| "e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise "
+#| "nsgmls eats them, and I don't know how to restore them in the final "
+#| "document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and "
+#| "C<{PO4A-end}>."
 msgid ""
 "The problem is that I have to \"protect\" the conditional inclusions (i.e. "
-"the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise nsgmls "
+"the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from onsgmls. Otherwise onsgmls "
 "eats them, and I don't know how to restore them in the final document. To "
 "prevent that, I rewrite them to C<{PO4A-beg-foo}> and C<{PO4A-end}>."
 msgstr ""
@@ -10079,8 +10100,12 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:40
+#, fuzzy
+#| msgid ""
+#| "Everything works well with nsgmls's output redirected that way, but it "
+#| "will prevent us from detecting that the document is badly formatted."
 msgid ""
-"Everything works well with nsgmls's output redirected that way, but it will "
+"Everything works well with onsgmls's output redirected that way, but it will "
 "prevent us from detecting that the document is badly formatted."
 msgstr ""
 "Tudo funciona bem com a saída redirecionada do nsgml dessa forma, mas isso "
@@ -10152,12 +10177,19 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:50
+#, fuzzy
+#| msgid ""
+#| "This is because I preprocess the file to protect the conditional "
+#| "inclusion (i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some "
+#| "entities (like &version;) from nsgmls because I want them verbatim to the "
+#| "generated document. For that, I make a temp copy of the input file and do "
+#| "all the changes I want to this before passing it to nsgmls for parsing."
 msgid ""
 "This is because I preprocess the file to protect the conditional inclusion "
 "(i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like "
-"&version;) from nsgmls because I want them verbatim to the generated "
+"&version;) from onsgmls because I want them verbatim to the generated "
 "document. For that, I make a temp copy of the input file and do all the "
-"changes I want to this before passing it to nsgmls for parsing."
+"changes I want to this before passing it to onsgmls for parsing."
 msgstr ""
 "Isso porque eu preprocesso o arquivo para proteger a inclusão condicional (i."
 "e. aqueles C<E<lt>! [ %foo [> e C<]]E<gt>>) e algumas entidades (como "
@@ -10182,9 +10214,13 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:53
+#, fuzzy
+#| msgid ""
+#| "This module is an adapted version of sgmlspl (SGML postprocessor for the "
+#| "SGMLS and NSGMLS parsers) which was:"
 msgid ""
 "This module is an adapted version of sgmlspl (SGML postprocessor for the "
-"SGMLS and NSGMLS parsers) which was:"
+"ONSGMLS parser) which was:"
 msgstr ""
 "Esse módulo é uma versão adaptado do sgmlspl (pós-processador SGML para os "
 "analisadores SGMLS e NSGMLS) que era:"
