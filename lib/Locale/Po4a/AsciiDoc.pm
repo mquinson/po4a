@@ -771,6 +771,8 @@ sub split_attributelist {
        | [^\W\d][-\w]*=\S+                  # invalid, but accept it anyway
        | "(?:[^"\\]++|\\.)*+"               # quoted attribute
        |  (?:[^,\\]++|\\.)++                # unquoted attribute
+       | ^$                                 # Empty attribute list allowed
+
          )(?:,\s*+)?/gx) {
         print STDERR "  -> $1\n" if $debug{split_attributelist};
         push @attributes, $1;
