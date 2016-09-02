@@ -257,12 +257,12 @@ BEGIN {
     my $UnicodeGCString_available = 0;
     $UnicodeGCString_available = 1 if (eval { require Unicode::GCString });
     eval {
-        sub columns($$$) {
+        sub chars($$$) {
             my $text = shift;
             my $encoder = shift;
             $text = $encoder->decode($text) if (defined($encoder) && $encoder->name ne "ascii");
             if ($UnicodeGCString_available) {
-                return Unicode::GCString->new($text)->columns();
+                return Unicode::GCString->new($text)->chars();
             } else {
                 $text =~ s/\n$//s;
                 return length($text) if !(defined($encoder) && $encoder->name ne "ascii");
@@ -318,7 +318,9 @@ sub parse {
                  ($line =~ m/^(={2,}|-{2,}|~{2,}|\^{2,}|\+{2,})$/) and
                  (defined($paragraph) )and
                  ($paragraph =~ m/^[^\n]*\n$/s) and
-                 (columns($paragraph, $self->{TT}{po_in}{encoder}, $ref) == (length($line)))) {
+                 # subtract one because chars includes the newline on the paragraph
+                 ((chars($paragraph, $self->{TT}{po_in}{encoder}, $ref) - 1) == (length($line)))) {
+
             # Found title
             $wrapped_mode = 0;
             my $level = $line;
@@ -333,7 +335,7 @@ sub parse {
             $paragraph="";
             @comments=();
             $wrapped_mode = 1;
-            $self->pushline(($level x (columns($t, $self->{TT}{po_in}{encoder}, $ref)))."\n");
+            $self->pushline(($level x (chars($t, $self->{TT}{po_in}{encoder}, $ref)))."\n");
         } elsif ($line =~ m/^(={1,5})( +)(.*?)( +\1)?$/) {
             my $titlelevel1 = $1;
             my $titlespaces = $2;
