@@ -1,0 +1,33 @@
+language: perl
+addons:
+  apt:
+    packages:
+      - liblocale-gettext-perl
+#      - libtext-wrapi18n-perl
+#      - libunicode-linebreak-perl
+      - gettext
+      - docbook-xml 
+      - docbook-xsl
+      - docbook
+      - xsltproc
+      - texlive-binaries
+      - opensp
+#      - libsgmls-perl Package disallowed by travis, unfortunately
+      - docbook
+
+before_install:
+  - cpanm Locale::gettext
+  - cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+  - cpanm Text::WrapI18N
+  - cpanm Unicode::GCString
+
+install:
+  - cpanm -v --installdeps --notest .  
+
+script:
+  - perl Build.PL; ./Build test
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
