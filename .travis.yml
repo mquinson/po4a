@@ -1,0 +1,27 @@
+language: perl
+perl: "5.22"
+addons:
+  apt:
+    packages:
+      - liblocale-gettext-perl
+      - libmodule-build-perl
+      - libtext-wrapi18n-perl
+      - libunicode-linebreak-perl
+      - gettext
+      - docbook-xml 
+      - docbook-xsl
+      - docbook
+      - xsltproc
+      - texlive-binaries
+      - opensp
+      - libsgmls-perl
+      - docbook
+
+script: "perl Build.PL; ./Build && ./Build test"
+
+notifications:
+  recipients:
+      - martin.quinson@ens-rennes.fr
+  email:
+    on_success: change
+    on_failure: always
