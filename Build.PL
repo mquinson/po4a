@@ -29,7 +29,7 @@ my $build = Po4aBuilder->new
           'scripts/po4aman-display-po', 'scripts/po4apod-display-po',
           'share/po4a-build'],
       add_to_cleanup => ['t/tmp','po/bin/*.gmo', 'blib', '_build'],
-      dist_abstract => 'Tools for helping translation of documentation',
+      dist_abstract => 'tools to ease the translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',
           'Denis Barbier <barbier@linuxfr.org>',
           'Nicolas Francois <nicolas.francois@centraliens.net>',
