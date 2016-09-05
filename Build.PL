@@ -8,6 +8,7 @@ my $build = Po4aBuilder->new
       license => 'gpl',
       dist_version_from => 'lib/Locale/Po4a/TransTractor.pm', # finds $VERSION
       requires => {},
+      configure_requires => { 'Module::Build' => 0.42 },
       recommends => {'Text::WrapI18N' => 0, # Only used for wrapping long
                                             # error/wraning lines.
 
