@@ -154,6 +154,7 @@ sub ACTION_dist {
     $self->depends_on('distdir');
 
     my $dist_dir = $self->dist_dir;
+    $self->make_files_writable($dist_dir);
 
     if ( -e "$dist_dir.tar.gz") {
         # Delete the distfile if it already exists
