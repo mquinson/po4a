@@ -1,12 +1,10 @@
 language: perl
-perl: "5.22"
 addons:
   apt:
     packages:
       - liblocale-gettext-perl
-      - libmodule-build-perl
-      - libtext-wrapi18n-perl
-      - libunicode-linebreak-perl
+#      - libtext-wrapi18n-perl
+#      - libunicode-linebreak-perl
       - gettext
       - docbook-xml 
       - docbook-xsl
@@ -14,14 +12,25 @@ addons:
       - xsltproc
       - texlive-binaries
       - opensp
-      - libsgmls-perl
+#      - libsgmls-perl Package disallowed by travis, unfortunately
       - docbook
 
-script: "perl Build.PL; ./Build && ./Build test"
+before_install:
+  - cpanm Locale::gettext
+  - cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+  - cpanm Text::WrapI18N
+  - cpanm Unicode::GCString
+
+install:
+  - cpanm -v --installdeps --notest .  
+
+script:
+  - perl Build.PL; ./Build test
 
 notifications:
-  recipients:
-      - martin.quinson@ens-rennes.fr
   email:
     on_success: change
     on_failure: always
+  irc:
+    channels:
+      - "irc.debian.org#po4a"
