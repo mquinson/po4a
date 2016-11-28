@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2016-06-17 11:02+0200\n"
-"PO-Revision-Date: 2016-11-28 10:42+0100\n"
+"PO-Revision-Date: 2016-11-28 18:28+0100\n"
 "Last-Translator: Danilo Piazzalunga <danilopiazza@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -109,7 +109,7 @@ msgid ""
 "build</command> and a simple configuration file is used to tell "
 "<command>po4a-build</command> how to build each element and which binary "
 "packages will include the translated and untranslated content."
-msgstr ""
+msgstr "Le istruzioni esistenti di creazione vengono sostituite da una singola chiamata a <command>po4a-build</command> e un semplice file di configurazione viene usato per dire a <command>po4a-build</command> come creare ogni elemento e che pacchetti binari includeranno i contenuti tradotti e non tradotti."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-build.xml:15
@@ -117,7 +117,7 @@ msgid ""
 "Once built, the content will be in package-specific directories beneath the "
 "<option>BASEDIR</option> specified in the configuration file.  For a binary "
 "package foo, with translations into German and French, this would result in:"
-msgstr ""
+msgstr "Una volta creati, i contenuti verranno posti in cartelle specifiche del pacchetto sotto la <option>BASEDIR</option> specificata nel file di configurazione.  Per un pacchetto binario foo, con traduzioni in tedesco e francese, si otterrebbe perciò:"
 
 #. type: Content of: <refentry><refsect1><programlisting>
 #: share/doc/po4a-build.xml:16
@@ -128,13 +128,17 @@ msgid ""
 "BASEDIR/foo/man/fr/man1/foo.1\n"
 "    "
 msgstr ""
+"BASEDIR/foo/man/man1/foo.1\n"
+"BASEDIR/foo/man/de/man1/foo.1\n"
+"BASEDIR/foo/man/fr/man1/foo.1\n"
+"    "
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-build.xml:17
 msgid ""
 "This makes it easy to include all the generated content into the binary "
 "package with a single install location:"
-msgstr ""
+msgstr "Ciò facilita l'inclusione di tutti i contenuti generati nel pacchetto binario con una singola posizione di installazione:"
 
 #. type: Content of: <refentry><refsect1><programlisting>
 #: share/doc/po4a-build.xml:18
@@ -144,6 +148,9 @@ msgid ""
 "doc/foo/html/* ./usr/share/doc/foo/\n"
 "    "
 msgstr ""
+"doc/foo/man/* ./usr/share/man/\n"
+"doc/foo/html/* ./usr/share/doc/foo/\n"
+"    "
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-build.xml:19
@@ -151,7 +158,7 @@ msgid ""
 "This rule will not need to be updated when new translations are added and "
 "adding a second binary package (bar) allows the content for that package to "
 "kept separate."
-msgstr ""
+msgstr "Questa regola non ha bisogno di essere aggiornata quando nuove traduzioni vengono aggiunte ed aggiungere un secondo file binario (bar) consente di tenere separatamente i contenuti di quel pacchetto."
 
 #. type: =head2
 #: share/doc/po4a-build.xml:20 doc/po4a-build.conf.5.pod:8 doc/po4a.7.pod:37
@@ -162,32 +169,32 @@ msgstr "Formati supportati"
 #: share/doc/po4a-build.xml:21
 msgid ""
 "Currently, <command>po4a-build</command> supports the following combinations:"
-msgstr ""
+msgstr "Attualmente, <command>po4a-build</command> supporta le seguenti combinazioni:"
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:22
 msgid "DocBook XML for section 1."
-msgstr ""
+msgstr "DocBook XML per la sezione 1."
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:23
 msgid "DocBook XML for section 3."
-msgstr ""
+msgstr "DocBook XML per la sezione 3."
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:24
 msgid "DocBook XML for HTML."
-msgstr ""
+msgstr "DocBook XML per l'HTML."
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:25
 msgid "POD for section 1."
-msgstr ""
+msgstr "POD per la sezione 1."
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:26
 msgid "POD for section 3."
-msgstr ""
+msgstr "POD per la sezione 3."
 
 #. type: Content of: <refentry><refsect1><refsect2><orderedlist><listitem><para>
 #: share/doc/po4a-build.xml:27
@@ -207,7 +214,7 @@ msgid ""
 "single call to <command>po4a-build</command>.  See "
 "<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
 "manvolnum></citerefentry>."
-msgstr ""
+msgstr "Tutti i formati supportati, in tutte le combinazioni supportate, possono essere gestiti in un unico file di configurazione <filename>po4a-build.conf</filename> in una singola chiamata a <command>po4a-build</command>.  Vedere <citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc/po4a-build.xml:30
@@ -222,7 +229,7 @@ msgid ""
 "directory of your package VCS. (Use the <option>-f</option> option to "
 "specify a different file.) See <citerefentry><refentrytitle>po4a-build.conf</"
 "refentrytitle><manvolnum>5</manvolnum></citerefentry>."
-msgstr ""
+msgstr "<command>po4a-build</command> usa un file di configurazione predefinito, <filename>po4a-build.conf</filename> che dovrebbe stare nella cartella radice del proprio pacchetto VCS. (Usare l'opzione <option>-f</option> per specificare un file diverso). Vedere <citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</manvolnum></citerefentry>."
 
 #. type: Content of: <refentry><refsect1><example><title>
 #: share/doc/po4a-build.xml:32
@@ -241,23 +248,25 @@ msgid ""
 "/usr/share/doc/po4a/examples/po4a-build.conf.example\n"
 "    "
 msgstr ""
+"/usr/share/doc/po4a/examples/po4a-build.conf.example\n"
+"    "
 
 #. type: Content of: <refentry><refsect1><example>
 #: share/doc/po4a-build.xml:35
 msgid "<placeholder type=\"programlisting\" id=\"0\"/>"
-msgstr ""
+msgstr "<placeholder type=\"programlisting\" id=\"0\"/>"
 
 #. type: Content of: <refentry><refsect1><refsect2><title>
 #: share/doc/po4a-build.xml:36
 msgid "configuration file layout"
-msgstr ""
+msgstr "organizzazione del file di configurazione"
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:37
 msgid ""
 "The configuration file consists of several sections, general, XML/XSL "
 "support, POD support and HTML support."
-msgstr ""
+msgstr "Il file di configurazione consiste di diverse sezioni, generale, supporto XML/XSL, supporto POD e supporto HTML."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:38
@@ -3687,10 +3696,8 @@ msgid ""
 "\n"
 msgstr ""
 
-# NdT: FIXME
 #. type: textblock
 #: doc/po4a.7.pod:64
-#, fuzzy
 msgid ""
 "On the left part, the conversion of a translation not using po4a to this "
 "system is shown. On the top of the right part, the action of the original "
@@ -3701,17 +3708,7 @@ msgid ""
 "partially modified are also connected to the previous translation, but with "
 "a specific marker indicating that the translation must be updated. The "
 "bottom of the figure shows how a formatted document is built."
-msgstr ""
-"Sulla parte sinistra, la conversione di una traduzione che non usa po4a a "
-"questo nuovo sistema viene mostrata. In alto nella parte destra, è "
-"illustrata l'azione dell'autore originale (aggiornare la documentazione). "
-"Sempre nella parte destra, nel mezzo, sono raffigurate le azioni automatiche "
-"di po4a. Il nuovo materiale viene estratto e confrontato con la traduzione "
-"esistente. Le parti che non sono cambiate vengono trovate e la precedente "
-"traduzione viene usata. Le parti che sono state modificate parzialmente sono "
-"anche connesse con la traduzione precedente, ma con uno specifico segnale "
-"indicante che la traduzione deve essere aggiornata. In basso, la figura "
-"mostra come viene assemblato un documento completo."
+msgstr "Sulla parte sinistra, si può osservare la conversione di una traduzione che non usa po4a. In alto a destra, viene illustrata l'azione dell'autore originale (aggiornare la documentazione). Nel centro della parte destra, sono raffigurate le azioni automatiche di po4a. Il nuovo materiale viene estratto e confrontato con la traduzione esistente. Rilevale le parti invariate, viene usata la traduzione precedente. Le parti parzialmente modificate vengono associate alla traduzione precedente, ma con una specifica marcatura indicante che la traduzione necessita di aggiornamento. La parte bassa della figura mostra come viene assemblato un documento completo."
 
 #. type: textblock
 #: doc/po4a.7.pod:65
@@ -8081,20 +8078,14 @@ msgstr "Tag che non è necessario chiudere."
 msgid "B<ignore>"
 msgstr "B<ignore>"
 
-# NdT: Rivedere "translate section". Provo "sezione traducibile"?
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:23
-#, fuzzy
 msgid ""
 "Tags ignored and considered as plain char data by po4a. That is to say that "
 "they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate "
 "for this category since putting it in the translate section would create "
 "msgids not being whole sentences, which is bad."
-msgstr ""
-"Tag ignorati e considerati come testo semplice da po4a, vale a dire che "
-"possono far parte di un msgid. Ad esempio, E<lt>bE<gt> è un buon candidato "
-"per questa categoria: metterlo nella sezione traducibile darebbe luogo a dei "
-"msgid che non contengono frasi complete, il che sarebbe male."
+msgstr "Tag ignorati e considerati come testo semplice da po4a, vale a dire che possono far parte di un msgid. Ad esempio, E<lt>bE<gt> è un buon candidato per questa categoria: metterlo nella sezione traducibile darebbe luogo a dei msgid che non contengono frasi complete, condizione non ideale."
 
 #. type: =item
 #: lib/Locale/Po4a/Sgml.pm:24 lib/Locale/Po4a/Xml.pm:41
@@ -8145,21 +8136,14 @@ msgstr "Procede anche se il DTD è sconosciuto o se onsgmls trova errori nel fil
 msgid "B<include-all>"
 msgstr "B<include-all>"
 
-# NdT: FIXME
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:31
-#, fuzzy
 msgid ""
 "By default, msgids containing only one entity (like '&version;') are skipped "
 "for the translator comfort. Activating this option prevents this "
 "optimisation. It can be useful if the document contains a construction like "
 "\"<title>&Aacute;</title>\", even if I doubt such things to ever happen..."
-msgstr ""
-"I msgid che contengono solo un'entità (come «&version;») vengono saltati per "
-"comodità del traduttore. Attivare questa opzione impedisce questa "
-"ottimizzazione. Può essere utile se il documento contiene una costruzione "
-"del tipo «<title>&Egrave;<title>», anche se dubito che cose del genere "
-"possano accadere..."
+msgstr "I msgid che contengono solo un'entità (come «&version;») vengono saltati per comodità del traduttore. Attivare questa opzione impedisce questa ottimizzazione. Può essere utile se il documento contiene una costruzione del tipo «<title>&Egrave;<title>», anche se è difficile possa succedere..."
 
 #. type: =item
 #: lib/Locale/Po4a/Sgml.pm:32
