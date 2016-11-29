@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2016-06-17 11:02+0200\n"
-"PO-Revision-Date: 2016-11-29 08:31+0100\n"
-"Last-Translator: Danilo Piazzalunga <danilopiazza@libero.it>\n"
+"PO-Revision-Date: 2016-11-29 15:31+0100\n"
+"Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -278,7 +278,7 @@ msgid ""
 "for the generated output, whether the package contains manpages in section 3 "
 "rather than just section 1 and the names of the binary packages which are to "
 "contain the generated output."
-msgstr ""
+msgstr "Generale include il nome e la posizione del file di configurazione di po4a (probabilmente è meglio lasciarlo com'è <filename>po4a.config</filename>), la cartella po contenente i file PO della documentazione (spesso <filename>doc/po</filename>), il nome completo del file POT usato per creare le traduzioni, la BASEDIR per i risultati generati, se il pacchetto contiene pagine man in sezione 3 piuttosto che solo della sezione 1 ed i nomi dei pacchetti binari che devono contenenere i risultati generati."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:39
@@ -287,14 +287,14 @@ msgid ""
 "support in the XMLPACKAGES variable, the top level DocBook file to pass to "
 "<command>xsltproc</command> and the location of the XML or DocBook files. "
 "The XSLFILE can be overridden, if necessary."
-msgstr ""
+msgstr "Il supporto XML/XSL include la specifica di quale dei pacchetti binari usa il supporto XSL nella variabile XMLPACKAGES, il file DocBook radice da passare a <command>xsltproc</command> e la posizione dei file XML o DocBook. Il file XSLFILE può essere sovrapposto, se necessario."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:40
 msgid ""
 "POD support includes specifying which of the binary packages use POD support "
 "in the PODPACKAGES variable and the full name of the POD file."
-msgstr ""
+msgstr "Il supporto POD include la specifica di quale dei pacchetti binari usa il supporto POD nella variabile PODPACKAGES e il nome completo del file POD."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:41
@@ -302,17 +302,17 @@ msgid ""
 "HTML support specifies the subdirectory to create below BASEDIR for the "
 "untranslated and translated HTML content and the DocBook file to generate "
 "the HTML. The HTMLXSL file can be overridden, if necessary."
-msgstr ""
+msgstr "Il supporto HTML specifica la sottocartella da creare sotto BASEDIR per i contenuti HTML tradotti e non tradotti e il file DocBook per generare l'HTML. Il file HTMLXSL può essere ignorato, se necessario."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc/po4a-build.xml:42
 msgid "COMMANDS"
-msgstr ""
+msgstr "COMANDI"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4a-build.xml:43
 msgid "<option>--pot-only</option>"
-msgstr ""
+msgstr "<option>--pot-only</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4a-build.xml:44
@@ -330,7 +330,7 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example><title>
 #: share/doc/po4a-build.xml:45
 msgid "svn-buildpackage example"
-msgstr ""
+msgstr "esempio di svn-buildpackage"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example><para>
 #: share/doc/po4a-build.xml:46
@@ -349,6 +349,10 @@ msgid ""
 "\tpo4a-build --pot-only\n"
 "            "
 msgstr ""
+"# aggiunge il file POT all'archivio sorgente\n"
+"native-dist: Makefile\n"
+"\tpo4a-build --pot-only\n"
+"            "
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example><programlisting>
 #: share/doc/po4a-build.xml:48
@@ -357,6 +361,8 @@ msgid ""
 "$ svn propset useNativeDist 1 debian\n"
 "            "
 msgstr ""
+"$ svn propset useNativeDist 1 debian\n"
+"            "
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example>
 #: share/doc/po4a-build.xml:49
@@ -368,17 +374,17 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4a-build.xml:50
 msgid "<option>-h</option>|<option>--help</option>"
-msgstr ""
+msgstr "<option>-h</option>|<option>--help</option>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4a-build.xml:51 share/doc/po4a-build.xml:53
 msgid "print the usage message and exit."
-msgstr ""
+msgstr "stampa la guida all'uso ed esce."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4a-build.xml:52
 msgid "<option>--version</option>"
-msgstr ""
+msgstr "<option>--version</option>"
 
 #. type: =head1
 #: share/doc/po4a-build.xml:54 share/doc/po4aman-display-po.xml:15
@@ -391,7 +397,7 @@ msgstr "OPZIONI"
 #: share/doc/po4a-build.xml:55
 msgid ""
 "<option>-f</option>|<option>--file</option><replaceable> FILE</replaceable>"
-msgstr ""
+msgstr "<option>-f</option>|<option>--file</option><replaceable> FILE</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4a-build.xml:56
@@ -403,52 +409,52 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc/po4a-build.xml:57
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-build.xml:58
 msgid ""
 "<command>po4a-build</command> was written by Neil Williams "
 "<email>codehelp@debian.org</email>."
-msgstr ""
+msgstr "<command>po4a-build</command> è stato scritto da Neil Williams <email>codehelp@debian.org</email>."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-build.xml:59
 msgid ""
 "This manual page was written by Neil Williams <email>codehelp@debian.org</"
 "email>"
-msgstr ""
+msgstr "Questa pagina di manuale è stata scritta da Neil Williams <email>codehelp@debian.org</email>"
 
 #. type: Content of: <refentry><refentryinfo>
 #: share/doc/po4aman-display-po.xml:2
 msgid "<date>2006-04-08</date>"
-msgstr ""
+msgstr "<date>2006-04-08</date>"
 
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc/po4aman-display-po.xml:3
 msgid "PO4AMAN-DISPLAY-PO"
-msgstr ""
+msgstr "PO4AMAN-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc/po4aman-display-po.xml:5
 msgid "2006-04-08"
-msgstr ""
+msgstr "2006-04-08"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc/po4aman-display-po.xml:6 share/doc/po4aman-display-po.xml:7
 #: share/doc/po4apod-display-po.xml:6 share/doc/po4apod-display-po.xml:7
 msgid "Po4a Tools"
-msgstr ""
+msgstr "Strumenti Po4a"
 
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc/po4aman-display-po.xml:8
 msgid "po4aman-display-po"
-msgstr ""
+msgstr "po4aman-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc/po4aman-display-po.xml:9
 msgid "display a translated man page according to a PO"
-msgstr ""
+msgstr "mostra una pagina man tradotta secondo un file PO"
 
 #. type: Content of: <refentry><refsynopsisdiv><cmdsynopsis>
 #: share/doc/po4aman-display-po.xml:10
@@ -515,7 +521,7 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4aman-display-po.xml:20 share/doc/po4apod-display-po.xml:18
 msgid "<option>-o </option><replaceable>PO4A_OPT</replaceable>"
-msgstr ""
+msgstr "<option>-o </option><replaceable>PO4A_OPT</replaceable>"
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4aman-display-po.xml:21 share/doc/po4apod-display-po.xml:19
@@ -563,7 +569,7 @@ msgstr "<date>2009-03-16</date>"
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc/po4apod-display-po.xml:3
 msgid "PO4APOD-DISPLAY-PO"
-msgstr ""
+msgstr "PO4APOD-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc/po4apod-display-po.xml:5
@@ -573,7 +579,7 @@ msgstr "2009-03-16"
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc/po4apod-display-po.xml:8
 msgid "po4apod-display-po"
-msgstr ""
+msgstr "po4apod-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc/po4apod-display-po.xml:9
@@ -620,7 +626,7 @@ msgstr ""
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4apod-display-po.xml:23
 msgid "Florentin Duneau"
-msgstr ""
+msgstr "Florentin Duneau"
 
 #. type: =head1
 #: po4a:1 po4a-gettextize:1 po4a-normalize:1 po4a-translate:1 po4a-updatepo:1
@@ -654,7 +660,7 @@ msgstr "SINTASSI"
 #. type: textblock
 #: po4a:4
 msgid "B<po4a> [I<options>] I<config_file>"
-msgstr "B<po4a> [I<options>] I<config_file>"
+msgstr "B<po4a> [I<opzioni>] I<file_config>"
 
 #. type: textblock
 #: po4a:6 po4a-gettextize:7 po4a-normalize:6 po4a-translate:7 po4a-updatepo:7
@@ -838,7 +844,7 @@ msgstr ""
 msgid ""
 " master document --> PO files --> translations\n"
 "\n"
-msgstr ""
+msgstr " documento master --> file PO --> traduzioni\n\n"
 
 #. type: textblock
 #: po4a:32
@@ -880,7 +886,7 @@ msgid ""
 "B<Note:> It is recommended to use B<[po_directory]> rather than "
 "B<[po4a_langs]> and B<[po4a_paths]>.  See section B<Autodetection of the "
 "paths and languages> below."
-msgstr ""
+msgstr "B<Nota:> si raccomanda l'uso di B<[po_directory]> invece che B<[po4a_langs]> e B<[po4a_paths]>.  Vedere sezione B<Autorilevamento dei percorsi e delle lingue> più avanti."
 
 #. type: textblock
 #: po4a:38
@@ -1024,7 +1030,7 @@ msgstr ""
 msgid ""
 " [po_directory] po4a/po/\n"
 "\n"
-msgstr ""
+msgstr " [cartella_po] po4a/po/\n\n"
 
 #. type: textblock
 #: po4a:57
@@ -1068,7 +1074,7 @@ msgstr ""
 #. type: textblock
 #: po4a:60
 msgid "More formally, the format is:"
-msgstr "La sintassi, scritta in maniera più formale, è la seguente:"
+msgstr "In maniera più formale, il formato è:"
 
 #. type: verbatim
 #: po4a:61
@@ -5960,11 +5966,14 @@ msgid ""
 "    use Locale::Po4a::Text;\n"
 "\n"
 msgstr ""
+"    use Locale::Po4a::Common qw(nowrapi18n);\n"
+"    use Locale::Po4a::Text;\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:7
 msgid "instead of:"
-msgstr ""
+msgstr "invece di:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:8
@@ -5972,7 +5981,7 @@ msgstr ""
 msgid ""
 "    use Locale::Po4a::Text;\n"
 "\n"
-msgstr ""
+msgstr "    use Locale::Po4a::Text;\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:9
@@ -8407,7 +8416,7 @@ msgstr "Il modulo TeX può essere personalizzato con righe che cominciano con B<
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:29
 msgid "B<% po4a: command> I<command1> B<alias> I<command2>"
-msgstr "B<% po4a: comando> I<comando1> B<alias> I<comando2>"
+msgstr "B<% po4a: command> I<comando1> B<alias> I<comando2>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:30
@@ -8419,7 +8428,7 @@ msgstr "Indica che gli argomenti del comando I<comando1> devono essere trattati 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:31
 msgid "B<% po4a: command> I<command1> I<parameters>"
-msgstr "B<% po4a: comando> I<comando1> I<parametri>"
+msgstr "B<% po4a: command> I<comando1> I<parametri>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:32
@@ -8461,19 +8470,19 @@ msgid ""
 "parameters.  This permits to keep more context, and is useful for commands "
 "with small words in parameter, which can have multiple meanings (and "
 "translations)."
-msgstr ""
+msgstr "Come per un asterisco, il comando verrà estratto se appare ad un'estremità di un blocco, ma i parametri non saranno tradotti separatamente.  Il traduttore dovrà tradurre il comando concatenato a tutti i suoi parametri.  Ciò permette di mantenere più contesto, ed è utile per comandi con piccole parole nei parametri, che possono avere significati multipli (e traduzioni)."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:38
 msgid ""
 "Note: In this case you don't have to specify which parameters are "
 "translatable, but po4a must know the type and number of parameters."
-msgstr ""
+msgstr "Nota: in questo caso non è necessario specificare quali parametri sono traducibili, ma po4a deve sapere il tipo e numero di parametri."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:39
 msgid "a minus (B<->)"
-msgstr ""
+msgstr "un segno meno (B<->)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:40
@@ -8484,7 +8493,7 @@ msgid ""
 "These commands should generally not be separated from their paragraph (to "
 "keep the context), but there is no reason to annoy the translator with them "
 "if a whole string is enclosed in such a command."
-msgstr ""
+msgstr "In questo caso, il comando non sarà estratto da nessun blocco. Ma se apparirà da solo in un blocco, allora solo i parametri marcati come traducibili saranno presentati al traduttore.  Ciò è utile per i comandi sui font.  Questi comandi generalmente non dovrebbero essere separati dai loro paragrafi (per mantenere il contesto), ma non c'è ragione di infastidire il traduttore con essi se un'intera stringa è racchiusa in un tale comando."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:41
@@ -8497,6 +8506,12 @@ msgid ""
 " % po4a: command *chapter [_]{_}\n"
 "\n"
 msgstr ""
+"L'argomento I<parametri> è un insieme di [] (per indicare un argomento\n"
+"opzionale) o {} (per indicare un argomento obbligatorio). Si può\n"
+"piazzare un carattere di sottolineatura (_) tra queste parentesi\n"
+"per indicare che il parametro deve essere tradotto. Per esempio:\n"
+" % po4a: command *capitolo [_]{_}\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:42
@@ -8511,18 +8526,26 @@ msgid ""
 " % po4a: command -href {}{_}\n"
 "\n"
 msgstr ""
+"Questo indica che il comando del capitolo ha due parametri: uno opzionale\n"
+"(titolo corto) e uno obbligatorio, che devono entrambi essere tradotti.\n"
+"Se si vuole specificare che il comando href abbia due parametri obbligatori,\n"
+"che non si vuole tradurre l'URL (primo parametro), e che non si vuole\n"
+"che questo comando sia separato dal suo paragrafo (il che permette\n"
+"al traduttore di spostare il collegamento nel testo), si può usare:\n"
+" % po4a: command -href {}{_}\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:43
 msgid ""
 "In this case, the information indicating which arguments must be translated "
 "is only used if a paragraph is only composed of this href command."
-msgstr ""
+msgstr "In questo caso, l'informazione indicante quali argomenti devono essere tradotti viene usata solo se un paragrafo è composto solo da questo comando href."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:44
 msgid "B<% po4a: environment> I<env> I<parameters>"
-msgstr ""
+msgstr "B<% po4a: environment> I<amb> I<parametri>"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:45
@@ -10509,7 +10532,7 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:87
 msgid "OVERRIDING THE found_string FUNCTION"
-msgstr ""
+msgstr "OVERRIDING THE found_string FUNCTION"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:88
@@ -10538,7 +10561,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:91
 msgid "type=\"tag\""
-msgstr ""
+msgstr "type=\"tag\""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:92
@@ -10551,7 +10574,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:93
 msgid "type=\"attribute\""
-msgstr ""
+msgstr "type=\"attributo\""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:94
@@ -10590,7 +10613,7 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:98
 msgid "MODIFYING TAG TYPES (TODO)"
-msgstr ""
+msgstr "MODIFICA DEI TIPI DI TAG (DA FARE)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:99
@@ -10610,7 +10633,7 @@ msgstr "B<beginning>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:101
 msgid "Specifies the beginning of the tag, after the \"E<lt>\"."
-msgstr ""
+msgstr "Specifica l'inizio del tag, dopo del \"E<lt>\"."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:102
@@ -10620,7 +10643,7 @@ msgstr "B<end>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:103
 msgid "Specifies the end of the tag, before the \"E<gt>\"."
-msgstr ""
+msgstr "Specifica la fine del tag, prima del \"E<gt>\"."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:104
@@ -10664,7 +10687,6 @@ msgid ""
 "input stream or not."
 msgstr ""
 
-# NdT: FIXME
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:110
 msgid "B<f_translate>"
@@ -10681,12 +10703,12 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:113
 msgid "WORKING WITH TAGS"
-msgstr ""
+msgstr "LAVORARE CON I TAG"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:114
 msgid "get_path()"
-msgstr ""
+msgstr "get_path()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:115
@@ -10705,7 +10727,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:117
 msgid "tag_type()"
-msgstr ""
+msgstr "tag_type()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:118
@@ -10717,7 +10739,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:119
 msgid "extract_tag($$)"
-msgstr ""
+msgstr "extract_tag($$)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:120
@@ -10732,7 +10754,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:121
 msgid "get_tag_name(@)"
-msgstr ""
+msgstr "get_tag_name(@)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:122
@@ -10744,7 +10766,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:123
 msgid "breaking_tag()"
-msgstr ""
+msgstr "breaking_tag()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:124
@@ -10757,7 +10779,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:125
 msgid "treat_tag()"
-msgstr ""
+msgstr "treat_tag()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:126
@@ -10769,7 +10791,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:127
 msgid "tag_in_list($@)"
-msgstr ""
+msgstr "tag_in_list($@)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:128
@@ -10784,12 +10806,12 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:129
 msgid "WORKING WITH ATTRIBUTES"
-msgstr ""
+msgstr "LAVORARE CON GLI ATTRIBUTI"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:130
 msgid "treat_attributes(@)"
-msgstr ""
+msgstr "treat_attributes(@)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:131
@@ -10803,12 +10825,12 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:132
 msgid "WORKING WITH THE MODULE OPTIONS"
-msgstr ""
+msgstr "LAVORARE CON LE OPZIONI DEL MODULO"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:133
 msgid "treat_options()"
-msgstr ""
+msgstr "treat_options()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:134
@@ -10821,12 +10843,12 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:135
 msgid "GETTING TEXT FROM THE INPUT DOCUMENT"
-msgstr ""
+msgstr "RICAVARE IL TESTO DAL DOCUMENTO IN INGRESSO"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:136
 msgid "get_string_until($%)"
-msgstr ""
+msgstr "get_string_until($%)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:137
@@ -10839,7 +10861,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:138
 msgid "The valid options are:"
-msgstr ""
+msgstr "Le opzioni valide sono:"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:139
@@ -10849,7 +10871,7 @@ msgstr "B<include>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:140
 msgid "This makes the returned array to contain the searched text"
-msgstr ""
+msgstr "Questo fa in modo che l'array restituito contenga il testo cercato"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:141
@@ -10859,9 +10881,8 @@ msgstr "B<remove>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:142
 msgid "This removes the returned stream from the input"
-msgstr ""
+msgstr "Questo rimuove il flusso restituito dall'ingresso"
 
-# NdT: FIXME
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:143
 msgid "B<unquoted>"
@@ -10870,12 +10891,12 @@ msgstr "B<unquoted>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:144
 msgid "This ensures that the searched text is outside any quotes"
-msgstr ""
+msgstr "Questo si assicura che il testo cercato sia fuori da ogni virgolettatura"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:145
 msgid "skip_spaces(\\@)"
-msgstr ""
+msgstr "skip_spaces(\\@)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:146
@@ -10888,24 +10909,24 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:147
 msgid "join_lines(@)"
-msgstr ""
+msgstr "join_lines(@)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:148
 msgid ""
 "This function returns a simple string with the text from the argument array "
 "(discarding the references)."
-msgstr ""
+msgstr "Questa funzione restituisce una stringa semplice con il testo dall'array di argomenti (senza i riferimenti)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:150
 msgid "This module can translate tags and attributes."
-msgstr ""
+msgstr "Questo modulo può tradurre tag e attributi."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:152
 msgid "DOCTYPE (ENTITIES)"
-msgstr ""
+msgstr "TIPO DI DOCUMENTO (ENTITÀ)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:153
