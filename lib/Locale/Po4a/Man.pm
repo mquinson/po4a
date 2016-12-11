@@ -2190,9 +2190,10 @@ $macro{'ti'}=\&untranslated;
 ###
 $macro{'TS'}=sub {
     my $self=shift;
-    my ($in_headers,$buffer)=(1,"");
+    my ($in_headers,$tab,$buffer)=(1,"\t","");
     my ($in_textblock,$preline,$postline)=(0,"","");
     my ($line,$ref)=$self->shiftline();
+    my @options;
 
     # Push table start
     $self->pushmacro(@_);
@@ -2203,7 +2204,11 @@ $macro{'TS'}=sub {
             return;
         }
         if ($in_headers) {
-            if ($line =~ /\.$/) {
+            if ($line =~ /;$/) { # global options line
+                if ($line =~ /\btab\s*\((.)\)/) {
+                    $tab = $1;
+                }
+            } elsif ($line =~ /\.$/) {
                 $in_headers = 0;
             }
             $self->pushline($self->r($line));
@@ -2211,10 +2216,16 @@ $macro{'TS'}=sub {
             $in_textblock = 0;
             $preline = $&; # save the `T}' marker to be output later
             $line = $';    # save the remaing part of the line
+            # Drop any EOL from entry to be translated and save it for
+            # output below.
+            if (chomp $buffer) {
+                $postline .= "\n";
+            }
             $self->pushline($self->translate($buffer,
                                              $ref,
-                                            'tbl table'));
-            $buffer = "";
+                                            'tbl table')
+                            .$postline);
+            $buffer = $postline = "";
             next; # continue processing with the remaining part of the line
         } elsif ($in_textblock && $line =~ /^[.']/) {
             # TODO: properly handle macros inside text blocks, currently we mark them
@@ -2233,19 +2244,24 @@ $macro{'TS'}=sub {
             if ($line =~ s/\s*T\{\s*$//) { # start of text block
               $in_textblock = 1;
               $postline = $&; # save the `T{' to be outputed below
-            } elsif ($buffer eq "" && $line ne ""){ # single line data
-              chomp $line; # drop eol char from the entry to be translated
-              $postline = "\n"; # and save the eol for output below
             }
 
             $buffer .= $line;
-            # Arguments to translate are separated by \t
+            # Drop any EOL from entry to be translated and save it for
+            # output below.
+            if (chomp $buffer) {
+                $postline .= "\n";
+            }
+            # Arguments to translate are separated by the table's tab
+            # character (\t by default).  We must be careful to preserve
+            # empty trailing fields, since in particular a text block is
+            # likely to show up as an empty trailing field here.
             $self->pushline($preline
-                            .join("\t",
+                            .join($tab,
                                  map { $self->translate($_,
                                                         $ref,
                                                         'tbl table')
-                                     } split (/\t/,$buffer))
+                                     } split (/\Q$tab/,$buffer,-1))
                            .$postline);
 
             $buffer = $preline = $postline = "";

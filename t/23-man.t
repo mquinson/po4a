@@ -137,6 +137,14 @@ push @tests, {
     'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/tbl-textblock.1 -p tmp/tbl-textblock.pot 2>/dev/null",
     'test' => "perl compare-po.pl data-23/tbl-textblock.pot tmp/tbl-textblock.pot",
     'doc'  => "Right handling of text blocs in tbl macros",
+}, {
+    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/tbl-option-tab.1 -p tmp/tbl-option-tab.pot 2>/dev/null",
+    'test' => "perl compare-po.pl data-23/tbl-option-tab.pot tmp/tbl-option-tab.pot",
+    'doc'  => "Handle tab option in tab macros",
+}, {
+    'run'  => "perl ../po4a-translate -f #format# -m data-23/tbl-option-tab.1 -p data-23/tbl-option-tab.fr.po -l tmp/tbl-option-tab.fr.1",
+    'test' => "diff -u $diff_pod_flags data-23/tbl-option-tab.fr.1 tmp/tbl-option-tab.fr.1",
+    'doc'  => "translate this document",
 };
 
 # Mixed mdoc and roff format
@@ -204,7 +212,7 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 72; # $formats * $tests * 2
+use Test::More tests => 76; # $formats * $tests * 2
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
