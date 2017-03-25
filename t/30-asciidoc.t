@@ -20,9 +20,11 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
     # Tables are currently badly supported.
     next if $AsciiDocTest =~ m/Tables/;
     push @tests, {
-        'run' => "perl ../../po4a-normalize -f asciidoc ../data-30/$AsciiDocTest.asciidoc",
-        'test'=> "perl ../compare-po.pl ../data-30/$AsciiDocTest.po po4a-normalize.po".
-                 "&& cmp ../data-30/$AsciiDocTest.out po4a-normalize.output",
+        'run' => "perl ../../po4a-normalize -f asciidoc ../data-30/$AsciiDocTest.asciidoc ".
+	         "&& mv po4a-normalize.po $AsciiDocTest.po ".
+	         "&& mv po4a-normalize.output $AsciiDocTest.out ",
+        'test'=> "perl ../compare-po.pl ../data-30/$AsciiDocTest.po $AsciiDocTest.po ".
+                 "&& cmp ../data-30/$AsciiDocTest.out $AsciiDocTest.out",
         'doc' => "$AsciiDocTest test"
     };
 }
