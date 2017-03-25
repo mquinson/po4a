@@ -291,6 +291,7 @@ sub parse {
         }
 
         chomp($line);
+	# print STDERR "Seen $ref $line\n";
         $self->{ref}="$ref";
         if ((defined $self->{verbatim}) and ($self->{verbatim} == 3)) {
             # Untranslated blocks
@@ -582,12 +583,20 @@ sub parse {
                  (defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/)) {
             my $indent = $1;
             my $text = $2;
+	    if ($paragraph eq "" && length($self->{bullet}) && length($indent)) {
+		# starting a paragraph with a bullet (not an enum or so), and indented.
+		# Thus a literal paragraph in a list.
+		$wrapped_mode = 0;
+	    }
             if (not defined $self->{indent}) {
+		# No indent level before => Starting a paragraph?
                 $paragraph .= $text."\n";
                 $self->{indent} = $indent;
             } elsif (length($paragraph) and (length($self->{bullet}) + length($self->{indent}) == length($indent))) {
+		# same indent level as before: append
                 $paragraph .= $text."\n";
             } else {
+		# not the same indent level: start a new translated paragraph
                 do_paragraph($self,$paragraph,$wrapped_mode);
                 $paragraph = $text."\n";
                 $self->{indent} = $indent;
