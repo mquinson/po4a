@@ -133,7 +133,7 @@ sub ACTION_install {
 
     require ExtUtils::Install;
 #    $self->depends_on('build');
-    my $mandir = $self->install_sets($self->installdirs)->{'bindoc'};
+    my $mandir = $self->install_path->{'bindoc'};
     $mandir =~ s,/man1$,,;
     $self->install_path(man => $mandir);
     $self->install_path(manl10n => $mandir);
