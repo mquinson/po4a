@@ -113,7 +113,8 @@ they are not translated.
 my @comments = ();
 
 my %debug=('split_attributelist' => 0,
-           'join_attributelist'  => 0
+           'join_attributelist'  => 0,
+           'parse'               => 0,
            );
 
 sub initialize {
@@ -291,7 +292,8 @@ sub parse {
         }
 
         chomp($line);
-	# print STDERR "Seen $ref $line\n";
+        print STDERR "Seen $ref $line\n" 
+	    if ($debug{parse});
         $self->{ref}="$ref";
         if ((defined $self->{verbatim}) and ($self->{verbatim} == 3)) {
             # Untranslated blocks
@@ -314,6 +316,7 @@ sub parse {
             # List Item Continuation or List Block
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
+	    $wrapped_mode = 1 unless defined($self->{verbatim});
             $self->pushline($line."\n");
         } elsif ((not defined($self->{verbatim})) and
                  ($line =~ m/^(={2,}|-{2,}|~{2,}|\^{2,}|\+{2,})$/) and
@@ -598,12 +601,18 @@ sub parse {
             } else {
 		# not the same indent level: start a new translated paragraph
                 do_paragraph($self,$paragraph,$wrapped_mode);
+		if (length($self->{indent})>0 && length($self->{indent}) < length($indent)) {
+		    # increase indentation: the new block must not be wrapped
+		    $wrapped_mode = 0;
+		}
                 $paragraph = $text."\n";
                 $self->{indent} = $indent;
                 $self->{bullet} = "";
             }
         } elsif ($line =~ /^\s*$/) {
             # Break paragraphs on lines containing only spaces
+	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n" 
+		if $debug{parse};
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1 unless defined($self->{verbatim});
@@ -887,6 +896,7 @@ Tested successfully on simple AsciiDoc files.
 
  Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
  Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.
+ Copyright 2017 by Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
