@@ -397,6 +397,7 @@ sub parse {
                             and ($self->{type} eq "verse")) {
                             $wrapped_mode = 0;
                             $self->{verbatim} = 1;
+			    print STDERR "QuoteBlock verse\n" if $debug{parse};
                         } else {
                             $wrapped_mode = 1;
                         }
@@ -463,8 +464,11 @@ sub parse {
             @comments=();
             $wrapped_mode = 1;
             if ($line =~ m/^\[(['"]?)(verse|quote)\1,/) {
-                $wrapped_mode = 0 if $2 eq 'verse';
                 $self->{type} = $2;
+		if ($self->{type} eq 'verse') {
+		    $wrapped_mode = 0;
+		}
+		print STDERR "Starting verse\n" if $debug{parse};
             }
             undef $self->{bullet};
             undef $self->{indent};
