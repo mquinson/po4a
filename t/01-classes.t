@@ -2,7 +2,7 @@
 
 #########################
 
-use Test::More tests =>25;
+use Test::More tests => 22;
 
 # Core modules
 eval qq{use Locale::Po4a::Po};           ok(!$@, 'Po.pm loadable');
@@ -19,8 +19,8 @@ eval qq{use Locale::Po4a::AsciiDoc};     ok(!$@, 'AsciiDoc.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::BibTeX};       ok(!$@, 'BibTeX.pm loadable');
 diag($@) if $@;
-eval qq{use Locale::Po4a::Debconf};      ok(!$@, 'Debconf.pm loadable');
-diag($@) if $@;
+#eval qq{use Locale::Po4a::Debconf};      ok(!$@, 'Debconf.pm loadable');
+#diag($@) if $@;
 eval qq{use Locale::Po4a::Dia};          ok(!$@, 'Dia.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Docbook};      ok(!$@, 'Docbook.pm loadable');
@@ -29,8 +29,8 @@ eval qq{use Locale::Po4a::Guide};        ok(!$@, 'Guide.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Halibut};      ok(!$@, 'Halibut.pm loadable');
 diag($@) if $@;
-eval qq{use Locale::Po4a::Html};         ok(!$@, 'Html.pm loadable');
-diag($@) if $@;
+#eval qq{use Locale::Po4a::Html};         ok(!$@, 'Html.pm loadable');
+#diag($@) if $@;
 eval qq{use Locale::Po4a::Ini};          ok(!$@, 'Ini.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::KernelHelp};   ok(!$@, 'KernelHelp.pm loadable');
@@ -39,8 +39,8 @@ eval qq{use Locale::Po4a::LaTeX};        ok(!$@, 'LaTeX.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Man};          ok(!$@, 'Man.pm loadable');
 diag($@) if $@;
-eval qq{use Locale::Po4a::NewsDebian};   ok(!$@, 'NewsDebian.pm loadable');
-diag($@) if $@;
+#eval qq{use Locale::Po4a::NewsDebian};   ok(!$@, 'NewsDebian.pm loadable');
+#diag($@) if $@;
 eval qq{use Locale::Po4a::Pod};          ok(!$@, 'Pod.pm loadable');
 diag($@) if $@;
 SKIP: {
