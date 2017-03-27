@@ -540,22 +540,22 @@ sub initialize {
     $self->{options}{'_default_attributes'}='';
     $self->{options}{'_default_customtag'}='';
 
-    #It will maintain the list of the translatable tags
+    # It will maintain the list of the translatable tags
     $self->{tags}=();
     $self->{translated}=();
     $self->{untranslated}=();
-    #It will maintain the list of the translatable attributes
+    # It will maintain the list of the translatable attributes
     $self->{attributes}=();
-    #It will maintain the list of the breaking tags
+    # It will maintain the list of the breaking tags
     $self->{break}=();
-    #It will maintain the list of the inline tags
+    # It will maintain the list of the inline tags
     $self->{inline}=();
-    #It will maintain the list of the placeholder tags
+    # It will maintain the list of the placeholder tags
     $self->{placeholder}=();
-    #It will maintain the list of the customtag tags
+    # It will maintain the list of the customtag tags
     $self->{customtag}=();
-    #list of the tags that must not be set in the tags or inline category
-    #by this module or sub-module (unless specified in an option)
+    # list of the tags that must not be set in the tags or inline category
+    # by this module or sub-module (unless specified in an option)
     $self->{nodefault}=();
 
     $self->treat_options;
