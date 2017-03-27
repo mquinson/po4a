@@ -1,4 +1,5 @@
 package Po4aBuilder;
+
 use Module::Build;
 use File::Basename;
 use File::Path qw(mkpath rmtree);

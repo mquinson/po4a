@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-use lib q('.');
+use lib q(.);
 use Po4aBuilder;
 
 my $build = Po4aBuilder->new
