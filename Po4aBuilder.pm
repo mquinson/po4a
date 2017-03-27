@@ -132,14 +132,15 @@ sub ACTION_install {
     my $self = shift;
 
     require ExtUtils::Install;
-#    $self->depends_on('build');
-    my $mandir = $self->install_path->{'bindoc'};
-    $mandir =~ s,/man1$,,;
+#    print ("KEYS\n");
+#    foreach my $k ($self->install_types()) {
+#	print ("$k -> ".$self->install_destination($k)."\n");
+#    }
+    my $mandir = $self->install_destination('libdoc');
     $self->install_path(man => $mandir);
-    $self->install_path(manl10n => $mandir);
 
-    my $localedir = $mandir;
-    $localedir =~ s,/man$,/locale,;
+    my $localedir = $self->install_destination('libdoc');
+    $localedir =~ s,/man/man3$,/locale,;
     $self->install_path(po => $localedir);
 
     ExtUtils::Install::install($self->install_map, !$self->quiet, 0, $self->{args}{uninst}||0);
