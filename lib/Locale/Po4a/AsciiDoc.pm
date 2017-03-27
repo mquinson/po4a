@@ -318,6 +318,7 @@ sub parse {
             $paragraph="";
 	    $wrapped_mode = 1 unless defined($self->{verbatim});
             $self->pushline($line."\n");
+            # TODO: add support for Open blocks
         } elsif ((not defined($self->{verbatim})) and
                  ($line =~ m/^(={2,}|-{2,}|~{2,}|\^{2,}|\+{2,})$/) and
                  (defined($paragraph) )and
@@ -640,7 +641,7 @@ sub parse {
             }
             undef $self->{bullet};
             undef $self->{indent};
-    # TODO: comments
+            # TODO: comments
             $paragraph .= $line."\n";
         }
         # paragraphs starting by a bullet, or numbered
@@ -764,7 +765,9 @@ sub parse_macro {
                          "wrap" => 0);
         return $t;
     }
-    my @attributes = $self->split_attributelist($macroparam);
+    my @attributes = ();
+    @attributes = $self->split_attributelist($macroparam) unless $macroparam eq "";
+
     unshift @attributes, $macroname;
     my @translated_attributes = $self->join_attributelist("macro", @attributes);
     shift @translated_attributes;
@@ -807,7 +810,12 @@ sub join_attributelist {
     my ($self, $type) = (shift, shift);
     my @attributes = @_;
     my $command = shift(@attributes);
-    my $position = 1;
+    my $position;
+    if ($type eq 'macro') {
+        $position = 0; # macroname is passed through the first attribute
+    } else {
+        $position = 1;
+    }
     my @text = ($command);
     if ($command =~ m/=/) {
         my $attr = $command;
