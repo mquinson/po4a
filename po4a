@@ -1409,6 +1409,13 @@ if (not $po4a_opts{"no-translations"}) {
     # update all translations
 
     foreach $lang (sort keys %po_filename) {
+	# Check the po file validity with msgfmt (but don't use --check-header)
+	my $cmd = "LC_ALL=C msgfmt".$Config{_exe}." --check-format --check-domain -o /dev/null ".$po_filename{$lang};
+	my $out = qx/$cmd 2>&1/;
+	if ($? != 0) {
+	    die wrap_msg(gettext("Invalid po file %s:\n%s"), $po_filename{$lang}, $out);
+	}
+
         # Read the $lang PO once, no options for the creation
         my $po = Locale::Po4a::Po->new();
         chdir $po4a_opts{"srcdir"}
