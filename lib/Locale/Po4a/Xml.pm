@@ -273,6 +273,10 @@ Canonicalizes the string to translate, considering that whitespaces are not
 important, and wraps the translated document. This option can be overridden
 by custom tag options. See the "tags" option below.
 
+=item B<unwrap_attributes>
+
+Attributes are wrapped by default. This option disables wrapping.
+
 =item B<caseinsensitive>
 
 It makes the tags and attributes searching to work in a case insensitive
@@ -497,6 +501,7 @@ sub initialize {
     $self->{options}{'addlang'}=0;
     $self->{options}{'nostrip'}=0;
     $self->{options}{'wrap'}=0;
+    $self->{options}{'unwrap_attributes'}=0;
     $self->{options}{'caseinsensitive'}=0;
     $self->{options}{'tagsonly'}=0;
     $self->{options}{'tags'}='';
@@ -648,6 +653,11 @@ sub found_string {
         }
     } elsif ($options->{'type'} eq "attribute") {
         $comment = "Attribute '".$options->{'attribute'}."' of: ".$self->get_path;
+        if ($self->{options}{'unwrap_attributes'} == 0) {
+          $wrap = 1;
+        } else {
+          $wrap = 0;
+        }
     } elsif ($options->{'type'} eq "CDATA") {
         $comment = "CDATA";
         $wrap = 0;
