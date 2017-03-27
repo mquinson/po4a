@@ -154,8 +154,16 @@ $tests[8]{'run'}  =
      "test ! -e tmp/test2_man.de.1");
 $tests[8]{'doc'}  = 'template languages in po4a_paths';
 
+# Detect broken po files
+$tests[9]{'run'} = 
+    'cp data-05/test9.* tmp/; '.
+    'LC_ALL=C COLUMNS=80 perl ../po4a -f data-05/test9.conf > tmp/err 2>&1 || true';
+@{$tests[9]{'test'}} =
+  ("diff -u data-05/test9.err tmp/err",
+   "test ! -e tmp/test9.en.1");
+$tests[9]{'doc'}  = 'correctly detect broken po files';
 
-use Test::More tests =>87;
+use Test::More tests => 90;
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
