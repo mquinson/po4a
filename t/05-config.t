@@ -206,7 +206,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
     }
     
     $ret = system('diff -u data-05/test9.err tmp/err');
-    is($ret, 0, "Output is not the expected one");
+    is($ret, 0, "diff command should return 0");
     if ($ret != 0) {
 	diag("Output difference reads:");
 	diag(qx|diff -u data-05/test9.err tmp/err|);
