@@ -282,6 +282,13 @@ Attributes are wrapped by default. This option disables wrapping.
 It makes the tags and attributes searching to work in a case insensitive
 way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang as E<lt>bookE<gt>lang.
 
+=item B<escapequotes>
+
+Escape quotes in output strings.  Necessary, for example, for creating 
+string resources for use by Android build tools.
+
+See also: https://developer.android.com/guide/topics/resources/string-resource.html
+
 =item B<includeexternal>
 
 When defined, external entities are included in the generated (translated)
@@ -503,6 +510,7 @@ sub initialize {
     $self->{options}{'wrap'}=0;
     $self->{options}{'unwrap_attributes'}=0;
     $self->{options}{'caseinsensitive'}=0;
+    $self->{options}{'escapequotes'}=0;
     $self->{options}{'tagsonly'}=0;
     $self->{options}{'tags'}='';
     $self->{options}{'break'}='';
@@ -665,6 +673,11 @@ sub found_string {
         die wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Internal error: unknown type identifier '%s'."), $options->{'type'});
     }
     $text = $self->translate($text,$ref,$comment,'wrap'=>$wrap, comment => $options->{'comments'});
+	if($self->{options}{'escapequotes'})
+	{
+		$text =~ s/'/\\'/g;
+		$text =~ s/"/\\"/g;
+	}
     return $text;
 }
 
