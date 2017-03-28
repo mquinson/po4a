@@ -302,7 +302,7 @@ sub parse_debianchangelog {
         $paragraph="";
         $self->pushline("$line\n");
         $expect_header=0;
-    } elsif ($line =~ m/^ \-\- (.*) <(.*)>  ((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))+)$/) {
+    } elsif ($line =~ m/^ \-\- (.*) <(.*)>  ((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]+\)))$/) {
         # Found trailer
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
