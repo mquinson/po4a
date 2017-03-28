@@ -137,6 +137,7 @@ sub ACTION_install {
 #	print ("$k -> ".$self->install_destination($k)."\n");
 #    }
     my $mandir = $self->install_destination('libdoc');
+    $mandir =~ s,/man3$,,;
     $self->install_path(man => $mandir);
 
     my $localedir = $self->install_destination('libdoc');
