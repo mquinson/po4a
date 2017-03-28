@@ -24,6 +24,9 @@ my $build = Po4aBuilder->new
                                                   # translating the
                                                   # po4a's messages.
                     },
+      test_requires => {'SGMLS' => 0,             # Needed for the Sgml module.
+                        'Unicode::GCString' => 0, # Used by the Text module (asciidoc)
+                       },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
           'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
           'scripts/po4aman-display-po', 'scripts/po4apod-display-po',
