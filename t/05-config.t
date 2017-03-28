@@ -154,28 +154,18 @@ $tests[8]{'run'}  =
      "test ! -e tmp/test2_man.de.1");
 $tests[8]{'doc'}  = 'template languages in po4a_paths';
 
-# Detect broken po files
-$tests[9]{'run'} = 
-    'cp data-05/test9.* tmp/; '.
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f data-05/test9.conf > tmp/err 2>&1 || true';
-@{$tests[9]{'test'}} =
-  ("diff -u data-05/test9.err tmp/err",
-   "test ! -e tmp/test9.en.1");
-$tests[9]{'doc'}  = 'correctly detect broken po files';
 
-use Test::More tests => 90;
+use Test::More tests => 91;
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
 
     system("rm -f tmp/* 2>&1");
 
-    my ($val,$name);
-
     my $cmd=$tests[$i]{'run'};
-    $val=system($cmd);
+    my $val=system($cmd);
 
-    $name=$tests[$i]{'doc'}.' runs';
+    my $name=$tests[$i]{'doc'}.' runs';
     ok($val == 0,$name);
     diag($tests[$i]{'run'}) unless ($val == 0);
 
@@ -197,6 +187,32 @@ for (my $i=0; $i<scalar @tests; $i++) {
         }
     }
 
+    chdir ".." || die "Can't chdir back to my root";
+}
+
+# Detect broken po files
+{
+    chdir "t" || die "Can't chdir to my test directory";
+    system("rm -f tmp/* 2>&1");
+    
+    my $ret = system('cp data-05/test9.* tmp/; ');
+    is($ret,0, "cp did not went well");
+
+    $ret = system('LC_ALL=C COLUMNS=80 perl ../po4a -f data-05/test9.conf > tmp/err 2>&1');
+    isnt($ret, 0, "Error was not detected");
+    if ($ret == 0) {
+	diag("Output reads:");
+	diag(qx|cat tmp/err|);
+    }
+    
+    $ret = system('diff -u data-05/test9.err tmp/err');
+    is($ret, 0, "Output is not the expected one");
+    if ($ret != 0) {
+	diag("Output difference reads:");
+	diag(qx|diff -u data-05/test9.err tmp/err|);
+    }
+    
+    ok(! -e "tmp/test9.en.1", "File tmp/test9.en.1 should not exist");
     chdir ".." || die "Can't chdir back to my root";
 }
 
