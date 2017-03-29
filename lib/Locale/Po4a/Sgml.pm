@@ -283,14 +283,14 @@ sub translate {
     # don't translate entries composed of one entity
     if ( (($string =~ /^&[^;]*;$/) || ($options{'wrap'} && $string =~ /^\s*&[^;]*;\s*$/))
          && !($self->{options}{'include-all'}) ){
-        warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only an entity)"), $string)
+        warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only an entity)"))
             unless $self->verbose() <= 0;
         return $string.($options{'wrap'}?"\n":"");
     }
     # don't translate entries composed of tags only
     if ( $string =~ /^(((<[^>]*>)|\s)*)$/
          && !($self->{options}{'include-all'}) ) {
-        warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only tags)"), $string)
+        warn wrap_mod("po4a::sgml", dgettext("po4a", "msgid skipped to help translators (contains only tags)"))
                unless $self->verbose() <= 0;
         return $string.($options{'wrap'}?"\n":"");
     }
