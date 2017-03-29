@@ -253,6 +253,8 @@ sub initialize {
     }
     if ($options{'debug'}) {
         foreach (split /\s+/, $options{'debug'}) {
+	    die wrap_mod("po4a::sgml", dgettext("po4a", "Unknown debug category: %s. Known categories:\n%s"), $_, join(" ",keys %debug))
+	      unless exists $debug{$_};
             $debug{$_} = 1;
         }
     }
@@ -1182,14 +1184,20 @@ sub parse_file {
     # What to do after parsing
     $self->pushline($buffer);
     close(IN);
-    warn wrap_mod("po4a::sgml",
-                  dgettext("po4a","Warning: onsgmls produced some errors.  ".
-                  "This is usually caused by po4a, which modifies the input ".
-                  "and restores it afterwards, causing the input of onsgmls ".
-                  "to be invalid.  This is usually safe, but you may wish ".
-                  "to verify the generated document with onsgmls -wno-valid.  ".
-                  "Continuing..."))
-        if ($? != 0 and $self->verbose() > 0);
+    if ($? != 0 and $self->verbose() > 0) {
+	warn wrap_mod("po4a::sgml",
+	    dgettext("po4a","Warning: onsgmls produced some errors.  ".
+		"This is usually caused by po4a, which modifies the input ".
+		"and restores it afterwards, causing the input of onsgmls ".
+		"to be invalid.  This is usually safe, but you may wish ".
+		"to verify the generated document with onsgmls -wno-valid."));
+	unless ($debug{'onsgmls'}) {
+	  warn wrap_mod("po4a::sgml", 
+	      dgettext("po4a", "To see the error message, ".
+		  "rerun po4a with this additional argument:\n".
+	          "   -o debug=onsgmls"))
+	}
+    }
     unlink ($tmpfile) unless ($debug{'refs'} or $debug{'onsgmls'});
 }
 
