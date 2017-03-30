@@ -1398,6 +1398,30 @@ sub count_entries_doc($) {
     return $self->{count_doc};
 }
 
+=item equals_msgid(po) 
+
+Returns whether the current po file is equal to the one passed as a parameter, 
+only considering only the msgid. All other fields are ignored.
+
+Informally, if it returns false, then the po files would be changed when going through B<po4a-updatepo>.
+
+=cut
+
+sub equals_msgid($$) {
+    my ($self, $other) = (shift, shift);
+    
+    unless ($self->count_entries() == $other->count_entries()) {
+	print STDERR "not same amount entries: in:".$self->count_entries()." out:".$other->count_entries()."\n";
+	return 0;
+    }
+    return 0 unless ($self->count_entries() == $other->count_entries());
+    foreach my $msgid ( keys %{$self->{po}} ) {
+	print STDERR "Faulty: $msgid" unless (defined($self->{po}{$msgid}) && defined($other->{po}{$msgid}));
+	return 0                      unless (defined($self->{po}{$msgid}) && defined($other->{po}{$msgid}));
+    }
+    return 1;
+}
+
 =item msgid($)
 
 Returns the msgid of the given number.
