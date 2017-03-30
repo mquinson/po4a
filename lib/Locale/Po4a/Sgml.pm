@@ -138,7 +138,7 @@ same. But there are still some problems:
 
 =item *
 
-The error output of onsgmls is redirected to /dev/null, which is clearly
+The error output of onsgmls is redirected to /dev/null by default, which is clearly
 bad. I don't know how to avoid that.
 
 The problem is that I have to "protect" the conditional inclusions (i.e. the
@@ -150,8 +150,9 @@ C<{PO4A-end}>.
 The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
-Everything works well with onsgmls's output redirected that way, but it will
-prevent us from detecting that the document is badly formatted.
+If you want to the the onsgmls output, just add the following to your command line (or po4a configuration line):
+
+  -o debug=onsgmls
 
 =item *
 
