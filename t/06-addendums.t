@@ -11,35 +11,35 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
-  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p /dev/null -l tmp/Titles.trans ' .
+  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a data-06/addendum1 -a data-06/addendum2 -a data-06/addendum3',
   'test'=> 'diff -U 50 data-06/Titles.trans.add123 tmp/Titles.trans',
   'doc' => 'translate with addendum1, 2 and 3'
   };
 
 push @tests, {
-  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p /dev/null -l tmp/Titles.trans ' .
+  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a @data-06/addendum123.list',
   'test'=> 'diff -U 50 data-06/Titles.trans.add123 tmp/Titles.trans',
   'doc' => 'translate with @addendum'
   };
 
 push @tests, {
-  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p /dev/null -l tmp/Titles.trans ' .
+  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a !data-06/addendum2 -a @data-06/addendum123.list',
   'test'=> 'diff -U 50 data-06/Titles.trans.add13 tmp/Titles.trans',
   'doc' => 'translate with !addendum'
   };
 
 push @tests, {
-  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p /dev/null -l tmp/Titles.trans ' .
+  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a ?/does/not/exist',
   'test'=> 'diff -U 50 data-06/Titles.asciidoc tmp/Titles.trans',
   'doc' => 'translate with non-existing ?addendum'
   };
 
 push @tests, {
-  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p /dev/null -l tmp/Titles.trans ' .
+  'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a @data-06/addendum123.list2',
   'test'=> 'diff -U 50 data-06/Titles.trans.add1 tmp/Titles.trans',
   'doc' => 'translate with recursive @addendum'

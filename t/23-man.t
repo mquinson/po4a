@@ -29,7 +29,7 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags data-23/quotes.fr tmp/quotes.fr",
   'doc'  => "translate this document",
 }, {
-  'run'  => "perl ../po4a-translate -f #format# -m data-23/quoted-comment -p data-23/quotes.fr.po -l tmp/quoted-comment.fr",
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/quoted-comment -p data-23/quoted-comment.po -l tmp/quoted-comment.fr",
   'test' => "diff -u $diff_pod_flags data-23/quoted-comment tmp/quoted-comment.fr",
   'doc'  => "Check that comment markers are not messed up during translation",
 };
@@ -116,7 +116,7 @@ push @tests, {
   'test' => "perl compare-po.pl data-23/fonts.pot tmp/fonts.pot",
   'doc'  => "gettextize well fonts",
 }, {
-  'run'  => "perl ../po4a-translate -f #format# -m data-23/fonts -p data-23/fonts.en.po -l tmp/fonts.en",
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/fonts -p data-23/fonts.en.po -l tmp/fonts.en 2>/dev/null",
   'test' => "diff -u $diff_pod_flags data-23/fonts.en tmp/fonts.en",
   'doc'  => "translate this document",
 };
@@ -127,7 +127,7 @@ push @tests, {
     'test' => "perl compare-po.pl data-23/mdoc.pot tmp/mdoc.pot",
     'doc'  => "gettextize well mdoc",
 }, {
-    'run'  => "perl ../po4a-translate -f #format# -m data-23/mdoc.1 -p data-23/mdoc.fr.po -l tmp/mdoc.fr -L ISO-8859-1",
+    'run'  => "perl ../po4a-translate -f #format# -m data-23/mdoc.1 -p data-23/mdoc.fr.po -l tmp/mdoc.fr -L ISO-8859-1 2>/dev/null",
     'test' => "diff -u $diff_pod_flags data-23/mdoc.fr tmp/mdoc.fr",
     'doc'  => "translate this document",
 };
@@ -142,7 +142,7 @@ push @tests, {
     'test' => "perl compare-po.pl data-23/tbl-option-tab.pot tmp/tbl-option-tab.pot",
     'doc'  => "Handle tab option in tab macros",
 }, {
-    'run'  => "perl ../po4a-translate -f #format# -m data-23/tbl-option-tab.1 -p data-23/tbl-option-tab.fr.po -l tmp/tbl-option-tab.fr.1",
+    'run'  => "perl ../po4a-translate -f #format# -m data-23/tbl-option-tab.1 -p data-23/tbl-option-tab.fr.po -l tmp/tbl-option-tab.fr.1 2>/dev/null",
     'test' => "diff -u $diff_pod_flags data-23/tbl-option-tab.fr.1 tmp/tbl-option-tab.fr.1",
     'doc'  => "translate this document",
 };
@@ -170,7 +170,7 @@ push @tests, {
   'test' => "perl compare-po.pl data-23/spaces.fr_latin1.po tmp/spaces.fr_latin1.po",
   'doc'  => "updatepo for this document (fr ISO-8859-1)",
 }, {
-  'run'  => "perl ../po4a-translate -f #format# -m data-23/spaces -p data-23/spaces.fr_latin1.po -l tmp/spaces.fr_latin1",
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/spaces -p data-23/spaces.fr_latin1.po -l tmp/spaces.fr_latin1 2>/dev/null",
   'test' => "diff -u $diff_pod_flags data-23/spaces.fr_latin1 tmp/spaces.fr_latin1",
   'doc'  => "translate this document (fr ISO-8859-1)",
 }, {
@@ -199,7 +199,7 @@ push @tests, {
   'test' => "perl compare-po.pl data-23/hyphens.verbatim.pot tmp/hyphens.pot",
   'doc'  => "gettextize well hyphens (verbatim)",
 }, {
-  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.verbatim.fr.po -l tmp/hyphens.fr -o groff_code=verbatim",
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.verbatim.fr.po -l tmp/hyphens.fr -o groff_code=verbatim 2>/dev/null",
   'test' => "diff -u $diff_pod_flags data-23/hyphens.verbatim.fr tmp/hyphens.fr",
   'doc'  => "translate this document",
 }, {
@@ -207,7 +207,7 @@ push @tests, {
   'test' => "perl compare-po.pl data-23/hyphens.translate.pot tmp/hyphens.pot",
   'doc'  => "gettextize well hyphens (translate)",
 }, {
-  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.translate.fr.po -l tmp/hyphens.fr -o groff_code=translate",
+  'run'  => "perl ../po4a-translate -f #format# -m data-23/hyphens.1 -p data-23/hyphens.translate.fr.po -l tmp/hyphens.fr -o groff_code=translate 2>/dev/null",
   'test' => "diff -u $diff_pod_flags data-23/hyphens.translate.fr tmp/hyphens.fr",
   'doc'  => "translate this document",
 };
@@ -222,6 +222,7 @@ foreach my $format (@formats) {
 
         my $cmd=$tests[$i]{'run'};
         $cmd =~ s/#format#/$format/g;
+#	print  STDERR $tests[$i]{'doc'}."\n";
         $val=system($cmd);
 
         $name=$tests[$i]{'doc'}.' runs';
