@@ -288,5 +288,11 @@ if ($percent<$threshold)  {
     $doc->write($outfile);
 }
 
+unless ($doc->is_po_uptodate()) {
+    warn wrap_msg(
+	gettext("Your input po file %s seems outdated. Please consider running po4a-updatepo to refresh it."), 
+	$po_filename);
+}
+
 1;
 
