@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2017-03-27 21:18+0200\n"
-"PO-Revision-Date: 2017-03-29 08:48+0200\n"
+"PO-Revision-Date: 2017-03-30 13:11+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -1076,7 +1076,7 @@ msgid ""
 "also use the list of F<*.po> files to define the list of languages (by "
 "stripping out the extension).  These languages will be used for the "
 "substitution of the B<$lang> variable in the rest of the configuration file."
-msgstr ""
+msgstr "Un altro comando può essere usato per specificare il nome di una cartella dove sono posizionati i file PO e POT.  Se usato, B<po4a> rileverà il file POT come unico file F<*.pot> dalla cartella specificata.  B<po4a> userà anche l'elenco di file F<*.po> per definire l'elenco delle lingue (togliendo le estensioni).  Queste lingue verranno usate per la sostituzione della variabile B<$lang> nel resto del file di configurazione."
 
 #. type: textblock
 #: po4a:53
@@ -1173,7 +1173,7 @@ msgstr "B<?>"
 #. type: textblock
 #: po4a:64
 msgid "Include I<addendum_path> if this file does exist, otherwise do nothing."
-msgstr ""
+msgstr "Include I<addendum_path> se questo file esiste, altrimenti non fa nulla."
 
 #. type: =item
 #: po4a:65
@@ -1185,7 +1185,7 @@ msgstr "B<@>"
 msgid ""
 "I<addendum_path> is not a regular addendum but a file containg a list of "
 "addenda, one by line.  Each addendum may be preceded by modifiers."
-msgstr ""
+msgstr "I<addendum_path> non è un un addendum normale ma un file contenente una lista di addendum, uno per riga.  Ogni addendum può essere preceduto da modificatori."
 
 #. type: =item
 #: po4a:67
@@ -5876,7 +5876,7 @@ msgstr "Queste sono le opzioni speciali per questo modulo:"
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:8 lib/Locale/Po4a/TeX.pm:21
 msgid "B<definitions>"
-msgstr "B<definizioni>"
+msgstr "B<definitions>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:9 lib/Locale/Po4a/TeX.pm:22
@@ -5891,12 +5891,12 @@ msgstr ""
 msgid ""
 "In a definitions file, lines must not start by two slashes, but directly by "
 "B<po4a:>."
-msgstr ""
+msgstr "Nel file delle definizioni, le righe non devono cominciare con due caratteri di slash, ma direttamente con B<po4a:>."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:11
 msgid "B<entry>"
-msgstr "B<voce>"
+msgstr "B<entry>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:12
@@ -5920,7 +5920,7 @@ msgstr "Elenco separato da spazi di definizioni di macro."
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:15
 msgid "B<style>"
-msgstr "B<stile>"
+msgstr "B<style>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:16
@@ -8948,7 +8948,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:44
 msgid "B<% po4a: environment> I<env> I<parameters>"
-msgstr "B<% po4a: environment> I<amb> I<parametri>"
+msgstr "B<% po4a: environment> I<env> I<parametri>"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:45
@@ -8966,25 +8966,36 @@ msgid ""
 " % po4a: environment equation\n"
 "\n"
 msgstr ""
+"Questo permette di definire i parametri accettati dall'ambiente I<env>.\n"
+"Questa informazione viene in seguito usata per controllare il numero di argomenti\n"
+"del comando \\begin e permette di specificare cosa deve essere tradotto.\n"
+"La sintassi dell'argomento I<parameters> è la stessa descritta per i\n"
+"comandi ???.\n"
+"Il primo parametro del comando \\begin è il nome dell'ambiente.\n"
+"Questo parametro non deve essere specificato nell'elenco dei parametri.\n"
+"Ecco alcuni esempi:\n"
+" % po4a: environment multicols {}\n"
+" % po4a: environment equation\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:46
 msgid ""
 "As for the commands, I<env> can be preceded by a plus (+) to indicate that "
 "the \\begin command must be translated with all its arguments."
-msgstr ""
+msgstr "Come per i comandi, I<env> può essere preceduto da un più (+) per indicare che il comando \\begin deve essere tradotto con tutti i suoi argomenti."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:47
 msgid "B<% po4a: separator> I<env> B<\">I<regex>B<\">"
-msgstr ""
+msgstr "B<% po4a: separator> I<env> B<\">I<regex>B<\">"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:48
 msgid ""
 "Indicates that an environment should be split according to the given regular "
 "expression."
-msgstr ""
+msgstr "Indica che un ambiente dovrebbe essere diviso secondo la data espressione regolare."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:49
@@ -8992,7 +9003,7 @@ msgid ""
 "The regular expression is delimited by quotes.  It should not create any "
 "backreference.  You should use (?:) if you need a group.  It may also need "
 "some escapes."
-msgstr ""
+msgstr "L'espressione regolare è delimitata da virgolette.  Non si dovrebbe creare nessun riferimento all'indietro. Si dovrebbe usare (?:) se serve un gruppo.  Potrebbero servire anche qualche carattere di escape."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:50
@@ -9013,7 +9024,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:52
 msgid "B<% po4a: verbatim environment> I<env>"
-msgstr ""
+msgstr "B<% po4a: verbatim environment> I<env>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:53
@@ -10596,10 +10607,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:20
-#, fuzzy
-#| msgid "B<quotes>"
 msgid "B<escapequotes>"
-msgstr "B<quotes>"
+msgstr "B<escapequotes>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:21
