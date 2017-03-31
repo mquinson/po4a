@@ -105,11 +105,10 @@ Output some debugging information.
 
 =item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
-Specify the reference format. Argument I<type> can be one of B<none> to not
-produce any reference, B<noline> to not specify the line number (more
-accurately all line numbers are replaced by 1), B<counter> to replace line
-number by an increasing counter, and B<full> to include complete
-references.
+Specify the reference format. Argument I<type> can be one of B<none>
+to not produce any reference, B<noline> to not specify the line
+number, B<counter> to replace line number by an increasing counter,
+and B<full> to include complete references.
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
 References are written by default on a single line.  The B<wrap> option wraps
@@ -196,6 +195,7 @@ my $mastchar;
 my $previous;
 my $noprevious;
 my $msgmerge_opt = "";
+my $porefs = "full";
 GetOptions('help|h'      => \$help,
            'help-format' => \$help_fmt,
 
@@ -214,6 +214,7 @@ GetOptions('help|h'      => \$help,
            'msgid-bugs-address=s'=> \$msgid_bugs_address,
            'package-name=s'      => \$package_name,
            'package-version=s'   => \$package_version,
+           'porefs=s'            => \$porefs,
 
            'verbose|v'   => \$verbose,
            'debug|d'     => \$debug,
@@ -233,7 +234,8 @@ my %options = (
     "copyright-holder"   => $copyright_holder,
     "msgid-bugs-address" => $msgid_bugs_address,
     "package-name"       => $package_name,
-    "package-version"    => $package_version);
+    "package-version"    => $package_version,
+    "porefs"             => $porefs);
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {

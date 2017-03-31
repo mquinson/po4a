@@ -34,6 +34,15 @@ push @tests, {
 
 {
   'run'  =>
+    'LC_ALL=C COLUMNS=80 perl ../po4a-updatepo --porefs=noline -f man -m data-02/man -p tmp/updatepo-noline.pot  > tmp/updatepo.err 2>&1',
+  'test' =>
+    ["diff -u data-12/updatepo.err tmp/updatepo.err",
+     "perl compare-po.pl data-12/updatepo-noline.pot tmp/updatepo-noline.pot"],
+  'doc'  => 'po4a-updatepo --porefs=noline flag'
+},
+
+{
+  'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=noline,wrap data-12/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-12/test1.err tmp/err",
@@ -109,12 +118,12 @@ push @tests, {
   'doc'  => 'po4a --porefs=full,nowrap flag'
 };
 
-use Test::More tests =>45;
+use Test::More tests =>48;
 
+system("rm -f t/tmp/* 2>&1");
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
 
-    system("rm -f tmp/* 2>&1");
 
     my ($val,$name);
 
