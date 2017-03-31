@@ -685,7 +685,7 @@ sub get_options {
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
     $opts{"msgmerge-opt"} .= " --previous" unless $noprevious;
-    $opts{"msgmerge-opt"} .= " --add-location=file" if ($opts{'porefs'} =~ m/^file/);
+#    $opts{"msgmerge-opt"} .= " --add-location=file" if ($opts{'porefs'} =~ m/^file/); # Don't depend on too recent msgmerge for nothing
     
     # options to transmit to the modules
     $opts{"options"} = {
