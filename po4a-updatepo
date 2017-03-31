@@ -106,9 +106,9 @@ Output some debugging information.
 =item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
 Specify the reference format. Argument I<type> can be one of B<none>
-to not produce any reference, B<noline> to not specify the line
-number, B<counter> to replace line number by an increasing counter,
-and B<full> to include complete references.
+to not produce any reference, B<file> to only specify the file
+without the line number, B<counter> to replace line number by an
+increasing counter, and B<full> to include complete references (default: full).
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
 References are written by default on a single line.  The B<wrap> option wraps
@@ -226,6 +226,8 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 $msgmerge_opt .= " --previous" unless $noprevious;
+$msgmerge_opt .= " --add-location=file" 
+  if ($porefs =~ m/^file/);
 $msgmerge_opt =~ s/^\s+//;
 
 my %options = (

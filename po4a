@@ -430,9 +430,9 @@ configuration file.
 =item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
 Specify the reference format. Argument I<type> can be one of B<none>
-to not produce any reference, B<noline> to not specify the line
-number, B<counter> to replace line number by an increasing counter,
-and B<full> to include complete references.
+to not produce any reference, B<file> to only specify the file
+without the line number, B<counter> to replace line number by an
+increasing counter, and B<full> to include complete references (default: full).
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
 References are written by default on a single line.  The B<wrap> option wraps
@@ -685,7 +685,8 @@ sub get_options {
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
     $opts{"msgmerge-opt"} .= " --previous" unless $noprevious;
-
+    $opts{"msgmerge-opt"} .= " --add-location=file" if ($opts{'porefs'} =~ m/^file/);
+    
     # options to transmit to the modules
     $opts{"options"} = {
         "verbose" => $opts{"verbose"},

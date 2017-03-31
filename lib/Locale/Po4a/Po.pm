@@ -53,11 +53,10 @@ from this.
 
 =item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
-Specify the reference format. Argument I<type> can be one of B<none> to not
-produce any reference, B<noline> to not specify the line number (more
-accurately all line numbers are replaced by 1), B<counter> to replace line
-number by an increasing counter, and B<full> to include complete
-references.
+Specify the reference format. Argument I<type> can be one of B<none>
+to not produce any reference, B<file> to only specify the file
+without the line number, B<counter> to replace line number by an
+increasing counter, and B<full> to include complete references (default: full).
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
 References are written by default on a single line.  The B<wrap> option wraps
@@ -190,12 +189,13 @@ sub initialize {
             $self->{options}{$opt} = $options->{$opt};
         }
     }
-    $self->{options}{'porefs'} =~ /^(full|counter|noline|none)(,(no)?wrap)?$/ ||
+    $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none)(,(no)?wrap)?$/ ||
         die wrap_mod("po4a::po",
                      dgettext ("po4a",
                                "Invalid value for option 'porefs' ('%s' is ".
-                               "not one of 'full', 'counter', 'noline' or 'none')"),
+                               "not one of 'full', 'counter', 'file' or 'none')"),
                      $self->{options}{'porefs'});
+    $self->{options}{'porefs'} =~ s/noline/file/; # backward compat. 'file' used to be called 'noline'.
     if ($self->{options}{'porefs'} =~ m/^counter/) {
         $self->{counter} = {};
     }
@@ -1273,8 +1273,8 @@ sub push_raw {
             }gex && pos($reference);
             $reference = $new_ref;
         }
-    } elsif ($self->{options}{'porefs'} =~ m/^noline/) {
-        $reference =~ s/:\d+/:1/g;
+    } elsif ($self->{options}{'porefs'} =~ m/^file/) {
+        $reference =~ s/:\d+//g;
     }
 
     if (defined($self->{po}{$msgid})) {
