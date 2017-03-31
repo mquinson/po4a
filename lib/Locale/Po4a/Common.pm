@@ -126,6 +126,7 @@ sub wrap_msg($@) {
     my $msg = shift;
     my @args = @_;
 
+#    print "'$msg' ; ".(scalar @args)." $args[0] $args[1]\n";
     return wrapi18n("", "", sprintf($msg, @args))."\n";
 }
 

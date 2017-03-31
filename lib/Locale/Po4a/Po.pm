@@ -89,7 +89,6 @@ Set the package version for the POT header. The default is "VERSION".
 
 use IO::File;
 
-
 require Exporter;
 
 package Locale::Po4a::Po;
@@ -119,6 +118,7 @@ use POSIX qw(strftime floor);
 use Time::Local;
 
 use Encode;
+use Config;
 
 my @known_flags=qw(wrap no-wrap c-format fuzzy);
 
@@ -249,13 +249,17 @@ sub read {
     my $self=shift;
     my $filename=shift
         or croak wrap_mod("po4a::po",
-                          dgettext("po4a",
-                                   "Please provide a non-null filename"));
+                          dgettext("po4a", "Please provide a non-null filename"));
 
     my $lang = basename($filename);
     $lang =~ s/\.po$//;
     $self->{lang} = $lang;
 
+    my $cmd = "LC_ALL=C msgfmt".$Config{_exe}." --check-format --check-domain -o /dev/null ".$filename;
+    my $out = qx/$cmd 2>&1/;
+    die wrap_msg(dgettext("po4a","Invalid po file %s:\n%s"), $filename, $out)
+      unless ($? == 0);
+    
     my $fh;
     if ($filename eq '-') {
         $fh=*STDIN;
