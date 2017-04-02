@@ -150,7 +150,7 @@ C<{PO4A-end}>.
 The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
-If you want to the the onsgmls output, just add the following to your command line (or po4a configuration line):
+If you want to view the onsgmls output, just add the following to your command line (or po4a configuration line):
 
   -o debug=onsgmls
 
