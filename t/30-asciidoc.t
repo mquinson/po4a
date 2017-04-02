@@ -23,15 +23,15 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
         'run' => "perl ../../po4a-normalize -f asciidoc ../data-30/$AsciiDocTest.asciidoc ".
 	         "&& mv po4a-normalize.po $AsciiDocTest.po ".
 	         "&& mv po4a-normalize.output $AsciiDocTest.out ",
-        'test'=> "perl ../compare-po.pl ../data-30/$AsciiDocTest.po $AsciiDocTest.po ".
-                 "&& cmp ../data-30/$AsciiDocTest.out $AsciiDocTest.out",
+        'test'=> "perl ../compare-po.pl --no-ref ../data-30/$AsciiDocTest.po $AsciiDocTest.po ".
+                 "&& diff -u ../data-30/$AsciiDocTest.out $AsciiDocTest.out 1>&2",
         'doc' => "$AsciiDocTest test"
     };
 }
 
 push @tests, {
     'run' => "perl ../../po4a-gettextize -f asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesUTF8.asciidoc -L UTF-8 -p TitlesUTF8.po",
-    'test'=> "perl ../compare-po.pl ../data-30/TitlesUTF8.po TitlesUTF8.po",
+    'test'=> "perl ../compare-po.pl --no-ref ../data-30/TitlesUTF8.po TitlesUTF8.po",
     'doc' => "test titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
 };
@@ -43,7 +43,7 @@ push @tests, {
 };
 push @tests, {
     'run' => "perl ../../po4a-gettextize -f asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesLatin1.asciidoc -L iso-8859-1 -p TitlesLatin1.po",
-    'test'=> "perl ../compare-po.pl ../data-30/TitlesLatin1.po TitlesLatin1.po",
+    'test'=> "perl ../compare-po.pl --no-ref ../data-30/TitlesLatin1.po TitlesLatin1.po",
     'doc' => "test titles with latin1 encoding",
     'requires' => "Unicode::GCString"
 };
