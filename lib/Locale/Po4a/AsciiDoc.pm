@@ -591,6 +591,7 @@ sub parse {
                  (defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/)) {
             my $indent = $1;
             my $text = $2;
+	    print STDERR "bullet (".($self->{bullet}).") starting with ".length($indent)." spaces\n" if $debug{'parse'};
 	    if ($paragraph eq "" && length($self->{bullet}) && length($indent)) {
 		# starting a paragraph with a bullet (not an enum or so), and indented.
 		# Thus a literal paragraph in a list.
@@ -620,9 +621,8 @@ sub parse {
 		if $debug{parse};
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
-            $wrapped_mode = 1 unless defined($self->{verbatim});
+	    $wrapped_mode = 1 unless defined($self->{verbatim});
             $self->pushline($line."\n");
-            undef $self->{controlkey};
         } elsif ($line =~ /^-- $/) {
             # Break paragraphs on email signature hint
             do_paragraph($self,$paragraph,$wrapped_mode);
