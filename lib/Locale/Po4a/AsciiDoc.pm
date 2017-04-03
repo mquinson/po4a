@@ -619,10 +619,6 @@ sub parse {
             } elsif (length($paragraph) and (length($self->{bullet}) + length($self->{indent}) == length($indent))) {
 		# same indent level as before: append
                 $paragraph .= $text."\n";
-	    } elsif (length($indent) == length($self->{indent}) and length($indent) == 0) {
-		# Broken indentation. Damn specification
-		print STDERR "Broken indentation at $ref. You may want to fix your document.\n";
-                $paragraph .= $text."\n";
             } else {
 		# not the same indent level: start a new translated paragraph
 		print STDERR "New paragraph (indent: '".($self->{indent})."')\n" if ($debug{parse});
@@ -655,13 +651,22 @@ sub parse {
 		"Bullet: '".(defined($self->{bullet})?$self->{bullet}:'none')."'; ".
 		"Indent: '".(defined($self->{indent})?$self->{indent}:'none')."'\n"
 		if ($debug{parse});
+	    
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
                 $wrapped_mode = 0;
             }
-            undef $self->{bullet};
-            undef $self->{indent};
+	    
+	    if ($paragraph ne "" && $self->{bullet} && length($self->{indent}||"")==0) {
+		# Second line of an item block is not indented. It looks like a broken indentation
+		# I'd prefer not to accept it, but the formaters do. Damn specification
+		print STDERR "$ref: It seems that you are adding unindented content to an item.\n".
+		    "The \"standard\" allows this, but you may still want to fix your document.\n";
+	    } else {
+		undef $self->{bullet};
+		undef $self->{indent};
+	    }
             # TODO: comments
             $paragraph .= $line."\n";
         }
