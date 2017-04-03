@@ -53,7 +53,7 @@ from this.
 
 =item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
 
-Specify the reference format. Argument I<type> can be one of B<none>
+Specify the reference format. Argument I<type> can be one of B<never>
 to not produce any reference, B<file> to only specify the file
 without the line number, B<counter> to replace line number by an
 increasing counter, and B<full> to include complete references (default: full).
@@ -189,13 +189,14 @@ sub initialize {
             $self->{options}{$opt} = $options->{$opt};
         }
     }
-    $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none)(,(no)?wrap)?$/ ||
+    $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none|never)(,(no)?wrap)?$/ ||
         die wrap_mod("po4a::po",
                      dgettext ("po4a",
                                "Invalid value for option 'porefs' ('%s' is ".
-                               "not one of 'full', 'counter', 'file' or 'none')"),
+                               "not one of 'full', 'counter', 'file' or 'never')"),
                      $self->{options}{'porefs'});
     $self->{options}{'porefs'} =~ s/noline/file/; # backward compat. 'file' used to be called 'noline'.
+    $self->{options}{'porefs'} =~ s/none/never/; # backward compat. 'never' used to be called 'none'.
     if ($self->{options}{'porefs'} =~ m/^counter/) {
         $self->{counter} = {};
     }
@@ -1262,7 +1263,7 @@ sub push_raw {
         return;
     }
 
-    if ($self->{options}{'porefs'} =~ m/^none/) {
+    if ($self->{options}{'porefs'} =~ m/^never/) {
         $reference = "";
     } elsif ($self->{options}{'porefs'} =~ m/^counter/) {
         if ($reference =~ m/^(.+?)(?=\S+:\d+)/g) {
