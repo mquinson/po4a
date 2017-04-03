@@ -579,6 +579,7 @@ sub parse {
             my $indent = $1||"";
             my $bullet = $2;
             my $text = $3;
+	    print STDERR "Item (bullet: '$bullet')\n" if ($debug{parse});
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph = $text."\n";
             $self->{indent} = $indent;
@@ -591,11 +592,20 @@ sub parse {
             $paragraph = $text."\n";
             $self->{indent} = "";
             $self->{bullet} = $bullet;
+        } elsif ($line =~ /^\s*$/) {
+            # Break paragraphs on empty lines or lines containing only spaces
+	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n" 
+		if $debug{parse};
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+	    $wrapped_mode = 1 unless defined($self->{verbatim});
+            $self->pushline($line."\n");
         } elsif (not defined $self->{verbatim} and
                  (defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/)) {
             my $indent = $1;
             my $text = $2;
-	    print STDERR "bullet (".($self->{bullet}).") starting with ".length($indent)." spaces\n" if $debug{'parse'};
+	    print STDERR "bullet (".($self->{bullet}).") starting with ".length($indent)." spaces\n"
+		if $debug{'parse'};
 	    if ($paragraph eq "" && length($self->{bullet}) && length($indent)) {
 		# starting a paragraph with a bullet (not an enum or so), and indented.
 		# Thus a literal paragraph in a list.
@@ -605,11 +615,17 @@ sub parse {
 		# No indent level before => Starting a paragraph?
                 $paragraph .= $text."\n";
                 $self->{indent} = $indent;
+		print STDERR "Starting a paragraph\n" if ($debug{parse});
             } elsif (length($paragraph) and (length($self->{bullet}) + length($self->{indent}) == length($indent))) {
 		# same indent level as before: append
                 $paragraph .= $text."\n";
+	    } elsif (length($indent) == length($self->{indent}) and length($indent) == 0) {
+		# Broken indentation. Damn specification
+		print STDERR "Broken indentation at $ref. You may want to fix your document.\n";
+                $paragraph .= $text."\n";
             } else {
 		# not the same indent level: start a new translated paragraph
+		print STDERR "New paragraph (indent: '".($self->{indent})."')\n" if ($debug{parse});
                 do_paragraph($self,$paragraph,$wrapped_mode);
 		if (length($self->{indent})>0 && length($self->{indent}) < length($indent)) {
 		    # increase indentation: the new block must not be wrapped
@@ -619,14 +635,6 @@ sub parse {
                 $self->{indent} = $indent;
                 $self->{bullet} = "";
             }
-        } elsif ($line =~ /^\s*$/) {
-            # Break paragraphs on empty lines or lines containing only spaces
-	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n" 
-		if $debug{parse};
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-	    $wrapped_mode = 1 unless defined($self->{verbatim});
-            $self->pushline($line."\n");
         } elsif ($line =~ /^-- $/) {
             # Break paragraphs on email signature hint
             do_paragraph($self,$paragraph,$wrapped_mode);
