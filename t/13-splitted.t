@@ -15,10 +15,10 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f data-13/test0.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-13/test0.err tmp/err",
-     "sed -e 's,#: data-23/dot1:1 data-23/dot1:1,#: data-23/dot1:1,' data-05/test0.pot > tmp/test0-mod.pot",
-     "perl compare-po.pl tmp/test0-mod.pot tmp/test0_man.1.pot",
-     "sed -e 's,#: data-23/dot1:1 data-23/dot1:1,#: data-23/dot1:1,' data-23/dot1.pot > tmp/dot1-mod.pot",
-     "perl compare-po.pl tmp/dot1-mod.pot tmp/dot1.pot"],
+     "cp data-05/test00.pot tmp/test0-mod.pot",
+     "perl compare-po.pl --no-ref tmp/test0-mod.pot tmp/test00_man.1.pot",
+     "cp data-23/dot1.pot tmp/dot1-mod.pot",
+     "perl compare-po.pl --no-ref tmp/dot1-mod.pot tmp/dot1.pot"],
   'doc'  => 'splitted mode'
 },
 {
