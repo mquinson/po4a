@@ -160,11 +160,11 @@ $tests[9]{'run'}  =
     'cp data-05/test00.fr.po tmp '.
     '&& printf "\n#. Fake entry\nmsgid \"This entry will disappear if pofile is updated\"\nmsgstr \"\"\n" >> tmp/test00.fr.po '.
     '&& touch -d "2 hours ago" tmp/test00.fr.po '.
-    '&& LC_ALL=C COLUMNS=80 perl ../po4a --no-update data-05/test00.conf >> tmp/test10.err 2>&1';
+    '&& LC_ALL=C COLUMNS=80 perl ../po4a --no-update data-05/test00.conf >> tmp/test09.err 2>&1';
 @{$tests[9]{'test'}} =
-    ("diff -u data-05/test10.err tmp/test10.err 1>&2",
-     "perl compare-po.pl --no-ref data-05/test10.fr tmp/test00.fr.po",
-     "test tmp/test00.fr.po -ot tmp/test10.err");
+    ("diff -u data-05/test09.err tmp/test09.err 1>&2",
+     "perl compare-po.pl --no-ref data-05/test09.fr tmp/test00.fr.po",
+     "test tmp/test00.fr.po -ot tmp/test09.err");
 
 use Test::More tests => 95;
 
