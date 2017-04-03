@@ -371,8 +371,12 @@ sub parse {
                     and ($self->{type} eq $type)) {
                     undef $self->{type};
                     undef $self->{verbatim};
+		    undef $self->{bullet};
+		    undef $self->{indent};
                     $wrapped_mode = 1;
+		    print STDERR "Closing $t block\n" if  $debug{parse};
                 } else {
+		    print STDERR "Begining $t block\n" if $debug{parse};
                     if ($t eq "\/") {
                         # CommentBlock, should not be treated
                         $self->{verbatim} = 2;
@@ -616,7 +620,7 @@ sub parse {
                 $self->{bullet} = "";
             }
         } elsif ($line =~ /^\s*$/) {
-            # Break paragraphs on lines containing only spaces
+            # Break paragraphs on empty lines or lines containing only spaces
 	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n" 
 		if $debug{parse};
             do_paragraph($self,$paragraph,$wrapped_mode);
@@ -638,6 +642,11 @@ sub parse {
             $paragraph="";
             $wrapped_mode = 1;
         } else {
+	    # A stupid paragraph of text
+	    print STDERR "Regular line. ".
+		"Bullet: '".(defined($self->{bullet})?$self->{bullet}:'none')."'; ".
+		"Indent: '".(defined($self->{indent})?$self->{indent}:'none')."'\n"
+		if ($debug{parse});
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
