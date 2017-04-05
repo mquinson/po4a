@@ -43,10 +43,6 @@ areas where they were not expected like documentation.
 Locale::Po4a::Docbook is a module to help the translation of DocBook XML
 documents into other [human] languages.
 
-Please note that this module is still under heavy development, and not
-distributed in official po4a release since we don't feel it to be mature
-enough. If you insist on trying, check the CVS out.
-
 =head1 STATUS OF THIS MODULE
 
 This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
