@@ -1405,10 +1405,11 @@ sub count_entries_doc($) {
 
 =item equals_msgid(po) 
 
-Returns whether the current po file is equal to the one passed as a parameter, 
-only considering only the msgid. All other fields are ignored.
+Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are also present in the one passed as parameter 
+(all other fields are ignored in the file comparison).
+Informally, if $uptodate returns false, then the po files would be changed when going through B<po4a-updatepo>.
 
-Informally, if it returns false, then the po files would be changed when going through B<po4a-updatepo>.
+If $uptodate is false, then $diagnostic contains a diagnostic of why this is so.
 
 =cut
 
@@ -1416,15 +1417,14 @@ sub equals_msgid($$) {
     my ($self, $other) = (shift, shift);
     
     unless ($self->count_entries() == $other->count_entries()) {
-	print STDERR "not same amount entries: in:".$self->count_entries()." out:".$other->count_entries()."\n";
-	return 0;
+	return (0, "The amount of entries differ between files: ".$self->count_entries()." is not ".$other->count_entries()."\n");
     }
-    return 0 unless ($self->count_entries() == $other->count_entries());
     foreach my $msgid ( keys %{$self->{po}} ) {
-	print STDERR "Faulty: $msgid" unless (defined($self->{po}{$msgid}) && defined($other->{po}{$msgid}));
-	return 0                      unless (defined($self->{po}{$msgid}) && defined($other->{po}{$msgid}));
+	unless (defined($self->{po}{$msgid}) && defined($other->{po}{$msgid})) {
+	    return (0, "msgid declared in one file only: $msgid\n");
+	}
     }
-    return 1;
+    return (1, "");
 }
 
 =item msgid($)

@@ -503,7 +503,8 @@ of use:
 
 =item is_po_uptodate()
 
-Returns whether the input po and the output po match. If not, it means that the input po should be updated.
+Returns ($uptodate, $diagnostic) where $uptodate is whether the input po and the output po match (if not, it means that the input po should be updated) 
+and $diagnostic is a string explaining why the po file is not uptodate, when this happens.
 
 =back
 
