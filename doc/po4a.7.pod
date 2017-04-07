@@ -99,8 +99,8 @@ display translated messages to the user.
 But the situation is rather different when it comes to documentation. Too
 often, the translated documentation is not visible enough (not distributed
 as a part of the program), only partial, or not up to date. This last
-situation is by far the worst possible one. Outdated translation can turn out to be
-worse than no translation at all to the users by describing old program
+situation is by far the worst possible one. Outdated translation can turn out
+to be worse than no translation at all to the users by describing old program
 behavior which are not in use anymore.
 
 =head2 The problem to solve
@@ -228,9 +228,9 @@ converted your project to po4a, only the right part of the graphic is
 relevant.
 
 Note that F<master.doc> is taken as an example for the documentation to be
-translated and F<translation.doc> is the corresponding translated text.  The suffix
-could be F<.pod>, F<.xml>, or F<.sgml> depending on its format. Each part of the
-picture will be detailed in the next sections.
+translated and F<translation.doc> is the corresponding translated text.
+The suffix could be F<.pod>, F<.xml>, or F<.sgml> depending on its format.
+Each part of the picture will be detailed in the next sections.
 
                                    master.doc
                                        |
@@ -299,9 +299,10 @@ To begin a new translation using po4a, you have to do the following steps:
 
 =item -
 
-Extract the text which have to be translated from the original E<lt>F<master.doc>E<gt> document into
-a new translation template E<lt>F<translation.pot>E<gt> file (the gettext format). For that, use the B<po4a-gettextize>
-program this way:
+Extract the text which have to be translated from the original
+E<lt>F<master.doc>E<gt> document into a new translation template
+E<lt>F<translation.pot>E<gt> file (the gettext format). For that, use the
+B<po4a-gettextize> program this way:
 
   $ po4a-gettextize -f <format> -m <master.doc> -p <translation.pot>
 
@@ -319,8 +320,8 @@ resulting file. It is often a good idea to not name the file F<XX.po> to avoid
 confusion with the translation of the program messages, but this your call.
 Don't forget to update the PO file headers, they are important.
 
-The actual translation can be done using the Emacs' or Vi's PO mode, Lokalize (KDE
-based), Gtranslator (GNOME based) or whichever program you prefer to use
+The actual translation can be done using the Emacs' or Vi's PO mode, Lokalize
+(KDE based), Gtranslator (GNOME based) or whichever program you prefer to use
 for them (e.g. Virtaal).
 
 If you wish to learn more about this, you definitively need to refer to the
@@ -337,16 +338,16 @@ language code):
 
   $ po4a-translate -f <format> -m <master.doc> -p <doc.XX.po> -l <XX.doc>
 
-As before, E<lt>I<format>E<gt> is the format used in the F<master.doc> document. But
-this time, the PO file provided with the B<-p> flag is part of the input. This
-is your translation. The output goes into F<XX.doc>.
+As before, E<lt>I<format>E<gt> is the format used in the F<master.doc> document.
+But this time, the PO file provided with the B<-p> flag is part of the input.
+This is your translation. The output goes into F<XX.doc>.
 
 Please refer to L<po4a-translate(1)> for more details.
 
 =head2 HOWTO update a po4a translation?
 
-To update your translation when the original F<master.doc> file has changed, use the
-L<po4a-updatepo(1)> program like that:
+To update your translation when the original F<master.doc> file has changed, use
+the L<po4a-updatepo(1)> program like that:
 
   $ po4a-updatepo -f <format> -m <new_master.doc> -p <old_doc.XX.po>
 
@@ -504,8 +505,9 @@ new reference is added to the existing one instead.
 So, when the same paragraph appears twice in the original but both are not
 translated in the exact same way each time, you will get the feeling that a
 paragraph of the original disappeared. Just kill the new translation. If you
-prefer to kill the first translation instead when the second one was actually better,
-remove the second one from where it is and put the first one in the place of the second one.
+prefer to kill the first translation instead when the second one was actually
+better, remove the second one from where it is and put the first one in the
+place of the second one.
 
 In the contrary, if two similar but different paragraphs were translated in the
 exact same way, you will get the feeling that a paragraph of the translation
@@ -552,9 +554,9 @@ rest of the addendum file will be added verbatim at the determined position of
 the resulting document.
 
 The header has a pretty rigid syntax: It must begin with the string
-B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list of I<key>B<=>I<value>
-fields. White spaces ARE important. Note that you cannot use the semi-colon
-char (B<;>) in the value, and that quoting it doesn't help.
+B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list of
+I<key>B<=>I<value> fields. White spaces ARE important. Note that you cannot use
+the semi-colon char (B<;>) in the value, and that quoting it doesn't help.
 
 Again, it sounds scary, but the examples given below should help you to find
 how to write the header line you need. To illustrate the discussion, assume
@@ -668,11 +670,11 @@ and give a B<beginboundary> matching any line.
  PO4A-HEADER:mode=after;position=Copyright Big Dude, 2004;beginboundary=^
 
 =item
-If you want to add something at the end of the document, give a
-B<position> matching any line of your document (but only one line. Po4a
-won't proceed if it's not unique), and give an B<endboundary> matching
-nothing. Don't use simple strings here like B<"EOF">, but prefer those which have
-less chance to be in your document.
+If you want to add something at the end of the document, give a B<position>
+matching any line of your document (but only one line. Po4a won't proceed if
+it's not unique), and give an B<endboundary> matching nothing. Don't use simple
+strings here like B<"EOF">, but prefer those which have less chance to be in
+your document.
 
  PO4A-HEADER:mode=after;position=<title>About</title>;beginboundary=FakePo4aBoundary
 
@@ -687,9 +689,8 @@ don't use B<.fi> as B<endboundary>, because it will match with "the[ fi]le",
 which is obviously not what you expect. The correct B<endboundary> in that case
 is: B<^\.fi$>.
 
-If the addendum doesn't go where you expected, try to pass the B<-vv> argument to
-the tools, so that they explain you what they do while placing the
-addendum.
+If the addendum doesn't go where you expected, try to pass the B<-vv> argument
+to the tools, so that they explain you what they do while placing the addendum.
 
 =head3 More detailed example
 
@@ -1053,8 +1054,8 @@ The main advantages of po4a over them are the ease of extra content addition
 When you try to translate documentation or programs, you face three kinds of
 problems; linguistics (not everybody speaks two languages), technical
 (that's why po4a exists) and relational/human. Not all developers understand
-the necessity of translating stuff. Even when good willed, they may ignore how to
-ease the work of translators. To help with that, po4a comes with lot of
+the necessity of translating stuff. Even when good willed, they may ignore how
+to ease the work of translators. To help with that, po4a comes with lot of
 documentation which can be referred to.
 
 Another important point is that each translated file begins with a short
