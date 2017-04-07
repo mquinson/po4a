@@ -3,7 +3,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
 # Copyright 2002, 2003, 2004 by Martin Quinson (mquinson#debian.org)
-# 
+#
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 
@@ -29,10 +29,10 @@ The used filters are very similar to the LDAP ones:
 =over
 
 =item * (E<lt>fieldE<gt>=argument)
-   
+
 The EQ operator returns true (and thus select the message for
 extraction) if and only if the value of the E<lt>fieldE<gt> is equal to the
-string used as argument. The argument are Perl regular expression, so if 
+string used as argument. The argument are Perl regular expression, so if
 you want to get an equality (and not a substring search), you have to use ^value$.
 
 Existing fields are:
@@ -55,7 +55,7 @@ E<gt>fileE<lt>:E<gt>line numberE<lt>.
 
 =item - comment
 
-Comment added manually (by the translators). 
+Comment added manually (by the translators).
 
 =item - automatic
 
@@ -86,7 +86,7 @@ return false if at least one of them return false.
 =item * (|E<lt>expression1E<gt>E<lt>expression2E<gt>...E<lt>expressionNE<gt>)
 
 The OR operator returns true when at least one of the sub-expression return
-true. It return false if all of them return false. 
+true. It return false if all of them return false.
 
 =head1 OPTIONS
 
@@ -176,7 +176,7 @@ my $filter = shift(@ARGV) || pod2usage(1);
 my $poin = Locale::Po4a::Po->new();
 # All following function croak on problem
 print STDERR gettext("Read $input")."\n" if $verbose;
-$poin->read($input); 
+$poin->read($input);
 
 print STDERR gettext("Filter")."\n" if $verbose;
 my $poout = $poin->filter($filter);

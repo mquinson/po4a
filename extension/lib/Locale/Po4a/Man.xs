@@ -277,7 +277,7 @@ char *do_fonts(char *string, char *ref)
     return tmp;
 }
 
-MODULE = Locale::Po4a::Man		PACKAGE = Locale::Po4a::Man		
+MODULE = Locale::Po4a::Man		PACKAGE = Locale::Po4a::Man
 
 char *
 do_fonts(string, ref)

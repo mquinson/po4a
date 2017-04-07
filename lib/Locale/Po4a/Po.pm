@@ -260,7 +260,7 @@ sub read {
     my $out = qx/$cmd 2>&1/;
     die wrap_msg(dgettext("po4a","Invalid po file %s:\n%s"), $filename, $out)
       unless ($? == 0);
-    
+
     my $fh;
     if ($filename eq '-') {
         $fh=*STDIN;
@@ -1403,9 +1403,9 @@ sub count_entries_doc($) {
     return $self->{count_doc};
 }
 
-=item equals_msgid(po) 
+=item equals_msgid(po)
 
-Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are also present in the one passed as parameter 
+Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are also present in the one passed as parameter
 (all other fields are ignored in the file comparison).
 Informally, if $uptodate returns false, then the po files would be changed when going through B<po4a-updatepo>.
 
@@ -1415,7 +1415,7 @@ If $uptodate is false, then $diagnostic contains a diagnostic of why this is so.
 
 sub equals_msgid($$) {
     my ($self, $other) = (shift, shift);
-    
+
     unless ($self->count_entries() == $other->count_entries()) {
 	return (0, "The amount of entries differ between files: ".$self->count_entries()." is not ".$other->count_entries()."\n");
     }

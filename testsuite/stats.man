@@ -43,7 +43,7 @@ sub wanted {
 	} else {
 	    open FILE,"<$file" || die "Can't open $file\n";
 	}
-	
+
 	my $header="";
 	while ($_=<FILE>) {
 	    last unless /^.."/;#"
@@ -67,8 +67,8 @@ sub wanted {
 		$macro =~ s/^\s*//g;
 		$macro =~ s/.".*$/|"/;
 		next unless (length($macro));
-#		unless ($define =~ m/$macro/) { # ignore self defined macro	
-		    $used{$macro} = (defined($used{$macro}) ? $used{$macro}+1 : 1);	    
+#		unless ($define =~ m/$macro/) { # ignore self defined macro
+		    $used{$macro} = (defined($used{$macro}) ? $used{$macro}+1 : 1);
 #		}
 	    }
 	}
@@ -88,7 +88,7 @@ sub wanted {
 	}
 	if (length($define)) {
 	    $page{$type}{'define'}{$file} = $define;
-	    $page{$type}{'defcount'}++; 
+	    $page{$type}{'defcount'}++;
 	}
 	push @{$page{$type}{'files'}},$file;
 	push @{$page{$type}{'headers'}},"$file\n$header";

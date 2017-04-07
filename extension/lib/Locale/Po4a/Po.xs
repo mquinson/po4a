@@ -431,7 +431,7 @@ void
 Po_DESTROY(self)
 	Locale_Po4a_Po	self
 
-void 
+void
 Po_read(self, filename)
 	Locale_Po4a_Po	self
 	char *		filename

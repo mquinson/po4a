@@ -1193,7 +1193,7 @@ sub parse_file {
 		"to be invalid.  This is usually safe, but you may wish ".
 		"to verify the generated document with onsgmls -wno-valid."));
 	unless ($debug{'onsgmls'}) {
-	  warn wrap_mod("po4a::sgml", 
+	  warn wrap_mod("po4a::sgml",
 	      dgettext("po4a", "To see the error message, ".
 		  "rerun po4a with this additional argument:\n".
 	          "   -o debug=onsgmls"))

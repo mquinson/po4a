@@ -37,7 +37,7 @@ while (<IN2>) {
 # Now compare lines
 foreach my $l1 (<IN1>) {
     $lineno ++;
-    
+
     my $l2 = <IN2> or die "Unexpected EOF found when reading $f2\n";
 
     unless (($l1 eq $l2) or ($ignore_ref and ($l1 =~ m/^#:/) and ($l2 =~ m/^#:/))) {

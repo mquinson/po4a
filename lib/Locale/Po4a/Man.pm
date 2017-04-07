@@ -2265,7 +2265,7 @@ $macro{'TS'}=sub {
                            .$postline);
 
             $buffer = $preline = $postline = "";
- 
+
         }
         ($line,$ref)=$self->shiftline();
     }
