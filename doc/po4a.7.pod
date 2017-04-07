@@ -240,24 +240,24 @@ picture will be detailed in the next sections.
 {translation}    |         { update of master.doc }             :
      :           |                     |                        :
    XX.doc        |                     V                        V
-(optional)       |                 master.doc ->-------->------>+
+ (optional)      |                 master.doc ->-------->------>+
      :           |                   (new)                      |
      V           V                     |                        |
-  [po4a-gettextize]   doc.XX.po--->+   |                        |
+  [po4a-gettextize]   doc.XX.po -->+   |                        |
           |            (old)       |   |                        |
           |              ^         V   V                        |
           |              |     [po4a-updatepo]                  |
           V              |           |                          V
    translation.pot       ^           V                          |
-          |              |         doc.XX.po                    |
+          |              |        doc.XX.po                     |
           |              |         (fuzzy)                      |
    { translation }       |           |                          |
           |              ^           V                          V
           |              |     {manual editing}                 |
           |              |           |                          |
           V              |           V                          V
-      doc.XX.po --->---->+<---<---- doc.XX.po   addendum     master.doc
-      (initial)                   (up-to-date) (optional)   (up-to-date) 
+      doc.XX.po --->---->+<---<-- doc.XX.po    addendum     master.doc
+      (initial)                 (up-to-date)  (optional)   (up-to-date)
           :                          |            |             |
           :                          V            |             |
           +----->----->----->------> +            |             |
@@ -270,7 +270,7 @@ picture will be detailed in the next sections.
                                                   |
                                                   V
                                                 XX.doc
-                                            (up-to-date)
+                                             (up-to-date)
 
 
 On the left part, the conversion of a translation not using po4a to this
