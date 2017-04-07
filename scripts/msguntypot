@@ -1,4 +1,4 @@
-#! /usr/bin/env perl 
+#! /usr/bin/env perl
 eval 'exec perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
 
@@ -35,7 +35,7 @@ synopsis, and it all becomes automatic.
 In short, when you discover a typo in one of your [english] message, do the
 following:
 
-=over 
+=over
 
 =item - Regenerate your POT and PO files.
 
@@ -137,16 +137,16 @@ my ($newfile,$oldfile)=("","");
 
 Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
 GetOptions(
-	'help|h'        => \$help,
+    'help|h'        => \$help,
 
-	'new|n=s'       => \$newfile,
-	'old|o=s'       => \$oldfile,
+    'new|n=s'       => \$newfile,
+    'old|o=s'       => \$oldfile,
 
-	'verbose|v'     => \@verbose,
-	'debug|d'       => \$debug,
-	'quiet|q'       => \$quiet,
-	'no-previous'   => \$noprevious,
-	'version|V'     => \&show_version
+    'verbose|v'     => \@verbose,
+    'debug|d'       => \$debug,
+    'quiet|q'       => \$quiet,
+    'no-previous'   => \$noprevious,
+    'version|V'     => \&show_version
 ) or pod2usage();
 
 # Argument check
@@ -182,13 +182,13 @@ my (%diff)=();
 for (my ($o,$n)=(0,0) ;
     $o<$oldpot->count_entries() && $n<$newpot->count_entries();
     $o++,$n++) {
-	
-	my ($oldstr,$newstr)=($oldpot->msgid($o),$newpot->msgid($n));
-	
-	$diff{$oldstr} = $newstr
-	  if ($oldstr ne $newstr);
 
-    }		     
+    my ($oldstr,$newstr)=($oldpot->msgid($o),$newpot->msgid($n));
+
+    $diff{$oldstr} = $newstr
+      if ($oldstr ne $newstr);
+
+    }
 print wrap_msg(gettext("Found %d modified entries."),scalar keys %diff) if $verbose;
 
 my $msgmergeOpts = ($noprevious ? "" : "--previous");
@@ -207,24 +207,24 @@ while (my $poarg = shift) {
     $pocount ++;
     print wrap_msg(gettext("Handling %s"),$poarg) if $verbose;
     if (system("msgmerge $msgmergeOpts -o $pofile $poarg $oldfile 2>/dev/null")) {
-	my $msg = $!;
-	unlink ($pofile);
-	die wrap_msg(gettext("Error while running msgmerge: %s"), $msg);
+        my $msg = $!;
+        unlink ($pofile);
+        die wrap_msg(gettext("Error while running msgmerge: %s"), $msg);
     }
     my $po=Locale::Po4a::Po->new();
     $po->read($pofile);
-    
+
     for (my $n=0 ; $n<$po->count_entries(); $n++) {
-	my $str=$po->msgid($n);
-	my $newstr = $diff{$str};
-	
-	if (defined $newstr) {
-	    $po->{po}{ $newstr } = { %{ $po->{po}{ $str } } };
-	    $po->{po}{ $str } = ();
-	    delete $po->{po}{ $str };
-	    print " Changed \"$str\" to \"$newstr\"\n" if ($verbose);
-	}
-    }    
+        my $str=$po->msgid($n);
+        my $newstr = $diff{$str};
+
+        if (defined $newstr) {
+            $po->{po}{ $newstr } = { %{ $po->{po}{ $str } } };
+            $po->{po}{ $str } = ();
+            delete $po->{po}{ $str };
+            print " Changed \"$str\" to \"$newstr\"\n" if ($verbose);
+        }
+    }
     $po->write($poarg);
 }
 unlink($pofile);
