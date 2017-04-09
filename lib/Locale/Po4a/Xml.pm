@@ -284,7 +284,7 @@ way.  If it's defined, it will treat E<lt>BooKE<gt>laNG and E<lt>BOOKE<gt>Lang a
 
 =item B<escapequotes>
 
-Escape quotes in output strings.  Necessary, for example, for creating 
+Escape quotes in output strings.  Necessary, for example, for creating
 string resources for use by Android build tools.
 
 See also: https://developer.android.com/guide/topics/resources/string-resource.html

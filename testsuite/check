@@ -81,14 +81,14 @@ podtotxt() { # $1 file to convert ; $2 name to pretend to have
 
 for fich in `cat LISTE.TOTAL` ; do
   if echo $fich | egrep '\.gz$' ; then
-    newfich=`basename $fich .gz`; 
+    newfich=`basename $fich .gz`;
     zcat $fich > $tmp/$newfich;
   else
     newfich=`basename $fich`
     cat $fich > $tmp/$newfich;
   fi
-	
-  echo "####### $fich"; 
+
+  echo "####### $fich";
   rm -f po4a-normalize.*
   if PERLLIB=../lib ../po4a-normalize -f $module -M iso-8859-1 $tmp/$newfich \
                     -o groff_code=translate \
@@ -100,7 +100,8 @@ for fich in `cat LISTE.TOTAL` ; do
                     -o inline=ZN,Pn \
                     -o generated 2>&1 ; then
       mv po4a-normalize.output $tmp/po4a-normalize.output
-      $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich; 
+      $cmdtotxt $tmp/po4a-normalize.output $tmp/$newfich;
+
       $cmdtotxt $tmp/$newfich $tmp/$newfich;
       echo $fich
       echo "$DIFF $tmp/$newfich.txt $tmp/po4a-normalize.output.txt"

@@ -292,7 +292,7 @@ sub parse {
         }
 
         chomp($line);
-        print STDERR "Seen $ref $line\n" 
+        print STDERR "Seen $ref $line\n"
 	    if ($debug{parse});
         $self->{ref}="$ref";
         if ((defined $self->{verbatim}) and ($self->{verbatim} == 3)) {
@@ -594,7 +594,7 @@ sub parse {
             $self->{bullet} = $bullet;
         } elsif ($line =~ /^\s*$/) {
             # Break paragraphs on empty lines or lines containing only spaces
-	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n" 
+	    print STDERR "Empty new line. Wrap: ".(defined($self->{verbatim})?"yes. ":"no. ")."\n"
 		if $debug{parse};
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
@@ -651,13 +651,13 @@ sub parse {
 		"Bullet: '".(defined($self->{bullet})?$self->{bullet}:'none')."'; ".
 		"Indent: '".(defined($self->{indent})?$self->{indent}:'none')."'\n"
 		if ($debug{parse});
-	    
+
             if ($line =~ /^\s/) {
                 # A line starting by a space indicates a non-wrap
                 # paragraph
                 $wrapped_mode = 0;
             }
-	    
+
 	    if ($paragraph ne "" && $self->{bullet} && length($self->{indent}||"")==0) {
 		# Second line of an item block is not indented. It looks like a broken indentation
 		# I'd prefer not to accept it, but the formaters do. Damn specification

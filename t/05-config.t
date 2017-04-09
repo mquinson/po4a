@@ -197,7 +197,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
             }
         }
     }
-    
+
     chdir ".." || die "Can't chdir back to my root";
 }
 
@@ -205,7 +205,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
 {
     chdir "t" || die "Can't chdir to my test directory";
     system("rm -f tmp/* 2>&1");
-    
+
     my $ret = system('cp data-05/test50.* tmp/; ');
     is($ret,0, "cp did not went well");
 
@@ -215,14 +215,14 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	diag("Output reads:");
 	diag(qx|cat tmp/test50.err|);
     }
-    
+
     $ret = system('diff -u data-05/test50.err tmp/test50.err 1>&2');
     is($ret, 0, "diff command should return 0");
     if ($ret != 0) {
 	diag("Output difference reads:");
 	diag(qx|diff -u data-05/test50.err tmp/test50.err|);
     }
-    
+
     ok(! -e "tmp/test50.en.1", "File tmp/test50.en.1 should not exist");
     chdir ".." || die "Can't chdir back to my root";
 }

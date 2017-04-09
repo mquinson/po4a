@@ -124,7 +124,7 @@ sub ACTION_binpo {
         unless ($self->up_to_date($_,"blib/po/$lang/LC_MESSAGES/po4a.mo")) {
             mkpath( File::Spec->catdir( 'blib', 'po', $lang, "LC_MESSAGES" ), 0, oct(755) );
             system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo $_") && die;
-        } 
+        }
     }
 }
 
@@ -167,7 +167,7 @@ sub ACTION_dist {
 
     $self->make_tarball($dist_dir);
     $self->delete_filetree($dist_dir);
-} 
+}
 
 sub ACTION_manpo {
     my $self = shift;
@@ -300,5 +300,5 @@ sub postats {
         print "  $lang: $stat";
     }
 }
-    
+
 1;
