@@ -594,7 +594,9 @@ In our case, we would have:
 =item B<mode> (mandatory)
 
 It can be either the string B<before> or B<after>, specifying the position of
-the addendum, relative to the I<position point>.
+the addendum, relative to the I<position point>. In case B<before> is given
+the I<insertion point> will placed exactly before the I<position point>. The
+B<after> behaviour is detailed bellow.
 
 Since we want the new section to be placed below the one we are matching, we
 have:
@@ -713,6 +715,7 @@ means "TRANSLATOR", and "moi" means "me")
  |=head1 TRADUCTEUR
  |
  |moi
+ |
 
 In order to put your addendum before the AUTHOR, use the following header:
 
@@ -720,7 +723,14 @@ In order to put your addendum before the AUTHOR, use the following header:
 
 This works because the next line matching the B<beginboundary> /^=head1/ after
 the section "NAME" (translated to "NOM" in French), is the one declaring the
-authors. So, the addendum will be put between both sections.
+authors. So, the addendum will be put between both sections. Note that if later
+some other section will be added between NAME and AUTHOR sections, it will
+break this example making the addenda to be added before this newly added
+section.
+
+To avoid this you may accomplish the same using B<mode>=I<before>:
+
+ PO4A-HEADER:mode=before;position=^=head1 AUTEUR
 
 =head2 HOWTO do all this in one program invocation?
 
