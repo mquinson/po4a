@@ -64,6 +64,17 @@ These are this module's particular options:
 
 =over
 
+=item B<keyvalue>
+
+Treat paragraphs that look like a key value pair as verbatim (with the no-wrap flag in the PO file).
+Key value pairs are defined as a line containing one or more non-colon
+and non-space characters followed by a colon followed by at least one
+non-space character before the end of the line.
+
+=cut
+
+my $keyvalue = 0;
+
 =item B<nobullets>
 
 Deactivate detection of bullets.
@@ -178,6 +189,7 @@ sub initialize {
     $self->{options}{'fortunes'} = 1;
     $self->{options}{'markdown'} = 1;
     $self->{options}{'nobullets'} = 1;
+    $self->{options}{'keyvalue'} = 1;
     $self->{options}{'tabs'} = 1;
     $self->{options}{'verbose'} = 1;
     $self->{options}{'neverwrap'} = 1;
@@ -187,6 +199,11 @@ sub initialize {
                      dgettext("po4a", "Unknown option: %s"), $opt)
             unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
+    }
+
+    if (defined $options{'keyvalue'}) {
+        $keyvalue = 1;
+        print "setting keyvalue\n";
     }
 
     if (defined $options{'nobullets'}) {
@@ -821,6 +838,9 @@ sub parse {
                           or $paragraph =~ m/[ \t][ \t][ \t]/s);
         $wrapped_mode = 0 if (    $tabs eq "verbatim"
                               and $paragraph =~ m/\t/s);
+        # Also consider keyvalue paragraphs verbatim, if requested
+        $wrapped_mode = 0 if (    $keyvalue == 1
+                              and $paragraph =~ m/^[^ :]+:.*[^\s].*$/s);
         if ($markdown) {
             # Some Markdown markup can (or might) not survive wrapping
             $wrapped_mode = 0 if (
