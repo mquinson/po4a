@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2017-04-05 10:34+0200\n"
-"PO-Revision-Date: 2017-04-02 07:44+0200\n"
+"PO-Revision-Date: 2017-04-11 17:19+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -609,14 +609,6 @@ msgstr "<option>-m </option><replaceable>MASTER_FILE</replaceable>"
 #.  .br 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4aman-display-po.xml:19
-#, fuzzy
-#| msgid ""
-#| "The original man page.  It can be the absolute or relative path to the "
-#| "original man page (gzipped or not), the name the man page or the name and "
-#| "section of the man page (using the man.section format).  When the master "
-#| "document is not provided with the <option>-m</option> option, "
-#| "<command>po4aman-display-po</command> tries to find the original man page "
-#| "based on the line reference of the first string in the PO."
 msgid ""
 "The original man page.  It can be the absolute or relative path to the "
 "original man page (gzipped or not), the name of the man page or the name and "
@@ -1300,7 +1292,7 @@ msgstr "B<!>"
 msgid ""
 "I<addendum_path> is discarded, it is not loaded and will not be loaded by "
 "any further addendum specification."
-msgstr ""
+msgstr "I<percorso_addendum> viene scartato, non viene caricato e non verrà caricato da nessun'altra successiva specifica di addendum."
 
 # NdT: Messaggio probabilmente errato: non dovrebbe usare $lang.
 # MSGID-BUG
@@ -1342,7 +1334,7 @@ msgstr ""
 msgid ""
 "B<po4a> accepts options that will be passed to the module. These options are "
 "module specific and are specified with the B<-o> switch."
-msgstr ""
+msgstr "B<po4a> accetta opzioni che verranno passate al modulo. Queste opzioni sono specifiche del modulo e vengono specificate con l'opzione B<-o>."
 
 #. type: textblock
 #: po4a:75
@@ -1353,7 +1345,7 @@ msgid ""
 "double quotes if it contains a space (e.g. if you specify multiple options, "
 "or an option with an argument).  You can also specify options that will only "
 "apply to a specific language by using the B<opt_>I<lang> keyword."
-msgstr ""
+msgstr "Se serve una opzione specifica per uno dei documenti che si desidera tradurre, si può anche specificarlo nel file di configurazione. Le opzioni vengono inserite dalla parola chiave B<opt>. L'argomento della parola chiave B<opt> deve essere virgolettato se contiene uno o più spazi (per es. se si specifica più opzioni, o un'opzione con un argomento).  È anche possibile specificare opzioni che verranno applicate solo su una specifica lingua usando la parola chiave B<opt_>I<lang>."
 
 #. type: verbatim
 #: po4a:76
@@ -1364,6 +1356,10 @@ msgid ""
 "            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
+"Ecco un esempio:\n"
+" [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+"            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
+"\n"
 
 #. type: verbatim
 #: po4a:77
@@ -1374,13 +1370,17 @@ msgid ""
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
 "\n"
 msgstr ""
+"Gli argomenti possono contenere degli spazi se si usano gli apici o le virgolette\n"
+"precedute dal carattere backslash:\n"
+" [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:78
 msgid ""
 "If you want to specify the same options for many documents, you may want to "
 "use an alias (see the B<Specifying aliases> section below)."
-msgstr ""
+msgstr "Se si vuole specificare le stesse opzioni per molti documenti, si può voler usare un alias (consultare la sezione B<Specificare alias> sottostante)."
 
 #. type: verbatim
 #: po4a:79
@@ -1391,13 +1391,17 @@ msgid ""
 " [options] opt:\"...\" opt_fr:\"...\"\n"
 "\n"
 msgstr ""
+"È anche possibile impostare opzioni per tutti i documenti specificati nel\n"
+"file di configurazione:\n"
+" [opzioni] opt:\"...\" opt_fr:\"...\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:81
 msgid ""
 "If you must specify the same options for multiple files, you may be "
 "interested in defining a module alias. This can be done this way:"
-msgstr ""
+msgstr "Se si deve specificare le stesse opzioni per più file, si potrebbe essere interessati a definire un alias di modulo. Questo può essere effettuato in questo modo:"
 
 #. type: verbatim
 #: po4a:82
@@ -1405,7 +1409,7 @@ msgstr ""
 msgid ""
 " [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n"
 "\n"
-msgstr ""
+msgstr " [po4a_alias:test] man opt:\"-k 21\" opt_es:\"-o debug=splitargs\"\n\n"
 
 #. type: textblock
 #: po4a:83
@@ -1413,12 +1417,12 @@ msgid ""
 "This defines a module alias named B<test>, based on the B<man> module, with "
 "the B<-k 21> applied to all the languages and with B<-o debug=splitargs> "
 "applied to the Spanish translation."
-msgstr ""
+msgstr "Questo definisce un alias di modulo di nome B<test>, basato sul modulo B<man>, con B<-k 21> applicata a tutte le lingue e con B<-o debug=splitargs> applicata alla traduzione in spagnolo."
 
 #. type: textblock
 #: po4a:84
 msgid "This module alias can then be use like a regular module:"
-msgstr ""
+msgstr "Questo alias di modulo può essere usato come un normale modulo:"
 
 #. type: verbatim
 #: po4a:85
@@ -1428,23 +1432,26 @@ msgid ""
 "            opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
+" [type:test] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+"            opt_it:\"-L UTF-8\" opt_fr:-v\n"
+"\n"
 
 #. type: textblock
 #: po4a:86
 msgid "Note that you can specify additional options on a per file basis."
-msgstr ""
+msgstr "Si noti che si possono specificare opzioni aggiuntive per ogni file."
 
 #. type: textblock
 #: po4a:88
 msgid "The split mode is used when B<$master> is used in the B<[po4a_paths]> line."
-msgstr ""
+msgstr "La modalità split viene usata se B<$master> viene usato nella riga B<[po4a_paths]>."
 
 #. type: textblock
 #: po4a:89
 msgid ""
 "When the split mode is used, a temporary big POT and temporary big POs are "
 "used. This permits to share the translations between all the POs."
-msgstr ""
+msgstr "Quando la modalità split viene usata, vengono usati un grande file temporaneo POT e grandi file temporanei PO. Ciò permette di condividere le traduzioni tra tutti i PO."
 
 #. type: textblock
 #: po4a:90
@@ -1693,10 +1700,8 @@ msgstr ""
 
 #. type: =item
 #: po4a:126
-#, fuzzy
-#| msgid "B<--no-backups>"
 msgid "B<--no-update>"
-msgstr "B<--no-backups>"
+msgstr "B<--no-update>"
 
 #. type: textblock
 #: po4a:127
@@ -2443,13 +2448,8 @@ msgstr "po4a-updatepo - aggiorna la traduzione (in formato PO) di un documento"
 
 #. type: textblock
 #: po4a-updatepo:4
-#, fuzzy
-#| msgid ""
-#| "B<po4a-updatepo> B<-f> I<fmt> (B<-m> I<master.docE>)+ (B<-p> I<XX.po>)+"
 msgid "B<po4a-updatepo> B<-f> I<fmt> (B<-m> I<master.doc>)+ (B<-p> I<XX.po>)+"
-msgstr ""
-"B<po4a-updatepo> B<-f> I<formato> (B<-m> I<originale.docE>)+ (B<-p> "
-"I<XX.po>)+"
+msgstr "B<po4a-updatepo> B<-f> I<fmt> (B<-m> I<master.doc>)+ (B<-p> I<XX.po>)+"
 
 #. type: textblock
 #: po4a-updatepo:5
@@ -8616,16 +8616,10 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:37
-#, fuzzy
-#| msgid ""
-#| "The error output of onsgmls is redirected to /dev/null, which is clearly "
-#| "bad. I don't know how to avoid that."
 msgid ""
 "The error output of onsgmls is redirected to /dev/null by default, which is "
 "clearly bad. I don't know how to avoid that."
-msgstr ""
-"Gli errori scritti in uscita da onsgmls vengono rediretti su /dev/null, il "
-"che è chiaramente sbagliato, ma non so come fare per evitarlo."
+msgstr "Gli errori scritti in uscita da onsgmls vengono rediretti in maniera predefinita su /dev/null, il che è chiaramente sbagliato, ma non so come fare per evitarlo."
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:38
@@ -11618,22 +11612,3 @@ msgstr ""
 " Copyright (c) 2008-2009 by Nicolas François "
 "<nicolas.francois@centraliens.net>\n"
 "\n"
-#~ msgid " \n"
-#~ msgstr " \n"
-
-#~ msgid ""
-#~ "Please note that this module is still under heavy development, and not "
-#~ "distributed in official po4a release since we don't feel it to be mature "
-#~ "enough. If you insist on trying, check the CVS out."
-#~ msgstr ""
-#~ "Questo modulo è ancora in fase di sviluppo e non viene distribuito "
-#~ "nell'archivio di po4a perché non è ancora ritenuto sufficientemente "
-#~ "maturo. Se si desidera usarlo ugualmente, è necessario prelevarne una "
-#~ "copia dal CVS."
-
-#~ msgid ""
-#~ "Everything works well with onsgmls's output redirected that way, but it "
-#~ "will prevent us from detecting that the document is badly formatted."
-#~ msgstr ""
-#~ "Tutto funziona bene con l'output di onsgmls rediretto in quel modo, ma ci "
-#~ "impedisce di scoprire se il documento sia stato formattato in modo errato."
