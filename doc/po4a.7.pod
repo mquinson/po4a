@@ -314,8 +314,8 @@ options.
 =item -
 
 Actually translate what should be translated. For that, you have to rename
-the POT file for example to F<doc.XX.po> (where I<XX> is the ISO639 code of the
-language you are translating to, e.g. B<fr> for French), and edit the
+the POT file for example to F<doc.XX.po> (where I<XX> is the ISO 639-1 code of
+the language you are translating to, e.g. B<fr> for French), and edit the
 resulting file. It is often a good idea to not name the file F<XX.po> to avoid
 confusion with the translation of the program messages, but this your call.
 Don't forget to update the PO file headers, they are important.
@@ -386,7 +386,7 @@ prepared to some grunt work here. In any case, remember that it is the
 price to pay to get the comfort of po4a afterward. And the good point is
 that you have to do so only once.
 
-I cannot emphasis this too much. In order to ease the process, it is thus
+I cannot emphasize this too much. In order to ease the process, it is thus
 important that you find the exact version which were used to do the
 translation. The best situation is when you noted down the VCS revision used
 for the translation and you didn't modify it in the translation process, so
@@ -594,7 +594,9 @@ In our case, we would have:
 =item B<mode> (mandatory)
 
 It can be either the string B<before> or B<after>, specifying the position of
-the addendum, relative to the I<position point>.
+the addendum, relative to the I<position point>. In case B<before> is given
+the I<insertion point> will placed exactly before the I<position point>. The
+B<after> behaviour is detailed bellow.
 
 Since we want the new section to be placed below the one we are matching, we
 have:
@@ -713,6 +715,7 @@ means "TRANSLATOR", and "moi" means "me")
  |=head1 TRADUCTEUR
  |
  |moi
+ |
 
 In order to put your addendum before the AUTHOR, use the following header:
 
@@ -720,7 +723,14 @@ In order to put your addendum before the AUTHOR, use the following header:
 
 This works because the next line matching the B<beginboundary> /^=head1/ after
 the section "NAME" (translated to "NOM" in French), is the one declaring the
-authors. So, the addendum will be put between both sections.
+authors. So, the addendum will be put between both sections. Note that if later
+some other section will be added between NAME and AUTHOR sections, it will
+break this example making the addenda to be added before this newly added
+section.
+
+To avoid this you may accomplish the same using B<mode>=I<before>:
+
+ PO4A-HEADER:mode=before;position=^=head1 AUTEUR
 
 =head2 HOWTO do all this in one program invocation?
 
