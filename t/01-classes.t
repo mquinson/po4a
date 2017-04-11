@@ -2,7 +2,7 @@
 
 #########################
 
-use Test::More tests => 22;
+use Test::More tests => 23;
 
 # Core modules
 eval qq{use Locale::Po4a::Po};           ok(!$@, 'Po.pm loadable');
@@ -49,6 +49,8 @@ SKIP: {
     eval qq{use Locale::Po4a::Sgml};         ok(!$@, 'Sgml.pm loadable');
     diag($@) if $@;
 }
+eval qq{use Locale::Po4a::RubyDoc};      ok(!$@, 'RubyDoc.pm loadable');
+diag($@) if $@;
 eval qq{use Locale::Po4a::Texinfo};      ok(!$@, 'Texinfo.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::TeX};          ok(!$@, 'TeX.pm loadable');

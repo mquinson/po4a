@@ -39,6 +39,8 @@ sub new {
         $modname = 'TeX';
     } elsif ($module eq 'asciidoc') {
         $modname = 'AsciiDoc';
+    } elsif ($module eq 'Rd' || $module eq 'rubydoc') {
+        $modname = 'RubyDoc';
     } else {
         $modname = ucfirst($module);
     }
@@ -69,6 +71,7 @@ sub list {
         ."\n  - ".gettext("latex: LaTeX format.")
         ."\n  - ".gettext("man: Good old manual page format.")
         ."\n  - ".gettext("pod: Perl Online Documentation format.")
+        ."\n  - ".gettext("rubydoc: Ruby Documentation (RD) format.")
         ."\n  - ".gettext("sgml: either DebianDoc or DocBook DTD.")
         ."\n  - ".gettext("texinfo: The info page format.")
         ."\n  - ".gettext("tex: generic TeX documents (see also latex).")
@@ -129,6 +132,7 @@ L<Locale::Po4a::KernelHelp(3pm)>,
 L<Locale::Po4a::LaTeX(3pm)>,
 L<Locale::Po4a::Man(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
+L<Locale::Po4a::RubyDoc(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
 L<Locale::Po4a::TeX(3pm)>,
 L<Locale::Po4a::Texinfo(3pm)>,
@@ -147,7 +151,7 @@ L<Locale::Po4a::Wml(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002,2003,2004,2005,2014 by SPI, inc.
+Copyright 2002,2003,2004,2005,2014,2017 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
