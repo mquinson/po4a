@@ -17,12 +17,12 @@ my @TextTests = qw(KeyValue);
 
 foreach my $TextTest (@TextTests) {
     push @tests, {
-        'run' => "perl ../../po4a-normalize -f text -o keyvalue ../data-31/$TextTest.text >$TextTest.err 2>&1".
+        'run' => "perl ../../po4a-normalize -f text -o keyvalue ../data-28/$TextTest.text >$TextTest.err 2>&1".
 	         "&& mv po4a-normalize.po $TextTest.po ".
 	         "&& mv po4a-normalize.output $TextTest.out ",
-        'test'=> "perl ../compare-po.pl --no-ref ../data-31/$TextTest.po $TextTest.po ".
-                 "&& diff -u ../data-31/$TextTest.out $TextTest.out 1>&2".
-	         "&& diff -u ../data-31/$TextTest.err $TextTest.err 1>&2",
+        'test'=> "perl ../compare-po.pl --no-ref ../data-28/$TextTest.po $TextTest.po ".
+                 "&& diff -u ../data-28/$TextTest.out $TextTest.out 1>&2".
+	         "&& diff -u ../data-28/$TextTest.err $TextTest.err 1>&2",
         'doc' => "$TextTest test"
     };
 }
