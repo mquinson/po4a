@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2017-05-17 19:11+0200\n"
-"PO-Revision-Date: 2017-06-22 22:43+0200\n"
+"PO-Revision-Date: 2017-08-03 17:31+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@libero.it>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -2005,21 +2005,21 @@ msgid ""
 "F<man/po4a/po/> and F<man/po4a/add_$lang/>) below the current directory. In "
 "our example the F<man/po4a/po/> directory would include F<de.po>, F<pt.po> "
 "and F<sv.po>, and the F<man/po4a/add_de/> directory would include F<de.add>."
-msgstr ""
+msgstr "In questo esempio si presume che le pagine man generate (e tutti il file po e addendum) siano stati posti in F<man/translated/$lang/> (rispettivamente in F<man/po4a/po/> e F<man/po4a/add_$lang/>) sotto la cartella corrente. Nel nostro esempio la cartella F<man/po4a/po/> includerà F<de.po>, F<pt.po> e F<sv.po>, e la cartella F<man/po4a/add_de/> includerà F<de.add>."
 
 #. type: textblock
 #: po4a:171
 msgid ""
 "Note the use of the modifier B<?> as only the German translation (F<de.po>) "
 "is accompanied by an addendum."
-msgstr ""
+msgstr "Si noti l'utilizzo del modificatore B<?> in quanto solo la traduzione tedesca (F<de.po>) è accompagnata da un addendum."
 
 #. type: textblock
 #: po4a:172
 msgid ""
 "To actually build the translated man pages you would then (once!) add the "
 "following line in the B<build> target of the appropriate F<Makefile>:"
-msgstr ""
+msgstr "Per creare realmente le pagine man tradotte aggiungere (una sola volta!) la seguente riga nel target B<build> del F<Makefile> appropriato:"
 
 #. type: verbatim
 #: po4a:173
@@ -2037,14 +2037,14 @@ msgid ""
 "F<fr.add> then you simply drop them respectively in F<man/po4a/po/> and "
 "F<man/po4a/add_fr/> and the next time the programm is build the French "
 "translation is automatically build as well in F<man/translated/fr/>."
-msgstr ""
+msgstr "Una volta impostato tutto questo non è necessario modificare il F<Makefile> quando arriva una nuova traduzione, cioè se la squadra francese vi spedisce F<fr.po> e F<fr.add> basta semplicemente metterli rispettivamente in F<man/po4a/po/> e F<man/po4a/add_fr/> e la prossima volta che il programma verrà compilato la traduzione francese verrà automaticamente aggiornata in F<man/translated/fr/>."
 
 #. type: textblock
 #: po4a:175
 msgid ""
 "Note that you still need an appropriate target to install localized manual "
 "pages with English ones."
-msgstr ""
+msgstr "Si noti che è necessario un obiettivo appropriato per installare le pagine man localizzate con quelle inglesi."
 
 #. type: verbatim
 #: po4a:176
@@ -2056,6 +2056,10 @@ msgid ""
 "        -rm -rf man/translated\n"
 "\n"
 msgstr ""
+"Infine, se non si memorizza i file generati nel proprio sistema di versionamento,\n"
+"sarà necessaria anche una riga nell'obiettivo B<clean>:\n"
+"        -rm -rf man/translated\n"
+"\n"
 
 #. type: textblock
 #: po4a:178
@@ -2234,7 +2238,7 @@ msgstr "B<-m>, B<--master>"
 msgid ""
 "File containing the master document to translate. You can use this option "
 "multiple times if you want to gettextize multiple documents."
-msgstr ""
+msgstr "Il file contenente il documento master da tradurre. Si può usare questa opzione più volte se si vuole \"gettext-izzare\" più documenti."
 
 #. type: textblock
 #: po4a-gettextize:19 po4a-normalize:22 po4a-translate:19
@@ -2252,7 +2256,7 @@ msgid ""
 "File containing the localized (translated) document. If you provided "
 "multiple master files, you may wish to provide multiple localized file by "
 "using this option more than once."
-msgstr ""
+msgstr "Il file contenente la versione localizzata (tradotta) del documento. Se si hanno più documenti master, è probabile si voglia anche fornire più documenti localizzati usando quest'opzione più di una volta."
 
 #. type: textblock
 #: po4a-gettextize:23 po4a-translate:23
@@ -2334,12 +2338,12 @@ msgstr "B<-b>, B<--blank>"
 msgid ""
 "Create an blank translated document.  The generated translated document will "
 "be generated assuming all messages are translated by a space or new line."
-msgstr ""
+msgstr "Creare un documento tradotto vuoto.  Il documento tradotto generato verrà creato assumendo che tutti i messaggi sono tradotti da uno spazio o da un a capo."
 
 #. type: textblock
 #: po4a-normalize:14
 msgid "This is useful to check what parts of the document cannot be translated."
-msgstr ""
+msgstr "Questo è utile per controllare quali parti del documento non possono essere tradotte."
 
 #. type: textblock
 #: po4a-normalize:26
@@ -2575,12 +2579,12 @@ msgstr ""
 #. type: textblock
 #: scripts/msguntypot:2
 msgid "msguntypot - update PO files when a typo is fixed in POT file"
-msgstr ""
+msgstr "msguntypot - aggiorna il file PO quando un errore tipografico viene corretto nel file POT"
 
 #. type: textblock
 #: scripts/msguntypot:4
 msgid "B<msguntypot> B<-o> I<old_pot> B<-n> I<new_pot> I<pofiles> ..."
-msgstr ""
+msgstr "B<msguntypot> B<-o> I<vecchio_pot> B<-n> I<nuovo_pot> I<file_po> ..."
 
 #. type: textblock
 #: scripts/msguntypot:6
@@ -2588,7 +2592,7 @@ msgid ""
 "When you fix a trivial error which surely doesn't affect translations (e.g.  "
 "a typo) in a POT file, you should unfuzzy the corresponding msgstr in the "
 "translated PO files to avoid so extra work to the translators."
-msgstr ""
+msgstr "Quando si sitema un errore banale che sicuramente non influisce sulle traduzioni (per es. un errore di battitura) in un file POT, si dovrebbe de-fuzzy-are le corrispondenti msgstr nei file PO tradotti in modo da evitare lavoro extra ai traduttori."
 
 #. type: textblock
 #: scripts/msguntypot:7
@@ -2597,24 +2601,24 @@ msgid ""
 "there to help doing so correctly. You just need to provide the two versions "
 "of the POT file: before the edition and after as marked in the above "
 "synopsis, and it all becomes automatic."
-msgstr ""
+msgstr "Questo compito è difficoltoso e porta facilmente a commettere degli errori se eseguito manualmente, e questo strumento esiste proprio per aiutare ad eseguirlo correttamente. Basta solo fornire le due versioni del file POT: prima della modifica e dopo come impostato nella sintassi descritta sopra, e tutto diventa automatico."
 
 #. type: =head1
 #: scripts/msguntypot:8
 msgid "HOW TO USE IT"
-msgstr ""
+msgstr "COME USARLO"
 
 #. type: textblock
 #: scripts/msguntypot:9
 msgid ""
 "In short, when you discover a typo in one of your [english] message, do the "
 "following:"
-msgstr ""
+msgstr "In breve, quando si scopre un errore di battitura in oneuno dei messaggi [in inglese], fare le operazioni seguenti:"
 
 #. type: =item
 #: scripts/msguntypot:10 scripts/msguntypot:19
 msgid "- Regenerate your POT and PO files."
-msgstr ""
+msgstr "- Rigenerare i file POT e PO."
 
 #. type: verbatim
 #: scripts/msguntypot:11
@@ -2635,7 +2639,7 @@ msgstr ""
 msgid ""
 "or something else, depending on your project's building settings. You know "
 "how to make sure your POT an PO files are uptodate, don't you??"
-msgstr ""
+msgstr "o qualcos'altro, a seconda delle impostazioni di compilazione del progetto. Sapete come assicurarvi che i file POT e PO siano aggiornati, non è vero?"
 
 #. type: =item
 #: scripts/msguntypot:13
@@ -2671,7 +2675,7 @@ msgstr "- Sistemare l'errore."
 #. type: textblock
 #: scripts/msguntypot:18
 msgid "$EDITOR the_file_in_which_there_is_a_typo"
-msgstr ""
+msgstr "$EDITOR il_file_nel_quale_c'è_un_errore_di_battitura"
 
 #. type: textblock
 #: scripts/msguntypot:20
@@ -2684,12 +2688,12 @@ msgid ""
 "At this point, the typo fix fuzzied all the translations, and this "
 "unfortunate change is the only one between the PO files of your main "
 "directory and the one from the fridge. Here is how to solve this."
-msgstr ""
+msgstr "A questo punto, la correzione dell'errore di battitura ha reso fuzzy tutte le traduzioni, e questo sfortunato cambiamento è l'unico tra i file PO della cartella principale e quella del frigo. Ecco come risolvere il problema."
 
 #. type: =item
 #: scripts/msguntypot:22
 msgid "- Discard fuzzy translation, restore the ones from the fridge."
-msgstr ""
+msgstr "- Scartare le traduzioni fuzzy, ripristinare quelle dal frigo."
 
 #. type: verbatim
 #: scripts/msguntypot:23
@@ -2704,7 +2708,7 @@ msgstr "  cp po_fridge/*.po .\n\n"
 msgid ""
 "- Manually merge the PO files with the new POT file, but taking the useless "
 "fuzzy into account."
-msgstr ""
+msgstr "- Fondere manualmente i file PO con il nuovo file POT, ma tenendo conto delle fuzzy inutili."
 
 #. type: verbatim
 #: scripts/msguntypot:25
