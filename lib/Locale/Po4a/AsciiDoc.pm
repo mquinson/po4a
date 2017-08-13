@@ -826,9 +826,6 @@ sub split_attributelist {
         print STDERR "  -> $1\n" if $debug{split_attributelist};
         push @attributes, $1;
     }
-    die wrap_mod("po4a::asciidoc",
-                 dgettext("po4a", "Unable to parse attribute list: [%s]"), $text)
-            unless scalar(@attributes);
     return @attributes;
 }
 
