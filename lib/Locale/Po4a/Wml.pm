@@ -109,8 +109,8 @@ sub read {
          my $line = $1;
          print STDERR "PROTECT HEADER: $line\n"
              if $self->debug();
-         if ($line =~ m/title="([^"]*)"/) { #) {#"){
-             warn "FIXME: We should translate the page title: $1\n";
+         if ($line =~ m/title="([^"]*)"/) {
+             $file = "<title>$1</title>" . $file;
          }
      }
 
@@ -145,14 +145,44 @@ sub parse {
         # Get the document back (undoing our WML masking)
         # FIXME: need to join the file first, and then split?
         my @doc_out;
+        my $cnt = 0;
+        my $title_node;
+        my $title;
+
         foreach my $line (@{$self->{TT}{doc_out}}) {
-            $line =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg;
-            $line =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/sg;
-            $line =~ s/(<define-tag\s+)PO4ADUMMYATTR="([^"]*)"/$1$2/g;
-            $line =~ s/PO4ALT/</sg;
-            $line =~ s/PO4AGT/>/sg;
-            push @doc_out, $line;
+            if (!$cnt) {
+                if (!$title_node && $line =~ m/<title>/) {
+                    $title_node = $line;
+                } elsif ($title_node) {
+                    $title_node .= $line;
+                    if ($title_node =~ m/<title>(.*?)<\/title>/) {
+                        $title = $1;
+                        $cnt = 1;
+                    }
+                } else {
+                    $cnt = 1;
+                }
+            } else {
+                if ($line =~ s/^<!--PO4ASHARPBEGIN(.*?)PO4ASHARPEND-->/#$1/mg && $title) {
+                    $line =~ s/title="[^"]*"$/title="$title"/mg;
+                }
+                $line =~ s/<!--PO4ABEGINPERL(.*?)PO4AENDPERL-->/<:$1:>/sg;
+                $line =~ s/(<define-tag\s+)PO4ADUMMYATTR="([^"]*)"/$1$2/g;
+                $line =~ s/PO4ALT/</sg;
+                $line =~ s/PO4AGT/>/sg;
+                push @doc_out, $line;
+            }
         }
+
+        # Do a simple left trim
+        foreach my $line (@doc_out) {
+            if ($line =~ m/\s+/) {
+                shift @doc_out;
+            } else {
+                last;
+            }
+        }
+
         $self->{TT}{doc_out} = \@doc_out;
     }
 }
