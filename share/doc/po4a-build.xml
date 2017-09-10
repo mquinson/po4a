@@ -131,7 +131,7 @@ doc/foo/html/* ./usr/share/doc/foo/
       </para>
       <para>General includes the name and location of the po4a config
       file (probably best to leave this as <filename>po4a.config</filename>),
-      the po directory containing the documentation PO files (often
+      the <filename>po</filename> directory containing the documentation PO files (often
       <filename>doc/po</filename>), the full name of the POT file used
       to create the translations, the BASEDIR for the generated output,
       whether the package contains manpages in section 3 rather than just
@@ -139,9 +139,9 @@ doc/foo/html/* ./usr/share/doc/foo/
       the generated output.
       </para>
       <para>XML/XSL support includes specifying which of the binary packages
-      use XSL support in the XMLPACKAGES variable, the top level DocBook
+      use XSL support in the <option>XMLPACKAGES</option> variable, the top level DocBook
       file to pass to <command>xsltproc</command> and the location of the
-      XML or DocBook files. The XSLFILE can be overridden, if necessary.
+      XML or DocBook files. The <option>XSLFILE</option> can be overridden, if necessary.
       </para>
       <para>POD support includes specifying which of the binary packages
       use POD support in the PODPACKAGES variable and the full name
@@ -165,7 +165,7 @@ doc/foo/html/* ./usr/share/doc/foo/
           <para>Only updates the POT file(s). <option>--pot-only</option>
           is intended to support packages including all POT files in the
           package source. Packages using Autotools can easily add the POT
-          file via EXTRA_DIST but packages just using a Makefile or
+          file via <option>EXTRA_DIST</option> but packages just using a Makefile or
           certain VCS build helpers can find it awkward to add the POT file
           (which is a generated file) without putting the POT file into
           the VCS. To avoid this ugly and unnecessary work,
