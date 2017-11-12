@@ -323,8 +323,7 @@ sub parse {
                  ($line =~ m/^(={2,}|-{2,}|~{2,}|\^{2,}|\+{2,})$/) and
                  (defined($paragraph) )and
                  ($paragraph =~ m/^[^\n]*\n$/s) and
-                 # subtract one because chars includes the newline on the paragraph
-                 ((chars($paragraph, $self->{TT}{po_in}{encoder}, $ref) - 1) == (length($line)))) {
+                 (chars($paragraph, $self->{TT}{po_in}{encoder}, $ref) == (length($line)))) {
 
             # Found title
             $wrapped_mode = 0;
