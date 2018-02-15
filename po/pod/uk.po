@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-14 19:40+0200\n"
-"PO-Revision-Date: 2018-02-14 20:04+0000\n"
+"PO-Revision-Date: 2018-02-15 19:33+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.19-dev\n"
+"X-Generator: Weblate 2.19\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-build.xml:1 share/doc/po4aman-display-po.xml:1
@@ -319,6 +319,14 @@ msgid ""
 "contains manpages in section 3 rather than just section 1 and the names of "
 "the binary packages which are to contain the generated output."
 msgstr ""
+"До загального розділу включається назва і розташування файла налаштувань "
+"po4a (ймовірно, варто залишити назву <filename>po4a.config</filename>), "
+"каталог <filename>po</filename>, у якому містяться файли PO документації ("
+"часто <filename>doc/po</filename>), повна назва файла POT, який "
+"використовується для створення перекладів, базовий каталог BASEDIR для "
+"виведених даних, дані про те, чи містяться у пакунку сторінки підручника "
+"(man) у розділі 3, а не лише у розділі 1, та назви бінарних пакунків, у яких "
+"міститимуться створені у результаті перекладу дані."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:39
@@ -328,6 +336,11 @@ msgid ""
 "file to pass to <command>xsltproc</command> and the location of the XML or "
 "DocBook files. The <option>XSLFILE</option> can be overridden, if necessary."
 msgstr ""
+"До розділу підтримки XML/XSL включають визначення того, які бінарні пакунки "
+"використовують підтримку XSL, у змінній <option>XMLPACKAGES</option>, файл "
+"DocBook верхнього рівня, який слід передати <command>xsltproc</command>, та "
+"розташування файлів XML або DocBook. Параметр <option>XSLFILE</option>, якщо "
+"потрібно, можна перевизначити."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:40
@@ -335,6 +348,9 @@ msgid ""
 "POD support includes specifying which of the binary packages use POD support "
 "in the PODPACKAGES variable and the full name of the POD file."
 msgstr ""
+"До розділу підтримки POD включають визначення того, у яких бінарних пакунках "
+"використовується підтримка POD, у змінній PODPACKAGES та повна назва файла "
+"POD."
 
 #. type: Content of: <refentry><refsect1><refsect2><para>
 #: share/doc/po4a-build.xml:41
@@ -343,6 +359,9 @@ msgid ""
 "untranslated and translated HTML content and the DocBook file to generate "
 "the HTML. The HTMLXSL file can be overridden, if necessary."
 msgstr ""
+"У розділі підтримки HTML вказують підкаталог, який слід створити у BASEDIR "
+"для неперекладених і перекладених даних HTML, та файл DocBook, призначений "
+"для створення HTML. Файл HTMLXSL можна, якщо потрібно, перевизначити."
 
 #. type: Content of: <refentry><refsect1><title>
 #: share/doc/po4a-build.xml:42
@@ -367,6 +386,17 @@ msgid ""
 "build, so that <command>dpkg-source</command> includes them into the source "
 "tarball."
 msgstr ""
+"Лише оновити файли POT. <option>--pot-only</option> призначено для підтримки "
+"пакунків, де усі файли POT включаються до пакунку з кодом. До пакунків, де "
+"використовується Autotools, файл POT можна додати доволі просто, за "
+"допомогою <option>EXTRA_DIST</option>, але у пакунках, де використовується "
+"лише Makefile або певні допоміжні засоби збирання системи керування "
+"версіями, додавання файла POT (який є створеним файлом) є некрасивим без "
+"записування цього файла POT до системи керування версіями. Щоб уникнути "
+"марудної і непотрібної роботи, можна скористатися програмою <command>po4a-"
+"build</command>, яка може оновити файли POT на початку процесу збирання, щоб "
+"згодом програма <command>dpkg-source</command> включила ці файли до архіву "
+"tar із початковим кодом."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example><title>
 #: share/doc/po4a-build.xml:45
@@ -380,6 +410,9 @@ msgid ""
 "addition, using the <option>useNativeDist</option> SVN property and the "
 "<option>native-dist</option> Make target."
 msgstr ""
+"У <command>svn-buildpackage</command> передбачено явну підтримку цього типу "
+"додавання за допомогою властивості SVN <option>useNativeDist</option> та "
+"цілі Make <option>native-dist</option>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><example><programlisting>
 #: share/doc/po4a-build.xml:47
@@ -489,7 +522,7 @@ msgstr "<date>8 квітня 2006 року</date>"
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc/po4aman-display-po.xml:3
 msgid "PO4AMAN-DISPLAY-PO"
-msgstr ""
+msgstr "PO4AMAN-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc/po4aman-display-po.xml:5
@@ -505,7 +538,7 @@ msgstr "Інструменти Po4a"
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc/po4aman-display-po.xml:8
 msgid "po4aman-display-po"
-msgstr ""
+msgstr "po4aman-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc/po4aman-display-po.xml:9
@@ -535,6 +568,9 @@ msgid ""
 "<command>po4aman-display-po</command> can be used by a translator who wants "
 "to check how the man page being translated in a PO will be displayed."
 msgstr ""
+"Програмою <command>po4aman-display-po</command> можуть користуватися "
+"перекладачі, які хочу перевірити, як виглядатиме сторінка підручника, яку "
+"вони перекладають у PO."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4aman-display-po.xml:13
@@ -543,6 +579,10 @@ msgid ""
 "<emphasis remap='I'>man</emphasis> module.  The manual page can be provided "
 "on the command line, or installed on the system."
 msgstr ""
+"Сторінка підручника має зберігатися у одному з форматів, підтримку якого "
+"передбачено у модулі <emphasis remap='I'>man</emphasis> po4a. Сторінку "
+"підручника можна вказати у командному рядку, можна також скористатися "
+"сторінкою, встановленою у системі."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4aman-display-po.xml:14
@@ -552,6 +592,11 @@ msgid ""
 "refentrytitle><manvolnum>1</manvolnum></citerefentry> for an equivalent "
 "supporting <emphasis remap='I'>POD</emphasis> documents."
 msgstr ""
+"Підтримки сторінок підручника, створених на основі інших форматів, зокрема "
+"DocBook або POD, не передбачено. Див. <citerefentry><refentrytitle>po4apod-"
+"display-po</refentrytitle><manvolnum>1</manvolnum></citerefentry>, якщо "
+"потрібна відповідна підтримка для документів <emphasis "
+"remap='I'>POD</emphasis>."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4aman-display-po.xml:16 share/doc/po4apod-display-po.xml:14
@@ -579,6 +624,13 @@ msgid ""
 "<command>po4aman-display-po</command> tries to find the original man page "
 "based on the line reference of the first string in the PO."
 msgstr ""
+"Початкова сторінка підручника. Можна вказати її за допомогою абсолютного або "
+"відносного шляху до сторінки man (стисненої gzip або нестисненої), назви "
+"сторінки підручника або назви розділу сторінки підручника (у форматі "
+"«підручник.розділ»). Якщо основний документ не вказано за допомогою "
+"параметра <option>-m</option>, програма <command>po4aman-display-po</command>"
+" намагається знайти початкову сторінку підручника на основі рядка-посилання "
+"на сторінку у першому рядку у файлі PO."
 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><term>
 #: share/doc/po4aman-display-po.xml:20 share/doc/po4apod-display-po.xml:18
@@ -591,6 +643,8 @@ msgid ""
 "Some options to pass to <citerefentry><refentrytitle>po4a-translate</"
 "refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 msgstr ""
+"Деякі з параметрів, які слід передати <citerefentry><refentrytitle>po4a-"
+"translate</refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 
 #. type: =head1
 #: share/doc/po4aman-display-po.xml:22 share/doc/po4apod-display-po.xml:20
@@ -628,7 +682,7 @@ msgstr "<date>16 березня 2009 року</date>"
 #. type: Content of: <refentry><refmeta><refentrytitle>
 #: share/doc/po4apod-display-po.xml:3
 msgid "PO4APOD-DISPLAY-PO"
-msgstr ""
+msgstr "PO4APOD-DISPLAY-PO"
 
 #. type: Content of: <refentry><refmeta><refmiscinfo>
 #: share/doc/po4apod-display-po.xml:5
@@ -638,7 +692,7 @@ msgstr "16 березня 2009 року"
 #. type: Content of: <refentry><refnamediv><refname>
 #: share/doc/po4apod-display-po.xml:8
 msgid "po4apod-display-po"
-msgstr ""
+msgstr "po4apod-display-po"
 
 #. type: Content of: <refentry><refnamediv><refpurpose>
 #: share/doc/po4apod-display-po.xml:9
