@@ -19,7 +19,7 @@ Locale::Po4a::Common contains common parts of the po4a scripts and some useful
 functions used along the other modules.
 
 In order to use Locale::Po4a programatically, one may want to disable
-the use of Text::WrapI18N, by writing e.g.
+the use of Text::WrapI18N, by writing something like:
 
     use Locale::Po4a::Common qw(nowrapi18n);
     use Locale::Po4a::Text;

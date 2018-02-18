@@ -311,7 +311,7 @@ or using an alias:
 
  .IR_untranslated \-q ", " \-\-quiet
 
-(this will require the B<-o untranslated=als,IR_untranslated> option)
+This will require the B<-o untranslated=als,IR_untranslated> option.
 
 =head2 Conclusion
 
