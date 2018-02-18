@@ -1394,7 +1394,7 @@ sub count_entries($) {
 =item count_entries_doc()
 
 Returns the number of entries in document. If a string appears multiple times
-in the document, it will be counted multiple times
+in the document, it will be counted multiple times.
 
 =cut
 

@@ -890,7 +890,7 @@ sub translate_buffer {
 
 =item B<read>
 
-Overload Transtractor's read
+Overloads Transtractor's read().
 
 =cut
 
