@@ -55,6 +55,10 @@ files and translations on need.
   languages. Improve it as much as possible, but avoid superfluous
   changes when possible.
 
+Finally, we are playing with the idea of reimplementing po4a in Python
+to increase the amount of potential contributors. A proof of concept
+of the TransTractor design in Python would be welcome.
+
 # Testing your changes
 
 You should of course make sure that your PR does not break any test to
@@ -68,15 +72,14 @@ ensure that bugs won't resurface in the future.
   ./Build test
 ```
 
-## Test dependencies
+*Test dependencies:*
 
-Debian packages needed to run the testsuite:
-  docbook-xml texlive-binaries libhtml-parser-perl libmodule-build-perl opensp docbook
-
-Fedora 24 packages needed to run the testsuite (from the rpm po4a package):
-  perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
+- On Debian:
+  `docbook-xml texlive-binaries libhtml-parser-perl libmodule-build-perl opensp docbook`
+- On Fedora 24 (if you installed from the rpm po4a package):
+  `perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
   perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
-  docbook-dtds
+  docbook-dtds`
 
 # Translating
 
@@ -128,21 +131,18 @@ wlc unlock
 
 Here is the checklist of things to remember when releasing po4a:
 
-- Integrate all pending translations:
-  - `wlc commit && wlc push`
+- Integrate all pending translations: `wlc commit && wlc push`
 - Bump the version number in lib/Locale/Po4a/TransTractor.pm and
   regenerate the building script: `perl Build.PL`
 - Check that `./Build test` reports no error.
 - Check NEWS
   - It documents all recent changes found in git logs.
   - It contains a release name and a release date.
-- Build the archive:
-  - `./Build dist`
-  - Interrupt it if the MANIFEST is out of sync (by either adding the
-    files to MANIFEST or MANIFEST.SKIP if they should not be released to
-    the users)
-- Tag the git and push it:
-  - `git tag v0.XXX && git push tags`
+- Build the archive: `./Build dist`
+  - Interrupt it if the MANIFEST is out of sync, and then fix it by
+    adding the missing files to MANIFEST (or MANIFEST.SKIP if they
+    should not be released to the users)
+- Tag the git and push it: `git tag v0.XXX && git push tags`
 - Edit the release on [GitHub](https://github.com/mquinson/po4a/releases).
   Reuse the release name and paste the changelog of this release.
 - Announce the release on the Mailing List.
