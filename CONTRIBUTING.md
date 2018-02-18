@@ -1,16 +1,82 @@
-# Pull Requests
+This project welcomes contributions! And this file intend to get you
+at full speed as quickly as possible.
 
-Your PR are really welcome to improve po4a and/or fix bugs. You should
-however make sure that your PR does not break any test to get quickly
-accepted.
+# Software Architecture
 
-If you fix an issue, the best is to add a new test to the suite to
-ensure that it wont resurface in the future.
+po4a is architectured around the idea of TransTractors, that are
+specific parsers in charge of separating the document structure from
+the translatable content, and to reinject the translated content back
+into the structure.
 
-# Adding support for a new format
+You can learn more on TransTractors in 
+[their documentation](https://po4a.org/man/man3/Locale::Po4a::TransTractor.3pm.php),
+or by browsing the code of 
+[all existing ones](https://github.com/mquinson/po4a/tree/master/lib/Locale/Po4a).
+Also don't miss the [project overview](https://po4a.org/man/man7/po4a.7.php)
+if you did not read it yet. 
 
-We are welcoming new modules for new formats, provided that you add a
-decent amount of tests. 
+Several binaries are built around these TransTractors, each of them
+being dedicated to one step of the [translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ)
+([po4a-translate](https://po4a.org/man/man1/po4a-translate.1.php),
+[po4a-updatepo](https://po4a.org/man/man1/po4a-updatepo.1.php), and
+also
+[po4a-gettextize](https://po4a.org/man/man1/po4a-gettextize.1.php)).
+Some [other tools](https://po4a.org/man/) are built on top of the
+transtractors.
+
+Finally, the [po4a command](https://po4a.org/man/man1/po4a.1.php) tool
+takes automatically care of the translation workflow, updating the po
+files and translations on need.
+
+# Finding something to hack
+
+- Check the [GitHub issues](https://github.com/mquinson/po4a/issues).
+  Search in particular for the tasks are marked "new comer", as they
+  should be accessible even if you're just starting with the po4a
+  development.
+- Check the [Debian bug reports](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a),
+  since most of these reports are not related to Debian in any way.
+  Actually, they should be forwarded to the GitHub issue tracker, but
+  it's easier to read them on Debian directly. 
+  [Some of them](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a;tag=newcomer)
+  are tagged as "new comer".
+- Check the [TODO] file in the archive. This file often gets outdated,
+  but you may find some inspiring notes.
+- Add support for a new format. The best is to add support for a
+  format that you need yourself, or to convince some prospective users.
+  There is no better testing to a new TransTractor than the
+  translation of a large document used in production somewhere. Don't
+  forget to add all relevant tests to your format.
+- po4a comes with a fairly large amount of documentation. You are
+  welcome to fix or report any typo or errors. It would be good to improve
+  this documentation, for example with the [Google documentation style
+  guide](https://developers.googleblog.com/2017/09/making-google-developers-documentation.html)
+  but remember that our documentation is translated is a dozen of
+  languages. Improve it as much as possible, but avoid superfluous
+  changes when possible.
+
+# Testing your changes
+
+You should of course make sure that your PR does not break any test to
+get accepted. If you fix an issue or add a feature, we may be
+reluctant to integrate your change without a new dedicated test, to
+ensure that bugs won't resurface in the future.
+
+
+```sh
+  perl Build.PL
+  ./Build test
+```
+
+## Test dependencies
+
+Debian packages needed to run the testsuite:
+  docbook-xml texlive-binaries libhtml-parser-perl libmodule-build-perl opensp docbook
+
+Fedora 24 packages needed to run the testsuite (from the rpm po4a package):
+  perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
+  perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
+  docbook-dtds
 
 # Translating
 
@@ -25,28 +91,10 @@ On need, you can manually refresh the translation files as follows:
  ./Build postats
 ```
 
-# Running tests
-
-```sh
-  perl Build.PL
-  ./Build test
-```
-
-If the test suite reports errors, please report this as a bug, along
-with the full output and any other relevant details.
-
-## Test dependencies
-
-Debian packages needed to run the testsuite:
-  docbook-xml texlive-binaries libhtml-parser-perl libmodule-build-perl opensp docbook
-
-Fedora 24 packages needed to run the testsuite (from the rpm po4a package):
-  perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
-  perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
-  docbook-dtds
-
-
 # Reminder for the po4a maintainers
+
+This is mostly a note to ourselves. But who knows? Maybe you are (or
+soon will be) one of us? You're welcome here.
 
 ## Interacting with weblate
 
