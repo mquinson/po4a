@@ -7,10 +7,10 @@ msgstr ""
 "Project-Id-Version: po4a 0.41\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2018-02-18 14:39+0100\n"
-"PO-Revision-Date: 2018-02-18 13:30+0000\n"
+"PO-Revision-Date: 2018-02-18 17:10+0000\n"
 "Last-Translator: Martin Quinson <martin.quinson@ens-rennes.fr>\n"
-"Language-Team: Polish <https://hosted.weblate.org/projects/po4a/po4a-doc/pl/"
-">\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/po4a/po4a-doc/pl/>"
+"\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -641,14 +641,6 @@ msgstr "<option>-m </option><replaceable>PLIK_GŁÓWNY</replaceable>"
 #.  .br 
 #. type: Content of: <refentry><refsect1><variablelist><varlistentry><listitem><para>
 #: share/doc/po4aman-display-po.xml:19
-#, fuzzy
-#| msgid ""
-#| "The original man page.  It can be the absolute or relative path to the "
-#| "original man page (gzipped or not), the name the man page or the name and "
-#| "section of the man page (using the man.section format).  When the master "
-#| "document is not provided with the <option>-m</option> option, "
-#| "<command>po4aman-display-po</command> tries to find the original man page "
-#| "based on the line reference of the first string in the PO."
 msgid ""
 "The original man page.  It can be the absolute or relative path to the "
 "original man page (gzipped or not), the name of the man page or the name and "
@@ -1038,13 +1030,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:35
-#, fuzzy
-#| msgid ""
-#| "Comments in this files are noted by the char '#'. It comments everything "
-#| "until the end of the line. Lines can be continued by escaping the end of "
-#| "line.  All non blank lines must begin with a [] command, followed by its "
-#| "arguments.  (sound difficult said that way, but it is rather easy, I "
-#| "hope ;)"
 msgid ""
 "Comments in these files are noted by the char '#'. It comments everything "
 "until the end of the line. Lines can be continued by escaping the end of "
@@ -2986,13 +2971,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:5
-#, fuzzy
-#| msgid ""
-#| "All supported formats, in all supported combinations, can be handled in a "
-#| "single F<po4a-build.conf> configuration file and in a single call to "
-#| "C<po4a-build>. However, you can also choose to separate the F<po/> "
-#| "directories and have one configuration file for each run. (Call C<po4a-"
-#| "build -f FILE> for each one.)"
 msgid ""
 "All supported formats, in all supported combinations, can be handled in a "
 "single F<po4a-build.conf> configuration file and in a single call to C<po4a-"
@@ -3003,8 +2981,8 @@ msgstr ""
 "Wszystkie dostępne formaty i wszystkie dostępne kombinacje można zawrzeć w "
 "pojedynczym pliku konfiguracyjnym F<po4a-build.conf> i w pojedynczym "
 "wywołaniu programu C<po4a-build>. Jednakże można również rozdzielić katalogi "
-"F<po/> i używać oddzielnego pliku konfiguracji dla każdego uruchomienia "
-"(należy wtedy za każdym razem wywołać C<po4a-build -f PLIK>)."
+"F<po/> i używać oddzielnego pliku konfiguracji dla każdego uruchomienia ("
+"należy wtedy za każdym razem wywołać C<po4a-build -f PLIK>)."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:6
@@ -5611,19 +5589,14 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:167
-#, fuzzy
-#| msgid ""
-#| "Then, the following addendum will ensure that a section (in French) about "
-#| "the translator is added at the end of the file. (in French, \"TRADUCTEUR"
-#| "\" means \"TRANSLATOR\", and \"moi\" means \"me\")"
 msgid ""
 "Then, the following addendum will ensure that a section (in French) about "
 "the translator is added at the end of the file (in French, \"TRADUCTEUR\" "
 "means \"TRANSLATOR\", and \"moi\" means \"me\")."
 msgstr ""
 "Wtedy następujący dodatek spowoduje dodanie sekcji (w języku francuskim) na "
-"koniec tego pliku (w jęz. francuskim \"TRADUCTEUR\" oznacza \"TŁUMACZ\", a "
-"\"moi\" znaczy \"ja\")"
+"koniec tego pliku (w jęz. francuskim \"TRADUCTEUR\" oznacza \"TŁUMACZ\", a \""
+"moi\" znaczy \"ja\")."
 
 #. type: verbatim
 #: doc/po4a.7.pod:168
@@ -5873,29 +5846,7 @@ msgstr ""
 
 #. type: verbatim
 #: doc/po4a.7.pod:191
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  1 sub parse {\n"
-#| "  2   PARAGRAPH: while (1) {\n"
-#| "  3     $my ($paragraph,$pararef,$line,$lref)=(\"\",\"\",\"\",\"\");\n"
-#| "  4     $my $first=1;\n"
-#| "  5     while (($line,$lref)=$document->shiftline() && defined($line)) {\n"
-#| "  6       if ($line =~ m/<p>/ && !$first--; ) {\n"
-#| "  7         $document->unshiftline($line,$lref);\n"
-#| "  8\n"
-#| "  9         $paragraph =~ s/^<p>//s;\n"
-#| " 10         $document->pushline(\"<p>\".$document->translate($paragraph,$pararef));\n"
-#| " 11\n"
-#| " 12         next PARAGRAPH;\n"
-#| " 13       } else {\n"
-#| " 14         $paragraph .= $line;\n"
-#| " 15         $pararef = $lref unless(length($pararef));\n"
-#| " 16       }\n"
-#| " 17     }\n"
-#| " 18     return; # Did not got a defined line? End of input file.\n"
-#| " 19   }\n"
-#| " 20 } \n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  1 sub parse {\n"
 "  2   PARAGRAPH: while (1) {\n"
@@ -5928,7 +5879,8 @@ msgstr ""
 "  7         $document->unshiftline($line,$lref);\n"
 "  8\n"
 "  9         $paragraph =~ s/^<p>//s;\n"
-" 10         $document->pushline(\"<p>\".$document->translate($paragraph,$pararef));\n"
+" 10         $document->pushline(\"<p>\""
+".$document->translate($paragraph,$pararef));\n"
 " 11\n"
 " 12         next PARAGRAPH;\n"
 " 13       } else {\n"
@@ -5938,7 +5890,7 @@ msgstr ""
 " 17     }\n"
 " 18     return; # Nie otrzymano linii? Koniec pliku wejściowego.\n"
 " 19   }\n"
-" 20 } \n"
+" 20 }\n"
 "\n"
 
 #. type: textblock
@@ -6277,10 +6229,6 @@ msgstr ""
 
 #. type: =head2
 #: doc/po4a.7.pod:224
-#, fuzzy
-#| msgid ""
-#| "Why not put the original as comment along with translation (or other way "
-#| "around)?"
 msgid ""
 "Why not put the original as comment along with translation (or the other way "
 "around)?"
@@ -6411,11 +6359,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:235
-#, fuzzy
-#| msgid ""
-#| "Moreover, such problems are hard to detect (i.e., only Korean readers "
-#| "will detect that the encoding of Korean is broken [because of the Russian "
-#| "translator])"
 msgid ""
 "Moreover, such problems are hard to detect (i.e., only Korean readers will "
 "detect that the encoding of Korean is broken [because of the Russian "
@@ -6565,19 +6508,7 @@ msgstr ""
 
 #. type: verbatim
 #: doc/po4a.7.pod:251
-#, fuzzy, no-wrap
-#| msgid ""
-#| " |       *****************************************************\n"
-#| " |       *           GENERATED FILE, DO NOT EDIT             * \n"
-#| " |       * THIS IS NO SOURCE FILE, BUT RESULT OF COMPILATION *\n"
-#| " |       *****************************************************\n"
-#| " |\n"
-#| " | This file was generated by po4a-translate(1). Do not store it (in VCS,\n"
-#| " | for example), but store the PO file used as source file by po4a-translate. \n"
-#| " |\n"
-#| " | In fact, consider this as a binary, and the PO file as a regular source file:\n"
-#| " | If the PO gets lost, keeping this translation up-to-date will be harder ;)\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " |       *****************************************************\n"
 " |       *           GENERATED FILE, DO NOT EDIT             *\n"
@@ -6600,8 +6531,10 @@ msgstr ""
 " | (na przykład w CVS-ie), ale przechowuj plik PO, użyty jako plik źródłowy\n"
 " | przez polecenie po4a-translate.\n"
 " |\n"
-" | Tak naprawdę, potraktuj ten plik jako plik binarny, a plik PO jako zwykły\n"
-" | plik źródłowy: jeśli plik PO zaginie, to będzie trudniej zachować aktualność\n"
+" | Tak naprawdę, potraktuj ten plik jako plik binarny, a plik PO jako "
+"zwykły\n"
+" | plik źródłowy: jeśli plik PO zaginie, to będzie trudniej zachować "
+"aktualność\n"
 " | tego tłumaczenia ;)\n"
 "\n"
 
@@ -6628,27 +6561,7 @@ msgstr ""
 
 #. type: verbatim
 #: doc/po4a.7.pod:253
-#, fuzzy, no-wrap
-#| msgid ""
-#| " #\n"
-#| " #  ADVISES TO DEVELOPERS:\n"
-#| " #    - you do not need to manually edit POT or PO files.\n"
-#| " #    - this file contains the translation of your debconf templates.\n"
-#| " #      Do not replace the translation of your program with this !!\n"
-#| " #        (or your translators will get very upset)\n"
-#| " #\n"
-#| " #  ADVISES TO TRANSLATORS:\n"
-#| " #    If you are not familiar with the PO format, gettext documentation \n"
-#| " #     is worth reading, especially sections dedicated to this format.\n"
-#| " #    For example, run:\n"
-#| " #         info -n '(gettext)PO Files'\n"
-#| " #         info -n '(gettext)Header Entry'\n"
-#| " #\n"
-#| " #    Some information specific to po-debconf are available at\n"
-#| " #            /usr/share/doc/po-debconf/README-trans\n"
-#| " #         or http://www.debian.org/intl/l10n/po-debconf/README-trans\n"
-#| " #\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " #\n"
 " #  ADVISES TO DEVELOPERS:\n"
@@ -7066,13 +6979,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:24
-#, fuzzy
-#| msgid ""
-#| "Note that it is explicitly supported that the scripts themselves can "
-#| "contain strings for both runtime and documentation translation, e.g.  "
-#| "using gettext functions for runtime and embedded POD content for "
-#| "documentation. So it is not a problem to have the same file listed in "
-#| "F<po/POTFILES.in> and F<doc/po4a-build.conf>"
 msgid ""
 "Note that it is explicitly supported that the scripts themselves can contain "
 "strings for both runtime and documentation translation, e.g.  using gettext "
@@ -7084,7 +6990,7 @@ msgstr ""
 "tłumaczenia komunikatów wyjściowych i dokumentacji, np. używając funkcji "
 "programu gettext do tłumaczenia komunikatów skryptu i osadzonej w nim "
 "dokumentacji w formacie POD. Tak więc nie będzie problemem wymienienie tego "
-"samego pliku zarówno w F<po/POTFILES.in>, jak i F<doc/po4a-build.conf>"
+"samego pliku zarówno w F<po/POTFILES.in>, jak i F<doc/po4a-build.conf>."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:25
@@ -7121,13 +7027,6 @@ msgstr "po4a-build.make"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:30
-#, fuzzy
-#| msgid ""
-#| "Copy this example file as F<po/Makefile> - it shouldn't need editing but "
-#| "you may want to keep it updated against F</usr/share/doc/po4a/examples/"
-#| "po4a-build.make> as it may need to be updated within po4a releases as the "
-#| "underlying intltool support changes. (The file itself was generated from "
-#| "another project using Autotools and intltool.)"
 msgid ""
 "Copy this example file as F<po/Makefile> - it shouldn't need editing but you "
 "may want to keep it updated against F</usr/share/doc/po4a/examples/po4a-"
@@ -7220,11 +7119,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:39
-#, fuzzy
-#| msgid ""
-#| "Depending on how you prepare your source tarball, you may also need to "
-#| "list new PO files in the F<MANIFEST> file or add to the script(s) that "
-#| "prepare the tarball. (That also applies to F<po4a-build>.)"
 msgid ""
 "Depending on how you prepare your source tarball, you may also need to list "
 "new PO files in the F<MANIFEST> file or add to the script(s) that prepare "
@@ -8998,11 +8892,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:91
-#, fuzzy
-#| msgid ""
-#| "(this will require the B<-o untranslated=als,IR_untranslated> option)"
 msgid "This will require the B<-o untranslated=als,IR_untranslated> option."
-msgstr "(wymaga to podania opcji B<-o untranslated=als,IR_untranslated>)"
+msgstr "Wymaga to podania opcji B<-o untranslated=als,IR_untranslated>."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:92
@@ -9665,10 +9556,6 @@ msgstr "count_entries_doc()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:86
-#, fuzzy
-#| msgid ""
-#| "Returns the number of entries in document. If a string appears multiple "
-#| "times in the document, it will be counted multiple times"
 msgid ""
 "Returns the number of entries in document. If a string appears multiple "
 "times in the document, it will be counted multiple times."
@@ -10253,18 +10140,13 @@ msgstr "B<ignore-inclusion>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:33
-#, fuzzy
-#| msgid ""
-#| "Space separated list of entities that won't be inlined.  Use this option "
-#| "with caution: it may cause nsgmls (used internally) to add tags and "
-#| "render the output document invalid."
 msgid ""
 "Space separated list of entities that won't be inlined.  Use this option "
 "with caution: it may cause onsgmls (used internally) to add tags and render "
 "the output document invalid."
 msgstr ""
 "Rozdzielona spacjami lista encji, które nie będą włączane. Tej opcji należy "
-"używać ostrożnie: może spowodować, że nsgmls (używany wewnętrznie przez ten "
+"używać ostrożnie: może spowodować, że onsgmls (używany wewnętrznie przez ten "
 "moduł) doda elementy i wygeneruje niepoprawny dokument wyjściowy."
 
 #. type: textblock
@@ -10291,13 +10173,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:38
-#, fuzzy
-#| msgid ""
-#| "The problem is that I have to \"protect\" the conditional inclusions (i."
-#| "e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from nsgmls. Otherwise "
-#| "nsgmls eats them, and I don't know how to restore them in the final "
-#| "document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and "
-#| "C<{PO4A-end}>."
 msgid ""
 "The problem is that I have to \"protect\" the conditional inclusions (i.e. "
 "the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from onsgmls. Otherwise onsgmls "
@@ -10305,8 +10180,8 @@ msgid ""
 "prevent that, I rewrite them to C<{PO4A-beg-foo}> and C<{PO4A-end}>."
 msgstr ""
 "Problemem jest to, że musiałem \"ochronić\" warunkowe włączenia (rzeczy "
-"takie jak C<E<lt>! [ %foo [> i C<]]E<gt>>) w nsgmls. W przeciwnym razie "
-"nsgmls je zjada, a nie mam pojęcia jak je przywrócić w końcowym dokumencie. "
+"takie jak C<E<lt>! [ %foo [> i C<]]E<gt>>) w onsgmls. W przeciwnym razie "
+"onsgmls je zjada, a nie mam pojęcia jak je przywrócić w końcowym dokumencie. "
 "Aby temu zapobiec, przepisałem je jako {PO4A-beg-coś}> i C<{PO4A-end}>."
 
 #. type: textblock
@@ -10403,13 +10278,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:51
-#, fuzzy
-#| msgid ""
-#| "This is because I preprocess the file to protect the conditional "
-#| "inclusion (i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some "
-#| "entities (like &version;) from nsgmls because I want them verbatim to the "
-#| "generated document. For that, I make a temp copy of the input file and do "
-#| "all the changes I want to this before passing it to nsgmls for parsing."
 msgid ""
 "This is because I preprocess the file to protect the conditional inclusion "
 "(i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like "
@@ -10419,10 +10287,10 @@ msgid ""
 msgstr ""
 "Dzieje się tak dlatego, że wstępnie przetwarzam ten plik, aby ochronić "
 "warunkowe włączenia (rzeczy takie jak C<E<lt>! [ %foo [> i C<]]E<gt>>) oraz "
-"niektóre encja (jak &version) przed nsgmls ponieważ chcę je otrzymać bez "
+"niektóre encja (jak &version) przed onsgmls ponieważ chcę je otrzymać bez "
 "zmian w wygenerowanym dokumencie. Dlatego, tworzę tymczasową kopię pliku "
 "wejściowego i na niej robię wszystkie zmiany przed przekazaniem go "
-"programowi nsgmls do przetwarzania."
+"programowi onsgmls do przetwarzania."
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:52
@@ -11030,10 +10898,8 @@ msgstr "B<read>"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:77
-#, fuzzy
-#| msgid "Overload Transtractor's read"
 msgid "Overloads Transtractor's read()."
-msgstr "Przeładowanie funkcji read TransTractora"
+msgstr "Przeładowanie funkcji read() TransTractora."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:78
@@ -11503,10 +11369,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
-#, fuzzy
-#| msgid "B<wrap>"
 msgid "B<neverwrap>"
-msgstr "B<wrap>"
+msgstr "B<neverwrap>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:35
@@ -12706,11 +12570,6 @@ msgstr "Uniemożliwia usuwanie spacji otaczających wyodrębnione komunikaty."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:15
-#, fuzzy
-#| msgid ""
-#| "Canonizes the string to translate, considering that whitespaces are not "
-#| "important, and wraps the translated document. This option can be "
-#| "overridden by custom tag options. See the \"tags\" option below."
 msgid ""
 "Canonicalizes the string to translate, considering that whitespaces are not "
 "important, and wraps the translated document. This option can be overridden "
@@ -12723,10 +12582,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:16
-#, fuzzy
-#| msgid "B<attributes>"
 msgid "B<unwrap_attributes>"
-msgstr "B<attributes>"
+msgstr "B<unwrap_attributes>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:17
@@ -12751,10 +12608,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:20
-#, fuzzy
-#| msgid "B<quotes>"
 msgid "B<escapequotes>"
-msgstr "B<quotes>"
+msgstr "B<escapequotes>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:21
@@ -12794,12 +12649,6 @@ msgstr "B<ontagerror>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:26
-#, fuzzy
-#| msgid ""
-#| "This option defines the behavior of the module when it encounter a "
-#| "invalid XML syntax (a closing tag which does not match the last opening "
-#| "tag, or a tag's attribute without value).  It can take the following "
-#| "values:"
 msgid ""
 "This option defines the behavior of the module when it encounters invalid "
 "XML syntax (a closing tag which does not match the last opening tag, or a "
@@ -12945,15 +12794,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:47
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of tag's attributes you want to translate.  You can "
-#| "specify the attributes by their name (for example, \"lang\"), but you can "
-#| "prefix it with a tag hierarchy, to specify that this attribute will only "
-#| "be translated when it's into the specified tag. For example: "
-#| "E<lt>bbbE<gt>E<lt>aaaE<gt>lang specifies that the lang attribute will "
-#| "only be translated if it's into an E<lt>aaaE<gt> tag, and it's into a "
-#| "E<lt>bbbE<gt> tag."
 msgid ""
 "Space-separated list of tag's attributes you want to translate.  You can "
 "specify the attributes by their name (for example, \"lang\"), but you can "
@@ -13026,11 +12866,6 @@ msgstr ""
 #: lib/Locale/Po4a/Xml.pm:55 lib/Locale/Po4a/Xml.pm:58
 #: lib/Locale/Po4a/Xml.pm:63 lib/Locale/Po4a/Xml.pm:70
 #: lib/Locale/Po4a/Xml.pm:75
-#, fuzzy
-#| msgid ""
-#| "The tags must be in the form <aaa>, but you can join some (<bbb><aaa>), "
-#| "if a tag (<aaa>) should only be considered when it's into another tag "
-#| "(<bbb>)."
 msgid ""
 "The tags must be in the form <aaa>, but you can join some (<bbb><aaa>), if a "
 "tag (<aaa>) should only be considered when it's within another tag (<bbb>)."
@@ -13368,14 +13203,6 @@ msgstr "MODYFIKOWANIE TYPÓW ELEMENTÓW (DO ZROBIENIA)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:104
-#, fuzzy
-#| msgid ""
-#| "This is a more complex one, but it enables a (almost) total "
-#| "customization.  It's based in a list of hashes, each one defining a tag "
-#| "type's behavior. The list should be sorted so that the most general tags "
-#| "are after the most concrete ones (sorted first by the beginning and then "
-#| "by the end keys). To define a tag type you'll have to make a hash with "
-#| "the following keys:"
 msgid ""
 "This is a more complex one, but it enables a (almost) total customization.  "
 "It's based on a list of hashes, each one defining a tag type's behavior. The "
