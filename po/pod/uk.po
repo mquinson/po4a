@@ -2,18 +2,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
-"Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
-"POT-Creation-Date: 2018-02-18 14:39+0100\n"
-"PO-Revision-Date: 2018-02-18 13:02+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-18 14:59+0200\n"
+"PO-Revision-Date: 2018-02-18 14:40+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
-"uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
+"doc/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2.19\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -1003,13 +1003,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:35
-#, fuzzy
-#| msgid ""
-#| "Comments in this files are noted by the char '#'. It comments everything "
-#| "until the end of the line. Lines can be continued by escaping the end of "
-#| "line.  All non blank lines must begin with a [] command, followed by its "
-#| "arguments.  (sound difficult said that way, but it is rather easy, I "
-#| "hope ;)"
 msgid ""
 "Comments in these files are noted by the char '#'. It comments everything "
 "until the end of the line. Lines can be continued by escaping the end of "
@@ -1132,6 +1125,10 @@ msgid ""
 "be created for each document specified in the B<po4a> configuration file.  "
 "See the B<Split mode> section."
 msgstr ""
+"Ви також можете використовувати змінну B<$master> для посилання на назву "
+"основного документа. У цьому випадку B<po4a> використовуватиме режим поділу: "
+"один POT і один PO (для кожної мови) буде створено для кожного з документів, "
+"вказаних у файлі налаштувань B<po4a>. Див. розділ B<Режим поділу>."
 
 #. type: verbatim
 #: po4a:50
@@ -1153,6 +1150,12 @@ msgid ""
 "stripping out the extension).  These languages will be used for the "
 "substitution of the B<$lang> variable in the rest of the configuration file."
 msgstr ""
+"Іншою командою можна скористатися для того, щоб вказати назву каталогу, де "
+"зберігаються файли PO і POT. Якщо використано цю команду, B<po4a> виявить "
+"файл POT як єдиний файл F<*.pot> з вказаного каталогу. Крім того, B<po4a> "
+"використовуватиме список файлів F<*.po> для визначення списку мов (вилучаючи "
+"з назв файлів суфікс). Ці мови буде використано для заміни змінної B<$lang> "
+"у решті файла налаштувань."
 
 #. type: textblock
 #: po4a:53
@@ -1160,6 +1163,8 @@ msgid ""
 "This command should not be used together with the B<[po4a_langs]> or "
 "B<[po4a_paths]> commands."
 msgstr ""
+"Цю команду не слід використовувати разом з командою B<[po4a_langs]> або "
+"B<[po4a_paths]>."
 
 #. type: textblock
 #: po4a:54
@@ -1167,6 +1172,8 @@ msgid ""
 "When using this command, you have to create an empty POT file on the first "
 "invocation of B<po4a> to let it know the name of the POT file."
 msgstr ""
+"Якщо ви користуєтеся цією командою, вам слід створити порожній файл POT під "
+"час першого запуску B<po4a>, щоб повідомити програмі назву файла POT."
 
 #. type: verbatim
 #: po4a:55
@@ -1184,6 +1191,9 @@ msgid ""
 "You now naturally have to specify which documents are translated, their "
 "format, and where to put the translations. It can be made by such lines:"
 msgstr ""
+"Тепер, ви, природно, маєте вказати, які документи перекладаються, їхній "
+"формат, та визначити, куди слід записувати перекладені документи. Зробити це "
+"можна за допомогою таких рядків:"
 
 #. type: verbatim
 #: po4a:58
@@ -1195,6 +1205,11 @@ msgid ""
 "             add_fr:doc/l10n/script.fr.add\n"
 "\n"
 msgstr ""
+" [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
+"              de:doc/de/mein_kram.sgml\n"
+" [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \\\n"
+"             add_fr:doc/l10n/script.fr.add\n"
+"\n"
 
 #. type: textblock
 #: po4a:59
@@ -1204,6 +1219,10 @@ msgid ""
 "this document.  Please refer to L<po4a(7)> for more information about the "
 "addenda."
 msgstr ""
+"Ця частина також майже очевидна. Зауважте, що у другому випадку "
+"F<doc/l10n/script.fr.add> є додатком для додавання французької версії цього "
+"документа. Будь ласка, зверніться до підручника з L<po4a(7)>, щоб дізнатися "
+"більше про додатки."
 
 #. type: textblock
 #: po4a:60
@@ -1218,6 +1237,9 @@ msgid ""
 "                  (add_<lang>:<modifier>*<addendum_path>)*\n"
 "\n"
 msgstr ""
+" [type: <формат>] <основний_документ> (<мова>:<локалізований_документ>)* \\\n"
+"                  (add_<мова>:<модифікатор>*<шлях_до_додатка>)*\n"
+"\n"
 
 #. type: textblock
 #: po4a:62
@@ -1225,6 +1247,8 @@ msgid ""
 "If there is no modifier, I<addendum_path> is a path to an addendum.  "
 "Modifiers are"
 msgstr ""
+"Якщо не буде вказано модифікатора, значенням параметра I<шлях_до_додатка> "
+"буде шлях до додатка. Можливі модифікатори:"
 
 #. type: =item
 #: po4a:63
@@ -1235,6 +1259,7 @@ msgstr "B<?>"
 #: po4a:64
 msgid "Include I<addendum_path> if this file does exist, otherwise do nothing."
 msgstr ""
+"Включити I<шлях_до_додатка>, якщо цей файл існує, інакше, не робити нічого."
 
 #. type: =item
 #: po4a:65
@@ -1247,6 +1272,9 @@ msgid ""
 "I<addendum_path> is not a regular addendum but a file containg a list of "
 "addenda, one by line.  Each addendum may be preceded by modifiers."
 msgstr ""
+"I<шлях_до_додатків> не є звичайним файлом додатка, а є файлом, що містить "
+"список додатків, по одному на рядок. Перед записом кожного з додатків може "
+"бути вказано модифікатори."
 
 #. type: =item
 #: po4a:67
@@ -1259,6 +1287,8 @@ msgid ""
 "I<addendum_path> is discarded, it is not loaded and will not be loaded by "
 "any further addendum specification."
 msgstr ""
+"I<шлях_до_додатків> відкидається, він не завантажується, його не буде "
+"завантажено будь-якою подальшою специфікацією додатків."
 
 #. type: verbatim
 #: po4a:70
@@ -1268,6 +1298,9 @@ msgid ""
 "             add_fr:doc/l10n/script.fr.add\n"
 "\n"
 msgstr ""
+" [type: pod] script $lang:doc/$lang/script.1 \\\n"
+"             add_fr:doc/l10n/script.fr.add\n"
+"\n"
 
 #. type: textblock
 #: po4a:71
@@ -1275,6 +1308,7 @@ msgid ""
 "If all the languages had addenda with similar paths, you could also write "
 "something like:"
 msgstr ""
+"Якщо для всіх мов шляхи до додатків подібні, ви можете написати ось так:"
 
 #. type: verbatim
 #: po4a:72
@@ -1284,6 +1318,9 @@ msgid ""
 "             add_$lang:doc/l10n/script.$lang.add\n"
 "\n"
 msgstr ""
+" [type: pod] script $lang:doc/$lang/script.1 \\\n"
+"             add_$lang:doc/l10n/script.$lang.add\n"
+"\n"
 
 #. type: textblock
 #: po4a:74
@@ -1291,6 +1328,9 @@ msgid ""
 "B<po4a> accepts options that will be passed to the module. These options are "
 "module specific and are specified with the B<-o> switch."
 msgstr ""
+"B<po4a> приймає параметри, які буде передано модулю обробки. Ці параметри "
+"специфічні для кожного з модулів і визначаються за допомогою перемикача "
+"B<-o>."
 
 #. type: textblock
 #: po4a:75
@@ -1312,6 +1352,10 @@ msgid ""
 "            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
 "\n"
 msgstr ""
+"Ось приклад:\n"
+" [type:man] data-05/test2_man.1 $lang:tmp/test2_man.$lang.1 \\\n"
+"            opt:\"-k 75\" opt_it:\"-L UTF-8\" opt_fr:-v\n"
+"\n"
 
 #. type: verbatim
 #: po4a:77
@@ -1322,6 +1366,10 @@ msgid ""
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
 "\n"
 msgstr ""
+"У аргументах можуть містити пробіли, якщо ви скористаєтеся одинарними або "
+"екранованими подвійними лапками:\n"
+" [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\" -k 20\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:78
@@ -2580,13 +2628,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:5
-#, fuzzy
-#| msgid ""
-#| "All supported formats, in all supported combinations, can be handled in a "
-#| "single <filename>po4a-build.conf</filename> configuration file and in a "
-#| "single call to <command>po4a-build</command>.  See "
-#| "<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
-#| "manvolnum></citerefentry>."
 msgid ""
 "All supported formats, in all supported combinations, can be handled in a "
 "single F<po4a-build.conf> configuration file and in a single call to C<po4a-"
@@ -2595,10 +2636,10 @@ msgid ""
 "each one)."
 msgstr ""
 "Усі підтримувані формати, у всіх їхніх підтримуваних комбінаціях можна "
-"вказати у одному файлі налаштувань <filename>po4a-build.conf</filename> і у "
-"єдиному виклику <command>po4a-build</command>.  Див. "
-"<citerefentry><refentrytitle>po4a-build.conf</refentrytitle><manvolnum>5</"
-"manvolnum></citerefentry>."
+"вказати у одному файлі налаштувань F<po4a-build.conf> і у єдиному виклику C"
+"<po4a-build>. Втім, ви можете також відділити каталоги F<po/> і створити по "
+"одному файлу налаштувань на кожен запуск. (Для кожного з файлів доведеться "
+"запускати C<po4a-build -f ФАЙЛ>.)"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:6
