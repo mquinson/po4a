@@ -131,7 +131,10 @@ wlc unlock
 
 Here is the checklist of things to remember when releasing po4a:
 
-- Integrate all pending translations: `wlc commit && wlc push`
+- Integrate all pending translations: 
+  - `wlc commit && wlc push` 
+  - merge the pull request
+  - `git pull`
 - Bump the version number in lib/Locale/Po4a/TransTractor.pm and
   regenerate the building script: `perl Build.PL`
 - Check that `./Build test` reports no error.
