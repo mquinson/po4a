@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2018-02-18 18:13+0100\n"
-"PO-Revision-Date: 2018-02-18 20:32+0000\n"
+"PO-Revision-Date: 2018-02-25 21:24+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.19\n"
+"X-Generator: Weblate 2.20-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-build.xml:1 share/doc/po4aman-display-po.xml:1
@@ -1342,6 +1342,13 @@ msgid ""
 "or an option with an argument).  You can also specify options that will only "
 "apply to a specific language by using the B<opt_>I<lang> keyword."
 msgstr ""
+"Якщо вам потрібен специфічний параметр для одного з документів, які ви "
+"хочете перекласти, ви також можете вказати його у файлі налаштувань. "
+"Параметри впроваджуються за допомогою ключового слова B<opt>. Аргумент "
+"ключового слова B<opt> слід брати у подвійні лапки, якщо у ньому міститься "
+"пробіл (наприклад, якщо ви вказуєте декілька параметрів або параметр з "
+"аргументом). Ви також можете вказати параметри, які стосуються лише певної "
+"мови, за допомогою ключового слова B<opt_>I<мова>."
 
 #. type: verbatim
 #: po4a:76
@@ -1376,6 +1383,9 @@ msgid ""
 "If you want to specify the same options for many documents, you may want to "
 "use an alias (see the B<Specifying aliases> section below)."
 msgstr ""
+"Якщо ви хочете вказати однакові параметри для багатьох документів, ви можете "
+"скористатися альтернативною назвою (див. розділ B<Визначення альтернативних "
+"назв> нижче)."
 
 #. type: verbatim
 #: po4a:79
@@ -1397,6 +1407,9 @@ msgid ""
 "If you must specify the same options for multiple files, you may be "
 "interested in defining a module alias. This can be done this way:"
 msgstr ""
+"Якщо вам потрібно вказати однакові параметри для декількох файлів, вам буде "
+"корисним визначення альтернативних назв модулів. Зробити це можна у такий "
+"спосіб:"
 
 #. type: verbatim
 #: po4a:82
@@ -1415,6 +1428,10 @@ msgid ""
 "the B<-k 21> applied to all the languages and with B<-o debug=splitargs> "
 "applied to the Spanish translation."
 msgstr ""
+"Цей код визначає альтернативну назву модуля B<test>, заснованого на модулі "
+"B<man>, із параметром B<-k 21>, який застосовується до усіх мов, і "
+"параметром B<-o debug=splitargs>, який застосовується для перекладу "
+"іспанською."
 
 #. type: textblock
 #: po4a:84
@@ -1455,6 +1472,9 @@ msgid ""
 "When the split mode is used, a temporary big POT and temporary big POs are "
 "used. This permits to share the translations between all the POs."
 msgstr ""
+"Якщо використовується режим поділу, використовуються тимчасовий великий файл "
+"POT і тимчасові великі файли PO. Це надає змогу спільного використання "
+"перекладів для усіх файлів PO."
 
 #. type: textblock
 #: po4a:90
@@ -1465,6 +1485,12 @@ msgid ""
 "and removes the fuzzy tag in one PO, the translation of this string will be "
 "updated in every POs automatically."
 msgstr ""
+"Якщо буде виявлено два файли PO із різними перекладами одного і того самого "
+"рядка, B<po4a> позначить переклад рядка як неточний і надішле обидва "
+"переклади до усіх файлів PO, які містять цей рядок. Далі, коли перекладач "
+"оновлюватиме переклад і вилучить позначку неточного перекладу у одному з "
+"файлів PO, переклад цього рядка буде оновлено у всіх інших файлах PO "
+"автоматично."
 
 #. type: textblock
 #: po4a:91
@@ -1473,6 +1499,9 @@ msgid ""
 "the name of the master file can be specified by adding a C<master:"
 "file=>I<name> option:"
 msgstr ""
+"Якщо існуватимуть конфлікти назв, пов'язані із тим, що декілька з файлів "
+"матимуть однакові назви, назву основного файла можна вказати за допомогою "
+"параметра C<master:file=>I<назва>:"
 
 #. type: verbatim
 #: po4a:92
@@ -1502,6 +1531,10 @@ msgid ""
 "resulting file (default: 80). I.e. by default, files have to be translated "
 "at at least 80% to get written."
 msgstr ""
+"Мінімальне порогове значення частки перекладених рядків у відсотках, щоб "
+"файл результат було збережено, тобто записано (типове значення: 80). Інакше "
+"кажучи, типово, щоб файл було записано, його має бути перекладено принаймні "
+"на 80%."
 
 #. type: =item
 #: po4a:96 po4a-gettextize:28 po4a-normalize:15 po4a-translate:32
@@ -1528,6 +1561,9 @@ msgid ""
 "master documents must use the same charset for now. This is a known "
 "limitation, and we are working on solving this."
 msgstr ""
+"Кодування файлів, які містять документи для перекладу. Зауважте, що у "
+"поточній версії усі основні документи мають зберігатися у одному кодуванні. "
+"Це відоме обмеження, яке ми намагаємося усунути."
 
 #. type: =item
 #: po4a:100 po4a-gettextize:22 po4a-translate:22
@@ -1541,6 +1577,9 @@ msgid ""
 "translated documents will use the same charset for now. This is a known "
 "limitation, and we are working on solving this."
 msgstr ""
+"Кодування файлів, у яких містяться дані перекладених документів. Зауважте, "
+"що у поточній версії дані усізх перекладених документів мають зберігатися у "
+"одному кодуванні. Це відоме обмеження, над усуванням якого ми працюємо."
 
 #. type: =item
 #: po4a:102 po4a-translate:14
@@ -1553,6 +1592,8 @@ msgid ""
 "Charset of the addenda. Note that all the addenda should be in the same "
 "charset."
 msgstr ""
+"Кодування для додатків. Зауважте, що дані усіх додатків мають зберігатися у "
+"одному кодуванні."
 
 #. type: =item
 #: po4a:104 po4a-gettextize:32 po4a-normalize:23 po4a-translate:36
@@ -1574,7 +1615,7 @@ msgstr "B<-v>, B<--verbose>"
 #. type: textblock
 #: po4a:107 po4a-gettextize:35 po4a-translate:39 po4a-updatepo:35
 msgid "Increase the verbosity of the program."
-msgstr ""
+msgstr "Збільшити докладність повідомлень програми."
 
 #. type: =item
 #: po4a:108
@@ -1584,7 +1625,7 @@ msgstr "B<-q>, B<--quiet>"
 #. type: textblock
 #: po4a:109
 msgid "Decrease the verbosity of the program."
-msgstr ""
+msgstr "Зменшити докладність повідомлень програми."
 
 #. type: =item
 #: po4a:110 po4a-gettextize:36 po4a-translate:40 po4a-updatepo:36
@@ -1594,7 +1635,7 @@ msgstr "B<-d>, B<--debug>"
 #. type: textblock
 #: po4a:111 po4a-gettextize:37 po4a-translate:41 po4a-updatepo:37
 msgid "Output some debugging information."
-msgstr ""
+msgstr "Вивести деякі діагностичні відомості."
 
 #. type: =item
 #: po4a:112 po4a-gettextize:26 po4a-normalize:10 po4a-translate:26
@@ -1609,6 +1650,10 @@ msgid ""
 "'I<name>B<=>I<value>' format. See the documentation of each plugin for more "
 "information about the valid options and their meanings."
 msgstr ""
+"Додаткові параметри, які слід передати додатку форматування. Кожен параметр "
+"слід вказувати у форматі I<назва>B<=>I<значення>. Докладніші відомості щодо "
+"параметрів кожного з додатків можна знайти у документації до відповідного "
+"додатка."
 
 #. type: =item
 #: po4a:114
@@ -1621,12 +1666,14 @@ msgid ""
 "Always generate the POT and PO files, even if B<po4a> considers it is not "
 "necessary."
 msgstr ""
+"Завжди створювати файли POT і PO, навіть якщо B<po4a> це видається "
+"непотрібним."
 
 #. type: textblock
 #: po4a:116
 msgid ""
 "The default behavior (when B<--force> is not specified) is the following:"
-msgstr ""
+msgstr "Типова поведінка (якщо не вказано B<--force>) така:"
 
 #. type: textblock
 #: po4a:117
@@ -1635,6 +1682,11 @@ msgid ""
 "the configuration file is more recent.  The POT file is also written in a "
 "temporary document and B<po4a> verifies that the changes are really needed."
 msgstr ""
+"Якщо файл POT вже існує, його буде повторно створено, якщо момент часу "
+"внесення змін до основного документа або файла налаштувань є новішим за "
+"момент часу внесення змін до файла POT. Крім того, файл POT буде записано до "
+"тимчасового документа, за яким B<po4a> визначить, чи справді слід вносити "
+"якісь зміни до файла."
 
 #. type: textblock
 #: po4a:118
@@ -1659,6 +1711,8 @@ msgstr ""
 msgid ""
 "The PO files are always re-generated based on the POT with B<msgmerge -U>."
 msgstr ""
+"Файли PO завжди повторно створюються на основі файла POT за допомогою B<"
+"msgmerge -U>."
 
 #. type: =item
 #: po4a:121
