@@ -95,6 +95,9 @@ On need, you can manually refresh the translation files as follows:
  ./Build         # Refresh everything, even the pot file
 ```
 
+The documentation is written using the PerlDoc format (pod), as
+described here: http://perldoc.perl.org/perlpod.html
+
 # Reminder for the po4a maintainers
 
 This is mostly a note to ourselves. But who knows? Maybe you are (or
