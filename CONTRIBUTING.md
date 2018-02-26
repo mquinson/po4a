@@ -91,7 +91,8 @@ requests for that.
 On need, you can manually refresh the translation files as follows:
 ```sh
  perl Build.PL
- ./Build postats
+ ./Build postats # Refresh the po files from the (unchanged) pot file
+ ./Build         # Refresh everything, even the pot file
 ```
 
 # Reminder for the po4a maintainers
@@ -120,7 +121,7 @@ wlc commit
 wlc push
 # Merge the pull request on github
 # Do and commit your local changes
-./Build postats
+./Build 
 git commit -m "update po files"
 git push 
 wlc pull
