@@ -4,16 +4,16 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: po4a-devel@lists.alioth.debian.org\n"
 "POT-Creation-Date: 2018-02-26 16:50+0100\n"
-"PO-Revision-Date: 2018-02-25 21:24+0000\n"
+"PO-Revision-Date: 2018-02-26 22:30+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
-"uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
+"doc/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 2.20-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -1334,15 +1334,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:75
-#, fuzzy
-#| msgid ""
-#| "If you need a specific option for one of the document you want to "
-#| "translate, you can also specify it in the configuration file. Options are "
-#| "introduced by the B<opt> keyword. The argument of the B<opt> keyword must "
-#| "be quoted with double quotes if it contains a space (e.g. if you specify "
-#| "multiple options, or an option with an argument).  You can also specify "
-#| "options that will only apply to a specific language by using the "
-#| "B<opt_>I<lang> keyword."
 msgid ""
 "If you need a specific option for one of the documents you want to "
 "translate, you can also specify it in the configuration file. Options are "
@@ -1535,11 +1526,6 @@ msgstr "B<-k>, B<--keep>"
 
 #. type: textblock
 #: po4a:95
-#, fuzzy
-#| msgid ""
-#| "Minimal threshold for translation percentage to keep (i.e. write) the "
-#| "resulting file (default: 80). I.e. by default, files have to be "
-#| "translated at at least 80% to get written."
 msgid ""
 "Minimal threshold for translation percentage to keep (i.e. write) the "
 "resulting file (default: 80). I.e. by default, files have to be translated "
@@ -1711,6 +1697,12 @@ msgid ""
 "B<--keep>), a file with the F<.po4a-stamp> extension can be created (see B<--"
 "stamp>)."
 msgstr ""
+"Крім того, перекладений документ буде повторно створено, лише якщо його "
+"основний документ, файл PO, один із додатків або файл налаштувань виявиться "
+"актуальнішим. Щоб запобігти спробам повторного створення перекладених "
+"документів, які не проходять перевірки на порогове значення перекладів (див. "
+"B<--keep>), буде створено файл із суфіксом назви F<.po4a-stamp> (див. "
+"B<--stamp>)."
 
 #. type: textblock
 #: po4a:119
@@ -1719,6 +1711,9 @@ msgid ""
 "because the modification time of these included files are not taken into "
 "account."
 msgstr ""
+"Якщо до основного документа включаються додаткові файли, вам слід "
+"скористатися прапорцем B<--force>, інакше час внесення змін до цих включених "
+"файлів не буде враховано."
 
 #. type: textblock
 #: po4a:120
@@ -1741,6 +1736,10 @@ msgid ""
 "according to the expected translated document, with the F<.po4a-stamp> "
 "extension."
 msgstr ""
+"Наказати B<po4a> створити файли штампів, якщо перекладений документ не "
+"створено через те, що його переклад не досяг порогового значення. Назви цих "
+"файлів штампів будуть відповідати назвам очікуваних перекладених документів "
+"із додаванням суфікса F<.po4a-stamp>."
 
 #. type: textblock
 #: po4a:123
@@ -1749,6 +1748,10 @@ msgid ""
 "stamp files are always used if they exist, and they are removed with B<--rm-"
 "translations> or when the file is finally translated."
 msgstr ""
+"Зауваження: цей параметр вмикає лише створення файлів F<.po4a-stamp>. "
+"Програма завжди використовуватиме файли штампів, якщо вони існують, їх буде "
+"вилучено, лише якщо вказано параметр B<--rm-translations> або переклад файла "
+"буде завершено."
 
 #. type: =item
 #: po4a:124
@@ -1759,7 +1762,7 @@ msgstr "B<--no-translations>"
 #: po4a:125
 msgid ""
 "Do not generate the translated documents, only update the POT and PO files."
-msgstr ""
+msgstr "Не створювати перекладених документів, лише оновити файли POT і PO."
 
 #. type: =item
 #: po4a:126
@@ -1771,6 +1774,8 @@ msgstr "B<--no-update>"
 msgid ""
 "Do not change the POT and PO files, only the translation may be updated."
 msgstr ""
+"Не змінювати файли POT і PO, лише оновити, якщо можливо, перекладені "
+"документи."
 
 #. type: =item
 #: po4a:128
@@ -1781,6 +1786,7 @@ msgstr "B<--rm-translations>"
 #: po4a:129
 msgid "Remove the translated files (implies B<--no-translations>)."
 msgstr ""
+"Вилучити перекладені файли (із неявним додаванням B<--no-translations>)."
 
 #. type: =item
 #: po4a:130
@@ -1792,6 +1798,8 @@ msgstr "B<--no-backups>"
 msgid ""
 "This flag does nothing since 0.41, and may be removed in later releases."
 msgstr ""
+"Цей прапорець не діє з версії 0.41, його може бути вилучено у наступних "
+"випусках."
 
 #. type: =item
 #: po4a:132
@@ -5292,6 +5300,25 @@ msgid ""
 " #\n"
 "\n"
 msgstr ""
+" #\n"
+" #  ADVISES TO DEVELOPERS:\n"
+" #    - you do not need to manually edit POT or PO files.\n"
+" #    - this file contains the translation of your debconf templates.\n"
+" #      Do not replace the translation of your program with this !!\n"
+" #        (or your translators will get very upset)\n"
+" #\n"
+" #  ADVISES TO TRANSLATORS:\n"
+" #    If you are not familiar with the PO format, gettext documentation\n"
+" #     is worth reading, especially sections dedicated to this format.\n"
+" #    For example, run:\n"
+" #         info -n '(gettext)PO Files'\n"
+" #         info -n '(gettext)Header Entry'\n"
+" #\n"
+" #    Some information specific to po-debconf are available at\n"
+" #            /usr/share/doc/po-debconf/README-trans\n"
+" #         or http://www.debian.org/intl/l10n/po-debconf/README-trans\n"
+" #\n"
+"\n"
 
 #. type: =head2
 #: doc/po4a.7.pod:254
