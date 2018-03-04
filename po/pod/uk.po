@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-28 18:20+0200\n"
-"PO-Revision-Date: 2018-03-02 12:57+0000\n"
+"POT-Creation-Date: 2018-03-04 08:49+0200\n"
+"PO-Revision-Date: 2018-03-04 13:10+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -2140,6 +2140,12 @@ msgid ""
 "po4a/add_fr/> and the next time the programm is build the French translation "
 "is automatically build as well in F<man/translated/fr/>."
 msgstr ""
+"Щойно усе буде налаштовано, вам не доведеться знову редагувати F<Makefile>, "
+"якщо з'явиться новий переклад, тобто, якщо, наприклад, перекладачі "
+"французькою надішлють вам F<fr.po> і F<fr.add>, ви просто запишете "
+"відповідні файли до F<man/po4a/po/> і F<man/po4a/add_fr/>, і під час "
+"наступного збирання програми переклад французькою буде автоматично зібрано "
+"до F<man/translated/fr/>."
 
 #. type: textblock
 #: po4a:175
@@ -2147,6 +2153,8 @@ msgid ""
 "Note that you still need an appropriate target to install localized manual "
 "pages with English ones."
 msgstr ""
+"Зауважте, що відповідну ціль для встановлення перекладених сторінок "
+"підручника разом із англійськими все ж доведеться створити окремо."
 
 #. type: verbatim
 #: po4a:176
@@ -2157,11 +2165,16 @@ msgid ""
 "        -rm -rf man/translated\n"
 "\n"
 msgstr ""
+"Нарешті, якщо ви не зберігаєте створені файли у вашій системі керування "
+"версіями, вам потрібен буде рядок\n"
+"і у вашій цілі B<clean>:\n"
+"        -rm -rf man/translated\n"
+"\n"
 
 #. type: textblock
 #: po4a:178
 msgid "Duplicates some code with the B<po4a->I<*> programs."
-msgstr ""
+msgstr "Дублює частину коду програм B<po4a->I<*>."
 
 #. type: textblock
 #: po4a:179
@@ -2213,12 +2226,16 @@ msgid ""
 "This program is free software; you may redistribute it and/or modify it "
 "under the terms of GPL (see the COPYING file)."
 msgstr ""
+"Ця програма є вільним програмним забезпеченням; ви можете поширювати її і/"
+"або вносити до неї зміни за умов дотримання GPL (див. файл COPYING)."
 
 #. type: textblock
 #: po4a-gettextize:2
 msgid ""
 "po4a-gettextize - convert an original file (and its translation) to a PO file"
 msgstr ""
+"po4a-gettextize — програма для перетворення початкового файла (і його "
+"перекладу) на файл PO"
 
 #. type: textblock
 #: po4a-gettextize:4
@@ -2226,11 +2243,13 @@ msgid ""
 "B<po4a-gettextize> B<-f> I<fmt> B<-m> I<master.doc> [B<-l> I<XX.doc>] B<-p> "
 "I<XX.po>"
 msgstr ""
+"B<po4a-gettextize> B<-f> I<формат> B<-m> I<основний.документ> [B<-l> "
+"I<XX.документ>] B<-p> I<XX.po>"
 
 #. type: textblock
 #: po4a-gettextize:5
 msgid "(I<XX.po> is the output, all others are inputs)"
-msgstr ""
+msgstr "(I<XX.po> вказує на результат, усі інші вказують на вхідні дані)"
 
 #. type: textblock
 #: po4a-gettextize:8
@@ -2240,6 +2259,10 @@ msgid ""
 "extract the translatable strings from the documentation file and write a POT "
 "file from it."
 msgstr ""
+"Скрипт B<po4a-gettextize> відповідає за перетворення файлів документації на "
+"файли PO. Якщо ви розпочинаєте новий переклад, B<po4a-gettextize> виконає "
+"видобування придатних до перекладу рядків з файла документації і запише на "
+"його основі файл POT."
 
 #. type: textblock
 #: po4a-gettextize:9
@@ -2251,6 +2274,12 @@ msgid ""
 "string in the original. If it's not the case, you're dead. That's why it is "
 "very important that both files share exactly the same structure."
 msgstr ""
+"Якщо у вас вже є перекладений файл, B<po4a-gettextize> спробує виконати "
+"видобування перекладів з нього і збереже їх до записаного файла PO. Майте на "
+"увазі, що можливості із розбору тексту у цьому процесі доволі обмежено: "
+"програма просто вважатиме N-ий рядок із перекладеного файла перекладом N-го "
+"рядка із початкового файла. Якщо це не так, нічого не вийде. Ось чому "
+"важливо, щоб обидва файли мали абсолютно однакову структуру."
 
 #. type: textblock
 #: po4a-gettextize:10
@@ -2262,6 +2291,12 @@ msgid ""
 "generated PO file is correct (i.e. that each msgstr is the translation of "
 "the associated msgid, and not the one before or after)."
 msgstr ""
+"Втім, B<po4a-gettextize> виявлятиме проблеми із розсинхронізацією файлів і "
+"повідомлятиме вам про них. Якщо буде виявлено проблему, вам слід виконати "
+"редагування вручну, щоб усунути розсинхронізацію. Навіть якщо повідомлень "
+"про помилки не буде, вам слід уважно вивчити створений файл PO і "
+"переконатися, що все у ньому як слід (тобто усі рядки msgstr є перекладами "
+"відповідних рядків msgid, а не якихось сусідніх рядків з тексту)."
 
 #. type: textblock
 #: po4a-gettextize:11
@@ -2270,6 +2305,9 @@ msgid ""
 "still marks all extracted translations as fuzzy, to make sure that the "
 "translator will have a look at them, and detect any remaining problem."
 msgstr ""
+"Навіть якщо скрипту вдасться виконати завдання без жодних видимих проблем, "
+"він все одно позначить усі видобуті переклади як неточні, щоб переконатися, "
+"що перекладач вивчить їх і виявить усі залишкові проблеми."
 
 #. type: textblock
 #: po4a-gettextize:12
@@ -2279,6 +2317,11 @@ msgid ""
 "independent way. Else (if the master document is completely in ASCII), the "
 "generated PO will use the encoding of the translated input document."
 msgstr ""
+"Якщо у основному документі є символи, як не є символами ASCII, новостворений "
+"файл PO буде записано у кодуванні UTF-8 з метою предсталвення нестандартних "
+"символів у незалежний від локалі спосіб. У інших випадках (якщо основний "
+"документ містить лише символи ASCII), створений файл PO використовуватиме "
+"кодування перекладеного вхідного документа."
 
 #. type: =item
 #: po4a-gettextize:14 po4a-normalize:19 po4a-translate:10 po4a-updatepo:12
@@ -2291,6 +2334,8 @@ msgid ""
 "Format of the documentation you want to handle. Use the B<--help-format> "
 "option to see the list of available formats."
 msgstr ""
+"Формат документації, з якою ви працюватимете. Скористайтеся параметром B"
+"<--help-format>, щоб ознайомитися зі списком доступних форматів."
 
 #. type: =item
 #: po4a-gettextize:16 po4a-translate:16 po4a-updatepo:14
@@ -2303,11 +2348,15 @@ msgid ""
 "File containing the master document to translate. You can use this option "
 "multiple times if you want to gettextize multiple documents."
 msgstr ""
+"Файл, який містить основний документ для перекладу. Ви можете скористатися "
+"цим параметром декілька разів, якщо ви хочете перетворити на формат gettext "
+"декілька документів одночасно."
 
 #. type: textblock
 #: po4a-gettextize:19 po4a-normalize:22 po4a-translate:19
 msgid "Charset of the file containing the document to translate."
 msgstr ""
+"Кодування символів файла, який містить дані документа, який слід перекласти."
 
 #. type: =item
 #: po4a-gettextize:20 po4a-translate:20
@@ -2321,11 +2370,14 @@ msgid ""
 "multiple master files, you may wish to provide multiple localized file by "
 "using this option more than once."
 msgstr ""
+"Файл, який містить дані перекладеного документа. Якщо було вказано декілька "
+"основних файлів, вам варто вказати декілька перекладених файлів, додавши їх "
+"до списку декількома використаннями цього параметра у одній команді."
 
 #. type: textblock
 #: po4a-gettextize:23 po4a-translate:23
 msgid "Charset of the file containing the localized document."
-msgstr ""
+msgstr "Кодування символів файла, який містить дані перекладеного документа."
 
 #. type: =item
 #: po4a-gettextize:24 po4a-translate:24 po4a-updatepo:18
@@ -2338,6 +2390,8 @@ msgid ""
 "File where the message catalog should be written. If not given, the message "
 "catalog will be written to the standard output."
 msgstr ""
+"Файл, до якого слід записати каталог повідомлень. Якщо файл не вказано, "
+"каталог повідомлень буде записано до стандартного виведення (stdout)."
 
 #. type: =item
 #: po4a-gettextize:30 po4a-normalize:17 po4a-translate:34 po4a-updatepo:30
@@ -2347,13 +2401,14 @@ msgstr "B<--help-format>"
 #. type: textblock
 #: po4a-gettextize:31 po4a-normalize:18 po4a-translate:35 po4a-updatepo:31
 msgid "List the documentation formats understood by po4a."
-msgstr ""
+msgstr "Список форматів документації, відомих po4a."
 
 #. type: textblock
 #: po4a-gettextize:47
 msgid ""
 "L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 msgstr ""
+"L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: textblock
 #: po4a-normalize:2
@@ -2361,11 +2416,14 @@ msgid ""
 "po4a-normalize - normalize a documentation file by parsing it in po4a, and "
 "writing it back"
 msgstr ""
+"po4a-normalize — програма для нормалізації файла документації шляхом його "
+"обробки за допомогою po4a і наступного запису оброблених даних назад до "
+"документа"
 
 #. type: textblock
 #: po4a-normalize:4
 msgid "B<po4a-normalize> B<-f> I<fmt> I<master.doc>"
-msgstr ""
+msgstr "B<po4a-normalize> B<-f> I<формат> I<основний.документ>"
 
 #. type: textblock
 #: po4a-normalize:7
@@ -2374,6 +2432,10 @@ msgid ""
 "don't change the document when it's not supposed to. Only use it if you're "
 "developing a new module, or if you doubt the sanity of the tools."
 msgstr ""
+"Скрипт B<po4a-normalize> є діагностичним інструментом, призначеним для того, "
+"щоб переконатися, що po4a не змінює документ, якщо у цьому немає потреби. "
+"Користуйтеся ним лише для розробки нових модулів або тоді, коли маєте "
+"сумніви у коректній роботі інструментів комплекту."
 
 #. type: textblock
 #: po4a-normalize:8
@@ -2382,6 +2444,9 @@ msgid ""
 "generated PO file will be written to F<po4a-normalize.po>. No way to change "
 "that ;)"
 msgstr ""
+"Створений документ буде записано до F<po4a-normalize.output>, а створений "
+"файл PO матиме назву F<po4a-normalize.po>. Можливостей змінити це не "
+"передбачено ;)"
 
 #. type: =item
 #: po4a-normalize:12
@@ -2394,23 +2459,29 @@ msgid ""
 "Create an blank translated document.  The generated translated document will "
 "be generated assuming all messages are translated by a space or new line."
 msgstr ""
+"Створити порожній перекладений документ. Перекладений документ буде створено "
+"у припущенні, що усі повідомлення було перекладено пробілом або символом "
+"нового рядка."
 
 #. type: textblock
 #: po4a-normalize:14
 msgid ""
 "This is useful to check what parts of the document cannot be translated."
-msgstr ""
+msgstr "Корисно для виявлення частин документа, які неможливо перекласти."
 
 #. type: textblock
 #: po4a-normalize:26
 msgid ""
 "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 msgstr ""
+"L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: textblock
 #: po4a-translate:2
 msgid "po4a-translate - convert a PO file back to documentation format"
 msgstr ""
+"po4a-translate —програма для перетворення даних файла PO у формат "
+"документації"
 
 #. type: textblock
 #: po4a-translate:4
@@ -2418,11 +2489,15 @@ msgid ""
 "B<po4a-translate> B<-f> I<fmt> B<-m> I<master.doc> B<-p> I<XX.po> B<-l> I<XX."
 "doc>"
 msgstr ""
+"B<po4a-translate> B<-f> I<формат> B<-m> I<основний.документ> B<-p> I<XX.po> "
+"B<-l> I<XX.doc>"
 
 #. type: textblock
 #: po4a-translate:5
 msgid "(I<XX.doc> is the output, all others are inputs)"
 msgstr ""
+"(I<XX.документ> є результатом перетворення, усі інші аргументи є файлами "
+"вхідних даних)"
 
 #. type: textblock
 #: po4a-translate:8
@@ -2432,6 +2507,9 @@ msgid ""
 "provided PO file should be the translation of the POT file which was "
 "produced by L<po4a-gettextize(1)>."
 msgstr ""
+"Скрипт B<po4a-translate> призначено для перетворення перекладу (який було "
+"виконано у форматі файла PO) назад у формат документації. Заданий файл PO "
+"має бути перекладом файла POT, створеного за допомогою L<po4a-gettextize(1)>."
 
 #. type: =item
 #: po4a-translate:12
@@ -2446,21 +2524,25 @@ msgid ""
 "insert should be a PO4A header indicating where it should be added (see "
 "section B<HOWTO add extra text to translations> in L<po4a(7)>)."
 msgstr ""
+"Додати файл до файла результатів (для того, щоб, наприклад, вказати ім'я "
+"перекладача або додати розділ «Про цей переклад»). Першим рядком файла, який "
+"слід вставити, має бути заголовок PO4A, який вказує, куди слід додати дані ("
+"див. розділ B<Як додавати текст до перекладів> у L<po4a(7)>)."
 
 #. type: textblock
 #: po4a-translate:17
 msgid "File containing the master document to translate."
-msgstr ""
+msgstr "Файл, який містить основний документ для перекладу."
 
 #. type: textblock
 #: po4a-translate:21
 msgid "File where the localized (translated) document should be written."
-msgstr ""
+msgstr "Файл, до якого слід записати перекладений документ."
 
 #. type: textblock
 #: po4a-translate:25
 msgid "File from which the message catalog should be read."
-msgstr ""
+msgstr "Файл, з якого слід прочитати каталог повідомлень."
 
 #. type: textblock
 #: po4a-translate:29
@@ -2482,12 +2564,12 @@ msgstr "B<-w>, B<--width>"
 #. type: textblock
 #: po4a-translate:31
 msgid "Column at which we should wrap the resulting file."
-msgstr ""
+msgstr "Позиція, на якій слід переносити рядки у файлі-результаті."
 
 #. type: =head1
 #: po4a-translate:42
 msgid "Adding content (beside translations) to generated files"
-msgstr ""
+msgstr "Додавання даних (окрім перекладів) до створених файлів"
 
 #. type: textblock
 #: po4a-translate:43
@@ -2496,6 +2578,9 @@ msgid ""
 "translated (like the name of the translator, or a \"About this translation\" "
 "section), you should use the B<--addendum> option."
 msgstr ""
+"Щоб додати якісь дані до створеного документа, окрім перекладів (наприклад, "
+"ім'я перекладача або розділ «Про цей переклад»), вам слід скористатися "
+"параметром B<--addendum>."
 
 #. type: textblock
 #: po4a-translate:44
@@ -2505,6 +2590,10 @@ msgid ""
 "The rest of the file will be added verbatim to the resulting file without "
 "further processing."
 msgstr ""
+"Першим рядком додатка має бути заголовок, який вказує, куди слід дописати "
+"додаток у документі (можна вказати позицію до чи після вказаної частини "
+"документа). Решту файла буде додано без змін до документа-результату без "
+"подальшої обробки."
 
 #. type: textblock
 #: po4a-translate:45
@@ -2514,6 +2603,11 @@ msgid ""
 "the author, what would prevent the users to contact him to report bugs in "
 "the translation)."
 msgstr ""
+"Зауважте, що якщо po4a-translate не вдасться додати один із вказаних файлів, "
+"увесь переклад буде відкинуто (оскільки у пропущеному файлі можуть бути дані "
+"щодо перекладача, і його нестача може призвести до неможливостя для "
+"користувачів зв'язатися із автором перекладу і повідомити йому чи їй про "
+"вади у перекладі)."
 
 #. type: textblock
 #: po4a-translate:46
@@ -2521,27 +2615,36 @@ msgid ""
 "The header has a pretty rigid syntax. For more information on how to use "
 "this feature and how it works, please refer to the L<po4a(7)> man page."
 msgstr ""
+"Заголовок має доволі строгий синтаксис. Щоб дізнатися більше про те, як "
+"скористатися цією можливістю, і як вона працює, будь ласка, зверніться до "
+"сторінки підручника щодо <po4a(7)>."
 
 #. type: textblock
 #: po4a-translate:48
 msgid ""
 "L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 msgstr ""
+"L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: textblock
 #: po4a-updatepo:2
 msgid "po4a-updatepo - update the translation (in PO format) of documentation"
 msgstr ""
+"po4a-updatepo — програма для оновлення перекладів (у форматі PO) документації"
 
 #. type: textblock
 #: po4a-updatepo:4
 msgid "B<po4a-updatepo> B<-f> I<fmt> (B<-m> I<master.doc>)+ (B<-p> I<XX.po>)+"
 msgstr ""
+"B<po4a-updatepo> B<-f> I<формат> (B<-m> I<основний.документ>)+ (B<-p> "
+"I<XX.po>)+"
 
 #. type: textblock
 #: po4a-updatepo:5
 msgid "(I<XX.po> are the outputs, all others are inputs)"
 msgstr ""
+"(I<XX.po> — назви файлів результатів обробки, усі інші аргументи вказують на "
+"вхідні дані)"
 
 #. type: textblock
 #: po4a-updatepo:8
@@ -2551,6 +2654,10 @@ msgid ""
 "converts the documentation file to a POT file, and call L<msgmerge(1)> on "
 "this new POT and on the provided PO files."
 msgstr ""
+"Скрипт B<po4a-updatepo> призначено для оновлення вмісту файлів PO з метою "
+"відтворення у них змін, які було внесено у початковий файл документації. Для "
+"цього програма перетворює дані файла документації у файл POT і викликає "
+"L<msgmerge(1)> для цього нового файла POT і вказаних файлів PO."
 
 #. type: textblock
 #: po4a-updatepo:9
@@ -2559,6 +2666,9 @@ msgid ""
 "languages at once), and several documentation files (if you want to store "
 "the translations of several documents in the same PO file)."
 msgstr ""
+"Можна вказувати декілька файлів PO (якщо вам потрібно оновити декілька "
+"перекладів одночасно) та декілька файлів документації (якщо ви хочете "
+"зберігати переклади декількох документів у одному файлі PO)."
 
 #. type: textblock
 #: po4a-updatepo:10
@@ -2567,11 +2677,15 @@ msgid ""
 "files to UTF-8 (if they weren't already), in order to allow non-standard "
 "characters in a culture independent way."
 msgstr ""
+"Якщо у основному документів містяться символи, які не належать до ASCII, "
+"перетворені файли PO буде записано у кодуванні UTF-8 (якщо це кодування там "
+"ще не використовувалося) для того, щоб уможливити представлення "
+"нестандартних символів в універсальний спосіб."
 
 #. type: textblock
 #: po4a-updatepo:15
 msgid "File(s) containing the master document to translate."
-msgstr ""
+msgstr "Файли, які містить основний документ для перекладу."
 
 #. type: textblock
 #: po4a-updatepo:17
@@ -2579,6 +2693,8 @@ msgid ""
 "Charset of the files containing the document to translate. Note that all "
 "files must have the same charset."
 msgstr ""
+"Кодування файлів, які містять документ для перекладу. Зауважте, що у "
+"поточній версії усі основні документи мають зберігатися у одному кодуванні."
 
 #. type: textblock
 #: po4a-updatepo:19
@@ -2586,6 +2702,8 @@ msgid ""
 "PO file(s) to update. If these files do not exist, they are created by "
 "B<po4a-updatepo>."
 msgstr ""
+"Файли, які слід оновити. Якщо цих файлів не існує, їх буде створено за "
+"допомогою B<po4a-updatepo>."
 
 #. type: textblock
 #: po4a-updatepo:21
@@ -2595,22 +2713,29 @@ msgid ""
 "documentation of each plugin for more information about the valid options "
 "and their meanings."
 msgstr ""
+"Додаткові параметри, які слід передати додатку форматування та іншим "
+"внутрішнім модулям po4a. Кожен параметр слід вказувати у форматі "
+"I<назва>B<=>I<значення>. Докладніші відомості щодо параметрів кожного з "
+"додатків можна знайти у документації до відповідного додатка."
 
 #. type: textblock
 #: po4a-updatepo:50
 msgid ""
 "L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a(7)>"
 msgstr ""
+"L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a(7)>"
 
 #. type: textblock
 #: scripts/msguntypot:2
 msgid "msguntypot - update PO files when a typo is fixed in POT file"
 msgstr ""
+"msguntypot — програма для оновлення файлів PO, якщо у файлі POT було "
+"виправлено друкарську помилку"
 
 #. type: textblock
 #: scripts/msguntypot:4
 msgid "B<msguntypot> B<-o> I<old_pot> B<-n> I<new_pot> I<pofiles> ..."
-msgstr ""
+msgstr "B<msguntypot> B<-o> I<старий_pot> B<-n> I<новий_pot> I<файли_po> ..."
 
 #. type: textblock
 #: scripts/msguntypot:6
@@ -2619,6 +2744,10 @@ msgid ""
 "a typo) in a POT file, you should unfuzzy the corresponding msgstr in the "
 "translated PO files to avoid so extra work to the translators."
 msgstr ""
+"Якщо вами було виправлено тривіальну помилку, яка напевне не вплине на "
+"переклади (наприклад, друкарську помилку) у файлі POT, вам слід зняти "
+"позначку неточних перекладів із msgstr у перекладених файлах PO, щоб не "
+"завдавати перекладачам зайвих клопотів."
 
 #. type: textblock
 #: scripts/msguntypot:7
@@ -2628,11 +2757,16 @@ msgid ""
 "of the POT file: before the edition and after as marked in the above "
 "synopsis, and it all becomes automatic."
 msgstr ""
+"Це завдання є доволі складним та помилконебезпечним, якщо його виконувати "
+"вручну, а ця програма допоможе вам зробити усе правильно. Вам лише потрібно "
+"надати дві версії файла POT: до редагування і після редагування, яке це "
+"вказано у наведеному вище короткому описі команди, решту буде зроблено "
+"автоматично."
 
 #. type: =head1
 #: scripts/msguntypot:8
 msgid "HOW TO USE IT"
-msgstr ""
+msgstr "ЯК КОРИСТУВАТИСЯ"
 
 #. type: textblock
 #: scripts/msguntypot:9
@@ -2640,11 +2774,13 @@ msgid ""
 "In short, when you discover a typo in one of your [english] message, do the "
 "following:"
 msgstr ""
+"Якщо коротко, коли ви виявите друкарську помилку у одному з ваших початкових "
+"повідомлень (англійською), виконайте такі дії:"
 
 #. type: =item
 #: scripts/msguntypot:10 scripts/msguntypot:19
 msgid "- Regenerate your POT and PO files."
-msgstr ""
+msgstr "- Повторно створіть ваші файли POT і PO."
 
 #. type: verbatim
 #: scripts/msguntypot:11
@@ -2655,6 +2791,10 @@ msgid ""
 "  po4a po4a.conf        # for po4a based documentation translations\n"
 "\n"
 msgstr ""
+"  make -C po/ update-po # для повідомлень перекладу інтерфейсу програми\n"
+"  debconf-updatepo      # для перекладів debconf\n"
+"  po4a po4a.conf        # для перекладів заснованої на po4a документації\n"
+"\n"
 
 #. type: textblock
 #: scripts/msguntypot:12
@@ -2662,11 +2802,13 @@ msgid ""
 "or something else, depending on your project's building settings. You know "
 "how to make sure your POT an PO files are uptodate, don't you??"
 msgstr ""
+"або щось подібне, залежно від параметрів збирання вашого проекту. Ви ж маєте "
+"знати спосіб автоматичного оновлення ваших файлів POT і PO?"
 
 #. type: =item
 #: scripts/msguntypot:13
 msgid "- Make a copy of your POT file."
-msgstr ""
+msgstr "- Зробіть копію вашого файла POT."
 
 #. type: verbatim
 #: scripts/msguntypot:14
@@ -2675,11 +2817,13 @@ msgid ""
 "  cp myfile.pot myfile.pot.orig\n"
 "\n"
 msgstr ""
+"  cp ваш_файл.pot ваш_файл.pot.orig\n"
+"\n"
 
 #. type: =item
 #: scripts/msguntypot:15
 msgid "- Make a copy of all your files."
-msgstr ""
+msgstr "- Зробіть копію усіх ваших файлів PO."
 
 #. type: verbatim
 #: scripts/msguntypot:16
@@ -2688,16 +2832,18 @@ msgid ""
 "  mkdir po_fridge; cp *.po po_fridge\n"
 "\n"
 msgstr ""
+"  mkdir po_копія; cp *.po po_копія\n"
+"\n"
 
 #. type: =item
 #: scripts/msguntypot:17
 msgid "- Fix your typo."
-msgstr ""
+msgstr "- Виправте друкарську помилку."
 
 #. type: textblock
 #: scripts/msguntypot:18
 msgid "$EDITOR the_file_in_which_there_is_a_typo"
-msgstr ""
+msgstr "$EDITOR файл_у_якому_помічено_друкарську_помилку"
 
 #. type: textblock
 #: scripts/msguntypot:20
@@ -2711,11 +2857,15 @@ msgid ""
 "unfortunate change is the only one between the PO files of your main "
 "directory and the one from the fridge. Here is how to solve this."
 msgstr ""
+"На цьому етапі виправлення друкарської помилки призведе до позначення "
+"неточними усіх перекладів відповідного повідомлення, і ця незручна зміна є "
+"єдиною відмінністю між файлами PO у вашому основному каталозі і файлами з "
+"резервної копії. Далі, ми вирішимо цю проблему."
 
 #. type: =item
 #: scripts/msguntypot:22
 msgid "- Discard fuzzy translation, restore the ones from the fridge."
-msgstr ""
+msgstr "- Відкиньте неточний переклад, відновіть переклади з резервної копії."
 
 #. type: verbatim
 #: scripts/msguntypot:23
@@ -2724,6 +2874,8 @@ msgid ""
 "  cp po_fridge/*.po .\n"
 "\n"
 msgstr ""
+"  cp po_копія/*.po .\n"
+"\n"
 
 #. type: =item
 #: scripts/msguntypot:24
@@ -2731,6 +2883,8 @@ msgid ""
 "- Manually merge the PO files with the new POT file, but taking the useless "
 "fuzzy into account."
 msgstr ""
+"- Вручну об'єднайте файли PO з новим файлом POT, враховуючи непотрібне "
+"позначення перекладу як такого, що є неточним."
 
 #. type: verbatim
 #: scripts/msguntypot:25
@@ -2739,11 +2893,13 @@ msgid ""
 "  msguntypot -o myfile.pot.orig -n myfile.pot *.po\n"
 "\n"
 msgstr ""
+"  msguntypot -o ваш_файл.pot.orig -n ваш_файл.pot *.po\n"
+"\n"
 
 #. type: =item
 #: scripts/msguntypot:26
 msgid "- Cleanups."
-msgstr ""
+msgstr "- Почистіть теку від зайвих файлів."
 
 #. type: verbatim
 #: scripts/msguntypot:27
@@ -2752,6 +2908,8 @@ msgid ""
 "  rm -rf myfile.pot.orig po_fridge\n"
 "\n"
 msgstr ""
+"  rm -rf ваш_файл.pot.orig po_копія\n"
+"\n"
 
 #. type: textblock
 #: scripts/msguntypot:28
@@ -2760,6 +2918,9 @@ msgid ""
 "files, and the PO files were not fuzzyied in the process. Your translators "
 "love you already."
 msgstr ""
+"Ось і все. Друкарську помилку усунено з msgstr файлів POT і PO, і переклад "
+"повідомлення у файлах PO не позначено як неточний. Ваші перекладачі вдячні "
+"вам за це."
 
 #. type: textblock
 #: scripts/msguntypot:30
@@ -2768,6 +2929,10 @@ msgid ""
 "instead part of po4a. More precisely, it's a random Perl script using the "
 "fine po4a modules. For more information about po4a, please see:"
 msgstr ""
+"Незважаючи на назву, ця програма не є частиною комплексу програм gettext. "
+"Вона є частиною комплексу po4a. Якщо точніше, це скрипт мовою Perl, який "
+"використовує чудові модулі po4a. Щоб дізнатися більше про po4a, будь ласка, "
+"ознайомтеся із такими сторінками підручника:"
 
 #. type: textblock
 #: scripts/msguntypot:31
@@ -2785,7 +2950,7 @@ msgstr ""
 #. type: textblock
 #: scripts/msguntypot:35 lib/Locale/Po4a/Common.pm:31
 msgid "Copyright 2005 by SPI, inc."
-msgstr ""
+msgstr "© SPI, inc., 2005"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:2
@@ -6025,7 +6190,7 @@ msgstr "Значення полів видобуваються і пропону
 #. type: textblock
 #: lib/Locale/Po4a/BibTeX.pm:8 lib/Locale/Po4a/Wml.pm:8
 msgid "NONE."
-msgstr ""
+msgstr "НЕМАЄ."
 
 #. type: textblock
 #: lib/Locale/Po4a/BibTeX.pm:10
@@ -6125,7 +6290,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:15
 msgid "Copyright 2002,2003,2004,2005,2014,2017 by SPI, inc."
-msgstr ""
+msgstr "© SPI, inc., 2002, 2003, 2004, 2005, 2014, 2017"
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:2
@@ -6585,7 +6750,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/KernelHelp.pm:12 lib/Locale/Po4a/Pod.pm:41
 msgid "Copyright 2002 by SPI, inc."
-msgstr ""
+msgstr "© SPI, inc., 2002"
 
 #. type: textblock
 #: lib/Locale/Po4a/LaTeX.pm:2
@@ -7297,7 +7462,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:112
 msgid "Copyright 2002-2008 by SPI, inc."
-msgstr ""
+msgstr "© SPI, inc., 2002–2008"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:2
@@ -8961,7 +9126,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:109
 msgid "Some commands should be added to the environment stack"
-msgstr ""
+msgstr "Деякі команди має бути додано до стека середовища"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:110
@@ -10524,12 +10689,13 @@ msgstr "B<translated>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:69
 msgid "Space-separated list of tags you want to translate."
-msgstr ""
+msgstr "Список відокремлених пробілами теґів, вміст яких ви хочете перекладати."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:74
 msgid "Space-separated list of tags you do not want to translate."
 msgstr ""
+"Список відокремлених пробілами теґів, вміст яких ви не хочете перекладати."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:76
@@ -10546,7 +10712,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:78
 msgid "This is a set of letters:"
-msgstr ""
+msgstr "Це набір таких літер:"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:79
@@ -10983,7 +11149,7 @@ msgstr "B<include>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:145
 msgid "This makes the returned array to contain the searched text"
-msgstr ""
+msgstr "Робить так, що повернути масив міститиме текст, який шукали"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:146
