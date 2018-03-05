@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-04 08:49+0200\n"
-"PO-Revision-Date: 2018-03-04 18:04+0000\n"
+"PO-Revision-Date: 2018-03-06 14:42+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -2946,6 +2946,8 @@ msgid ""
 " Martin Quinson (mquinson#debian,org)\n"
 "\n"
 msgstr ""
+" Martin Quinson (mquinson#debian,org)\n"
+"\n"
 
 #. type: textblock
 #: scripts/msguntypot:35 lib/Locale/Po4a/Common.pm:31
@@ -2955,12 +2957,12 @@ msgstr "© SPI, inc., 2005."
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:2
 msgid "po4a-build.conf - configuration file for building translated content"
-msgstr ""
+msgstr "po4a-build.conf — файл налаштувань для збирання перекладених даних"
 
 #. type: =head1
 #: doc/po4a-build.conf.5.pod:3 doc/po4a.7.pod:3 doc/po4a-runtime.7.pod:3
 msgid "Introduction"
-msgstr ""
+msgstr "Вступ"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:4
@@ -2969,6 +2971,9 @@ msgid ""
 "untranslated documentation from a set of untranslated source documents and "
 "corresponding PO files."
 msgstr ""
+"F<po4a-build.conf> описує, у який спосіб C<po4a-build> має збирати "
+"перекладену і неперекладену документацію на основі набору неперекладених "
+"початкових документів та відповідних файлів PO."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:5
@@ -2993,6 +2998,10 @@ msgid ""
 "bearing on such translations. F<po4a-build.conf> only relates to translating "
 "static content like manpages."
 msgstr ""
+"Зауважте, що хоча до F<po4a-build> включено підтримку додавання підтримки "
+"gettext для перекладу виведених скриптом повідомлень, сам файл F<po4a-"
+"build.conf> не стосується таких перекладів. F<po4a-build.conf> пов'язано "
+"лише з перекладом статичних даних, зокрема сторінок підручника (man)."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:7
@@ -3000,16 +3009,18 @@ msgid ""
 "For F<po4a-build> support of runtime message translation, see L<po4a-"
 "runtime(7)>."
 msgstr ""
+"Щоб дізнатися більше про підтримку у F<po4a-build> перекладу динамічних "
+"повідомлень, див. L<po4a-runtime(7)>."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:9
 msgid "Currently, C<po4a-build> supports the following combinations:"
-msgstr ""
+msgstr "У поточній версії C<po4a-build> передбачено підтримку таких комбінацій:"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:10
 msgid "DocBook XML for sections 1 and 3"
-msgstr ""
+msgstr "XML DocBook для розділів 1 і 3"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:11
@@ -3023,6 +3034,16 @@ msgid ""
 "manpage from the C<doclifter> XML but also use C<po4a> to prepare translated "
 "XML from the PO files and then build translated manpages from the XML."
 msgstr ""
+"Типово використовується для сторінок підручника для скриптів командної "
+"оболонки або інших інтерпретаторів, які не мають власного формату "
+"документації, подібного до POD. Відповідні XML може бути створено "
+"безпосередньо на основі наявної сторінки підручника за допомогою "
+"C<doclifter>(1), а C<po4a-build> без проблем створить на їхній основі файл "
+"POT. Файл POT потім можна буде запропонувати перекладачам, а файли PO додати "
+"до відповідного каталогу F<po/>. Далі, C<po4a-build> не лише приготує "
+"неперекладену сторінку підручника на основі XML C<doclifter>, але і "
+"скористається C<po4a> для приготування перекладених XML на основі файлів PO, "
+"а потім збере перекладені сторінки підручника на основі XML."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:12
@@ -3031,6 +3052,9 @@ msgid ""
 "used can be overridden using the C<XSLFILE> setting in the C<po4a-build> "
 "configuration file."
 msgstr ""
+"Сторінки підручника буде створено за допомогою типової підтримки у docbook-"
+"xsl — використану таблицю стилів можна перевизначити за допомогою параметра "
+"C<XSLFILE> у файлі налаштувань C<po4a-build>."
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:13
@@ -3043,17 +3067,22 @@ msgid ""
 "The default stylesheet used to prepare the final HTML can be overridden "
 "using the C<HTMLXSL> setting in the C<po4a-build> configuration file."
 msgstr ""
+"Типову таблицю стилів, використану для приготування остаточного HTML можна "
+"перевизначити за допомогою параметра C<HTMLXSL> у файлі налаштувань C<po4a-"
+"build>."
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:15
 msgid "POD for sections 1, 3, 5 and 7"
-msgstr ""
+msgstr "POD для розділів 1, 3, 5 і 7"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:16
 msgid ""
 "pod2man is used to convert POD content for each of the supported sections."
 msgstr ""
+"Для усіх підтримуваних розділів для перетворення даних POD використовується "
+"pod2man."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:17
@@ -3061,6 +3090,8 @@ msgid ""
 "Use C<PODFILE> for section 1, C<PODMODULES> for section 3, C<POD5FILES> for "
 "section 5 and C<POD7FILES> for section 7."
 msgstr ""
+"Користуйтеся C<PODFILE> для розділу 1, C<PODMODULES> для розділу 3, "
+"C<POD5FILES> для розділу 5 і C<POD7FILES> для розділу 7."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:18 doc/po4a-build.conf.5.pod:85
@@ -3071,11 +3102,15 @@ msgid ""
 "the filename, this (and any filename extension) will be automatically "
 "stripped."
 msgstr ""
+"Для даних у розділах 5 або 7 (для яких, зазвичай, потрібна назва файла, яка "
+"також використовується для даних розділу 1), якщо назва файла містить як "
+"частину 5 або 7, цю частину (і будь-який суфікс назви файла) буде "
+"автоматично відкинуто."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:19
 msgid "e.g. to prepare F</usr/share/man/man7/po4a.7.gz>:"
-msgstr ""
+msgstr "Наприклад, для приготування F</usr/share/man/man7/po4a.7.gz>:"
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:20 doc/po4a-build.conf.5.pod:90
@@ -3085,6 +3120,9 @@ msgid ""
 " POD7FILES=\"doc/po4a.7.pod\"\n"
 "\n"
 msgstr ""
+" # Файли POD для розділу 7\n"
+" POD7FILES=\"doc/po4a.7.pod\"\n"
+"\n"
 
 #. type: =head1
 #: doc/po4a-build.conf.5.pod:21
@@ -3094,17 +3132,17 @@ msgstr "Вміст файла"
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:22
 msgid "Configuration values can appear in any order in the configuration file."
-msgstr ""
+msgstr "Порядок значень налаштувань у файлі налаштування може бути довільним."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:23
 msgid "Any content after a '#' is ignored."
-msgstr ""
+msgstr "Усе у рядку після символу «#» буде проігноровано."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:24
 msgid "Any value that would always be empty can be dropped from the file."
-msgstr ""
+msgstr "Усі значення, які завжди є порожніми можна безпечно викинути з файла."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:25
@@ -3112,11 +3150,13 @@ msgid ""
 "Some configuration fields are required - F<po4a-build> could end up with "
 "nothing to do if required fields are empty."
 msgstr ""
+"Деякі поля налаштувань є обов'язковими — F<po4a-build> не зможе нічого "
+"зробити, якщо обов'язкові поля залишаться порожніми."
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:26
 msgid "CONFIG"
-msgstr "НАЛАШТУВАННЯ"
+msgstr "CONFIG"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:27 doc/po4a-build.conf.5.pod:31
@@ -3132,6 +3172,10 @@ msgid ""
 "build> will generate and maintain. This file does not need to live in your "
 "version control system and can be safely cleaned up during the package build."
 msgstr ""
+"Назва і розташування (тимчасового) файла налаштувань C<po4a>, який створить "
+"і супроводжуватиме C<po4a-build>. Цей файл не обов'язково має зберігатися у "
+"вашій системі керування версіями — його можна спокійнісінько вилучити після "
+"збирання пакунка."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:29
@@ -3141,11 +3185,14 @@ msgid ""
 " CONFIG=\"_build/po4a.config\"\n"
 "\n"
 msgstr ""
+" # назва і розташування файла налаштувань\n"
+" CONFIG=\"_build/po4a.config\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:30
 msgid "PODIR"
-msgstr ""
+msgstr "PODIR"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:32
@@ -3168,11 +3215,14 @@ msgid ""
 " PODIR=\"po/pod\"\n"
 "\n"
 msgstr ""
+" # каталог po для сторінок підручника або документації\n"
+" PODIR=\"po/pod\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:34
 msgid "POTFILE"
-msgstr ""
+msgstr "POTFILE"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:36
@@ -3190,16 +3240,19 @@ msgid ""
 " POTFILE=\"po/pod/po4a-pod.pot\"\n"
 "\n"
 msgstr ""
+" # шлях до файла POT\n"
+" POTFILE=\"po/pod/po4a-pod.pot\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:38
 msgid "BASEDIR"
-msgstr ""
+msgstr "BASEDIR"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:40
 msgid "Base directory for writing out the translated content."
-msgstr ""
+msgstr "Базовий каталог для запису перекладених даних."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:41
@@ -3209,16 +3262,21 @@ msgid ""
 " BASEDIR=\"_build\"\n"
 "\n"
 msgstr ""
+" # базовий каталог для створених файлів, наприклад файлів документації\n"
+" BASEDIR=\"_build\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:42
 msgid "BINARIES"
-msgstr ""
+msgstr "BINARIES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:44
 msgid "Even if only one package is built, at least one value is required here."
 msgstr ""
+"Навіть якщо збирається лише один пакунок, тут має бути принаймні одне "
+"значення."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:45
@@ -3234,6 +3292,8 @@ msgid ""
 " _build/po4a/man/man1/foo.1\n"
 "\n"
 msgstr ""
+" _build/po4a/man/man1/foo.1\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:47
