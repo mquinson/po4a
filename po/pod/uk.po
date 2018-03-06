@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-04 08:49+0200\n"
-"PO-Revision-Date: 2018-03-06 14:42+0000\n"
+"POT-Creation-Date: 2018-03-06 18:47+0200\n"
+"PO-Revision-Date: 2018-03-06 18:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -3206,6 +3206,14 @@ msgid ""
 "tools expect the name to be 'po', therefor it is recommended to keep this "
 "name."
 msgstr ""
+"Каталог, у якому містяться файли PO для УСІХ перекладів, які обробляються "
+"цим файлом налаштувань. Усі рядки буде об'єднано у один файл POT у цьому "
+"каталозі, а усі файли PO буде синхронізовано з файлом POT. Порогове значення "
+"KEEP (див. нижче) буде застосовано до усіх рядків із усіх вхідних файлів, "
+"вказаних у файлі налаштувань, та усіх файлів PO у цьому каталозі. Каталог не "
+"обов'язково має називатися «po». Втім, будь ласка, зауважте, що деякі "
+"статичні інструменти вимагають називати цей каталог «po», тому рекомендовано "
+"зберігати саме таку назву."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:33
@@ -3231,6 +3239,8 @@ msgid ""
 "that will be generated, maintained and updated by C<po4a-build> for these "
 "translations."
 msgstr ""
+"Шлях до файла POT (відносно розташування цього файла налаштувань), який буде "
+"створено, оброблено і оновлено за допомогою C<po4a-build> для цих перекладів."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:37
@@ -3284,6 +3294,8 @@ msgid ""
 "The string itself is arbitrary but typically consists of the package name. "
 "Generated content will then appear in subdirectories of F<BASEDIR/BINARIES>:"
 msgstr ""
+"Сам рядок є довільним, але типово складається з назви пакунка. Створені "
+"програмою файли згодом буде записано до підкаталогів F<BASEDIR/BINARIES>:"
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:46
@@ -3302,11 +3314,15 @@ msgid ""
 "and multiple .deb or .rpm files), this field can help isolate content "
 "intended for each target, making it easier to automate the build process."
 msgstr ""
+"Якщо з початкового коду збирається декілька двійкових пакунків (тобто з "
+"одного пакунка з початковим кодом збирається декілька файлів .deb або .rpm), "
+"це поле допоможе ізолювати дані для кожної з цілей збирання і спростить "
+"автоматизацію процесу збирання."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:48
 msgid "Separate strings with a space."
-msgstr ""
+msgstr "Рядки слід відокремлювати пробілами."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:49
@@ -3316,6 +3332,9 @@ msgid ""
 " BINARIES=\"po4a\"\n"
 "\n"
 msgstr ""
+" # двійкові пакунки, які міститимуть створені сторінки підручника\n"
+" BINARIES=\"po4a\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:50
@@ -3330,6 +3349,11 @@ msgid ""
 "the build. Leave empty or remove to use the default (80%) or specify zero to "
 "force the inclusion of all content, even if completely untranslated."
 msgstr ""
+"Значення, яке слід передати безпосередньо C<po4a -k> з метою визначення "
+"порогового значення правильно перекладених даних потрібного для того, щоб "
+"переклад не було відкинуто під час збирання. Не вказуйте або вилучте, щоб "
+"скористатися типовим значенням (80%), або вкажіть нульове значення, щоб "
+"включити усі дані, навіть якщо у них не перекладено жодного рядка."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:52
@@ -3337,6 +3361,8 @@ msgid ""
 "For full control over such behaviour, consider carefully which files are "
 "assigned to which F<po4a-build.conf> configuration file."
 msgstr ""
+"Для точнішого керування поведінкою програми слід уважно стежити за тим, які "
+"файли пов'язано із конкретним файлом налаштувань F<po4a-build.conf>."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:53
@@ -3346,6 +3372,11 @@ msgid ""
 "files with thousands of long strings are daunting for translators, leading "
 "to long string freezes."
 msgstr ""
+"Зауважте, що використання багатьох файлів у одному файлі POT може бути "
+"зручнішим для перекладачів, особливо якщо у файлах є однакові рядки. Втім, "
+"робота із файлами POT, які містять тисячі довгих рядків, є марудною для "
+"перекладачів. Такі файли у проекті змушують користуватися довгими періодами "
+"замороження рядків."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:54
@@ -3355,11 +3386,14 @@ msgid ""
 " KEEP=\n"
 "\n"
 msgstr ""
+" # мінімальне порогове значення для створення кінцевого файла перекладу\n"
+" KEEP=\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:55
 msgid "XMLMAN1"
-msgstr ""
+msgstr "XMLMAN1"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:56
@@ -3367,6 +3401,9 @@ msgid ""
 "DocBook XML files to generate manpages in section 1. Separate filenames with "
 "spaces. All files need to be in the XMLDIR directory."
 msgstr ""
+"Файли XML DocBook для створення сторінок підручника у розділі 1. Назви "
+"файлів слід відокремлювати пробілом. Усі файли мають зберігатися у каталозі "
+"XMLDIR."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:57
@@ -3377,6 +3414,10 @@ msgid ""
 "itself. If the book only contains content for this section, only specify the "
 "book file."
 msgstr ""
+"Поширеною практикою є збирання декількох файлів XML у одну книгу з метою "
+"створення таблиці змісту тощо. Якщо у книзі містяться файли, які також "
+"вказано у XMLMAN3, тут слід вказати лише файли з розділу 1, а не саму книгу. "
+"Якщо у книзі містяться лише дані з цього розділу, вкажіть лише файл книги."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:58
@@ -3386,11 +3427,14 @@ msgid ""
 " XMLMAN1=\"po4a-build.xml po4aman-display-po.xml po4apod-display-po.xml\"\n"
 "\n"
 msgstr ""
+" # файли XML DocBook для розділу 1\n"
+" XMLMAN1=\"po4a-build.xml po4aman-display-po.xml po4apod-display-po.xml\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:59
 msgid "XMLMAN3"
-msgstr ""
+msgstr "XMLMAN3"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:60
@@ -3398,6 +3442,9 @@ msgid ""
 "DocBook XML files to generate manpages in section 3. Separate filenames with "
 "spaces. All files need to be in the XMLDIR directory."
 msgstr ""
+"Файли XML DocBook для створення сторінок підручника у розділі 3. Назви "
+"файлів слід відокремлювати пробілом. Усі файли мають зберігатися у каталозі "
+"XMLDIR."
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:61
@@ -3408,6 +3455,10 @@ msgid ""
 "itself. If the book only contains content for this section, only specify the "
 "book file."
 msgstr ""
+"Поширеною практикою є збирання декількох файлів XML у одну книгу з метою "
+"створення таблиці змісту тощо. Якщо у книзі містяться файли, які також "
+"вказано у XMLMAN1, тут слід вказати лише файли з розділу 3, а не саму книгу. "
+"Якщо у книзі містяться лише дані з цього розділу, вкажіть лише файл книги."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:62
@@ -3417,11 +3468,14 @@ msgid ""
 " XMLMAN3=\"\"\n"
 "\n"
 msgstr ""
+" # XML DocBook для розділу 3\n"
+" XMLMAN3=\"\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:63
 msgid "XMLDIR"
-msgstr ""
+msgstr "XMLDIR"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:64
@@ -3446,11 +3500,14 @@ msgid ""
 " XMLDIR=\"share/doc/\"\n"
 "\n"
 msgstr ""
+" # розташування файлів XML\n"
+" XMLDIR=\"share/doc/\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:67
 msgid "XMLPACKAGES"
-msgstr ""
+msgstr "XMLPACKAGES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:68
@@ -3472,11 +3529,14 @@ msgid ""
 " XMLPACKAGES=\"po4a\"\n"
 "\n"
 msgstr ""
+" # двійкові пакунки, які використовують XML DocBook та xsltproc\n"
+" XMLPACKAGES=\"po4a\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:71
 msgid "DOCBOOKDIR"
-msgstr ""
+msgstr "DOCBOOKDIR"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:72
@@ -3494,11 +3554,14 @@ msgid ""
 " DOCBOOKDIR=\"\"\n"
 "\n"
 msgstr ""
+" # взірець для пошуку файлів .docbook\n"
+" DOCBOOKDIR=\"\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:74
 msgid "XSLFILE"
-msgstr ""
+msgstr "XSLFILE"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:75
@@ -3519,7 +3582,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a-build.conf.5.pod:77
 msgid "PODFILE"
-msgstr ""
+msgstr "PODFILE"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:78
@@ -3537,11 +3600,14 @@ msgid ""
 " PODFILE=\"po4a po4a-gettextize po4a-normalize scripts/msguntypot\"\n"
 "\n"
 msgstr ""
+" # файли POD для розділу 1\n"
+" PODFILE=\"po4a po4a-gettextize po4a-normalize scripts/msguntypot\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:80
 msgid "PODMODULES"
-msgstr ""
+msgstr "PODMODULES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:81
@@ -3563,7 +3629,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a-build.conf.5.pod:83
 msgid "POD5FILES"
-msgstr ""
+msgstr "POD5FILES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:84
@@ -3581,11 +3647,14 @@ msgid ""
 " POD5FILES=\"doc/po4a-build.conf.5.pod\"\n"
 "\n"
 msgstr ""
+" # файли POD для розділу 5\n"
+" POD5FILES=\"doc/po4a-build.conf.5.pod\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:87
 msgid "POD7FILES"
-msgstr ""
+msgstr "POD7FILES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:88
@@ -3598,7 +3667,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a-build.conf.5.pod:91
 msgid "PODPACKAGES"
-msgstr ""
+msgstr "PODPACKAGES"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:92
@@ -3616,11 +3685,14 @@ msgid ""
 " PODPACKAGES=\"po4a\"\n"
 "\n"
 msgstr ""
+" # двійкові пакунки, які використовують POD\n"
+" PODPACKAGES=\"po4a\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:94
 msgid "HTMLDIR"
-msgstr ""
+msgstr "HTMLDIR"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:95
@@ -3641,7 +3713,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a-build.conf.5.pod:97
 msgid "HTMLFILE"
-msgstr ""
+msgstr "HTMLFILE"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:98
@@ -3660,11 +3732,14 @@ msgid ""
 " HTMLFILE=\"\"\n"
 "\n"
 msgstr ""
+" # файл DocBook HTML\n"
+" HTMLFILE=\"\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:100
 msgid "HTMLXSL"
-msgstr ""
+msgstr "HTMLXSL"
 
 #. type: textblock
 #: doc/po4a-build.conf.5.pod:101
@@ -3689,6 +3764,8 @@ msgid ""
 " Neil Williams <linux@codehelp.co.uk>\n"
 "\n"
 msgstr ""
+" Neil Williams <linux@codehelp.co.uk>\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:2
@@ -3711,7 +3788,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:9
 msgid "2 How to use po4a?"
-msgstr ""
+msgstr "2. Як користуватися po4a?"
 
 #. type: textblock
 #: doc/po4a.7.pod:10 doc/po4a.7.pod:58
@@ -3874,7 +3951,7 @@ msgstr ""
 #. type: =head2
 #: doc/po4a.7.pod:32
 msgid "The po4a answers"
-msgstr ""
+msgstr "Відповіді щодо po4a"
 
 #. type: textblock
 #: doc/po4a.7.pod:33
@@ -3935,7 +4012,7 @@ msgstr ""
 #. type: =head3
 #: doc/po4a.7.pod:40
 msgid "pod"
-msgstr ""
+msgstr "pod"
 
 #. type: textblock
 #: doc/po4a.7.pod:41
@@ -4034,7 +4111,7 @@ msgstr ""
 #. type: =head2
 #: doc/po4a.7.pod:54
 msgid "Unsupported formats"
-msgstr ""
+msgstr "Непідтримувані формати"
 
 #. type: textblock
 #: doc/po4a.7.pod:55
@@ -4056,12 +4133,12 @@ msgstr ""
 #. type: =head1
 #: doc/po4a.7.pod:57
 msgid "How to use po4a?"
-msgstr ""
+msgstr "Як користуватися po4a?"
 
 #. type: =head2
 #: doc/po4a.7.pod:59
 msgid "Graphical overview"
-msgstr ""
+msgstr "Графічний огляд"
 
 #. type: textblock
 #: doc/po4a.7.pod:60
@@ -4175,7 +4252,7 @@ msgstr ""
 #: lib/Locale/Po4a/TransTractor.pm:127 lib/Locale/Po4a/TransTractor.pm:144
 #: lib/Locale/Po4a/TransTractor.pm:146 lib/Locale/Po4a/TransTractor.pm:148
 msgid "-"
-msgstr ""
+msgstr "-"
 
 #. type: textblock
 #: doc/po4a.7.pod:69
@@ -4682,6 +4759,8 @@ msgid ""
 "     mode=after\n"
 "\n"
 msgstr ""
+"     mode=after\n"
+"\n"
 
 #. type: =item
 #: doc/po4a.7.pod:139
@@ -4723,6 +4802,8 @@ msgid ""
 "   endboundary=</section>\n"
 "\n"
 msgstr ""
+"   endboundary=</section>\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:145
