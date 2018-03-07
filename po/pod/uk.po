@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-07 15:56+0000\n"
+"PO-Revision-Date: 2018-03-07 18:17+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-"
 "doc/uk/>\n"
@@ -3607,6 +3607,9 @@ msgid ""
 "with spaces. Paths, if used, need to be relative to the location of the "
 "specified configuration file."
 msgstr ""
+"Файли POD для створення вмісту сторінки підручника з розділу 1. Записи "
+"файлів POD слід відокремлювати пробілом. Шляхи, якщо це потрібно, слід "
+"вказувати відносно розташування вказаного файла налаштувань."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:79
@@ -3632,6 +3635,9 @@ msgid ""
 "name will be reconstructed from the path (so this should be the typical Perl "
 "layout) and manpages are automatically put into section 3."
 msgstr ""
+"Спеціалізована підтримка для модулів Perl, які містять дані POD — назву "
+"модуля буде відтворено за шляхом (так, щоб зберегти типове компонування "
+"модулів Perl), а сторінки підручника буде автоматично розміщено у розділі 3."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:82
@@ -3641,6 +3647,9 @@ msgid ""
 " PODMODULES=\"lib/Locale/Po4a/*.pm\"\n"
 "\n"
 msgstr ""
+" # файли POD для розділу 3 — назви модулів буде визначено за шляхом\n"
+" PODMODULES=\"lib/Locale/Po4a/*.pm\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:83
@@ -3654,6 +3663,9 @@ msgid ""
 "used, need to be relative to the location of the specified configuration "
 "file."
 msgstr ""
+"Довільні дані POD для створення вмісту сторінки підручника з розділу 5. "
+"Шляхи, якщо це потрібно, слід вказувати відносно розташування вказаного "
+"файла налаштувань."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:86
@@ -3679,6 +3691,9 @@ msgid ""
 "used, need to be relative to the location of the specified configuration "
 "file."
 msgstr ""
+"Довільні дані POD для створення вмісту сторінки підручника з розділу 7. "
+"Шляхи, якщо це потрібно, слід вказувати відносно розташування вказаного "
+"файла налаштувань."
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:91
@@ -3692,6 +3707,10 @@ msgid ""
 "files needs to include a value in PODPACKAGES. Required if any values are "
 "specified for PODFILE, PODMODULES, POD5FILES or POD7FILES."
 msgstr ""
+"Подібний до XMLPACKAGES — будь-який пакунок, у якому дані може бути зібрано "
+"з файлів POD, має бути включено до значення PODPACKAGES. Обов'язковий "
+"параметр, якщо вказано значення для PODFILE, PODMODULES, POD5FILES або "
+"POD7FILES."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:93
@@ -3716,6 +3735,8 @@ msgid ""
 "Subdirectory of BASEDIR to be used to output the untranslated and translated "
 "HTML output."
 msgstr ""
+"Підкаталог BASEDIR, який буде використано для виведення неперекладених і "
+"перекладених даних HTML."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:96
@@ -3725,6 +3746,9 @@ msgid ""
 " HTMLDIR=\"\"\n"
 "\n"
 msgstr ""
+" # виведення HTML (підкаталог BASEDIR)\n"
+" HTMLDIR=\"\"\n"
+"\n"
 
 #. type: =item
 #: doc/po4a-build.conf.5.pod:97
@@ -3739,6 +3763,10 @@ msgid ""
 "to use the single book file here so that the HTML has a table of contents "
 "etc."
 msgstr ""
+"Файл DocBook, який буде перетворено на HTML (можливо, один із файлів з "
+"XMLMAN1 або XMLMAN3). Розділи не пов'язано із виведенням до HTML, отже, "
+"можна довільно використовувати будь-який окремий файл книги, щоб у HTML була "
+"таблиця змісту та інші потрібні елементи."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:99
@@ -3763,6 +3791,9 @@ msgid ""
 "The default is to use a chunked XSL stylesheet. It is not currently "
 "supported to use more than one stylesheet per HTML run."
 msgstr ""
+"Типовим є використання фрагментованої таблиці стилів XSL. У поточній версії "
+"не передбачено підтримки використання декількох таблиць стилів на один "
+"запуск HTML."
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:102
@@ -3772,6 +3803,10 @@ msgid ""
 " HTMLXSL=\"http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl\"\n"
 "\n"
 msgstr ""
+" # файл XSL, яким слід скористатися для HTML\n"
+" HTMLXSL=\"http://docbook.sourceforge.net/release/xsl/current/html/chunk."
+"xsl\"\n"
+"\n"
 
 #. type: verbatim
 #: doc/po4a-build.conf.5.pod:104 doc/po4a-runtime.7.pod:44
@@ -3787,11 +3822,12 @@ msgstr ""
 #: doc/po4a.7.pod:2
 msgid "po4a - framework to translate documentation and other materials"
 msgstr ""
+"po4a — набір інструментів для перекладу документації та інших матеріалів"
 
 #. type: =item
 #: doc/po4a.7.pod:7
 msgid "1 Why should I use po4a? What is it good for?"
-msgstr ""
+msgstr "1. Чому слід користуватися po4a? Які переваги цього комплексу програм?"
 
 #. type: textblock
 #: doc/po4a.7.pod:8
@@ -3800,6 +3836,9 @@ msgid ""
 "philosophy. You should read it first if you are in the process of evaluating "
 "po4a for your own translations."
 msgstr ""
+"У цій вступній главі описано мотивацію щодо проекту та його філософію. Вам "
+"варто ознайомитися з ним, якщо ви хочете оцінити можливість використання "
+"po4a для перекладу вашого проекту."
 
 #. type: =item
 #: doc/po4a.7.pod:9
@@ -3814,46 +3853,50 @@ msgid ""
 "introduces how to do things with po4a and serve as an introduction to the "
 "documentation of the specific tools."
 msgstr ""
+"У цій главі подано довідкові матеріали із відповідями на поширені питання "
+"користувачів та наведено дані, які допоможуть зрозуміти усю процедуру роботи "
+"комплекту програм. Це вступ до роботи з po4a та документації до специфічних "
+"інструментів комплекту."
 
 #. type: =head2
 #: doc/po4a.7.pod:11 doc/po4a.7.pod:65
 msgid "HOWTO begin a new translation?"
-msgstr ""
+msgstr "Як розпочати переклад?"
 
 #. type: =head2
 #: doc/po4a.7.pod:12 doc/po4a.7.pod:76
 msgid "HOWTO change the translation back to a documentation file?"
-msgstr ""
+msgstr "Як створити з перекладу файл документації?"
 
 #. type: =head2
 #: doc/po4a.7.pod:13 doc/po4a.7.pod:81
 msgid "HOWTO update a po4a translation?"
-msgstr ""
+msgstr "Як оновлювати переклад po4a?"
 
 #. type: =head2
 #: doc/po4a.7.pod:14 doc/po4a.7.pod:87
 msgid "HOWTO convert a pre-existing translation to po4a?"
-msgstr ""
+msgstr "Як перетворити готові переклади у формат po4a?"
 
 #. type: =head2
 #: doc/po4a.7.pod:15 doc/po4a.7.pod:121
 msgid "HOWTO add extra text to translations (like translator's name)?"
-msgstr ""
+msgstr "Як додати до перекладу додатковий текст (наприклад, ім'я перекладача)?"
 
 #. type: =head2
 #: doc/po4a.7.pod:16 doc/po4a.7.pod:174
 msgid "HOWTO do all this in one program invocation?"
-msgstr ""
+msgstr "Як зробити усе це однією командою?"
 
 #. type: =head2
 #: doc/po4a.7.pod:17 doc/po4a.7.pod:178
 msgid "HOWTO customize po4a?"
-msgstr ""
+msgstr "Як налаштувати po4a?"
 
 #. type: =item
 #: doc/po4a.7.pod:18
 msgid "3 How does it work?"
-msgstr ""
+msgstr "3. Як усе це працює?"
 
 #. type: textblock
 #: doc/po4a.7.pod:19 doc/po4a.7.pod:184
@@ -3883,7 +3926,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:22
 msgid "5 Specific notes about modules"
-msgstr ""
+msgstr "5. Специфічні зауваження щодо модулів"
 
 #. type: textblock
 #: doc/po4a.7.pod:23
