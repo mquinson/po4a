@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-12 18:11+0000\n"
+"PO-Revision-Date: 2018-03-13 18:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -4387,7 +4387,7 @@ msgid ""
 "                                             (up-to-date)\n"
 "\n"
 msgstr ""
-"                                   основний.документ\n"
+"                                основний.документ\n"
 "                                       |\n"
 "                                       V\n"
 "     +<-----<----+<-----<-----<--------+------->-------->-------+\n"
@@ -5155,6 +5155,13 @@ msgid ""
 "preceding section and explain po4a where the section ends (remember that "
 "I<position point> is given by a regexp which should match a unique line)."
 msgstr ""
+"Цей рядок будемо називати надалі I<позиційною точкою>. Точку, до якої буде "
+"додано додаток будемо називати I<точкою вставлення>. Ці дві точки "
+"розташовано поруч, але вони не є ідентичними. Наприклад, якщо ви хочете "
+"вставити новий розділ, простіше встановити I<точку вставлення> на заголовку "
+"попереднього розділу і пояснити po4a, де закінчується розділ (пам'ятайте, що "
+"I<позиційна точка> задається формальним виразом, який має відповідати рядку, "
+"який ніде у тексті не повторюється)."
 
 #. type: textblock
 #: doc/po4a.7.pod:132
@@ -5163,6 +5170,9 @@ msgid ""
 "point> is controlled by the B<mode>, B<beginboundary> and B<endboundary> "
 "fields, as explained below."
 msgstr ""
+"Локалізацією I<точки вставлення> відносно I<позиційної точки> керують поля "
+"the B<mode>, B<beginboundary> та B<endboundary>, пояснення щодо яких "
+"наведено нижче."
 
 #. type: textblock
 #: doc/po4a.7.pod:133
@@ -5192,6 +5202,10 @@ msgid ""
 "given the I<insertion point> will placed exactly before the I<position "
 "point>. The B<after> behaviour is detailed bellow."
 msgstr ""
+"Це може бути або рядок B<before> або рядок B<after>, які вказують позицію "
+"додатка відносно I<позиційної точки>. Якщо вказано B<before>, I<точку "
+"вставлення> буде розташовано точно перед I<позиційною точкою>. Пояснення "
+"щодо використання B<after> наведено нижче."
 
 #. type: textblock
 #: doc/po4a.7.pod:137
@@ -5239,6 +5253,11 @@ msgid ""
 ">B<boundary> argument, depending on whether you used B<beginboundary> or "
 "B<endboundary>."
 msgstr ""
+"Якщо вказано B<mode=after>, I<точку вставлення> буде розташовано після I<"
+"позиційної точки>, але не безпосередньо! Її буде розташовано наприкінці "
+"розділу, який починається з I<позиційної точки>, тобто після або перед "
+"рядком, що відповідає аргументу I<???>B<boundary>, залежно від того, який з "
+"варіантів, B<beginboundary> чи B<endboundary>, ви використали."
 
 #. type: textblock
 #: doc/po4a.7.pod:143
@@ -5262,7 +5281,7 @@ msgstr ""
 #. type: textblock
 #: doc/po4a.7.pod:145
 msgid "or to indicate the beginning of the next section by indicating:"
-msgstr ""
+msgstr "або, для позначення початку нового розділу, вказавши:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:146
@@ -5281,6 +5300,9 @@ msgid ""
 "and before the B<E<lt>sectionE<gt>>. The first one is better since it will "
 "work even if the document gets reorganized."
 msgstr ""
+"У обох випадках, наш додаток буде розташовано після B<E<lt>/sectionE<gt>> і "
+"перед B<E<lt>sectionE<gt>>. Перший варіант є кращим, оскільки він "
+"працюватиму навіть після реорганізації документа."
 
 #. type: textblock
 #: doc/po4a.7.pod:148
@@ -5294,6 +5316,14 @@ msgid ""
 "I<beginning of the next section>, so that the I<insertion point> comes just "
 "before it."
 msgstr ""
+"Дві форми існують через відмінності у форматах документації. У деяких з них "
+"передбачено підтримку позначення кінця розділу (подібно до теґу "
+"B<E<lt>/sectionE<gt>>, яким ми щойно скористалися), а в інших кінець розділу "
+"ніяк явно не позначається (зокрема такі проблеми виникають у форматі man). У "
+"першому випадку шукати слід на I<межі>, у I<кінці розділу>, так, щоб I<точка "
+"вставлення> розташовувалися після знайденої позиції. У другому ж випадку, "
+"слід шукати на I<межі>, але на I<початку наступного розділу>, так, щоб I<"
+"точка вставлення> перебувала точно перед знайденою позицією."
 
 #. type: textblock
 #: doc/po4a.7.pod:149
@@ -5310,6 +5340,9 @@ msgid ""
 "\"About this translation\" after the \"About this document\" one in a SGML "
 "document, you can use either of those header lines:"
 msgstr ""
+"Підбиваючи підсумки дослідження нашого прикладу, щоб додати розділ із назвою "
+"«Про цей переклад» після розділу «Про цей документ» у документі SGML, ви "
+"можете скористатися одним із таких рядків заголовка:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:151
@@ -5348,6 +5381,10 @@ msgid ""
 "will then be added B<after> the I<position point> and immediately B<before> "
 "the first line matching the B<beginboundary>. That is to say:"
 msgstr ""
+"вам слід вказати B<position> для цього рядка і B<beginboundary> із "
+"відповідністю початку наступного розділу (тобто B<^\\.SH>). Додаток буде "
+"додано B<після> I<позиційної точки> і безпосередньо B<перед> першим рядком, "
+"який відповідає критерію B<beginboundary>. Тобто, слід написати ось так:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:155
@@ -5366,6 +5403,10 @@ msgid ""
 "\")  instead of adding a whole section, give a B<position> matching this "
 "line, and give a B<beginboundary> matching any line."
 msgstr ""
+"Якщо ви хочете додати щось у розділ (наприклад, після «Copyright Big Dude, "
+"2004») замість додавання цілого розділу, вкажіть для B<position> критерій "
+"пошуку відповідного рядка, а для B<beginboundary> вкажіть відповідник будь-"
+"якого рядка."
 
 #. type: verbatim
 #: doc/po4a.7.pod:157
@@ -5386,6 +5427,12 @@ msgid ""
 "simple strings here like B<\"EOF\">, but prefer those which have less chance "
 "to be in your document."
 msgstr ""
+"Якщо ви хочете щось додати наприкінці документа, вкажіть для B<position> "
+"відповідник будь-якого рядка вашого документа (але лише одного, бо po4a "
+"відмовиться виконувати дію, якщо буде знайдено декілька таких рядків), а для "
+"B<endboundary> вкажіть рядок, якого немає у документі. Не використовуйте для "
+"цього рядка надто прості варіанти, наприклад B<\"EOF\">, — вкажіть щось, що "
+"має набагато менші шанси бути знайденим у документі."
 
 #. type: verbatim
 #: doc/po4a.7.pod:159
@@ -5404,6 +5451,8 @@ msgid ""
 "In any case, remember that these are regexp. For example, if you want to "
 "match the end of a nroff section ending with the line"
 msgstr ""
+"Щоб там не було, пам'ятайте, що це формальні вирази. Наприклад, якщо ви "
+"хочете встановити відповідність кінцю розділу nroff, який завершується рядком"
 
 #. type: verbatim
 #: doc/po4a.7.pod:161
@@ -5422,6 +5471,10 @@ msgid ""
 "\", which is obviously not what you expect. The correct B<endboundary> in "
 "that case is: B<^\\.fi$>."
 msgstr ""
+"не використовуйте B<.fi> у полі B<endboundary>, оскільки вказаний рядок є "
+"формальним виразом, за яким може бути знайдено, наприклад, рядок «the[ fi]le»"
+", що, звичайно ж, є небажаним. Правильним значенням для B<endboundary> у "
+"цьому випадку буде таке: B<^\\.fi$>."
 
 #. type: textblock
 #: doc/po4a.7.pod:163
@@ -5430,6 +5483,9 @@ msgid ""
 "argument to the tools, so that they explain you what they do while placing "
 "the addendum."
 msgstr ""
+"Якщо додаток опиниться не там, де ви сподівалися, спробуйте додати до рядка "
+"команди B<-vv>, щоб отримати додаткові дані щодо того, які дії виконуються "
+"для вставляння додатка."
 
 #. type: =head3
 #: doc/po4a.7.pod:164
@@ -5470,6 +5526,8 @@ msgid ""
 "the translator is added at the end of the file (in French, \"TRADUCTEUR\" "
 "means \"TRANSLATOR\", and \"moi\" means \"me\")."
 msgstr ""
+"Далі, наведений нижче додаток забезпечить додавання розділу (українською) "
+"щодо перекладачів наприкінці файла."
 
 #. type: verbatim
 #: doc/po4a.7.pod:168
@@ -5518,6 +5576,11 @@ msgid ""
 "Note that if another section is added between NAME and AUTHOR sections "
 "later, po4a will wrongfully put the addenda before the new section."
 msgstr ""
+"Це працює, оскільки наступний рядок відповідника B<beginboundary> /^=head1/ "
+"після розділу «NAME» (перекладеного як «ІМ'Я» українською) є розділ зі "
+"списком авторів. Отже, додаток буде розташовано між вказаними розділами. "
+"Зауважте, що якщо між розділами NAME і AUTHOR згодом буде додано ще якийсь "
+"розділ, po4a помилково додасть додаток перед новим розділом."
 
 #. type: textblock
 #: doc/po4a.7.pod:172
@@ -5545,6 +5608,12 @@ msgid ""
 "was difficult with this system to use only one PO file for all your "
 "documents when more than one format was used."
 msgstr ""
+"Практика використання po4a показала, що іноді стаються помилки, оскільки "
+"доводиться викликати дві різні програми у належному порядку (B<po4a-updatepo>"
+", а потім B<po4a-translate>) і кожній з цих програм слід передати більше 3 "
+"параметрів. Крім того, у такій системі важко використовувати один файл PO "
+"для усіх ваших документів, якщо ці документи зберігають дані у різних "
+"форматах."
 
 #. type: textblock
 #: doc/po4a.7.pod:176
@@ -5554,6 +5623,11 @@ msgid ""
 "explaining where your translation files are (PO and POT), where the original "
 "documents are, their formats and where their translations should be placed."
 msgstr ""
+"Програму L<po4a(1)> було створено, щоб усунути ці складнощі. Щойно ваш "
+"проект буде переведено на нашу систему, вам достатньо буде написати простий "
+"файл налаштувань з поясненнями, де зберігаються ваші файли перекладів (PO і "
+"POT), де зберігаються початкові документи, у яких форматах зберігаються ці "
+"документи, і де слід зберігати переклади документів."
 
 #. type: textblock
 #: doc/po4a.7.pod:177
@@ -5565,6 +5639,12 @@ msgid ""
 "completely updated translated document. But you only need to remember one "
 "command line."
 msgstr ""
+"Далі, виклик po4a(1) із вказаним файлом налаштувань забезпечить "
+"синхронізацію файлів PO із початковим документом і належне створення "
+"перекладених документів. Звичайно ж, вам знадобиться два виклики цієї "
+"програми — один перед редагуванням файлів PO з метою їхнього оновлення, і "
+"один після редагування, щоб створити повністю оновлений перекладений "
+"документ. Втім, вам доведеться запам'ятати лише один командний рядок."
 
 #. type: textblock
 #: doc/po4a.7.pod:179
@@ -5572,6 +5652,8 @@ msgid ""
 "po4a modules have options (specified with the B<-o> option) that can be used "
 "to change the module behavior."
 msgstr ""
+"Модулям po4a передаються параметри (вказані за допомогою параметра B<-o>). "
+"Цим можна скористатися для зміни поведінки модулів."
 
 #. type: textblock
 #: doc/po4a.7.pod:180
@@ -5581,6 +5663,10 @@ msgid ""
 "called C</bli/blah/blu/lib/Locale/Po4a/> and then adding the path C</bli/"
 "blah/blu> in the C<PERLIB> or C<PERL5LIB> environment variable. For example:"
 msgstr ""
+"Ви також можете редагувати початковий код наявних модулів або навіть "
+"написати власні модулі. Щоб зробити ці модулі видимими для po4a, скопіюйте "
+"їх до каталогу із назвою C</щось/там/lib/Locale/Po4a/>, а потім додайте шлях "
+"C</щось/тамh/blu> до змінної середовища C<PERLIB> або C<PERL5LIB>. Приклад:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:181
@@ -5689,6 +5775,28 @@ msgid ""
 " 20 }\n"
 "\n"
 msgstr ""
+"  1 sub parse {\n"
+"  2   PARAGRAPH: while (1) {\n"
+"  3     $my ($paragraph,$pararef,$line,$lref)=(\"\",\"\",\"\",\"\");\n"
+"  4     $my $first=1;\n"
+"  5     while (($line,$lref)=$document->shiftline() && defined($line)) {\n"
+"  6       if ($line =~ m/<p>/ && !$first--; ) {\n"
+"  7         $document->unshiftline($line,$lref);\n"
+"  8\n"
+"  9         $paragraph =~ s/^<p>//s;\n"
+" 10         $document->pushline(\"<p>\""
+".$document->translate($paragraph,$pararef));\n"
+" 11\n"
+" 12         next PARAGRAPH;\n"
+" 13       } else {\n"
+" 14         $paragraph .= $line;\n"
+" 15         $pararef = $lref unless(length($pararef));\n"
+" 16       }\n"
+" 17     }\n"
+" 18     return; # Не отримали визначений рядок? Кінець файла вхідних даних.\n"
+" 19   }\n"
+" 20 }\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:192
@@ -6370,6 +6478,8 @@ msgid ""
 "Using example F<Makefile> snippets, packages can harness F<intltool> with "
 "minimal effort."
 msgstr ""
+"За допомогою прикладів фрагментів F<Makefile> пакунки можуть скористатися "
+"F<intltool> із мінімальними зусиллями."
 
 #. type: =head1
 #: doc/po4a-runtime.7.pod:6
@@ -6387,7 +6497,7 @@ msgstr ""
 #. type: =head1
 #: doc/po4a-runtime.7.pod:8
 msgid "Multiple languages"
-msgstr "мови, що належать до декількох родин"
+msgstr "Використання декількох мов програмування"
 
 #. type: textblock
 #: doc/po4a-runtime.7.pod:9
@@ -6411,6 +6521,8 @@ msgid ""
 "In particular, specifying two languages in F<po/Makevars> can be "
 "problematic. Instead of:"
 msgstr ""
+"Зокрема, вказування двох мов у F<po/Makevars> може призвести до проблем. "
+"Замість такого:"
 
 #. type: verbatim
 #: doc/po4a-runtime.7.pod:12
@@ -6544,6 +6656,8 @@ msgid ""
 "If your scripts are in Perl, copy this example file as F<po/Makevars> and "
 "edit it to suit."
 msgstr ""
+"Якщо ваші скрипти написано мовою програмування Perl, скопіюйте цей файл "
+"прикладу як F<po/Makevars> і відредагуйте відповідно до ваших вимог."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:27
@@ -6556,6 +6670,8 @@ msgid ""
 "If your scripts are in shell, copy this example file as F<po/Makevars> and "
 "edit it to suit."
 msgstr ""
+"Якщо ваші скрипти написано мовою скриптів командної оболонки, скопіюйте цей "
+"файл прикладу як F<po/Makevars> і відредагуйте відповідно до ваших вимог."
 
 #. type: =item
 #: doc/po4a-runtime.7.pod:29
