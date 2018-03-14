@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-13 21:11+0000\n"
+"PO-Revision-Date: 2018-03-14 16:28+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -5701,6 +5701,10 @@ msgid ""
 "name comes from the fact that it is at the same time in charge of "
 "translating document and extracting strings."
 msgstr ""
+"Архітектура po4a є об'єктно-орієнтованою (на Perl. Хіба це не чудово?). "
+"Загальний предок усіх класів обробки називається TransTractor. Ця дивна "
+"назва походить від того факту, що він водночас відповідає за переклад "
+"документа (translator) та видобування рядків (extractor)."
 
 #. type: textblock
 #: doc/po4a.7.pod:187
@@ -5712,6 +5716,12 @@ msgid ""
 "the input one, but with all translatable strings replaced with content of "
 "the input PO). Here is a graphical representation of this:"
 msgstr ""
+"Формально, він отримує документ для перекладу і файл PO з перекладами на "
+"вході і створює два потоки виведених даних: ще один файл PO (який є "
+"результатом видобування придатних до перекладу рядків із вхідного документа) "
+"та перекладений документ (тієї самої структури, що і вхідний, але із заміною "
+"усіх придатних до перекладу рядків на вміст вхідного файла PO). Ось графічне "
+"представлення обробки:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:188
@@ -5741,6 +5751,9 @@ msgid ""
 "input PO and the output document, you get B<po4a-gettextize>. If you provide "
 "both input and disregard the output PO, you get B<po4a-translate>."
 msgstr ""
+"Ця маленька часточка коду є ядром усієї архітектури po4a. Якщо викинути "
+"вхідний файл PO і вихідний документ, ми отримуємо B<po4a-gettextize>. Якщо "
+"надати вхідний PO і відкинути вихідний PO, отримуємо B<po4a-translate>."
 
 #. type: textblock
 #: doc/po4a.7.pod:190
@@ -5749,6 +5762,9 @@ msgid ""
 "is a little example to show you how it works. It parses a list of "
 "paragraphs, each of them beginning with B<E<lt>pE<gt>>."
 msgstr ""
+"TransTractor::parse() є віртуальною функцією, яка реалізується у кожному "
+"модулі. Ось невеличкий приклад того, як це працює. Код обробляє список "
+"абзаців, кожен з яких починається з B<E<lt>pE<gt>>."
 
 #. type: verbatim
 #: doc/po4a.7.pod:191
@@ -5809,6 +5825,11 @@ msgid ""
 "push the concatenation of this tag with the translation of the rest of the "
 "paragraph."
 msgstr ""
+"У рядку 6 ми бачимо B<E<lt>pE<gt>> вдруге. Це сигнал щодо наступного абзацу. "
+"Отже, ми маємо вставити щойно отриманий рядок назад у початковий документ ("
+"рядок 7) і надіслати створений таким чином абзац до виведених даних. Після "
+"вилучення початкового B<E<lt>pE<gt>> з абзацу у рядку 9, ми надсилаємо до "
+"виведення об'єднання цього теґу і перекладу решти абзацу."
 
 #. type: textblock
 #: doc/po4a.7.pod:193
@@ -5818,6 +5839,10 @@ msgid ""
 "input PO file (translation). Since it's used as part of the argument of "
 "pushline(), this translation lands into the output document."
 msgstr ""
+"Ця функція translate() прекрасна. Вона надсилає свій аргумент до вихідного "
+"файла PO (видобування) і повертає його переклад, відповідно до вхідного "
+"файла PO (переклад). Оскільки вона використовується як частина аргументу "
+"pushline(), переклад опиняється у документі, який є результатом обробки."
 
 #. type: textblock
 #: doc/po4a.7.pod:194
@@ -5825,6 +5850,8 @@ msgid ""
 "Isn't that cool? It is possible to build a complete po4a module in less than "
 "20 lines when the format is simple enough..."
 msgstr ""
+"Хіба це не чудово? Можна створити повноцінний модуль po4a, у якому буде "
+"менше за 20 рядків, якщо формат є доволі простим..."
 
 #. type: textblock
 #: doc/po4a.7.pod:195
@@ -5851,6 +5878,12 @@ msgid ""
 "(of type 'chapter') is the translation of the 4th string in original (of "
 "type 'paragraph')."
 msgstr ""
+"Використана тут ідея полягає у тому, щоб взяти початковий документ і його "
+"переклад і вважати, що N-й видобутий рядок з перекладу є перекладом N-го "
+"видобутого рядка з оригіналу. Щоб це спрацювало, обидва файли повинні мати "
+"абсолютно однакову будову. Наприклад, якщо файли мають наведену нижче "
+"будову, дуже малоймовірним є те, що 4-й рядок у перекладі (типу «глава») є "
+"перекладом 4-го рядка оригіналу (типу «абзац»)."
 
 #. type: verbatim
 #: doc/po4a.7.pod:198
@@ -5874,6 +5907,13 @@ msgid ""
 "    paragraph          paragraph\n"
 "\n"
 msgstr ""
+"  глава                глава\n"
+"    абзац                абзац\n"
+"    абзац                абзац\n"
+"    абзац              глава\n"
+"  глава                абзац\n"
+"    абзац                абзац\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:200
@@ -5889,6 +5929,17 @@ msgid ""
 "it would allow us to detect that string 4 is a paragraph in one case, and a "
 "chapter title in another case and to report the problem."
 msgstr ""
+"Для реалізації цієї ідеї засоби обробки po4a використовуються для "
+"початкового документа та файла перекладу для видобування даних PO, а потім "
+"на їхній основі збирається третій файл PO, якому використовуються рядки з "
+"другого файла як переклади рядків з першого. З метою перевірити, чи є рядки, "
+"які ми зіставили, справді перекладами одне одного, засоби обробки документів "
+"у po4a мають записувати дані щодо синтаксичного типу видобутих рядків до "
+"документа (усі наявні засоби так роблять, і так має робити створений вами "
+"засіб). Далі, ці дані використовуються для того, щоб забезпечити однаковий "
+"синтаксис у обох документах. У попередньому випадку це надало б нам змогу "
+"визначити, що рядок 4 є абзацом у одному з випадків і заголовком глави у "
+"іншому випадку, а отже повідомити про проблему."
 
 #. type: textblock
 #: doc/po4a.7.pod:201
@@ -5900,6 +5951,13 @@ msgid ""
 "resynchronize anything and verbosely fail when something goes wrong, "
 "requiring manual modification of files to fix the problem."
 msgstr ""
+"Теоретично, можна виявити проблему і синхронізувати файли нижче за списком "
+"записів (як це робить B<diff>). Але при цьому залишається відкритим питання "
+"про те, що робити із декількома рядками до синхронізації. Іноді такий підхід "
+"призводить до помилкових результатів. Ось чому у поточній реалізації "
+"програма не робить спроб повторно синхронізувати рядки і просто завершує "
+"роботу, повідомивши докладно про помилку, яка потребує внесення змін до "
+"файлів вручну з метою усування проблеми."
 
 #. type: textblock
 #: doc/po4a.7.pod:202
@@ -5908,6 +5966,9 @@ msgid ""
 "why all translations guessed this way are marked fuzzy to make sure that the "
 "translator reviews and checks them."
 msgstr ""
+"Навіть якщо виконуються усі попередні умови, тут усе ж дуже просто можуть "
+"виникнути проблеми. Ось чому переклади, які було визначено у цей спосіб "
+"позначаються як неточні. Перекладач має переглянути і перевірити їх."
 
 #. type: =head2
 #: doc/po4a.7.pod:203
@@ -5925,6 +5986,13 @@ msgid ""
 "and insert the addendum after this line if it's an B<endboundary> or before "
 "this line if it's a B<beginboundary>."
 msgstr ""
+"Гаразд, тут усе просто. Перекладений документ не записується одразу на диск, "
+"а зберігається у пам'яті, аж доки до нього не буде записано додатки. "
+"Використані тут алгоритми є доволі простими. Ми шукаємо рядок, який "
+"відповідає формальному виразу позиції і вставляємо додаток перед ним, якщо "
+"працюємо у режимі B<mode=before>. Якщо це не так, ми шукаємо наступний "
+"рядок, який відповідає межі фрагмента і вставляємо додаток після цього "
+"рядка, якщо це B<endboundary> або перед цим рядком, якщо це B<beginboundary>."
 
 #. type: =head1
 #: doc/po4a.7.pod:205
@@ -5943,6 +6011,9 @@ msgid ""
 "decides this, but all existing modules do so, and yours should also).  There "
 "are two main advantages to this approach:"
 msgstr ""
+"Так, у po4a кожен абзац перекладається окремо (фактично, це вирішується на "
+"рівні модуля, але у всіх наявних модулях це так, отже, це має бути так і у "
+"вашому модулі). У цього підходу є дві основні переваги:"
 
 #. type: =item
 #: doc/po4a.7.pod:209 doc/po4a.7.pod:211 doc/po4a.7.pod:214 doc/po4a.7.pod:216
@@ -5963,6 +6034,9 @@ msgid ""
 "translator can't mess with them. The fewer markers we present to the "
 "translator the less error he can do."
 msgstr ""
+"Якщо технічні частини документа приховано, перекладач не зможе помилитися у "
+"їхньому використанні. Чим менше технічних елементів буде у початковому "
+"тексті для перекладу, тим меншою буде ймовірність помилки."
 
 #. type: textblock
 #: doc/po4a.7.pod:212
@@ -5971,6 +6045,9 @@ msgid ""
 "document. When the original is modified, finding what parts of the "
 "translation need to be updated is eased by this process."
 msgstr ""
+"Поділ документа допомагає ізолювати зміни у початковому документі. Якщо до "
+"початкового документа внесено зміни, буде простіше знайти частини, де має "
+"бути оновлено переклад."
 
 #. type: textblock
 #: doc/po4a.7.pod:213
@@ -5979,6 +6056,9 @@ msgid ""
 "each paragraph separately. Here are some of the answers I can give to their "
 "fear:"
 msgstr ""
+"Навіть ці переваги не переконують декого у тому, що кожен абзац слід "
+"перекладати окремо. Ось декілька тез, які ми можемо висловити у відповідь на "
+"заперечення цієї методики:"
 
 #. type: textblock
 #: doc/po4a.7.pod:215
@@ -5987,6 +6067,8 @@ msgid ""
 "to produce the biggest corpus of translated and up to date documentation I "
 "know."
 msgstr ""
+"Цей підхід добре зарекомендував себе у проекті KDE і надав змогу його "
+"перекладачам створити значний масив перекладеної і актуальної документації."
 
 #. type: textblock
 #: doc/po4a.7.pod:217
@@ -5998,6 +6080,14 @@ msgid ""
 "a printable format since the text formatting ones are not really readable, "
 "IMHO."
 msgstr ""
+"Перекладачі можуть користуватися контекстом для перекладу, оскільки рядки у "
+"файлі PO належать до тієї самої послідовності, що і у початковому документі. "
+"Тому послідовний переклад тексту у випадку, якщо ви користуєтеся po4a, нічим "
+"не відрізнятиметься від послідовного перекладу тексту безпосередньо у "
+"початковому документі. У обох випадках, найкращим способом отримати контекст "
+"є перетворення документа у якийсь зручний для читання тексту формат, "
+"оскільки, на мою думку, початковий код і розмітка важко піддаються простому "
+"аналізу."
 
 #. type: textblock
 #: doc/po4a.7.pod:219
@@ -6007,6 +6097,10 @@ msgid ""
 "maintenance is for example often less critical to them since the content "
 "changes rarely."
 msgstr ""
+"Цей підхід використовують професійні перекладачі. Згоден, у них трохи інша "
+"мета, ніж у перекладачів вільного програмного забезпечення. Для них, "
+"наприклад, можливість супроводу тексту часто є менш важливою, оскільки "
+"початковий текст змінюється не часто."
 
 #. type: =head2
 #: doc/po4a.7.pod:220
@@ -6021,6 +6115,10 @@ msgid ""
 "speed up their process.  The problem is that the same sentence may have "
 "several translations, depending on the context."
 msgstr ""
+"Засоби професійного перекладу іноді поділяють документ на рівні речення, щоб "
+"максимально скористатися можливістю повторного використання попередніх "
+"перекладів і пришвидшення процесу. Проблема полягає у тому, що те саме "
+"речення може мати декілька різних перекладів, які залежать від контексту."
 
 #. type: textblock
 #: doc/po4a.7.pod:222
@@ -6029,6 +6127,9 @@ msgid ""
 "that having the same paragraph in two documents will have the same meaning "
 "(and translation), regardless of the context in each case."
 msgstr ""
+"Абзаци, за означенням, є довшими за речення. Можна сподіватися, що однакові "
+"абзаци у двох різних документах матимуть те саме значення (і переклад), "
+"незалежно від контексту."
 
 #. type: textblock
 #: doc/po4a.7.pod:223
@@ -6041,6 +6142,14 @@ msgid ""
 "sentences by aggregating parts of sentences working for all existing "
 "languages (or even for the 5 of the 10 most spoken ones, or even less)."
 msgstr ""
+"Поділ на частини, менші за речення, дасть B<дуже погані> результати. "
+"Пояснення причин є надто довгим, щоб наводити його тут, але зацікавлений "
+"читач може звернутися до прикладу, наведеного на сторінці підручника "
+"L<Locale::Maketext::TPJ13(3pm)|Locale::Maketext::TPJ13(3pm)> (яка є частиною "
+"документації до Perl). Якщо коротко, у кожної мови є власні правила щодо "
+"синтаксису. Не існує способу побудови речення за допомогою збирання "
+"перекладів частин речення, які б працювали для усіх відомих мов (навіть для "
+"5 з 10 найрозповсюдженіших)."
 
 #. type: =head2
 #: doc/po4a.7.pod:224
@@ -6048,6 +6157,8 @@ msgid ""
 "Why not put the original as comment along with translation (or the other way "
 "around)?"
 msgstr ""
+"Чому б просто не додавати оригінал як коментар до перекладу (або якось у "
+"інший спосіб)?"
 
 #. type: textblock
 #: doc/po4a.7.pod:225
@@ -6060,6 +6171,13 @@ msgid ""
 "in a specialized file since it has to be available before the package "
 "installation."
 msgstr ""
+"З першого погляду, gettext не пасує для усіх різновидів перекладу. "
+"Наприклад, його не дуже пристосовано для перекладу debconf, інтерфейсу, який "
+"використовується усіма пакунками Debian для взаємодії з користувачем під час "
+"встановлення. У цьому випадку тексти для перекладу є доволі короткими ("
+"десяток рядків на кожен з пакунків), і розташувати переклад у "
+"спеціалізованому файлі складно, оскільки переклад має бути доступним до "
+"встановлення пакунка."
 
 #. type: textblock
 #: doc/po4a.7.pod:226
@@ -6069,6 +6187,10 @@ msgid ""
 "rather appealing. One would even want to do this for XML, for example. It "
 "would look like that:"
 msgstr ""
+"Саме тому розробник debconf вирішив реалізувати інший підхід, коли переклади "
+"розташовуються у тому самому файлі, що і оригінал. Такий підхід є доволі "
+"привабливим. Декому може видатися, що це буде добре і для, наприклад, XML. "
+"Це б виглядало десь так:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:227
@@ -6110,6 +6232,12 @@ msgid ""
 "PO files extracted from the master template (and placed back at package "
 "compilation time). The old system was deprecated because of several issues:"
 msgstr ""
+"Але усе це потягло за собою такі проблеми, що зараз використовується лише "
+"підхід, який засновано на файлах PO. У початковому файлі можна редагувати "
+"лише початковий варіант рядка, а переклади розташовуються у файлах PO, дані "
+"яких видобуто із основного шаблону (ці переклади записуються назад до "
+"пакунка під час його збирання). Стару систему було відправлено на відпочинок "
+"з декількох причин:"
 
 #. type: =item
 #: doc/po4a.7.pod:230
@@ -6132,6 +6260,10 @@ msgid ""
 "translations? In order to use diff, you have to note which version of the "
 "original you translated. I.e., you need a PO file in your file ;)"
 msgstr ""
+"Як ви зможете виявити зміни у оригіналі, які слід реалізувати у новій версії "
+"перекладу? Щоб скористатися diff, вам потрібні будуть значення щодо версії "
+"оригіналу, яку було перекладено. Отже, у вашому житті все одно з'явиться "
+"файл PO. ;)"
 
 #. type: =item
 #: doc/po4a.7.pod:233
@@ -6145,6 +6277,9 @@ msgid ""
 "introduction of Korean, Russian and/or Arab really complicate the picture.  "
 "UTF could be a solution, but there are still some problems with it."
 msgstr ""
+"Цей підхід добре працює лише для частини європейських мов, але додавання "
+"корейської, української і/або арабської значно ускладнює картину. Можна було "
+"б скористатися UTF, але і з ним є певні проблеми."
 
 #. type: textblock
 #: doc/po4a.7.pod:235
@@ -6153,6 +6288,9 @@ msgid ""
 "detect that the encoding of Korean is broken [because of the Russian "
 "translator])."
 msgstr ""
+"Більше того, такі проблеми важко виявити (тобто лише ті, хто знає корейську "
+"можуть виявити, що кодування хангилю є помилковим [наприклад, через дії "
+"перекладача російською])."
 
 #. type: textblock
 #: doc/po4a.7.pod:236
@@ -6170,6 +6308,8 @@ msgid ""
 "That's true, but until now nobody came with a better solution. The only "
 "known alternative is manual translation, with all the maintenance issues."
 msgstr ""
+"Правда, але кращого варіанта досі ніхто не придумав. Єдиною альтернативою є "
+"переклад вручну із усіма проблемами із супроводом такого перекладу."
 
 #. type: =head2
 #: doc/po4a.7.pod:239
@@ -6194,6 +6334,9 @@ msgid ""
 "was the first program to extract strings to translate from documentation to "
 "PO files, and inject them back after translation."
 msgstr ""
+"Це програма, яку розроблено KDE для роботи із XML DocBook. Наскільки мені "
+"відомо, це була перша програма, яка видобувала рядки для перекладу з "
+"документації до файлів PO і вставляла ці рядки назад після перекладу."
 
 #. type: textblock
 #: doc/po4a.7.pod:243
@@ -6202,6 +6345,10 @@ msgid ""
 "the handling of lists, which end in one big msgid. When the list become big, "
 "the chunk becomes harder to swallow."
 msgstr ""
+"Ця програма може працювати лише із форматом XML і лише з певним DTD. Мені не "
+"дуже подобається робота зі списками у ній, оскільки використання списків за "
+"певних умов призводить до створення величезних msgid. Якщо список дуже "
+"великий, перекладати його стає дуже складно."
 
 #. type: =item
 #: doc/po4a.7.pod:244
@@ -6435,6 +6582,8 @@ msgstr ""
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
 msgstr ""
+"Навіть із простим інтерфейсом, цей інструмент залишатиметься новим, таким, "
+"роботі з яким слід навчатися."
 
 #. type: textblock
 #: doc/po4a.7.pod:275
