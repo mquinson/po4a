@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-16 15:55+0000\n"
+"PO-Revision-Date: 2018-03-16 18:28+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -7249,6 +7249,9 @@ msgid ""
 "list is translated as a whole.  There is no need to define translatable "
 "attributes."
 msgstr ""
+"Якщо перед назвою стилю вказано символ «плюс» (B<+>), список атрибутів "
+"перекладається як ціле. У такому випадку немає потреби у визначенні "
+"атрибутів, які слід перекладати."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:27
@@ -7256,6 +7259,8 @@ msgid ""
 "If a minus sign (B<->) is prepended to the style name, then this attribute "
 "is not translated."
 msgstr ""
+"Якщо перед назвою стилю вказано символ «мінус» (B<->), список атрибутів не "
+"перекладається."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:28
@@ -7380,6 +7385,11 @@ msgid ""
 "documentation is synchronized in all modules, and that each of them can "
 "access the new module."
 msgstr ""
+"Locale::Po4a::Chooser — модуль для керування модулями po4a. Раніше, усі "
+"виконувані файли po4a мали знати про усі модулі po4a (pod, man, sgml тощо). "
+"Це робило додавання нового модуля марудною справою, оскільки слід було "
+"переконатися, що документацію синхронізовано для усіх модулів, і кожне з "
+"модулів може отримувати доступ до нового модуля."
 
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:5
@@ -7387,6 +7397,8 @@ msgid ""
 "Now, you just have to call the Locale::Po4a::Chooser::new() function, "
 "passing the name of module as argument."
 msgstr ""
+"Тепер вам достатньо викликати функцію Locale::Po4a::Chooser::new(), "
+"передавши їй назву модуля як аргумент."
 
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:6
@@ -7396,6 +7408,11 @@ msgid ""
 "list(0) when requested for the list of formats, and Locale::Po4a::Chooser::"
 "list(1) when passed an invalid format name."
 msgstr ""
+"Функція Locale::Po4a::Chooser::list() виводить список усіх доступних "
+"форматів і завершує роботу зі значенням, яке передано їй як аргумент. Отже, "
+"можна викликати Locale::Po4a::Chooser::list(0), якщо потрібен список "
+"форматів, і Locale::Po4a::Chooser::list(1), якщо передано некоректну назву "
+"формату."
 
 #. type: =item
 #: lib/Locale/Po4a/Chooser.pm:8
@@ -7478,6 +7495,8 @@ msgid ""
 "In order to use Locale::Po4a programatically, one may want to disable the "
 "use of Text::WrapI18N, by writing something like:"
 msgstr ""
+"При використанні Locale::Po4a у програмі може виникнути потреба у вимиканні "
+"використання Text::WrapI18N. Зробити це можна так:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:6
@@ -7513,6 +7532,9 @@ msgid ""
 "Locale::Po4a::Common, the first time this module is loaded determines "
 "whether Text::WrapI18N is used."
 msgstr ""
+"Тут важливий порядок інструкцій: більшість модулів Locale::Po4a самі "
+"завантажують Locale::Po4a::Common, отже місце першого завантаження модуля "
+"визначає, чи буде використано Text::WrapI18N."
 
 #. type: =head1
 #: lib/Locale/Po4a/Common.pm:10
@@ -7535,6 +7557,8 @@ msgid ""
 "Shows the current version of the script, and a short copyright message. It "
 "takes the name of the script as an argument."
 msgstr ""
+"Виводить поточну версію скрипту та коротке повідомлення щодо авторських "
+"прав. Приймає як аргумент назву скрипту."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:14
@@ -7547,6 +7571,9 @@ msgid ""
 "This function displays a message the same way than sprintf() does, but wraps "
 "the result so that they look nice on the terminal."
 msgstr ""
+"Ця функція виводить повідомлення у той самий спосіб, у який це робить "
+"sprintf(), але розбиває результат на рядки, щоб він краще виглядав у "
+"терміналі."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:16
@@ -7559,6 +7586,8 @@ msgid ""
 "This function works like wrap_msg(), but it takes a module name as the first "
 "argument, and leaves a space at the left of the message."
 msgstr ""
+"Ця функція працює так само, як wrap_msg(), але отримує як перший аргумент "
+"назву модуля і лишає місце ліворуч від повідомлення."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:18
@@ -7572,6 +7601,9 @@ msgid ""
 "the first argument, a module name as the second one, and leaves a space at "
 "the left of the message."
 msgstr ""
+"Ця функція працює так само, як wrap_msg(), але отримує як перший аргумент "
+"позицію файл:рядок, назву модуля як другий аргумент і лишає місце ліворуч "
+"від повідомлення."
 
 #. type: =head2
 #: lib/Locale/Po4a/Common.pm:20
@@ -7590,6 +7622,9 @@ msgid ""
 "(empty) implementation of the following functions. In that case, po4a "
 "messages won't get translated but the program will continue to work."
 msgstr ""
+"Якщо не вдається завантажити модуль Locale::Gettext, цей модуль надає "
+"фіктивну (порожню) реалізацію зазначених нижче функцій. Повідомлення po4a "
+"при цьому перекладено не буде, але програма зможе працювати."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:23
@@ -7598,6 +7633,9 @@ msgid ""
 "setlocale(LC_MESSAGES, \"\") so callers don't depend on the POSIX module "
 "either."
 msgstr ""
+"Якщо немає доступу до Locale::gettext, ця обгортка викликає setlocale("
+"LC_MESSAGES, \"\"), щоб функції, які її викликають, також не залежали від "
+"модуля POSIX."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:24
@@ -7671,6 +7709,9 @@ msgid ""
 "uncompressed diagrams with Dia itself, unchecking the \"Compress diagram "
 "files\" at the \"Save Diagram\" dialog."
 msgstr ""
+"Цей модуль призначено для перекладу лише нестиснених діаграм Dia. Зберегти "
+"нестиснені діаграми можна за допомогою самої Dia, якщо зняти позначку з "
+"пункту «Стиснути файл діаграми» у вікні «Збереження діаграми»."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Dia.pm:9
@@ -7693,6 +7734,10 @@ msgid ""
 "filters the internal strings (the content of the E<lt>dia:diagramdataE<gt> "
 "tag), not interesting for translation."
 msgstr ""
+"Цей модуль є повнофункціональним, оскільки він використовує модуль "
+"L<Locale::Po4a::Xml>. Сам модуль лише визначає придатні до перекладу теґи "
+"(E<lt>dia:stringE<gt>) і фільтрує вбудовані рядки (вміст теґу "
+"E<lt>dia:diagramdataE<gt>), які не варті перекладу."
 
 #. type: textblock
 #: lib/Locale/Po4a/Dia.pm:13 lib/Locale/Po4a/Docbook.pm:10
@@ -7732,6 +7777,9 @@ msgid ""
 "This module is fully functional, as it relies in the L<Locale::Po4a::Xml> "
 "module. This only defines the translatable tags and attributes."
 msgstr ""
+"Цей модуль є повнофункціональним, оскільки він використовує модуль "
+"L<Locale::Po4a::Xml>. Сам модуль лише визначає придатні до перекладу теґи і "
+"атрибути."
 
 #. type: textblock
 #: lib/Locale/Po4a/Docbook.pm:8
@@ -7741,6 +7789,10 @@ msgid ""
 "files alone (except the typical entities files), and it's usually better to "
 "maintain them separated."
 msgstr ""
+"Єдиною відомою вадою є те, що модуль ще не може працювати із замінниками "
+"(entities), зокрема із замінниками включення файлів. Втім, ви можете "
+"перекладати більшу частину включених файлів окремо (окрім файлів типових "
+"замінників), і, зазвичай, такі файли все одно краще супроводжувати окремо."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Docbook.pm:14
@@ -7784,6 +7836,9 @@ msgid ""
 "\"...\"> tag, but you can translate all those files alone, and it's usually "
 "better to have them separated."
 msgstr ""
+"Єдиною відомою вадою є те, що не передбачено включення файлів за допомогою "
+"теґу <include href=\"...\">. Втім, такі файли можна перекладати окремо. "
+"Зазвичай, навіть краще тримати переклад включених файлів у власних файлах."
 
 #. type: textblock
 #: lib/Locale/Po4a/Halibut.pm:2
@@ -7834,7 +7889,7 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Halibut.pm:11
 msgid "Verbatim blocks"
-msgstr ""
+msgstr "Блоки форматованого тексту"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Halibut.pm:12
@@ -7844,6 +7899,9 @@ msgid ""
 "  \\c bar\n"
 "\n"
 msgstr ""
+"  \\c щось\n"
+"  \\c ще щось\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Halibut.pm:13
@@ -7851,6 +7909,8 @@ msgid ""
 "The verbatim block is not considered as a whole. Each line will be "
 "translated separately."
 msgstr ""
+"Блоки форматованого тексту не вважаються цілими. Кожен рядок такого блоку "
+"перекладається окремо."
 
 #. type: textblock
 #: lib/Locale/Po4a/Halibut.pm:15 lib/Locale/Po4a/LaTeX.pm:9
@@ -7960,6 +8020,10 @@ msgid ""
 "so that they accept to read the documentation from another (translated)  "
 "file."
 msgstr ""
+"Цей модуль є новим і потребує тестування. Більша частина роботи "
+"стосуватиметься інструментів, які використовуються для обробки цього файла ("
+"і налаштовування ядра), щоб вони могли читати документацію із іншого "
+"(перекладеного) файла."
 
 #. type: textblock
 #: lib/Locale/Po4a/KernelHelp.pm:8
@@ -8046,6 +8110,10 @@ msgid ""
 "the man page. Indeed, the cruder parts of the nroff format are hidden, so "
 "that translators can't mess up with them."
 msgstr ""
+"Цей модуль намагається зробити завдання перекладача якомога простішим. Для "
+"цього текст, який отримає перекладач, не є буквальною копією тексту із "
+"сторінки підручника. Найнеоковирніші частини коду nroff приховано так, щоб "
+"перекладачі не мали з ними справи."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:8
@@ -8060,6 +8128,10 @@ msgid ""
 "rewrapping rules used by groff aren't very clear. For example, two spaces "
 "after a parenthesis are sometimes preserved."
 msgstr ""
+"Абзаци без відступів автоматично розбиваються для перекладачів на рядки. Це "
+"може призвести до незначних відмінностей у результатах, оскільки правила "
+"розбиття на рядки, які використовує groff, не є доволі чіткими. Наприклад, "
+"два пробіли після дужки іноді зберігаються."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:10
@@ -8067,6 +8139,9 @@ msgid ""
 "Anyway, the difference will only be about the position of the extra spaces "
 "in wrapped paragraph, and I think it's worth."
 msgstr ""
+"Щоб там не було, а відмінності стосуються лише розташування додаткових "
+"пробілів у розбитому на рядки абзаці. Мені здається, що можливість "
+"перекладати текст у зручний спосіб варта таких відмінностей."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:11
@@ -8105,7 +8180,7 @@ msgstr "еквівалент \\fBтекст\\fP або \".B текст\""
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:17
 msgid "RE<lt>textE<gt> -- roman text"
-msgstr ""
+msgstr "RE<lt>текстE<gt> — текст прямим шрифтом"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:18
@@ -8115,12 +8190,12 @@ msgstr "еквівалент \\fRtext\\fP"
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:19
 msgid "CWE<lt>textE<gt> -- constant width text"
-msgstr ""
+msgstr "CWE<lt>текстE<gt> — текст моноширинним шрифтом"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:20
 msgid "equivalent to \\f(CWtext\\fP or \".CW text\""
-msgstr ""
+msgstr "еквівалент \\f(CWтекст\\fP або \".CW текст\""
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:21
