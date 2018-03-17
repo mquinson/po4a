@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-17 15:28+0000\n"
+"PO-Revision-Date: 2018-03-17 16:45+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -8548,6 +8548,8 @@ msgid ""
 "With B<translate_each>, the arguments will also be proposed for the "
 "translation, except that each one will be translated separately."
 msgstr ""
+"Якщо вказано B<translate_each>, аргументи також буде запропоновано для "
+"перекладу, але кожен із них перекладатиметься окремо."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:66 lib/Locale/Po4a/TeX.pm:15
@@ -8561,6 +8563,9 @@ msgid ""
 "I<end>, where I<begin> and I<end> are commands that delimit the begin and "
 "end of a section that should not be rewrapped."
 msgstr ""
+"Цьому параметру передається список відокремлених комами пар "
+"I<початок>:I<кінець>, де I<початок> і I<кінець> є командами, які "
+"відповідають початку і кінцю розділу, у якому не слід переносити рядки."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:68
@@ -8571,6 +8576,13 @@ msgid ""
 "can specify an existing I<end> (like fi) or I<begin> (like nf) as a "
 "counterpart.  These macros (and their arguments) wont be translated."
 msgstr ""
+"Зауваження: програма не виконуватиме ніяких перевірок щодо того, чи є "
+"відповідність між командами I<кінець> і I<початок> — будь яка команда "
+"завершення розділу зупинятиме дію режиму no_wrap. Якщо у тексті є макрос "
+"I<початок> (відповідно, I<кінець>) без відповідника I<кінець> (відповідно, "
+"I<початок>), ви можете вказати наявний у тексті I<кінець> (наприклад, fi) "
+"або I<початок> (наприклад, nf) як відповідник обмежувача розділу. Ці макроси "
+"(та їхні аргументи) не перекладатимуться."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:69 lib/Locale/Po4a/Xml.pm:56
@@ -8585,6 +8597,11 @@ msgid ""
 "bar baz quxE<gt> quux>, where I<bar> is the command that should be inlined, "
 "and I<baz qux> its arguments."
 msgstr ""
+"За допомогою цього параметра можна задати список відокремлених комами "
+"макросів, за якими не слід ділити на частини поточний абзац. Після цього у "
+"рядку для перекладу буде щось подібне до I<щось E<lt>.команда "
+"аргументи_командиE<gt> далі>, де I<команда> — команда, яку слід залишити у "
+"ряду, а I<аргументи_комнади> — її аргументи."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:71
@@ -8600,11 +8617,16 @@ msgid ""
 "B<translate_joined>, or B<translate_each> (see above for an explanation of "
 "these values)."
 msgstr ""
+"За допомогою цього параметра можна вказати, як po4a має поводитися зі "
+"знайденими невідомими макросами. Типово, po4a завершує роботу із "
+"попередженням. Параметр може приймати такі значення: B<failed> (типове "
+"значення), B<untranslated>, B<noarg>, B<translate_joined> і B<translate_each>"
+" (пояснення щодо цих значень наведено вище)."
 
 #. type: =head1
 #: lib/Locale/Po4a/Man.pm:73
 msgid "AUTHORING MAN PAGES COMPLIANT WITH PO4A::MAN"
-msgstr ""
+msgstr "НАПИСАННЯ СУМІСНИХ ІЗ PO4A::MAN СТОРІНОК ПІДРУЧНИКА"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:74
@@ -8617,6 +8639,14 @@ msgid ""
 "see their productions translated, they may have to adapt to ease the work of "
 "translators."
 msgstr ""
+"Можливості цього модуля дуже обмежено, і так буде завжди, оскільки він не є "
+"повноцінним інтерпретатором nroff. Можна було б створити справжній "
+"інтерпретатор nroff, щоб надати авторам змогу використовувати усі наявні "
+"макроси або навіть визначати нові макроси на власних сторінках, але нам не "
+"хотілося цього робити. Це надто ускладнило б справу, і нам здається, що у "
+"цьому немає потреби. Нам здається, що якщо автори сторінок підручника "
+"хочуть, щоб їхню роботу було перекладено, їм буде неважко зробити синтаксис "
+"сторінки простішим, щоб спростити роботу перекладачам."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:75
@@ -8626,11 +8656,15 @@ msgid ""
 "you'll have to avoid if you want to see translators taking care of your "
 "documentation."
 msgstr ""
+"Отже, у обробника сторінок підручника, реалізованого у po4a є декілька "
+"відомих обмежень, які ми не хочемо усувати, і які визначають межі певних "
+"пасток, до яких ви не повинні потрапити, якщо хочете, щоб над вашою "
+"документацією попрацювали перекладачі."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:76
 msgid "Don't program in nroff"
-msgstr ""
+msgstr "Не програмуйте на nroff"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:77
@@ -8640,11 +8674,15 @@ msgid ""
 "interpreter, it will fail on pages using these facilities (There are about "
 "200 such pages on my box)."
 msgstr ""
+"nroff є повноцінною мовою програмування із визначенням макросів, умов тощо. "
+"Оскільки цей обробник не є повноцінним інтерпретатором nroff, він не зможе "
+"працювати зі сторінками, де використовуються можливості nroff з "
+"програмування (у моїй системі таких сторінок близько 200)."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:78
 msgid "Use the plain macro set"
-msgstr ""
+msgstr "Використовуйте простий набір макросів"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:79
@@ -8717,11 +8755,13 @@ msgid ""
 " .if !'po4a'hide' .B other\n"
 "\n"
 msgstr ""
+" .if !'po4a'hide' .B other\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:85
 msgid "(this will require the B<-o groff_code=verbatim> option)"
-msgstr ""
+msgstr "(це потребуватиме параметра B<-o groff_code=verbatim>)"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:86
@@ -8733,6 +8773,11 @@ msgid ""
 " ..\n"
 "\n"
 msgstr ""
+"Також мона визначити новий макрос для автоматизації цього:\n"
+" .de IR_untranslated\n"
+" .    IR \\\\$@\n"
+" ..\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:87 lib/Locale/Po4a/Man.pm:90
@@ -8741,6 +8786,8 @@ msgid ""
 " .IR_untranslated \\-q \", \" \\-\\-quiet\n"
 "\n"
 msgstr ""
+" .IR_untranslated \\-q \", \" \\-\\-quiet\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:88
@@ -8759,11 +8806,14 @@ msgid ""
 " .als IR_untranslated IR\n"
 "\n"
 msgstr ""
+"або за допомогою альтернативи:\n"
+" .als IR_untranslated IR\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:91
 msgid "This will require the B<-o untranslated=als,IR_untranslated> option."
-msgstr ""
+msgstr "Це потребуватиме параметра B<-o untranslated=als,IR_untranslated>."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:92
@@ -8810,11 +8860,12 @@ msgstr ""
 #: lib/Locale/Po4a/Man.pm:97
 msgid "This module can be used for most of the existing man pages."
 msgstr ""
+"Цим модулем можна скористатися для більшості наявних сторінок підручника."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:98
 msgid "Some tests are regularly run on Linux boxes:"
-msgstr ""
+msgstr "Ось результати регулярного тестування у системах Linux:"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:100
@@ -8822,6 +8873,9 @@ msgid ""
 "one third of the pages are refused because they were generated from another "
 "format supported by po4a (e.g. POD or SGML)."
 msgstr ""
+"причиною помилок під час перетворення однієї третини зі сторінок є те, що їх "
+"було автоматично створено на основі іншого формату, підтримку якого "
+"передбачено у  po4a (наприклад POD або SGML)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:102
@@ -8829,6 +8883,8 @@ msgid ""
 "10% of the remaining pages are rejected with an error (e.g. a groff macro is "
 "not supported)."
 msgstr ""
+"перетворення 10% решти сторінок завершується помилкою (наприклад, через те, "
+"що не передбачено підтримки макросу groff)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:104
@@ -8836,6 +8892,9 @@ msgid ""
 "Then, less than 1% of the pages are accepted silently by po4a, but with "
 "significant issues (i.e. missing words, or new words inserted)"
 msgstr ""
+"Крім того, менше за 1% сторінок вдається обробити за допомогою po4a без "
+"помилок, але результати мають суттєві вади (пропущені слова або вставлені "
+"нові слова)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:106
@@ -8844,6 +8903,9 @@ msgid ""
 "spacing differences or line rewrapped (font issues in less than 10% of the "
 "processed pages)."
 msgstr ""
+"Решту сторінок зазвичай вдається обробити без відмінностей, окрім "
+"відмінностей у пробілах або перенесенні рядків (проблеми зі шрифтами "
+"виникають на менш ніж 10% оброблених сторінок)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:108
@@ -8968,6 +9030,8 @@ msgid ""
 "Creates a new message catalog. If an argument is provided, it's the name of "
 "a PO file we should load."
 msgstr ""
+"Створює каталог повідомлень. Якщо вказано аргумент, він вважатиметься назвою "
+"файла PO, який слід завантажити."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:28 lib/Locale/Po4a/TransTractor.pm:73
@@ -8990,7 +9054,7 @@ msgstr "write($)"
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:31
 msgid "Writes the current catalog to the given file."
-msgstr ""
+msgstr "Записує поточний каталог до вказаного файла."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:32
