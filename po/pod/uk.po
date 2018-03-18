@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-06 18:47+0200\n"
-"PO-Revision-Date: 2018-03-18 15:50+0000\n"
+"PO-Revision-Date: 2018-03-18 16:27+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -9518,6 +9518,11 @@ msgid ""
 "returns false, then the po files would be changed when going through B<po4a-"
 "updatepo>."
 msgstr ""
+"Повертає ($uptodate, $diagnostic), де $uptodate вказує, чи усі msgid у "
+"поточному файлі po містяться у файлі, який передано як параметр (при "
+"порівнянні файлів усі інші поля буде проігноровано). Неформально, якщо $"
+"uptodate має значення false, файли po буде змінено при обробці B<po4a-"
+"updatepo>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:89
@@ -9525,6 +9530,8 @@ msgid ""
 "If $uptodate is false, then $diagnostic contains a diagnostic of why this is "
 "so."
 msgstr ""
+"Якщо $uptodate має значення false, параметр $diagnostic містить діагностичні "
+"дані щодо причин."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:90
@@ -9557,6 +9564,8 @@ msgid ""
 "Returns the character set specified in the PO header. If it hasn't been set, "
 "it will return \"CHARSET\"."
 msgstr ""
+"Повертає кодування символів, яке вказано у заголовку файла PO. Якщо таке "
+"кодування не вказано, поверне рядок «CHARSET»."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:96
@@ -9572,6 +9581,11 @@ msgid ""
 "This value doesn't change the behavior of this module, it's just used to "
 "fill that field in the header, and to return it in get_charset()."
 msgstr ""
+"Встановлює для кодування символів у заголовку PO значення, вказане як перший "
+"аргумент функції. Якщо ви не викликатимете цю функцію (і не читатимете файл "
+"із визначеним кодуванням символів), типовим значенням залишиться «CHARSET». "
+"Це значення не змінює поведінки модуля, просто використовується для "
+"заповнення поля у заголовку і повернення значення у функції get_charset()."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:2
@@ -9632,6 +9646,9 @@ msgid ""
 "with F</usr/lib/perl5/Tk/MainWindow.pod> (and some other pages, see below) "
 "which contains:"
 msgstr ""
+"Я вважаю цей модуль дуже стабільним. У нього лише одна відома вада, "
+"пов'язана із F</usr/lib/perl5/Tk/MainWindow.pod> (та деякими іншими "
+"сторінками, див. нижче), де міститься такий рядок:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Pod.pm:11
@@ -9649,6 +9666,8 @@ msgid ""
 "Lack of luck, in the po4a version, this was split on the space by the "
 "wrapping. As result, in the original version, the man page contains"
 msgstr ""
+"На жаль, у версії po4a цей рядок ділиться за пробілом на два рядки. У "
+"результаті, якщо у початковій версії сторінка підручника містить таке:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Pod.pm:13
@@ -9663,7 +9682,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:14
 msgid "and mine contains"
-msgstr ""
+msgstr "то після обробки вона містить таке:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Pod.pm:15
@@ -9678,7 +9697,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:16
 msgid "which is logic since CE<lt>foobarE<gt> is rewritten \"foobar\"."
-msgstr ""
+msgstr "Це логічно, оскільки CE<lt>щось тамE<gt> переписується як \"щось там\"."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:17
@@ -9690,6 +9709,13 @@ msgid ""
 "perlfaq5.pod /usr/share/perl/5.8.0/pod/perlpod.pod /usr/share/perl/5.8.0/pod/"
 "perlre.pod /usr/share/perl/5.8.0/pod/perlretut.pod"
 msgstr ""
+"Повний список сторінок, які є проблемними у цьому сенсі, з моєї системи (у "
+"мене 564 сторінок; зауважте, що перелік залежить від вибраної позиції "
+"перенесення рядків): /usr/lib/perl5/Tk/MainWindow.pod /usr/share/perl/5.8.0/"
+"overload.pod /usr/share/perl/5.8.0/pod/perlapi.pod /usr/share/perl/5.8.0/pod/"
+"perldelta.pod /usr/share/perl/5.8.0/pod/perlfaq5.pod /usr/share/perl/5.8.0/"
+"pod/perlpod.pod /usr/share/perl/5.8.0/pod/perlre.pod /usr/share/perl/5.8.0/"
+"pod/perlretut.pod"
 
 #. type: =head1
 #: lib/Locale/Po4a/Pod.pm:18
@@ -9704,6 +9730,11 @@ msgid ""
 "one creates a new parser with C<< Locale::Po4a::Pod->new() >> and then calls "
 "either parse_from_filehandle() or parse_from_file()."
 msgstr ""
+"Будучи класом, який походить від класу Pod::Parser, Locale::Po4a::Pod "
+"підтримує ті самі методи та інтерфейси. Докладний опис можна знайти на "
+"сторінці підручника щодо L<Pod::Parser>. Якщо коротко, клас створює обробки "
+"за допомогою C<< Locale::Po4a::Pod->new() >>, а потім викликає "
+"parse_from_filehandle() або parse_from_file()."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:20
@@ -9712,6 +9743,9 @@ msgid ""
 "behavior of the parser.  The recognized options common to all Pod::Parser "
 "children are:"
 msgstr ""
+"new() може примати параметри у форматі пар ключ/значення. Ці параметри "
+"керують поведінкою обробника. Коректні параметри є спільними для усіх "
+"дочірніх класів Pod::Parser:"
 
 #. type: =item
 #: lib/Locale/Po4a/Pod.pm:21
@@ -9725,6 +9759,9 @@ msgid ""
 "things, uses a different heading style and marks B<=item> entries with a "
 "colon in the left margin.  Defaults to false."
 msgstr ""
+"Якщо встановлено значення true, вибирає альтернативний формат виведення, "
+"який, окрім інших речей, використовує інший стиль заголовків і позначає "
+"запис B<=item> двокрапкою на лівому полі. Типовим значенням є false."
 
 #. type: =item
 #: lib/Locale/Po4a/Pod.pm:23
@@ -9738,6 +9775,10 @@ msgid ""
 "in the output.  Useful for viewing code documented with POD blocks with the "
 "POD rendered and the code left intact."
 msgstr ""
+"Якщо встановлено значення true, до виведених результатів буде включено не "
+"пов'язані із POD частини файла вхідних даних. Корисно для файлів із кодом, "
+"документованим за допомогою блоків POD, де слід перекласти POD, а код лишити "
+"незмінним."
 
 #. type: =item
 #: lib/Locale/Po4a/Pod.pm:25 lib/Locale/Po4a/Sgml.pm:16
@@ -9750,6 +9791,8 @@ msgid ""
 "The number of spaces to indent regular text, and the default indentation for "
 "B<=over> blocks.  Defaults to 4."
 msgstr ""
+"Кількість пробілів у відступах для звичайного тексту і типові відступи для "
+"блоків B<=over>. Типове значення — 4."
 
 #. type: =item
 #: lib/Locale/Po4a/Pod.pm:27
@@ -9788,6 +9831,8 @@ msgid ""
 "This may also be set to the special value B<none>, in which case no quote "
 "marks are added around CE<lt>> text."
 msgstr ""
+"Може приймати особливе значення B<none>, яке означає, що навколо тексту "
+"CE<lt>> не додаватимуться лапки."
 
 #. type: =item
 #: lib/Locale/Po4a/Pod.pm:32
@@ -9813,6 +9858,7 @@ msgstr "B<width>"
 msgid ""
 "The column at which to wrap text on the right-hand side.  Defaults to 76."
 msgstr ""
+"Позиція, на якій слід переносити рядки тексту праворуч. Типове значення — 76."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:37
