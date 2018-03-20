@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-03-19 17:27+0200\n"
-"PO-Revision-Date: 2018-03-20 16:42+0000\n"
+"PO-Revision-Date: 2018-03-20 18:20+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -11428,6 +11428,10 @@ msgid ""
 "B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which presents an "
 "example."
 msgstr ""
+"Тут відбувається уся справа: обробка вхідних документів, створення виведених "
+"даних та видобування придатних до перекладу рядків. Усе це доволі просто "
+"зробити за допомогою функцій, які представлено у розділі B<ВНУТРІШНІ ФУНКЦІЇ>"
+" нижче. Див. також розділ B<КОРОТКИЙ ОПИС>, де наведено приклад."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:21
@@ -11467,6 +11471,10 @@ msgid ""
 "e. that '<p>' tags are the only tags present, and that this tag is at the "
 "very beginning of each paragraph."
 msgstr ""
+"Нижче наведено приклад коду обробки списку абзаців, кожен з яких починається "
+"з «<p>». З міркувань простоти, будемо вважати, що документ має коректне "
+"форматування, тобто у ньому є лише теґи «<p>», і ці теґи розташовано на "
+"самому початку кожного абзацу."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:26
@@ -11851,6 +11859,8 @@ msgid ""
 "Add the content of a file (which name is passed as argument) to the existing "
 "input PO. The old content is not discarded."
 msgstr ""
+"Додати вміст файла (назва якого передається як аргументи) до наявного файла "
+"вхідних даних PO. Старий вміст файла не відкидається."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:81
@@ -11876,6 +11886,12 @@ msgid ""
 "status of the file. It is a wrapper to the Locale::Po4a::Po::stats_get "
 "function applied to the input PO file. Example of use:"
 msgstr ""
+"Повертає деякі статистичні дані щодо поточного стану перекладу. Будь ласка, "
+"зауважте, що ці статистичні дані — це не ті дані, які виводить команда "
+"msgfmt --statistic. Це статистичні дані щодо використання файла PO, тоді як "
+"дані msgfmt — це звіт щодо стану файла. Є обгорткою до функції "
+"Locale::Po4a::Po::stats_get, застосованою до файла PO вхідних даних. Приклад "
+"використання:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:85
@@ -11895,6 +11911,10 @@ msgid ""
 "    print \"We found translations for $percent\\%  ($hit from $queries) of strings.\\n\";\n"
 "\n"
 msgstr ""
+"    ($percent,$hit,$queries) = $document->stats();\n"
+"    print \"Знайдено переклади $percent\\%  ($hit з $queries) рядків.\\n"
+"\";\n"
+"\n"
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:87
@@ -11909,6 +11929,10 @@ msgid ""
 "and $diagnostic is a string explaining why the po file is not uptodate, when "
 "this happens."
 msgstr ""
+"Повертає ($uptodate, $diagnostic), де $uptodate вказує на те, чи збігаються "
+"файл po вхідних даних і файл po вихідних даних (якщо ні, це означає, що файл "
+"po вхідних даних слід оновити) і $diagnostic є рядком, який пояснює, чому "
+"файл po втратив актуальність, якщо це трапилося."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:89
@@ -11928,6 +11952,10 @@ msgid ""
 "translated document, simply pass its filename to this function and you are "
 "done ;)"
 msgstr ""
+"Будь ласка, зверніться до розділу L<po4a(7)|po4a.7>, щоб дізнатися більше "
+"про додатки та те, як перекладачі мають їх писати. Щоб застосувати додаток "
+"до перекладеного документа, просто передайте його назву цій функції, ось і "
+"усе. ;)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:92
@@ -11948,6 +11976,11 @@ msgid ""
 "first line, what shift gives, and in output you want to add your result at "
 "the end, like push does."
 msgstr ""
+"Передбачено чотири функції для отримання вхідних даних і повернення вихідних "
+"даних. Вони дуже подібні до функцій shift/unshift та push/pop. Перша пара "
+"працює із вхідними даними, а друга — з вихідними. Мнемоніка: у вхідних даних "
+"вас цікавитиме перший рядок, який дає shift, у вихідних ви додаєте результат "
+"наприкінці, як це робить push."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:96
@@ -11972,6 +12005,7 @@ msgstr "unshiftline($$)"
 #: lib/Locale/Po4a/TransTractor.pm:99
 msgid "Unshifts a line of the input document and its reference."
 msgstr ""
+"Повертає до попереднього рядка у вхідному документі і до посилання на нього."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:100
@@ -11981,7 +12015,7 @@ msgstr "pushline($)"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:101
 msgid "Push a new line to the doc_out."
-msgstr ""
+msgstr "Вставити новий рядок до doc_out."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:102
@@ -11991,7 +12025,7 @@ msgstr "popline()"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:103
 msgid "Pop the last pushed line from the doc_out."
-msgstr ""
+msgstr "Виштовхнути останній вставлених рядок з doc_out."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:104
@@ -12001,7 +12035,7 @@ msgstr "Позначення придатних до перекладу рядк
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:105
 msgid "One function is provided to handle the text which should be translated."
-msgstr ""
+msgstr "Одну функцію передбачено для обробки тексту, який має бути перекладено."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:106
@@ -12030,6 +12064,10 @@ msgid ""
 "role; used in Locale::Po4a::Po::gettextization(); see also L<po4a(7)|"
 "po4a.7>, section B<Gettextization: how does it work?>)"
 msgstr ""
+"Тип цього рядка (тобто текстовий опис його структурної ролі; "
+"використовується у Locale::Po4a::Po::gettextization(); див. також "
+"L<po4a(7)|po4a.7>, розділ B<Перетворення на формат gettextization: як це "
+"працює?>)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:114
@@ -12037,6 +12075,8 @@ msgid ""
 "This function can also take some extra arguments. They must be organized as "
 "a hash. For example:"
 msgstr ""
+"Ця функція також може приймати додаткові аргументи. Їх має бути упорядковано "
+"як хеш. Приклад:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:115
@@ -12075,7 +12115,7 @@ msgstr "Дії:"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:124
 msgid "Pushes the string, reference and type to po_out."
-msgstr ""
+msgstr "Вставляє рядок, посилання і тип до po_out."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:126
@@ -12083,6 +12123,8 @@ msgid ""
 "Returns the translation of the string (as found in po_in) so that the parser "
 "can build the doc_out."
 msgstr ""
+"Повертає переклад рядка (знайдений у po_in), щоб обробник міг зібрати "
+"doc_out."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:128
@@ -12090,6 +12132,8 @@ msgid ""
 "Handles the charsets to recode the strings before sending them to po_out and "
 "before returning the translations."
 msgstr ""
+"Обробляє кодування для перекодовування рядків до надсилання їх до po_out і "
+"перед повертанням перекладів."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:129
@@ -12107,6 +12151,8 @@ msgid ""
 "Returns if the verbose option was passed during the creation of the "
 "TransTractor."
 msgstr ""
+"Повертає значення, яке вказує, чи було передано під час створення "
+"TransTractor параметр докладного режиму повідомлень."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:132
