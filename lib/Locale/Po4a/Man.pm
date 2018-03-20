@@ -324,7 +324,7 @@ it's valid in nroff, but would complicate too much the parser to be
 handled.
 
 Of course, another possibility is to use another format, more translator
-friendly (like POD using po4a::pod, or one of the XML familly like SGML),
+friendly (like POD using po4a::pod, or one of the XML family like SGML),
 but thanks to po4a::man it isn't needed anymore. That being said, if the
 source format of your documentation is POD, or XML, it may be clever to
 translate the source format and not this generated one. In most cases,
@@ -338,7 +338,7 @@ In most cases, po4a::man will detect the problem and refuse to process the
 page, issuing an adapted message. In some rare cases, the program will
 complete without warning, but the output will be wrong. Such cases are
 called "bugs" ;) If you encounter such case, be sure to report this, along
-with a fix when possible...
+with a fix when possible…
 
 =head1 STATUS OF THIS MODULE
 
