@@ -117,7 +117,7 @@ sub show_version {
 
 wrap_msg($@)
 
-This function displays a message the same way than sprintf() does, but wraps
+This function displays a message the same way as sprintf() does, but wraps
 the result so that they look nice on the terminal.
 
 =cut

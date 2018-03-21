@@ -37,7 +37,7 @@ Locale::Po4a::TeX is a module to help the translation of TeX documents into
 other [human] languages. It can also be used as a base to build modules for
 TeX-based documents.
 
-Users should probably use the LaTeX module, which inherite from the TeX module
+Users should probably use the LaTeX module, which inherits from the TeX module
 and contains the definitions of common LaTeX commands.
 
 =head1 TRANSLATING WITH PO4A::TEX
@@ -240,10 +240,10 @@ command.
 =item B<% po4a: environment> I<env> I<parameters>
 
 This permits to define the parameters accepted by the I<env> environment.
-This information is latter used to check the number of arguments of the
+This information is later used to check the number of arguments of the
 \begin command, and permit to specify which one must be translated.
 The syntax of the I<parameters> argument is the same as described for the
-??? commands.
+others commands.
 The first parameter of the \begin command is the name of the environment.
 This parameter must not be specified in the list of parameters. Here are
 some examples:
