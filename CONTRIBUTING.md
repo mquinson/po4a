@@ -149,6 +149,7 @@ Here is the checklist of things to remember when releasing po4a:
   - Interrupt it if the MANIFEST is out of sync, and then fix it by
     adding the missing files to MANIFEST (or MANIFEST.SKIP if they
     should not be released to the users)
+- Commit your changes, eg with commit log like "Releasing v0.XXX"
 - Tag the git and push it: `git tag v0.XXX && git push tags`
 - Edit the release on [GitHub](https://github.com/mquinson/po4a/releases).
   Reuse the release name and paste the changelog of this release.
