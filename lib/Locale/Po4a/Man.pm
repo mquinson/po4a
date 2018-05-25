@@ -338,7 +338,7 @@ In most cases, po4a::man will detect the problem and refuse to process the
 page, issuing an adapted message. In some rare cases, the program will
 complete without warning, but the output will be wrong. Such cases are
 called "bugs" ;) If you encounter such case, be sure to report this, along
-with a fix when possible...
+with a fix when possible…
 
 =head1 STATUS OF THIS MODULE
 
