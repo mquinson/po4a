@@ -44,7 +44,17 @@ push @tests, {
     'doc' => "yamlkeysoption2 test"
 };
 
-use Test::More tests => 2 * 3;
+push @tests, {
+    'run' => "perl ../../po4a-normalize -f yaml ../data-32/yamlutf8.yaml -M UTF-8 >yamlutf8.err 2>&1".
+	     "&& mv po4a-normalize.po yamlutf8.po ".
+	     "&& mv po4a-normalize.output yamlutf8.out ",
+    'test'=> "perl ../compare-po.pl --no-ref ../data-32/yamlutf8.po yamlutf8.po ".
+             "&& diff -u ../data-32/yamlutf8.out yamlutf8.out 1>&2".
+	     "&& diff -u ../data-32/yamlutf8.err yamlutf8.err 1>&2",
+    'doc' => "yamlutf8 test"
+};
+
+use Test::More tests => 2 * 4;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 

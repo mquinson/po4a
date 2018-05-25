@@ -66,7 +66,7 @@ sub parse_file {
     for my $i (0 .. $#{$yaml}) {
         &walk_yaml($self, $yaml->[$i]);
     }
-    $self->pushline(Encode::decode_utf8($yaml->write_string()));
+    $self->pushline(Encode::encode_utf8($yaml->write_string()));
 }
 
 sub walk_yaml {
@@ -81,8 +81,8 @@ sub walk_yaml {
                 &walk_yaml($self, $el->{$key});
             } else {
                 next if (($self->{options}{keys} ne "") and (!exists $self->{keys}{lc($key)}));
-                my $trans = $self->translate($el->{$key}, "", "Hash Value - Key: $key", 'wrap' => 0);
-                $el->{$key} = $trans; # Save the translation
+                my $trans = $self->translate(Encode::encode_utf8($el->{$key}), "", "Hash Value - Key: $key", 'wrap' => 0);
+                $el->{$key} = Encode::decode_utf8($trans); # Save the translation
             }
         }
     }
@@ -92,15 +92,15 @@ sub walk_yaml {
             if (ref $el->[$i] ne ref "") {
                 &walk_yaml($self, $el->[$i]);
             } else {
-                my $trans = $self->translate($el->[$i], "", "Array Element", 'wrap' => 0);
-                $el->[$i] = $trans; # Save the translation
+                my $trans = $self->translate(Encode::encode_utf8($el->[$i]), "", "Array Element", 'wrap' => 0);
+                $el->[$i] = Encode::decode_utf8($trans); # Save the translation
             }
         }
     }
     else {
         print STDERR  "got a string - this is unexpected in yaml\n" if $self->{'options'}{'debug'};
-        my $trans = $self->translate($$el, "", "String", 'wrap' => 0);
-        $$el = $trans; # Save the translation
+        my $trans = $self->translate(Encode::encode_utf8($$el), "", "String", 'wrap' => 0);
+        $$el = Encode::decode_utf8($trans); # Save the translation
     }
 }
 
