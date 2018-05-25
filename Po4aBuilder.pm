@@ -177,7 +177,7 @@ sub ACTION_manpo {
     my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
     $cmd .= "--previous ";
     $cmd .= "--no-translations ";
-    $cmd .= "--msgid-bugs-address po4a-devel\@lists.alioth.debian.org ";
+    $cmd .= "--msgid-bugs-address devel\@lists.po4a.org ";
     $cmd .= "--package-name po4a ";
     $cmd .= "--package-version ".$self->dist_version()." ";
     $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
