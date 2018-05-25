@@ -36,7 +36,7 @@ foreach my $format (@formats) {
         diag($cmd) unless ($val == 0);
 
         SKIP: {
-            skip ("Command don't run, can't test the validity of its return",1)
+            skip ("The command fails to run, I can't test the validity of its effect.",1)
               if $val;
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
