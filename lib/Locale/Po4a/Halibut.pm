@@ -374,7 +374,7 @@ register_generic_command("rule,"); # TODO: TBC does it break paragraphs
 # 3.3.4 `\quote': Indenting multiple paragraphs as a long quotation
 register_generic_command("*quote,{_}"); # TODO: TBC
 # 3.3.5 `\C', `\H', `\S', `\A', `\U': Chapter and section headings
-# FIXME: What happens if the the line is rewrapped?
+# FIXME: What happens if the line is rewrapped?
 # NOTE: The name of the section is not translated.
 register_generic_command("*C,{}");
 register_generic_command("*S0,{}"); # Synonym for \H

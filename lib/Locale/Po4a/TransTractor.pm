@@ -1111,7 +1111,7 @@ add an argument to translate to indicate the target language
 =item -
 
 make a pushline_all function, which would make pushline of its content for
-all language, using a map-like syntax:
+all languages, using a map-like syntax:
 
     $self->pushline_all({ "Description[".$langcode."]=".
                           $self->translate($line,$ref,$langcode)

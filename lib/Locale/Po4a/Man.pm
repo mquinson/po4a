@@ -324,7 +324,7 @@ it's valid in nroff, but would complicate too much the parser to be
 handled.
 
 Of course, another possibility is to use another format, more translator
-friendly (like POD using po4a::pod, or one of the XML familly like SGML),
+friendly (like POD using po4a::pod, or one of the XML family like SGML),
 but thanks to po4a::man it isn't needed anymore. That being said, if the
 source format of your documentation is POD, or XML, it may be clever to
 translate the source format and not this generated one. In most cases,
@@ -642,7 +642,7 @@ NEW_LINE:
     #     of the module (e.g. when searching for a font : \f, whe don't
     #     want to match \\f)
     $line =~ s/\\\\/\\e/g;
-    #   * \. is just a dot (this can even be use to introduce a macro)
+    #   * \. is just a dot (this can even be used to introduce a macro)
     $line =~ s/\\\././g;
 
     chomp $line;
