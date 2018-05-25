@@ -388,6 +388,12 @@ Do not generate the translated documents, only update the POT and PO files.
 
 Do not change the POT and PO files, only the translation may be updated.
 
+=item B<--no-rm-translations>
+
+Keeps the old translation files if the translation doesn't meet the threshold specified by --keep. This is useful in the case where you have existing translations, but the sources gets updated and you fall below your desired threshold.
+
+WARNING: This may result in very high grade translations of outdated files.
+
 =item B<--rm-translations>
 
 Remove the translated files (implies B<--no-translations>).
@@ -632,6 +638,7 @@ sub get_options {
         "quiet"           => 0,
         "no-translations" => 0,
         "no-update"       => 0,
+        "no-rm-translations" => 0,
         "rm-translations" => 0,
         "no-backups"      => 0,
         "rm-backups"      => 0,
@@ -668,6 +675,7 @@ sub get_options {
         'keep|k=s'              => \$opts{"threshold"},
         'no-translations'       => \$opts{"no-translations"},
         'no-update'             => \$opts{"no-update"},
+        'no-rm-translations'    => \$opts{"no-rm-translations"},
         'rm-translations'       => \$opts{"rm-translations"},
         'translate-only=s'      => \@{$opts{"partial"}},
         'no-backups'            => \$opts{"no-backups"},
@@ -1492,8 +1500,20 @@ if (not $po4a_opts{"no-translations"}) {
             $doc->{TT}{po_in} = $po;
             $doc->{TT}{po_in}->stats_clear();
 
+	    my $translation_out;
+	    if ($po4a_opts{"no-rm-translations"} &&
+		-e $document{$master}{$lang}) {
+	      (undef,$translation_out) =
+		    File::Temp::tempfile("$document{$master}{$lang}.new-XXXX",
+					 OPEN   => 0,
+					 UNLINK => 0);
+	    }
+	    else {
+	      $translation_out=$document{$master}{$lang};
+	    }
+
             $doc->process('file_in_name'  => \@file_in_name,
-                          'file_out_name' => $document{$master}{$lang},
+                          'file_out_name' => $translation_out,
                           'file_in_charset'  => $file_opts{"mastchar"},
                           'file_out_charset' => $file_opts{"locchar"},
                           'addendum_charset' => $file_opts{"addchar"},
@@ -1509,7 +1529,12 @@ if (not $po4a_opts{"no-translations"}) {
                     $percent, $file_opts{"threshold"});
                 chdir $po4a_opts{"destdir"}
                     if (defined $po4a_opts{"destdir"});
-                unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+                unlink($document{$master}{$lang})
+		  if (! $po4a_opts{"no-rm-translations"} &&
+		      -e $document{$master}{$lang});
+                unlink($translation_out)
+		  if ($po4a_opts{"no-rm-translations"} &&
+		      -e $translation_out);
                 unless ($po4a_opts{"force"}) {
                     if ($po4a_opts{"stamp"}) {
                     touch($document{$master}{$lang}.".po4a-stamp");
@@ -1522,6 +1547,9 @@ if (not $po4a_opts{"no-translations"}) {
                     if (defined $po4a_opts{"destdir"});
                 next DOC;
             }
+	    else {
+	      rename ($translation_out, $document{$master}{$lang});
+	    }
             unless ($po4a_opts{"force"}) {
                 chdir $po4a_opts{"destdir"}
                     if (defined $po4a_opts{"destdir"});
