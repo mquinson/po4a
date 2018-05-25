@@ -152,7 +152,9 @@ Here is the checklist of things to remember when releasing po4a:
 - Commit your changes, eg with commit log like "Releasing v0.XXX"
 - Tag the git and push it: `git tag v0.XXX && git push tags`
 - Edit the release on [GitHub](https://github.com/mquinson/po4a/releases).
-  Reuse the release name and paste the changelog of this release.
+  - Reuse the release name and paste the changelog of this release.
+  - Also upload the tarball to the github release: the file META.yml
+    is missing from the tarball generated automatically (see #115).
 - Announce the release on the Mailing List.
 
 - Put a template in NEWS (using `figlet v0.XXX`)
