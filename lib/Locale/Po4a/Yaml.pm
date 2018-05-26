@@ -79,7 +79,7 @@ sub walk_yaml {
         print STDERR  "begin a hash\n" if $self->{'options'}{'debug'};
         foreach my $key (sort keys %$el) {
             if (ref $el->{$key} ne ref "") {
-                &walk_yaml($self, $el->{$key}, "$reference:$key");
+                &walk_yaml($self, $el->{$key}, "$reference>$key");
             } else {
                 next if (($self->{options}{keys} ne "") and (!exists $self->{keys}{lc($key)}));
                 my $trans = $self->translate(Encode::encode_utf8($el->{$key}), $reference, "Hash Value - Key: $key", 'wrap' => 0);
@@ -91,7 +91,7 @@ sub walk_yaml {
         print STDERR  "begin an array\n" if $self->{'options'}{'debug'};
         for my $i (0 .. $#{$el}) {
             if (ref $el->[$i] ne ref "") {
-                &walk_yaml($self, $el->[$i], "$reference:");
+                &walk_yaml($self, $el->[$i], "$reference>");
             } else {
                 my $trans = $self->translate(Encode::encode_utf8($el->[$i]), $reference, "Array Element", 'wrap' => 0);
                 $el->[$i] = Encode::decode_utf8($trans); # Save the translation
