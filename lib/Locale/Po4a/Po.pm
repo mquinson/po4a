@@ -1246,7 +1246,7 @@ sub push_raw {
 
     return unless defined($entry{'msgid'});
 
-    #no msgid => header definition
+    # no msgid => header definition
     unless (length($entry{'msgid'})) {
 #       if (defined($self->{header}) && $self->{header} =~ /\S/) {
 #           warn dgettext("po4a","Redefinition of the header. ".
@@ -1332,7 +1332,11 @@ sub push_raw {
     }
     if (defined($reference) && length($reference)) {
         if (defined $self->{po}{$msgid}{'reference'}) {
-            $self->{po}{$msgid}{'reference'} .= " ".$reference;
+	    # Only add the new reference if it's not already included in the existing string
+	    # It'd be much easier if $self->{po}{$msgid}{'reference'} were an array instead of a joined string...
+	    my $oldref = $self->{po}{$msgid}{'reference'};
+            $self->{po}{$msgid}{'reference'} .= " ".$reference
+	      unless (($oldref =~ m/ $reference /) || ($oldref =~ m/ $reference$/) || ($oldref =~ m/^$reference$/) || ($oldref =~ m/^$reference /))
         } else {
             $self->{po}{$msgid}{'reference'} = $reference;
         }
