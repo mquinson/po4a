@@ -81,6 +81,15 @@ ensure that bugs won't resurface in the future.
   perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
   docbook-dtds`
 
+When writing or improving a test, you probably want to select the test
+to run, and make it verbose. The tests are executed from the t/tmp
+directory.
+
+```
+  ./Build test --test_files t/32-yaml.t verbose=1
+```
+
+
 # Translating
 
 You can translate the runtime messages, the documentation and the
