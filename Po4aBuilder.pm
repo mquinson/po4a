@@ -43,7 +43,7 @@ sub ACTION_binpo {
 
     my @all_files = sort((perl_scripts(), @{$self->rscan_dir('lib',qr{\.pm$})}));
     unless ($self->up_to_date(\@all_files, "po/bin/po4a.pot")) {
-        print "XX Update po/bin/po4a-perl.pot\n";
+        print "XX Update po/bin/po4a.pot\n";
         chdir "po/bin";
         $sources = join ("", map {" ../../".$_ } @all_files);
         $cmd = "xgettext ";
