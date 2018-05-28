@@ -2,7 +2,7 @@
 
 #########################
 
-use Test::More tests => 23;
+use Test::More tests => 24;
 
 # Core modules
 eval qq{use Locale::Po4a::Po};           ok(!$@, 'Po.pm loadable');
@@ -62,4 +62,6 @@ diag($@) if $@;
 eval qq{use Locale::Po4a::Xhtml};        ok(!$@, 'Xthml.pm loadable');
 diag($@) if $@;
 eval qq{use Locale::Po4a::Xml};          ok(!$@, 'Xml.pm loadable');
+diag($@) if $@;
+eval qq{use Locale::Po4a::Yaml};         ok(!$@, 'Yaml.pm loadable');
 diag($@) if $@;
