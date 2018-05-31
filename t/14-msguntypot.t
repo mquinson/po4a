@@ -13,7 +13,8 @@ unless (-e "t/tmp") {
 }
 
 push @tests, {
-  'run' => 'cp ../data-14/test1.po . && chmod u+w test1.po && perl ../../scripts/msguntypot -o ../data-14/test1.old.pot -n ../data-14/test1.new.pot test1.po > /dev/null',
+  'run' => 'cp ../data-14/test1.po . && chmod u+w test1.po && '.
+           'perl ../../scripts/msguntypot -o ../data-14/test1.old.pot -n ../data-14/test1.new.pot test1.po > /dev/null',
   'test'=> "perl ../compare-po.pl ../data-14/test1.new.po test1.po",
   'doc' => 'nominal test',
   };
