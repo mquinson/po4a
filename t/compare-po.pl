@@ -11,8 +11,8 @@ if ($f1 =~ /--no-ref/) {
 
 my $f2 = shift(@ARGV);
 
-open IN1, "<", $f1 or die "Unable to read 1st file: $!\n";
-open IN2, "<", $f2 or die "Unable to read 2nd file: $!\n";
+open IN1, "<", $f1 or die "Unable to read 1st file ($f1): $!\n";
+open IN2, "<", $f2 or die "Unable to read 2nd file ($f2): $!\n";
 
 # Skip headers
 my $inMsgstr = 0;
