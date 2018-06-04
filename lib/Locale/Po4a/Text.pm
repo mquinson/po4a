@@ -333,16 +333,33 @@ sub parse_debianchangelog {
 
 sub parse_fortunes {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
+    # Always include paragraphs in no-wrap mode,
+    # because the formatting of the fortunes
+    # is usually hand-crafted and matters.
+    $wrapped_mode = 0;
     if ($line =~ m/^%%?\s*$/) {
         # Found end of fortune
+        # Remove the last newline for the translation.
+        chomp($paragraph);
         do_paragraph($self,$paragraph,$wrapped_mode);
-        $self->pushline("\n") unless (   $wrapped_mode == 0
-                                  or $paragraph eq "");
         $paragraph="";
-        $wrapped_mode = 1;
+        # Add the last newline again for the output.
+        $self->pushline("\n");
         $self->pushline("$line\n");
     } else {
-        $line =~ s/%%(.*)$//;
+        $paragraph .= $line."\n";
+        # If this is the last line in the input file,
+        # remove the last newline for the translation.
+        my ($nextline,$nextref) = $self->shiftline();
+        if (defined $nextline) {
+            # There is a next line, put it back.
+            $self->unshiftline($nextline, $nextref);
+        } else {
+            chomp($paragraph);
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $self->pushline("\n");
+        }
     }
     return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
 }
