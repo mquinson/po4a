@@ -358,7 +358,7 @@ sub parse {
             $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
             @comments=();
             $wrapped_mode = 1;
-        } elsif ($line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,}|\|={4,})$/) {
+        } elsif ($line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,}|\|={3,})$/) {
             # Found one delimited block
             my $t = $line;
             $t =~ s/^(.).*$/$1/;
