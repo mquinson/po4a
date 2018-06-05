@@ -337,29 +337,34 @@ sub parse_fortunes {
     # because the formatting of the fortunes
     # is usually hand-crafted and matters.
     $wrapped_mode = 0;
-    if ($line =~ m/^%%?\s*$/) {
-        # Found end of fortune
+    # Check if there are more lines in the file.
+    my $last_line_of_file = 0;
+    my ($nextline,$nextref) = $self->shiftline();
+    if (defined $nextline) {
+        # There is a next line, put it back.
+        $self->unshiftline($nextline, $nextref);
+    } else {
+        # Nope, no more lines available.
+        $last_line_of_file = 1;
+    }
+    # Is the line the end of a fortune or the last line of the file?
+    if ($line =~ m/^%%?\s*$/ or $last_line_of_file) {
+        # Add the last line to the paragraph
+        if ($last_line_of_file) {
+            $paragraph .= $line;
+        }
         # Remove the last newline for the translation.
         chomp($paragraph);
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
         # Add the last newline again for the output.
         $self->pushline("\n");
-        $self->pushline("$line\n");
+        # Also add the separator line, if this is not the end of the file.
+        if (!$last_line_of_file) {
+            $self->pushline("$line\n");
+        }
     } else {
         $paragraph .= $line."\n";
-        # If this is the last line in the input file,
-        # remove the last newline for the translation.
-        my ($nextline,$nextref) = $self->shiftline();
-        if (defined $nextline) {
-            # There is a next line, put it back.
-            $self->unshiftline($nextline, $nextref);
-        } else {
-            chomp($paragraph);
-            do_paragraph($self,$paragraph,$wrapped_mode);
-            $paragraph="";
-            $self->pushline("\n");
-        }
     }
     return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
 }
