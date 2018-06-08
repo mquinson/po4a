@@ -1968,8 +1968,15 @@ $macro{'IP'}=sub {
 #         corresponding UE  command.
 #         When generating HTML this should translate into the HTML command
 #         <A  NAME="u" id="u">&nbsp;</A>
-$inline{'UR'}=1;
-$inline{'UE'}=1;
+#
+# E-Mail address Macros
+#  .MT m  Begins a mailto link to the adress u; it will end with
+#         the corresponding ME command. When generating HTML this should
+#         translate into the HTML command <A HREF="mailto:u">.
+#  .ME    Ends the corresponding MT command; when generating HTML this
+#         should translate into </A>.
+$inline{'UR'}=$inline{'MT'}=1;
+$inline{'UE'}=$inline{'ME'}=1;
 $macro{'UN'}=\&translate_joined;
 
 # Miscellaneous Macros
