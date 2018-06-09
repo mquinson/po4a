@@ -1970,9 +1970,9 @@ $macro{'IP'}=sub {
 #         <A  NAME="u" id="u">&nbsp;</A>
 #
 # E-Mail address Macros
-#  .MT m  Begins a mailto link to the adress u; it will end with
+#  .MT m  Begins a mailto link to the adress m; it will end with
 #         the corresponding ME command. When generating HTML this should
-#         translate into the HTML command <A HREF="mailto:u">.
+#         translate into the HTML command <A HREF="mailto:m">.
 #  .ME    Ends the corresponding MT command; when generating HTML this
 #         should translate into </A>.
 $inline{'UR'}=$inline{'MT'}=1;
