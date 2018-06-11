@@ -215,7 +215,7 @@ push @tests, {
 # Macros (2 tests)
 push @tests, {
   'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m data-23/macros.1 -p tmp/macros.pot 2>/dev/null",
-  'test' => "perl compare-po.pl data-23/macros.pot tmp/macros.pot",
+  'test' => "perl compare-po.pl --no-ref data-23/macros.pot tmp/macros.pot",
   'doc'  => "check for correct handling of some macros",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m data-23/macros.1 -p data-23/macros.de.po -l tmp/macros.de.1 2>/dev/null",
