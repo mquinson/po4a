@@ -25,7 +25,7 @@ foreach my $TexinfoTest (@all_tests) {
     push @tests, {
         'doc' => "$TexinfoTest translation test",
         'run' => "perl ../../po4a-translate -f texinfo -m ../data-34/$TexinfoTest.texi -l $TexinfoTest-trans.texi -p ../data-34/$TexinfoTest.po",
-        'test'=> "diff -u ../data-34/$TexinfoTest-trans.texi $TexinfoTest.texi 1>&2"
+        'test'=> "diff -u ../data-34/$TexinfoTest-trans.texi $TexinfoTest-trans.texi 1>&2"
     };
 }
 
