@@ -1,67 +1,48 @@
-# Class tester. Tries to load all module to check their syntax
+#! /usr/bin/perl
+#
+# Class tester.
+# Tries to load all modules to check their syntax.
 
 #########################
 
+use strict;
+use warnings;
 use Test::More tests => 24;
 
-# Core modules
-eval qq{use Locale::Po4a::Po};           ok(!$@, 'Po.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::TransTractor}; ok(!$@, 'TransTractor.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Chooser};      ok(!$@, 'Chooser.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Common};       ok(!$@, 'Common.pm loadable');
-diag($@) if $@;
+note "Core modules";
 
-# File format modules
-eval qq{use Locale::Po4a::AsciiDoc};     ok(!$@, 'AsciiDoc.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::BibTeX};       ok(!$@, 'BibTeX.pm loadable');
-diag($@) if $@;
-#eval qq{use Locale::Po4a::Debconf};      ok(!$@, 'Debconf.pm loadable');
-#diag($@) if $@;
-eval qq{use Locale::Po4a::Dia};          ok(!$@, 'Dia.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Docbook};      ok(!$@, 'Docbook.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Guide};        ok(!$@, 'Guide.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Halibut};      ok(!$@, 'Halibut.pm loadable');
-diag($@) if $@;
-#eval qq{use Locale::Po4a::Html};         ok(!$@, 'Html.pm loadable');
-#diag($@) if $@;
-eval qq{use Locale::Po4a::Ini};          ok(!$@, 'Ini.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::KernelHelp};   ok(!$@, 'KernelHelp.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::LaTeX};        ok(!$@, 'LaTeX.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Man};          ok(!$@, 'Man.pm loadable');
-diag($@) if $@;
-#eval qq{use Locale::Po4a::NewsDebian};   ok(!$@, 'NewsDebian.pm loadable');
-#diag($@) if $@;
-eval qq{use Locale::Po4a::Pod};          ok(!$@, 'Pod.pm loadable');
-diag($@) if $@;
+use_ok "Locale::Po4a::Chooser";
+use_ok "Locale::Po4a::Common";
+use_ok "Locale::Po4a::Po";
+use_ok "Locale::Po4a::TransTractor";
+
+
+note "File format modules";
+
+use_ok "Locale::Po4a::AsciiDoc";
+use_ok "Locale::Po4a::BibTeX";
+# use_ok "Locale::Po4a::Debconf";
+use_ok "Locale::Po4a::Dia";
+use_ok "Locale::Po4a::Docbook";
+use_ok "Locale::Po4a::Guide";
+use_ok "Locale::Po4a::Halibut";
+# use_ok "Locale::Po4a::Html";
+use_ok "Locale::Po4a::Ini";
+use_ok "Locale::Po4a::KernelHelp";
+use_ok "Locale::Po4a::LaTeX";
+use_ok "Locale::Po4a::Man";
+# use_ok "Locale::Po4a::NewsDebian";
+use_ok "Locale::Po4a::Pod";
+use_ok "Locale::Po4a::RubyDoc";
 SKIP: {
-    skip "SGMLS required for this test", 1
-        unless eval 'require SGMLS';
-    eval qq{use Locale::Po4a::Sgml};         ok(!$@, 'Sgml.pm loadable');
-    diag($@) if $@;
+    eval { require SGMLS };
+    skip "SGMLS required for this test", 1 if $@;
+    use_ok "Locale::Po4a::Sgml";
 }
-eval qq{use Locale::Po4a::RubyDoc};      ok(!$@, 'RubyDoc.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Texinfo};      ok(!$@, 'Texinfo.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::TeX};          ok(!$@, 'TeX.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Text};         ok(!$@, 'Text.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Wml};          ok(!$@, 'Wml.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Xhtml};        ok(!$@, 'Xthml.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Xml};          ok(!$@, 'Xml.pm loadable');
-diag($@) if $@;
-eval qq{use Locale::Po4a::Yaml};         ok(!$@, 'Yaml.pm loadable');
-diag($@) if $@;
+use_ok "Locale::Po4a::TeX";
+use_ok "Locale::Po4a::Texinfo";
+use_ok "Locale::Po4a::Text";
+use_ok "Locale::Po4a::Wml";
+use_ok "Locale::Po4a::Xhtml";
+use_ok "Locale::Po4a::Xml";
+use_ok "Locale::Po4a::Yaml";
