@@ -13,19 +13,15 @@ unless (-e "t/tmp") {
         or die "Can't create test directory t/tmp: $!\n";
 }
 
-my @TextTests = qw(KeyValue);
-
-foreach my $TextTest (@TextTests) {
-    push @tests, {
-        'run' => "perl ../../po4a-normalize -f text -o keyvalue ../t-20-text/$TextTest.text >$TextTest.err 2>&1".
-	         "&& mv po4a-normalize.po $TextTest.po ".
-	         "&& mv po4a-normalize.output $TextTest.out ",
-        'test'=> "perl ../compare-po.pl --no-ref ../t-20-text/$TextTest.po $TextTest.po ".
-                 "&& diff -u ../t-20-text/$TextTest.out $TextTest.out 1>&2".
-	         "&& diff -u ../t-20-text/$TextTest.err $TextTest.err 1>&2",
-        'doc' => "$TextTest test"
-    };
-}
+push @tests, {
+    'run' => "perl ../../po4a-normalize -f text -o keyvalue ../t-20-text/KeyValue.text >KeyValue.err 2>&1".
+       "&& mv po4a-normalize.po KeyValue.po ".
+       "&& mv po4a-normalize.output KeyValue.out ",
+    'test'=> "perl ../compare-po.pl --no-ref ../t-20-text/KeyValue.po KeyValue.po ".
+             "&& diff -u ../t-20-text/KeyValue.out KeyValue.out 1>&2".
+       "&& diff -u ../t-20-text/KeyValue.err KeyValue.err 1>&2",
+    'doc' => "KeyValue test"
+};
 
 use Test::More tests => 2 * 1;
 
