@@ -26,9 +26,9 @@ push @tests, {
     'LC_ALL=C COLUMNS=80 perl ../po4a -f data-13/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u data-13/test1.err tmp/err",
-     "sed -e 's, data-03/man:[0-9]*,,' tmp/man02.pot > tmp/test1-man02.pot",
+     "sed -e 's, data-06/man:[0-9]*,,' tmp/man02.pot > tmp/test1-man02.pot",
      "perl compare-po.pl data-02/man.po-empty tmp/test1-man02.pot",
-     "msgfilter sed d < data-03/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > tmp/test1-man03a.pot",
+     "msgfilter sed d < data-06/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > tmp/test1-man03a.pot",
      "sed -e '/^#[:,]/d' tmp/man03.pot > tmp/test1-man03b.pot",
      "perl compare-po.pl tmp/test1-man03a.pot tmp/test1-man03b.pot"],
   'doc'  => 'splitted mode'

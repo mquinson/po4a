@@ -11,26 +11,26 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
-	'run'  => 'perl ../po4a-translate -f man -a data-03/man.addendum1 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr',
-	'test' => 'diff -U 50 data-03/man.fr.add1 tmp/man.fr',
+	'run'  => 'perl ../po4a-translate -f man -a data-06/man.addendum1 -m data-06/man -p data-06/man.po-ok -l tmp/man.fr',
+	'test' => 'diff -U 50 data-06/man.fr.add1 tmp/man.fr',
 	'doc'  => 'translate with addendum1'
 };
 
 push @tests, {
-	'run'  => 'perl ../po4a-translate -f man -a data-03/man.addendum2 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr',
-	'test' => 'diff -U 50 data-03/man.fr.add2 tmp/man.fr',
+	'run'  => 'perl ../po4a-translate -f man -a data-06/man.addendum2 -m data-06/man -p data-06/man.po-ok -l tmp/man.fr',
+	'test' => 'diff -U 50 data-06/man.fr.add2 tmp/man.fr',
 	'doc'  => 'translate with addendum2'
 };
 
 push @tests, {
-	'run'  => 'perl ../po4a-translate -f man -a data-03/man.addendum3 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr',
-	'test' => 'diff -U 50 data-03/man.fr.add3 tmp/man.fr',
+	'run'  => 'perl ../po4a-translate -f man -a data-06/man.addendum3 -m data-06/man -p data-06/man.po-ok -l tmp/man.fr',
+	'test' => 'diff -U 50 data-06/man.fr.add3 tmp/man.fr',
 	'doc'  => 'translate with addendum3'
 };
 
 push @tests, {
-	'run'  => 'perl ../po4a-translate -f man -a data-03/man.addendum4 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr',
-	'test' => 'diff -U 50 data-03/man.fr.add4 tmp/man.fr',
+	'run'  => 'perl ../po4a-translate -f man -a data-06/man.addendum4 -m data-06/man -p data-06/man.po-ok -l tmp/man.fr',
+	'test' => 'diff -U 50 data-06/man.fr.add4 tmp/man.fr',
 	'doc'  => 'translate with addendum4'
 };
 
