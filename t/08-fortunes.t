@@ -17,12 +17,12 @@ my @FortunesTests = qw(SingleFortune SeveralFortunes MultipleLines);
 
 foreach my $FortunesTest (@FortunesTests) {
     push @tests, {
-        'run' => "perl ../../po4a-normalize -f text -o fortunes ../data-33/$FortunesTest.txt >$FortunesTest.err 2>&1".
+        'run' => "perl ../../po4a-normalize -f text -o fortunes ../t-08-fortunes/$FortunesTest.txt >$FortunesTest.err 2>&1".
 	         "&& mv po4a-normalize.po $FortunesTest.po ".
 	         "&& mv po4a-normalize.output $FortunesTest.out ",
-        'test'=> "perl ../compare-po.pl --no-ref ../data-33/$FortunesTest.po $FortunesTest.po ".
-                 "&& diff -u ../data-33/$FortunesTest.out $FortunesTest.out 1>&2".
-	         "&& diff -u ../data-33/$FortunesTest.err $FortunesTest.err 1>&2",
+        'test'=> "perl ../compare-po.pl --no-ref ../t-08-fortunes/$FortunesTest.po $FortunesTest.po ".
+                 "&& diff -u ../t-08-fortunes/$FortunesTest.out $FortunesTest.out 1>&2".
+	         "&& diff -u ../t-08-fortunes/$FortunesTest.err $FortunesTest.err 1>&2",
         'doc' => "$FortunesTest test"
     };
 }

@@ -15,17 +15,17 @@ my @all_tests = qw(longmenu);
 foreach my $TexinfoTest (@all_tests) {
     push @tests, {
         'doc' => "$TexinfoTest normalization test",
-        'run' => "perl ../../po4a-normalize -f texinfo ../data-34/$TexinfoTest.texi >$TexinfoTest.err 2>&1".
+        'run' => "perl ../../po4a-normalize -f texinfo ../t-18-texinfo/$TexinfoTest.texi >$TexinfoTest.err 2>&1".
 	         "&& mv po4a-normalize.po $TexinfoTest.po ".
 	         "&& mv po4a-normalize.output $TexinfoTest.out ",
-        'test'=> "perl ../compare-po.pl ../data-34/$TexinfoTest.pot $TexinfoTest.po ".
-                 "&& diff -u ../data-34/$TexinfoTest.out $TexinfoTest.out 1>&2".
-	         "&& diff -u ../data-34/$TexinfoTest.err $TexinfoTest.err 1>&2"
+        'test'=> "perl ../compare-po.pl ../t-18-texinfo/$TexinfoTest.pot $TexinfoTest.po ".
+                 "&& diff -u ../t-18-texinfo/$TexinfoTest.out $TexinfoTest.out 1>&2".
+	         "&& diff -u ../t-18-texinfo/$TexinfoTest.err $TexinfoTest.err 1>&2"
     };
     push @tests, {
         'doc' => "$TexinfoTest translation test",
-        'run' => "perl ../../po4a-translate -f texinfo -m ../data-34/$TexinfoTest.texi -l $TexinfoTest-trans.texi -p ../data-34/$TexinfoTest.po",
-        'test'=> "diff -u ../data-34/$TexinfoTest-trans.texi $TexinfoTest-trans.texi 1>&2"
+        'run' => "perl ../../po4a-translate -f texinfo -m ../t-18-texinfo/$TexinfoTest.texi -l $TexinfoTest-trans.texi -p ../t-18-texinfo/$TexinfoTest.po",
+        'test'=> "diff -u ../t-18-texinfo/$TexinfoTest-trans.texi $TexinfoTest-trans.texi 1>&2"
     };
 }
 

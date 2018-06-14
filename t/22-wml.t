@@ -11,9 +11,9 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
 push @tests, {
-  'run' => 'perl ../../po4a-normalize -f wml ../data-29/general.wml',
-  'test'=> 'perl ../compare-po.pl ../data-29/general.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-29/general-normalized.wml po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f wml ../t-22-wml/general.wml',
+  'test'=> 'perl ../compare-po.pl ../t-22-wml/general.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-22-wml/general-normalized.wml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 

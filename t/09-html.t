@@ -11,20 +11,20 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
-  'run' => 'perl ../../po4a-gettextize -f html -m ../data-22/html.html -p html.po',
-  'test'=> 'perl ../compare-po.pl ../data-22/html.po html.po',
+  'run' => 'perl ../../po4a-gettextize -f html -m ../t-09-html/html.html -p html.po',
+  'test'=> 'perl ../compare-po.pl ../t-09-html/html.po html.po',
   'doc' => 'General',
 }, {
-  'run' => 'perl ../../po4a-normalize -f html ../data-22/spaces.html',
-  'test'=> 'perl ../compare-po.pl ../data-22/spaces.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-22/spaces_out.html po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f html ../t-09-html/spaces.html',
+  'test'=> 'perl ../compare-po.pl ../t-09-html/spaces.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-09-html/spaces_out.html po4a-normalize.output',
   'doc' => 'Spaces',
 }, {
-  'run' => 'perl ../../po4a-gettextize -f html -m ../data-22/attribute.html -p attribute.po;'.
+  'run' => 'perl ../../po4a-gettextize -f html -m ../t-09-html/attribute.html -p attribute.po;'.
            'sed "s/msgstr \"\"/msgstr \"baz\"/" attribute.po > attribute2.po;'.
-           'perl ../../po4a-translate -f html -m ../data-22/attribute.html -p attribute2.po -l attribute.html'
+           'perl ../../po4a-translate -f html -m ../t-09-html/attribute.html -p attribute2.po -l attribute.html'
   ,
-  'test'=> 'perl ../compare-po.pl ../data-22/attribute_out.html attribute.html',
+  'test'=> 'perl ../compare-po.pl ../t-09-html/attribute_out.html attribute.html',
   'doc' => 'Attribute replacement'
 };
 

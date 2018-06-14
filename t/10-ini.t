@@ -11,9 +11,9 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
 push @tests, {
-  'run' => 'perl ../../po4a-normalize -f ini ../data-26/test1.ini',
-  'test'=> 'perl ../compare-po.pl  ../data-26/test1.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-26/test1.ini po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f ini ../t-10-ini/test1.ini',
+  'test'=> 'perl ../compare-po.pl  ../t-10-ini/test1.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-10-ini/test1.ini po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 

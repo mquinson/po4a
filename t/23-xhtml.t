@@ -11,18 +11,18 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
 push @tests, {
-      'run' => 'perl ../../po4a-gettextize -f xhtml -m ../data-25/xhtml.html -p xhtml.po',
-          'test'=> 'perl ../compare-po.pl ../data-25/xhtml.po xhtml.po',
+      'run' => 'perl ../../po4a-gettextize -f xhtml -m ../t-23-xhtml/xhtml.html -p xhtml.po',
+          'test'=> 'perl ../compare-po.pl ../t-23-xhtml/xhtml.po xhtml.po',
           'doc' => 'Text extraction',
   }, {
-  'run' => 'perl ../../po4a-normalize -f xhtml ../data-25/xhtml.html',
-  'test'=> 'perl ../compare-po.pl ../data-25/xhtml.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-25/xhtml_normalized.html po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f xhtml ../t-23-xhtml/xhtml.html',
+  'test'=> 'perl ../compare-po.pl ../t-23-xhtml/xhtml.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-23-xhtml/xhtml_normalized.html po4a-normalize.output',
   'doc' => 'normalisation test',
   }, {
-  'run' => 'perl ../../po4a-normalize -f xhtml -o includessi ../data-25/includessi.html',
-  'test'=> 'perl ../compare-po.pl ../data-25/includessi.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-25/includessi_normalized.html po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f xhtml -o includessi ../t-23-xhtml/includessi.html',
+  'test'=> 'perl ../compare-po.pl ../t-23-xhtml/includessi.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-23-xhtml/includessi_normalized.html po4a-normalize.output',
   'doc' => 'includessi test',
   };
 

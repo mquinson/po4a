@@ -12,14 +12,14 @@ my @formats=qw(sgml);
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-$tests[0]{'run'}  = "perl ../po4a-gettextize -f #format# -o force -m data-20/text.xml -p tmp/xml.po";
-$tests[0]{'test'} = "perl compare-po.pl data-20/xml.po tmp/xml.po";
+$tests[0]{'run'}  = "perl ../po4a-gettextize -f #format# -o force -m t-16-sgml/text.xml -p tmp/xml.po";
+$tests[0]{'test'} = "perl compare-po.pl t-16-sgml/xml.po tmp/xml.po";
 $tests[0]{'doc'}  = "gettextize well simple xml documents";
 $tests[0]{'requires'} = "Text::WrapI18N";
 
-$tests[1]{'run'}  = 'cd tmp && perl ../../po4a-normalize -f sgml ../data-20/test2.sgml';
-$tests[1]{'test'} = 'perl compare-po.pl data-20/test2.pot tmp/po4a-normalize.po'.
-                    ' && perl compare-po.pl data-20/test2-normalized.sgml tmp/po4a-normalize.output';
+$tests[1]{'run'}  = 'cd tmp && perl ../../po4a-normalize -f sgml ../t-16-sgml/test2.sgml';
+$tests[1]{'test'} = 'perl compare-po.pl t-16-sgml/test2.pot tmp/po4a-normalize.po'.
+                    ' && perl compare-po.pl t-16-sgml/test2-normalized.sgml tmp/po4a-normalize.output';
 $tests[1]{'doc'}  = 'normalisation test';
 
 use Test::More tests =>4; # $formats * $tests * 2

@@ -11,27 +11,27 @@ my @tests;
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
 push @tests, {
-  'run' => 'perl ../../po4a-normalize -f guide ../data-27/general.xml',
-  'test'=> 'perl ../compare-po.pl ../data-27/general.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-27/general-normalized.xml po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f guide ../t-24-xml/general.xml',
+  'test'=> 'perl ../compare-po.pl ../t-24-xml/general.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-24-xml/general-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 push @tests, {
-  'run' => 'perl ../../po4a-normalize -f guide ../data-27/comments.xml',
-  'test'=> 'perl ../compare-po.pl ../data-27/comments.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-27/comments-normalized.xml po4a-normalize.output',
+  'run' => 'perl ../../po4a-normalize -f guide ../t-24-xml/comments.xml',
+  'test'=> 'perl ../compare-po.pl ../t-24-xml/comments.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-24-xml/comments-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 push @tests, {
-  'run' => "perl ../../po4a-normalize -f xml -o translated='w<translate1w> W<translate2W> <translate5> i<inline6> ' -o untranslated='<untranslated4>' ../data-27/options.xml",
-  'test'=> 'perl ../compare-po.pl ../data-27/options.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-27/options-normalized.xml po4a-normalize.output',
+  'run' => "perl ../../po4a-normalize -f xml -o translated='w<translate1w> W<translate2W> <translate5> i<inline6> ' -o untranslated='<untranslated4>' ../t-24-xml/options.xml",
+  'test'=> 'perl ../compare-po.pl ../t-24-xml/options.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-24-xml/options-normalized.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 push @tests, {
-  'run' => "perl ../../po4a-normalize -f guide ../data-27/cdata.xml",
-  'test'=> 'perl ../compare-po.pl ../data-27/cdata.po po4a-normalize.po'.
-            ' && perl ../compare-po.pl ../data-27/cdata.xml po4a-normalize.output',
+  'run' => "perl ../../po4a-normalize -f guide ../t-24-xml/cdata.xml",
+  'test'=> 'perl ../compare-po.pl ../t-24-xml/cdata.po po4a-normalize.po'.
+            ' && perl ../compare-po.pl ../t-24-xml/cdata.xml po4a-normalize.output',
   'doc' => 'normalisation test',
   };
 

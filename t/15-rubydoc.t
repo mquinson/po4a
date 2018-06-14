@@ -19,11 +19,11 @@ foreach my $RubyDocTest (@RubyDocTests) {
     my $options = "";
     $options = "-o puredoc" if $RubyDocTest =~ m/_puredoc/;
     push @tests, {
-        'run' => "perl ../../po4a-normalize -f Rd $options ../data-31/$RubyDocTest.rd ".
+        'run' => "perl ../../po4a-normalize -f Rd $options ../t-15-rubydoc/$RubyDocTest.rd ".
 	         "&& mv po4a-normalize.po $RubyDocTest.po ".
 	         "&& mv po4a-normalize.output $RubyDocTest.out ",
-        'test'=> "perl ../compare-po.pl ../data-31/$RubyDocTest.po $RubyDocTest.po ".
-                 "&& cmp ../data-31/$RubyDocTest.out $RubyDocTest.out",
+        'test'=> "perl ../compare-po.pl ../t-15-rubydoc/$RubyDocTest.po $RubyDocTest.po ".
+                 "&& cmp ../t-15-rubydoc/$RubyDocTest.out $RubyDocTest.out",
         'doc' => "$RubyDocTest test"
     };
 }

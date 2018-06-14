@@ -20,37 +20,37 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
     # Tables are currently badly supported.
     next if $AsciiDocTest =~ m/Tables/;
     push @tests, {
-        'run' => "perl ../../po4a-normalize -f asciidoc ../data-30/$AsciiDocTest.asciidoc >$AsciiDocTest.err 2>&1".
+        'run' => "perl ../../po4a-normalize -f asciidoc ../t-03-asciidoc/$AsciiDocTest.asciidoc >$AsciiDocTest.err 2>&1".
 	         "&& mv po4a-normalize.po $AsciiDocTest.po ".
 	         "&& mv po4a-normalize.output $AsciiDocTest.out ",
-        'test'=> "perl ../compare-po.pl --no-ref ../data-30/$AsciiDocTest.po $AsciiDocTest.po ".
-                 "&& diff -u ../data-30/$AsciiDocTest.out $AsciiDocTest.out 1>&2".
-	         "&& diff -u ../data-30/$AsciiDocTest.err $AsciiDocTest.err 1>&2",
+        'test'=> "perl ../compare-po.pl --no-ref ../t-03-asciidoc/$AsciiDocTest.po $AsciiDocTest.po ".
+                 "&& diff -u ../t-03-asciidoc/$AsciiDocTest.out $AsciiDocTest.out 1>&2".
+	         "&& diff -u ../t-03-asciidoc/$AsciiDocTest.err $AsciiDocTest.err 1>&2",
         'doc' => "$AsciiDocTest test"
     };
 }
 
 push @tests, {
-    'run' => "perl ../../po4a-gettextize -f asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesUTF8.asciidoc -L UTF-8 -p TitlesUTF8.po",
-    'test'=> "perl ../compare-po.pl --no-ref ../data-30/TitlesUTF8.po TitlesUTF8.po",
+    'run' => "perl ../../po4a-gettextize -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l ../t-03-asciidoc/TitlesUTF8.asciidoc -L UTF-8 -p TitlesUTF8.po",
+    'test'=> "perl ../compare-po.pl --no-ref ../t-03-asciidoc/TitlesUTF8.po TitlesUTF8.po",
     'doc' => "test titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
 };
 push @tests, {
-    'run' => "msgattrib --clear-fuzzy -o TitlesUTF8.po TitlesUTF8.po && perl ../../po4a-translate -f asciidoc -m ../data-30/Titles.asciidoc -l TitlesUTF8.asciidoc -p TitlesUTF8.po",
-    'test'=> "diff TitlesUTF8.asciidoc ../data-30/TitlesUTF8.asciidoc",
+    'run' => "msgattrib --clear-fuzzy -o TitlesUTF8.po TitlesUTF8.po && perl ../../po4a-translate -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l TitlesUTF8.asciidoc -p TitlesUTF8.po",
+    'test'=> "diff TitlesUTF8.asciidoc ../t-03-asciidoc/TitlesUTF8.asciidoc",
     'doc' => "translate titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
 };
 push @tests, {
-    'run' => "perl ../../po4a-gettextize -f asciidoc -m ../data-30/Titles.asciidoc -l ../data-30/TitlesLatin1.asciidoc -L iso-8859-1 -p TitlesLatin1.po",
-    'test'=> "perl ../compare-po.pl --no-ref ../data-30/TitlesLatin1.po TitlesLatin1.po",
+    'run' => "perl ../../po4a-gettextize -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l ../t-03-asciidoc/TitlesLatin1.asciidoc -L iso-8859-1 -p TitlesLatin1.po",
+    'test'=> "perl ../compare-po.pl --no-ref ../t-03-asciidoc/TitlesLatin1.po TitlesLatin1.po",
     'doc' => "test titles with latin1 encoding",
     'requires' => "Unicode::GCString"
 };
 push @tests, {
-    'run' => "msgattrib --clear-fuzzy -o TitlesLatin1.po TitlesLatin1.po && perl ../../po4a-translate -f asciidoc -m ../data-30/Titles.asciidoc -l TitlesLatin1.asciidoc -p TitlesLatin1.po",
-    'test'=> "diff TitlesLatin1.asciidoc ../data-30/TitlesLatin1.asciidoc",
+    'run' => "msgattrib --clear-fuzzy -o TitlesLatin1.po TitlesLatin1.po && perl ../../po4a-translate -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l TitlesLatin1.asciidoc -p TitlesLatin1.po",
+    'test'=> "diff TitlesLatin1.asciidoc ../t-03-asciidoc/TitlesLatin1.asciidoc",
     'doc' => "translate titles with latin1 encoding",
     'requires' => "Unicode::GCString"
 };

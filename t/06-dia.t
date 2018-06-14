@@ -10,12 +10,12 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
-$tests[0]{'run'}  = 'perl ../po4a-gettextize -f dia -m data-21/extract.dia -p tmp/dia_extract.po';
-$tests[0]{'test'} = 'perl compare-po.pl data-21/extract.po-ok tmp/dia_extract.po';
+$tests[0]{'run'}  = 'perl ../po4a-gettextize -f dia -m t-06-dia/extract.dia -p tmp/dia_extract.po';
+$tests[0]{'test'} = 'perl compare-po.pl t-06-dia/extract.po-ok tmp/dia_extract.po';
 $tests[0]{'doc'}  = 'get only needed strings';
 
-$tests[1]{'run'}  = 'perl ../po4a-translate -f dia -m data-21/transl.dia -p data-21/transl.po -l tmp/transl.dia';
-$tests[1]{'test'} = 'diff -u data-21/transl.dia-ok tmp/transl.dia';
+$tests[1]{'run'}  = 'perl ../po4a-translate -f dia -m t-06-dia/transl.dia -p t-06-dia/transl.po -l tmp/transl.dia';
+$tests[1]{'test'} = 'diff -u t-06-dia/transl.dia-ok tmp/transl.dia';
 $tests[1]{'doc'}  = 'test translations with new-lines';
 
 use Test::More tests =>4; # tests * (run+validity)
