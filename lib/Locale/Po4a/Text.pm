@@ -422,14 +422,17 @@ sub parse_markdown {
         $wrapped_mode = 0;
         my $level = $line;
         $level =~ s/^(.).*$/$1/;
+        # Remove the trailing newline from the title
+        chomp($paragraph);
         my $t = $self->translate($paragraph,
                                  $self->{ref},
                                  "Title $level",
                                  "wrap" => 0);
-        $self->pushline($t);
+        # Add the newline again for the output
+        $self->pushline($t . "\n");
         $paragraph="";
         $wrapped_mode = 1;
-        $self->pushline(($level x (length($t)-1))."\n");
+        $self->pushline(($level x length($t))."\n");
     } elsif ($line =~ m/^(#{1,6})( +)(.*?)( +\1)?$/) {
         my $titlelevel1 = $1;
         my $titlespaces = $2;
