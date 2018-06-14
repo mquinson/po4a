@@ -5,6 +5,7 @@
 
 use strict;
 use warnings;
+use Test::More;
 
 my @tests;
 
@@ -23,7 +24,17 @@ push @tests, {
     'doc' => "KeyValue test"
 };
 
-use Test::More tests => 2 * 1;
+push @tests, {
+    'run' => "perl ../../po4a-normalize -f text -o markdown ../t-20-text/MarkDown.md > MarkDown.err 2>&1".
+       "&& mv po4a-normalize.po MarkDown.pot ".
+       "&& mv po4a-normalize.output MarkDown.out ",
+    'test'=> "perl ../compare-po.pl --no-ref ../t-20-text/MarkDown.pot MarkDown.pot ".
+             "&& diff -u ../t-20-text/MarkDown.out MarkDown.out 1>&2".
+       "&& diff -u ../t-20-text/MarkDown.err MarkDown.err 1>&2",
+    'doc' => "MarkDown test"
+};
+
+plan tests => 2 * scalar @tests;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
