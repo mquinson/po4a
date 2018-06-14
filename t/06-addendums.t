@@ -10,6 +10,22 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
+$tests[0]{'run'}  = 'perl ../po4a-translate -f man -a data-03/man.addendum1 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr';
+$tests[0]{'test'} = 'diff -U 50 data-03/man.fr.add1 tmp/man.fr';
+$tests[0]{'doc'}  = 'translate with addendum1';
+
+$tests[1]{'run'}  = 'perl ../po4a-translate -f man -a data-03/man.addendum2 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr';
+$tests[1]{'test'} = 'diff -U 50 data-03/man.fr.add2 tmp/man.fr';
+$tests[1]{'doc'}  = 'translate with addendum2';
+
+$tests[2]{'run'}  = 'perl ../po4a-translate -f man -a data-03/man.addendum3 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr';
+$tests[2]{'test'} = 'diff -U 50 data-03/man.fr.add3 tmp/man.fr';
+$tests[2]{'doc'}  = 'translate with addendum3';
+
+$tests[3]{'run'}  = 'perl ../po4a-translate -f man -a data-03/man.addendum4 -m data-03/man -p data-03/man.po-ok -l tmp/man.fr';
+$tests[3]{'test'} = 'diff -U 50 data-03/man.fr.add4 tmp/man.fr';
+$tests[3]{'doc'}  = 'translate with addendum4';
+
 push @tests, {
   'run' => 'perl ../po4a-translate -k 0 -f text -m data-06/Titles.asciidoc -p data-06/Titles.po -l tmp/Titles.trans ' .
                 '-a data-06/addendum1 -a data-06/addendum2 -a data-06/addendum3',
@@ -75,7 +91,7 @@ push @tests, {
   'doc' => '(po4a) translate with recursive @addendum'
   };
 
-use Test::More tests => 20; # tests * (run+validity)
+use Test::More tests => 28; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
