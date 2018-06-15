@@ -408,8 +408,124 @@ sub parse_control {
     return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
 }
 
+# Support pandoc's format of specifying bibliographic information.
+#
+# If the first line starts with a percent sign, the following
+# is considered to be title, author, and date.
+#
+# If the information spans multiple lines, the following
+# lines must be indented with space.
+# If information is omitted, it's just a percent sign
+# and a blank line.
+#
+# Examples with missing title resp. missing authors:
+#
+# %
+# % Author
+#
+# % My title
+# %
+# % June 14, 2018
+sub parse_markdown_bibliographic_information {
+    my ($self,$line,$ref) = @_;
+    my ($nextline, $nextref);
+    # The first match is always the title or an empty string (no title).
+    if ($line =~ /^%(.*)$/) {
+        my $title = $1;
+        # Remove leading and trailing whitespace
+        $title =~ s/^\s+|\s+$//g;
+        # If there's some text, look for continuation lines
+        if (length($title)) {
+            ($nextline, $nextref) = $self->shiftline();
+            while ($nextline =~ /^\s+(.+)$/) {
+                $nextline = $1;
+                $nextline =~ s/^\s+|\s+$//g;
+                $title .= " " . $nextline;
+                ($nextline, $nextref) = $self->shiftline();
+            }
+            # Now the title should be complete, give it to translation.
+            my $t = $self->translate($title, $ref, "Pandoc title block", "wrap" => 1);
+            $t = Locale::Po4a::Po::wrap($t);
+            my $first_line = 1;
+            foreach my $translated_line (split /\n/, $t) {
+                if ($first_line) {
+                    $first_line = 0;
+                    $self->pushline("% " . $translated_line . "\n");
+                } else {
+                    $self->pushline("  " . $translated_line . "\n");
+                }
+            }
+        }
+        else {
+            # Title has been empty, fetch the next line
+            # if that are the authors.
+            $self->pushline("%\n");
+            ($nextline, $nextref) = $self->shiftline();
+        }
+        # The next line can contain the author or an empty string.
+        if ($nextline =~ /^%(.*)$/) {
+            my $author_ref = $nextref;
+            my $authors = $1;
+            # If there's some text, look for continuation lines
+            if (length($authors)) {
+                ($nextline, $nextref) = $self->shiftline();
+                while ($nextline =~ /^\s+(.+)$/) {
+                    $nextline = $1;
+                    $authors .= ";" . $nextline;
+                    ($nextline, $nextref) = $self->shiftline();
+                }
+                # Now the authors should be complete, split them by semicolon
+                my $first_line = 1;
+                foreach my $author (split /;/, $authors) {
+                    $author =~ s/^\s+|\s+$//g;
+                    # Skip empty authors
+                    next unless length($author);
+                    my $t = $self->translate($author, $author_ref, "Pandoc title block");
+                    if ($first_line) {
+                        $first_line = 0;
+                        $self->pushline("% " . $t . "\n");
+                    } else {
+                        $self->pushline("  " . $t . "\n");
+                    }
+                }
+            }
+            else {
+                # Authors has been empty, fetch the next line
+                # if that is the date.
+                $self->pushline("%\n");
+                ($nextline, $nextref) = $self->shiftline();
+            }
+            # The next line can contain the date.
+            if ($nextline =~ /^%(.*)$/) {
+                my $date = $1;
+                # Remove leading and trailing whitespace
+                $date =~ s/^\s+|\s+$//g;
+                my $t = $self->translate($date, $nextref, "Pandoc title block");
+                $self->pushline("% " . $t . "\n");
+                # Now we're done with the bibliographic information
+                return;
+            }
+        }
+        # The line did not start with a percent sign, to stop
+        # parsing bibliographic information and return the
+        # line to the normal parsing.
+        $self->unshiftline($nextline, $nextref);
+        return;
+    }
+}
+
 sub parse_markdown {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
+    if ($expect_header) {
+        # Either we find and parse the bibliographic information,
+        # or there is no line with a percent sign.
+        # Anyway, stop expecting header information for the next run.
+        $expect_header = 0;
+        if ($line =~ /^%(.*)$/) {
+            parse_markdown_bibliographic_information($self, $line, $ref);
+            return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
+        }
+    }
     if (($line =~ m/^(={4,}|-{4,})$/) and
         (defined($paragraph) ) and
         ($paragraph =~ m/^[^\n]*\n$/s) and
