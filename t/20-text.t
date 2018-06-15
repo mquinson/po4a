@@ -46,23 +46,13 @@ foreach my $test ( @tests ) {
     my ($val,$name);
 
     my $cmd=$test->{'run'};
+    $val=system($cmd);
 
     $name=$test->{'doc'}.' runs';
+    ok($val == 0,$name);
+    diag($cmd) unless ($val == 0);
 
     SKIP: {
-        if (defined $test->{'requires'}) {
-            skip ($test->{'requires'}." required for this test", 1)
-                unless eval 'require '.$test->{'requires'};
-        }
-        $val=system($cmd);
-        ok($val == 0,$name);
-        diag($cmd) unless ($val == 0);
-    }
-    SKIP: {
-        if (defined $test->{'requires'}) {
-            skip ($test->{'requires'}." required for this test", 1)
-                unless eval 'require '.$test->{'requires'};
-        }
         skip ("Command didn't run, can't test the validity of its return",1)
             if $val;
         $val=system($test->{'test'});
