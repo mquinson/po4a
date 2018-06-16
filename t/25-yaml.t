@@ -10,19 +10,15 @@ my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
 
-my @YamlTests = qw(yamltest);
-
-foreach my $YamlTest (@YamlTests) {
-    push @tests, {
-        'run' => "perl ../../po4a-normalize -f yaml ../t-25-yaml/$YamlTest.yaml >$YamlTest.err 2>&1".
-	         "&& mv po4a-normalize.po $YamlTest.po ".
-	         "&& mv po4a-normalize.output $YamlTest.out ",
-        'test'=> "perl ../compare-po.pl ../t-25-yaml/$YamlTest.po $YamlTest.po ".
-                 "&& diff -u ../t-25-yaml/$YamlTest.out $YamlTest.out 1>&2".
-	         "&& diff -u ../t-25-yaml/$YamlTest.err $YamlTest.err 1>&2",
-        'doc' => "$YamlTest test"
-    };
-}
+push @tests, {
+    'run' => "perl ../../po4a-normalize -f yaml ../t-25-yaml/yamltest.yaml >yamltest.err 2>&1".
+       "&& mv po4a-normalize.po yamltest.po ".
+       "&& mv po4a-normalize.output yamltest.out ",
+    'test'=> "perl ../compare-po.pl ../t-25-yaml/yamltest.po yamltest.po ".
+             "&& diff -u ../t-25-yaml/yamltest.out yamltest.out 1>&2".
+       "&& diff -u ../t-25-yaml/yamltest.err yamltest.err 1>&2",
+    'doc' => "yamltest test"
+};
 
 push @tests, {
     'run' => "perl ../../po4a-normalize -f yaml ../t-25-yaml/yamlkeysoption1.yaml -o keys=name >yamlkeysoption1.err 2>&1".
