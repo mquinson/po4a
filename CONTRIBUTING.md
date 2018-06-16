@@ -100,8 +100,7 @@ requests for that.
 On need, you can manually refresh the translation files as follows:
 ```sh
  perl Build.PL
- ./Build postats # Refresh the po files from the (unchanged) pot file
- ./Build         # Refresh everything, even the pot file
+ ./Build postats # Refresh the pot and po files (both doc and bin)
 ```
 
 The documentation is written using the PerlDoc format (pod), as

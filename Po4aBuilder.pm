@@ -130,7 +130,7 @@ sub ACTION_dist {
     $self->depends_on('distcheck');
     $self->depends_on('test');
     $self->depends_on('binpo');
-    $self->depends_on('manpo');
+    $self->depends_on('docpo');
     $self->depends_on('distdir');
 
     my $dist_dir = $self->dist_dir;
@@ -145,7 +145,7 @@ sub ACTION_dist {
     $self->delete_filetree($dist_dir);
 }
 
-sub ACTION_manpo {
+sub ACTION_docpo {
     my $self = shift;
     $self->depends_on('code');
     $self->make_files_writable("po/pod");
@@ -164,7 +164,7 @@ sub ACTION_manpo {
 
 sub ACTION_man {
     my $self = shift;
-    $self->depends_on('manpo');
+    $self->depends_on('docpo');
 
     use Pod::Man;
     use Encode;
@@ -254,6 +254,7 @@ sub ACTION_man {
 sub ACTION_postats {
     my $self = shift;
     $self->depends_on('binpo');
+    $self->depends_on('docpo');
     $self->postats( File::Spec->catdir("po", "bin"));
     $self->postats( File::Spec->catdir("po", "pod"));
     $self->postats( File::Spec->catdir("po", "www")) if -d File::Spec->catdir("po", "www");
