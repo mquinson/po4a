@@ -133,8 +133,9 @@ wlc commit
 wlc push
 # Merge the pull request on github
 # Do and commit your local changes
+perl Build.PL
 ./Build 
-git commit -m "update po files"
+git commit -m "update po files" po
 git push 
 wlc pull
 wlc unlock
