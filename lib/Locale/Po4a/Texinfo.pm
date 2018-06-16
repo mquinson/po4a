@@ -334,7 +334,11 @@ sub translate_buffer_menuentry {
             $l = $menu_sep_width-1;
         }
         ($t, @e) = $self->translate_buffer($description, $no_wrap, @env);
-        $t =~ s/\n//sg;
+        # Replace newlines with space for proper wrapping
+        # See https://github.com/mquinson/po4a/issues/122
+        $t =~ s/\n/ /sg;
+        # Remove trailing spaces
+        $t =~ s/\s*$//;
         $t = Locale::Po4a::Po::wrap($t, $menu_width-$l-2);
         my $spaces = ' 'x($l+2);
         $t =~ s/\n/\n$spaces/sg;
