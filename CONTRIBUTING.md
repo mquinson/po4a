@@ -140,6 +140,26 @@ wlc pull
 wlc unlock
 ```
 
+Here is how to integrate a PR that fixes typos in english without
+fuzzying the translations (using msguntypot):
+```sh
+wlc lock && wlc commit && wlc push
+# Merge the weblate PR on github
+git pull
+# Merge the other PR on github
+git pull
+rm -rf po_orig ; cp -r po po_orig # Copy existing po files
+./Build postats # Refresh the pot and po files (both doc and bin)
+cp po_orig/bin/*.po po/bin # Restore po files; msguntypot will handle typos in msgids
+cp po_orig/pod/*.po po/pod
+msguntypot -o po_orig/bin/po4a.pot     -n po/bin/po4a.pot     po/bin/*.po
+msguntypot -o po_orig/pod/po4a-pod.pot -n po/pod/po4a-pod.pot po/pod/*.po
+rm -rf po_orig
+git commit -m "unfuzzy translations after the typo fixes in english" po
+git push
+wlc pull && wlc unlock
+```
+
 ## Releasing po4a
 
 Here is the checklist of things to remember when releasing po4a:
