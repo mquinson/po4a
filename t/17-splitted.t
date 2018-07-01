@@ -1,4 +1,3 @@
-#! /usr/bin/perl
 # Splitted mode tester.
 
 #########################
@@ -14,57 +13,53 @@ push @tests, {
   'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f t-17-splitted/test0.conf > tmp/err 2>&1',
   'test' =>
-    ["diff -u t-17-splitted/test0.err tmp/err",
-     "cp t-05-config/test00.pot tmp/test0-mod.pot",
-     "perl compare-po.pl --no-ref tmp/test0-mod.pot tmp/test00_man.1.pot",
-     "cp t-11-man/dot1.pot tmp/dot1-mod.pot",
-     "perl compare-po.pl --no-ref tmp/dot1-mod.pot tmp/dot1.pot"],
+    "diff -u t-17-splitted/test0.err tmp/err "
+     ."&& cp t-05-config/test00.pot tmp/test0-mod.pot "
+     ."&& perl compare-po.pl --no-ref tmp/test0-mod.pot tmp/test00_man.1.pot "
+     ."&& cp t-11-man/dot1.pot tmp/dot1-mod.pot "
+     ."&& perl compare-po.pl --no-ref tmp/dot1-mod.pot tmp/dot1.pot",
   'doc'  => 'splitted mode'
 },
 {
   'run'  =>
     'LC_ALL=C COLUMNS=80 perl ../po4a -f t-17-splitted/test1.conf > tmp/err 2>&1',
   'test' =>
-    ["diff -u t-17-splitted/test1.err tmp/err",
-     "sed -e 's, t-02-addendums/man:[0-9]*,,' tmp/man02.pot > tmp/test1-man02.pot",
-     "perl compare-po.pl t-21-TransTractors/man.po-empty tmp/test1-man02.pot",
-     "msgfilter sed d < t-02-addendums/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > tmp/test1-man03a.pot",
-     "sed -e '/^#[:,]/d' tmp/man03.pot > tmp/test1-man03b.pot",
-     "perl compare-po.pl tmp/test1-man03a.pot tmp/test1-man03b.pot"],
+    "diff -u t-17-splitted/test1.err tmp/err "
+     ."&& sed -e 's, t-02-addendums/man:[0-9]*,,' tmp/man02.pot > tmp/test1-man02.pot "
+     ."&& perl compare-po.pl t-21-TransTractors/man.po-empty tmp/test1-man02.pot "
+     ."&& msgfilter sed d < t-02-addendums/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > tmp/test1-man03a.pot "
+     ."&& sed -e '/^#[:,]/d' tmp/man03.pot > tmp/test1-man03b.pot "
+     ."&& perl compare-po.pl tmp/test1-man03a.pot tmp/test1-man03b.pot",
   'doc'  => 'splitted mode'
 };
 
-use Test::More tests => 13;
+use Test::More tests => 4;
 
-for (my $i=0; $i<scalar @tests; $i++) {
+for my $test (@tests) {
     chdir "t" || die "Can't chdir to my test directory";
 
     system("rm -f tmp/* 2>&1");
 
     my ($val,$name);
 
-    my $cmd=$tests[$i]{'run'};
+    my $cmd=$test->{'run'};
     $val=system($cmd);
 
-    $name=$tests[$i]{'doc'}.' runs';
+    $name=$test->{'doc'}.' runs';
     ok($val == 0,$name);
-    diag($tests[$i]{'run'}) unless ($val == 0);
+    diag($test->{'run'}) unless ($val == 0);
 
     SKIP: {
         skip ("Command don't run, can't test the validity of its return",1)
             if $val;
-        my $nb = 0;
-        foreach my $test (@{$tests[$i]{'test'}}) {
-            $nb++;
-            $val=system($test);
-            $name=$tests[$i]{'doc'}."[$nb] returns what is expected";
-            ok($val == 0,$name);
-            unless ($val == 0) {
-                diag ("Failed (retval=$val) on:");
-                diag ($test);
-                diag ("Was created with:");
-                diag ($tests[$i]{'run'});
-            }
+        $val=system($test->{'test'});
+        $name=$test->{'doc'}." returns what is expected";
+        ok($val == 0,$name);
+        unless ($val == 0) {
+            diag ("Failed (retval=$val) on:");
+            diag ($test->{'test'});
+            diag ("Was created with:");
+            diag ($test->{'run'});
         }
     }
 
