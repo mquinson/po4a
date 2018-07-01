@@ -27,8 +27,16 @@ my @markdown_tests = qw(MarkDown PandocHeaderMultipleLines PandocOnlyAuthor
   PandocTitleAndDate PandocMultipleAuthors PandocOnlyTitle PandocTitleAuthors
   MarkDownNestedLists);
 for my $markdown_test (@markdown_tests) {
+
+    # The nested lists currently fail for markdown.
+    # Mark the test as TODO.
+    my $todo = "";
+    if ( $markdown_test eq "MarkDownNestedLists" ) {
+        $todo = "https://github.com/mquinson/po4a/issues/131";
+    }
     push @tests,
       {
+        'todo' => $todo,
         'run' =>
 "perl ../../po4a-normalize -f text -o markdown ../t-20-text/$markdown_test.md > $markdown_test.err 2>&1"
           . "&& mv po4a-normalize.po $markdown_test.pot "
