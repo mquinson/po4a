@@ -40,7 +40,20 @@ sub run_all_tests {
         my $test_name   = $test->{'doc'} . ' runs';
         my $exit_status = system( $test->{'run'} );
 
-        is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
+        # Mark failing tests as TODO
+        if ( defined $test->{'todo'} && length( $test->{'todo'} ) > 0 ) {
+          TODO: {
+                local our $TODO = $test->{'todo'};
+                is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
+
+                # Set the exit status to an error value, in order to be
+                # able to skip the test for the command's output.
+                $exit_status = 1;
+            }
+        }
+        else {
+            is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
+        }
 
       SKIP: {
             skip( "Command didn't run, can't test the validity of its return",
