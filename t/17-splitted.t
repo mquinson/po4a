@@ -5,65 +5,34 @@
 use strict;
 use warnings;
 
+use lib q(t);
+use Testhelper;
+
 my @tests;
 
-mkdir "t/tmp" unless -e "t/tmp";
+push @tests,
+  {
+    'run' =>
+'LC_ALL=C COLUMNS=80 perl ../../po4a -f ../t-17-splitted/test0.conf > err 2>&1',
+    'test' => "diff -u ../t-17-splitted/test0.err err "
+      . "&& cp ../t-05-config/test00.pot test0-mod.pot "
+      . "&& perl ../compare-po.pl --no-ref test0-mod.pot test00_man.1.pot "
+      . "&& cp ../t-11-man/dot1.pot dot1-mod.pot "
+      . "&& perl ../compare-po.pl --no-ref dot1-mod.pot dot1.pot",
+    'doc' => 'splitted mode'
+  };
+push @tests,
+  {
+    'run' =>
+'LC_ALL=C COLUMNS=80 perl ../../po4a -f ../t-17-splitted/test1.conf > err 2>&1',
+    'test' => "diff -u ../t-17-splitted/test1.err err "
+      . "&& sed -e 's, ../t-02-addendums/man:[0-9]*,,' man02.pot > test1-man02.pot "
+      . "&& perl ../compare-po.pl ../t-21-TransTractors/man.po-empty test1-man02.pot "
+      . "&& msgfilter sed d < ../t-02-addendums/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > test1-man03a.pot "
+      . "&& sed -e '/^#[:,]/d' man03.pot > test1-man03b.pot "
+      . "&& perl ../compare-po.pl test1-man03a.pot test1-man03b.pot",
+    'doc' => 'splitted mode'
+  };
 
-push @tests, {
-  'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f t-17-splitted/test0.conf > tmp/err 2>&1',
-  'test' =>
-    "diff -u t-17-splitted/test0.err tmp/err "
-     ."&& cp t-05-config/test00.pot tmp/test0-mod.pot "
-     ."&& perl compare-po.pl --no-ref tmp/test0-mod.pot tmp/test00_man.1.pot "
-     ."&& cp t-11-man/dot1.pot tmp/dot1-mod.pot "
-     ."&& perl compare-po.pl --no-ref tmp/dot1-mod.pot tmp/dot1.pot",
-  'doc'  => 'splitted mode'
-},
-{
-  'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f t-17-splitted/test1.conf > tmp/err 2>&1',
-  'test' =>
-    "diff -u t-17-splitted/test1.err tmp/err "
-     ."&& sed -e 's, t-02-addendums/man:[0-9]*,,' tmp/man02.pot > tmp/test1-man02.pot "
-     ."&& perl compare-po.pl t-21-TransTractors/man.po-empty tmp/test1-man02.pot "
-     ."&& msgfilter sed d < t-02-addendums/man.po-ok 2>/dev/null | sed -e '/^#[:,]/d' > tmp/test1-man03a.pot "
-     ."&& sed -e '/^#[:,]/d' tmp/man03.pot > tmp/test1-man03b.pot "
-     ."&& perl compare-po.pl tmp/test1-man03a.pot tmp/test1-man03b.pot",
-  'doc'  => 'splitted mode'
-};
-
-use Test::More tests => 4;
-
-for my $test (@tests) {
-    chdir "t" || die "Can't chdir to my test directory";
-
-    system("rm -f tmp/* 2>&1");
-
-    my ($val,$name);
-
-    my $cmd=$test->{'run'};
-    $val=system($cmd);
-
-    $name=$test->{'doc'}.' runs';
-    ok($val == 0,$name);
-    diag($test->{'run'}) unless ($val == 0);
-
-    SKIP: {
-        skip ("Command don't run, can't test the validity of its return",1)
-            if $val;
-        $val=system($test->{'test'});
-        $name=$test->{'doc'}." returns what is expected";
-        ok($val == 0,$name);
-        unless ($val == 0) {
-            diag ("Failed (retval=$val) on:");
-            diag ($test->{'test'});
-            diag ("Was created with:");
-            diag ($test->{'run'});
-        }
-    }
-
-    chdir ".." || die "Can't chdir back to my root";
-}
-
+run_all_tests(@tests);
 0;
