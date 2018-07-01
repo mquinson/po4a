@@ -37,24 +37,22 @@ sub run_all_tests {
     chdir "t/tmp" or die "Can't chdir to test directory t/tmp\n";
 
     foreach my $test (@tests) {
-        my ( $val, $name );
+        my $test_name   = $test->{'doc'} . ' runs';
+        my $exit_status = system( $test->{'run'} );
 
-        my $cmd = $test->{'run'};
-        $val = system($cmd);
-
-        $name = $test->{'doc'} . ' runs';
-        ok( $val == 0, $name );
-        diag( $test->{'run'} ) unless ( $val == 0 );
+        is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
 
       SKIP: {
             skip( "Command didn't run, can't test the validity of its return",
                 1 )
-              if $val;
-            $val  = system( $test->{'test'} );
-            $name = $test->{'doc'} . ' returns what is expected';
-            ok( $val == 0, $name );
-            unless ( $val == 0 ) {
-                diag("Failed (retval=$val) on:");
+              if $exit_status;
+
+            $test_name   = $test->{'doc'} . ' returns what is expected';
+            $exit_status = system( $test->{'test'} );
+
+            is( $exit_status, 0, $test_name );
+            unless ( $exit_status == 0 ) {
+                diag("Failed (retval=$exit_status) on:");
                 diag( $test->{'test'} );
                 diag("Was created with:");
                 diag( $test->{'run'} );
