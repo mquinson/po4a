@@ -40,15 +40,39 @@ sub create_tests_for_normalize {
         if ( $test->{'normalize'} =~ /^(.*) (t-[0-9]+-[^\/]+)\/(.*)\.(.*)$/ ) {
             my ( $options, $test_directory, $basename, $ext ) =
               ( $1, $2, $3, $4 );
-            $test->{'run'} =
-                "LC_ALL=C perl ../po4a-normalize $options $test_directory/$basename.$ext"
+            my $run_cmd =
+                "LC_ALL=C perl ../po4a-normalize"
+              . " $options $test_directory/$basename.$ext"
               . " > tmp/$basename.err 2>&1"
-              . " && mv po4a-normalize.po tmp/$basename.pot "
-              . " && mv po4a-normalize.output tmp/$basename.out ";
-            $test->{'test'} =
-              "LC_ALL=C perl compare-po.pl $test_directory/$basename.pot tmp/$basename.pot"
+              . " && mv po4a-normalize.po tmp/$basename.pot"
+              . " && mv po4a-normalize.output tmp/$basename.out";
+
+            # If there's a translation, also test the translated output.
+            if ( -f "$test_directory/$basename.trans.po" ) {
+                $run_cmd .=
+                    " && LC_ALL=C perl ../po4a-translate"
+                  . " $options -m $test_directory/$basename.$ext"
+                  . " -p $test_directory/$basename.trans.po"
+                  . " -l tmp/$basename.trans.out"
+                  . " > tmp/$basename.trans.err 2>&1";
+            }
+            $test->{'run'} = $run_cmd;
+
+            my $test_cmd =
+                "LC_ALL=C perl compare-po.pl"
+              . " $test_directory/$basename.pot tmp/$basename.pot"
               . " && diff -u $test_directory/$basename.out tmp/$basename.out 2>&1"
               . " && diff -u $test_directory/$basename.err tmp/$basename.err 2>&1";
+
+            # If there's a translation, also check the translated output.
+            if ( -f "$test_directory/$basename.trans.po" ) {
+                $test_cmd .=
+                    " && diff -u $test_directory/$basename.trans.out"
+                  . " tmp/$basename.trans.out 2>&1"
+                  . " && diff -u $test_directory/$basename.trans.err"
+                  . " tmp/$basename.trans.err 2>&1";
+            }
+            $test->{'test'} = $test_cmd;
         }
         else {
             die "Invalid 'normalize' key in test definition: $test->{'doc'}\n";
