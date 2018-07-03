@@ -8,12 +8,12 @@ specific parsers in charge of separating the document structure from
 the translatable content, and to reinject the translated content back
 into the structure.
 
-You can learn more on TransTractors in 
+You can learn more on TransTractors in
 [their documentation](https://po4a.org/man/man3/Locale::Po4a::TransTractor.3pm.php),
-or by browsing the code of 
+or by browsing the code of
 [all existing ones](https://github.com/mquinson/po4a/tree/master/lib/Locale/Po4a).
 Also don't miss the [project overview](https://po4a.org/man/man7/po4a.7.php)
-if you did not read it yet. 
+if you did not read it yet.
 
 Several binaries are built around these TransTractors, each of them
 being dedicated to one step of the [translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ)
@@ -37,7 +37,7 @@ files and translations on need.
 - Check the [Debian bug reports](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a),
   since most of these reports are not related to Debian in any way.
   Actually, they should be forwarded to the GitHub issue tracker, but
-  it's easier to read them on Debian directly. 
+  it's easier to read them on Debian directly.
   [Some of them](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a;tag=newcomer)
   are tagged as "new comer".
 - Check the [TODO] file in the archive. This file often gets outdated,
@@ -82,12 +82,63 @@ ensure that bugs won't resurface in the future.
   docbook-dtds`
 
 When writing or improving a test, you probably want to select the test
-to run, and make it verbose. The tests are executed from the t/tmp
+to run, and make it verbose. The tests are executed from the "_t_"
 directory.
 
 ```
-  ./Build test --test_files t/32-yaml.t verbose=1
+  ./Build test --test_files t/25-yaml.t verbose=1
 ```
+
+## Writing a test
+
+In order to define a new test, you can use some convenience
+helpers. If you follow some conventions, you don't have to
+write much boilerplate code.
+
+Each test is defined using a perl hash with several keys.
+Every test needs to have the key "_doc_", which contains
+a short description of the test.
+
+If you need to test the output of a module, it should suffice
+to define a second key in the hash, named "_normalize_".
+This key points to a string which can be used for the
+script `po4a-normalize`. See for example the YAML tests
+for some easy test definitions.
+
+The "_normalize_" tests expect to find four files in the
+corresponding test directory:
+
+1. The master file used as input for po4a.
+2. The expected .pot file, using the same name as the master
+   file. The extension is changed to "_.po_".
+3. The expected translated file, again using the same name
+   as the master file. The extension is changed to "_.out_".
+4. The expected messages on stderr, again using the same name
+   as the master file. The extension is changed to "_.err_".
+
+Here's an example. If you define the following hash:
+
+```
+push @tests,
+  {
+    'doc'       => "YAML UTF-8 test",
+    'normalize' => "-f yaml -M UTF-8 t-25-yaml/yamlutf8.yaml",
+  };
+```
+
+... you need to have at least the following four files:
+
+```
+t-25-yaml/yamlutf8.yaml
+t-25-yaml/yamlutf8.po
+t-25-yaml/yamlutf8.out
+t-25-yaml/yamlutf8.err
+```
+
+If you need to have more control over your tests, you can
+use the "_run_" and "_test_" keys in the hash. The "_run_"
+key defines the commands to run; the "_test_" key has
+the commands to check the generated output.
 
 
 # Translating
@@ -133,9 +184,9 @@ wlc push
 # Merge the pull request on github
 # Do and commit your local changes
 perl Build.PL
-./Build 
+./Build
 git commit -m "update po files" po
-git push 
+git push
 wlc pull
 wlc unlock
 ```
@@ -164,8 +215,8 @@ wlc pull && wlc unlock
 
 Here is the checklist of things to remember when releasing po4a:
 
-- Integrate all pending translations: 
-  - `wlc commit && wlc push` 
+- Integrate all pending translations:
+  - `wlc commit && wlc push`
   - merge the pull request
   - `git pull`
 - Bump the version number in lib/Locale/Po4a/TransTractor.pm and
