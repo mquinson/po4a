@@ -14,6 +14,7 @@ push @tests,
   {
     'doc'       => 'WML normalisation test',
     'normalize' => "-f wml t-22-wml/general.wml",
+    'todo'      => 1,
   };
 
 run_all_tests(@tests);
