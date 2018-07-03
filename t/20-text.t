@@ -13,13 +13,13 @@ my @tests;
 push @tests,
   {
     'run' =>
-"perl ../../po4a-normalize -f text -o keyvalue ../t-20-text/KeyValue.text >KeyValue.err 2>&1"
-      . "&& mv po4a-normalize.po KeyValue.po "
-      . "&& mv po4a-normalize.output KeyValue.out ",
+"perl ../po4a-normalize -f text -o keyvalue t-20-text/KeyValue.text > tmp/KeyValue.err 2>&1"
+      . "&& mv po4a-normalize.po tmp/KeyValue.po "
+      . "&& mv po4a-normalize.output tmp/KeyValue.out ",
     'test' =>
-      "perl ../compare-po.pl --no-ref ../t-20-text/KeyValue.po KeyValue.po "
-      . "&& diff -u ../t-20-text/KeyValue.out KeyValue.out 1>&2"
-      . "&& diff -u ../t-20-text/KeyValue.err KeyValue.err 1>&2",
+      "perl compare-po.pl --no-ref t-20-text/KeyValue.po tmp/KeyValue.po "
+      . "&& diff -u t-20-text/KeyValue.out tmp/KeyValue.out 1>&2"
+      . "&& diff -u t-20-text/KeyValue.err tmp/KeyValue.err 1>&2",
     'doc' => "KeyValue test"
   };
 
@@ -38,13 +38,13 @@ for my $markdown_test (@markdown_tests) {
       {
         'todo' => $todo,
         'run' =>
-"perl ../../po4a-normalize -f text -o markdown ../t-20-text/$markdown_test.md > $markdown_test.err 2>&1"
-          . "&& mv po4a-normalize.po $markdown_test.pot "
-          . "&& mv po4a-normalize.output $markdown_test.out ",
+"perl ../po4a-normalize -f text -o markdown t-20-text/$markdown_test.md > tmp/$markdown_test.err 2>&1"
+          . "&& mv po4a-normalize.po tmp/$markdown_test.pot "
+          . "&& mv po4a-normalize.output tmp/$markdown_test.out ",
         'test' =>
-"perl ../compare-po.pl --no-ref ../t-20-text/$markdown_test.pot $markdown_test.pot "
-          . "&& diff -u ../t-20-text/$markdown_test.out $markdown_test.out 1>&2"
-          . "&& diff -u ../t-20-text/$markdown_test.err $markdown_test.err 1>&2",
+"perl compare-po.pl --no-ref t-20-text/$markdown_test.pot tmp/$markdown_test.pot "
+          . "&& diff -u t-20-text/$markdown_test.out tmp/$markdown_test.out 1>&2"
+          . "&& diff -u t-20-text/$markdown_test.err tmp/$markdown_test.err 1>&2",
         'doc' => "$markdown_test test"
       };
 }
