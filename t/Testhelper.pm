@@ -23,6 +23,7 @@ package Testhelper;
 use strict;
 use warnings;
 use Test::More;
+use File::Path qw(make_path remove_tree);
 
 use Exporter qw(import);
 our @EXPORT = qw(run_all_tests);
@@ -32,9 +33,9 @@ sub run_all_tests {
 
     plan tests => 2 * scalar @tests;
 
-    mkdir "t/tmp"
-      unless -e "t/tmp" or die "Can't create test directory t/tmp\n";
-    chdir "t/tmp" or die "Can't chdir to test directory t/tmp\n";
+    # Change into test directory and create a temporary directory
+    chdir "t" or die "Can't chdir to test directory t\n";
+    make_path("tmp");
 
     foreach my $test (@tests) {
         my $test_name   = $test->{'doc'} . ' runs';
@@ -56,8 +57,7 @@ sub run_all_tests {
         }
 
       SKIP: {
-            skip( "Command didn't run, can't test the validity of its return",
-                1 )
+            skip "Command didn't run, can't test the validity of its return", 1
               if $exit_status;
 
             $test_name   = $test->{'doc'} . ' returns what is expected';
@@ -73,7 +73,9 @@ sub run_all_tests {
         }
     }
 
-    chdir "../.." or die "Can't chdir back to root directory\n";
+    # Clean up test files
+    remove_tree("tmp");
+    chdir ".." or die "Can't chdir back to root directory\n";
 }
 
 1;
