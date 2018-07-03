@@ -105,8 +105,8 @@ This key points to a string which can be used for the
 script `po4a-normalize`. See for example the YAML tests
 for some easy test definitions.
 
-The "_normalize_" tests expect to find four files in the
-corresponding test directory:
+The "_normalize_" tests expect to find at least four files
+in the corresponding test directory:
 
 1. The master file used as input for po4a.
 2. The expected .pot file, using the same name as the master
@@ -135,10 +135,38 @@ t-25-yaml/yamlutf8.out
 t-25-yaml/yamlutf8.err
 ```
 
+You can also check that the translation works, using the file
+name of the master file, with the extension changed to
+"_.trans.po_". The actual language does not matter, the
+extension is always the same. Similarly to the above files,
+you also need to add the expected translated output and
+the expected messages from stderr:
+
+```
+t-25-yaml/yamlutf8.trans.po
+t-25-yaml/yamlutf8.trans.out
+t-25-yaml/yamlutf8.trans.err
+```
+
 If you need to have more control over your tests, you can
 use the "_run_" and "_test_" keys in the hash. The "_run_"
 key defines the commands to run; the "_test_" key has
 the commands to check the generated output.
+
+Last, not least, you can mark a test as TODO with the
+hash key "_todo_". Usually, it's best to write a short
+description or to add a link to the online bug report.
+
+Example:
+
+```
+push @tests,
+  {
+    'doc'       => 'WML normalisation test',
+    'normalize' => "-f wml t-22-wml/general.wml",
+    'todo'      => "https://github.com/mquinson/po4a/issues/138",
+  };
+```
 
 
 # Translating
