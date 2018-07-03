@@ -110,7 +110,7 @@ corresponding test directory:
 
 1. The master file used as input for po4a.
 2. The expected .pot file, using the same name as the master
-   file. The extension is changed to "_.po_".
+   file. The extension is changed to "_.pot_".
 3. The expected translated file, again using the same name
    as the master file. The extension is changed to "_.out_".
 4. The expected messages on stderr, again using the same name
@@ -130,7 +130,7 @@ push @tests,
 
 ```
 t-25-yaml/yamlutf8.yaml
-t-25-yaml/yamlutf8.po
+t-25-yaml/yamlutf8.pot
 t-25-yaml/yamlutf8.out
 t-25-yaml/yamlutf8.err
 ```
