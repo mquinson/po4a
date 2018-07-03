@@ -1,5 +1,3 @@
-#! /usr/bin/perl
-#
 # Class tester.
 # Tries to load all modules to check their syntax.
 
@@ -21,24 +19,17 @@ note "File format modules";
 
 use_ok "Locale::Po4a::AsciiDoc";
 use_ok "Locale::Po4a::BibTeX";
-# use_ok "Locale::Po4a::Debconf";
 use_ok "Locale::Po4a::Dia";
 use_ok "Locale::Po4a::Docbook";
 use_ok "Locale::Po4a::Guide";
 use_ok "Locale::Po4a::Halibut";
-# use_ok "Locale::Po4a::Html";
 use_ok "Locale::Po4a::Ini";
 use_ok "Locale::Po4a::KernelHelp";
 use_ok "Locale::Po4a::LaTeX";
 use_ok "Locale::Po4a::Man";
-# use_ok "Locale::Po4a::NewsDebian";
 use_ok "Locale::Po4a::Pod";
 use_ok "Locale::Po4a::RubyDoc";
-SKIP: {
-    eval { require SGMLS };
-    skip "SGMLS required for this test", 1 if $@;
-    use_ok "Locale::Po4a::Sgml";
-}
+use_ok "Locale::Po4a::Sgml";
 use_ok "Locale::Po4a::TeX";
 use_ok "Locale::Po4a::Texinfo";
 use_ok "Locale::Po4a::Text";
