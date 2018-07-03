@@ -12,11 +12,8 @@ my @tests;
 
 push @tests,
   {
-    'run' =>
-"LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f latex -m t-19-tex/simple.tex -p tmp/simple.pot > tmp/simple-gettextize.out 2>&1",
-    'test' => "diff -u t-19-tex/simple-gettextize.out tmp/simple-gettextize.out "
-      . "&& perl compare-po.pl t-19-tex/simple.pot tmp/simple.pot",
-    'doc' => "gettextize well a simple tex document",
+    'doc'       => "gettextize well a simple tex document",
+    'normalize' => "-f latex t-19-tex/simple.tex",
   };
 push @tests,
   {
