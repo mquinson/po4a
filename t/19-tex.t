@@ -34,10 +34,8 @@ push @tests,
   };
 push @tests,
   {
-    'run' =>
-"LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f latex -m t-19-tex/theorem.tex -p tmp/theorem.pot > tmp/theorem-gettextize.out 2>&1",
-    'test' => "perl compare-po.pl t-19-tex/theorem.pot tmp/theorem.pot",
-    'doc'  => "gettextize well a LaTeX document with theorem environments",
+    'doc'       => "gettextize well a LaTeX document with theorem environments",
+    'normalize' => "-f latex t-19-tex/theorem.tex",
   };
 
 run_all_tests(@tests);
