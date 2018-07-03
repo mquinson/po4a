@@ -12,15 +12,8 @@ my @tests;
 
 push @tests,
   {
-    'run' =>
-"perl ../po4a-normalize -f text -o keyvalue t-20-text/KeyValue.text > tmp/KeyValue.err 2>&1"
-      . "&& mv po4a-normalize.po tmp/KeyValue.po "
-      . "&& mv po4a-normalize.output tmp/KeyValue.out ",
-    'test' =>
-      "perl compare-po.pl --no-ref t-20-text/KeyValue.po tmp/KeyValue.po "
-      . "&& diff -u t-20-text/KeyValue.out tmp/KeyValue.out 1>&2"
-      . "&& diff -u t-20-text/KeyValue.err tmp/KeyValue.err 1>&2",
-    'doc' => "KeyValue test"
+    'doc'       => "KeyValue test",
+    'normalize' => "-f text -o keyvalue t-20-text/KeyValue.text",
   };
 
 my @markdown_tests = qw(MarkDown PandocHeaderMultipleLines PandocOnlyAuthor
@@ -36,16 +29,9 @@ for my $markdown_test (@markdown_tests) {
     }
     push @tests,
       {
-        'todo' => $todo,
-        'run' =>
-"perl ../po4a-normalize -f text -o markdown t-20-text/$markdown_test.md > tmp/$markdown_test.err 2>&1"
-          . "&& mv po4a-normalize.po tmp/$markdown_test.pot "
-          . "&& mv po4a-normalize.output tmp/$markdown_test.out ",
-        'test' =>
-"perl compare-po.pl --no-ref t-20-text/$markdown_test.pot tmp/$markdown_test.pot "
-          . "&& diff -u t-20-text/$markdown_test.out tmp/$markdown_test.out 1>&2"
-          . "&& diff -u t-20-text/$markdown_test.err tmp/$markdown_test.err 1>&2",
-        'doc' => "$markdown_test test"
+        'todo'      => $todo,
+        'doc'       => "$markdown_test test",
+        'normalize' => "-f text -o markdown t-20-text/$markdown_test.md",
       };
 }
 
