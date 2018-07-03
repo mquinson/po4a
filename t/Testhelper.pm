@@ -28,6 +28,35 @@ use File::Path qw(make_path remove_tree);
 use Exporter qw(import);
 our @EXPORT = qw(run_all_tests);
 
+# The "normalize" hash key is a convenient shortcut
+# to define a test with a po4a-normalize invocation.
+# All those tests are similar, they generate a pot file,
+# check for possible output on stderr and compare
+# the resulting translated document with the
+# one provided in the test directory.
+sub create_tests_for_normalize {
+    my $test = shift;
+    if ( exists $test->{'normalize'} ) {
+        if ( $test->{'normalize'} =~ /^(.*) (t-[0-9]+-[^\/]+)\/(.*)\.(.*)$/ ) {
+            my ( $options, $test_directory, $basename, $ext ) =
+              ( $1, $2, $3, $4 );
+            $test->{'run'} =
+                "perl ../po4a-normalize $options $test_directory/$basename.$ext"
+              . " > tmp/$basename.err 2>&1"
+              . " && mv po4a-normalize.po tmp/$basename.po "
+              . " && mv po4a-normalize.output tmp/$basename.out ";
+            $test->{'test'} =
+              "perl compare-po.pl $test_directory/$basename.po tmp/$basename.po"
+              . " && diff -u $test_directory/$basename.out tmp/$basename.out 2>&1"
+              . " && diff -u $test_directory/$basename.err tmp/$basename.err 2>&1";
+        }
+        else {
+            die "Invalid 'normalize' key in test definition: $test->{'doc'}\n";
+        }
+    }
+    return $test;
+}
+
 sub run_all_tests {
     my @tests = @_;
 
@@ -38,6 +67,7 @@ sub run_all_tests {
     make_path("tmp");
 
     foreach my $test (@tests) {
+        $test = create_tests_for_normalize($test);
         my $test_name   = $test->{'doc'} . ' runs';
         my $exit_status = system( $test->{'run'} );
 
