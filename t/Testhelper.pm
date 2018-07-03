@@ -41,12 +41,12 @@ sub create_tests_for_normalize {
             my ( $options, $test_directory, $basename, $ext ) =
               ( $1, $2, $3, $4 );
             $test->{'run'} =
-                "perl ../po4a-normalize $options $test_directory/$basename.$ext"
+                "LC_ALL=C perl ../po4a-normalize $options $test_directory/$basename.$ext"
               . " > tmp/$basename.err 2>&1"
-              . " && mv po4a-normalize.po tmp/$basename.po "
+              . " && mv po4a-normalize.po tmp/$basename.pot "
               . " && mv po4a-normalize.output tmp/$basename.out ";
             $test->{'test'} =
-              "perl compare-po.pl $test_directory/$basename.po tmp/$basename.po"
+              "LC_ALL=C perl compare-po.pl $test_directory/$basename.pot tmp/$basename.pot"
               . " && diff -u $test_directory/$basename.out tmp/$basename.out 2>&1"
               . " && diff -u $test_directory/$basename.err tmp/$basename.err 2>&1";
         }
