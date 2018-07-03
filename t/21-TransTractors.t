@@ -16,31 +16,31 @@ for my $format (@formats) {
     push @tests,
       {
         'run' =>
-"perl ../../po4a-gettextize -f $format -m ../t-21-TransTractors/$format -p po",
+"perl ../po4a-gettextize -f $format -m t-21-TransTractors/$format -p tmp/po",
         'test' =>
-          "perl ../compare-po.pl ../t-21-TransTractors/$format.po-empty po",
+          "perl compare-po.pl t-21-TransTractors/$format.po-empty tmp/po",
         'doc' => "gettextize $format document with only the original",
       };
     push @tests,
       {
         'run' =>
-"perl ../../po4a-gettextize -f $format -m ../t-21-TransTractors/$format -l ../t-21-TransTractors/$format.fr -L ISO-8859-1 -p po 2>/dev/null",
-        'test' => "perl ../compare-po.pl ../t-21-TransTractors/$format.po po",
+"perl ../po4a-gettextize -f $format -m t-21-TransTractors/$format -l t-21-TransTractors/$format.fr -L ISO-8859-1 -p tmp/po 2>/dev/null",
+        'test' => "perl compare-po.pl t-21-TransTractors/$format.po tmp/po",
         'doc'  => "gettextize $format page with original and translation",
       };
     push @tests,
       {
         'run' =>
-"cp ../t-21-TransTractors/$format.po po && perl ../../po4a-updatepo -f $format -m ../t-21-TransTractors/$format -p po >/dev/null 2>&1 ",
-        'test' => "perl ../compare-po.pl ../t-21-TransTractors/$format.po po",
+"cp t-21-TransTractors/$format.po tmp/po && perl ../po4a-updatepo -f $format -m t-21-TransTractors/$format -p tmp/po >/dev/null 2>&1 ",
+        'test' => "perl compare-po.pl t-21-TransTractors/$format.po tmp/po",
         'doc'  => "updatepo for $format document",
       };
     push @tests,
       {
         'run' =>
-"perl ../../po4a-translate -f $format -m ../t-21-TransTractors/$format -p ../t-21-TransTractors/$format.po-ok -l $format.fr",
+"perl ../po4a-translate -f $format -m t-21-TransTractors/$format -p t-21-TransTractors/$format.po-ok -l tmp/$format.fr",
         'test' =>
-          "diff -u ../t-21-TransTractors/$format.fr-normalized $format.fr",
+          "diff -u t-21-TransTractors/$format.fr-normalized tmp/$format.fr",
         'doc' => "translate $format document",
       };
 }
