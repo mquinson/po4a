@@ -23,6 +23,7 @@ my $build = Po4aBuilder->new
                      'Locale::gettext' => '1.01', # Only used for
                                                   # translating the
                                                   # po4a's messages.
+	             'YAML::Tiny' => 0, # Used by the Yaml module
                     },
       test_requires => {'SGMLS' => 0,             # Needed for the Sgml module.
                         'Unicode::GCString' => 0, # Used by the Text module (asciidoc)
