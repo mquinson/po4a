@@ -6,6 +6,10 @@
 use strict;
 use warnings;
 
+# Set the right environment variables to normalize the outputs
+$ENV{'LC_ALL'}="C";
+$ENV{'COLUMNS'}="80";
+
 my @tests;
 
 my @formats=qw(man);
@@ -49,22 +53,22 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags t-11-man/dot1.fr tmp/dot1.fr",
   'doc'  => "translate this document",
 }, {
-  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m t-11-man/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
   'test' => "perl compare-po.pl t-11-man/dot2.err tmp/dot2.err",
   'doc'  => "gettextize well various lines beginning by a dot (2)",
   'requires' => "Text::WrapI18N",
 }, {
-  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m t-11-man/dot3 -p tmp/dot3.pot 2>tmp/dot3.err || true",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/dot3 -p tmp/dot3.pot 2>tmp/dot3.err || true",
   'test' => "perl compare-po.pl t-11-man/dot3.err tmp/dot3.err",
   'doc'  => "gettextize well various lines beginning by a dot (3)",
   'requires' => "Text::WrapI18N",
 }, {
-  'run'  => "LC_ALL=C COLUMNS=80 perl ../po4a-gettextize -f #format# -m t-11-man/dot4 -p tmp/dot4.pot 2>tmp/dot4.err || true",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/dot4 -p tmp/dot4.pot 2>tmp/dot4.err || true",
   'test' => "perl compare-po.pl t-11-man/dot4.err tmp/dot4.err",
   'doc'  => "gettextize well various lines beginning by a dot (4)",
   'requires' => "Text::WrapI18N",
 }, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/dot5 -p tmp/dot5.pot 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/dot5 -p tmp/dot5.pot 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/dot5.pot tmp/dot5.pot",
   'doc'  => "gettextize well various lines beginning by a dot (5)",
 }, {
@@ -80,7 +84,7 @@ push @tests, {
 
 # Null argument (3 tests)
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/null -p tmp/null.pot 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/null -p tmp/null.pot 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/null.pot tmp/null.pot",
   'doc'  => "gettextize well null argument/paragraphs",
 }, {
@@ -96,7 +100,7 @@ push @tests, {
 
 # Escaped tabs and newlines (3 tests)
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/escapes1 -p tmp/escapes1.pot 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/escapes1 -p tmp/escapes1.pot 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/escapes1.pot tmp/escapes1.pot",
   'doc'  => "gettextize well escaped newlines and tabs",
 }, {
@@ -112,7 +116,7 @@ push @tests, {
 
 # Fonts
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/fonts -p tmp/fonts.pot",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/fonts -p tmp/fonts.pot",
   'test' => "perl compare-po.pl t-11-man/fonts.pot tmp/fonts.pot",
   'doc'  => "gettextize well fonts",
 }, {
@@ -123,7 +127,7 @@ push @tests, {
 
 # mdoc format
 push @tests, {
-    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/mdoc.1 -p tmp/mdoc.pot 2>/dev/null",
+    'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/mdoc.1 -p tmp/mdoc.pot 2>/dev/null",
     'test' => "perl compare-po.pl t-11-man/mdoc.pot tmp/mdoc.pot",
     'doc'  => "gettextize well mdoc",
 }, {
@@ -134,11 +138,11 @@ push @tests, {
 
 # tbl format
 push @tests, {
-    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/tbl-textblock.1 -p tmp/tbl-textblock.pot 2>/dev/null",
+    'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/tbl-textblock.1 -p tmp/tbl-textblock.pot 2>/dev/null",
     'test' => "perl compare-po.pl t-11-man/tbl-textblock.pot tmp/tbl-textblock.pot",
     'doc'  => "Right handling of text blocs in tbl macros",
 }, {
-    'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/tbl-option-tab.1 -p tmp/tbl-option-tab.pot 2>/dev/null",
+    'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/tbl-option-tab.1 -p tmp/tbl-option-tab.pot 2>/dev/null",
     'test' => "perl compare-po.pl t-11-man/tbl-option-tab.pot tmp/tbl-option-tab.pot",
     'doc'  => "Handle tab option in tab macros",
 }, {
@@ -149,7 +153,7 @@ push @tests, {
 
 # Mixed mdoc and roff format
 push @tests, {
-    'run'  => "cp t-11-man/mixed.fr.po tmp/ && chmod u+w tmp/mixed.fr.po && LC_ALL=C perl ../po4a t-11-man/mixed.cfg",
+    'run'  => "cp t-11-man/mixed.fr.po tmp/ && chmod u+w tmp/mixed.fr.po && perl ../po4a t-11-man/mixed.cfg",
     'test' => "perl compare-po.pl t-11-man/mixed.pot tmp/mixed.pot &&".
               "perl compare-po.pl t-11-man/mixed.fr.po tmp/mixed.fr.po &&".
               "perl compare-po.pl t-11-man/mixed1.fr tmp/mixed1.fr &&".
@@ -161,7 +165,7 @@ push @tests, {
 
 # Non breaking spaces (7 tests)
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/spaces -p tmp/spaces.pot 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/spaces -p tmp/spaces.pot 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/spaces.pot tmp/spaces.pot",
   'doc'  => "gettextize well non breaking spaces",
 }, {
@@ -195,7 +199,7 @@ push @tests, {
 
 # Hyphens (4 tests)
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/hyphens.1 -p tmp/hyphens.pot -o groff_code=verbatim 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/hyphens.1 -p tmp/hyphens.pot -o groff_code=verbatim 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/hyphens.verbatim.pot tmp/hyphens.pot",
   'doc'  => "gettextize well hyphens (verbatim)",
 }, {
@@ -203,7 +207,7 @@ push @tests, {
   'test' => "diff -u $diff_pod_flags t-11-man/hyphens.verbatim.fr tmp/hyphens.fr",
   'doc'  => "translate this document",
 }, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/hyphens.1 -p tmp/hyphens.pot -o groff_code=translate 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/hyphens.1 -p tmp/hyphens.pot -o groff_code=translate 2>/dev/null",
   'test' => "perl compare-po.pl t-11-man/hyphens.translate.pot tmp/hyphens.pot",
   'doc'  => "gettextize well hyphens (translate)",
 }, {
@@ -214,7 +218,7 @@ push @tests, {
 
 # Macros (2 tests)
 push @tests, {
-  'run'  => "LC_ALL=C perl ../po4a-gettextize -f #format# -m t-11-man/macros.1 -p tmp/macros.pot 2>/dev/null",
+  'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/macros.1 -p tmp/macros.pot 2>/dev/null",
   'test' => "perl compare-po.pl --no-ref t-11-man/macros.pot tmp/macros.pot",
   'doc'  => "check for correct handling of some macros",
 }, {

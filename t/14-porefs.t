@@ -6,13 +6,17 @@
 use strict;
 use warnings;
 
+# Set the right environment variables to normalize the outputs
+$ENV{'LC_ALL'}="C";
+$ENV{'COLUMNS'}="80";
+
 my @tests;
 
 mkdir "t/tmp" unless -e "t/tmp";
 
 push @tests, {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=none t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=none t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/none.pot tmp/test1.pot",
@@ -23,7 +27,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=file t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=file t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/file.pot tmp/test1.pot",
@@ -34,7 +38,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a-updatepo --porefs=file -f man -m t-21-TransTractors/man -p tmp/updatepo-file.pot  > tmp/updatepo.err 2>&1',
+    'perl ../po4a-updatepo --porefs=file -f man -m t-21-TransTractors/man -p tmp/updatepo-file.pot  > tmp/updatepo.err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/updatepo.err tmp/updatepo.err",
      "perl compare-po.pl t-14-porefs/updatepo-file.pot tmp/updatepo-file.pot"],
@@ -43,7 +47,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=file,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=file,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/file_wrap.pot tmp/test1.pot",
@@ -54,7 +58,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=file,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=file,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/file.pot tmp/test1.pot",
@@ -65,7 +69,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=counter t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/counter.pot tmp/test1.pot",
@@ -76,7 +80,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=counter,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/counter_wrap.pot tmp/test1.pot",
@@ -87,7 +91,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=counter,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=counter,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/counter.pot tmp/test1.pot",
@@ -98,7 +102,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=full,wrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/full_wrap.pot tmp/test1.pot",
@@ -109,7 +113,7 @@ push @tests, {
 
 {
   'run'  =>
-    'LC_ALL=C COLUMNS=80 perl ../po4a -f --porefs=full,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
+    'perl ../po4a -f --porefs=full,nowrap t-14-porefs/test1.conf > tmp/err 2>&1',
   'test' =>
     ["diff -u t-14-porefs/test1.err tmp/err",
      "perl compare-po.pl t-14-porefs/full.pot tmp/test1.pot",

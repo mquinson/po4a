@@ -28,6 +28,10 @@ use File::Path qw(make_path remove_tree);
 use Exporter qw(import);
 our @EXPORT = qw(run_all_tests);
 
+# Set the right environment variables to normalize the outputs
+$ENV{'LC_ALL'}="C";
+$ENV{'COLUMNS'}="80";
+
 # The "normalize" hash key is a convenient shortcut
 # to define a test with a po4a-normalize invocation.
 # All those tests are similar, they generate a pot file,
@@ -41,7 +45,7 @@ sub create_tests_for_normalize {
             my ( $options, $test_directory, $basename, $ext ) =
               ( $1, $2, $3, $4 );
             my $run_cmd =
-                "LC_ALL=C perl ../po4a-normalize"
+                "perl ../po4a-normalize"
               . " $options $test_directory/$basename.$ext"
               . " > tmp/$basename.err 2>&1"
               . " && mv po4a-normalize.po tmp/$basename.pot"
@@ -50,7 +54,7 @@ sub create_tests_for_normalize {
             # If there's a translation, also test the translated output.
             if ( -f "$test_directory/$basename.trans.po" ) {
                 $run_cmd .=
-                    " && LC_ALL=C perl ../po4a-translate"
+                    " && perl ../po4a-translate"
                   . " $options -m $test_directory/$basename.$ext"
                   . " -p $test_directory/$basename.trans.po"
                   . " -l tmp/$basename.trans.out"
@@ -59,7 +63,7 @@ sub create_tests_for_normalize {
             $test->{'run'} = $run_cmd;
 
             my $test_cmd =
-                "LC_ALL=C perl compare-po.pl"
+                "perl compare-po.pl"
               . " $test_directory/$basename.pot tmp/$basename.pot"
               . " && diff -u $test_directory/$basename.out tmp/$basename.out 2>&1"
               . " && diff -u $test_directory/$basename.err tmp/$basename.err 2>&1";

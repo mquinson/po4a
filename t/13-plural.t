@@ -6,6 +6,10 @@
 use strict;
 use warnings;
 
+# Set the right environment variables to normalize the outputs
+$ENV{'LC_ALL'}="C";
+$ENV{'COLUMNS'}="80";
+
 my @tests;
 
 my @formats=qw(pod);
@@ -30,7 +34,7 @@ $tests[3]{'run'}  = "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t
 $tests[3]{'test'} = "diff -u t-13-plural/pod4.fr tmp/pod4.fr $diff_pod_flags";
 $tests[3]{'doc'}  = "Use single and plural form";
 
-$tests[4]{'run'}  = "LC_ALL=C perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t-13-plural/pod1.po -l tmp/pod4.fr 2> tmp/err";
+$tests[4]{'run'}  = "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t-13-plural/pod1.po -l tmp/pod4.fr 2> tmp/err";
 $tests[4]{'test'} = "diff -u t-13-plural/err1 tmp/err $diff_pod_flags";
 $tests[4]{'doc'}  = "Warn when using plural forms";
 
