@@ -38,7 +38,7 @@ push @tests, {
 };
 push @tests, {
     'run' => "msgattrib --clear-fuzzy -o TitlesUTF8.po TitlesUTF8.po && perl ../../po4a-translate -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l TitlesUTF8.asciidoc -p TitlesUTF8.po",
-    'test'=> "diff TitlesUTF8.asciidoc ../t-03-asciidoc/TitlesUTF8.asciidoc",
+    'test'=> "diff TitlesUTF8.asciidoc ../t-03-asciidoc/TitlesUTF8.asciidoc 1>&2",
     'doc' => "translate titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
 };
@@ -50,11 +50,11 @@ push @tests, {
 };
 push @tests, {
     'run' => "msgattrib --clear-fuzzy -o TitlesLatin1.po TitlesLatin1.po && perl ../../po4a-translate -f asciidoc -m ../t-03-asciidoc/Titles.asciidoc -l TitlesLatin1.asciidoc -p TitlesLatin1.po",
-    'test'=> "diff TitlesLatin1.asciidoc ../t-03-asciidoc/TitlesLatin1.asciidoc",
+    'test'=> "diff TitlesLatin1.asciidoc ../t-03-asciidoc/TitlesLatin1.asciidoc 1>&2",
     'doc' => "translate titles with latin1 encoding",
     'requires' => "Unicode::GCString"
 };
-use Test::More tests => 2 * 15;
+use Test::More tests => 15 * 3; # test * (run+dos2unix+test)
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
@@ -81,6 +81,10 @@ foreach my $test ( @tests ) {
         }
         skip ("Command didn't run, can't test the validity of its return",1)
             if $val;
+	
+	$val = system("dos2unix -q *"); # Just in case this is Windows
+	is($val,0, "dos2unix did not went well");
+	
         $val=system($test->{'test'});
         $name=$test->{'doc'}.' returns what is expected';
         ok($val == 0,$name);

@@ -40,7 +40,7 @@ for my $format (@formats) {
         'run' =>
 "perl ../po4a-translate -f $format -m t-21-TransTractors/$format -p t-21-TransTractors/$format.po-ok -l tmp/$format.fr",
         'test' =>
-          "diff -u t-21-TransTractors/$format.fr-normalized tmp/$format.fr",
+          "diff -u t-21-TransTractors/$format.fr-normalized tmp/$format.fr 1>&2",
         'doc' => "translate $format document",
       };
 }

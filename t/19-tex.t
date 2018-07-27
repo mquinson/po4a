@@ -24,7 +24,7 @@ push @tests,
     'run' => "cp t-19-tex/simple.trans.po tmp && chmod u+w tmp/simple.trans.po"
       . " && perl ../po4a-updatepo -f latex -m t-19-tex/simple.tex -p tmp/simple.trans.po > tmp/simple-updatepo.out 2>&1",
     'test' =>
-"diff -u -I '^\.* done\.' t-19-tex/simple-updatepo.out tmp/simple-updatepo.out "
+        "diff -u -I '^\.* done\.' t-19-tex/simple-updatepo.out tmp/simple-updatepo.out 1>&2"
       . "&& perl compare-po.pl t-19-tex/simple.trans.po tmp/simple.trans.po",
     'doc' => "updatepo for this document",
   };

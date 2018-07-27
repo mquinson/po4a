@@ -30,11 +30,11 @@ push @tests, {
   'doc'  => "updatepo for this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/quotes -p t-11-man/quotes.fr.po -l tmp/quotes.fr",
-  'test' => "diff -u $diff_pod_flags t-11-man/quotes.fr tmp/quotes.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/quotes.fr tmp/quotes.fr 1>&2",
   'doc'  => "translate this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/quoted-comment -p t-11-man/quoted-comment.po -l tmp/quoted-comment.fr",
-  'test' => "diff -u $diff_pod_flags t-11-man/quoted-comment tmp/quoted-comment.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/quoted-comment tmp/quoted-comment.fr 1>&2",
   'doc'  => "Check that comment markers are not messed up during translation",
 };
 
@@ -50,7 +50,7 @@ push @tests, {
   'doc'  => "updatepo for this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/dot1 -p t-11-man/dot1.fr.po -l tmp/dot1.fr",
-  'test' => "diff -u $diff_pod_flags t-11-man/dot1.fr tmp/dot1.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/dot1.fr tmp/dot1.fr 1>&2",
   'doc'  => "translate this document",
 }, {
   'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/dot2 -p tmp/dot2.pot 2>tmp/dot2.err || true",
@@ -78,7 +78,7 @@ push @tests, {
   'doc'  => "updatepo for this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/dot5 -p t-11-man/dot5.it.po -l tmp/dot5.it",
-  'test' => "diff -u $diff_pod_flags t-11-man/dot5.it tmp/dot5.it",
+  'test' => "diff -u $diff_pod_flags t-11-man/dot5.it tmp/dot5.it 1>&2",
   'doc'  => "translate this document",
 };
 
@@ -94,7 +94,7 @@ push @tests, {
   'doc'  => "updatepo for this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/null -p t-11-man/null.fr.po -l tmp/null.fr",
-  'test' => "diff -u $diff_pod_flags t-11-man/null.fr tmp/null.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/null.fr tmp/null.fr 1>&2",
   'doc'  => "translate this document",
 };
 
@@ -110,7 +110,7 @@ push @tests, {
   'doc'  => "updatepo for this document",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/escapes1 -p t-11-man/escapes1.it.po -l tmp/escapes1.it",
-  'test' => "diff -u $diff_pod_flags t-11-man/escapes1.it tmp/escapes1.it",
+  'test' => "diff -u $diff_pod_flags t-11-man/escapes1.it tmp/escapes1.it 1>&2",
   'doc'  => "translate this document",
 };
 
@@ -121,7 +121,7 @@ push @tests, {
   'doc'  => "gettextize well fonts",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/fonts -p t-11-man/fonts.en.po -l tmp/fonts.en 2>/dev/null",
-  'test' => "diff -u $diff_pod_flags t-11-man/fonts.en tmp/fonts.en",
+  'test' => "diff -u $diff_pod_flags t-11-man/fonts.en tmp/fonts.en 1>&2",
   'doc'  => "translate this document",
 };
 
@@ -132,7 +132,7 @@ push @tests, {
     'doc'  => "gettextize well mdoc",
 }, {
     'run'  => "perl ../po4a-translate -f #format# -m t-11-man/mdoc.1 -p t-11-man/mdoc.fr.po -l tmp/mdoc.fr -L ISO-8859-1 2>/dev/null",
-    'test' => "diff -u $diff_pod_flags t-11-man/mdoc.fr tmp/mdoc.fr",
+    'test' => "diff -u $diff_pod_flags t-11-man/mdoc.fr tmp/mdoc.fr 1>&2",
     'doc'  => "translate this document",
 };
 
@@ -147,7 +147,7 @@ push @tests, {
     'doc'  => "Handle tab option in tab macros",
 }, {
     'run'  => "perl ../po4a-translate -f #format# -m t-11-man/tbl-option-tab.1 -p t-11-man/tbl-option-tab.fr.po -l tmp/tbl-option-tab.fr.1 2>/dev/null",
-    'test' => "diff -u $diff_pod_flags t-11-man/tbl-option-tab.fr.1 tmp/tbl-option-tab.fr.1",
+    'test' => "diff -u $diff_pod_flags t-11-man/tbl-option-tab.fr.1 tmp/tbl-option-tab.fr.1 1>&2",
     'doc'  => "translate this document",
 };
 
@@ -175,7 +175,7 @@ push @tests, {
   'doc'  => "updatepo for this document (fr ISO-8859-1)",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/spaces -p t-11-man/spaces.fr_latin1.po -l tmp/spaces.fr_latin1 2>/dev/null",
-  'test' => "diff -u $diff_pod_flags t-11-man/spaces.fr_latin1 tmp/spaces.fr_latin1",
+  'test' => "diff -u $diff_pod_flags t-11-man/spaces.fr_latin1 tmp/spaces.fr_latin1 1>&2",
   'doc'  => "translate this document (fr ISO-8859-1)",
 }, {
   'run'  => "cp t-11-man/spaces.fr_utf8.po tmp/ && chmod u+w tmp/spaces.fr_utf8.po".
@@ -184,7 +184,7 @@ push @tests, {
   'doc'  => "updatepo for this document (fr UTF-8)",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/spaces -p t-11-man/spaces.fr_utf8.po -l tmp/spaces.fr_utf8",
-  'test' => "diff -u $diff_pod_flags t-11-man/spaces.fr_utf8 tmp/spaces.fr_utf8",
+  'test' => "diff -u $diff_pod_flags t-11-man/spaces.fr_utf8 tmp/spaces.fr_utf8 1>&2",
   'doc'  => "translate this document (fr UTF-8)",
 }, {
   'run'  => "cp t-11-man/spaces.ja.po tmp/ && chmod u+w tmp/spaces.ja.po".
@@ -193,7 +193,7 @@ push @tests, {
   'doc'  => "updatepo for this document (ja EUC-JP)",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/spaces -p t-11-man/spaces.ja.po -l tmp/spaces.ja",
-  'test' => "diff -u $diff_pod_flags t-11-man/spaces.ja tmp/spaces.ja",
+  'test' => "diff -u $diff_pod_flags t-11-man/spaces.ja tmp/spaces.ja 1>&2",
   'doc'  => "translate this document (ja EUC-JP)",
 };
 
@@ -204,7 +204,7 @@ push @tests, {
   'doc'  => "gettextize well hyphens (verbatim)",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/hyphens.1 -p t-11-man/hyphens.verbatim.fr.po -l tmp/hyphens.fr -o groff_code=verbatim 2>/dev/null",
-  'test' => "diff -u $diff_pod_flags t-11-man/hyphens.verbatim.fr tmp/hyphens.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/hyphens.verbatim.fr tmp/hyphens.fr 1>&2",
   'doc'  => "translate this document",
 }, {
   'run'  => "perl ../po4a-gettextize -f #format# -m t-11-man/hyphens.1 -p tmp/hyphens.pot -o groff_code=translate 2>/dev/null",
@@ -212,7 +212,7 @@ push @tests, {
   'doc'  => "gettextize well hyphens (translate)",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/hyphens.1 -p t-11-man/hyphens.translate.fr.po -l tmp/hyphens.fr -o groff_code=translate 2>/dev/null",
-  'test' => "diff -u $diff_pod_flags t-11-man/hyphens.translate.fr tmp/hyphens.fr",
+  'test' => "diff -u $diff_pod_flags t-11-man/hyphens.translate.fr tmp/hyphens.fr 1>&2",
   'doc'  => "translate this document",
 };
 
@@ -223,11 +223,11 @@ push @tests, {
   'doc'  => "check for correct handling of some macros",
 }, {
   'run'  => "perl ../po4a-translate -f #format# -m t-11-man/macros.1 -p t-11-man/macros.de.po -l tmp/macros.de.1 2>/dev/null",
-  'test' => "diff -u $diff_pod_flags t-11-man/macros.de.1 tmp/macros.de.1",
+  'test' => "diff -u $diff_pod_flags t-11-man/macros.de.1 tmp/macros.de.1 1>&2",
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 80; # $formats * $tests * 2
+use Test::More tests => 40 * 3; # $tests * (run+dos2unix+validity)
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
@@ -261,6 +261,9 @@ foreach my $format (@formats) {
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
 
+	    $val = system("dos2unix -q tmp/*"); # Just in case this is Windows
+	    is($val,0, "dos2unix did not went well");
+	    
             $val=system($testcmd);
             $name=$tests[$i]{'doc'}.' returns what is expected';
             $name =~ s/#format#/$format/g;

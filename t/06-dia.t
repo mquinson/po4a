@@ -15,10 +15,10 @@ $tests[0]{'test'} = 'perl compare-po.pl t-06-dia/extract.po-ok tmp/dia_extract.p
 $tests[0]{'doc'}  = 'get only needed strings';
 
 $tests[1]{'run'}  = 'perl ../po4a-translate -f dia -m t-06-dia/transl.dia -p t-06-dia/transl.po -l tmp/transl.dia';
-$tests[1]{'test'} = 'diff -u t-06-dia/transl.dia-ok tmp/transl.dia';
+$tests[1]{'test'} = 'diff -u t-06-dia/transl.dia-ok tmp/transl.dia 1>&2';
 $tests[1]{'doc'}  = 'test translations with new-lines';
 
-use Test::More tests =>4; # tests * (run+validity)
+use Test::More tests =>6; # tests * (run+dos2unix+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
@@ -29,9 +29,12 @@ for (my $i=0; $i<scalar @tests; $i++) {
     $val=system($cmd);
 
     $name=$tests[$i]{'doc'}.' runs';
-    ok($val == 0,$name);
+    ok($val == 0, $name);
     diag(%{$tests[$i]{'run'}}) unless ($val == 0);
 
+    $val = system("dos2unix -q tmp/*"); # Just in case this is Windows
+    is($val,0, "dos2unix did not went well");
+    
     SKIP: {
         skip ("Command don't run, can't test the validity of its return",1)
           if $val;

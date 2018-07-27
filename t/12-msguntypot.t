@@ -13,13 +13,15 @@ unless (-e "t/tmp") {
 }
 
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test1.po . && chmod u+w test1.po && '.
-           'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test1.old.pot -n ../t-12-msguntypot/test1.new.pot test1.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test1.po .',
+            'chmod u+w test1.po',
+            'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test1.old.pot -n ../t-12-msguntypot/test1.new.pot test1.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test1.new.po test1.po",
   'doc' => 'nominal test',
   };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test2.po . && chmod u+w test2.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test2.old.pot -n ../t-12-msguntypot/test2.new.pot test2.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test2.po .','chmod u+w test2.po',
+      'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test2.old.pot -n ../t-12-msguntypot/test2.new.pot test2.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test2.new.po test2.po",
   'doc' => 'fuzzy test',
   };
@@ -31,51 +33,58 @@ push @tests, {
 #  'doc' => 'msg moved test',
 #  };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test4.po . && chmod u+w test4.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test4.old.pot -n ../t-12-msguntypot/test4.new.pot test4.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test4.po .', 'chmod u+w test4.po',
+            'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test4.old.pot -n ../t-12-msguntypot/test4.new.pot test4.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test4.new.po test4.po",
   'doc' => 'plural strings (typo in msgid) test',
   };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test5.po . && chmod u+w test5.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test5.old.pot -n ../t-12-msguntypot/test5.new.pot test5.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test5.po .', 'chmod u+w test5.po', 
+      'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test5.old.pot -n ../t-12-msguntypot/test5.new.pot test5.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test5.new.po test5.po",
   'doc' => 'plural strings (typo in msgid_plural) test',
   };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test6.po . && chmod u+w test6.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test6.old.pot -n ../t-12-msguntypot/test6.new.pot test6.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test6.po .','chmod u+w test6.po',
+      'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test6.old.pot -n ../t-12-msguntypot/test6.new.pot test6.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test6.new.po test6.po",
   'doc' => 'plural strings (typo in another msgid) test',
   };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test7.po . && chmod u+w test7.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test7.old.pot -n ../t-12-msguntypot/test7.new.pot test7.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test7.po .', 'chmod u+w test7.po',
+      'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test7.old.pot -n ../t-12-msguntypot/test7.new.pot test7.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test7.new.po test7.po",
   'doc' => 'plural fuzzy strings (typo in msgid) test',
   };
 push @tests, {
-  'run' => 'cp ../t-12-msguntypot/test8.po . && chmod u+w test8.po && perl ../../scripts/msguntypot -o ../t-12-msguntypot/test8.old.pot -n ../t-12-msguntypot/test8.new.pot test8.po > /dev/null',
+  'run' => ['cp ../t-12-msguntypot/test8.po .', 'chmod u+w test8.po', 
+      'perl ../../scripts/msguntypot -o ../t-12-msguntypot/test8.old.pot -n ../t-12-msguntypot/test8.new.pot test8.po > /dev/null'],
   'test'=> "perl ../compare-po.pl ../t-12-msguntypot/test8.new.po test8.po",
   'doc' => 'plural fuzzy strings (typo in msgid_plural) test',
   };
 
-use Test::More tests => 14;
+use Test::More tests => 28;
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
 foreach my $test ( @tests ) {
-    my ($val,$name);
+    my $exit_val = 0;
+    for my $cmd (@{$test->{'run'}}) {
+      my $val=system($cmd);
 
-    my $cmd=$test->{'run'};
-    $val=system($cmd);
-
-    $name=$test->{'doc'}.' runs';
-    ok($val == 0,$name);
-    diag($test->{'run'}) unless ($val == 0);
+      ok($val == 0, $test->{'doc'}.' runs');
+      if ($val != 0) {
+	  $exit_val = $val;
+	  diag($cmd);
+      }
+    }
 
     SKIP: {
         skip ("Command didn't run, can't test the validity of its return",1)
-            if $val;
-        $val=system($test->{'test'});
-        $name=$test->{'doc'}.' returns what is expected';
-        ok($val == 0,$name);
+            if $exit_val;
+        my $val=system($test->{'test'});
+
+        ok($val == 0, $test->{'doc'}.' produces what is expected');
         unless ($val == 0) {
             diag ("Failed (retval=$val) on:");
             diag ($test->{'test'});

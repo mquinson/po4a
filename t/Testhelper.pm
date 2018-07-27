@@ -65,16 +65,14 @@ sub create_tests_for_normalize {
             my $test_cmd =
                 "perl compare-po.pl"
               . " $test_directory/$basename.pot tmp/$basename.pot"
-              . " && diff -u $test_directory/$basename.out tmp/$basename.out 2>&1"
-              . " && diff -u $test_directory/$basename.err tmp/$basename.err 2>&1";
+              . " && diff -u $test_directory/$basename.out tmp/$basename.out 1>&2"
+              . " && diff -u $test_directory/$basename.err tmp/$basename.err 1>&2";
 
             # If there's a translation, also check the translated output.
             if ( -f "$test_directory/$basename.trans.po" ) {
                 $test_cmd .=
-                    " && diff -u $test_directory/$basename.trans.out"
-                  . " tmp/$basename.trans.out 2>&1"
-                  . " && diff -u $test_directory/$basename.trans.err"
-                  . " tmp/$basename.trans.err 2>&1";
+                    " && diff -u $test_directory/$basename.trans.out tmp/$basename.trans.out 1>&2"
+                  . " && diff -u $test_directory/$basename.trans.err tmp/$basename.trans.err 1>&2";
             }
             $test->{'test'} = $test_cmd;
         }
@@ -88,7 +86,7 @@ sub create_tests_for_normalize {
 sub run_all_tests {
     my @tests = @_;
 
-    plan tests => 2 * scalar @tests;
+    plan tests => 3 * scalar @tests;
 
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
@@ -113,6 +111,9 @@ sub run_all_tests {
         else {
             is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
         }
+
+	my $ret = system("dos2unix -q tmp/*"); # Just in case this is Windows
+	is($ret, 0, "dos2unix did not went well");
 
       SKIP: {
             skip "Command didn't run, can't test the validity of its return", 1
