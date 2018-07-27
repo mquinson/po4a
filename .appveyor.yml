@@ -14,18 +14,24 @@ branches:
 
 skip_tags: true
 
+cache:
+  - C:\strawberry -> .appveyor.yml
+
 install:
   - cmd: if not exist "C:\strawberry" cinst strawberryperl
-  - cmd: set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - cmd: set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;C:\cygwin64\bin;%PATH%
   - cmd: cd C:\projects\%APPVEYOR_PROJECT_NAME%
+  - cmd: rename "C:\Program Files\Git\usr\bin\sh.exe" "sh-ignored.exe" # this shell does like && and such
   - sh: sudo apt-get install build-essential git libssl-dev
-  - sh: sudo apt-get install -y perl cpanminus
+  - sh: sudo apt-get install -y perl cpanminus opensp
   - sh: export PATH=/home/appveyor/perl5/bin:$PATH
   - perl -v
-  - cpanm -v Locale::gettext
-  - cpanm -v http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
-  - cpanm -v Text::WrapI18N
-  - cpanm -v Unicode::GCString
+  - sh: cpanm -v Locale::gettext # Needs libintl that I fail to install on appveyor/native
+  - sh: cpanm -v Text::WrapI18N
+  - cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+  - cpanm Unicode::GCString
+  - cpanm Term::ReadKey
+  - cpanm YAML::Tiny
   - cpanm -v --installdeps --notest .  
 
 build_script:
