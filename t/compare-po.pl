@@ -40,6 +40,10 @@ foreach my $l1 (<IN1>) {
 
     my $l2 = <IN2> or die "Unexpected EOF found when reading $f2\n";
 
+    # Ignore end of lines, to avoid issues on windows
+    chomp $l1;
+    chomp $l2; 
+
     unless (($l1 eq $l2) or ($ignore_ref and ($l1 =~ m/^#:/) and ($l2 =~ m/^#:/))) {
 	die "Files $f1 and $f2 differ at line $lineno:\n-${l1}+${l2}\n";
     }
