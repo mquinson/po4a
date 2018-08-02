@@ -259,11 +259,12 @@ sub read {
     my $locale = $ENV{'LC_ALL'};
     $ENV{'LC_ALL'}="C";
     my $cmd = "msgfmt".$Config{_exe}." --check-format --check-domain -o /dev/null ".$filename;
-    $ENV{'LC_ALL'}=$locale;
 
     my $out = qx/$cmd 2>&1/;
     die wrap_msg(dgettext("po4a","Invalid po file %s:\n%s"), $filename, $out)
       unless ($? == 0);
+
+    $ENV{'LC_ALL'}=$locale;
 
     my $fh;
     if ($filename eq '-') {
