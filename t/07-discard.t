@@ -18,7 +18,7 @@ $tests[0]{'doc'}  = "po4a-translate discards the fuzzy translation (and report s
 $tests[0]{'run'}  = "perl ../po4a-translate -f pod -k 0 -m t-07-discard/pod -p t-07-discard/pod.po -l tmp/pod.fr";
 $tests[0]{'test'} = "diff -u t-07-discard/pod.fr tmp/pod.fr $diff_pod_flags";
 
-use Test::More tests =>1 * 3; # $formats * $tests * (run+dos2unix+validity)
+use Test::More tests =>1 * 2; # $formats * $tests * (run+validity)
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
@@ -39,8 +39,7 @@ foreach my $format (@formats) {
             skip ("The command fails to run, I can't test the validity of its effect.",1)
               if $val;
 	    
-	    $val = system("dos2unix -q tmp/*"); # Just in case this is Windows
-	    is($val,0, "dos2unix did not went well");
+	    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 	    
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
@@ -54,6 +53,7 @@ foreach my $format (@formats) {
                 diag ($testcmd);
                 diag ("Was created with:");
                 diag ("perl -I../lib $cmd");
+		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
 

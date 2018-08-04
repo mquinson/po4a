@@ -86,7 +86,7 @@ sub create_tests_for_normalize {
 sub run_all_tests {
     my @tests = @_;
 
-    plan tests => 3 * scalar @tests;
+    plan tests => 2 * scalar @tests;
 
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
@@ -112,8 +112,7 @@ sub run_all_tests {
             is( $exit_status, 0, $test_name ) or diag( $test->{'run'} );
         }
 
-	my $ret = system("dos2unix -q tmp/*"); # Just in case this is Windows
-	is($ret, 0, "dos2unix did not went well");
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 
       SKIP: {
             skip "Command didn't run, can't test the validity of its return", 1
@@ -128,6 +127,7 @@ sub run_all_tests {
                 diag( $test->{'test'} );
                 diag("Was created with:");
                 diag( $test->{'run'} );
+		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
     }

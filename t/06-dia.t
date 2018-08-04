@@ -18,7 +18,7 @@ $tests[1]{'run'}  = 'perl ../po4a-translate -f dia -m t-06-dia/transl.dia -p t-0
 $tests[1]{'test'} = 'diff -u t-06-dia/transl.dia-ok tmp/transl.dia 1>&2';
 $tests[1]{'doc'}  = 'test translations with new-lines';
 
-use Test::More tests =>6; # tests * (run+dos2unix+validity)
+use Test::More tests =>2*2; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
@@ -32,12 +32,12 @@ for (my $i=0; $i<scalar @tests; $i++) {
     ok($val == 0, $name);
     diag(%{$tests[$i]{'run'}}) unless ($val == 0);
 
-    $val = system("dos2unix -q tmp/*"); # Just in case this is Windows
-    is($val,0, "dos2unix did not went well");
-    
     SKIP: {
         skip ("Command don't run, can't test the validity of its return",1)
           if $val;
+	
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
+
         $val=system($tests[$i]{'test'});
         $name=$tests[$i]{'doc'}.' returns what is expected';
         ok($val == 0,$name);
@@ -46,6 +46,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
             diag ($tests[$i]{'test'});
             diag ("Was created with:");
             diag ($tests[$i]{'run'});
+	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
         }
     }
 

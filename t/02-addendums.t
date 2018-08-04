@@ -99,7 +99,7 @@ push @tests, {
   'doc' => '(po4a) translate with recursive @addendum'
   };
 
-use Test::More tests => 14*3; # tests * (run+dos2unix+validity)
+use Test::More tests => 14*2; # tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
@@ -116,10 +116,9 @@ for (my $i=0; $i<scalar @tests; $i++) {
     SKIP: {
         skip ("Command don't run, can't test the validity of its return",1)
             if $val;
-	
-	$val = system("dos2unix -q tmp/*"); # Just in case this is Windows
-	is($val,0, "dos2unix did not went well");
-	
+
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
+
 	$name=$tests[$i]{'doc'}.' returns what is expected';
         $val=system($tests[$i]{'test'});
         ok($val == 0, $name);
@@ -136,6 +135,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	    } else {
 		diag ("Unable to find the addendum header");
 	    }
+		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
 	    diag ("------------------------");
         }
     }

@@ -40,7 +40,7 @@ $tests[5]{'run'}  = "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t
 $tests[5]{'test'} = "diff -u t-13-plural/pod4.fr tmp/pod4.fr $diff_pod_flags 1>&2";
 $tests[5]{'doc'}  = "Use single and plural form with multiple plural translations";
 
-use Test::More tests => 6*3; # $tests * 3
+use Test::More tests => 6*2; # nb_tests * (run+validity)
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
@@ -56,8 +56,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	skip ("Command don't run, can't test the validity of its return",1)
 	  if $val;
 
-	$val = system("dos2unix -q tmp/*"); # Just in case this is Windows
-	is($val,0, "dos2unix did not went well");
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 
 	my $testcmd=$tests[$i]{'test'};
 
@@ -68,6 +67,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	    diag ($testcmd);
 	    diag ("Was created with:");
 	    diag ("perl -I../lib $cmd");
+	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
 	}
     }
 

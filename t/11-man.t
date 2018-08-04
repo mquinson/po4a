@@ -227,7 +227,7 @@ push @tests, {
   'doc'  => "translate this document",
 };
 
-use Test::More tests => 40 * 3; # $tests * (run+dos2unix+validity)
+use Test::More tests => 40 * 2; # $tests * (run+validity)
 
 foreach my $format (@formats) {
     for (my $i=0; $i<scalar @tests; $i++) {
@@ -261,8 +261,7 @@ foreach my $format (@formats) {
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
 
-	    $val = system("dos2unix -q tmp/*"); # Just in case this is Windows
-	    is($val,0, "dos2unix did not went well");
+	    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 	    
             $val=system($testcmd);
             $name=$tests[$i]{'doc'}.' returns what is expected';
@@ -273,6 +272,7 @@ foreach my $format (@formats) {
                 diag ($testcmd);
                 diag ("Was created with:");
                 diag ("perl -I../lib $cmd");
+		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
 

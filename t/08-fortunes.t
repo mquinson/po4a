@@ -27,7 +27,7 @@ foreach my $FortunesTest (@FortunesTests) {
     };
 }
 
-use Test::More tests => 3 * 3; # test * (run+dos2unix+test)
+use Test::More tests => 3 * 2; # test * (run+test)
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
@@ -41,8 +41,7 @@ foreach my $test ( @tests ) {
     ok($val == 0,$name);
     diag($test->{'run'}) unless ($val == 0);
 
-    $val = system("dos2unix -q *"); # Just in case this is Windows
-    is($val,0, "dos2unix did not went well");
+    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 	
     SKIP: {
         skip ("Command didn't run, can't test the validity of its return",1)
@@ -55,6 +54,7 @@ foreach my $test ( @tests ) {
             diag ($test->{'test'});
             diag ("Was created with:");
             diag ($test->{'run'});
+	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
         }
     }
 }

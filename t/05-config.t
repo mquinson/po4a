@@ -18,8 +18,7 @@ $tests[0]{'doc'}  = 'simple config file - init';
 $tests[0]{'run'}  =
     'perl ../po4a t-05-config/test00.conf > tmp/test00.err 2>&1';
 @{$tests[0]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test00.err tmp/test00.err 1>&2",
+    ("diff -u t-05-config/test00.err tmp/test00.err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
      "perl compare-po.pl --no-ref t-05-config/test00.fr.po-empty tmp/test00.fr.po",
      "test ! -e tmp/test00_man.fr.1");
@@ -31,8 +30,7 @@ $tests[1]{'run'}  =
     'chmod u+w tmp/test00.fr.po && '.
     'perl ../po4a t-05-config/test00.conf > tmp/err 2>&1';
 @{$tests[1]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test01.err tmp/err 1>&2",
+    ("diff -u t-05-config/test01.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
      "perl compare-po.pl --no-ref t-05-config/test00.fr.po tmp/test00.fr.po",
      "diff -u t-05-config/test00_man.fr.1 tmp/test00_man.fr.1 1>&2");
@@ -42,8 +40,7 @@ $tests[2]{'doc'}  = 'template languages';
 $tests[2]{'run'}  =
     'perl ../po4a t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[2]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test02.err tmp/err 1>&2",
+    ("diff -u t-05-config/test02.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po-empty tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po-empty tmp/test02.es.po",
@@ -61,8 +58,7 @@ $tests[3]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[3]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test03.err tmp/err 1>&2",
+    ("diff -u t-05-config/test03.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -80,8 +76,7 @@ $tests[4]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a -v -k 0 t-05-config/test02.conf >tmp/err 2>&1';
 @{$tests[4]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
+    ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -99,8 +94,7 @@ $tests[5]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a -v t-05-config/test03.conf > tmp/err 2>&1';
 @{$tests[5]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
+    ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -118,8 +112,7 @@ $tests[6]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a t-05-config/test04.conf > tmp/err 2>&1';
 @{$tests[6]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test06.err tmp/err 1>&2",
+    ("diff -u t-05-config/test06.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -137,8 +130,7 @@ $tests[7]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a t-05-config/test05.conf > tmp/err 2>&1';
 @{$tests[7]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test07.err tmp/err 1>&2",
+    ("diff -u t-05-config/test07.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -156,8 +148,7 @@ $tests[8]{'run'}  =
     'chmod u+w tmp/test02.??.po && '.
     'perl ../po4a -f t-05-config/test08.conf > tmp/err 2>&1';
 @{$tests[8]{'test'}} =
-    ("dos2unix -q tmp/*",
-     "diff -u t-05-config/test03.err tmp/err 1>&2",
+    ("diff -u t-05-config/test03.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
      "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
      "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
@@ -179,7 +170,7 @@ $tests[9]{'run'}  =
      "perl compare-po.pl --no-ref t-05-config/test09.fr tmp/test00.fr.po",
      "test tmp/test00.fr.po -ot tmp/test09.err");
 
-use Test::More tests => 105;
+use Test::More tests => 95;
 
 for (my $i=0; $i<scalar @tests; $i++) {
     chdir "t" || die "Can't chdir to my test directory";
@@ -197,6 +188,8 @@ for (my $i=0; $i<scalar @tests; $i++) {
         skip ("Command don't run, can't test the validity of its return",1)
             if $val;
 
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
+
         my $nb = 0;
         foreach my $test (@{$tests[$i]{'test'}}) {
             $nb++;
@@ -208,6 +201,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
                 diag ($test);
                 diag ("Was created with:");
                 diag ($tests[$i]{'run'});
+		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
     }
@@ -229,14 +223,14 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	diag("Output reads:");
 	diag(qx|cat tmp/test50.err|);
     }
-    $ret = system("dos2unix -q tmp/*"); # Just in case this is Windows
-    is($ret,0, "dos2unix did not went well");
+    my $ret_dos2unix = system("dos2unix -q tmp/*"); # Just in case this is Windows
 
     $ret = system('diff -u t-05-config/test50.err tmp/test50.err 1>&2');
     is($ret, 0, "diff command should return 0");
     if ($ret != 0) {
 	diag("Output difference reads:");
 	diag(qx|diff -u t-05-config/test50.err tmp/test50.err|);
+	diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
     }
 
     ok(! -e "tmp/test50.en.1", "File tmp/test50.en.1 should not exist");

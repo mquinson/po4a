@@ -54,7 +54,7 @@ push @tests, {
     'doc' => "translate titles with latin1 encoding",
     'requires' => "Unicode::GCString"
 };
-use Test::More tests => 15 * 3; # test * (run+dos2unix+test)
+use Test::More tests => 15 * 2; # test * (run+test)
 
 chdir "t/tmp" || die "Can't chdir to my test directory";
 
@@ -82,8 +82,7 @@ foreach my $test ( @tests ) {
         skip ("Command didn't run, can't test the validity of its return",1)
             if $val;
 	
-	$val = system("dos2unix -q *"); # Just in case this is Windows
-	is($val,0, "dos2unix did not went well");
+	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
 	
         $val=system($test->{'test'});
         $name=$test->{'doc'}.' returns what is expected';
@@ -93,6 +92,7 @@ foreach my $test ( @tests ) {
             diag ($test->{'test'});
             diag ("Was created with:");
             diag ($test->{'run'});
+	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
         }
     }
 }
