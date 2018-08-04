@@ -188,8 +188,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
         skip ("Command don't run, can't test the validity of its return",1)
             if $val;
 
-	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-
         my $nb = 0;
         foreach my $test (@{$tests[$i]{'test'}}) {
             $nb++;
@@ -201,7 +199,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
                 diag ($test);
                 diag ("Was created with:");
                 diag ($tests[$i]{'run'});
-		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
     }
@@ -223,14 +220,12 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	diag("Output reads:");
 	diag(qx|cat tmp/test50.err|);
     }
-    my $ret_dos2unix = system("dos2unix -q tmp/*"); # Just in case this is Windows
 
     $ret = system('diff -u t-05-config/test50.err tmp/test50.err 1>&2');
     is($ret, 0, "diff command should return 0");
     if ($ret != 0) {
 	diag("Output difference reads:");
 	diag(qx|diff -u t-05-config/test50.err tmp/test50.err|);
-	diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
     }
 
     ok(! -e "tmp/test50.en.1", "File tmp/test50.en.1 should not exist");

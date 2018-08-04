@@ -39,8 +39,6 @@ foreach my $format (@formats) {
             skip ("The command fails to run, I can't test the validity of its effect.",1)
               if $val;
 	    
-	    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-	    
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
 
@@ -53,7 +51,6 @@ foreach my $format (@formats) {
                 diag ($testcmd);
                 diag ("Was created with:");
                 diag ("perl -I../lib $cmd");
-		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
 

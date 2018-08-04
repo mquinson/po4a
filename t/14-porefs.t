@@ -142,8 +142,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
         skip ("Command don't run, can't test the validity of its return",1)
             if $val;
 	
-	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
- 
         my $nb = 0;
         foreach my $test (@{$tests[$i]{'test'}}) {
             $nb++;
@@ -155,7 +153,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
                 diag ($test);
                 diag ("Was created with:");
                 diag ($tests[$i]{'run'});
-		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
     }

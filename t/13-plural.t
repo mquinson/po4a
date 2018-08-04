@@ -56,8 +56,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	skip ("Command don't run, can't test the validity of its return",1)
 	  if $val;
 
-	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-
 	my $testcmd=$tests[$i]{'test'};
 
 	$val=system($testcmd);
@@ -67,7 +65,6 @@ for (my $i=0; $i<scalar @tests; $i++) {
 	    diag ($testcmd);
 	    diag ("Was created with:");
 	    diag ("perl -I../lib $cmd");
-	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
 	}
     }
 

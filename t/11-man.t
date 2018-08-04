@@ -261,8 +261,6 @@ foreach my $format (@formats) {
             my $testcmd=$tests[$i]{'test'};
             $testcmd =~ s/#format#/$format/g;
 
-	    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-	    
             $val=system($testcmd);
             $name=$tests[$i]{'doc'}.' returns what is expected';
             $name =~ s/#format#/$format/g;
@@ -272,7 +270,6 @@ foreach my $format (@formats) {
                 diag ($testcmd);
                 diag ("Was created with:");
                 diag ("perl -I../lib $cmd");
-		diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
             }
         }
 

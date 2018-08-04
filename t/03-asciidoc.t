@@ -82,8 +82,6 @@ foreach my $test ( @tests ) {
         skip ("Command didn't run, can't test the validity of its return",1)
             if $val;
 	
-	my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-	
         $val=system($test->{'test'});
         $name=$test->{'doc'}.' returns what is expected';
         ok($val == 0,$name);
@@ -92,7 +90,6 @@ foreach my $test ( @tests ) {
             diag ($test->{'test'});
             diag ("Was created with:");
             diag ($test->{'run'});
-	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
         }
     }
 }

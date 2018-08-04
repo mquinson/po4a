@@ -41,8 +41,6 @@ foreach my $test ( @tests ) {
     ok($val == 0,$name);
     diag($test->{'run'}) unless ($val == 0);
 
-    my $ret_dos2unix = system("dos2unix -qk tmp/*"); # Just in case this is Windows
-	
     SKIP: {
         skip ("Command didn't run, can't test the validity of its return",1)
           if $val;
@@ -54,7 +52,6 @@ foreach my $test ( @tests ) {
             diag ($test->{'test'});
             diag ("Was created with:");
             diag ($test->{'run'});
-	    diag ("(dos2unix failed earlier)") unless ($ret_dos2unix == 0);
         }
     }
 }
