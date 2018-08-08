@@ -16,9 +16,14 @@ my @AsciiDocTests = qw(Titles BlockTitles BlockId Paragraphs
 foreach my $AsciiDocTest (@AsciiDocTests) {
 
     # Tables are currently badly supported.
-    next if $AsciiDocTest =~ m/Tables/;
+    # Mark the test as TODO.
+    my $todo = "";
+    if ( $AsciiDocTest eq "Tables" ) {
+        $todo = "Tables are currently badly supported.";
+    }
     push @tests,
       {
+        'todo'      => $todo,
         'normalize' => "-f asciidoc t-03-asciidoc/$AsciiDocTest.asciidoc",
         'doc'       => "$AsciiDocTest test"
       };
