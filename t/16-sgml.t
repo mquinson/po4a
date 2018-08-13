@@ -6,72 +6,28 @@
 use strict;
 use warnings;
 
+use lib q(t);
+use Testhelper;
+
 my @tests;
 
-my @formats=qw(sgml);
+push @tests,
+  {
+    'doc' => "gettextize well simple xml documents",
+    'run' =>
+"perl ../po4a-gettextize -f sgml -o force -m t-16-sgml/text.xml -p tmp/xml.po",
+    'test'     => "perl compare-po.pl t-16-sgml/xml.po tmp/xml.po",
+    'requires' => "Text::WrapI18N",
+  },
+  {
+    'doc' => "normalisation test",
+    'run' => 'perl ../po4a-normalize -f sgml t-16-sgml/test2.sgml '
+      . '&& mv po4a-normalize.po tmp '
+      . '&& mv po4a-normalize.output tmp',
+    'test' => 'perl compare-po.pl t-16-sgml/test2.pot tmp/po4a-normalize.po'
+      . ' && perl compare-po.pl t-16-sgml/test2-normalized.sgml tmp/po4a-normalize.output',
 
-mkdir "t/tmp" unless -e "t/tmp";
+  };
 
-$tests[0]{'run'}  = "perl ../po4a-gettextize -f #format# -o force -m t-16-sgml/text.xml -p tmp/xml.po";
-$tests[0]{'test'} = "perl compare-po.pl t-16-sgml/xml.po tmp/xml.po";
-$tests[0]{'doc'}  = "gettextize well simple xml documents";
-$tests[0]{'requires'} = "Text::WrapI18N";
-
-$tests[1]{'run'}  = 'cd tmp && perl ../../po4a-normalize -f sgml ../t-16-sgml/test2.sgml';
-$tests[1]{'test'} = 'perl compare-po.pl t-16-sgml/test2.pot tmp/po4a-normalize.po'.
-                    ' && perl compare-po.pl t-16-sgml/test2-normalized.sgml tmp/po4a-normalize.output';
-$tests[1]{'doc'}  = 'normalisation test';
-
-use Test::More tests =>4; # $formats * $tests * 2
-
-foreach my $format (@formats) {
-    for (my $i=0; $i<scalar @tests; $i++) {
-        chdir "t" || die "Can't chdir to my test directory";
-
-        my ($val,$name);
-
-        my $cmd=$tests[$i]{'run'};
-        $cmd =~ s/#format#/$format/g;
-        $val=system($cmd);
-
-        $name=$tests[$i]{'doc'}.' runs';
-        $name =~ s/#format#/$format/g;
-        SKIP: {
-            if (defined $tests[$i]{'requires'}) {
-                skip ($tests[$i]{'requires'}." required for this test", 1)
-                    unless eval 'require '.$tests[$i]{'requires'};
-            }
-            ok($val == 0,$name);
-            diag($cmd) unless ($val == 0);
-        }
-
-        SKIP: {
-            if (defined $tests[$i]{'requires'}) {
-                skip ($tests[$i]{'requires'}." required for this test", 1)
-                    unless eval 'require '.$tests[$i]{'requires'};
-            }
-            skip ("Command don't run, can't test the validity of its return",1)
-              if $val;
-            my $testcmd=$tests[$i]{'test'};
-            $testcmd =~ s/#format#/$format/g;
-
-            $val=system($testcmd);
-            $name=$tests[$i]{'doc'}.' returns what is expected';
-            $name =~ s/#format#/$format/g;
-            ok($val == 0,$name);
-            unless ($val == 0) {
-                diag ("Failed (retval=$val) on:");
-                diag ($testcmd);
-                diag ("Was created with:");
-                diag ("perl -I../lib $cmd");
-            }
-        }
-
-#    system("rm -f tmp/* 2>&1");
-
-        chdir ".." || die "Can't chdir back to my root";
-    }
-}
-
+run_all_tests(@tests);
 0;
-
