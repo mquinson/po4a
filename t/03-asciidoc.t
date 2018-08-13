@@ -37,8 +37,7 @@ push @tests,
 "perl compare-po.pl --no-ref t-03-asciidoc/TitlesUTF8.po tmp/TitlesUTF8.po",
     'doc'      => "test titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
-  };
-push @tests,
+  },
   {
     'run' =>
 "msgattrib --clear-fuzzy -o tmp/TitlesUTF8.po tmp/TitlesUTF8.po && perl ../po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesUTF8.asciidoc -p tmp/TitlesUTF8.po",
@@ -46,8 +45,7 @@ push @tests,
       "diff tmp/TitlesUTF8.asciidoc t-03-asciidoc/TitlesUTF8.asciidoc 1>&2",
     'doc'      => "translate titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
-  };
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-gettextize -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l t-03-asciidoc/TitlesLatin1.asciidoc -L iso-8859-1 -p tmp/TitlesLatin1.po",
@@ -55,8 +53,7 @@ push @tests,
 "perl compare-po.pl --no-ref t-03-asciidoc/TitlesLatin1.po tmp/TitlesLatin1.po",
     'doc'      => "test titles with latin1 encoding",
     'requires' => "Unicode::GCString"
-  };
-push @tests,
+  },
   {
     'run' =>
 "msgattrib --clear-fuzzy -o tmp/TitlesLatin1.po tmp/TitlesLatin1.po && perl ../po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesLatin1.asciidoc -p tmp/TitlesLatin1.po",

@@ -17,8 +17,7 @@ push @tests,
     'run' =>
 "perl ../po4a-gettextize -f dia -m t-06-dia/extract.dia -p tmp/dia_extract.po",
     'test' => "perl compare-po.pl t-06-dia/extract.po-ok tmp/dia_extract.po",
-  };
-push @tests,
+  },
   {
     'doc' => "test translations with new-lines",
     'run' =>

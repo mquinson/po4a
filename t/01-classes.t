@@ -14,7 +14,6 @@ use_ok "Locale::Po4a::Common";
 use_ok "Locale::Po4a::Po";
 use_ok "Locale::Po4a::TransTractor";
 
-
 note "File format modules";
 
 use_ok "Locale::Po4a::AsciiDoc";

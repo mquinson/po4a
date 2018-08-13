@@ -19,41 +19,31 @@ push @tests,
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod1 -p t-13-plural/pod1.po -l tmp/pod1.fr 2> tmp/err",
     'test' => "diff -u t-13-plural/pod1.fr tmp/pod1.fr $diff_pod_flags 1>&2",
     'doc'  => "Parse plural forms",
-  };
-
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod2 -p t-13-plural/pod1.po -l tmp/pod2.fr 2> tmp/err",
     'test' => "diff -u t-13-plural/pod2.fr tmp/pod2.fr $diff_pod_flags 1>&2",
     'doc'  => "Use singular form",
-  };
-
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod3 -p t-13-plural/pod1.po -l tmp/pod3.fr 2> tmp/err",
     'test' => "diff -u t-13-plural/pod3.fr tmp/pod3.fr $diff_pod_flags 1>&2",
     'doc'  => "Use plural form",
-  };
-
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t-13-plural/pod1.po -l tmp/pod4.fr 2> tmp/err",
     'test' => "diff -u t-13-plural/pod4.fr tmp/pod4.fr $diff_pod_flags 1>&2",
     'doc'  => "Use single and plural form",
-  };
-
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t-13-plural/pod1.po -l tmp/pod4.fr 2> tmp/err",
     'test' => "diff -u t-13-plural/err1 tmp/err $diff_pod_flags 1>&2",
     'doc'  => "Warn when using plural forms",
-  };
-
-push @tests,
+  },
   {
     'run' =>
 "perl ../po4a-translate -f pod -k 0 -m t-13-plural/pod4 -p t-13-plural/pod2.po -l tmp/pod4.fr 2> tmp/err",

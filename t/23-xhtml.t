@@ -14,8 +14,7 @@ push @tests,
   {
     'doc'       => 'XHTML normalisation test',
     'normalize' => "-f xhtml t-23-xhtml/xhtml.html",
-  };
-push @tests,
+  },
   {
     'doc'       => 'includessi test',
     'normalize' => "-f xhtml -o includessi t-23-xhtml/includessi.html",

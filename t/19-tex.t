@@ -8,27 +8,21 @@ use warnings;
 use lib q(t);
 use Testhelper;
 
-# Set the right environment variables to normalize the outputs
-$ENV{'LC_ALL'}="C";
-$ENV{'COLUMNS'}="80";
-
 my @tests;
 
 push @tests,
   {
     'doc'       => "gettextize well a simple tex document",
     'normalize' => "-f latex t-19-tex/simple.tex",
-  };
-push @tests,
+  },
   {
     'run' => "cp t-19-tex/simple.trans.po tmp && chmod u+w tmp/simple.trans.po"
       . " && perl ../po4a-updatepo -f latex -m t-19-tex/simple.tex -p tmp/simple.trans.po > tmp/simple-updatepo.out 2>&1",
     'test' =>
-        "diff -u -I '^\.* done\.' t-19-tex/simple-updatepo.out tmp/simple-updatepo.out 1>&2"
+"diff -u -I '^\.* done\.' t-19-tex/simple-updatepo.out tmp/simple-updatepo.out 1>&2"
       . "&& perl compare-po.pl t-19-tex/simple.trans.po tmp/simple.trans.po",
     'doc' => "updatepo for this document",
-  };
-push @tests,
+  },
   {
     'doc'       => "gettextize well a LaTeX document with theorem environments",
     'normalize' => "-f latex t-19-tex/theorem.tex",
