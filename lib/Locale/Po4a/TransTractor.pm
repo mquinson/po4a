@@ -649,6 +649,9 @@ sub addendum {
             $self->get_out_charset);
     }
 
+    # Ensure each item of array contain "\n" terminated 1 line
+    @{$self->{TT}{doc_out}} = map { "$_\n" } map { split '\n', $_ } @{$self->{TT}{doc_out}};
+
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
         warn wrap_msg(dgettext("po4a",
