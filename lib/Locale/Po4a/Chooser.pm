@@ -65,7 +65,6 @@ sub list {
         ."\n  - ".gettext("dia: uncompressed Dia diagrams.")
         ."\n  - ".gettext("docbook: DocBook XML.")
         ."\n  - ".gettext("guide: Gentoo Linux's XML documentation format.")
-#       ."\n  - ".gettext("html: HTML documents (EXPERIMENTAL).")
         ."\n  - ".gettext("ini: INI format.")
         ."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
         ."\n  - ".gettext("latex: LaTeX format.")
