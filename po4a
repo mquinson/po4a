@@ -87,9 +87,44 @@ will be reflected in the PO files, and all changes to the PO files (either
 manual or caused by previous step) will be reflected in translation
 documents.
 
- master document --> PO files --> translations
+Normal case without specifying B<pot_in>:
 
-The dataflow cannot be inversed in this tool, and changes in translations
+ <- source files ->|<--------- build results --------------->
+
+ addendum ----------------------------------+
+                                            |
+ master document --+---------------------+  |
+                   V                     +--+--> translations
+ old PO files -----+--> updated PO files +  
+      ^                      |
+      |                      V
+      +<.....................+
+    (the updated PO files are manually
+     copied to the source of the next
+     release while manually updating
+     the translation contents)
+
+Special case with specifying B<pot_in>:
+
+ <- source files ->|<--------- build results ----------------->
+
+ master document --+--------------------------+
+                   :                          |
+ external          :    filtered              |
+ filtering ========X..> master                |
+ program                document              |
+                        |                     |
+                        V                     +--> translations
+ old PO files ----------+--> updated PO files +
+      ^                           |
+      |                           V
+      +<..........................+
+    (the updated PO files are manually
+     copied to the source of the next
+     release while manually updating
+     the translation contents)
+
+The dataflow cannot be reversed in this tool, and changes in translations
 are overwritten by the content of the PO files. As a matter of fact, this
 tool cannot be used to convert existing translations to the po4a system. For
 that task, please refer to L<po4a-gettextize(1)>.
@@ -177,6 +212,9 @@ format, and where to put the translations. It can be made by such lines:
               de:doc/de/mein_kram.sgml
  [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \
              add_fr:doc/l10n/script.fr.add
+ [type: docbook] doc/script.xml fr:doc/fr/script.xml \
+             de:doc/de/script.xml \
+             pot_in:doc/script.filtered.xml
 
 This should be rather self-explanatory also. Note that in the second case,
 F<doc/l10n/script.fr.add> is an addendum to add to the French version of this document.
@@ -185,7 +223,15 @@ Please refer to L<po4a(7)> for more information about the addenda.
 More formally, the format is:
 
  [type: <format>] <master_doc> (<lang>:<localized_doc>)* \
+                  (pot_in:<filtered_master_doc>)? \
                   (add_<lang>:<modifier>*<addendum_path>)*
+
+If B<pot_in> is specified, I<filtered_master_doc> is used to create POT file
+instead of I<master_doc>.  This feature allows user to create flexible ways to
+avoid contents which shouldn't be included in the PO files.  Tools such as C
+preprocessor (B<cpp>) or XSL Transformation utility (e.g., B<xsltproc>) can be
+used to create the external filtering program and call it before invoking
+B<po4a>.
 
 If there is no modifier, I<addendum_path> is a path to an addendum.
 Modifiers are
