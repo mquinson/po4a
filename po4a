@@ -829,7 +829,7 @@ my (@langs);
 my (%aliases); # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
 my (%po_filename); # po_files: '$lang'=>'$path'
-my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') }
+my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
 my $doc_count = 0;
 my %partial = ( 'master' => {}, 'files' => {}, 'lang' => {} );
 open CONFIG,"<","$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
@@ -859,6 +859,7 @@ while (<CONFIG>) {
       unless ($args =~ s/^\[([^\]]*)\] *//);
     my $cmd = $1;
     my $main = ($args=~ s/^(\S+) *// ? $1 : "");
+    my $pot_in = $main; # Default for POT file input is $main
 
     if (@langs) {
         # Expand the $lang templates
@@ -966,6 +967,7 @@ while (<CONFIG>) {
                 }
         }
         $document{$main}{'format'} = $1;
+        $document{$main}{'pot_in'} = $pot_in;
         $document{$main}{'pos'} = $doc_count;
         $doc_count++;
 
@@ -1052,6 +1054,9 @@ while (<CONFIG>) {
                 } else {
                     push @{$document{$main}{$lang}},$trans;
                 }
+            } elsif ($lang eq "pot_in") {
+                 $document{$main}{$lang} = $trans; # override POT file input
+                 print " .......... divert pot_in=$trans\n" if $po4a_opts{"debug"};
             } else {
                 die wrap_ref_mod("$config_file:$nb", "",
                     gettext("Translation of %s in %s redefined"), $main, $lang)
@@ -1168,7 +1173,8 @@ if (-e $pot_filename) {
     # than the POT.
     foreach my $master (keys %document) {
         next if ($master eq '');
-        if ((stat $master)[9] >= $modtime) {
+        my $pot_in = $document{$master}{'pot_in'};
+        if ((stat $pot_in)[9] >= $modtime) {
             $update_pot_file = 1;
             last;
         }
@@ -1215,6 +1221,7 @@ if ($update_pot_file) {
                                $document{$a}{'pos'} <=> $document{$b}{'pos'}
                              } keys %document) {
         next if ($master eq '');
+        my $pot_in = $document{$master}{'pot_in'};
         my %file_opts = %po4a_opts;
         my $options = $document{$master}{"options"}{"global"};
         if (defined $options) {
@@ -1231,7 +1238,7 @@ if ($update_pot_file) {
 
         $doc->setpoout($potfile);
         my @file_in_name;
-        push @file_in_name, $master;
+        push @file_in_name, $pot_in;
         $doc->process('file_in_name'     => \@file_in_name,
                       'file_in_charset'  => $file_opts{"mastchar"},
                       'srcdir'           => $po4a_opts{"srcdir"},
