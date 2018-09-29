@@ -566,6 +566,7 @@ sub initialize {
     # by this module or sub-module (unless specified in an option)
     $self->{nodefault}=();
 
+    print wrap_mod("po4a::Xml", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
     $self->treat_options;
 
     #  Clear cache
@@ -1275,7 +1276,7 @@ sub treat_attributes {
                             $text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
                         } else {
                             print wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Content of attribute %s excluded: %s"), $self->get_path.$name, $value)
-                                   if $self->debug();
+                                   if $self->{options}{'debug'};
                             $text .= $self->recode_skipped_text($value);
                         }
                         $text .= $quot;
@@ -1694,7 +1695,7 @@ sub translate_paragraph {
         } else {
             # Inform that this tag isn't translated in debug mode
             print wrap_ref_mod($paragraph[1], "po4a::xml", dgettext ("po4a", "Content of tag %s excluded: %s"), $self->get_path, $para)
-                   if $self->debug();
+                   if $self->{options}{'debug'};
             $self->pushline($self->recode_skipped_text($para));
         }
     }
@@ -1900,6 +1901,28 @@ sub treat_options {
         $self->{customtag}->{$2} = $1 || ""
             unless    $list_nodefault{$2}
                    or defined $self->{customtag}->{$2};
+    }
+
+    # Debug output of internal parameters for generic XML parser
+    # Marked content of a XML tag can be either "translated" or "untranslated".
+    # -- XML tags in these may specify options: wWip
+    # Extraction of XML content can be one of "inline", "break", "placeholder", or "customtag".
+    # -- XML tags in these must not specify options
+    foreach my $tagtype (qw(translated untranslated)) {
+    foreach my $tag (sort keys %{$self->{$tagtype}}) {
+        print "po4a::xml::treat_options: tag='$tag' content='$self->{$tagtype}->{$tag}' '$tagtype'" if $self->{options}{'debug'};
+        foreach my $tagtype1 (qw(inline break placeholder customtag)) {
+            if (exists $self->{$tagtype1}->{$tag}) {
+                if ($self->{$tagtype1}->{$tag} eq "") {
+                    print " / extraction='$tagtype1'" if $self->{options}{'debug'};
+                } else {
+                    die wrap_mod("po4a::xml",
+                          "Don't set option for '$tag' in extraction='$tagtype1': '$self->{$tagtype1}->{$tag}'");
+                }
+            }
+        }
+        print "\n" if $self->{options}{'debug'};
+    }
     }
 
     # There should be no translated and untranslated tags
