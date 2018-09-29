@@ -81,7 +81,7 @@ sub parse {
 
     # main loop
     ($line,$lref)=$self->shiftline();
-    print "seen >>$line<<\n" if $self->debug();
+    print "seen >>$line<<\n" if $self->{options}{'debug'};
     while (defined($line)) {
 
         # Begining of an entry
@@ -99,7 +99,7 @@ sub parse {
             # eat all leading empty lines
             ($line,$lref)=$self->shiftline();
             while (defined($line) && $line =~ m/^\s*$/) {
-                print "Eat >>$line<<\n" if $self->debug();
+                print "Eat >>$line<<\n" if $self->{options}{'debug'};
                 ($line,$lref)=$self->shiftline();
             }
             # ups, ate one line too much. Put it back.
@@ -128,7 +128,7 @@ sub parse {
         }
 
         ($line,$lref)=$self->shiftline();
-        print "seen >>".($line || '')."<<\n" if $self->debug();
+        print "seen >>".($line || '')."<<\n" if $self->{options}{'debug'};
     }
 }
 

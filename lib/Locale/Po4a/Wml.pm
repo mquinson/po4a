@@ -111,7 +111,7 @@ sub read {
      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
          my $line = $1;
          print STDERR "PROTECT HEADER: $line\n"
-             if $self->debug();
+             if $self->{options}{'debug'};
          if ($line =~ m/title="([^"]*)"/) {
              $file = "<title>$1</title>" . $file;
          }
