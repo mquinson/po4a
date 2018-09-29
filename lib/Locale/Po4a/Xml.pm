@@ -592,9 +592,22 @@ calling the main initialize:
 
 You should use the B<_default_inline>, B<_default_break>,
 B<_default_placeholder>, B<_default_translated>, B<_default_untranslated>,
-and B<_default_attributes> options in derivated modules. This allow users
+and B<_default_attributes> options in derivative modules. This allow users
 to override the default behavior defined in your module with command line
 options.
+
+=head2 OVERRIDE THE DEFAULT BEHAVIOR WITH COMMAND LINE OPTIONS
+
+If you don't like the default behavior of this xml module and its derivative
+modules, you can provide command line options to change their behavior.
+
+For example, you can add the following to po4a.conf to workaround the buggy
+Docbook module before 0.55 release:
+
+  opt:"-o nodefault=<bookinfo> -o break=<bookinfo> -o untranslated=<bookinfo>"
+
+This removes default option settings for E<lt>bookinfoE<gt> and adds
+E<lt>bookinfoE<gt> to B<break> and B<untranslated> options.
 
 =head2 OVERRIDING THE found_string FUNCTION
 
