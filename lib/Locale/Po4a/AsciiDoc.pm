@@ -575,7 +575,7 @@ sub parse {
             $self->pushline(".$t\n");
             @comments=();
         } elsif (not defined $self->{verbatim} and
-                 ($line =~ m/^(\s*)((?:[-*o+]|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\)|\.|\.\.)\s+)(.*)$/)) {
+                 ($line =~ m/^(\s*)((?:[-*o+]+|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\)|\.|\.\.)\s+)(.*)$/)) {
             my $indent = $1||"";
             my $bullet = $2;
             my $text = $3;
@@ -645,6 +645,18 @@ sub parse {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
             $wrapped_mode = 1;
+        } 
+	    elsif ($paragraph ne "" && $self->{bullet} && length($self->{indent}||"")==0 &&
+              ($line =~ m/^(\s*)((?:[-*o+]+|([0-9]+[.\)])|\([0-9]+\))\s+)/s)) {
+            # If the next line starts with a bullet, process this immediately and setup the next line
+            print STDERR "IM HERE\n";
+            do_paragraph($self,$paragraph,$wrapped_mode);
+            $paragraph="";
+            $wrapped_mode = 0;
+            $self->unshiftline($line,$ref);
+            $line="";
+		    undef $self->{bullet};
+		    undef $self->{indent};
         } else {
 	    # A stupid paragraph of text
 	    print STDERR "Regular line. ".
@@ -659,10 +671,11 @@ sub parse {
             }
 
 	    if ($paragraph ne "" && $self->{bullet} && length($self->{indent}||"")==0) {
-		# Second line of an item block is not indented. It looks like a broken indentation
-		# I'd prefer not to accept it, but the formaters do. Damn specification
+		# Second line of an item block is not indented. It is unindented
+        # (and allowed) additional text or a new list item.
 		print STDERR "$ref: It seems that you are adding unindented content to an item.\n".
-		    "The \"standard\" allows this, but you may still want to fix your document.\n";
+		    "The standard allows this, but you may still want to change your document\n".
+		    "to use indented text to provide better visual clues to writers.\n";
 	    } else {
 		undef $self->{bullet};
 		undef $self->{indent};
