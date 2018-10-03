@@ -1,9 +1,9 @@
-This project welcomes contributions! 
+# po4a welcomes contributions! 
 
 Even if you never contributed to any Open Source project in the past,
 you are welcome: we are willing to help and mentor you here. Check on 
-[First Timer](https://www.firsttimersonly.com/) to learn the basics of
-Open Source development and Social Coding before you proceed with po4a.
+[First Timer](https://www.firsttimersonly.com/) to get started with 
+the basics of Open Source development and Social Coding!
 
 # Software Architecture
 
