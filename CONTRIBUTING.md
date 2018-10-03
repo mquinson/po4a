@@ -31,9 +31,9 @@ files and translations on need.
 # Finding something to hack
 
 - Check the [GitHub issues](https://github.com/mquinson/po4a/issues).
-  Search in particular for the tasks are marked "new comer", as they
-  should be accessible even if you're just starting with the po4a
-  development.
+  Search in particular for the tasks are marked "beginner friendly",
+  as they should be accessible even if you're just starting with the
+  po4a development.
 - Check the [Debian bug reports](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a),
   since most of these reports are not related to Debian in any way.
   Actually, they should be forwarded to the GitHub issue tracker, but
@@ -168,6 +168,17 @@ push @tests,
   };
 ```
 
+# Submitting Your Patch
+
+When submitting a patch, please use the Pull Request feature on GitHub.
+Your PR should be based on the latest code in the master branch.
+Please rebase your PR as needed.
+
+Finally, all PRs should include an update the the NEWS file. Please follow
+the format and briefly describe the change and provide a reference to
+the PR or issue. Please place your update at the bottom of the list
+in the appropriate section for the next, as yet unreleased, version.
+Please add sections as needed for various formats.
 
 # Translating
 
