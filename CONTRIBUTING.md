@@ -1,5 +1,9 @@
-This project welcomes contributions! And this file intend to get you
-at full speed as quickly as possible.
+This project welcomes contributions! 
+
+Even if you never contributed to any Open Source project in the past,
+you are welcome: we are willing to help and mentor you here. Check on 
+[First Timer](https://www.firsttimersonly.com/) to learn the basics of
+Open Source development and Social Coding before you proceed with po4a.
 
 # Software Architecture
 
@@ -31,7 +35,8 @@ files and translations on need.
 # Finding something to hack
 
 - Check the [GitHub issues](https://github.com/mquinson/po4a/issues).
-  Search in particular for the tasks are marked "beginner friendly",
+  Search in particular for the tasks are marked [beginner
+  friendly](https://github.com/mquinson/po4a/issues?q=is%3Aissue+is%3Aopen+label%3A%22beginner+friendly%22),
   as they should be accessible even if you're just starting with the
   po4a development.
 - Check the [Debian bug reports](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a),
@@ -39,9 +44,11 @@ files and translations on need.
   Actually, they should be forwarded to the GitHub issue tracker, but
   it's easier to read them on Debian directly.
   [Some of them](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=po4a;tag=newcomer)
-  are tagged as "new comer".
-- Check the [TODO] file in the archive. This file often gets outdated,
-  but you may find some inspiring notes.
+  are tagged as "new comer" (this list may be currently empty when you
+  click it, though).
+- Check the [TODO](https://github.com/mquinson/po4a/blob/master/TODO)
+  file in the archive. This file often gets outdated, but you may find
+  some inspiring notes. 
 - Add support for a new format. The best is to add support for a
   format that you need yourself, or to convince some prospective users.
   There is no better testing to a new TransTractor than the
@@ -49,15 +56,12 @@ files and translations on need.
   forget to add all relevant tests to your format.
 - po4a comes with a fairly large amount of documentation. You are
   welcome to fix or report any typo or errors. It would be good to improve
-  this documentation, for example with the [Google documentation style
-  guide](https://developers.googleblog.com/2017/09/making-google-developers-documentation.html)
-  but remember that our documentation is translated is a dozen of
-  languages. Improve it as much as possible, but avoid superfluous
-  changes when possible.
+  this documentation to follow the [Best Practices](http://www.writethedocs.org/guide/) 
+  from WriteTheDocs, and many sections would need a full rewriting to
+  be in proper english. We should however refrain from superfluous
+  changes when possible to reduce the burden on our translators (hint:
+  rephrasing globish to english is NOT a superfluous change).
 
-Finally, we are playing with the idea of reimplementing po4a in Python
-to increase the amount of potential contributors. A proof of concept
-of the TransTractor design in Python would be welcome.
 
 # Testing your changes
 
