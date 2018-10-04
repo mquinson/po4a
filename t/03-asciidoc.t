@@ -18,9 +18,6 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
     # Tables are currently badly supported.
     # Mark the test as TODO.
     my $todo = "";
-    if ( $AsciiDocTest eq "Tables" ) {
-        $todo = "Tables are currently badly supported.";
-    }
     push @tests,
       {
         'todo'      => $todo,

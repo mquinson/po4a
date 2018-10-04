@@ -1,37 +1,78 @@
 Test Tables
 ===========
 
-`---`---
-1   2
-3   4
-5   6
---------
+|===
+|1 | 2
+|3 | 4
+|5 | 6
+|===
 
 
 .An example table
-[grid="all"]
-'---------.--------------
-Column 1   Column 2
--------------------------
-1          Item 1
-2          Item 2
-3          Item 3
--------------------------
-6          Three items
--------------------------
+[grid="all", options="header", cols=">,"]
+|===
+|Column 1 | Column 2
+|1        | Item 1
+|2        | Item 2
+|3        | Item 3
+|6        | Three items
+|===
 
-[frame="all"]
-````~15
-1,2,3,4
-a,b,c,d
-A,B,C,D
-~~~~~~~~
+[frame="all", cols="<,<,<,<", width="15%"]
+|===
+|1|2|3|4
+|a|b|c|d
+|A|B|C|D
+|===
 
-[frame="all", grid="all"]
-.15`20`25`20`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[frame="all", grid="all", cols="^15,>20,>25,>20", format="csv"]
+|===
 ID,Customer Name,Contact Name,Customer Address,Phone
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 include::customers.csv[]
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|===
 
+The following examples are drawn from the https://docs.fedoraproject.org/f27/system-administrators-guide/index.html[Fedora System Administrator's Guide]:
 
+[options="header"]
+|===
+|Option|Description
+|[option]`Charset` = __encoding__|Specifies the character set of a generated web page. The _encoding_ has to be a valid character set such as `UTF-8` or `ISO-8859-2`.
+|[option]`Type` = __content-type__|Specifies the media type of a generated web page. The _content-type_ has to be a valid MIME type such as `text/html` or `text/plain`.
+|[option]`DescriptionWidth` = __value__|Specifies the width of the description column. The _value_ can be either a number of characters, or an asterisk (that is, `*`) to adjust the width automatically.
+|[option]`FancyIndexing`|Enables advanced features such as different icons for certain files or possibility to re-sort a directory listing by clicking on a column header.
+|[option]`FolderFirst`|Enables listing directories first, always placing them above files.
+|[option]`HTMLTable`|Enables the use of HTML tables for directory listings.
+|[option]`IconsAreLinks`|Enables using the icons as links.
+|[option]`IconHeight` = __value__|Specifies an icon height. The _value_ is a number of pixels.
+|[option]`IconWidth` = __value__|Specifies an icon width. The _value_ is a number of pixels.
+|[option]`IgnoreCase`|Enables sorting files and directories in a case-sensitive manner.
+|[option]`IgnoreClient`|Disables accepting query variables from a client.
+|[option]`NameWidth` = __value__|Specifies the width of the file name column. The _value_ can be either a number of characters, or an asterisk (that is, `*`) to adjust the width automatically.
+|[option]`ScanHTMLTitles`|Enables parsing the file for a description (that is, the `title` element) in case it is not provided by the [option]`AddDescription` directive.
+|[option]`ShowForbidden`|Enables listing the files with otherwise restricted access.
+|[option]`SuppressColumnSorting`|Disables re-sorting a directory listing by clicking on a column header.
+|[option]`SuppressDescription`|Disables reserving a space for file descriptions.
+|[option]`SuppressHTMLPreamble`|Disables the use of standard HTML preamble when a file specified by the [option]`HeaderName` directive is present.
+|[option]`SuppressIcon`|Disables the use of icons in directory listings.
+|[option]`SuppressLastModified`|Disables displaying the date of the last modification field in directory listings.
+|[option]`SuppressRules`|Disables the use of horizontal lines in directory listings.
+|[option]`SuppressSize`|Disables displaying the file size field in directory listings.
+|[option]`TrackModified`|Enables returning the `Last-Modified` and `ETag` values in the HTTP header.
+|[option]`VersionSort`|Enables sorting files that contain a version number in the expected manner.
+|[option]`XHTML`|Enables the use of XHTML 1.0 instead of the default HTML 3.2.
+|===
+
+Manually wrapped cells
+
+|===
+|Option|Description
+|[option]`Charset` = __encoding__
+|Specifies the character set of a generated web page. The _encoding_ has to be a valid character set such as `UTF-8` or `ISO-8859-2`.
+|[option]`Type` = __content-type__
+|Specifies the media type of a generated web page. The _content-type_
+has to be a valid MIME type such as `text/html` or `text/plain`.
+
+|[option]`DescriptionWidth` = __value__
+
+|Specifies the width of the description column. The _value_ can be either a number of characters, or an asterisk (that is, `*`) to adjust the width automatically.
+|===
