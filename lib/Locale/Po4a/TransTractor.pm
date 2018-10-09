@@ -366,9 +366,9 @@ sub new {
     $self->{TT}=();
     $self->{TT}{po_in}=Locale::Po4a::Po->new(\%po_options);
     $self->{TT}{po_out}=Locale::Po4a::Po->new(\%po_options);
-    # Warning, this is an array of array:
-    #  The document is splited on lines, and for each
-    #  [0] is the line content, [1] is the reference [2] the type
+    # Warning, $self->{TT}{doc_in} is an array of array:
+    #  The document is split on lines, and for each array in array
+    #  [0] is the line content, [1] is the reference $filename:$linenum
     $self->{TT}{doc_in}=();
     $self->{TT}{doc_out}=();
     if (defined $options{'verbose'}) {
@@ -394,8 +394,13 @@ sub new {
 
 =item read($)
 
-Add another input document at the end of the existing one. The argument is
-the filename to read.
+Add another input document data at the end of the existing array
+C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read.
+
+This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an
+array of strings with alternating meanings.
+ * The string C<$textline> holding each line of the input text data.
+ * The string C<< $filename:$linenum >> holding its location.
 
 Please note that it does not parse anything. You should use the parse()
 function when you're done with packing input files into the document.
@@ -439,6 +444,10 @@ sub read() {
 =item write($)
 
 Write the translated document to the given filename.
+
+This translated document data are provided by:
+ * C<< $self->docheader() >> holding the header text for the plugin, and
+ * C<< @{$self->{TT}{doc_out}} >> holding each line of the main translated text in the array.
 
 =cut
 
@@ -646,6 +655,13 @@ sub addendum {
             $self->get_out_charset);
     }
 
+    # In order to make addendum more intuitive, each array item of
+    # @{$self->{TT}{doc_out}} must not have internal "\n".  But previous parser
+    # code may put multiple internal "\n" to address things like placeholder
+    # tag handling.  Let's normalize array content.
+    # Use internal "\n" as delimiter but keep it by using the lookbehind trick.
+    @{$self->{TT}{doc_out}} = map { split /(?<=\n)/, $_ } @{$self->{TT}{doc_out}};
+
     # Bugs around addendum is hard to understand.  So let's print involved data explicitly.
     if ($self->debug()) {
         print STDERR "Addendum position regex=$position\n";
@@ -730,34 +746,43 @@ sub addendum {
 
 =back
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
+=head1 INTERNAL FUNCTIONS used to write derivative parsers
 
 =head2 Getting input, providing output
 
 Four functions are provided to get input and return output. They are very
-similar to shift/unshift and push/pop. The first pair is about input, while
-the second is about output. Mnemonic: in input, you are interested in the
-first line, what shift gives, and in output you want to add your result at
-the end, like push does.
+similar to shift/unshift and push/pop of Perl.
+
+ * Perl shift returns the first array item and drop it from the array.
+ * Perl unshift prepends an item to the array as the first array item.
+ * Perl pop returns the last array item and drop it from the array.
+ * Perl push appends an item to the array as the last array item.
+
+The first pair is about input, while the second is about output. Mnemonic: in
+input, you are interested in the first line, what shift gives, and in output
+you want to add your result at the end, like push does.
 
 =over 4
 
 =item shiftline()
 
-This function returns the next line of the doc_in to be parsed and its
-reference (packed as an array).
+This function returns the first line to be parsed and its corresponding
+reference (packed as an array) from the array C<< @{$self->{TT}{doc_in}} >> and
+drop these first 2 array items.  Here, the reference is provided by a string
+C<< $filename:$linenum >>.
 
 =item unshiftline($$)
 
-Unshifts a line of the input document and its reference.
+Unshifts the last shifted line of the input document and its corresponding
+reference back to the head of C<< {$self->{TT}{doc_in}} >>.
 
 =item pushline($)
 
-Push a new line to the doc_out.
+Push a new line to the end of C<< {$self->{TT}{doc_out}} >>.
 
 =item popline()
 
-Pop the last pushed line from the doc_out.
+Pop the last pushed line from the end of C<< {$self->{TT}{doc_out}} >>.
 
 =back
 
