@@ -1,6 +1,7 @@
 # Introduction to Po4a
 
 [![Build Status](https://travis-ci.org/mquinson/po4a.svg?branch=master)](https://travis-ci.org/mquinson/po4a)
+[![First Timers Friendly](https://img.shields.io/badge/Beginners-Welcome-brightgreen.svg?style=flat-square)](http://www.firsttimersonly.com)
 
 The po4a (PO for anything) project goal is to ease translations (and
 more interestingly, the maintenance of translations) using gettext
@@ -36,6 +37,14 @@ To install this module type the following:
    ./Build
    ./Build install
 ```
+
+# Contributing
+
+po4a is particularly welcoming contributions from the community. If
+you are new to Open Source, we'd love to mentor you for your first
+contributions. Please see the
+[CONTRIBUTING](https://github.com/mquinson/po4a/blob/master/CONTRIBUTING.md)
+file to see how you could help.
 
 # Use without installation
 
