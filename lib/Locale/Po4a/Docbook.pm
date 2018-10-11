@@ -185,17 +185,17 @@ sub initialize {
     $self->{options}{'_default_translated'} .= " <arg>";
     $self->{options}{'_default_inline'} .= " <arg>";
 
-    # artheader; does not contain text; renamed to articleinfo in v4.0; Formatted as a displayed block
+    # artheader; does not contain text; renamed to articleinfo in v4.0
     $self->{options}{'_default_untranslated'} .= " <artheader>";
-    $self->{options}{'_default_break'} .= " <artheader>";
+    $self->{options}{'_default_placeholder'} .= " <artheader>";
 
     # article; does not contain text; Formatted as a displayed block
     $self->{options}{'_default_untranslated'} .= " <article>";
     $self->{options}{'_default_break'} .= " <article>";
 
-    # articleinfo; does not contain text; v4 only; Formatted as a displayed block
+    # articleinfo; does not contain text; v4 only
     $self->{options}{'_default_untranslated'} .= " <articleinfo>";
-    $self->{options}{'_default_break'} .= " <articleinfo>";
+    $self->{options}{'_default_placeholder'} .= " <articleinfo>";
 
     # artpagenums; contains text; Formatted inline
     # NOTE: could be in the break class
@@ -219,9 +219,9 @@ sub initialize {
     $self->{options}{'_default_placeholder'} .= " <audioobject>";
 
     # author; does not contain text; Formatted inline or as a
-    # displayed block depending on context (let"s not split out surname ...)
-    $self->{options}{'_default_translated'} .= " <author>";
-    $self->{options}{'_default_break'} .= " <author>";
+    # displayed block depending on context
+    $self->{options}{'_default_untranslated'} .= " <author>";
+    $self->{options}{'_default_inline'} .= " <author>";
 
     # authorblurb; does not contain text; Formatted as a displayed block.
     # v4, not in v5
@@ -1288,9 +1288,9 @@ sub initialize {
     $self->{options}{'_default_untranslated'} .= " <personblurb>";
     $self->{options}{'_default_placeholder'} .= " <personblurb>";
 
-    # personname; contains text; Formatted as a displayed block. 
+    # personname; contains text; Formatted inline
     $self->{options}{'_default_translated'} .= " <personname>";
-    $self->{options}{'_default_break'} .= " <personname>";
+    $self->{options}{'_default_inline'} .= " <personname>";
 
     # phone; contains text; Formatted inline
     $self->{options}{'_default_translated'} .= " <phone>";
