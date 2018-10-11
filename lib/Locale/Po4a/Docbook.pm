@@ -327,10 +327,9 @@ sub initialize {
     $self->{options}{'_default_untranslated'} .= " <bookbiblio>";
     $self->{options}{'_default_break'} .= " <bookbiblio>";
 
-    # bookinfo; does not contain text; Formatted as a displayed block;
-    # v4, not in v5
+    # bookinfo; does not contain text; v4, not in v5
     $self->{options}{'_default_untranslated'} .= " <bookinfo>";
-    $self->{options}{'_default_break'} .= " <bookinfo>";
+    $self->{options}{'_default_placeholder'} .= " <bookinfo>";
 
     # bridgehead; contains text; Formatted as a displayed block
     $self->{options}{'_default_translated'} .= " <bridgehead>";
