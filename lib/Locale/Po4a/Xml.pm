@@ -72,6 +72,11 @@ my %entities;
 my @comments;
 my %translate_options_cache;
 
+# This shiftline function returns the next line of the document being parsed
+# (and its reference).
+# For XML, it overloads the Transtractor shiftline to handle:
+#   - text file inclusion if includeexternal option is set
+#   - dropping of the text in the XML comment <!--... -->
 my $_shiftline_in_comment = 0;
 sub shiftline {
     my $self = shift;
@@ -188,6 +193,13 @@ my @save_holders;
 # the current translation, we can push the translation in the translated
 # document.
 # Otherwise, we keep the translation in the current holder.
+
+# This pushline function outputs a next translated text string.
+# For XML, it overloads the Transtractor pushline to handle:
+#   - placeholder tag replacement with translated text with tags
+#
+# This twist causes the string pushed into @{$self->{TT}{doc_out}} to have
+# multi-line contents with internal "\n" for placeholder tags.
 sub pushline {
     my ($self, $line) = (shift, shift);
 
@@ -603,12 +615,16 @@ If you don't like the default behavior of this xml module and its derivative
 modules, you can provide command line options to change their behavior.
 
 For example, you can add the following to po4a.conf to workaround the buggy
-Docbook module before 0.55 release:
+Docbook module for addendum preventing to add translator credit before 0.55
+release:
 
   opt:"-o nodefault=<bookinfo> -o break=<bookinfo> -o untranslated=<bookinfo>"
 
 This removes default option settings for E<lt>bookinfoE<gt> and adds
 E<lt>bookinfoE<gt> to B<break> and B<untranslated> options.
+
+The newer po4a (0.55) doesn't suffer the above issue since the internal data
+are normalized properly before the addendum processing.
 
 =head2 OVERRIDING THE found_string FUNCTION
 
@@ -1007,7 +1023,7 @@ sub tag_trans_open {
 
 ##### END of Generic XML tag types #####
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
+=head1 INTERNAL FUNCTIONS used to write derivative parsers
 
 =head2 WORKING WITH TAGS
 
@@ -1037,6 +1053,13 @@ sub get_path {
 
 This function returns the index from the tag_types list that fits to the next
 tag in the input stream, or -1 if it's at the end of the input file.
+
+Here, the tag has structure started by E<lt> and end by E<gt> and it can
+contain multiple lines.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
 
 =cut
 
@@ -1087,6 +1110,10 @@ This function returns the next tag from the input stream without the beginning
 and end, in an array form, to maintain the references from the input file.  It
 has two parameters: the type of the tag (as returned by tag_type) and a
 boolean, that indicates if it should be removed from the input stream.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
 
 =cut
 
@@ -1148,6 +1175,10 @@ sub breaking_tag {
 
 This function translates the next tag from the input stream.  Using each
 tag type's custom translation functions.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
 
 =cut
 
@@ -1429,7 +1460,23 @@ sub get_tag_from_list ($$$) {
     return undef;
 }
 
+=head2 WORKING WITH TAGGED CONTENTS
 
+=over 4
+
+
+=item treat_content()
+
+This function gets the text until the next breaking tag (not inline) from the
+input stream.  Translate it using each tag type's custom translation functions.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
+
+=back
+
+=cut
 
 sub treat_content {
     my $self = shift;
