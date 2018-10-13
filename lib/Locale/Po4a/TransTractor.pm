@@ -294,44 +294,46 @@ sub process {
     }
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
-    chdir $params{'srcdir'}
-        if (defined $params{'srcdir'});
+    if (defined $params{'srcdir'}) {
+        chdir $params{'srcdir'};
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (srcdir)"), $params{'srcdir'}) if $self->debug();
+    }
     foreach my $file (@{$params{'po_in_name'}}) {
-        print STDERR "readpo($file)... " if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call readpo(%s)"), $file) if $self->debug();
         $self->readpo($file);
-        print STDERR "done.\n" if $self->debug()
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done readpo(%s)"), $file) if $self->debug();
     }
     foreach my $file (@{$params{'file_in_name'}}) {
-        print STDERR "read($file)..." if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call read(%s)"), $file) if $self->debug();
         $self->read($file);
-        print STDERR "done.\n"  if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done read(%s)"), $file) if $self->debug();
     }
-    print STDERR "parse..." if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call parse()"))if $self->debug();
     $self->parse();
-    print STDERR "done.\n" if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done parse()"))if $self->debug();
     foreach my $file (@{$params{'addendum'}}) {
-        print STDERR "addendum($file)..." if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call addendum(%s)"), $file) if $self->debug();
         $self->addendum($file) || die "An addendum failed\n";
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done addendum(%s)"), $file) if $self->debug();
     }
     chdir $params{'destdir'}
         if (defined $params{'destdir'});
     if (defined $params{'file_out_name'}) {
-        print STDERR "write(".$params{'file_out_name'}.")... "
-            if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call write(%s)"), $params{'file_out_name'}) if $self->debug();
         $self->write($params{'file_out_name'});
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done write(%s)"), $params{'file_out_name'}) if $self->debug();
     }
     chdir $params{'srcdir'}
         if (defined $params{'srcdir'});
     if (defined $params{'po_out_name'}) {
-        print STDERR "writepo(".$params{'po_out_name'}.")... "
-             if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call writepo(%s)"), $params{'po_out_name'}) if $self->debug();
         $self->writepo($params{'po_out_name'});
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done writepo(%s)"), $params{'po_out_name'}) if $self->debug();
     }
-    chdir $params{'calldir'}
-        if (defined $params{'calldir'});
+    if (defined $params{'calldir'}) {
+        chdir $params{'calldir'};
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (calldir)"), $params{'calldir'}) if $self->debug();
+    }
     return $self;
 }
 
@@ -400,10 +402,13 @@ C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read.
 This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an
 array of strings with alternating meanings.
  * The string C<$textline> holding each line of the input text data.
- * The string C<< $filename:$linenum >> holding its location.
+ * The string C<< $filename:$linenum >> holding its location and called as
+   "reference".
 
 Please note that it does not parse anything. You should use the parse()
 function when you're done with packing input files into the document.
+
+Please note C<$linenum> starts with 1.
 
 =cut
 
@@ -634,7 +639,7 @@ sub mychomp {
 sub addendum {
     my ($self,$filename) = @_;
 
-    print STDERR "Apply addendum $filename...\n" if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::addendum", dgettext("po4a", "Apply addendum: %s"), $filename) if $self->debug();
     unless ($filename) {
         warn wrap_msg(dgettext("po4a",
             "Can't apply addendum when not given the filename"));
@@ -740,7 +745,7 @@ sub addendum {
         } while (scalar @{$self->{TT}{doc_out}});
         @{$self->{TT}{doc_out}} = @newres;
     }
-    print STDERR "done.\n" if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::addendum", dgettext("po4a", "Done addendum: %s"), $filename) if $self->debug();
     return 1;
 }
 
