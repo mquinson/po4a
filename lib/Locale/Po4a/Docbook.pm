@@ -416,9 +416,7 @@ sub initialize {
     # classsynopsis; does not contain text; may be in a para
     # NOTE: It may contain a classsynopsisinfo, which should be
     #       verbatim
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<classsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <classsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <classsynopsis>";
 
     # classsynopsisinfo; contains text;
@@ -427,10 +425,7 @@ sub initialize {
     $self->{options}{'_default_inline'} .= " <classsynopsisinfo>";
 
     # cmdsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect? => not completely. Rewrap afterward?
-    $self->{options}{'_default_untranslated'} .= " W<cmdsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <cmdsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <cmdsynopsis>";
 
     # co; does not contain text; Formatted inline
@@ -530,10 +525,7 @@ sub initialize {
     $self->{options}{'_default_break'} .= " <constraintdef>";
 
     # constructorsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<constructorsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <constructorsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <constructorsynopsis>";
 
     # contractnum; contains text; Formatted inline or as a displayed block
@@ -598,10 +590,7 @@ sub initialize {
     $self->{options}{'_default_break'} .= " <dedication>";
 
     # destructorsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<destructorsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <destructorsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <destructorsynopsis>";
 
     # docinfo; does not contain text; removed in v4.0
@@ -798,7 +787,7 @@ sub initialize {
     $self->{options}{'_default_placeholder'} .= " <graphicco>";
 
     # group; does not contain text; Formatted inline
-    $self->{options}{'_default_untranslated'} .= " W<group>";
+    $self->{options}{'_default_untranslated'} .= " <group>";
     $self->{options}{'_default_inline'} .= " <group>";
 
     # guibutton; contains text; Formatted inline
