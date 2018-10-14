@@ -809,7 +809,9 @@ the input PO). Here is a graphical representation of this:
 
 This little bone is the core of all the po4a architecture. If you omit the
 input PO and the output document, you get B<po4a-gettextize>. If you provide
-both input and disregard the output PO, you get B<po4a-translate>.
+both input and disregard the output PO, you get B<po4a-translate>.  The B<po4a>
+calls TransTractor twice and calls B<msgmerge -U> to provide one-stop solution
+with a single configuration file.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
 is a little example to show you how it works. It parses a list of paragraphs,
@@ -835,6 +837,13 @@ each of them beginning with B<E<lt>pE<gt>>.
  18     return; # Did not got a defined line? End of input file.
  19   }
  20 }
+
+On line 6 and 7, we encounter C<shiftline()> and C<unshiftline()>.  These help
+you to read and unread the head of internal input data stream of master
+document into the line string and its reference.  Here, the reference is
+provided by a string C<< $filename:$linenum >>.  Please remember Perl only has
+one dimensional array data structure.  So codes handling the internal input
+data stream line are a bit cryptic.
 
 On line 6, we encounter B<E<lt>pE<gt>> for the second time. That's the signal
 of the next paragraph. We should thus put the just obtained line back into
