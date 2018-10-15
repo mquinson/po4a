@@ -625,7 +625,7 @@ sub mychomp {
 sub addendum {
     my ($self,$filename) = @_;
 
-    print STDERR "Apply addendum $filename..." if $self->debug();
+    print STDERR "Apply addendum $filename...\n" if $self->debug();
     unless ($filename) {
         warn wrap_msg(dgettext("po4a",
             "Can't apply addendum when not given the filename"));
@@ -638,15 +638,31 @@ sub addendum {
         addendum_parse($filename);
     return 0 if ($errcode);
 
-    print STDERR "mode=$mode;pos=$position;bound=$boundary;bmode=$bmode;ctn=$content\n"
-      if $self->debug();
-
     # We only recode the addendum if an origin charset is specified, else we
     # suppose it's already in the output document's charset
     if (defined($self->{TT}{'addendum_charset'}) &&
         length($self->{TT}{'addendum_charset'})) {
         Encode::from_to($content,$self->{TT}{'addendum_charset'},
             $self->get_out_charset);
+    }
+
+    # Bugs around addendum is hard to understand.  So let's print involved data explicitly.
+    if ($self->debug()) {
+        print STDERR "Addendum position regex=$position\n";
+        print STDERR "Addendum mode=$mode\n";
+	if ($mode eq "after") {
+            print STDERR "Addendum boundary regex=$boundary\n";
+            print STDERR "Addendum boundary mode=$bmode\n";
+        }
+        print STDERR "Addendum content (begin):\n";
+        print STDERR "$content";
+        print STDERR "Addendum content (end)\n";
+        print STDERR "Output items searched for the addendum insertion position:\n";
+        foreach my $item (@{$self->{TT}{doc_out}}) {
+            print STDERR $item;
+            print STDERR "\n----- [ search item end marker with a preceding newline ] -----\n";
+	}
+        print STDERR "Start searching addendum insertion position...\n";
     }
 
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
