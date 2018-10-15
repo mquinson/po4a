@@ -1985,6 +1985,43 @@ sub treat_options {
                    or defined $self->{customtag}->{$2};
     }
 
+    foreach my $tagtype (qw(untranslated)) {
+        foreach my $tag (sort keys %{$self->{$tagtype}}) {
+            warn "po4a::xml::treat_options: WARN: tag='$tag' is %s tag, translation option='$self->{$tagtype}->{$tag}' is ignores wW.\n" if $self->{$tagtype}->{$tag} =~ m/wW/;
+        }
+    }
+    foreach my $tagtype (qw(inline break placeholder customtag)) {
+        foreach my $tag (sort keys %{$self->{$tagtype}}) {
+            die "po4a::xml::treat_options: WARN: tag='$tag' is %s tag, translation option='$self->{$tagtype}->{$tag}' is ignored.\n" if $self->{$tagtype}->{$tag} ne "";
+        }
+    }
+    foreach my $tagtype (qw(attributes)) {
+        foreach my $tag (sort keys %{$self->{$tagtype}}) {
+            warn "po4a::xml::treat_options: WARN: tag='$tag' is %s tag, translation option='$self->{$tagtype}->{$tag}' is ignored.\n" if $self->{$tagtype}->{$tag} ne "";
+        }
+    }
+    # Debug output of internal parameters for generic XML parser
+    # Marked content of a XML tag can be either "translated" or "untranslated".
+    # -- XML tags in these may specify options: wWip
+    # Extraction of XML content can be one of "inline", "break", "placeholder", or "customtag".
+    # -- XML tags in these must not specify options
+    if ($self->{options}{'debug'}) {
+        foreach my $tagtype (qw(translated untranslated)) {
+            foreach my $tag (sort keys %{$self->{$tagtype}}) {
+                print "po4a::xml::treat_options: $tag: translation option='$self->{$tagtype}->{$tag}' (original), but listed in '$tagtype'";
+                foreach my $tagtype1 (qw(inline break placeholder customtag)) {
+                    if (exists $self->{$tagtype1}->{$tag}) {
+                        print " / '$tagtype1'";
+                    }
+                }
+                print "\n";
+                print wrap_mod("po4a::xml::treat_options", dgettext ("po4a", "%s: translation option='%s' (valid)"), $tag, $self->get_translate_options($tag));
+            }
+        }
+        foreach my $tag (sort keys %{$self->{'attributes'}}) {
+            print "po4a::xml::treat_options: $tag: translated attributes.\n";
+        }
+    }
     # There should be no translated and untranslated tags
     foreach my $tag (keys %{$self->{translated}}) {
         die wrap_mod("po4a::xml::treat_options",
