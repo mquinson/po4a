@@ -578,6 +578,7 @@ sub initialize {
     # by this module or sub-module (unless specified in an option)
     $self->{nodefault}=();
 
+    print wrap_mod("po4a::xml::initialize", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
     $self->treat_options;
 
     #  Clear cache

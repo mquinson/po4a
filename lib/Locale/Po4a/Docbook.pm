@@ -99,6 +99,7 @@ use 5.006;
 use strict;
 use warnings;
 
+use Locale::Po4a::Common;
 use Locale::Po4a::Xml;
 
 use vars qw(@ISA);
@@ -2049,5 +2050,6 @@ sub initialize {
         lang
         xml:lang';
 
+    print wrap_mod("po4a::docbook::initialize", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
     $self->treat_options;
 }
