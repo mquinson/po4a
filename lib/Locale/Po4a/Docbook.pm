@@ -53,6 +53,28 @@ the file inclusion entities, but you can translate most of those files alone
 (except the typical entities files), and it's usually better to maintain them
 separated.
 
+=head1 OVERRIDE THE DEFAULT BEHAVIOR WITH COMMAND LINE OPTIONS
+
+The default behavior of system provided modules is set to be on the safe side.
+
+For example, the default of B<< <author> >> tag is aiming it to appear under
+B<< <para> >>.  But you may be using it only under B<< <bookinfo> >>.  For this
+case, you may want to translate it independently for each author.
+
+If you don't like the default behavior of the xml module and its derivative
+modules, you can provide command line options to change their behavior.  For
+example, you can add the following to the po4a configuration file:
+
+  opt:"-k 0 -o nodefault=\"<bookinfo> <author>\" \
+            -o break=\"<bookinfo> <author>\" \
+            -o untranslated=\"<bookinfo>\" \
+            -o translated=\"<author>\""
+
+This overrides the default behavior for B<< <bookinfo> >> and B<< <author> >>,
+set B<< <bookinfo> >> and B<< <author> >> to break input data stream on these
+tags, set B<< <bookinfo> >> not to translate its tagged content, and set B<<
+<author> >> to translate its tagged content.
+
 =head1 SEE ALSO
 
 L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<po4a(7)|po4a.7>
