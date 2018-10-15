@@ -114,18 +114,18 @@ sub shiftline {
                 next if ($tmp_in_comment);
 
                 open (my $in, $entities{$k})
-                    or croak wrap_mod("po4a::xml",
-                                      dgettext("po4a", "Can't read from %s: %s"),
-                                      $entities{$k}, $!);
+                    or croak wrap_mod("po4a::xml::shiftline",
+                                      dgettext("po4a", "%s: Can't read from %s: %s"),
+                                      $ref, $entities{$k}, $!);
                 while (defined (my $textline = <$in>)) {
                     $linenum++;
                     my $textref=$entities{$k}.":$linenum";
                     push @textentries, ($textline,$textref);
                 }
                 close $in
-                    or croak wrap_mod("po4a::xml",
-                              dgettext("po4a", "Can't close %s after reading: %s"),
-                                      $entities{$k}, $!);
+                    or croak wrap_mod("po4a::xml::shiftline",
+                              dgettext("po4a", "%s: Can't close %s after reading: %s"),
+                                      $ref, $entities{$k}, $!);
 
                 push @textentries, ($after, $ref);
                 $line = $before.(shift @textentries);
@@ -220,7 +220,7 @@ sub pushline {
         } else {
             # TODO: It will be hard to identify the location.
             #       => find a way to retrieve the reference.
-            die wrap_mod("po4a::xml", dgettext("po4a", "'po4a-id=%d' in the translation does not exist in the original string (or 'po4a-id=%d' used twice in the translation)."), $id, $id);
+            die wrap_mod("po4a::xml::pushline", dgettext("po4a", "'po4a-id=%d' in the translation does not exist in the original string (or 'po4a-id=%d' used twice in the translation)."), $id, $id);
         }
     }
 # TODO: check that %folded_attributes is empty at some time
@@ -255,6 +255,7 @@ sub parse_file {
     my ($self,$filename) = @_;
     my $eof = 0;
 
+    print wrap_mod("po4a::xml::parse_file", dgettext("po4a", ">>> filename = '%s'"), $filename ) if $self->{options}{'debug'};
     while (!$eof) {
         # We get all the text until the next breaking tag (not
         # inline) and translate it
@@ -545,7 +546,7 @@ sub initialize {
 
     foreach my $opt (keys %options) {
         if ($options{$opt}) {
-            die wrap_mod("po4a::xml",
+            die wrap_mod("po4a::xml::initialize",
                 dgettext("po4a", "Unknown option: %s"), $opt)
                 unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options{$opt};
@@ -1197,6 +1198,7 @@ sub treat_tag {
     # Calling this tag type's specific handling (translation of
     # attributes...)
     my $line = &{$tag_types[$type]->{f_translate}}($self,@lines);
+    print wrap_mod("po4a::xml::treat_tag", dgettext ("po4a", "%s: type=%s <%s%s%s%s%s>"), $lines[1], $type, $match1, $space1, $line, $space2, $match2) if $self->{options}{'debug'};
     $self->pushline("<".$match1.$space1.$line.$space2.$match2.">");
     return $eof;
 }
@@ -1304,8 +1306,8 @@ sub treat_attributes {
                         if ($self->tag_in_list($self->get_path.$name,$self->{attributes})) {
                             $text .= $self->found_string($value, $ref, { type=>"attribute", attribute=>$name });
                         } else {
-                            print wrap_ref_mod($ref, "po4a::xml", dgettext("po4a", "Content of attribute %s excluded: %s"), $self->get_path.$name, $value)
-                                   if $self->debug();
+                            print wrap_mod("po4a::xml::treat_attributes", dgettext("po4a", "%s: attribute '%s' is not defined in module option 'attributes' and\n".
+                                           "....  is not translated for the attribute path '%s'"), $ref, $value, $self->get_path.$name) if $self->{options}{'debug'};
                             $text .= $self->recode_skipped_text($value);
                         }
                         $text .= $quot;
@@ -1316,9 +1318,9 @@ sub treat_attributes {
             unless ($complete) {
                 my $ontagerror = $self->{options}{'ontagerror'};
                 if ($ontagerror eq "warn") {
-                    warn wrap_ref_mod($ref, "po4a::xml", dgettext ("po4a", "Bad attribute syntax.  Continuing..."));
+                    warn wrap_mod("po4a::xml::treat_attributes", dgettext ("po4a", "%s: Bad attribute syntax.  Continuing..."), $ref);
                 } elsif ($ontagerror ne "silent") {
-                    die wrap_ref_mod($ref, "po4a::xml", dgettext ("po4a", "Bad attribute syntax"));
+                    die wrap_mod("po4a::xml::treat_attributes", dgettext ("po4a", "%s: Bad attribute syntax"), $ref);
                 }
             }
         }
@@ -1432,6 +1434,7 @@ sub get_translate_options {
         my $poptions = $self->get_translate_options ($ppath);
         if ($poptions eq "") {
             $options =~ s/i//;
+            print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: translation option='%s'.\n *** the original translation option is overridden here since parent path='%s' is untranslated,"), $path, $options, $ppath) if $self->{options}{'debug'};
         }
     }
 
@@ -1439,7 +1442,12 @@ sub get_translate_options {
         $options .= "f";
     }
 
+    if ($options !~ m/i/ and $self->{options}{'foldattributes'}) {
+        print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: foldattributes setting ignored since '%s' is not inline tag"), $path, $tag) if $self->{options}{'debug'};
+    }
+
     $translate_options_cache{$path} = $options;
+    #print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: options: '%s'"), $path, $options) if $self->{options}{'debug'};
     return $options;
 }
 
@@ -1757,6 +1765,8 @@ sub translate_paragraph {
     if ( length($para) > 0 ) {
         if ($translate ne "") {
             # This tag should be translated
+            print wrap_mod("po4a::xml::translate_paragraph", dgettext ("po4a", "%s: path='%s', translation option='%s'"), $paragraph[1], $self->get_path, $translate)
+                   if $self->{options}{'debug'};
             $self->pushline($self->found_string(
                 $para,
                 $paragraph[1], {
@@ -1766,8 +1776,8 @@ sub translate_paragraph {
                 }));
         } else {
             # Inform that this tag isn't translated in debug mode
-            print wrap_ref_mod($paragraph[1], "po4a::xml", dgettext ("po4a", "Content of tag %s excluded: %s"), $self->get_path, $para)
-                   if $self->debug();
+            print wrap_mod("po4a::xml::translate_paragraph", dgettext ("po4a", "%s: path='%s', translation option='%s' (no translation)"), $paragraph[1], $self->get_path, $translate)
+                   if $self->{options}{'debug'};
             $self->pushline($self->recode_skipped_text($para));
         }
     }
@@ -1861,7 +1871,7 @@ sub treat_options {
 
     $self->{options}{'tags'} =~ /^\s*(.*)\s*$/s;
     if (length $self->{options}{'tags'}) {
-        warn wrap_mod("po4a::xml",
+        warn wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "The '%s' option is deprecated. Please use the translated/untranslated and/or break/inline/placeholder categories."), "tags");
     }
@@ -1871,7 +1881,7 @@ sub treat_options {
     }
 
     if ($self->{options}{'tagsonly'}) {
-        warn wrap_mod("po4a::xml",
+        warn wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "The '%s' option is deprecated. Please use the translated/untranslated and/or break/inline/placeholder categories."), "tagsonly");
     }
@@ -1977,38 +1987,38 @@ sub treat_options {
 
     # There should be no translated and untranslated tags
     foreach my $tag (keys %{$self->{translated}}) {
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "translated", "untranslated")
             if defined $self->{untranslated}->{$tag};
     }
     # There should be no inline, break, placeholder, and customtag tags
     foreach my $tag (keys %{$self->{inline}}) {
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "inline", "break")
             if defined $self->{break}->{$tag};
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "inline", "placeholder")
             if defined $self->{placeholder}->{$tag};
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "inline", "customtag")
             if defined $self->{customtag}->{$tag};
     }
     foreach my $tag (keys %{$self->{break}}) {
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "break", "placeholder")
             if defined $self->{placeholder}->{$tag};
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "break", "customtag")
             if defined $self->{customtag}->{$tag};
     }
     foreach my $tag (keys %{$self->{placeholder}}) {
-        die wrap_mod("po4a::xml",
+        die wrap_mod("po4a::xml::treat_options",
                      dgettext("po4a",
                               "Tag '%s' both in the %s and %s categories."), $tag, "placeholder", "customtag")
             if defined $self->{customtag}->{$tag};
