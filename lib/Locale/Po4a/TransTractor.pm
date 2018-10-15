@@ -649,6 +649,13 @@ sub addendum {
             $self->get_out_charset);
     }
 
+    # In order to make addendum more intuitive, each array item of
+    # @{$self->{TT}{doc_out}} must not have internal "\n".  But previous parser
+    # code may put multiple internal "\n" to address things like placeholder
+    # tag handling.  Let's normalize array content.
+    # Use internal "\n" as delimiter but keep it by using the lookbehind trick.
+    @{$self->{TT}{doc_out}} = map { split /(?<=\n)/, $_ } @{$self->{TT}{doc_out}};
+
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
     if ($found == 0) {
         warn wrap_msg(dgettext("po4a",
