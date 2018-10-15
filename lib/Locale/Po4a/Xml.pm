@@ -72,6 +72,11 @@ my %entities;
 my @comments;
 my %translate_options_cache;
 
+# This shiftline function returns the next line of the document being parsed
+# (and its reference).
+# For XML, it overloads the Transtractor shiftline to handle:
+#   - text file inclusion if includeexternal option is set
+#   - dropping of the text in the XML comment <!--... -->
 my $_shiftline_in_comment = 0;
 sub shiftline {
     my $self = shift;
@@ -188,6 +193,13 @@ my @save_holders;
 # the current translation, we can push the translation in the translated
 # document.
 # Otherwise, we keep the translation in the current holder.
+
+# This pushline function outputs a next translated text string.
+# For XML, it overloads the Transtractor pushline to handle:
+#   - placeholder tag replacement with translated text with tags
+#
+# This twist causes the string pushed into @{$self->{TT}{doc_out}} to have
+# multi-line contents with internal "\n" for placeholder tags.
 sub pushline {
     my ($self, $line) = (shift, shift);
 
@@ -572,11 +584,11 @@ sub initialize {
     %translate_options_cache=();
 }
 
-=head1 WRITING DERIVATE MODULES
+=head1 WRITING DERIVATIVE MODULES
 
 =head2 DEFINE WHAT TAGS AND ATTRIBUTES TO TRANSLATE
 
-The simplest customization is to define which tags and attributes you want
+The simplest customization is to define whicattributes you want
 the parser to translate.  This should be done in the initialize function.
 First you should call the main initialize, to get the command-line options,
 and then, append your custom definitions to the options hash.  If you want
@@ -592,9 +604,17 @@ calling the main initialize:
 
 You should use the B<_default_inline>, B<_default_break>,
 B<_default_placeholder>, B<_default_translated>, B<_default_untranslated>,
-and B<_default_attributes> options in derivated modules. This allow users
+and B<_default_attributes> options in derivative modules. This allow users
 to override the default behavior defined in your module with command line
 options.
+
+=head2 OVERRIDE THE DEFAULT BEHAVIOR WITH COMMAND LINE OPTIONS
+
+If you don't like the default behavior of this xml module and its derivative
+modules, you can provide command line options to change their behavior.
+
+See L<Locale::Po4a::Docbook(3pm)|Locale::Po4a::Docbook>, 
+
 
 =head2 OVERRIDING THE found_string FUNCTION
 
@@ -993,7 +1013,7 @@ sub tag_trans_open {
 
 ##### END of Generic XML tag types #####
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
+=head1 INTERNAL FUNCTIONS used to write derivative parsers
 
 =head2 WORKING WITH TAGS
 
@@ -1023,6 +1043,13 @@ sub get_path {
 
 This function returns the index from the tag_types list that fits to the next
 tag in the input stream, or -1 if it's at the end of the input file.
+
+Here, the tag has structure started by E<lt> and end by E<gt> and it can
+contain multiple lines.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
 
 =cut
 
@@ -1074,6 +1101,10 @@ and end, in an array form, to maintain the references from the input file.  It
 has two parameters: the type of the tag (as returned by tag_type) and a
 boolean, that indicates if it should be removed from the input stream.
 
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
+
 =cut
 
 sub extract_tag {
@@ -1081,14 +1112,19 @@ sub extract_tag {
     my ($match1,$match2) = ($tag_types[$type]->{beginning},$tag_types[$type]->{end});
     my ($eof,@tag);
     if (defined($tag_types[$type]->{f_extract})) {
+        # <!--# ... -->, <!-- ... -->, <!DOCTYPE ... >, or <![CDATA[ ... ]]>
         ($eof,@tag) = &{$tag_types[$type]->{f_extract}}($self,$remove);
     } else {
+        # <?xml ?>, <? ... ?>, </ tag>, <tag />, or <tag >.
         ($eof,@tag) = $self->get_string_until($match2.">",{include=>1,remove=>$remove,unquoted=>1});
     }
+    # Please note even index of array @tag holds actual text of input line
+    # Please note  odd index of array @tag holds its reference = $filename:$flinenum
     $tag[0] =~ /^<\Q$match1\E(.*)$/s;
     $tag[0] = $1;
     $tag[$#tag-1] =~ /^(.*)\Q$match2\E>$/s;
     $tag[$#tag-1] = $1;
+    # Please note even index of array @tag holds tag string
     return ($eof,@tag);
 }
 
@@ -1135,6 +1171,10 @@ sub breaking_tag {
 This function translates the next tag from the input stream.  Using each
 tag type's custom translation functions.
 
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
+
 =cut
 
 sub treat_tag {
@@ -1143,6 +1183,8 @@ sub treat_tag {
 
     my ($match1,$match2) = ($tag_types[$type]->{beginning},$tag_types[$type]->{end});
     my ($eof,@lines) = $self->extract_tag($type,1);
+    # Please note even index of array @lines holds actual text of input line
+    # Please note  odd index of array @lines holds its reference = $filename:$flinenum
 
     $lines[0] =~ /^(\s*)(.*)$/s;
     my $space1 = $1;
@@ -1292,6 +1334,7 @@ sub treat_attributes {
 #   i: the tag shall be inlined
 #   p: a placeholder shall replace the tag (and its content)
 #   n: a custom tag
+#   f: fold attribute
 #
 # A translatable inline tag in an untranslated tag is treated as a translatable breaking tag.
 sub get_translate_options {
@@ -1311,12 +1354,20 @@ sub get_translate_options {
     if (defined $tag) {
         $inlist = 1;
     }
+    # Note: tags option is deprecated. -->  $inlist should be 0 now
+
     if ($self->{options}{'tagsonly'} eq $inlist) {
+        # Note: tags option is deprecated. -->  $inlist should be 0 now
+        # Default is not to use tagsonly --> You are here.
         $usedefault = 0;
         if (defined $tag) {
             $options = $tag;
             $options =~ s/<.*$//;
         } else {
+            # Note: tags option is deprecated. -->  $tag is undefined
+            #   $self->{options}{'wrap'} = 0 ... xml inherent default
+            #   $self->{options}{'wrap'} = 1 ... docbook overridden default
+            # This sets all tags unlisted in translated nor untranslated to become translated tag normally
             if ($self->{options}{'wrap'}) {
                 $options = "w";
             } else {
@@ -1415,7 +1466,23 @@ sub get_tag_from_list ($$$) {
     return undef;
 }
 
+=head2 WORKING WITH TAGGED CONTENTS
 
+=over 4
+
+
+=item treat_content()
+
+This function gets the text until the next breaking tag (not inline) from the
+input stream.  Translate it using each tag type's custom translation functions.
+
+This works on the array C<< @{$self->{TT}{doc_in}} >> holding input document
+data and reference indirectly via C<< $self->shiftline() >> and C<<
+$self->unshiftline($$) >>.
+
+=back
+
+=cut
 
 sub treat_content {
     my $self = shift;
@@ -1424,22 +1491,33 @@ sub treat_content {
     my $translate = "";
 
     my ($eof,@paragraph)=$self->get_string_until('<',{remove=>1});
+    # Please note even index of array @paragraph holds actual text of input line
+    # Please note  odd index of array @paragraph holds its reference = $filename:$flinenum
 
     while (!$eof and !$self->breaking_tag) {
     NEXT_TAG:
+        # Loop if tag is <!--# ... -->, <!-- ... -->, </tag>, <tag />, or <tag >
         my @text;
         my $type = $self->tag_type;
         my $f_extract = $tag_types[$type]->{'f_extract'};
         if (    defined($f_extract)
             and $f_extract eq \&tag_extract_comment) {
-            # Remove the content of the comments
+	    # if tag is <!--# ... --> or <!-- ... -->, remove this tag from the
+	    # input stream and save its content to @comments for use by
+	    # translate_paragraph.
+            print wrap_mod("po4a::xml::treat_content", dgettext ("po4a", "%s: type='%s'"), $paragraph[1], $type) if $self->{options}{'debug'};
             ($eof, @text) = $self->extract_tag($type,1);
+            # Add "\0" to mark end of each separate comment
             $text[$#text-1] .= "\0";
             if ($tag_types[$type]->{'beginning'} eq "!--#") {
                 $text[0] = "#".$text[0];
             }
             push @comments, @text;
         } else {
+	    # if tag is </tag>, <tag />, or <tag >, get its tag name
+	    # alone in @tag without touching the input stream, then get this
+	    # whole tag with attributes in @text while removing this whole tag
+	    # from the input stream for use by translate_paragraph.
             my ($tmpeof, @tag) = $self->extract_tag($type,0);
             # Append the found inline tag
             ($eof,@text)=$self->get_string_until('>',
@@ -1450,14 +1528,15 @@ sub treat_content {
             # the tag path
             if ($tag_types[$type]->{'end'} eq "") {
                 if ($tag_types[$type]->{'beginning'} eq "") {
-                    # Opening inline tag
+                    # tag is <tag >
                     my $cur_tag_name = $self->get_tag_name(@tag);
                     my $t_opts = $self->get_translate_options($self->get_path($cur_tag_name));
                     if ($t_opts =~ m/p/) {
-                        # We enter a new holder.
-                        # Append a <placeholder ...> tag to the current
-                        # paragraph, and save the @paragraph in the
-                        # current holder.
+			# tag has a placeholder option, append a "<placeholder
+			# type=cur_tag_name id =id_index>" tag to @paragraph.
+			# using $self->get_tag_name(@tag) as cur_tag_name and
+			# using $#{$save_holders[$#save_holders]->{'sub_translations'}} + 1
+                        # as id_index
                         my $last_holder = $save_holders[$#save_holders];
                         my $placeholder_str = "<placeholder type=\"".$cur_tag_name."\" id=\"".($#{$last_holder->{'sub_translations'}}+1)."\"/>";
                         push @paragraph, ($placeholder_str, $text[1]);
@@ -1465,7 +1544,7 @@ sub treat_content {
 
                         $last_holder->{'paragraph'} = \@saved_paragraph;
 
-                        # Then we must push a new holder
+                        # Then we must push a new holder into @save_holders
                         my @new_paragraph = ();
                         my @sub_translations = ();
                         my %folded_attributes;
@@ -1476,13 +1555,16 @@ sub treat_content {
                                           'sub_translations' => \@sub_translations,
                                           'folded_attributes' => \%folded_attributes);
                         push @save_holders, \%new_holder;
-                        @text = ();
 
-                        # The current @paragraph
-                        # (for the current holder)
-                        # is empty.
+                        # reset @text holding the whole tag with attributes
+                        # to empty
+                        @text = ();
+                        # reset the current @paragraph (for the current holder)
+                        # to empty.
                         @paragraph = ();
+
                     } elsif ($t_opts =~ m/f/) {
+			# tag has a "f" option for folded attributes
                         my $tag_full = $self->join_lines(@text);
                         my $tag_ref = $text[1];
                         if ($tag_full =~ m/^<\s*\S+\s+\S.*>$/s) {
@@ -1497,13 +1579,14 @@ sub treat_content {
                         }
                     }
                     unless ($t_opts =~ m/n/) {
+                        # unless "n" for custom (such as non-XML HTML) tag, update @path
                         push @path, $cur_tag_name;
                     }
                 } elsif ($tag_types[$type]->{'beginning'} eq "/") {
-                    # Closing inline tag
+                    # tag is </tag>
 
-                    # Check if this is closing the
-                    # last opening tag we detected.
+                    # Verify this closing tag matches with the last opening tag
+                    # while removing the last opening tag in @path
                     my $test = pop @path;
                     my $name = $self->get_tag_name(@tag);
                     if (!defined($test) ||
@@ -1517,13 +1600,15 @@ sub treat_content {
                     }
 
                     if ($self->get_translate_options($self->get_path($self->get_tag_name(@tag))) =~ m/p/) {
-                        # This closes the current holder.
+			# this closing tag has a placeholder option
 
+                        # revert @path to include this tag for translate_paragraph
                         push @path, $self->get_tag_name(@tag);
                         # Now translate this paragraph if needed.
                         # This will call pushline and append the
                         # translation to the current holder's translation.
                         $self->translate_paragraph(@paragraph);
+                        # remove this tag from @path
                         pop @path;
 
                         # Now that this holder is closed, we can remove
