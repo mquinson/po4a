@@ -15,19 +15,19 @@ push @tests,
   {
     'run' => 'perl ../po4a -f t-02-addendums/article.conf',
     'test' =>
-      'diff -u t-02-addendums/article.ja.xml t-02-addendums/article.ja.xml-good 1>&2',
+      'diff -u tmp/article.ja.xml t-02-addendums/article.ja.xml-good 1>&2',
     'doc' => '(po4a) article.xml with addendum'
   },
   {
     'run' => 'perl ../po4a -f t-02-addendums/book.conf',
     'test' =>
-      'diff -u t-02-addendums/book.ja.xml t-02-addendums/book.ja.xml-good 1>&2',
+      'diff -u tmp/book.ja.xml t-02-addendums/book.ja.xml-good 1>&2',
     'doc' => '(po4a) book.xml with addendum'
   },
   {
     'run' => 'perl ../po4a -f t-02-addendums/book-potin.conf',
     'test' =>
-      'diff -u t-02-addendums/book-auto.ja.xml t-02-addendums/book-auto.ja.xml-good 1>&2 && \
+      'diff -u tmp/book-auto.ja.xml t-02-addendums/book-auto.ja.xml-good 1>&2 && \
        diff -u t-02-addendums/book.po.ja t-02-addendums/book.po.ja-good 1>&2' ,
     'doc' => '(po4a) book.xml with addendum and separate POT input'
   },
