@@ -13,6 +13,18 @@ my @tests;
 
 push @tests,
   {
+    'run' => 'perl ../po4a -f t-02-addendums/article.conf',
+    'test' =>
+      'diff -u t-02-addendums/article.ja.xml t-02-addendums/article.ja.xml-good 1>&2',
+    'doc' => '(po4a) article.xml with addendum'
+  },
+  {
+    'run' => 'perl ../po4a -f t-02-addendums/book.conf',
+    'test' =>
+      'diff -u t-02-addendums/book.ja.xml t-02-addendums/book.ja.xml-good 1>&2',
+    'doc' => '(po4a) book.xml with addendum'
+  },
+  {
     'run' =>
 'perl ../po4a-translate -f man -a t-02-addendums/man.addendum1 -m t-02-addendums/man -p t-02-addendums/man.po-ok -l tmp/man.fr',
     'test' => 'diff -u t-02-addendums/man.fr.add1 tmp/man.fr 1>&2',
