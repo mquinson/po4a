@@ -29,6 +29,8 @@ use File::Path; # mkdir before write
 use Encode;
 use Encode::Guess;
 
+use File::Spec;
+
 =encoding UTF-8
 
 =head1 NAME
@@ -296,7 +298,7 @@ sub process {
 
     if (defined $params{'srcdir'}) {
         chdir $params{'srcdir'};
-        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (srcdir)"), $params{'srcdir'}) if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (srcdir)"), File::Spec->abs2rel($params{'srcdir'})) if $self->debug();
     }
     foreach my $file (@{$params{'po_in_name'}}) {
         print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call readpo(%s)"), $file) if $self->debug();
@@ -332,7 +334,7 @@ sub process {
     }
     if (defined $params{'calldir'}) {
         chdir $params{'calldir'};
-        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (calldir)"), $params{'calldir'}) if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (calldir)"), File::Spec->abs2rel($params{'calldir'})) if $self->debug();
     }
     return $self;
 }
