@@ -563,7 +563,7 @@ sub parse_file {
     # Remove <![ IGNORE [ sections
     # FIXME: we don't support included PO4A-beg-
     my $tmp1 = $origfile;
-    while ($tmp1 =~ m/^(.*?)({PO4A-beg-\s*IGNORE\s*}(?:.+?)<po4aend>)(.*)$/s)
+    while ($tmp1 =~ m/^(.*?)(\{PO4A-beg-\s*IGNORE\s*}(?:.+?)<po4aend>)(.*)$/s)
     {
         my ($begin,$ignored,$end) = ($1, $2, $3);
         my @begin   = split(/\n/, $begin);
