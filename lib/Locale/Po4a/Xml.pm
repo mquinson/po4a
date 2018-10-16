@@ -284,7 +284,7 @@ Prevents it to strip the spaces around the extracted strings.
 
 Canonicalizes the string to translate, considering that whitespaces are not
 important, and wraps the translated document. This option can be overridden
-by custom tag options. See the "tags" option below.
+by custom tag options. See the B<translated> option below.
 
 =item B<unwrap_attributes>
 
@@ -338,10 +338,10 @@ It is generally recommended to fix the input file.
 
 =item B<tagsonly>
 
+Note: This option is deprecated.
+
 Extracts only the specified tags in the "tags" option.  Otherwise, it
 will extract all the tags except the ones specified.
-
-Note: This option is deprecated.
 
 =item B<doctype>
 
@@ -357,6 +357,9 @@ as the basename of the PO file without any .po extension.
 
 =item B<tags>
 
+Note: This option is deprecated.
+You should use the B<translated> and B<untranslated> options instead.
+
 Space-separated list of tags you want to translate or skip.  By default,
 the specified tags will be excluded, but if you use the "tagsonly" option,
 the specified tags will be the only ones included.  The tags must be in the
@@ -368,9 +371,6 @@ the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
 to override the default behavior specified by the global "wrap" option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
-
-Note: This option is deprecated.
-You should use the B<translated> and B<untranslated> options instead.
 
 =item B<attributes>
 
@@ -403,6 +403,9 @@ The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
 when it's within another tag (<bbb>).
 
+Please note a tag should be listed in only one of the B<break>, B<inline>
+B<placeholder>, or B<customtag> setting string.
+
 =item B<inline>
 
 Space-separated list of tags which should be treated as inline.
@@ -432,6 +435,10 @@ when it's within another tag (<bbb>).
 Space separated list of tags that the module should not try to set by
 default in any category.
 
+If you have a tag which has its default setting by the subclass of this module
+but you want to set alternative setting, you need to list that tag as a part of
+the B<nodefault> setting string.
+
 =item B<cpp>
 
 Support C preprocessor directives.
@@ -453,25 +460,8 @@ The tags must be in the form <aaa>, but you can join some
 when it's within another tag (<bbb>).
 
 You can also specify some tag options by putting some characters in front of
-the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
-to override the default behavior specified by the global "wrap" option.
-
-Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
-
-=item B<untranslated>
-
-Space-separated list of tags you do not want to translate.
-
-The tags must be in the form <aaa>, but you can join some
-(<bbb><aaa>), if a tag (<aaa>) should only be considered
-when it's within another tag (<bbb>).
-
-=item B<defaulttranslateoption>
-
-The default categories for tags that are not in any of the translated,
-untranslated, break, inline, or placeholder.
-
-This is a set of letters:
+the tag hierarchy.  This overrides the default behavior specified by the global
+B<wrap> and B<defaulttranslateoption> option.
 
 =over
 
@@ -493,13 +483,44 @@ Tags should be translated as placeholders.
 
 =back
 
+Internally, XML parser care these 4 options: I<w> I<W> I<i> I<p>.
+
+  * Tags listed in B<break> are set to I<w> or I<W> depending on the <wrap> option.
+  * Tags listed in B<inline> are set to I<i>.
+  * Tags listed in B<placeholder> are set to I<p>.
+  * Tags listed in B<untranslated> are without any of these options set.
+
+You can verify actual internal parameter behavior by invoking B<po4a> with
+B<--debug> option.
+
+Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
+
+Please note a tag should be listed in either B<translated> or B<untranslated>
+setting string.
+
+=item B<untranslated>
+
+Space-separated list of tags you do not want to translate.
+
+The tags must be in the form <aaa>, but you can join some
+(<bbb><aaa>), if a tag (<aaa>) should only be considered
+when it's within another tag (<bbb>).
+
+Please note a translatable inline tag in an untranslated tag is treated as a
+translatable breaking tag, I<i> setting is dropped and I<w> or I<W> is set
+depending on the <wrap> option.
+
+=item B<defaulttranslateoption>
+
+The default categories for tags that are not in any of the translated,
+untranslated, break, inline, or placeholder.
+
+This is a set of letters as defined in B<translated> and this setting is only
+valid for translatable tags.
+
 =back
 
 =cut
-# TODO: defaulttranslateoption
-# w => indicate that it is only valid for translatable tags and do not
-#      care about inline/break/placeholder?
-# ...
 
 sub initialize {
     my $self = shift;
