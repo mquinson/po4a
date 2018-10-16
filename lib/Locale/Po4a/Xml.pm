@@ -590,7 +590,7 @@ sub initialize {
 
 =head2 DEFINE WHAT TAGS AND ATTRIBUTES TO TRANSLATE
 
-The simplest customization is to define whicattributes you want
+The simplest customization is to define which tags and attributes you want
 the parser to translate.  This should be done in the initialize function.
 First you should call the main initialize, to get the command-line options,
 and then, append your custom definitions to the options hash.  If you want
