@@ -53,6 +53,28 @@ the file inclusion entities, but you can translate most of those files alone
 (except the typical entities files), and it's usually better to maintain them
 separated.
 
+=head1 OVERRIDE THE DEFAULT BEHAVIOR WITH COMMAND LINE OPTIONS
+
+The default behavior of system provided modules is set to be on the safe side.
+
+For example, the default of B<< <author> >> tag is aiming it to appear under
+B<< <para> >>.  But you may be using it only under B<< <bookinfo> >>.  For this
+case, you may want to translate it independently for each author.
+
+If you don't like the default behavior of the xml module and its derivative
+modules, you can provide command line options to change their behavior.  For
+example, you can add the following to the po4a configuration file:
+
+  opt:"-k 0 -o nodefault=\"<bookinfo> <author>\" \
+            -o break=\"<bookinfo> <author>\" \
+            -o untranslated=\"<bookinfo>\" \
+            -o translated=\"<author>\""
+
+This overrides the default behavior for B<< <bookinfo> >> and B<< <author> >>,
+set B<< <bookinfo> >> and B<< <author> >> to break input data stream on these
+tags, set B<< <bookinfo> >> not to translate its tagged content, and set B<<
+<author> >> to translate its tagged content.
+
 =head1 SEE ALSO
 
 L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<po4a(7)|po4a.7>
@@ -77,6 +99,7 @@ use 5.006;
 use strict;
 use warnings;
 
+use Locale::Po4a::Common;
 use Locale::Po4a::Xml;
 
 use vars qw(@ISA);
@@ -393,9 +416,7 @@ sub initialize {
     # classsynopsis; does not contain text; may be in a para
     # NOTE: It may contain a classsynopsisinfo, which should be
     #       verbatim
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<classsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <classsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <classsynopsis>";
 
     # classsynopsisinfo; contains text;
@@ -404,10 +425,7 @@ sub initialize {
     $self->{options}{'_default_inline'} .= " <classsynopsisinfo>";
 
     # cmdsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect? => not completely. Rewrap afterward?
-    $self->{options}{'_default_untranslated'} .= " W<cmdsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <cmdsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <cmdsynopsis>";
 
     # co; does not contain text; Formatted inline
@@ -507,10 +525,7 @@ sub initialize {
     $self->{options}{'_default_break'} .= " <constraintdef>";
 
     # constructorsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<constructorsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <constructorsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <constructorsynopsis>";
 
     # contractnum; contains text; Formatted inline or as a displayed block
@@ -575,10 +590,7 @@ sub initialize {
     $self->{options}{'_default_break'} .= " <dedication>";
 
     # destructorsynopsis; does not contain text; may be in a para
-    # NOTE: It may be clearer as a verbatim block
-    # XXX: since it is in untranslated class, does the W flag takes
-    #      effect?
-    $self->{options}{'_default_untranslated'} .= " W<destructorsynopsis>";
+    $self->{options}{'_default_untranslated'} .= " <destructorsynopsis>";
     $self->{options}{'_default_placeholder'} .= " <destructorsynopsis>";
 
     # docinfo; does not contain text; removed in v4.0
@@ -775,7 +787,7 @@ sub initialize {
     $self->{options}{'_default_placeholder'} .= " <graphicco>";
 
     # group; does not contain text; Formatted inline
-    $self->{options}{'_default_untranslated'} .= " W<group>";
+    $self->{options}{'_default_untranslated'} .= " <group>";
     $self->{options}{'_default_inline'} .= " <group>";
 
     # guibutton; contains text; Formatted inline
@@ -2038,5 +2050,6 @@ sub initialize {
         lang
         xml:lang';
 
+    print wrap_mod("po4a::docbook::initialize", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
     $self->treat_options;
 }

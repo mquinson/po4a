@@ -29,6 +29,8 @@ use File::Path; # mkdir before write
 use Encode;
 use Encode::Guess;
 
+use File::Spec;
+
 =encoding UTF-8
 
 =head1 NAME
@@ -294,44 +296,46 @@ sub process {
     }
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
 
-    chdir $params{'srcdir'}
-        if (defined $params{'srcdir'});
+    if (defined $params{'srcdir'}) {
+        chdir $params{'srcdir'};
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (srcdir)"), File::Spec->abs2rel($params{'srcdir'})) if $self->debug();
+    }
     foreach my $file (@{$params{'po_in_name'}}) {
-        print STDERR "readpo($file)... " if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call readpo(%s)"), $file) if $self->debug();
         $self->readpo($file);
-        print STDERR "done.\n" if $self->debug()
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done readpo(%s)"), $file) if $self->debug();
     }
     foreach my $file (@{$params{'file_in_name'}}) {
-        print STDERR "read($file)..." if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call read(%s)"), $file) if $self->debug();
         $self->read($file);
-        print STDERR "done.\n"  if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done read(%s)"), $file) if $self->debug();
     }
-    print STDERR "parse..." if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call parse()"))if $self->debug();
     $self->parse();
-    print STDERR "done.\n" if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done parse()"))if $self->debug();
     foreach my $file (@{$params{'addendum'}}) {
-        print STDERR "addendum($file)..." if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call addendum(%s)"), $file) if $self->debug();
         $self->addendum($file) || die "An addendum failed\n";
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done addendum(%s)"), $file) if $self->debug();
     }
     chdir $params{'destdir'}
         if (defined $params{'destdir'});
     if (defined $params{'file_out_name'}) {
-        print STDERR "write(".$params{'file_out_name'}.")... "
-            if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call write(%s)"), $params{'file_out_name'}) if $self->debug();
         $self->write($params{'file_out_name'});
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done write(%s)"), $params{'file_out_name'}) if $self->debug();
     }
     chdir $params{'srcdir'}
         if (defined $params{'srcdir'});
     if (defined $params{'po_out_name'}) {
-        print STDERR "writepo(".$params{'po_out_name'}.")... "
-             if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call writepo(%s)"), $params{'po_out_name'}) if $self->debug();
         $self->writepo($params{'po_out_name'});
-        print STDERR "done.\n" if $self->debug();
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done writepo(%s)"), $params{'po_out_name'}) if $self->debug();
     }
-    chdir $params{'calldir'}
-        if (defined $params{'calldir'});
+    if (defined $params{'calldir'}) {
+        chdir $params{'calldir'};
+        print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Chdir %s (calldir)"), File::Spec->abs2rel($params{'calldir'})) if $self->debug();
+    }
     return $self;
 }
 
@@ -366,9 +370,9 @@ sub new {
     $self->{TT}=();
     $self->{TT}{po_in}=Locale::Po4a::Po->new(\%po_options);
     $self->{TT}{po_out}=Locale::Po4a::Po->new(\%po_options);
-    # Warning, this is an array of array:
-    #  The document is splited on lines, and for each
-    #  [0] is the line content, [1] is the reference [2] the type
+    # Warning, $self->{TT}{doc_in} is an array of array:
+    #  The document is split on lines, and for each array in array
+    #  [0] is the line content, [1] is the reference $filename:$linenum
     $self->{TT}{doc_in}=();
     $self->{TT}{doc_out}=();
     if (defined $options{'verbose'}) {
@@ -394,11 +398,19 @@ sub new {
 
 =item read($)
 
-Add another input document at the end of the existing one. The argument is
-the filename to read.
+Add another input document data at the end of the existing array
+C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read.
+
+This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an
+array of strings with alternating meanings.
+ * The string C<$textline> holding each line of the input text data.
+ * The string C<< $filename:$linenum >> holding its location and called as
+   "reference".
 
 Please note that it does not parse anything. You should use the parse()
 function when you're done with packing input files into the document.
+
+Please note C<$linenum> starts with 1.
 
 =cut
 
@@ -439,6 +451,10 @@ sub read() {
 =item write($)
 
 Write the translated document to the given filename.
+
+This translated document data are provided by:
+ * C<< $self->docheader() >> holding the header text for the plugin, and
+ * C<< @{$self->{TT}{doc_out}} >> holding each line of the main translated text in the array.
 
 =cut
 
@@ -625,7 +641,7 @@ sub mychomp {
 sub addendum {
     my ($self,$filename) = @_;
 
-    print STDERR "Apply addendum $filename..." if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::addendum", dgettext("po4a", "Apply addendum: %s"), $filename) if $self->debug();
     unless ($filename) {
         warn wrap_msg(dgettext("po4a",
             "Can't apply addendum when not given the filename"));
@@ -638,15 +654,38 @@ sub addendum {
         addendum_parse($filename);
     return 0 if ($errcode);
 
-    print STDERR "mode=$mode;pos=$position;bound=$boundary;bmode=$bmode;ctn=$content\n"
-      if $self->debug();
-
     # We only recode the addendum if an origin charset is specified, else we
     # suppose it's already in the output document's charset
     if (defined($self->{TT}{'addendum_charset'}) &&
         length($self->{TT}{'addendum_charset'})) {
         Encode::from_to($content,$self->{TT}{'addendum_charset'},
             $self->get_out_charset);
+    }
+
+    # In order to make addendum more intuitive, each array item of
+    # @{$self->{TT}{doc_out}} must not have internal "\n".  But previous parser
+    # code may put multiple internal "\n" to address things like placeholder
+    # tag handling.  Let's normalize array content.
+    # Use internal "\n" as delimiter but keep it by using the lookbehind trick.
+    @{$self->{TT}{doc_out}} = map { split /(?<=\n)/, $_ } @{$self->{TT}{doc_out}};
+
+    # Bugs around addendum is hard to understand.  So let's print involved data explicitly.
+    if ($self->debug()) {
+        print STDERR "Addendum position regex=$position\n";
+        print STDERR "Addendum mode=$mode\n";
+	if ($mode eq "after") {
+            print STDERR "Addendum boundary regex=$boundary\n";
+            print STDERR "Addendum boundary mode=$bmode\n";
+        }
+        print STDERR "Addendum content (begin):\n";
+        print STDERR "$content";
+        print STDERR "Addendum content (end)\n";
+        print STDERR "Output items searched for the addendum insertion position:\n";
+        foreach my $item (@{$self->{TT}{doc_out}}) {
+            print STDERR $item;
+            print STDERR "\n----- [ search item end marker with a preceding newline ] -----\n";
+	}
+        print STDERR "Start searching addendum insertion position...\n";
     }
 
     my $found = scalar grep { /$position/ } @{$self->{TT}{doc_out}};
@@ -708,40 +747,49 @@ sub addendum {
         } while (scalar @{$self->{TT}{doc_out}});
         @{$self->{TT}{doc_out}} = @newres;
     }
-    print STDERR "done.\n" if $self->debug();
+    print STDERR wrap_mod("po4a::transtractor::addendum", dgettext("po4a", "Done addendum: %s"), $filename) if $self->debug();
     return 1;
 }
 
 =back
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
+=head1 INTERNAL FUNCTIONS used to write derivative parsers
 
 =head2 Getting input, providing output
 
 Four functions are provided to get input and return output. They are very
-similar to shift/unshift and push/pop. The first pair is about input, while
-the second is about output. Mnemonic: in input, you are interested in the
-first line, what shift gives, and in output you want to add your result at
-the end, like push does.
+similar to shift/unshift and push/pop of Perl.
+
+ * Perl shift returns the first array item and drop it from the array.
+ * Perl unshift prepends an item to the array as the first array item.
+ * Perl pop returns the last array item and drop it from the array.
+ * Perl push appends an item to the array as the last array item.
+
+The first pair is about input, while the second is about output. Mnemonic: in
+input, you are interested in the first line, what shift gives, and in output
+you want to add your result at the end, like push does.
 
 =over 4
 
 =item shiftline()
 
-This function returns the next line of the doc_in to be parsed and its
-reference (packed as an array).
+This function returns the first line to be parsed and its corresponding
+reference (packed as an array) from the array C<< @{$self->{TT}{doc_in}} >> and
+drop these first 2 array items.  Here, the reference is provided by a string
+C<< $filename:$linenum >>.
 
 =item unshiftline($$)
 
-Unshifts a line of the input document and its reference.
+Unshifts the last shifted line of the input document and its corresponding
+reference back to the head of C<< {$self->{TT}{doc_in}} >>.
 
 =item pushline($)
 
-Push a new line to the doc_out.
+Push a new line to the end of C<< {$self->{TT}{doc_out}} >>.
 
 =item popline()
 
-Pop the last pushed line from the doc_out.
+Pop the last pushed line from the end of C<< {$self->{TT}{doc_out}} >>.
 
 =back
 

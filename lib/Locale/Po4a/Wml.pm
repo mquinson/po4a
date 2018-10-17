@@ -67,6 +67,7 @@ use vars qw(@ISA @EXPORT);
 @ISA = qw(Locale::Po4a::Xhtml);
 @EXPORT = qw();
 
+use Locale::Po4a::Common;
 use Locale::Po4a::Xhtml;
 use File::Temp;
 
@@ -76,6 +77,7 @@ sub initialize {
 
     $self->SUPER::initialize(%options);
 
+    print wrap_mod("po4a::wml", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
     $self->treat_options;
 }
 
@@ -109,7 +111,7 @@ sub read {
      while ($file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m) {
          my $line = $1;
          print STDERR "PROTECT HEADER: $line\n"
-             if $self->debug();
+             if $self->{options}{'debug'};
          if ($line =~ m/title="([^"]*)"/) {
              $file = "<title>$1</title>" . $file;
          }

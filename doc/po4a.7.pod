@@ -552,10 +552,21 @@ header indicating where in the produced document they should be placed. The
 rest of the addendum file will be added verbatim at the determined position of
 the resulting document.
 
-The header has a pretty rigid syntax: It must begin with the string
-B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list of
-I<key>B<=>I<value> fields. White spaces ARE important. Note that you cannot use
-the semi-colon char (B<;>) in the value, and that quoting it doesn't help.
+The header line which specify context has a pretty rigid syntax: It must begin
+with the string B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list
+of I<key>B<=>I<value> fields. White spaces ARE important. Note that you cannot
+use the semi-colon char (B<;>) in the value, and that quoting it doesn't help.
+Optionally, spaces (B< >) may be inserted before I<key> for readability.
+
+Although this context search may be considered to operate roughly on each line
+of the translated document, it actually operates on the internal data string of
+the translated document.  This internal data string may be a text spanning a
+paragraph containing multiple lines or may be a XML tag itself alone.  The
+exact I<insertion point> of the addendum must be before or after the internal
+data string and can not be within the internal data string.
+
+The actual internal data string of the translated document can be visualized by
+executing po4a in debug mode.
 
 Again, it sounds scary, but the examples given below should help you to find
 how to write the header line you need. To illustrate the discussion, assume
@@ -566,53 +577,56 @@ Here are the possible header keys:
 
 =over 4
 
-=item B<position> (mandatory)
-
-a Perl regexp. The addendum will be placed near the line matching this regexp.
-Note that we're speaking about the translated document here, not the
-original. If more than a line match this expression (or none), the addition
-will fail. It is indeed better to report an error than inserting the
-addendum at the wrong location.
-
-This line is called I<position point> in the following. The point where the
-addendum is added is called I<insertion point>. Those two points are near one
-from another, but not equal. For example, if you want to insert a new section,
-it is easier to put the I<position point> on the title of the preceding section
-and explain po4a where the section ends (remember that I<position point> is
-given by a regexp which should match a unique line).
-
-The localization of the I<insertion point> with regard to the I<position point>
-is controlled by the B<mode>, B<beginboundary> and B<endboundary> fields, as
-explained below.
-
-In our case, we would have:
-
-     position=<title>About this document</title>
-
-
 =item B<mode> (mandatory)
 
-It can be either the string B<before> or B<after>, specifying the position of
-the addendum, relative to the I<position point>. In case B<before> is given
-the I<insertion point> will placed exactly before the I<position point>. The
-B<after> behaviour is detailed bellow.
+It can be either the string B<before> or B<after>.
 
-Since we want the new section to be placed below the one we are matching, we
-have:
+If B<mode=before>, the I<insertion point> is determined by one step regex match
+specified by the B<position> argument regex.  The I<insertion point> is
+immediately before the uniquely matched internal data string of the translated
+document. 
+
+If B<mode=after>, the I<insertion point> is determined by two step regex
+matches specified by the B<position> argument regex; and by the
+B<beginboundary> or B<endboundary> argument regex.
+
+Since there may be multiple sections for the assumed case, let's use 2 step
+approach.
 
      mode=after
+
+=item B<position> (mandatory)
+
+A Perl regexp for specifying the context.
+
+If more than one internal data strings match this expression (or none), the
+search for the I<insertion point> and addition of the addendum will fail. It is
+indeed better to report an error than inserting the addendum at the wrong
+location.
+
+If B<mode=before>, the I<insertion point> is specified to be immediately before
+the internal data string uniquely matching the B<position> argument regex.
+
+If B<mode=after>, the search for the I<insertion point> is narrowed down to the
+data after the internal data string uniquely matching the B<position> argument
+regex.  The exact I<insertion point> is further specified by the
+B<beginboundary> or B<endboundary>.
+
+In our case, we need to skip several preceding sections by narrowing down
+search using the section title string.
+
+     position=About this document
+
+(In reality, you need to use the translated section title string here,
+instead.)
 
 =item B<beginboundary> (used only when B<mode=after>, and mandatory in that case)
 
 =item B<endboundary> (idem)
 
-regexp matching the end of the section after which the addendum goes.
-
-When B<mode=after>, the I<insertion point> is after the I<position point>, but
-not directly after! It is placed at the end of the section beginning at the
-I<position point>, i.e., after or before the line matched by the
-I<???>B<boundary> argument, depending on whether you used B<beginboundary> or
-B<endboundary>.
+A second Perl regexp required only when B<mode=after>. The addendum will be
+placed immediately before or after the first internal data string matching the
+B<beginboundary> or B<endboundary> argument regexp, respectively.
 
 In our case, we can choose to indicate the end of the section we match by
 adding:
@@ -650,16 +664,15 @@ document, you can use either of those header lines:
  PO4A-HEADER: mode=after; position=About this document; endboundary=</section>
  PO4A-HEADER: mode=after; position=About this document; beginboundary=<section>
 
-
 =item
 If you want to add something after the following nroff section:
 
   .SH "AUTHORS"
 
-you should put a B<position> matching this line, and a B<beginboundary>
-matching the beginning of the next section (i.e., B<^\.SH>). The addendum will
-then be added B<after> the I<position point> and immediately B<before> the
-first line matching the B<beginboundary>. That is to say:
+You should select two step approach by setting B<mode=after>.  Then you should
+narrow down search to the line after B<AUTHORS> with the B<position> argument
+regex.  Then, you should match the beginning of the next section (i.e.,
+B<^\.SH>) with the B<beginboundary> argument regex. That is to say:
 
  PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\.SH
 
@@ -677,7 +690,7 @@ it's not unique), and give an B<endboundary> matching nothing. Don't use simple
 strings here like B<"EOF">, but prefer those which have less chance to be in
 your document.
 
- PO4A-HEADER:mode=after;position=<title>About</title>;beginboundary=FakePo4aBoundary
+ PO4A-HEADER:mode=after;position=About this document;beginboundary=FakePo4aBoundary
 
 =back
 
@@ -796,7 +809,9 @@ the input PO). Here is a graphical representation of this:
 
 This little bone is the core of all the po4a architecture. If you omit the
 input PO and the output document, you get B<po4a-gettextize>. If you provide
-both input and disregard the output PO, you get B<po4a-translate>.
+both input and disregard the output PO, you get B<po4a-translate>.  The B<po4a>
+calls TransTractor twice and calls B<msgmerge -U> between these TransTractor
+invocations to provide one-stop solution with a single configuration file.
 
 TransTractor::parse() is a virtual function implemented by each module. Here
 is a little example to show you how it works. It parses a list of paragraphs,
@@ -822,6 +837,13 @@ each of them beginning with B<E<lt>pE<gt>>.
  18     return; # Did not got a defined line? End of input file.
  19   }
  20 }
+
+On line 6 and 7, we encounter C<shiftline()> and C<unshiftline()>.  These help
+you to read and unread the head of internal input data stream of master
+document into the line string and its reference.  Here, the reference is
+provided by a string C<< $filename:$linenum >>.  Please remember Perl only has
+one dimensional array data structure.  So codes handling the internal input
+data stream line are a bit cryptic.
 
 On line 6, we encounter B<E<lt>pE<gt>> for the second time. That's the signal
 of the next paragraph. We should thus put the just obtained line back into
