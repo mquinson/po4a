@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2018-10-19 11:23+0200\n"
 "PO-Revision-Date: 2018-10-21 09:48+0000\n"
-"Last-Translator: brandelune <brandelune@gmail.com>\n"
+"Last-Translator: Martin Quinson <martin.quinson@ens-rennes.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
 "\n"
 "Language: fr\n"
@@ -572,7 +572,7 @@ msgid ""
 " <- source files ->|<--------- build results ----------------->\n"
 "\n"
 msgstr ""
-" <- fichiers files ->|<--------- résultats de la compilation "
+" <- fichiers source ->|<--------- résultats de la compilation "
 "----------------->\n"
 "\n"
 
@@ -885,20 +885,16 @@ msgstr "Plus formellement, le format est le S<suivant :>"
 
 #. type: verbatim
 #: po4a:66
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
-#| "                  (add_<lang>:<modifier>*<addendum_path>)*\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
 "                  (pot_in:<filtered_master_doc>)? \\\n"
 "                  (add_<lang>:<modifier>*<addendum_path>)*\n"
 "\n"
 msgstr ""
-" [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
-"                  (pot_in:<filtered_master_doc>)? \\\n"
-"                  (add_<lang>:<modifier>*<addendum_path>)*\n"
+" [type: <format>] <doc_maître> (<lang>:<doc_traduit>)* \\\n"
+"                  (pot_in:<doc_maître_filtré>)? \\\n"
+"                  (add_<lang>:<modificateur>*<addendum>)*\n"
 "\n"
 
 #. type: textblock
@@ -911,6 +907,13 @@ msgid ""
 "can be used to create the external filtering program and call it before "
 "invoking B<po4a>."
 msgstr ""
+"Si B<pot_in> est spécifié, I<doc_maître_filtré> est utilisé à la place de "
+"I<doc_maître> pour produire le fichier POT. Cela offre une grande "
+"flexibilité pour s'assurer que certain contenus ne seront pas inclus dans le "
+"fichier PO. Vous pouvez utiliser l'outil de votre choix pour ce filtrage, "
+"comme par exemple le préprocesseur C (B<cpp>) ou un utilitaire de "
+"transformation XSL (tel que B<xslproc>). Assurez-vous simplement d'effectuer "
+"ce filtrage avant d'invoquer B<po4a>."
 
 #. type: textblock
 #: po4a:68
