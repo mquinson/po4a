@@ -750,5 +750,7 @@ Tested successfully on simple text files and NEWS.Debian files.
 
  Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
+ Copyright 2008-2009 by Jonas Smedegaard <dr@jones.dk>.
+
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
