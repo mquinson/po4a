@@ -18,6 +18,7 @@ push @tests,
 
 my @markdown_tests = qw(MarkDown PandocHeaderMultipleLines PandocOnlyAuthor
   PandocTitleAndDate PandocMultipleAuthors PandocOnlyTitle PandocTitleAuthors
+  PandocFencedCodeBlocks
   MarkDownNestedLists MarkDownRules);
 for my $markdown_test (@markdown_tests) {
 

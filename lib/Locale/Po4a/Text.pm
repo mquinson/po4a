@@ -570,6 +570,34 @@ sub parse_markdown {
         $self->pushline($line."\n");
         $paragraph="";
         $end_of_paragraph = 1;
+    } elsif ($line =~ /^([ ]{0,3})(([~`])\3{2,})(\s*)([^`]*)\s*$/) {
+        my $fence_space_before = $1;
+        my $fence = $2;
+        my $fencechar = $3;
+        my $fence_space_between = $4;
+        my $info_string = $5;
+        # fenced code block
+        do_paragraph($self,$paragraph,$wrapped_mode);
+        $wrapped_mode = 0;
+        $paragraph="";
+        my $s = "";
+        $s = $self->translate($info_string,
+                                 $self->{ref},
+                                 "Code fence info string",
+                                 "wrap" => 0)
+            if ($info_string);
+        $self->pushline($fence_space_before.$fence.$fence_space_between.$s."\n");
+        do_paragraph($self,$paragraph,$wrapped_mode);
+        $paragraph="";
+        my ($nextline, $nextref) = $self->shiftline();
+        while ($nextline !~ /^\s{0,3}$fence$fencechar*\s*$/) {
+            $paragraph .= "$nextline\n";
+            ($nextline, $nextref) = $self->shiftline();
+        }
+        do_paragraph($self,$paragraph,$wrapped_mode);
+        $self->pushline($nextline."\n");
+        $paragraph="";
+        $end_of_paragraph = 1;
     } elsif (   $line =~ /^\s*\[\[\!\S+\s*$/     # macro begin
              or $line =~ /^\s*"""\s*\]\]\s*$/) { # """ textblock inside macro end
         # Avoid translating Markdown lines containing only markup
