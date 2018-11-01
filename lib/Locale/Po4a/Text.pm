@@ -577,8 +577,7 @@ sub parse_markdown {
         $paragraph="";
         $wrapped_mode = 1;
         $self->pushline("$line\n");
-    } elsif (    $line =~ /^#/            # headline
-              or $line =~ /^\s*\[\[\!\S[^\]]*\]\]\s*$/) { # sole macro
+    } elsif ($line =~ /^\s*\[\[\!\S[^\]]*\]\]\s*$/) { # sole macro
         # Preserve some Markdown markup as a single line
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="$line\n";
