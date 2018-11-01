@@ -564,11 +564,12 @@ sub parse_markdown {
                                  "wrap" => 0);
         $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
         $wrapped_mode = 1;
-    } elsif (($paragraph eq "") and
-             ($line =~ /^((\*\s*){3,}|(-\s*){3,}|(_\s*){3,})$/)) {
+    } elsif ($line =~ /^[ ]{0,3}([*_-])\s*(?:\1\s*){2,}$/) {
         # Horizontal rule
-        $wrapped_mode = 1;
+        do_paragraph($self,$paragraph,$wrapped_mode);
         $self->pushline($line."\n");
+        $paragraph="";
+        $end_of_paragraph = 1;
     } elsif (   $line =~ /^\s*\[\[\!\S+\s*$/     # macro begin
              or $line =~ /^\s*"""\s*\]\]\s*$/) { # """ textblock inside macro end
         # Avoid translating Markdown lines containing only markup

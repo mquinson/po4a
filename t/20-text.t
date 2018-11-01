@@ -18,7 +18,7 @@ push @tests,
 
 my @markdown_tests = qw(MarkDown PandocHeaderMultipleLines PandocOnlyAuthor
   PandocTitleAndDate PandocMultipleAuthors PandocOnlyTitle PandocTitleAuthors
-  MarkDownNestedLists);
+  MarkDownNestedLists MarkDownRules);
 for my $markdown_test (@markdown_tests) {
 
     # The nested lists currently fail for markdown.
