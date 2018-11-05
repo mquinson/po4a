@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2018-10-19 11:23+0200\n"
-"PO-Revision-Date: 2018-10-14 02:27+0000\n"
-"Last-Translator: ButterflyOfFire <ButterflyOfFire@protonmail.com>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/"
-">\n"
+"PO-Revision-Date: 2018-10-25 20:41+0000\n"
+"Last-Translator: Martin Quinson <martin.quinson@ens-rennes.fr>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 3.2.1\n"
+"X-Generator: Weblate 3.3-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -515,7 +515,7 @@ msgstr ""
 #. type: textblock
 #: po4a:31
 msgid "Normal case without specifying B<pot_in>:"
-msgstr ""
+msgstr "Cas normal sans spécifier B<pot_in> :"
 
 #. type: verbatim
 #: po4a:32
@@ -524,6 +524,9 @@ msgid ""
 " <- source files ->|<--------- build results --------------->\n"
 "\n"
 msgstr ""
+" <- fichiers source ->|<--------- résultat de la compilation --------------->"
+"\n"
+"\n"
 
 #. type: verbatim
 #: po4a:33
@@ -543,11 +546,24 @@ msgid ""
 "     the translation contents)\n"
 "\n"
 msgstr ""
+" addendum ----------------------------------+\n"
+"                                            |\n"
+" document maître --+---------------------+  |\n"
+"                   V                     +--+--> traductions\n"
+" anciens fichiers PO -----+-→ fichiers PO mis à jour +  \n"
+"      ^                      |\n"
+"      |                      V\n"
+"      +<.....................+\n"
+"    (les fichiers PO mis à jour sont copiés\n"
+"     manuellement vers la source de la version\n"
+"     suivante tout en mettant à jour manuellement\n"
+"     le contenu des traductions)\n"
+"\n"
 
 #. type: textblock
 #: po4a:34
 msgid "Special case with specifying B<pot_in>:"
-msgstr ""
+msgstr "Cas spécial en spécifiant B<pot_in> :"
 
 #. type: verbatim
 #: po4a:35
@@ -556,6 +572,9 @@ msgid ""
 " <- source files ->|<--------- build results ----------------->\n"
 "\n"
 msgstr ""
+" <- fichiers source ->|<--------- résultats de la compilation "
+"----------------->\n"
+"\n"
 
 #. type: verbatim
 #: po4a:36
@@ -578,15 +597,25 @@ msgid ""
 "     the translation contents)\n"
 "\n"
 msgstr ""
+" document maître --+--------------+\n"
+"                   :              |\n"
+" prog de           :     doc      v\n"
+" filtrage =========X--> maître    |\n"
+" externe                filtré    +----> traductions\n"
+"                          |       ^\n"
+"                          V       |\n"
+" anciens fichiers PO ->---+--> fichiers PO à jour\n"
+"      ^                           |\n"
+"      |                           V\n"
+"      +<..........................+\n"
+"    (les fichiers PO mis à jour sont copiés\n"
+"     manuellement vers la source de la version\n"
+"     suivante tout en mettant à jour manuellement\n"
+"     le contenu des traductions)\n"
+"\n"
 
 #. type: textblock
 #: po4a:37
-#, fuzzy
-#| msgid ""
-#| "The dataflow cannot be inversed in this tool, and changes in translations "
-#| "are overwritten by the content of the PO files. As a matter of fact, this "
-#| "tool cannot be used to convert existing translations to the po4a system. "
-#| "For that task, please refer to L<po4a-gettextize(1)>."
 msgid ""
 "The dataflow cannot be reversed in this tool, and changes in translations "
 "are overwritten by the content of the PO files. As a matter of fact, this "
@@ -810,13 +839,7 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:63
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
-#| "              de:doc/de/mein_kram.sgml\n"
-#| " [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \\\n"
-#| "             add_fr:doc/l10n/script.fr.add\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
 "              de:doc/de/mein_kram.sgml\n"
@@ -831,6 +854,9 @@ msgstr ""
 "              de:doc/de/mein_kram.sgml\n"
 " [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \\\n"
 "             add_fr:doc/l10n/script.fr.add\n"
+" [type: docbook] doc/script.xml fr:doc/fr/script.xml \\\n"
+"             de:doc/de/script.xml \\\n"
+"             pot_in:doc/script.filtered.xml\n"
 "\n"
 
 #. type: textblock
@@ -853,11 +879,7 @@ msgstr "Plus formellement, le format est le S<suivant :>"
 
 #. type: verbatim
 #: po4a:66
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
-#| "                  (add_<lang>:<modifier>*<addendum_path>)*\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
 "                  (pot_in:<filtered_master_doc>)? \\\n"
@@ -865,6 +887,7 @@ msgid ""
 "\n"
 msgstr ""
 " [type: <format>] <doc_maître> (<lang>:<doc_traduit>)* \\\n"
+"                  (pot_in:<doc_maître_filtré>)? \\\n"
 "                  (add_<lang>:<modificateur>*<addendum>)*\n"
 "\n"
 
@@ -878,6 +901,13 @@ msgid ""
 "can be used to create the external filtering program and call it before "
 "invoking B<po4a>."
 msgstr ""
+"Si B<pot_in> est spécifié, I<doc_maître_filtré> est utilisé à la place de "
+"I<doc_maître> pour produire le fichier POT. Cela offre une grande "
+"flexibilité pour s'assurer que certain contenus ne seront pas inclus dans le "
+"fichier PO. Vous pouvez utiliser l'outil de votre choix pour ce filtrage, "
+"comme par exemple le préprocesseur C (B<cpp>) ou un utilitaire de "
+"transformation XSL (tel que B<xslproc>). Assurez-vous simplement d'effectuer "
+"ce filtrage avant d'invoquer B<po4a>."
 
 #. type: textblock
 #: po4a:68
@@ -3904,13 +3934,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:126
-#, fuzzy
-#| msgid ""
-#| "The header has a pretty rigid syntax: It must begin with the string "
-#| "B<PO4A-HEADER:>, followed by a semi-colon (B<;>) separated list of "
-#| "I<key>B<=>I<value> fields. White spaces ARE important. Note that you "
-#| "cannot use the semi-colon char (B<;>) in the value, and that quoting it "
-#| "doesn't help."
 msgid ""
 "The header line which specify context has a pretty rigid syntax: It must "
 "begin with the string B<PO4A-HEADER:>, followed by a semi-colon (B<;>) "
@@ -3919,11 +3942,13 @@ msgid ""
 "quoting it doesn't help.  Optionally, spaces (B< >) may be inserted before "
 "I<key> for readability."
 msgstr ""
-"Les en-têtes ont une syntaxe relativement S<rigide :> ils doivent commencer "
-"par la chaîne B<PO4A-HEADER:>, suivie par une liste de champs de la forme "
-"I<clef>B<=>I<valeur> séparés par des points-virgules. Les espaces sont "
-"B<importants>. Notez qu’il n’est pas possible d’utiliser de point-virgule "
-"dans la valeur, même en la plaçant entre des guillemets."
+"Les lignes d'en-têtes spécifiant le contexte ont une syntaxe relativement S<"
+"rigide :> ils doivent commencer par la chaîne B<PO4A-HEADER:>, suivie par "
+"une liste de champs de la forme I<clef>B<=>I<valeur> séparés par des points-"
+"virgules. Les espaces sont B<importants>. Notez qu’il n’est pas possible d’"
+"utiliser de point-virgule dans la valeur, même en la plaçant entre des "
+"guillemets. Il est possible d'ajouter des espaces (B< >) avant le mot I<cle> "
+"pour améliorer la lisibilité."
 
 #. type: textblock
 #: doc/po4a.7.pod:127
@@ -3935,6 +3960,14 @@ msgid ""
 "alone.  The exact I<insertion point> of the addendum must be before or after "
 "the internal data string and can not be within the internal data string."
 msgstr ""
+"Bien que cette recherche contextuelle puisse être considérée comme opérant à "
+"peu près sur toutes les lignes du document traduit, elle opère en fait sur "
+"la chaîne de caractères des données internes à po4a. Cette chaîne de "
+"caractères des données internes peut être aussi bien un texte s'étendant sur "
+"un paragraphe et contenant plusieurs lignes, ou bien peut être un marqueur "
+"XML isolé. Le I<point d'insertion> exact de l'addendum doit donc être placé "
+"avant ou après cette chaîne de caractères des données internes et ne peut "
+"pas être à l'intérieur de celle-ci."
 
 #. type: textblock
 #: doc/po4a.7.pod:128
@@ -3942,6 +3975,8 @@ msgid ""
 "The actual internal data string of the translated document can be visualized "
 "by executing po4a in debug mode."
 msgstr ""
+"La chaîne de caractères des données internes du document traduit peut être "
+"visualisée en exécutant po4a en mode débogage."
 
 #. type: textblock
 #: doc/po4a.7.pod:129
@@ -3969,7 +4004,7 @@ msgstr "B<mode> (obligatoire)"
 #. type: textblock
 #: doc/po4a.7.pod:132
 msgid "It can be either the string B<before> or B<after>."
-msgstr ""
+msgstr "Peut être soit la chaîne B<avant> ou B<après>."
 
 #. type: textblock
 #: doc/po4a.7.pod:133
