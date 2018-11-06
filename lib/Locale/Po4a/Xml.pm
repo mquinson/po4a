@@ -483,7 +483,7 @@ Tags should be translated as placeholders.
 
 =back
 
-Internally, XML parser care these 4 options: I<w> I<W> I<i> I<p>.
+Internally, the XML parser only cares about these four options: I<w> I<W> I<i> I<p>.
 
   * Tags listed in B<break> are set to I<w> or I<W> depending on the <wrap> option.
   * Tags listed in B<inline> are set to I<i>.
@@ -636,7 +636,7 @@ options.
 If you don't like the default behavior of this xml module and its derivative
 modules, you can provide command line options to change their behavior.
 
-See L<Locale::Po4a::Docbook(3pm)|Locale::Po4a::Docbook>, 
+See L<Locale::Po4a::Docbook(3pm)|Locale::Po4a::Docbook>,
 
 
 =head2 OVERRIDING THE found_string FUNCTION
@@ -2249,8 +2249,8 @@ L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
- Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>
+ Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>
+ Copyright © 2008-2009 Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
