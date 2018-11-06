@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# Copyright (c) 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright © 2004-2007 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 #
 # This file is part of po4a.
 #
@@ -56,7 +56,7 @@ L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+Copyright © 2004-2007 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).

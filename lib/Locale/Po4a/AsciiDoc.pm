@@ -963,9 +963,9 @@ Tested successfully on simple AsciiDoc files.
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
- Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.
- Copyright 2017 by Martin Quinson <mquinson#debian.org>.
+ Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright © 2012 Denis BARBIER <barbier@linuxfr.org>.
+ Copyright © 2017 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

@@ -152,7 +152,7 @@ L<Locale::Po4a::Yaml(3pm)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002,2003,2004,2005,2014,2017 by SPI, inc.
+Copyright © 2002-2005, 2014, 2017 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

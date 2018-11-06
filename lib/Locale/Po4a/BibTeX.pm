@@ -146,7 +146,7 @@ sub do_paragraph {
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright 2006 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright © 2006 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

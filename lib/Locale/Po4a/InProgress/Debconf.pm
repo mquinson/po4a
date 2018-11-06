@@ -16,7 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 
+# Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 #
 ########################################################################
@@ -213,7 +213,7 @@ adaptation for po4a was done by:
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright 2005 by SPI, inc.
+ Copyright © 2005 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

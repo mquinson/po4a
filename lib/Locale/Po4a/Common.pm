@@ -1,6 +1,6 @@
 # Locale::Po4a::Common -- Common parts of the po4a scripts and utils
 #
-# Copyright 2005 by Jordi Vilalta <jvprat@gmail.com>
+# Copyright © 2005 Jordi Vilalta <jvprat@gmail.com>
 #
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -105,8 +105,8 @@ sub show_version {
 
     print sprintf(gettext(
         "%s version %s.\n".
-        "written by Martin Quinson and Denis Barbier.\n\n".
-        "Copyright (C) 2002, 2003, 2004 Software in the Public Interest, Inc.\n".
+        "Written by Martin Quinson and Denis Barbier.\n\n".
+        "Copyright © 2002-2018 Software in the Public Interest, Inc.\n".
         "This is free software; see source code for copying\n".
         "conditions. There is NO warranty; not even for\n".
         "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
@@ -239,7 +239,7 @@ __END__
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2005 by SPI, inc.
+Copyright © 2005 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

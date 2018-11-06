@@ -8,8 +8,8 @@
 # This code extracts plain text from tags and attributes on DocBook XML
 # documents.
 #
-# Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
-# Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>
+# Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>
+# Copyright © 2007-2009 Nicolas François <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -85,8 +85,8 @@ L<Locale::Po4a::TransTractor(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
- Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>
+ Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>
+ Copyright © 2007-2009 Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

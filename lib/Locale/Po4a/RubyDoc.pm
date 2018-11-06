@@ -1,7 +1,7 @@
 # Locale::Po4a::RubyDoc -- Convert Ruby Document data to PO file, for translation
 # version 0.15
 #
-# Copyright (c) 2016-2017  Francesco Poli <invernomuto@paranoici.org>
+# Copyright © 2016-2017 Francesco Poli <invernomuto@paranoici.org>
 #
 # This work is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,13 +22,13 @@
 # from the source of rdtool, under the terms of the GNU General Public
 # License, version 2 or later.
 # These parts are originally:
-# Copyright (c) 2004       MoonWolf <moonwolf@moonwolf.com>
-# Copyright (c) 2011-2012  Youhei SASAKI <uwabami@gfd-dennou.org>
+# Copyright © 2004       MoonWolf <moonwolf@moonwolf.com>
+# Copyright © 2011-2012  Youhei SASAKI <uwabami@gfd-dennou.org>
 #
 # The initialize code was adapted from the source of Locale::Po4a::Text,
 # under the terms of the GNU General Public License, version 2 or later.
 # This code was originally:
-# Copyright (c) 2005-2008  Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+# Copyright © 2005-2008  Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 #
 ############################################################################
 #
@@ -511,7 +511,7 @@ Francesco Poli <invernomuto@paranoici.org>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright (c) 2016-2017 by Francesco Poli <invernomuto@paranoici.org>
+ Copyright © 2016-2017 Francesco Poli <invernomuto@paranoici.org>
 
 This work is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -533,13 +533,13 @@ from the source of rdtool, under the terms of the GNU General Public
 License, version 2 or later.
 These parts are originally:
 
- Copyright (c) 2004      by MoonWolf <moonwolf@moonwolf.com>
- Copyright (c) 2011-2012 by Youhei SASAKI <uwabami@gfd-dennou.org>
+ Copyright © 2004      MoonWolf <moonwolf@moonwolf.com>
+ Copyright © 2011-2012 Youhei SASAKI <uwabami@gfd-dennou.org>
 
 The initialize code was adapted from the source of Locale::Po4a::Text,
 under the terms of the GNU General Public License, version 2 or later.
 This code was originally:
 
- Copyright (c) 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
+ Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>
 
 =cut

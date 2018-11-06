@@ -8,8 +8,8 @@
 # XML documents, and it can be used as a base to build modules for
 # XML-based documents.
 #
-# Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>
-# Copyright (c) 2008-2009 by Nicolas François  <nicolas.francois@centraliens.net>
+# Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>
+# Copyright © 2008-2009 Nicolas François  <nicolas.francois@centraliens.net>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

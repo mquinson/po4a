@@ -138,7 +138,7 @@ sub parse {
 
 This module is loosely inspired from /usr/lib/dpkg/parsechangelog/debian, which is:
 
- Copyright (C) 1996 Ian Jackson.  This is free software; see the GNU
+ Copyright © 1996 Ian Jackson.  This is free software; see the GNU
  General Public Licence version 2 or later for copying conditions.  There
  is NO warranty.
 
@@ -148,8 +148,8 @@ The adaptation for po4a was done by:
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright (c) 1996 by Ian Jackson.
- Copyright 2005 by SPI, inc.
+ Copyright © 1996 Ian Jackson.
+ Copyright © 2005 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
