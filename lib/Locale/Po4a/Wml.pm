@@ -112,8 +112,11 @@ sub read {
          my $line = $1;
          print STDERR "PROTECT HEADER: $line\n"
              if $self->{options}{'debug'};
+         # If the wml tag has a title attribute, use a fake
+         # <title> xml tag to enable the extraction
+         # for translation in the xml parser.
          if ($line =~ m/title="([^"]*)"/) {
-             $file = "<title>$1</title>" . $file;
+             $file = "<title>$1</title>\n" . $file;
          }
      }
 
