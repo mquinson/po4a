@@ -665,23 +665,21 @@ sub parse {
 		    undef $self->{indent};
         } elsif ($line =~ /^\|===/) {
             # This is a table, treat it as a non-wrapped paragraph
-            # TODO: Can we not add table delimeters to .pot?
             # TODO: Consider whether this should really try to deconstruct it by cell
             print STDERR "Found Table delimiter\n" if ($debug{parse});
             if (($paragraph eq "") or (defined($self->{type}) and ($self->{type} =~ /^delimited block/i))) {
                 # Start the table
                 $wrapped_mode = 0;
                 $self->{type} = "Table";
-                $paragraph .= $line."\n";
             } else {
                 # End the Table
-                $paragraph .= $line."\n";
                 do_paragraph($self,$paragraph,$wrapped_mode);
                 undef $self->{verbatim};
                 undef $self->{type};
                 $wrapped_mode = 1;
                 $paragraph="";
             }
+            $self->pushline($line."\n")
         } else {
 	    # A stupid paragraph of text
 	    print STDERR "Regular line. ".
