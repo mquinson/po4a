@@ -60,6 +60,10 @@ Space-separated list of macro definitions.
 
 Space-separated list of style definitions.
 
+=item B<noimagetargets>
+
+By default, the targets of block images are translatable to give opportunity to make the content point to translated images. This can be stopped by setting this option.
+
 =back
 
 =head1 INLINE CUSTOMIZATION
@@ -128,6 +132,7 @@ sub initialize {
     $self->{options}{'macro'}='';
     $self->{options}{'style'}='';
     $self->{options}{'definitions'}='';
+    $self->{options}{'noimagetargets'} = 0;
 
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::asciidoc",
@@ -153,7 +158,7 @@ sub initialize {
     $self->register_attributelist('[icon]');
     $self->register_attributelist('[caption]');
     $self->register_attributelist('[-icons,caption]');
-    $self->register_macro('image_[1,alt,title,link]');
+    $self->register_macro('image_[1,alt,title,link]') unless $self->{options}{'noimagetargets'};
 
     if ($self->{options}{'definitions'}) {
         $self->parse_definition_file($self->{options}{'definitions'})
