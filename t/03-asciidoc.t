@@ -28,6 +28,11 @@ foreach my $AsciiDocTest (@AsciiDocTests) {
 
 push @tests,
   {
+    'normalize' => "-f asciidoc -o noimagetargets=1 t-03-asciidoc/NoImageTarget.asciidoc",
+    'doc'      => "test ignoring image targets",
+    'requires' => "Unicode::GCString"
+  },
+  {
     'run' =>
 "perl ../po4a-gettextize -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l t-03-asciidoc/TitlesUTF8.asciidoc -L UTF-8 -p tmp/TitlesUTF8.po",
     'test' =>
