@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2018-11-06 11:45+0100\n"
-"PO-Revision-Date: 2018-10-04 13:21+0200\n"
+"PO-Revision-Date: 2018-12-03 22:19+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian\n"
 "Language: it\n"
@@ -511,7 +511,7 @@ msgstr ""
 #. type: textblock
 #: po4a:31
 msgid "Normal case without specifying B<pot_in>:"
-msgstr ""
+msgstr "Caso normale senza specificare B<pot_in>:"
 
 #. type: verbatim
 #: po4a:32
@@ -520,6 +520,8 @@ msgid ""
 " <- source files ->|<--------- build results --------------->\n"
 "\n"
 msgstr ""
+" <- file sorgenti->|<---- risultati della compilazione ----->\n"
+"\n"
 
 #. type: verbatim
 #: po4a:33
@@ -539,11 +541,24 @@ msgid ""
 "     the translation contents)\n"
 "\n"
 msgstr ""
+" addendum ----------------------------------+\n"
+"                                            |\n"
+" documento master--+---------------------+  |\n"
+"                   V                     +--+--> traduzioni\n"
+" vecchi file PO ---+-> file PO aggiornati+  \n"
+"      ^                      |\n"
+"      |                      V\n"
+"      +<.....................+\n"
+"    (i file PO aggiornati vengono copiati\n"
+"     manualmente sulla sorgente del prossimo\n"
+"     rilascio mentre si aggiornano manualmente\n"
+"     i contenuti della traduzione)\n"
+"\n"
 
 #. type: textblock
 #: po4a:34
 msgid "Special case with specifying B<pot_in>:"
-msgstr ""
+msgstr "Caso speciale con la specifica di B<pot_in>:"
 
 #. type: verbatim
 #: po4a:35
@@ -552,6 +567,8 @@ msgid ""
 " <- source files ->|<--------- build results ----------------->\n"
 "\n"
 msgstr ""
+" <- file sorgenti->|<---- risultati della compilazione ------->\n"
+"\n"
 
 #. type: verbatim
 #: po4a:36
@@ -574,15 +591,24 @@ msgid ""
 "     the translation contents)\n"
 "\n"
 msgstr ""
+" documento master -+--------------------------+\n"
+"                   :                          |\n"
+" programma         :    documento             |\n"
+" di filtro ========X..> master                |\n"
+" esterno                filtrato              |\n"
+"                        |                     |\n"
+"                        V                     +--> traduzioni\n"
+" vecchi file PO --------+-> file PO aggiornati+\n"
+"      ^                           |\n"
+"      |                           V\n"
+"      +<..........................+\n"
+"    (i file PO aggiornati vengono copiati\n"
+"     manualmente sulla sorgente del prossimo\n"
+"     rilascio mentre si aggiornano manualmente\n"
+"     i contenuti della traduzione)\n"
 
 #. type: textblock
 #: po4a:37
-#, fuzzy
-#| msgid ""
-#| "The dataflow cannot be inversed in this tool, and changes in translations "
-#| "are overwritten by the content of the PO files. As a matter of fact, this "
-#| "tool cannot be used to convert existing translations to the po4a system. "
-#| "For that task, please refer to L<po4a-gettextize(1)>."
 msgid ""
 "The dataflow cannot be reversed in this tool, and changes in translations "
 "are overwritten by the content of the PO files. As a matter of fact, this "
@@ -802,13 +828,7 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:63
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
-#| "              de:doc/de/mein_kram.sgml\n"
-#| " [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \\\n"
-#| "             add_fr:doc/l10n/script.fr.add\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
 "              de:doc/de/mein_kram.sgml\n"
@@ -823,6 +843,9 @@ msgstr ""
 "              de:doc/de/mein_kram.sgml\n"
 " [type: pod] script it:doc/it/script.1 de:doc/de/script.1 \\\n"
 "             add_it:doc/l10n/script.it.add\n"
+" [type: docbook] doc/script.xml it:doc/it/script.xml \\\n"
+"             de:doc/de/script.xml \\\n"
+"             pot_in:doc/script.filtered.xml\n"
 "\n"
 
 #. type: textblock
@@ -845,11 +868,7 @@ msgstr "In maniera più formale, il formato è:"
 
 #. type: verbatim
 #: po4a:66
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
-#| "                  (add_<lang>:<modifier>*<addendum_path>)*\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: <format>] <master_doc> (<lang>:<localized_doc>)* \\\n"
 "                  (pot_in:<filtered_master_doc>)? \\\n"
@@ -857,7 +876,8 @@ msgid ""
 "\n"
 msgstr ""
 " [type: <formato>] <doc_master> (<ling>:<doc_localizzato>)* \\\n"
-"                  (add_<ling>:<modificatore>*<percorso_addendum>)*\n"
+"                   (pot_in:<doc_master_filtrato>)? \\\n"
+"                   (add_<ling>:<modificatore>*<percorso_addendum>)*\n"
 "\n"
 
 #. type: textblock
@@ -869,7 +889,7 @@ msgid ""
 "as C preprocessor (B<cpp>) or XSL Transformation utility (e.g., B<xsltproc>) "
 "can be used to create the external filtering program and call it before "
 "invoking B<po4a>."
-msgstr ""
+msgstr "Se viene specificato B<pot_in>, viene usato il I<doc_master_filtrato> per creare il file POT invece di I<master_doc>.  Questa caratteristica permette all'utente di creare modi flessibili per evitare contenuti che non dovrebbero venire inclusi nei file PO.  Strumenti quali preprocessori C (B<cpp>) o utilità di trasformazione XSL (per es. B<xsltproc>) possono venire usati per creare programmi filtro esterni da chiamare prima dell'esecuzione di B<po4a>."
 
 #. type: textblock
 #: po4a:68
@@ -1864,7 +1884,7 @@ msgstr ""
 #: po4a:194 po4a-gettextize:51 po4a-normalize:30 po4a-translate:52
 #: po4a-updatepo:54
 msgid "Copyright 2002-2012 by SPI, inc."
-msgstr "Copyright 2002-2012 by SPI, inc."
+msgstr "Copyright © 2002-2012 by SPI, inc."
 
 #. type: textblock
 #: po4a:195 po4a-gettextize:52 po4a-normalize:31 po4a-translate:53
@@ -2581,7 +2601,7 @@ msgstr ""
 #. type: textblock
 #: scripts/msguntypot:35
 msgid "Copyright 2005 by SPI, inc."
-msgstr "Copyright 2005 by SPI, inc."
+msgstr "Copyright © 2005 by SPI, inc."
 
 #. type: textblock
 #: doc/po4a.7.pod:2
@@ -3974,16 +3994,11 @@ msgstr ""
 
 #. type: verbatim
 #: doc/po4a.7.pod:143
-#, fuzzy, no-wrap
-#| msgid ""
-#| "     position=<title>About this document</title>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "     position=About this document\n"
 "\n"
-msgstr ""
-"     position=<title>Su questo documento</title>\n"
-"\n"
+msgstr "     position=Su questo documento\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:144
@@ -4391,11 +4406,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:194
-#, fuzzy
-#| msgid ""
-#| "This little bone is the core of all the po4a architecture. If you omit "
-#| "the input PO and the output document, you get B<po4a-gettextize>. If you "
-#| "provide both input and disregard the output PO, you get B<po4a-translate>."
 msgid ""
 "This little bone is the core of all the po4a architecture. If you omit the "
 "input PO and the output document, you get B<po4a-gettextize>. If you provide "
@@ -4403,11 +4413,7 @@ msgid ""
 "B<po4a> calls TransTractor twice and calls B<msgmerge -U> between these "
 "TransTractor invocations to provide one-stop solution with a single "
 "configuration file."
-msgstr ""
-"Questa piccola ossatura è il cuore di tutta l'architettura di po4a. Se si "
-"omette il file PO in ingresso e il documento in uscita, si ottiene B<po4a-"
-"gettextize>. Se si fornisce entrambi gli ingressi e si ignora il file PO in "
-"uscita, si ottiene B<po4a-translate>."
+msgstr "Questa piccola ossatura è il cuore di tutta l'architettura di po4a. Se si omette il file PO in ingresso e il documento in uscita, si ottiene B<po4a-gettextize>. Se si fornisce entrambi gli ingressi e si ignora il file PO in uscita, si ottiene B<po4a-translate>. B<po4a> chiama TransTractor due volte e chiama B<msgmerge -U> tra queste invocazioni di TransTractor per fornire una soluzione tutta in uno con un singolo file di configurazione."
 
 #. type: textblock
 #: doc/po4a.7.pod:195
@@ -5325,21 +5331,16 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:35
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| " Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.\n"
-#| " Copyright 2017 by Martin Quinson <mquinson#debian.org>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 " Copyright © 2012 Denis BARBIER <barbier@linuxfr.org>.\n"
 " Copyright © 2017 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
-" Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-" Copyright 2012 by Denis BARBIER <barbier@linuxfr.org>.\n"
-" Copyright 2017 by Martin Quinson <mquinson#debian.org>.\n"
+" Copyright © 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright © 2012 by Denis BARBIER <barbier@linuxfr.org>.\n"
+" Copyright © 2017 by Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 
 #. type: textblock
@@ -5385,16 +5386,11 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/BibTeX.pm:14
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2006 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2006 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
-msgstr ""
-" Copyright 2006 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-"\n"
+msgstr " Copyright © 2006 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:2
@@ -5491,10 +5487,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:15
-#, fuzzy
-#| msgid "Copyright 2002,2003,2004,2005,2014,2017 by SPI, inc."
 msgid "Copyright © 2002-2005, 2014, 2017 SPI, Inc."
-msgstr "Copyright 2002, 2003, 2004, 2005, 2014, 2017 by SPI, inc."
+msgstr "Copyright © 2002-2005, 2014, 2017 by SPI, inc."
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:2
@@ -5677,10 +5671,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:31
-#, fuzzy
-#| msgid "Copyright 2005 by SPI, inc."
 msgid "Copyright © 2005 SPI, Inc."
-msgstr "Copyright 2005 by SPI, inc."
+msgstr "Copyright © 2005 by SPI, inc."
 
 #. type: textblock
 #: lib/Locale/Po4a/Dia.pm:2
@@ -5762,8 +5754,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Dia.pm:17 lib/Locale/Po4a/Guide.pm:15
-#, fuzzy
-#| msgid "Copyright (c) 2004 by Jordi Vilalta <jvprat@gmail.com>"
 msgid "Copyright © 2004 Jordi Vilalta <jvprat@gmail.com>"
 msgstr "Copyright © 2004 Jordi Vilalta <jvprat@gmail.com>"
 
@@ -5857,11 +5847,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Docbook.pm:20
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
-#| " Copyright (c) 2007-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright © 2007-2009 Nicolas François <nicolas.francois@centraliens.net>\n"
@@ -5987,14 +5973,9 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Halibut.pm:19
-#, fuzzy
-#| msgid ""
-#| "Copyright 2004-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens."
-#| "net>."
 msgid ""
 "Copyright © 2004-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
-msgstr ""
-"Copyright 2004-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
+msgstr "Copyright © 2004-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Halibut.pm:20 lib/Locale/Po4a/LaTeX.pm:14
@@ -6058,10 +6039,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Ini.pm:13
-#, fuzzy
-#| msgid "Copyright 2006 by BitDefender"
 msgid "Copyright © 2006 BitDefender"
-msgstr "Copyright 2006 BitDefender"
+msgstr "Copyright © 2006 BitDefender"
 
 #. type: textblock
 #: lib/Locale/Po4a/KernelHelp.pm:2
@@ -6105,10 +6084,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/KernelHelp.pm:12 lib/Locale/Po4a/Pod.pm:41
-#, fuzzy
-#| msgid "Copyright 2002 by SPI, inc."
 msgid "Copyright © 2002 SPI, Inc."
-msgstr "Copyright 2002 SPI, inc."
+msgstr "Copyright © 2002 SPI, inc."
 
 #. type: textblock
 #: lib/Locale/Po4a/LaTeX.pm:2
@@ -6146,14 +6123,9 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/LaTeX.pm:13 lib/Locale/Po4a/TeX.pm:120
-#, fuzzy
-#| msgid ""
-#| "Copyright 2004, 2005 by Nicolas FRANÇOIS <nicolas.francois@centraliens."
-#| "net>."
 msgid ""
 "Copyright © 2004, 2005 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
-msgstr ""
-"Copyright 2004, 2005 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
+msgstr "Copyright © 2004, 2005 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:2
@@ -6839,10 +6811,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:112
-#, fuzzy
-#| msgid "Copyright 2002-2008 by SPI, inc."
 msgid "Copyright © 2002-2008 SPI, Inc."
-msgstr "Copyright 2002-2008 by SPI, inc."
+msgstr "Copyright © 2002-2008 by SPI, inc."
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:2
@@ -8016,16 +7986,11 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Sgml.pm:55
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>\n"
 "\n"
-msgstr ""
-" Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
-"\n"
+msgstr " Copyright © 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:56
@@ -8034,18 +7999,14 @@ msgstr "Adattato per po4a da:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Sgml.pm:59
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
-#| " Copyright 2002, 2003, 2004, 2005 by SPI, inc.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>.\n"
 " Copyright © 2002-2005 SPI, Inc.\n"
 "\n"
 msgstr ""
-" Copyright (c) 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
-" Copyright 2002, 2003, 2004, 2005 by SPI, inc.\n"
+" Copyright © 1995 by David Megginson <dmeggins@aix1.uottawa.ca>\n"
+" Copyright © 2002-2005 by SPI, inc.\n"
 "\n"
 
 #. type: textblock
@@ -8811,14 +8772,9 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Texinfo.pm:14
-#, fuzzy
-#| msgid ""
-#| "Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens."
-#| "net>."
 msgid ""
 "Copyright © 2004-2007 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
-msgstr ""
-"Copyright 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
+msgstr "Copyright © 2004-2007 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:2
@@ -8986,16 +8942,11 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:39
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
-msgstr ""
-" Copyright 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-"\n"
+msgstr " Copyright © 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:40
@@ -9563,15 +9514,13 @@ msgstr ""
 
 #. type: =head1
 #: lib/Locale/Po4a/TransTractor.pm:96 lib/Locale/Po4a/Xml.pm:127
-#, fuzzy
-#| msgid "INTERNAL FUNCTIONS used to write derivated parsers"
 msgid "INTERNAL FUNCTIONS used to write derivative parsers"
 msgstr "FUNZIONI INTERNE usate per scrivere parser derivati"
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:97
 msgid "Getting input, providing output"
-msgstr ""
+msgstr "Ottenere l'ingresso, fornire l'uscita"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:98
@@ -9602,7 +9551,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:101
 msgid "shiftline()"
-msgstr ""
+msgstr "shiftline()"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:102
@@ -9932,16 +9881,11 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Wml.pm:14
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright 2005 by SPI, inc.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2005 SPI, Inc.\n"
 "\n"
-msgstr ""
-" Copyright 2005 by SPI, inc.\n"
-"\n"
+msgstr " Copyright © 2005 by SPI, inc.\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xhtml.pm:2
@@ -10004,18 +9948,14 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xhtml.pm:20
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 2004 by Yves Rütschlé <po4a@rutschle.net>\n"
-#| " Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2004 Yves Rütschlé <po4a@rutschle.net>\n"
 " Copyright © 2007-2008 Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
-" Copyright (c) 2004 by Yves Rütschlé <po4a@rutschle.net>\n"
-" Copyright (c) 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>\n"
+" Copyright © 2004 by Yves Rütschlé <po4a@rutschle.net>\n"
+" Copyright © 2007-2008 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 #. type: textblock
@@ -10519,15 +10459,13 @@ msgstr ""
 
 #. type: =head1
 #: lib/Locale/Po4a/Xml.pm:94
-#, fuzzy
-#| msgid "WRITING DERIVATE MODULES"
 msgid "WRITING DERIVATIVE MODULES"
 msgstr "SCRIVERE MODULI DERIVATI"
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:95
 msgid "DEFINE WHAT TAGS AND ATTRIBUTES TO TRANSLATE"
-msgstr ""
+msgstr "DEFINIRE CHE MARCATORI E ATTRIBUTI TRADURRE"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:96
@@ -10572,14 +10510,8 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:101
-#, fuzzy
-#| msgid ""
-#| "L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>, L<po4a(7)|"
-#| "po4a.7>"
 msgid "See L<Locale::Po4a::Docbook(3pm)|Locale::Po4a::Docbook>,"
-msgstr ""
-"L<Locale::Po4a::TransTractor(3pm)|Locale::Po4a::TransTractor>, L<po4a(7)|"
-"po4a.7>"
+msgstr "Vedere L<Locale::Po4a::Docbook(3pm)|Locale::Po4a::Docbook>,"
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:102
@@ -10892,17 +10824,13 @@ msgstr ""
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:151
-#, fuzzy
-#| msgid "WORKING WITH TAGS"
 msgid "WORKING WITH TAGGED CONTENTS"
-msgstr "LAVORARE CON I TAG"
+msgstr "LAVORARE CON CONTENUTI MARCATI"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:152
-#, fuzzy
-#| msgid "treat_options()"
 msgid "treat_content()"
-msgstr "treat_options()"
+msgstr "treat_content()"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:153
@@ -11060,18 +10988,14 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:183
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
-#| " Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2004 Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright © 2008-2009 Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 msgstr ""
-" Copyright (c) 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
-" Copyright (c) 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
+" Copyright © 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
+" Copyright © 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
 
 #~ msgid ""
