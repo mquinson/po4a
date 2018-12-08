@@ -133,6 +133,7 @@ sub initialize {
     $self->{options}{'style'}='';
     $self->{options}{'definitions'}='';
     $self->{options}{'noimagetargets'} = 0;
+    $self->{options}{'tablecells'}=0;
 
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::asciidoc",
@@ -317,6 +318,42 @@ sub parse {
             } else {
                 push @comments, $line;
             }
+        } elsif ((defined $self->{type}) and ($self->{type} eq "Table") and ($line !~ m/^\|===/) and ($self->{options}{"tablecells"})) {
+            # inside a table
+            my $new_line = "";
+            my @texts = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/, $line;
+            my @seps = ($line)=~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/g;
+            if ((scalar(@texts) and length($texts[0])) || (!length($line))) {
+                if (!length($line)) { $texts[0] = "";}
+                if (length($paragraph)) {
+                    # if we are in a continuation line
+                    $paragraph .= "\n" . $texts[0];
+                } else {
+                    $paragraph = $texts[0];
+                    $self->pushline("\n");
+                }
+            } elsif (length($paragraph)) {
+                $new_line = "\n";
+            }
+
+            shift @texts;
+            my @parts = map { ( $_ , shift @texts ) } @seps;
+            foreach my $part (@parts) {
+                if ($part =~ /\|$/) {
+                    # this is a cell separator. End the previous cell
+                    do_stripped_unwrapped_paragraph($self, $paragraph, $wrapped_mode);
+                    if ($new_line eq "\n") {
+                        $self->pushline("\n");
+                        $new_line = "";
+                    }
+                    $paragraph = "";
+                    $self->pushline($part);
+                } else {
+                    # this is content. Append it.
+                    $paragraph .= $part;
+                }
+            }
+
         } elsif ((not defined($self->{verbatim})) and ($line =~ m/^(\+|--)$/)) {
             # List Item Continuation or List Block
             do_paragraph($self,$paragraph,$wrapped_mode);
@@ -678,10 +715,14 @@ sub parse {
                 $self->{type} = "Table";
             } else {
                 # End the Table
-                do_paragraph($self,$paragraph,$wrapped_mode);
+                if ($self->{options}{'tablecells'}) {
+                    do_stripped_unwrapped_paragraph($self, $paragraph, $wrapped_mode);
+                    $self->pushline("\n");
+                } else {
+                    do_paragraph($self, $paragraph, $wrapped_mode);
+                }
                 undef $self->{verbatim};
                 undef $self->{type};
-                $wrapped_mode = 1;
                 $paragraph="";
             }
             $self->pushline($line."\n")
@@ -722,6 +763,15 @@ sub parse {
     if (length $paragraph) {
         do_paragraph($self,$paragraph,$wrapped_mode);
     }
+}
+
+sub do_stripped_unwrapped_paragraph {
+    my ($self, $paragraph, $wrap) = (shift, shift, shift);
+    my $type = shift || $self->{type} || "Plain text";
+    my ($pre, $trans, $post) = $paragraph =~ /^(\s*)(.*?)(\s*)$/s;
+    $self->pushline($pre);
+    do_paragraph($self, $trans, $wrap, $type);
+    $self->pushline($post);
 }
 
 sub do_paragraph {
