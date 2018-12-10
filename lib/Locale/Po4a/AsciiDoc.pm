@@ -62,7 +62,14 @@ Space-separated list of style definitions.
 
 =item B<noimagetargets>
 
-By default, the targets of block images are translatable to give opportunity to make the content point to translated images. This can be stopped by setting this option.
+By default, the targets of block images are translatable to give opportunity
+to make the content point to translated images. This can be stopped by setting
+this option.
+
+=item B<tablecells>
+
+This option is a flag that enables sub-table segmentation into cell content.
+The segmentation is limited to cell content, without any parsing inside of it.
 
 =back
 
