@@ -1342,7 +1342,7 @@ if ($po4a_opts{"split"}) {
                 or die wrap_msg(gettext("Can't create directory '%s': %s"),
                                 $dir, $!);
         }
-        my $cmd = "msggrep".$Config{_exe}." -N '$master' -o ".
+        my $cmd = "msggrep".$Config{_exe}." -N \"$master\" -o ".
                   ($po4a_opts{"force"}?$split_pot{$master}:$tmp_file).
                   " $pot_filename";
         run_cmd($cmd);
