@@ -591,11 +591,11 @@ sub parse_markdown {
         $paragraph="";
         my ($nextline, $nextref) = $self->shiftline();
         while ($nextline !~ /^\s{0,3}$fence$fencechar*\s*$/) {
-            $paragraph .= "$nextline\n";
+            $paragraph .= "$nextline";
             ($nextline, $nextref) = $self->shiftline();
         }
         do_paragraph($self,$paragraph,$wrapped_mode);
-        $self->pushline($nextline."\n");
+        $self->pushline($nextline);
         $paragraph="";
         $end_of_paragraph = 1;
     } elsif (   $line =~ /^\s*\[\[\!\S+\s*$/     # macro begin
