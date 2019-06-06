@@ -225,6 +225,7 @@ wlc lock
 wlc commit
 wlc push
 # Merge the pull request on github
+git pull
 # Do and commit your local changes
 perl Build.PL
 ./Build
