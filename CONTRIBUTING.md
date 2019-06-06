@@ -280,7 +280,7 @@ Here is the checklist of things to remember when releasing po4a:
   - Also upload the tarball to the github release: the file META.yml
     is missing from the tarball generated automatically (see #115).
 - Announce the release on the Mailing List.
-- Add a News entry to the website, rebuild it, and re-push it
+- Add a News entry to the website, update VERSION, rebuild it, and re-push it
 
 - Put a template in NEWS (using `figlet v0.XXX`)
 - Change the version in lib/Locale/Po4a/TransTractor.pm to 0.XX-alpha
