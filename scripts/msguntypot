@@ -216,6 +216,7 @@ while (my $poarg = shift) {
 
     for (my $n=0 ; $n<$po->count_entries(); $n++) {
         my $str=$po->msgid($n);
+	next unless defined $str;
         my $newstr = $diff{$str};
 
         if (defined $newstr) {
