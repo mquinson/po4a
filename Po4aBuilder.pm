@@ -255,9 +255,12 @@ sub ACTION_postats {
     my $self = shift;
     $self->depends_on('binpo');
     $self->depends_on('docpo');
+    print("-------------\n");
     $self->postats( File::Spec->catdir("po", "bin"));
+    print("-------------\n");
     $self->postats( File::Spec->catdir("po", "pod"));
-    $self->postats( File::Spec->catdir("po", "www")) if -d File::Spec->catdir("po", "www");
+    print("-------------\n");
+    $self->postats( File::Spec->catdir("..", "po4a-website", "po")) if -d File::Spec->catdir("..", "po4a-website", "po");
 }
 
 sub postats {
@@ -268,12 +271,56 @@ sub postats {
     my $potsize = stat($potfile)->size;
     print "$dir (pot: $potsize)\n";
     my @files = @{$self->rscan_dir($dir,qr{\.po$})};
+    my (@t100,@t95,@t90,@t80,@t70,@t50,@t33,@t20,@starting);
     foreach (sort @files) {
         $file = $_;
         my $lang = fileparse($file, qw{.po});
-        my $stat = `msgfmt -o /dev/null -c -v --statistics $file 2>&1`;
-        print "  $lang: $stat";
+        my $stat = `msgfmt -o /dev/null -c --statistics $file 2>&1`;
+	my ($trans, $fuzz, $untr) = (0,0,0);
+	if ($stat =~ /(\d+)\D+?(\d+)\D+?(\d+)/) {
+	  ($trans, $fuzz, $untr) = ($1,$2,$3);
+	} elsif ($stat =~ /(\d+)\D+?(\d+)/) {
+	  ($trans, $fuzz) = ($1,$2);
+	} elsif ($stat =~ /(\d+)/) {
+	  ($trans) = ($1);
+	} else {
+	  print "Unparsable content\n";
+	}
+        my $total = $trans+$fuzz+$untr;
+	my $ratio = $trans / $total * 100;
+#	print "ratio: $ratio| trans: $trans; fuzz: $fuzz; untr: $untr\n";
+	my $Ratio = int($ratio);
+        print "  $lang (".(int($ratio*100)/100)."%): $stat";
+	if ($ratio == 100) {
+	    push @t100, $lang;
+	} elsif ($ratio >= 95) {
+	    push @t95, "$lang ($Ratio%)";
+	} elsif ($ratio >= 90) {
+	    push @t90, "$lang ($Ratio%)";
+	} elsif ($ratio >= 80) {
+	    push @t80, "$lang ($Ratio%)";
+	} elsif ($ratio >= 70) {
+	    push @t70, "$lang ($Ratio%)";
+	} elsif ($ratio >= 50) {
+	    push @t50, "$lang ($Ratio%)";
+	} elsif ($ratio >= 33) {
+	    push @t33, "$lang ($Ratio%)";
+	} elsif ($ratio >= 20) {
+	    push @t20, "$lang ($Ratio%)";
+	} else {
+	    push @starting, "$lang ($Ratio%)";
+	}
     }
+    print "$dir (pot: $potsize)\n";
+    print " ".(scalar (@t100))." language".(scalar (@t100)==1?' ':'s')." = 100%: ". (join(", ", @t100)).".\n" if (scalar(@t100)>0);
+    print " ".(scalar (@t95))." language".(scalar (@t95)==1?' ':'s')." >= 95%: ". (join(", ", @t95)).".\n" if (scalar(@t95)>0);
+    print " ".(scalar (@t90))." language".(scalar (@t90)==1?' ':'s')." >= 90%: ". (join(", ", @t90)).".\n" if (scalar(@t90)>0);
+    print " ".(scalar (@t80))." language".(scalar (@t80)==1?' ':'s')." >= 80%: ". (join(", ", @t80)).".\n" if (scalar(@t80)>0);
+    print " ".(scalar (@t70))." language".(scalar (@t70)==1?' ':'s')." >= 70%: ". (join(", ", @t70)).".\n" if (scalar(@t70)>0);
+    print " ".(scalar (@t50))." language".(scalar (@t50)==1?' ':'s')." >= 50%: ". (join(", ", @t50)).".\n" if (scalar(@t50)>0);
+    print " ".(scalar (@t33))." language".(scalar (@t33)==1?' ':'s')." >= 33%: ". (join(", ", @t33)).".\n" if (scalar(@t33)>0);
+    print " ".(scalar (@t20))." language".(scalar (@t20)==1?' ':'s')." >= 20%: ". (join(", ", @t20)).".\n" if (scalar(@t20)>0);
+    print " ".(scalar (@starting))." starting language".(scalar (@starting)==1?' ':'s').": ". (join(", ", @starting)).".\n" if (scalar(@starting)>0);
 }
 
 1;
