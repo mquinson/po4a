@@ -346,6 +346,7 @@ sub parse {
             shift @texts;
             my @parts = map { ( $_ , shift @texts ) } @seps;
             foreach my $part (@parts) {
+                if (!$part) {next}
                 if ($part =~ /\|$/) {
                     # this is a cell separator. End the previous cell
                     do_stripped_unwrapped_paragraph($self, $paragraph, $wrapped_mode);
