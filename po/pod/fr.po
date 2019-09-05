@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2019-06-06 10:17+0200\n"
-"PO-Revision-Date: 2019-07-18 18:05+0000\n"
-"Last-Translator: Mattéo Rossillol‑‑Laruelle <beatussum@protonmail.com>\n"
+"PO-Revision-Date: 2019-08-03 13:23+0000\n"
+"Last-Translator: Julien Lepiller <roptat@lepiller.eu>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
 "\n"
 "Language: fr\n"
@@ -4002,7 +4002,7 @@ msgstr "B<mode> (obligatoire)"
 #. type: textblock
 #: doc/po4a.7.pod:132
 msgid "It can be either the string B<before> or B<after>."
-msgstr "Peut être soit la chaîne B<avant> ou B<après>."
+msgstr "Peut être soit la chaîne B<before> ou B<after>."
 
 #. type: textblock
 #: doc/po4a.7.pod:133
@@ -4012,6 +4012,10 @@ msgid ""
 "is immediately before the uniquely matched internal data string of the "
 "translated document."
 msgstr ""
+"Si B<mode=before>, le I<point d'insertion> est déterminé par une "
+"correspondance à une étape d'une regexp spécifiée par la regexp B<position> "
+"en argument. Le I<point d'insertion> est immédiatement avant avant l'unique "
+"chaîne interne correspondante du document traduit."
 
 #. type: textblock
 #: doc/po4a.7.pod:134
@@ -4020,6 +4024,9 @@ msgid ""
 "matches specified by the B<position> argument regex; and by the "
 "B<beginboundary> or B<endboundary> argument regex."
 msgstr ""
+"Si B<mode=after>, le I<point d'insertion> est déterminé par deux "
+"correspondances à deux étapes d'une regexp spécifiée par l'argument "
+"B<position> ; et par l'argument B<beginboundary> ou B<endboundary>."
 
 #. type: textblock
 #: doc/po4a.7.pod:135
@@ -4027,6 +4034,8 @@ msgid ""
 "Since there may be multiple sections for the assumed case, let's use 2 step "
 "approach."
 msgstr ""
+"Comme il y a plusieurs sections dans le cas présenté, utilisons l'approche à "
+"deux étapes."
 
 #. type: verbatim
 #: doc/po4a.7.pod:136
@@ -4068,6 +4077,9 @@ msgid ""
 "before the internal data string uniquely matching the B<position> argument "
 "regex."
 msgstr ""
+"Si B<mode=before>, le I<point d'insertion> est spécifié comment étant "
+"immédiatement avant l'unique chaîne de données interne correspondant à la "
+"regexp B<position> passée en argument."
 
 #. type: textblock
 #: doc/po4a.7.pod:141
@@ -4077,6 +4089,10 @@ msgid ""
 "argument regex.  The exact I<insertion point> is further specified by the "
 "B<beginboundary> or B<endboundary>."
 msgstr ""
+"Si B<mode=after>, la recherche du I<point d'insertion> est réduit aux "
+"données après l'unique chaîne de données internes correspondant la regexp "
+"B<position> passée en argument. Le I<point d'insertion> exact est ensuite "
+"spécifié par B<beginboundary> ou B<endboundary>."
 
 #. type: textblock
 #: doc/po4a.7.pod:142
@@ -4084,6 +4100,8 @@ msgid ""
 "In our case, we need to skip several preceding sections by narrowing down "
 "search using the section title string."
 msgstr ""
+"Dans notre cas, nous devons sauter plusieurs sections précédentes en "
+"réduisant la recherche avec la chaîne du titre de la section."
 
 #. type: verbatim
 #: doc/po4a.7.pod:143
@@ -4101,6 +4119,8 @@ msgid ""
 "(In reality, you need to use the translated section title string here, "
 "instead.)"
 msgstr ""
+"(En réalité, vous devez plutôt utiliser la chaîne traduite du titre de "
+"section ici)"
 
 #. type: =item
 #: doc/po4a.7.pod:145
@@ -4122,6 +4142,10 @@ msgid ""
 "placed immediately before or after the first internal data string matching "
 "the B<beginboundary> or B<endboundary> argument regexp, respectively."
 msgstr ""
+"Une deuxième regexp Perl requise uniquement lorsque B<mode=after>. L'ajout "
+"sera placé immédiatement avant ou après la première chaîne correspondant à "
+"la regexp B<beginboundary> ou B<endboundary> passée en argument, "
+"respectivement."
 
 #. type: textblock
 #: doc/po4a.7.pod:148
