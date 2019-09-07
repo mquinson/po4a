@@ -963,7 +963,7 @@ sub tag_trans_close {
     if (!defined($test) || $test ne $name ) {
         my $ontagerror = $self->{options}{'ontagerror'};
         if ($ontagerror eq "warn") {
-            warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $name);
+            warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"), $name);
         } elsif ($ontagerror ne "silent") {
             die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
         }
@@ -1339,7 +1339,7 @@ sub treat_attributes {
             unless ($complete) {
                 my $ontagerror = $self->{options}{'ontagerror'};
                 if ($ontagerror eq "warn") {
-                    warn wrap_mod("po4a::xml::treat_attributes", dgettext ("po4a", "%s: Bad attribute syntax.  Continuing..."), $ref);
+                    warn wrap_mod("po4a::xml::treat_attributes", dgettext ("po4a", "%s: Bad attribute syntax.  Continuing…"), $ref);
                 } elsif ($ontagerror ne "silent") {
                     die wrap_mod("po4a::xml::treat_attributes", dgettext ("po4a", "%s: Bad attribute syntax"), $ref);
                 }
@@ -1623,7 +1623,7 @@ sub treat_content {
                         $test ne $name ) {
                         my $ontagerror = $self->{options}{'ontagerror'};
                         if ($ontagerror eq "warn") {
-                            warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing..."), $name);
+                            warn wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"), $name);
                         } elsif ($ontagerror ne "silent") {
                             die wrap_ref_mod($tag[1], "po4a::xml", dgettext("po4a", "Unexpected closing tag </%s> found. The main document may be wrong."), $name);
                         }
