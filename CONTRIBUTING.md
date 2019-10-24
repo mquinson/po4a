@@ -1,9 +1,9 @@
 # po4a welcomes contributions! 
 
-Even if you never contributed to any Open Source project in the past,
+Even if you have never contributed to any Open Source project in the past,
 you are welcome: we are willing to help and mentor you here. Check on 
 [First Timer](https://www.firsttimersonly.com/) to get started with 
-the basics of Open Source development and Social Coding!
+the basics of Open Source development and Social Coding.
 
 # Software Architecture
 
@@ -20,17 +20,17 @@ Also don't miss the [project overview](https://po4a.org/man/man7/po4a.7.php)
 if you did not read it yet.
 
 Several binaries are built around these TransTractors, each of them
-being dedicated to one step of the [translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ)
+are dedicated to one step of the [translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ)
 ([po4a-translate](https://po4a.org/man/man1/po4a-translate.1.php),
 [po4a-updatepo](https://po4a.org/man/man1/po4a-updatepo.1.php), and
 also
 [po4a-gettextize](https://po4a.org/man/man1/po4a-gettextize.1.php)).
-Some [other tools](https://po4a.org/man/) are built on top of the
+Some [other tools](https://po4a.org/man/) and are built on top of the
 transtractors.
 
 Finally, the [po4a command](https://po4a.org/man/man1/po4a.1.php) tool
 takes automatically care of the translation workflow, updating the po
-files and translations on need.
+files and translations when needed.
 
 # Finding something to hack
 
@@ -65,7 +65,7 @@ files and translations on need.
 
 # Testing your changes
 
-You should of course make sure that your PR does not break any test to
+Of course you should make sure that your PR does not break any test to
 get accepted. If you fix an issue or add a feature, we may be
 reluctant to integrate your change without a new dedicated test, to
 ensure that bugs won't resurface in the future.
