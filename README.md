@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/mquinson/po4a.svg?branch=master)](https://travis-ci.org/mquinson/po4a)
 [![First Timers Friendly](https://img.shields.io/badge/Beginners-Welcome-brightgreen.svg?style=flat-square)](http://www.firsttimersonly.com)
 
-The po4a (PO for anything) project goal is to ease translations (and
+The goal of po4a (PO for anything) project is to ease translations (and
 more interestingly, the maintenance of translations) using gettext
 tools on areas where they were not expected like documentation.
 
-In po4a each documentation format is handled by a module. For now, we have a
+In po4a each documentation format is handled by a module. Presently, we have a
 module for the following formats:
 
   - asciidoc: AsciiDoc format.
