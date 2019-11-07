@@ -33,6 +33,7 @@ sub initialize {
     $self->{options}{'keys'}='';
     $self->{options}{'debug'}=0;
     $self->{options}{'verbose'} = 1;
+    $self->{options}{'skip_array'} = 0;
 
     foreach my $opt (keys %options) {
         die wrap_mod("po4a::yaml",
@@ -88,6 +89,7 @@ sub walk_yaml {
         }
     }
     elsif (ref $el eq ref []) {
+        next if ($self->{options}{skip_array});
         print STDERR  "begin an array\n" if $self->{'options'}{'debug'};
         for my $i (0 .. $#{$el}) {
             if (ref $el->[$i] ne ref "") {
@@ -138,7 +140,11 @@ These are this module's particular options:
 
 Space-separated list of hash keys to process for extraction, all
 other keys are skipped.  Keys are matched with a case-insentive match.
-Arrays values are always returned.
+Arrays values are always returned unless skipped with B<skip_array>.
+
+=item B<skip_array>
+
+Never return array values.
 
 =back
 
