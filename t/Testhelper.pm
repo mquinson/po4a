@@ -125,6 +125,17 @@ sub run_all_tests {
                 diag( $test->{'test'} );
                 diag("Was created with:");
                 diag( $test->{'run'} );
+                foreach my $file (glob("tmp/*")) {
+                    if (-s $file) {
+                        diag("Error file $file:");
+                        open FH, "$file" || die "Cannot open exisiting $file, I'm puzzled";
+                        while (<FH>) {
+                            diag("  $_");
+                        }
+                        diag("(end of $file)");
+                        close(FH);
+                    }
+                }
             }
         }
     }
