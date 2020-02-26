@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2019-06-06 10:17+0200\n"
-"PO-Revision-Date: 2020-02-17 16:32+0000\n"
+"PO-Revision-Date: 2020-02-28 03:33+0000\n"
 "Last-Translator: Golubev Alexander <fatzer2@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a-doc/ru/"
 ">\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.11\n"
+"X-Generator: Weblate 4.0-dev\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -5613,6 +5613,10 @@ msgid ""
 "B<INLINE CUSTOMIZATION> section.  You can use this option if it is not "
 "possible to put the definitions in the document being translated."
 msgstr ""
+"Имя файла с po4a-определениями (definitions), которые описаны в разделе B<"
+"ВСТРОЕННЫЕ НАСТРОЙКИ ПОВЕДЕНИЯ>. Вы можете использовать этот параметр, если "
+"добавить эти определения непосредственно в переводимый документ не является "
+"возможным."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:10
@@ -5620,6 +5624,8 @@ msgid ""
 "In a definitions file, lines must not start by two slashes, but directly by "
 "B<po4a:>."
 msgstr ""
+"В файле с определениями строки должны начинаться не, как комментарии, с двух "
+"слешей, а сразу с B<po4a:>."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:11
@@ -5632,6 +5638,8 @@ msgid ""
 "Space-separated list of attribute entries you want to translate.  By "
 "default, no attribute entries are translatable."
 msgstr ""
+"Список атрибутов, разделённых пробелом, значения которых должны "
+"переводиться. По умолчанию ни какие атрибуты не считаются переводимыми."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:13
@@ -5641,17 +5649,17 @@ msgstr "B<macro>"
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:14
 msgid "Space-separated list of macro definitions."
-msgstr ""
+msgstr "Список определений макросов (macro definitions), разделённых пробелом."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:15
 msgid "B<style>"
-msgstr ""
+msgstr "B<style>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:16
 msgid "Space-separated list of style definitions."
-msgstr ""
+msgstr "Список определений стилей (style definitions), разделённых пробелами."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:17
@@ -5665,6 +5673,9 @@ msgid ""
 "to make the content point to translated images. This can be stopped by "
 "setting this option."
 msgstr ""
+"По умолчанию, дабы дать переводчикам возможность вставлять в документ "
+"локализованные версии изображений, ссылки на них являются переводимыми "
+"строками. Это можно изменить, указав данный параметр."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:19
@@ -5678,11 +5689,14 @@ msgid ""
 "content.  The segmentation is limited to cell content, without any parsing "
 "inside of it."
 msgstr ""
+"Этот параметр является флагом, при указании которого таблицы будут разбиты "
+"на ячейки. Разбиение ограничивается только ячейками без какого-либо разбора "
+"их содержимого."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:21 lib/Locale/Po4a/TeX.pm:27
 msgid "INLINE CUSTOMIZATION"
-msgstr ""
+msgstr "ВСТРОЕННЫЕ НАСТРОЙКИ ПОВЕДЕНИЯ"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:22
@@ -5691,11 +5705,14 @@ msgid ""
 "These lines are interpreted as commands to the parser.  The following "
 "commands are recognized:"
 msgstr ""
+"Поведение модуля AsciiDoc может быть настроено строками в документе "
+"начинающимися с B<//po4a:>. Эти строки рассматриваются, как команды данному "
+"парсеру. Возможно задать следующие команды:"
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:23
 msgid "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: macro >I<имя>B<[>I<список атрибутов>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:24
@@ -5704,6 +5721,10 @@ msgid ""
 "must be a valid macro name, and it ends with an underscore if the target "
 "must be translated."
 msgstr ""
+"Этот параметр позволяет описать, как именно нужно обрабатывать B<макрос> и "
+"его параметры. I<Имя> должно быть действительным именем макроса. Если цель "
+"(target) макроса должна быть переведена, то к имени оного должно быть "
+"добавлено подчёркивание."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:25
@@ -5712,6 +5733,10 @@ msgid ""
 "informations about translatable arguments.  This list contains either "
 "numbers, to define positional parameters, or named attributes."
 msgstr ""
+"I<список атрибутов> — это список аргументов макроса, разделённых пробелом, "
+"которые также должны быть переведены. Этот список состоит из либо чисел, "
+"которые задают номера позиционных параметров, либо непосредственно самих "
+"имёна оных атрибутов."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:26
@@ -5720,11 +5745,14 @@ msgid ""
 "arguments are translated as a whole.  There is no need to define attribute "
 "list in this case, but brackets must be present."
 msgstr ""
+"Если в начало I<имени> добавлен знак плюс (B<+>), то макрос и все его "
+"аргументы переводятся как единое целое. В этом случае нет необходимости "
+"задавать список аргументов, но скобки всё равно должны присутствовать."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:27
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
-msgstr ""
+msgstr "B<//po4a: style >B<[>I<список атрибутов>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:28
@@ -5732,6 +5760,8 @@ msgid ""
 "This permits to describe in detail which attributes of a style must be "
 "translated."
 msgstr ""
+"Этот параметр позволяет описать, какие именно атрибуты стиля должны "
+"переводиться."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:29
@@ -5741,6 +5771,11 @@ msgid ""
 "numbers, to define positional parameters, or named attributes.  The first "
 "attribute is the style name, it will not be translated."
 msgstr ""
+"I<список атрибутов> — это список аргументов, разделённых запятыми, которые "
+"должны быть переведены. Этот список содержит либо числа, которые задают "
+"номера позиционных параметров, либо непосредственно сами имена оных. При "
+"этом первым аргументом считается имя стиля, которое в любом случае не будет "
+"переведено."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:30
@@ -5749,6 +5784,9 @@ msgid ""
 "list is translated as a whole.  There is no need to define translatable "
 "attributes."
 msgstr ""
+"Если в начало имени стиля добавлен знак плюс (B<+>), то весь список "
+"атрибутов переводится как единое целое. В этом случае нет необходимости "
+"задавать список атрибутов."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:31
@@ -5756,11 +5794,13 @@ msgid ""
 "If a minus sign (B<->) is prepended to the style name, then this attribute "
 "is not translated."
 msgstr ""
+"Если в начало имени стиля добавлен знак минус (B<->), то его атрибуты не "
+"будут переводиться."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:32
 msgid "B<//po4a: entry >I<name>"
-msgstr ""
+msgstr "B<//po4a: entry >I<имя>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:33
@@ -5768,6 +5808,8 @@ msgid ""
 "This declares an attribute entry as being translatable.  By default, they "
 "are not translated."
 msgstr ""
+"Этот параметр объявляет значение атрибута переводимым. По умолчанию все оные "
+"не являются таковыми."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:34 lib/Locale/Po4a/BibTeX.pm:9
@@ -5784,7 +5826,7 @@ msgstr "СОСТОЯНИЕ ЭТОГО МОДУЛЯ"
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:35
 msgid "Tested successfully on simple AsciiDoc files."
-msgstr ""
+msgstr "Успешно протестирован на простых файлах AsciiDoc."
 
 #. type: verbatim
 #: lib/Locale/Po4a/AsciiDoc.pm:37
