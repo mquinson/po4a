@@ -580,13 +580,7 @@ sub parse_markdown {
         do_paragraph($self,$paragraph,$wrapped_mode);
         $wrapped_mode = 0;
         $paragraph="";
-        my $s = "";
-        $s = $self->translate($info_string,
-                                 $self->{ref},
-                                 "Code fence info string",
-                                 "wrap" => 0)
-            if ($info_string);
-        $self->pushline($fence_space_before.$fence.$fence_space_between.$s."\n");
+        $self->pushline("$line\n");
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
         my ($nextline, $nextref) = $self->shiftline();
