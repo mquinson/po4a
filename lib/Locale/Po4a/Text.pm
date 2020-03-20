@@ -577,6 +577,7 @@ sub parse_markdown {
         my $fence_space_between = $4;
         my $info_string = $5;
         # fenced code block
+        my $type = "Fenced code block".($info_string?" ($info_string)":"");
         do_paragraph($self,$paragraph,$wrapped_mode);
         $wrapped_mode = 0;
         $paragraph="";
@@ -588,7 +589,7 @@ sub parse_markdown {
             $paragraph .= "$nextline";
             ($nextline, $nextref) = $self->shiftline();
         }
-        do_paragraph($self,$paragraph,$wrapped_mode);
+        do_paragraph($self,$paragraph,$wrapped_mode,$type);
         $self->pushline($nextline);
         $paragraph="";
         $end_of_paragraph = 1;
