@@ -2,13 +2,13 @@
 # Copyright © 2004 Martin Quinson and Denis Barbier.
 # This file is distributed under the same license as the po4a package.
 # Danilo Piazzalunga <danilopiazza@libero.it>, 2004-2005.
-# Marco Ciampa <ciampix@posteo.net>, 2015-2019.
+# Marco Ciampa <ciampix@posteo.net>, 2015-2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-03-20 23:54+0100\n"
-"PO-Revision-Date: 2019-09-13 10:30+0200\n"
+"PO-Revision-Date: 2020-03-21 20:01+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian\n"
 "Language: it\n"
@@ -1432,22 +1432,12 @@ msgstr "B<--keep-translations>"
 
 #. type: textblock
 #: po4a:135
-#, fuzzy
-#| msgid ""
-#| "Keeps the existing translation files even if the translation doesn't meet "
-#| "the threshold specified by --keep.  This option does not create new "
-#| "translation files with few content, but it will save existing "
-#| "translations which decay because of changes to the master files."
 msgid ""
 "Keeps the existing translation files even if the translation doesn't meet "
 "the threshold specified by B<--keep>.  This option does not create new "
 "translation files with few content, but it will save existing translations "
 "which decay because of changes to the master files."
-msgstr ""
-"Mantiene i file di traduzione esistenti anche se la traduzione non incontra "
-"la soglia specificata da --keep.  Questa opzione non crea nuovi file di "
-"traduzione con poco contenuto, ma salverà le traduzioni esistenti che "
-"decadranno a causa dei cambiamenti ai file master."
+msgstr "Mantiene i file di traduzione esistenti anche se la traduzione non incontra la soglia specificata da --keep.  Questa opzione non crea nuovi file di traduzione con poco contenuto, ma salverà le traduzioni esistenti che scadranno a causa dei cambiamenti ai file master."
 
 #. type: textblock
 #: po4a:136
@@ -4248,6 +4238,9 @@ msgid ""
 "argument regex.  Then, you should match the beginning of the next section (i."
 "e., B<^\\.SH>) with the B<beginboundary> argument regex. That is to say:"
 msgstr ""
+"You should select two step approach by setting B<mode=after>.  Then you should narrow down search to the line after B<AUTHORS> with the B<position> argument regex.  Then, you should match the beginning of the next section (i.e., B<^\\.SH>) with the B<beginboundary> argument regex. That is to say:<\n"
+"\n"
+"Si dovrebbe selezionare un approccio in due passaggi impostando B<mode=after>. Quindi si dovrebbe restringere la ricerca alla riga dopo B<AUTHORS> con l'argomento dell'espressione regolare B<position>. Quindi, si dovrebbe abbinare l'inizio della sezione successiva (cioè B<^\\.SH>) con l'argomento espressione regolare B<beginboundary>. Vale a dire: "
 
 #. type: verbatim
 #: doc/po4a.7.pod:160
@@ -4255,7 +4248,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\\.SH\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\\.SH\n\n"
 
 #. type: =item
 #: doc/po4a.7.pod:161
@@ -4263,7 +4256,7 @@ msgid ""
 "If you want to add something into a section (like after \"Copyright Big Dude"
 "\")  instead of adding a whole section, give a B<position> matching this "
 "line, and give a B<beginboundary> matching any line."
-msgstr ""
+msgstr "Se si vuole aggiungere qualcosa in una sezione (come dopo \"Copyright Big Dude\") invece che aggiungere un'intera sezione, fare in modo che B<position> corrisponda a questa riga, e fare in modo che B<beginboundary> corrisponda a qualunque riga."
 
 #. type: verbatim
 #: doc/po4a.7.pod:162
@@ -4271,7 +4264,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER:mode=after;position=Copyright Big Dude, 2004;beginboundary=^\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER:mode=after;position=Copyright Big Dude, 2004;beginboundary=^\n\n"
 
 #. type: =item
 #: doc/po4a.7.pod:163
@@ -4281,7 +4274,7 @@ msgid ""
 "it's not unique), and give an B<endboundary> matching nothing. Don't use "
 "simple strings here like B<\"EOF\">, but prefer those which have less chance "
 "to be in your document."
-msgstr ""
+msgstr "Se si vuole aggiungere qualcosa alla fine del documento, fare in modo che B<position> corrisponda a qualunque riga del documento (ma solo una riga. Po4a non procederà se questa non è univoca), e fare in modo che B<endboundary> non corrisponda a nulla. Non usare stringhe semplici come B<\"EOF\">, ma preferire quelle che hanno meno probabilità di esistere nel documento."
 
 #. type: verbatim
 #: doc/po4a.7.pod:164
@@ -4289,14 +4282,14 @@ msgstr ""
 msgid ""
 " PO4A-HEADER:mode=after;position=About this document;beginboundary=FakePo4aBoundary\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER:mode=after;position=About this document;beginboundary=FakePo4aBoundary\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:165
 msgid ""
 "In any case, remember that these are regexp. For example, if you want to "
 "match the end of a nroff section ending with the line"
-msgstr ""
+msgstr "In ogni caso, si ricordi che queste sono espressioni regolari. Ad esempio, se si desidera far corrispondere la fine di una sezione nroff che finisce con la riga"
 
 #. type: verbatim
 #: doc/po4a.7.pod:166
@@ -4304,7 +4297,7 @@ msgstr ""
 msgid ""
 "  .fi\n"
 "\n"
-msgstr ""
+msgstr "  .fi\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:167
@@ -4312,7 +4305,7 @@ msgid ""
 "don't use B<.fi> as B<endboundary>, because it will match with \"the[ fi]le"
 "\", which is obviously not what you expect. The correct B<endboundary> in "
 "that case is: B<^\\.fi$>."
-msgstr ""
+msgstr "non usare B<.fi> come B<endboundary>, perché corrisponderà con \"the[ fi]le\", che ovviamente non è ciò che ci si aspettava. Il B<endboundary> corretto in quel caso è: B<^\\.fi$>."
 
 #. type: textblock
 #: doc/po4a.7.pod:168
@@ -4320,17 +4313,17 @@ msgid ""
 "If the addendum doesn't go where you expected, try to pass the B<-vv> "
 "argument to the tools, so that they explain you what they do while placing "
 "the addendum."
-msgstr ""
+msgstr "Se l'addendum non va dove ci si aspettava, provate a passare l'argomento B<-vv> agli strumenti, in modo che questi possano spiegare cosa avviene durante il piazzamento dell'addendum."
 
 #. type: =head3
 #: doc/po4a.7.pod:169
 msgid "More detailed example"
-msgstr ""
+msgstr "Esempio più dettagliato"
 
 #. type: textblock
 #: doc/po4a.7.pod:170
 msgid "Original document (POD formatted):"
-msgstr ""
+msgstr "Documento originale (formattato POD):"
 
 #. type: verbatim
 #: doc/po4a.7.pod:171
@@ -4345,6 +4338,14 @@ msgid ""
 " |me\n"
 "\n"
 msgstr ""
+" |=head1 NOME\n"
+" |\n"
+" |dummy - un programma fantoccio\n"
+" |\n"
+" |=head1 AUTORE\n"
+" |\n"
+" |me\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:172
@@ -4352,7 +4353,7 @@ msgid ""
 "Then, the following addendum will ensure that a section (in French) about "
 "the translator is added at the end of the file (in French, \"TRADUCTEUR\" "
 "means \"TRANSLATOR\", and \"moi\" means \"me\")."
-msgstr ""
+msgstr "Poi, il seguente addendum assicurerà che una sezione (in Francese) riguardante il traduttore venga aggiunta alla fine del file (in Francese, \"TRADUCTEUR\" significa \"TRADUTTORE\", e \"moi\" significa \"me\")."
 
 #. type: verbatim
 #: doc/po4a.7.pod:173
@@ -4366,12 +4367,19 @@ msgid ""
 " |\n"
 "\n"
 msgstr ""
+" |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^=head\n"
+" |\n"
+" |=head1 TRADUCTEUR\n"
+" |\n"
+" |moi\n"
+" |\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:174
 msgid ""
 "In order to put your addendum before the AUTHOR, use the following header:"
-msgstr ""
+msgstr "Per mettere il proprio addendum prima dell'AUTHOR, usare l'impostazione seguente:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:175
@@ -4379,7 +4387,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:176
@@ -4389,12 +4397,12 @@ msgid ""
 "declaring the authors. So, the addendum will be put between both sections. "
 "Note that if another section is added between NAME and AUTHOR sections "
 "later, po4a will wrongfully put the addenda before the new section."
-msgstr ""
+msgstr "Questo funziona perché la successiva riga che corrisponde al B<beginboundary> /^=head1/ dopo la sezione \"NAME\" (tradotta in \"NOM\" in Francese), è quella che dichiara gli autori. Perciò, l'addendum verrà messo tra entrambe le sezioni. Si noti che se un'altra sezione viene aggiunta in seguito tra le sezioni NAME e AUTHOR, po4a metterà erroneamente l'addenda prima della nuova sezione."
 
 #. type: textblock
 #: doc/po4a.7.pod:177
 msgid "To avoid this you may accomplish the same using B<mode>=I<before>:"
-msgstr ""
+msgstr "Per evitare ciò si può ottenere lo stesso risultato usando B<mode>=I<before>:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:178
@@ -4402,7 +4410,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER:mode=before;position=^=head1 AUTEUR\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER:mode=before;position=^=head1 AUTEUR\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:180
@@ -4412,7 +4420,7 @@ msgid ""
 "B<po4a-translate>), each of them needing more than 3 arguments. Moreover, it "
 "was difficult with this system to use only one PO file for all your "
 "documents when more than one format was used."
-msgstr ""
+msgstr "L'uso di po4a si è dimostrato indurre un po' in errore gli utenti dato che è necessario chiamare due programmi diversi nell'ordine giusto (B<po4a-updatepo> e poi B<po4a-translate>), ognuno dei quali che necessita più di tre argomenti. Inoltre, era difficile con questo sistema usare solo un file PO per tutti i documenti quando viene usato più di un formato."
 
 #. type: textblock
 #: doc/po4a.7.pod:181
@@ -4421,7 +4429,7 @@ msgid ""
 "project is converted to the system, you write a simple configuration file "
 "explaining where your translation files are (PO and POT), where the original "
 "documents are, their formats and where their translations should be placed."
-msgstr ""
+msgstr "Il programma L<po4a(1)> è stato progettato per risolvere questi problemi. Una volta che il progetto viene convertito al sistema, si scrive un semplice file di configurazione che descrive dove sono posizionati il file di traduzione (PO e POT), dove sono i documenti originali, i loro formati e dove le loro traduzioni dovrebbero essere posizionate."
 
 #. type: textblock
 #: doc/po4a.7.pod:182
@@ -4432,14 +4440,14 @@ msgid ""
 "once before editing the PO files to update them and once afterward to get a "
 "completely updated translated document. But you only need to remember one "
 "command line."
-msgstr ""
+msgstr "Poi, chiamando po4a(1) su questo si file assicura che i file PO vengano sincronizzati rispetto al documento originale, e che il documento tradotto sia generato correttamente. Naturalmente, si vorrà chiamare questo programma due volte: la prima volta prima di modificare i file PO per aggiornarli e una seconda volta in seguito per ottenere un documento tradotto completamente aggiornato. Ma basta ricordarsi solo una riga di comando."
 
 #. type: textblock
 #: doc/po4a.7.pod:184
 msgid ""
 "po4a modules have options (specified with the B<-o> option) that can be used "
 "to change the module behavior."
-msgstr ""
+msgstr "I moduli po4a hanno opzioni (specificate con l'opzione B<-o>) che possono essere usate per cambiare il comportamento del modulo."
 
 #. type: textblock
 #: doc/po4a.7.pod:185
@@ -4448,7 +4456,7 @@ msgid ""
 "own modules. To make them visible to po4a, copy your modules into a path "
 "called C</bli/blah/blu/lib/Locale/Po4a/> and then adding the path C</bli/"
 "blah/blu> in the C<PERLIB> or C<PERL5LIB> environment variable. For example:"
-msgstr ""
+msgstr "Si può anche modificare il codice sorgente dei moduli esistenti o anche scrivere i propri moduli. Per renderli visibili a po4a, copiare i propri moduli in un percorso nella forma C</bli/blah/blu/lib/Locale/Po4a/> e poi aggiungerlo al percorso C</bli/blah/blu> nelle variabili ambiente C<PERLIB> o C<PERL5LIB>. Per esempio:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:186
@@ -4456,12 +4464,12 @@ msgstr ""
 msgid ""
 "   PERLLIB=$PWD/lib po4a --previous po4a/po4a.cfg\n"
 "\n"
-msgstr ""
+msgstr "   PERLLIB=$PWD/lib po4a --previous po4a/po4a.cfg\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:187
 msgid "Note: the actual name of the lib directory is not important."
-msgstr ""
+msgstr "Nota: il nome effettivo della cartella lib non è importante."
 
 #. type: =head1
 #: doc/po4a.7.pod:188
