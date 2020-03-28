@@ -93,6 +93,13 @@ directory.
   ./Build test --test_files t/25-yaml.t verbose=1
 ```
 
+The PERL5LIB variable can be used to run your modified modules without
+reinstalling everything:
+
+```
+  PERL5LIB=../lib/ perl ../po4a-normalize -f text -o markdown t-20-text/PandocYamlFrontMatter.md
+```
+
 ## Writing a test
 
 In order to define a new test, you can use some convenience
