@@ -93,6 +93,13 @@ directory.
   ./Build test --test_files t/25-yaml.t verbose=1
 ```
 
+The PERL5LIB variable can be used to run your modified modules without
+reinstalling everything:
+
+```
+  PERL5LIB=../lib/ perl ../po4a-normalize -f text -o markdown t-20-text/PandocYamlFrontMatter.md
+```
+
 ## Writing a test
 
 In order to define a new test, you can use some convenience
@@ -174,9 +181,14 @@ push @tests,
 
 # Submitting Your Patch
 
-When submitting a patch, please use the Pull Request feature on GitHub.
-Your PR should be based on the latest code in the master branch.
-Please rebase your PR as needed.
+When submitting a patch, please either fill a Pull Request on 
+[mquinson/po4a](https://github.com/mquinson/po4a) on GitHub or a Merge
+Request on [mquinson/po4a](https://salsa.debian.org/mquinson/po4a)
+salsa instance of GitLab. If you go for the salsa server, please do
+not fill your MR against the debian/po4a repository that is dedicated
+to the packaging of the software (unless, of course, your change is
+against the packaging). Your request should be based on the latest
+code in the master branch. Please rebase your work as needed.
 
 Finally, all PRs should include an update the the NEWS file. Please follow
 the format and briefly describe the change and provide a reference to

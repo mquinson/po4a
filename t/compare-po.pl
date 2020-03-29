@@ -45,7 +45,7 @@ foreach my $l1 (<IN1>) {
     chomp $l2; 
 
     unless (($l1 eq $l2) or ($ignore_ref and ($l1 =~ m/^#:/) and ($l2 =~ m/^#:/))) {
-	die "Files $f1 and $f2 differ at line $lineno:\n-${l1}+${l2}\n";
+	die "Files $f1 and $f2 differ at line $lineno:\n-${l1}\n+${l2}\n";
     }
 }
 close IN1;
