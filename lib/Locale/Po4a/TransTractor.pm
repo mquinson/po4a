@@ -146,7 +146,7 @@ of each paragraph.
                #   - push to output the leading tag (untranslated) and the
                #     rest of the paragraph (translated)
                $self->pushline(  "<p>"
-                               . $document->translate($paragraph,$pararef)
+                               . $self->translate($paragraph,$pararef)
                                );
 
                next PARAGRAPH;
