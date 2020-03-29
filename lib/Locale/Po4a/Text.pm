@@ -57,6 +57,7 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
+use YAML::Tiny;
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -514,15 +515,169 @@ sub parse_markdown_bibliographic_information {
     }
 }
 
+# Support YAML Front Matter in Markdown documents
+#
+# If the text starts with a YAML ---\n separator, the full text until
+# the next YAML ---\n separator is considered YAML metadata.
+#
+# If the information spans multiple lines, the following
+# lines must be indented with space.
+# If information is omitted, it's just a percent sign
+# and a blank line.
+#
+sub parse_markdown_yaml_front_matter {
+    my ($self,$line,$blockref) = @_;
+    my ($nextline, $nextref);
+    my $yfm;
+    ($nextline, $nextref) = $self->shiftline();
+    while (defined($nextline)) {
+        last if ($nextline =~ /^---$/);
+        $yfm .= $nextline;
+        ($nextline, $nextref) = $self->shiftline();
+    }
+    die "Could not get the YAML front matter from the file." if (length($yfm)==0);
+    my $yamlarray = YAML::Tiny->read_string($yfm)
+        || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
+    die "Empty YAML front matter" unless (length($yamlarray)>0);
+
+    my ($indent,$ctx) = (0, "");
+    foreach my $cursor ( @$yamlarray ) {
+        # An empty document
+        if ( ! defined $cursor ) {
+            $self->pushline("---\n");
+            # Do nothing
+
+        # A scalar document
+        } elsif ( ! ref $cursor ) {
+            $self->pushline("---\n");
+            $self->pushline(format_scalar($self->translate($cursor, $blockref, "YAML header (scalar)", "wrap" => 0)));
+
+        # A list at the root
+        } elsif ( ref $cursor eq 'ARRAY' ) {
+            if ( @$cursor ) {
+                $self->pushline("---\n");
+                do_array($self, $blockref, $cursor, $indent, $ctx);
+            } else {
+                $self->pushline("---[]\n");
+            }
+
+        # A hash at the root
+        } elsif ( ref $cursor eq 'HASH' ) {
+            if ( %$cursor ) {
+                $self->pushline("---\n");
+                do_hash($self, $blockref, $cursor, $indent, $ctx);
+            } else {
+                $self->pushline("--- {}\n");
+            }
+
+        } else {
+            die ("Cannot serialize " . ref($cursor));
+        }
+        $self->pushline("---\n");
+    }
+
+    sub format_scalar {
+        my $string = $_[0];
+        my $is_key = $_[1];
+
+        return '~'  unless defined $string;
+        return "''" unless length  $string;
+        if (Scalar::Util::looks_like_number($string)) {
+            # keys and values that have been used as strings get quoted
+            if ( $is_key ) {
+                return qq['$string'];
+            } else {
+                return $string;
+            }
+        }
+        if ( $string =~ /[\x00-\x09\x0b-\x0d\x0e-\x1f\x7f-\x9f\'\n]/ ) {
+            $string =~ s/\\/\\\\/g;
+            $string =~ s/"/\\"/g;
+            $string =~ s/\n/\\n/g;
+            $string =~ s/[\x85]/\\N/g;
+            $string =~ s/([\x7f-\x9f])/'\x' . sprintf("%X",ord($1))/ge;
+            return qq|"$string"|;
+        }
+        if ( $string =~ /(?:^[~!@#%&*|>?:,'"`{}\[\]]|^-+$|\s|:\z)/ ) {
+            return "'$string'";
+        }
+        return $string;
+    }
+    sub do_array {
+        my ($self, $blockref, $array, $indent, $ctx) = @_;
+       foreach my $el ( @$array ) {
+           my $header = ('  ' x $indent) . '- ';
+           my $type = ref $el;
+           if ( ! $type ) {
+               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML header: $ctx", "wrap" => 0)). "\n");
+
+           } elsif ( $type eq 'ARRAY' ) {
+               if ( @$el ) {
+                   $self->pushline($header."\n");
+                   do_array($self, $blockref, $el, $indent + 1, $ctx);
+               } else {
+                   $self->pushline($header." []\n");
+               }
+
+           } elsif ( $type eq 'HASH' ) {
+               if ( keys %$el ) {
+                   $self->pushline($header."\n");
+                   do_hash($self, $blockref, $el, $indent + 1, $ctx);
+               } else {
+                   $self->pushline($header." {}\n");
+               }
+
+           } else {
+               die "YAML $type references not supported";
+           }
+       }
+    }
+    sub do_hash {
+        my ($self, $blockref, $hash, $indent, $ctx) = @_;
+        foreach my $name ( sort keys %$hash ) {
+            my $el   = $hash->{$name};
+            my $header = ('  ' x $indent) . format_scalar($name, 1). ":";
+            my $type = ref $el;
+            if ( ! $type ) {
+                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML header: $ctx$name", "wrap" => 0)). "\n");
+
+            } elsif ( $type eq 'ARRAY' ) {
+                if ( @$el ) {
+                    $self->pushline($header."\n");
+                    do_array($self, $blockref, $el, $indent + 1, "$ctx$name ");
+                } else {
+                    $self->pushline($header." []\n");
+                }
+
+            } elsif ( $type eq 'HASH' ) {
+                if ( keys %$el ) {
+                    $self->pushline($header."\n");
+                    do_hash($self, $blockref, $el, $indent + 1, "$ctx$name ");
+                } else {
+                    $self->pushline($header." {}\n");
+                }
+
+            } else {
+                die "YAML $type references not supported";
+            }
+        }
+    }
+
+    return;
+}
+
 sub parse_markdown {
     my ($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph) = @_;
     if ($expect_header) {
-        # Either we find and parse the bibliographic information,
-        # or there is no line with a percent sign.
+        # It is only possible to find and parse the bibliographic
+        # information or the YAML Front Matter from the first line.
         # Anyway, stop expecting header information for the next run.
         $expect_header = 0;
         if ($line =~ /^%(.*)$/) {
             parse_markdown_bibliographic_information($self, $line, $ref);
+            return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
+        } elsif ($line =~ /^---$/) {
+            parse_markdown_yaml_front_matter($self, $line, $ref);
             return ($paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
         }
     }
