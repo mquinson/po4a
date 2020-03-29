@@ -90,12 +90,16 @@ sub run_all_tests {
 
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
+    
+    remove_tree("tmp") if (-e "tmp");
     make_path("tmp");
+    my $clean_tmp = 1;
 
     foreach my $test (@tests) {
         $test = create_tests_for_normalize($test);
         my $test_name   = $test->{'doc'} . ' runs';
         my $exit_status = system( $test->{'run'} );
+	$clean_tmp = 0 unless ($exit_status == 0); # Do not clean tmp files out on error
 
         # Mark failing tests as TODO
         if ( defined $test->{'todo'} && length( $test->{'todo'} ) > 0 ) {
@@ -140,8 +144,8 @@ sub run_all_tests {
         }
     }
 
-    # Clean up test files
-    remove_tree("tmp");
+    # Clean up test files if no error occured
+    remove_tree("tmp") if ($clean_tmp);
     chdir ".." or die "Can't chdir back to root directory\n";
 }
 
