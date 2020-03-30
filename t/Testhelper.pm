@@ -45,7 +45,7 @@ sub create_tests_for_normalize {
             my ( $options, $test_directory, $basename, $ext ) =
               ( $1, $2, $3, $4 );
             my $run_cmd =
-                "perl ../po4a-normalize"
+                "perl ../po4a-normalize -v "
               . " $options $test_directory/$basename.$ext"
               . " > tmp/$basename.err 2>&1"
               . " && mv po4a-normalize.po tmp/$basename.pot"
@@ -54,7 +54,7 @@ sub create_tests_for_normalize {
             # If there's a translation, also test the translated output.
             if ( -f "$test_directory/$basename.trans.po" ) {
                 $run_cmd .=
-                    " && perl ../po4a-translate"
+                    " && perl ../po4a-translate -v "
                   . " $options -m $test_directory/$basename.$ext"
                   . " -p $test_directory/$basename.trans.po"
                   . " -l tmp/$basename.trans.out"
