@@ -535,10 +535,10 @@ sub parse_markdown_yaml_front_matter {
         $yfm .= $nextline;
         ($nextline, $nextref) = $self->shiftline();
     }
-    die "Could not get the YAML front matter from the file." if (length($yfm)==0);
+    die "Could not get the YAML Front Matter from the file." if (length($yfm)==0);
     my $yamlarray = YAML::Tiny->read_string($yfm)
         || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
-    die "Empty YAML front matter" unless (length($yamlarray)>0);
+    die "Empty YAML Front Matter" unless (length($yamlarray)>0);
 
     my ($indent,$ctx) = (0, "");
     foreach my $cursor ( @$yamlarray ) {
@@ -550,7 +550,7 @@ sub parse_markdown_yaml_front_matter {
         # A scalar document
         } elsif ( ! ref $cursor ) {
             $self->pushline("---\n");
-            $self->pushline(format_scalar($self->translate($cursor, $blockref, "YAML header (scalar)", "wrap" => 0)));
+            $self->pushline(format_scalar($self->translate($cursor, $blockref, "YAML Front Matter (scalar)", "wrap" => 0)));
 
         # A list at the root
         } elsif ( ref $cursor eq 'ARRAY' ) {
@@ -609,7 +609,7 @@ sub parse_markdown_yaml_front_matter {
            my $header = ('  ' x $indent) . '- ';
            my $type = ref $el;
            if ( ! $type ) {
-               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML header: $ctx", "wrap" => 0)). "\n");
+               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML Front Matter: $ctx", "wrap" => 0)). "\n");
 
            } elsif ( $type eq 'ARRAY' ) {
                if ( @$el ) {
@@ -639,7 +639,7 @@ sub parse_markdown_yaml_front_matter {
             my $header = ('  ' x $indent) . format_scalar($name, 1). ":";
             my $type = ref $el;
             if ( ! $type ) {
-                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML header: $ctx$name", "wrap" => 0)). "\n");
+                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML Front Matter: $ctx$name", "wrap" => 0)). "\n");
 
             } elsif ( $type eq 'ARRAY' ) {
                 if ( @$el ) {
