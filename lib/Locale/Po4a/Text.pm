@@ -606,7 +606,7 @@ sub parse_markdown_yaml_front_matter {
            my $header = ('  ' x $indent) . '- ';
            my $type = ref $el;
            if ( ! $type ) {
-               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML Front Matter: $ctx", "wrap" => 0)). "\n");
+               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx", "wrap" => 0)). "\n");
 
            } elsif ( $type eq 'ARRAY' ) {
                if ( @$el ) {
@@ -636,12 +636,12 @@ sub parse_markdown_yaml_front_matter {
             my $header = ('  ' x $indent) . format_scalar($name, 1). ":";
             my $type = ref $el;
             if ( ! $type ) {
-                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML Front Matter: $ctx$name", "wrap" => 0)). "\n");
+                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0)). "\n");
 
             } elsif ( $type eq 'ARRAY' ) {
                 if ( @$el ) {
                     $self->pushline($header."\n");
-                    do_array($self, $blockref, $el, $indent + 1, "$ctx$name ");
+                    do_array($self, $blockref, $el, $indent + 1, "$ctx $name");
                 } else {
                     $self->pushline($header." []\n");
                 }
@@ -649,7 +649,7 @@ sub parse_markdown_yaml_front_matter {
             } elsif ( $type eq 'HASH' ) {
                 if ( keys %$el ) {
                     $self->pushline($header."\n");
-                    do_hash($self, $blockref, $el, $indent + 1, "$ctx$name ");
+                    do_hash($self, $blockref, $el, $indent + 1, "$ctx $name");
                 } else {
                     $self->pushline($header." {}\n");
                 }
