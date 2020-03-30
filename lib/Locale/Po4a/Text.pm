@@ -518,12 +518,9 @@ sub parse_markdown_bibliographic_information {
 # Support YAML Front Matter in Markdown documents
 #
 # If the text starts with a YAML ---\n separator, the full text until
-# the next YAML ---\n separator is considered YAML metadata.
-#
-# If the information spans multiple lines, the following
-# lines must be indented with space.
-# If information is omitted, it's just a percent sign
-# and a blank line.
+# the next YAML ---\n separator is considered YAML metadata. The ...\n
+# "end of document" separator can be used at the end of the YAML
+# block.
 #
 sub parse_markdown_yaml_front_matter {
     my ($self,$line,$blockref) = @_;
@@ -531,7 +528,7 @@ sub parse_markdown_yaml_front_matter {
     my $yfm;
     ($nextline, $nextref) = $self->shiftline();
     while (defined($nextline)) {
-        last if ($nextline =~ /^---$/);
+        last if ($nextline =~ /^(---|\.\.\.)$/);
         $yfm .= $nextline;
         ($nextline, $nextref) = $self->shiftline();
     }
