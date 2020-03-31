@@ -12,11 +12,14 @@ my @tests;
 $ENV{'LC_ALL'}="C";
 $ENV{'COLUMNS'}="80";
 
+# Path to the tested executables. AUTOPKGTEST_TMP is set on salsa CI for Debian packages.
+my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
+
 mkdir "t/tmp" unless -e "t/tmp";
 
 $tests[0]{'doc'}  = 'simple config file - init';
 $tests[0]{'run'}  =
-    'perl ../po4a t-05-config/test00.conf > tmp/test00.err 2>&1';
+    "${execpath}/po4a".' t-05-config/test00.conf > tmp/test00.err 2>&1';
 @{$tests[0]{'test'}} =
     ("diff -u t-05-config/test00.err tmp/test00.err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
@@ -28,7 +31,7 @@ $tests[1]{'doc'}  = 'simple config file - with a provided translation';
 $tests[1]{'run'}  =
     'cp t-05-config/test00.fr.po tmp/test00.fr.po && '.
     'chmod u+w tmp/test00.fr.po && '.
-    'perl ../po4a t-05-config/test00.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' t-05-config/test00.conf > tmp/err 2>&1';
 @{$tests[1]{'test'}} =
     ("diff -u t-05-config/test01.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
@@ -38,7 +41,7 @@ $tests[1]{'run'}  =
 
 $tests[2]{'doc'}  = 'template languages';
 $tests[2]{'run'}  =
-    'perl ../po4a t-05-config/test02.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[2]{'test'}} =
     ("diff -u t-05-config/test02.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -56,7 +59,7 @@ $tests[3]{'doc'}  = 'template languages - with translations';
 $tests[3]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a t-05-config/test02.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[3]{'test'}} =
     ("diff -u t-05-config/test03.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -74,7 +77,7 @@ $tests[4]{'doc'}  = 'template languages - command line arguments';
 $tests[4]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a -v -k 0 t-05-config/test02.conf >tmp/err 2>&1';
+    "${execpath}/po4a".' -v -k 0 t-05-config/test02.conf >tmp/err 2>&1';
 @{$tests[4]{'test'}} =
     ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -92,7 +95,7 @@ $tests[5]{'doc'}  = 'command line arguments + options';
 $tests[5]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a -v t-05-config/test03.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' -v t-05-config/test03.conf > tmp/err 2>&1';
 @{$tests[5]{'test'}} =
     ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -110,7 +113,7 @@ $tests[6]{'doc'}  = 'module alias + options';
 $tests[6]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a t-05-config/test04.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' t-05-config/test04.conf > tmp/err 2>&1';
 @{$tests[6]{'test'}} =
     ("diff -u t-05-config/test06.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -128,7 +131,7 @@ $tests[7]{'doc'}  = 'module alias + options per language';
 $tests[7]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a t-05-config/test05.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' t-05-config/test05.conf > tmp/err 2>&1';
 @{$tests[7]{'test'}} =
     ("diff -u t-05-config/test07.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -146,7 +149,7 @@ $tests[8]{'doc'}  = 'template languages in po4a_paths';
 $tests[8]{'run'}  =
     'cp t-05-config/test02.??.po tmp/ && '.
     'chmod u+w tmp/test02.??.po && '.
-    'perl ../po4a -f t-05-config/test08.conf > tmp/err 2>&1';
+    "${execpath}/po4a".' -f t-05-config/test08.conf > tmp/err 2>&1';
 @{$tests[8]{'test'}} =
     ("diff -u t-05-config/test03.err tmp/err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
@@ -164,7 +167,7 @@ $tests[9]{'run'}  =
     'cp t-05-config/test00.fr.po tmp '.
     '&& printf "\n#. Fake entry\nmsgid \"This entry will disappear if pofile is updated\"\nmsgstr \"\"\n" >> tmp/test00.fr.po '.
     '&& touch -d "2 hours ago" tmp/test00.fr.po '.
-    '&& perl ../po4a --no-update t-05-config/test00.conf >> tmp/test09.err 2>&1';
+    "&& ${execpath}/po4a".' --no-update t-05-config/test00.conf >> tmp/test09.err 2>&1';
 @{$tests[9]{'test'}} =
     ("diff -u t-05-config/test09.err tmp/test09.err 1>&2",
      "perl compare-po.pl --no-ref t-05-config/test09.fr tmp/test00.fr.po",
@@ -214,7 +217,7 @@ for (my $i=0; $i<scalar @tests; $i++) {
     my $ret = system('cp t-05-config/test50.* tmp/; ');
     is($ret,0, "cp did not went well");
 
-    $ret = system('perl ../po4a -f t-05-config/test50.conf > tmp/test50.err 2>&1');
+    $ret = system("${execpath}/po4a".' -f t-05-config/test50.conf > tmp/test50.err 2>&1');
     isnt($ret, 0, "Error was not detected");
     if ($ret == 0) {
 	diag("Output reads:");

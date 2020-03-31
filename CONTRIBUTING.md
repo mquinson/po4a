@@ -100,6 +100,14 @@ reinstalling everything:
   PERL5LIB=../lib/ perl ../po4a-normalize -f text -o markdown t-20-text/PandocYamlFrontMatter.md
 ```
 
+To the opposite, if you want to test the installed binaries instead of
+the local ones, simply set the AUTOPKGTEST_TMP variable:
+
+```
+  AUTOPKGTEST_TMP=1 ./Build test
+```
+
+
 ## Writing a test
 
 In order to define a new test, you can use some convenience

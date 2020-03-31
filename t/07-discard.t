@@ -16,7 +16,7 @@ push @tests,
   {
     'doc' => "po4a-translate discards the fuzzy translation (and report so)",
     'run' =>
-"perl ../po4a-translate -f pod -k 0 -m t-07-discard/pod -p t-07-discard/pod.po -l tmp/pod.fr",
+"PATH/po4a-translate -f pod -k 0 -m t-07-discard/pod -p t-07-discard/pod.po -l tmp/pod.fr",
     'test' => "diff -u t-07-discard/pod.fr tmp/pod.fr $diff_pod_flags",
   };
 

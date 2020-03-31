@@ -29,7 +29,7 @@ my $build = Po4aBuilder->new
                         'Unicode::GCString' => 0, # Used by the Text module (asciidoc)
                        },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
-          'po4a-translate', 'po4a-normalize', 'po4a', 'scripts/msguntypot',
+          'po4a-translate', 'po4a-normalize', 'po4a', 'msguntypot',
           'scripts/po4aman-display-po', 'scripts/po4apod-display-po'],
       add_to_cleanup => ['t/tmp','po/bin/*.gmo', 'blib', '_build'],
       dist_abstract => 'tools to ease the translation of documentation',

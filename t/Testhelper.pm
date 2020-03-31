@@ -32,6 +32,9 @@ our @EXPORT = qw(run_all_tests);
 $ENV{'LC_ALL'}="C";
 $ENV{'COLUMNS'}="80";
 
+# Path to the tested executables. AUTOPKGTEST_TMP is set on salsa CI for Debian packages.
+my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
+
 # The "normalize" hash key is a convenient shortcut
 # to define a test with a po4a-normalize invocation.
 # All those tests are similar, they generate a pot file,
@@ -45,7 +48,7 @@ sub create_tests_for_normalize {
             my ( $options, $test_directory, $basename, $ext ) =
               ( $1, $2, $3, $4 );
             my $run_cmd =
-                "perl ../po4a-normalize"
+                "PATH/po4a-normalize"
               . " $options $test_directory/$basename.$ext"
               . " > tmp/$basename.err 2>&1"
               . " && mv po4a-normalize.po tmp/$basename.pot"
@@ -54,7 +57,7 @@ sub create_tests_for_normalize {
             # If there's a translation, also test the translated output.
             if ( -f "$test_directory/$basename.trans.po" ) {
                 $run_cmd .=
-                    " && perl ../po4a-translate"
+                    " && PATH/po4a-translate"
                   . " $options -m $test_directory/$basename.$ext"
                   . " -p $test_directory/$basename.trans.po"
                   . " -l tmp/$basename.trans.out"
@@ -98,6 +101,7 @@ sub run_all_tests {
     foreach my $test (@tests) {
         $test = create_tests_for_normalize($test);
         my $test_name   = $test->{'doc'} . ' runs';
+	$test->{'run'} =~ s/PATH/${execpath}/g;
         my $exit_status = system( $test->{'run'} );
 	$clean_tmp = 0 unless ($exit_status == 0); # Do not clean tmp files out on error
 
