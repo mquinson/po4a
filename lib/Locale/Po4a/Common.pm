@@ -18,8 +18,7 @@ Locale::Po4a::Common - common parts of the po4a scripts and utils
 Locale::Po4a::Common contains common parts of the po4a scripts and some useful
 functions used along the other modules.
 
-In order to use Locale::Po4a programatically, one may want to disable
-the use of Text::WrapI18N, by writing something like:
+If needed, you can disable the use of Text::WrapI18N as such:
 
     use Locale::Po4a::Common qw(nowrapi18n);
     use Locale::Po4a::Text;
@@ -28,9 +27,8 @@ instead of:
 
     use Locale::Po4a::Text;
 
-Ordering is important here: as most Locale::Po4a modules themselves
-load Locale::Po4a::Common, the first time this module is loaded
-determines whether Text::WrapI18N is used.
+The ordering is important here: as most Locale::Po4a modules load themselves
+Locale::Po4a::Common, the first time this module is loaded determines whether Text::WrapI18N is used.
 
 =cut
 
@@ -106,7 +104,7 @@ sub show_version {
     print sprintf(gettext(
         "%s version %s.\n".
         "Written by Martin Quinson and Denis Barbier.\n\n".
-        "Copyright © 2002-2018 Software in the Public Interest, Inc.\n".
+        "Copyright © 2002-2020 Software in the Public Interest, Inc.\n".
         "This is free software; see source code for copying\n".
         "conditions. There is NO warranty; not even for\n".
         "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."

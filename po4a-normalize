@@ -115,7 +115,7 @@ sub show_version {
     exit 0;
 }
 
-my ($blank,$help_fmt,$help,$type,$debug,$verbose,@options);
+my ($blank,$help_fmt,$help,$type,$debug,$verbose,$wrappo,@options);
 my ($mastchar);
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
@@ -128,6 +128,7 @@ GetOptions(
         'master-charset|M=s'    => \$mastchar,
 
         'option|o=s'   => \@options,
+        'wrap-po=s'    => \$wrappo,
 
         'verbose|v'    => \$verbose,
         'debug|d'      => \$debug,
@@ -139,8 +140,8 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () unless scalar @ARGV == 1;
 
 my %options = (
-    "verbose" => $verbose,
-    "debug" => $debug);
+    "verbose"    => $verbose,
+    "debug"      => $debug);
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
         $options{$1}="$2";
@@ -157,6 +158,8 @@ $filename eq '-' || -e $filename || die wrap_msg(gettext("File %s does not exist
 $parser->read($filename);
 $parser->{TT}{utf_mode} = 1;
 $parser->{TT}{file_in_charset} = $mastchar;
+my %pot_options = ('wrap-po' => $wrappo);
+$parser->setpoout(Locale::Po4a::Po->new(\%pot_options));
 $parser->parse();
 if ($blank) {
     foreach my $msgid (keys %{$parser->{TT}{po_out}{po}}) {

@@ -485,7 +485,7 @@ configuration file.
 
 =back
 
-=head2 OPTIONS WHICH MODIFY POT HEADER
+=head2 OPTIONS MODIFYING THE POT HEADER
 
 =over 4
 
@@ -502,6 +502,22 @@ references on several lines, to mimic B<gettext> tools (B<xgettext> and
 B<msgmerge>).  This option will become the default in a future release, because
 it is more sensible.  The B<nowrap> option is available so that users who want
 to keep the old behavior can do so.
+
+=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
+
+Specify how the po file should be wrapped. This gives the choice between files
+that are nicely wrapped but could lead to git conflicts, and files that are
+easier to handle automatically, but harder to read for humans.
+
+Historically, the gettext suite has reformatted the po files at the 77th column
+for cosmetics. This option specifies the behavior of po4a. If set to a numerical
+value, po4a will wrap the po file after this column and after newlines in the
+content. If set to B<newlines>, po4a will only split the msgid and msgstr after
+newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
+The wrapping of the reference comments is controlled by the B<--porefs> option.
+
+Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+on how newlines are added to the content of these strings.
 
 =item B<--msgid-bugs-address> I<email@address>
 
@@ -700,6 +716,7 @@ sub get_options {
         "variables"       => {},
         "partial"         => [],
         "porefs"          => "full",
+        "warp-po"         => undef,
         "copyright-holder"=> undef,
         "msgid-bugs-address"=> undef,
         "package-name"    => undef,
@@ -734,6 +751,7 @@ sub get_options {
         'option|o=s'            => \@options,
         'variable=s'            => \@variables,
         'porefs=s'              => \$opts{"porefs"},
+        'wrap-po=s'             => \$opts{"warp-po"},
         'copyright-holder=s'    => \$opts{"copyright-holder"},
         'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
         'package-name=s'        => \$opts{"package-name"},
@@ -1254,7 +1272,7 @@ if ($update_pot_file) {
     chdir $po4a_opts{"srcdir"}
         if (defined $po4a_opts{"srcdir"});
     my %pot_options;
-    foreach (qw(porefs msgid-bugs-address copyright-holder package-name package-version)) {
+    foreach (qw(porefs wrap-po msgid-bugs-address copyright-holder package-name package-version)) {
         if (defined $po4a_opts{$_}) {
             $pot_options{$_} = $po4a_opts{$_};
         }

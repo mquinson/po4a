@@ -117,6 +117,22 @@ B<msgmerge>).  This option will become the default in a future release, because
 it is more sensible.  The B<nowrap> option is available so that users who want
 to keep the old behavior can do so.
 
+=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
+
+Specify how the po file should be wrapped. This gives the choice between files
+that are nicely wrapped but could lead to git conflicts, and files that are
+easier to handle automatically, but harder to read for humans.
+
+Historically, the gettext suite has reformatted the po files at the 77th column
+for cosmetics. This option specifies the behavior of po4a. If set to a numerical
+value, po4a will wrap the po file after this column and after newlines in the
+content. If set to B<newlines>, po4a will only split the msgid and msgstr after
+newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
+The wrapping of the reference comments is controlled by the B<--porefs> option.
+
+Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+on how newlines are added to the content of these strings.
+
 =item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
@@ -196,6 +212,7 @@ my $previous;
 my $noprevious;
 my $msgmerge_opt = "";
 my $porefs = "full";
+my $wrappo;
 GetOptions('help|h'      => \$help,
            'help-format' => \$help_fmt,
 
@@ -208,6 +225,7 @@ GetOptions('help|h'      => \$help,
            'option|o=s'  => \@options,
 
            'no-previous' => \$noprevious,
+           'wrap-po'     => \$wrappo,
            'previous'    => \$previous,
            'msgmerge-opt=s'      => \$msgmerge_opt,
            'copyright-holder=s'  => \$copyright_holder,
@@ -226,8 +244,7 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 $msgmerge_opt .= " --previous" unless $noprevious;
-# $msgmerge_opt .= " --add-location=file" # Don't depend on too recent msgmerge for nothing
-#   if ($porefs =~ m/^file/);
+$msgmerge_opt .= " --add-location=file" if ($porefs =~ m/^file/);
 $msgmerge_opt =~ s/^\s+//;
 
 my %options = (
@@ -237,7 +254,8 @@ my %options = (
     "msgid-bugs-address" => $msgid_bugs_address,
     "package-name"       => $package_name,
     "package-version"    => $package_version,
-    "porefs"             => $porefs);
+    "porefs"             => $porefs,
+    "wrap-po"            => $wrappo);
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
@@ -248,7 +266,7 @@ foreach (@options) {
 }
 
 # parser
-my ($doc)=Locale::Po4a::Chooser::new($format,%options);
+my $doc = Locale::Po4a::Chooser::new($format,%options);
 
 map { -e $_ || die wrap_msg(gettext("File %s does not exist."), $_) } @masterfiles;
 map { die wrap_msg(gettext("po4a-updatepo can't take the input PO from stdin."))

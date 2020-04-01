@@ -65,6 +65,22 @@ B<msgmerge>).  This option will become the default in a future release, because
 it is more sensible.  The B<nowrap> option is available so that users who want
 to keep the old behavior can do so.
 
+=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
+
+Specify how the po file should be wrapped. This gives the choice between files
+that are nicely wrapped but could lead to git conflicts, and files that are
+easier to handle automatically, but harder to read for humans.
+
+Historically, the gettext suite has reformatted the po files at the 77th column
+for cosmetics. This option specifies the behavior of po4a. If set to a numerical
+value, po4a will wrap the po file after this column and after newlines in the
+content. If set to B<newlines>, po4a will only split the msgid and msgstr after
+newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
+The wrapping of the reference comments is controlled by the B<--porefs> option.
+
+Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+on how newlines are added to the content of these strings.
+
 =item B<--msgid-bugs-address> I<email@address>
 
 Set the report address for msgid bugs. By default, the created POT files
@@ -174,26 +190,31 @@ sub initialize {
     my $time = time;
     my $date = strftime("%Y-%m-%d %H:%M", localtime($time)) . timezone($time);
     chomp $date;
-#    $options = ref($options) || $options;
 
     $self->{options}{'porefs'}= 'full,nowrap';
     $self->{options}{'msgid-bugs-address'}= undef;
     $self->{options}{'copyright-holder'}= "Free Software Foundation, Inc.";
     $self->{options}{'package-name'}= "PACKAGE";
     $self->{options}{'package-version'}= "VERSION";
+    $self->{options}{'wrap-po'} = 76;
     foreach my $opt (keys %$options) {
+#        print STDERR "$opt: ".(defined($options->{$opt})?$options->{$opt}:"(undef)")."\n";
         if ($options->{$opt}) {
-            die wrap_mod("po4a::po",
-                         dgettext ("po4a", "Unknown option: %s"), $opt)
+            die wrap_mod("po4a::po", dgettext ("po4a", "Unknown option: %s"), $opt)
                 unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options->{$opt};
         }
     }
+    $self->{options}{'wrap-po'} =~ /^(no|newlines|\d+)$/ ||
+        die wrap_mod("po4a::po",
+                     dgettext ("po4a", "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)"),
+                     $self->{options}{'wrap-po'});
+
     $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none|never)(,(no)?wrap)?$/ ||
         die wrap_mod("po4a::po",
                      dgettext ("po4a",
                                "Invalid value for option 'porefs' ('%s' is ".
-                               "not one of 'full', 'counter', 'file' or 'never')"),
+                               "not one of 'full', 'counter', 'noline', 'file' or 'never' + eventually ',wrap' or ',nowrap')"),
                      $self->{options}{'porefs'});
     $self->{options}{'porefs'} =~ s/noline/file/; # backward compat. 'file' used to be called 'noline'.
     $self->{options}{'porefs'} =~ s/none/never/; # backward compat. 'never' used to be called 'none'.
@@ -440,7 +461,7 @@ sub write{
         if defined($self->{header_comment}) && length($self->{header_comment});
 
     print $fh "msgid \"\"\n";
-    print $fh "msgstr ".quote_text($self->{header})."\n\n";
+    print $fh "msgstr ".quote_text($self->{header}, $self->{options}{'wrap-po'})."\n\n";
 
 
     my $buf_msgstr_plural; # Used to keep the first msgstr of plural forms
@@ -490,25 +511,25 @@ sub write{
                 if ($self->get_charset =~ /^utf-8$/i) {
                     my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
                     $msgid = Encode::decode_utf8($msgid);
-                    $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
-                    $buf_msgstr_plural = Encode::encode_utf8("msgstr[0] ".quote_text($msgstr)."\n");
+                    $output .= Encode::encode_utf8("msgid ".quote_text($msgid, $self->{options}{'wrap-po'})."\n");
+                    $buf_msgstr_plural = Encode::encode_utf8("msgstr[0] ".quote_text($msgstr, $self->{options}{'wrap-po'})."\n");
                 } else {
-                    $output = "msgid ".quote_text($msgid)."\n";
-                    $buf_msgstr_plural = "msgstr[0] ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+                    $output = "msgid ".quote_text($msgid, $self->{options}{'wrap-po'})."\n";
+                    $buf_msgstr_plural = "msgstr[0] ".quote_text($self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'})."\n";
                 }
             } elsif ($self->{po}{$msgid}{'plural'} == 1) {
 # TODO: there may be only one plural form
                 if ($self->get_charset =~ /^utf-8$/i) {
                     my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
                     $msgid = Encode::decode_utf8($msgid);
-                    $output = Encode::encode_utf8("msgid_plural ".quote_text($msgid)."\n");
+                    $output = Encode::encode_utf8("msgid_plural ".quote_text($msgid, $self->{options}{'wrap-po'})."\n");
                     $output .= $buf_msgstr_plural;
-                    $output .= Encode::encode_utf8("msgstr[1] ".quote_text($msgstr)."\n");
+                    $output .= Encode::encode_utf8("msgstr[1] ".quote_text($msgstr, $self->{options}{'wrap-po'})."\n");
                     $buf_msgstr_plural = "";
                 } else {
-                    $output = "msgid_plural ".quote_text($msgid)."\n";
+                    $output = "msgid_plural ".quote_text($msgid, $self->{options}{'wrap-po'})."\n";
                     $output .= $buf_msgstr_plural;
-                    $output .= "msgstr[1] ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+                    $output .= "msgstr[1] ".quote_text($self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'})."\n";
                 }
             } else {
                 die wrap_msg(dgettext("po4a","Can't write PO files with more than two plural forms."));
@@ -517,11 +538,11 @@ sub write{
             if ($self->get_charset =~ /^utf-8$/i) {
                 my $msgstr = Encode::decode_utf8($self->{po}{$msgid}{'msgstr'});
                 $msgid = Encode::decode_utf8($msgid);
-                $output .= Encode::encode_utf8("msgid ".quote_text($msgid)."\n");
-                $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr)."\n");
+                $output .= Encode::encode_utf8("msgid ".quote_text($msgid, $self->{options}{'wrap-po'})."\n");
+                $output .= Encode::encode_utf8("msgstr ".quote_text($msgstr, $self->{options}{'wrap-po'})."\n");
             } else {
-                $output .= "msgid ".quote_text($msgid)."\n";
-                $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'})."\n";
+                $output .= "msgid ".quote_text($msgid, $self->{options}{'wrap-po'})."\n";
+                $output .= "msgstr ".quote_text($self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'})."\n";
             }
         }
 
@@ -1295,13 +1316,13 @@ sub push_raw {
         if (    defined $msgstr
             and defined $self->{po}{$msgid}{'msgstr'}
             and $self->{po}{$msgid}{'msgstr'} ne $msgstr) {
-            my $txt=quote_text($msgid);
+            my $txt=quote_text($msgid, $self->{options}{'wrap-po'});
             my ($first,$second)=
                 (format_comment(". ",$self->{po}{$msgid}{'reference'}).
-                 quote_text($self->{po}{$msgid}{'msgstr'}),
+                 quote_text($self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'}),
 
                  format_comment(". ",$reference).
-                 quote_text($msgstr));
+                 quote_text($msgstr), $self->{options}{'wrap-po'});
 
             if ($keep_conflict) {
                 if ($self->{po}{$msgid}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s) {
@@ -1572,14 +1593,17 @@ sub escape_text {
 }
 
 # put quotes around the string on each lines (without escaping it)
-# It does also normalize the text (ie, make sure its representation is wraped
+# It does also normalize the text (ie, make sure its representation is wrapped
 #   on the 80th char, but without changing the meaning of the string)
 sub quote_text {
     my $string = shift;
+    my $do_wrap = shift; # either 'no' or 'newlines', or column at which we should wrap
 
     return '""' unless defined($string) && length($string);
 
-    print STDERR "\nquote [$string]====" if $debug{'quote'};
+    return "\"$string\"" if ($do_wrap eq 'no');
+
+    print STDERR "\nquote $do_wrap [$string]====" if $debug{'quote'};
     # break lines on newlines, if any
     # see unescape_text for an explanation on \G
     $string =~ s/(           # $1:
@@ -1588,7 +1612,8 @@ sub quote_text {
                   (\\\\)*    #    followed by any even number of '\'
                  \\n)        # and followed by an escaped newline
                 /$1\n/sgx;   # single string, match globally, allow comments
-    $string = wrap($string);
+
+    $string = wrap($string, $do_wrap) if ($do_wrap ne 'newlines');
     my @string = split(/\n/,$string);
     $string = join ("\"\n\"",@string);
     $string = "\"$string\"";
@@ -1633,8 +1658,7 @@ sub canonize {
     return $text;
 }
 
-# wraps the string. We don't use Text::Wrap since it mangles whitespace at
-# the end of splited line
+# wraps the string. We don't use Text::Wrap since it mangles whitespace at the end of the split line
 sub wrap {
     my $text=shift;
     return "0" if ($text eq '0');

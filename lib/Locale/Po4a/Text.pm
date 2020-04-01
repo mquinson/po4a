@@ -156,11 +156,11 @@ my %control = ();
 
 =item B<neverwrap>
 
-Prevent po4a from wrapping lines.
+Prevent po4a from wrapping any lines. This means that every content is handled verbatim, even simple paragraphs.
 
 =cut
 
-my $neverwrap = 0;
+my $defaultwrap = 1;
 
 my $parse_func = \&parse_fallback;
 
@@ -211,7 +211,7 @@ sub initialize {
     }
 
     if (defined $options{'neverwrap'}) {
-        $neverwrap = 1;
+        $defaultwrap = 0;
     }
 
     if (defined $options{'debianchangelog'}) {
@@ -247,14 +247,14 @@ sub parse_fallback {
         # Break paragraphs on lines containing only spaces
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
-        $wrapped_mode = 1 unless defined($self->{verbatim});
+        $wrapped_mode = $defaultwrap unless defined($self->{verbatim});
         $self->pushline($line."\n");
         undef $self->{controlkey};
     } elsif ($line =~ /^-- $/) {
         # Break paragraphs on email signature hint
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
         $self->pushline($line."\n");
     } elsif (   $line =~ /^=+$/
              or $line =~ /^_+$/
@@ -263,7 +263,7 @@ sub parse_fallback {
         $paragraph .= $line."\n";
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
     } elsif ($tabs eq "split" and $line =~ m/\t/ and $paragraph !~ m/\t/s) {
         $wrapped_mode = 0;
         do_paragraph($self,$paragraph,$wrapped_mode);
@@ -272,7 +272,7 @@ sub parse_fallback {
     } elsif ($tabs eq "split" and $line !~ m/\t/ and $paragraph =~ m/\t/s) {
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph = "$line\n";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
     } else {
         if ($line =~ /^\s/) {
             # A line starting by a space indicates a non-wrap
@@ -375,7 +375,7 @@ sub parse_control {
         }
         $self->pushline("$tag: $t\n");
         $paragraph="";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
         $self->{bullet} = "";
         $self->{indent} = " ";
     } elsif ($line eq " .") {
@@ -445,7 +445,7 @@ sub parse_markdown_bibliographic_information {
                 ($nextline, $nextref) = $self->shiftline();
             }
             # Now the title should be complete, give it to translation.
-            my $t = $self->translate($title, $ref, "Pandoc title block", "wrap" => 1);
+            my $t = $self->translate($title, $ref, "Pandoc title block", "wrap" => $defaultwrap);
             $t = Locale::Po4a::Po::wrap($t);
             my $first_line = 1;
             foreach my $translated_line (split /\n/, $t) {
@@ -699,7 +699,7 @@ sub parse_markdown {
         # Add the newline again for the output
         $self->pushline($t . "\n");
         $paragraph="";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
         $self->pushline(($level x length($t))."\n");
     } elsif ($line =~ m/^(#{1,6})( +)(.*?)( +\1)?$/) {
         my $titlelevel1 = $1;
@@ -715,7 +715,7 @@ sub parse_markdown {
                                  "Title $titlelevel1",
                                  "wrap" => 0);
         $self->pushline($titlelevel1.$titlespaces.$t.$titlelevel2."\n");
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
     } elsif ($line =~ /^[ ]{0,3}([*_-])\s*(?:\1\s*){2,}$/) {
         # Horizontal rule
         do_paragraph($self,$paragraph,$wrapped_mode);
@@ -750,7 +750,7 @@ sub parse_markdown {
         # Avoid translating Markdown lines containing only markup
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
         $self->pushline("$line\n");
     } elsif ($line =~ /^\s*\[\[\!\S[^\]]*\]\]\s*$/) { # sole macro
         # Preserve some Markdown markup as a single line
@@ -762,7 +762,7 @@ sub parse_markdown {
         # Markdown markup needing separation _before_ this line
         do_paragraph($self,$paragraph,$wrapped_mode);
         $paragraph="$line\n";
-        $wrapped_mode = 1;
+        $wrapped_mode = $defaultwrap;
     } else {
         return parse_fallback($self,$line,$ref,$paragraph,$wrapped_mode,$expect_header,$end_of_paragraph);
     }
@@ -773,7 +773,7 @@ sub parse {
     my $self = shift;
     my ($line,$ref);
     my $paragraph="";
-    my $wrapped_mode = 1;
+    my $wrapped_mode = $defaultwrap;
     my $expect_header = 1;
     my $end_of_paragraph = 0;
     ($line,$ref)=$self->shiftline();
@@ -785,7 +785,7 @@ sub parse {
             $file = $1;
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
-            $wrapped_mode = 1;
+            $wrapped_mode = $defaultwrap;
             $expect_header = 1;
         }
 
@@ -818,7 +818,7 @@ sub parse {
         if ($end_of_paragraph) {
             do_paragraph($self,$paragraph,$wrapped_mode);
             $paragraph="";
-            $wrapped_mode = 1;
+            $wrapped_mode = $defaultwrap;
             $end_of_paragraph = 0;
         }
         ($line,$ref)=$self->shiftline();
@@ -833,7 +833,7 @@ sub do_paragraph {
     my $type = shift || $self->{type} || "Plain text";
     return if ($paragraph eq "");
 
-	$wrap = 0 if $neverwrap;
+    $wrap = 0 unless $defaultwrap;
 
 # DEBUG
 #    my $b;
@@ -873,7 +873,7 @@ TEST_BULLET:
                     my $trans = $self->translate($text,
                                                  $self->{ref},
                                                  "Bullet: '$indent1$bullet'",
-                                                 "wrap" => 1,
+                                                 "wrap" => $defaultwrap,
                                                  "wrapcol" => - (length $indent2));
                     $trans =~ s/^/$indent1$bullet/s;
                     $trans =~ s/\n(.)/\n$indent2$1/sg;
@@ -926,6 +926,8 @@ Tested successfully on simple text files and NEWS.Debian files.
  Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
  Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.
+ Copyright © 2020 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
+$

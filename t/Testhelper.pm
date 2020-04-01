@@ -149,7 +149,7 @@ sub run_all_tests {
     }
 
     # Clean up test files if no error occured
-    remove_tree("tmp") if ($clean_tmp);
+#    remove_tree("tmp") if ($clean_tmp);
     chdir ".." or die "Can't chdir back to root directory\n";
 }
 
