@@ -21,11 +21,9 @@ push @tests,
   },
   {
     'doc' => "normalisation test",
-    'run' => 'PATH/po4a-normalize -f sgml t-16-sgml/test2.sgml '
-      . '&& mv po4a-normalize.po tmp '
-      . '&& mv po4a-normalize.output tmp',
-    'test' => 'perl compare-po.pl t-16-sgml/test2.pot tmp/po4a-normalize.po'
-      . ' && perl compare-po.pl t-16-sgml/test2-normalized.sgml tmp/po4a-normalize.output',
+    'run' => 'PATH/po4a-normalize --format sgml --localize tmp/test2.sgml --pot tmp/test2.pot t-16-sgml/test2.sgml '
+    'test' => 'perl compare-po.pl t-16-sgml/test2.pot tmp/test2.pot'
+      . ' && perl compare-po.pl t-16-sgml/test2-normalized.sgml tmp/test2.sgml',
 
   };
 

@@ -49,18 +49,18 @@ sub create_tests_for_normalize {
               ( $1, $2, $3, $4 );
             my $run_cmd =
                 "PATH/po4a-normalize"
+              . " --pot tmp/$basename.pot"
+              . " --localized tmp/$basename.out"
               . " $options $test_directory/$basename.$ext"
-              . " > tmp/$basename.err 2>&1"
-              . " && mv po4a-normalize.po tmp/$basename.pot"
-              . " && mv po4a-normalize.output tmp/$basename.out";
+              . " > tmp/$basename.err 2>&1";
 
             # If there's a translation, also test the translated output.
             if ( -f "$test_directory/$basename.trans.po" ) {
                 $run_cmd .=
                     " && PATH/po4a-translate"
                   . " $options -m $test_directory/$basename.$ext"
-                  . " -p $test_directory/$basename.trans.po"
-                  . " -l tmp/$basename.trans.out"
+                  . " --po $test_directory/$basename.trans.po"
+                  . " --localized tmp/$basename.trans.out"
                   . " > tmp/$basename.trans.err 2>&1";
             }
             $test->{'run'} = $run_cmd;
