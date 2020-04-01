@@ -67,8 +67,8 @@ to keep the old behavior can do so.
 
 =item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
 
-Specify how the po file should be wrapped. This gives the choice between files
-that are nicely wrapped but could lead to git conflicts, and files that are
+Specify how the po file should be wrapped. This gives the choice between either
+files that are nicely wrapped but could lead to git conflicts, or files that are
 easier to handle automatically, but harder to read for humans.
 
 Historically, the gettext suite has reformatted the po files at the 77th column
