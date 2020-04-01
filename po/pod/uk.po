@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-01 18:09+0200\n"
-"PO-Revision-Date: 2020-04-01 16:21+0000\n"
+"PO-Revision-Date: 2020-04-01 17:26+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -1609,6 +1609,9 @@ msgid ""
 "either files that are nicely wrapped but could lead to git conflicts, or "
 "files that are easier to handle automatically, but harder to read for humans."
 msgstr ""
+"Визначає спосіб перенесення рядків у файлі po. Так можна вибрати між файлами "
+"із добре перенесеними рядками, які можуть спричиняти конфлікти у git, та "
+"файлами, які простіше обробляються автоматично, але є важчими для читання."
 
 #. type: textblock
 #: po4a:157 po4a-updatepo:43 lib/Locale/Po4a/Po.pm:19
@@ -1621,6 +1624,15 @@ msgid ""
 "not wrap the po file at all.  The wrapping of the reference comments is "
 "controlled by the B<--porefs> option."
 msgstr ""
+"Так історично склалося, що комплект програм gettext виконує переформатування "
+"файлів po так, щоб рядки було перенесено на 77-й позиції, з косметичних "
+"міркувань. За допомогою цього параметра можна встановити відповідну "
+"поведінку po4a. Якщо встановлено числове значення, po4a переноситиме рядки у "
+"файлі po після вказаної позиції і після символів розриву рядка у самих "
+"рядках. Якщо встановити значення B<newlines>, po4a розриватиме рядки у msgid "
+"і msgstr лише після символів нового рядка у вмісті. Якщо встановити значення "
+"B<no>, po4a не переноситиме рядки у файлі po взагалі. Перенесення рядків у "
+"коментарях контролюється за допомогою параметра B<--porefs>."
 
 #. type: textblock
 #: po4a:158 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:20
@@ -1628,6 +1640,9 @@ msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "ie on how newlines are added to the content of these strings."
 msgstr ""
+"Зауважте, що цей параметр не стосується того, яким чином переноситимуться "
+"рядки у msgid і msgstr, тобто того, у який спосіб до цих рядків "
+"додаватимуться символи розриву рядків."
 
 #. type: =item
 #: po4a:159 po4a-gettextize:38 po4a-updatepo:45 lib/Locale/Po4a/Po.pm:21
@@ -2159,19 +2174,14 @@ msgstr ""
 
 #. type: textblock
 #: po4a-normalize:8
-#, fuzzy
-#| msgid ""
-#| "The generated document will be written to F<po4a-normalize.output> while "
-#| "the generated PO file will be written to F<po4a-normalize.po>. No way to "
-#| "change that ;)"
 msgid ""
 "The generated document will be written to F<po4a-normalize.output> while the "
 "generated POT file will be written to F<po4a-normalize.po> by default, but "
 "you can use the B<--localized> and B<--pot> options to change that."
 msgstr ""
 "Створений документ буде записано до F<po4a-normalize.output>, а створений "
-"файл PO матиме назву F<po4a-normalize.po>. Можливостей змінити це не "
-"передбачено ;)"
+"файл POT типово матиме назву F<po4a-normalize.po>. Втім, ви можете "
+"скористатися параметрами B<--localized> та B<--pot>, щоб змінити цю назву."
 
 #. type: =item
 #: po4a-normalize:12
@@ -2199,18 +2209,18 @@ msgstr "Корисно для виявлення частин документа
 msgid ""
 "Name of the normalized file to produce (I<po4a-normalize.output> by default)."
 msgstr ""
+"Назва нормалізованого файла, який слід створити (типово, I<po4a-"
+"normalize.output>)."
 
 #. type: =item
 #: po4a-normalize:25
-#, fuzzy
-#| msgid "B<-p>, B<--po>"
 msgid "B<p>, B<--pot>"
-msgstr "B<-p>, B<--po>"
+msgstr "B<p>, B<--pot>"
 
 #. type: textblock
 #: po4a-normalize:26
 msgid "Pot file to produce (I<po4a-normalize.po> by default)."
-msgstr ""
+msgstr "Файл pot, який слід створити (типово, I<po4a-normalize.po>)."
 
 #. type: textblock
 #: po4a-normalize:30
@@ -2221,10 +2231,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a-normalize:34
-#, fuzzy
-#| msgid "Copyright 2002-2012 by SPI, inc."
 msgid "Copyright 2002-2020 by SPI, inc."
-msgstr "© SPI, inc., 2002–2012"
+msgstr "© SPI, inc., 2002–2020."
 
 #. type: textblock
 #: po4a-translate:2
@@ -3123,7 +3131,7 @@ msgstr ""
 #. type: =head3
 #: doc/po4a.7.pod:49
 msgid "text"
-msgstr ""
+msgstr "text"
 
 #. type: textblock
 #: doc/po4a.7.pod:50
@@ -3131,6 +3139,9 @@ msgid ""
 "The Text format is the base format for many formats that include long blocks "
 "of text, including Markdown, debian/changelog, and debian/control."
 msgstr ""
+"Текстовий формат є базовим форматом для багатьох інших форматів, у яких ви "
+"маєте справу зі довгими блоками тексту, зокрема Markdown, debian/changelog "
+"та debian/control."
 
 #. type: textblock
 #: doc/po4a.7.pod:51
@@ -3139,6 +3150,9 @@ msgid ""
 "other documentation systems.  See L<Locale::Po4a::Text(3pm)|Text> for "
 "details."
 msgstr ""
+"Цей формат є типовим для генераторів статичних сайтів, файлів README та "
+"інших систем документації. Див. L<Locale::Po4a::Text(3pm)|Text>, щоб "
+"дізнатися більше."
 
 #. type: =head3
 #: doc/po4a.7.pod:52
@@ -6081,7 +6095,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:5
 msgid "If needed, you can disable the use of Text::WrapI18N as such:"
-msgstr ""
+msgstr "Якщо потрібно, ви можете вимкнути використання Text::WrapI18N взагалі:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:6
@@ -6112,11 +6126,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:9
-#, fuzzy
-#| msgid ""
-#| "Ordering is important here: as most Locale::Po4a modules themselves load "
-#| "Locale::Po4a::Common, the first time this module is loaded determines "
-#| "whether Text::WrapI18N is used."
 msgid ""
 "The ordering is important here: as most Locale::Po4a modules load themselves "
 "Locale::Po4a::Common, the first time this module is loaded determines "
@@ -9957,6 +9966,8 @@ msgid ""
 "Prevent po4a from wrapping any lines. This means that every content is "
 "handled verbatim, even simple paragraphs."
 msgstr ""
+"Заборонити po4a переносити рядки. Це означає, що усі дані будуть оброблятися "
+"буквально, навіть прості абзаци."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:35
@@ -9975,30 +9986,24 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:40
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
 " © Jonas Smedegaard <dr@jones.dk>, 2008-2009, 2018.\n"
+" © Martin Quinson <mquinson#debian.org>, 2020.\n"
 "\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:41
-#, fuzzy
-#| msgid ""
-#| "This program is free software; you may redistribute it and/or modify it "
-#| "under the terms of GPL (see the COPYING file)."
 msgid ""
 "This program is free software; you may redistribute it and/or modify it "
 "under the terms of GPL (see the COPYING file).  $"
 msgstr ""
 "Ця програма є вільним програмним забезпеченням; ви можете поширювати її і/"
-"або вносити до неї зміни за умов дотримання GPL (див. файл COPYING)."
+"або вносити до неї зміни за умов дотримання GPL (див. файл COPYING). $"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:2
@@ -10204,14 +10209,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:29
-#, fuzzy, no-wrap
-#| msgid ""
-#| "               #   - push to output the leading tag (untranslated) and the\n"
-#| "               #     rest of the paragraph (translated)\n"
-#| "               $self->pushline(  \"<p>\"\n"
-#| "                               . $document->translate($paragraph,$pararef)\n"
-#| "                               );\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "               #   - push to output the leading tag (untranslated) and the\n"
 "               #     rest of the paragraph (translated)\n"
@@ -10223,7 +10221,7 @@ msgstr ""
 "               #   - виштовхуємо на вихід початковий теґ (неперекладений) і\n"
 "               #     решту абзацу (перекладену)\n"
 "               $self->pushline(  \"<p>\"\n"
-"                               . $document->translate($paragraph,$pararef)\n"
+"                               . $self->translate($paragraph,$pararef)\n"
 "                               );\n"
 "\n"
 
