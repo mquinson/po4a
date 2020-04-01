@@ -197,6 +197,7 @@ sub initialize {
     $self->{options}{'package-name'}= "PACKAGE";
     $self->{options}{'package-version'}= "VERSION";
     $self->{options}{'wrap-po'} = 76;
+    $self->{options}{'pot-charset'} = "CHARSET";
     foreach my $opt (keys %$options) {
 #        print STDERR "$opt: ".(defined($options->{$opt})?$options->{$opt}:"(undef)")."\n";
         if ($options->{$opt}) {
@@ -249,7 +250,7 @@ sub initialize {
                                 "Language-Team: LANGUAGE <LL\@li.org>\n".
                                 "Language: \n".
                                 "MIME-Version: 1.0\n".
-                                "Content-Type: text/plain; charset=CHARSET\n".
+                                "Content-Type: text/plain; charset=".$self->{options}{'pot-charset'}."\n".
                                 "Content-Transfer-Encoding: 8bit\n");
 
     $self->{encoder}=find_encoding("ascii");

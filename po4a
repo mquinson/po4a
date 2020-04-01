@@ -351,14 +351,12 @@ Show a short help message.
 =item B<-M>, B<--master-charset>
 
 Charset of the files containing the documents to translate. Note that all
-master documents must use the same charset for now. This is a known
-limitation, and we are working on solving this.
+master documents must use the same charset.
 
 =item B<-L>, B<--localized-charset>
 
 Charset of the files containing the localized documents. Note that all
-translated documents will use the same charset for now. This is a known
-limitation, and we are working on solving this.
+translated documents will use the same charset.
 
 =item B<-A>, B<--addendum-charset>
 
@@ -1277,6 +1275,7 @@ if ($update_pot_file) {
             $pot_options{$_} = $po4a_opts{$_};
         }
     }
+    $pot_options{'pot-charset'} = $po4a_opts{"mastchar"};
     my $potfile=Locale::Po4a::Po->new(\%pot_options);
     chdir $po4a_opts{"calldir"}
         if (defined $po4a_opts{"srcdir"});
