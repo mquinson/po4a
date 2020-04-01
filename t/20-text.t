@@ -19,7 +19,7 @@ push @tests,
 push @tests,
   {
     'doc'       => "MarkDownNoWrap test",
-    'normalize' => "-f text --master-charset UTF-8 --wrap-po=newlines -o neverwrap -o markdown t-20-text/MarkDownNoWrap.md",
+    'normalize' => "-f text --master-charset UTF-8 --wrap-po=newlines -o markdown t-20-text/MarkDownNoWrap.md",
   };
 
   # MarkDownNestedLists: currently broken (https://github.com/mquinson/po4a/issues/131)
