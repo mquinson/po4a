@@ -173,7 +173,7 @@ sub show_version {
 
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 my ($outfile,$width,$threshold)=('-',80,80);
-my ($help,$help_fmt,@verbose,$debug,@addfiles,$format,@options);
+my ($help,$help_fmt,@verbose,$debug,$wrappo,@addfiles,$format,@options);
 my ($master_filename,$po_filename);
 my ($mastchar,$locchar,$addchar);
 GetOptions(
@@ -189,6 +189,7 @@ GetOptions(
         'master-charset|M=s'    => \$mastchar,
         'localized-charset|L=s' => \$locchar,
         'addendum-charset|A=s' => \$addchar,
+        'wrap-po=s'            => \$wrappo,
 
         'option|o=s'    => \@options,
 
@@ -232,7 +233,8 @@ $doc->process('po_in_name'       => \@pos,
               'file_in_name'     => \@masters,
               'file_in_charset'  => $mastchar,
               'file_out_charset' => $locchar,
-              'addendum_charset' => $addchar);
+              'addendum_charset' => $addchar,
+              'wrap-po'          => $wrappo);
 
 my ($percent,$hit,$queries) = $doc->stats();
 my $error=0;
