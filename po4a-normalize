@@ -30,8 +30,8 @@ po4a don't change the document when it's not supposed to. Only use it if
 you're developing a new module, or if you doubt the sanity of the tools.
 
 The generated document will be written to F<po4a-normalize.output> while the
-generated PO file will be written to F<po4a-normalize.po>. No way to change
-that ;)
+generated POT file will be written to F<po4a-normalize.po> by default, but 
+you can use the B<--localized> and B<--pot> options to change that.
 
 =head1 OPTIONS
 
@@ -68,6 +68,14 @@ option to see the list of available formats.
 
 Charset of the file containing the document to translate.
 
+=item B<-l>, B<--localized>
+
+Name of the normalized file to produce (I<po4a-normalize.output> by default). 
+
+=item B<p>, B<--pot>
+
+Pot file to produce (I<po4a-normalize.po> by default).
+
 =item B<-V>, B<--version>
 
 Display the version of the script and exit.
@@ -89,7 +97,7 @@ L<po4a(7)>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002-2012 by SPI, inc.
+Copyright 2002-2020 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
@@ -117,11 +125,14 @@ sub show_version {
 
 my ($blank,$help_fmt,$help,$type,$debug,$verbose,$wrappo,@options);
 my ($mastchar);
+my ($localized, $potfile) = ('po4a-normalize.output', 'po4a-normalize.po');
 Getopt::Long::Configure('no_auto_abbrev','no_ignore_case');
 GetOptions(
         'help|h'       => \$help,
         'help-format'  => \$help_fmt,
         'format|f=s'   => \$type,
+        'localized|l=s'=> \$localized,
+        'pot|p=s'      => \$potfile,
 
         'blank|b'      => \$blank,
 
@@ -177,8 +188,8 @@ if ($blank) {
     $parser->{TT}{file_in_charset} = $mastchar;
     $parser->parse();
 }
-$parser->write('po4a-normalize.output');
-$parser->writepo('po4a-normalize.po');
+$parser->write($localized);
+$parser->writepo($potfile);
 
 __END__
 
