@@ -312,8 +312,7 @@ documents.
 =item B<ontagerror>
 
 This option defines the behavior of the module when it encounters invalid
-XML syntax (a closing tag which does not match the last opening tag, or a
-tag's attribute without value).
+XML syntax (a closing tag which does not match the last opening tag).
 It can take the following values:
 
 =over
@@ -1333,6 +1332,8 @@ sub treat_attributes {
                         }
                         $text .= $quot;
                     }
+                } else { # This is an attribute with no '=' sign, nothing to translate
+                    $complete = 1;
                 }
             }
 
