@@ -930,4 +930,5 @@ Tested successfully on simple text files and NEWS.Debian files.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
-$
+
+=cut
