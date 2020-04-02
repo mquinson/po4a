@@ -25,7 +25,7 @@ push @tests,
   },
   {
     'doc'       => "yamlskiparray test",
-    'normalize' => "-f yaml -o 'keys=dir' -o skip_array=1 t-25-yaml/yamlskiparray.yaml",
+    'normalize' => "-f yaml -o keys=title -o skip_array t-25-yaml/yamlskiparray.yaml",
   },
   {
     'doc'       => "yamlutf8 test",

@@ -75,8 +75,7 @@ sub walk_yaml {
     my $el=shift;
     my $reference=shift;
 
-
-    if (ref $el eq ref {}) {
+    if (ref $el eq 'HASH') {
         print STDERR  "begin a hash\n" if $self->{'options'}{'debug'};
         foreach my $key (sort keys %$el) {
             if (ref $el->{$key} ne ref "") {
@@ -88,13 +87,12 @@ sub walk_yaml {
             }
         }
     }
-    elsif (ref $el eq ref []) {
-        next if ($self->{options}{skip_array});
+    elsif (ref $el eq 'ARRAY') {
         print STDERR  "begin an array\n" if $self->{'options'}{'debug'};
         for my $i (0 .. $#{$el}) {
             if (ref $el->[$i] ne ref "") {
                 &walk_yaml($self, $el->[$i], "$reference>");
-            } else {
+            } elsif (!$self->{options}{skip_array}) { # translate that element only if not asked to skip arrays
                 my $trans = $self->translate(Encode::encode_utf8($el->[$i]), $reference, "Array Element", 'wrap' => 0);
                 $el->[$i] = Encode::decode_utf8($trans); # Save the translation
             }
