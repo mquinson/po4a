@@ -35,24 +35,19 @@ push @tests,
   {
     'run' =>
 "PATH/po4a-gettextize -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l t-03-asciidoc/TitlesUTF8.asciidoc -L UTF-8 -p tmp/TitlesUTF8.po",
-    'test' =>
-"perl compare-po.pl --no-ref t-03-asciidoc/TitlesUTF8.po tmp/TitlesUTF8.po",
+    'test' => "diff -u -I\'^# \' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-03-asciidoc/TitlesUTF8.po tmp/TitlesUTF8.po 1>&2",
     'doc'      => "test titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
   },
   {
-    'run' =>
-"msgattrib --clear-fuzzy -o tmp/TitlesUTF8.po tmp/TitlesUTF8.po && PATH/po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesUTF8.asciidoc -p tmp/TitlesUTF8.po",
-    'test' =>
-      "diff tmp/TitlesUTF8.asciidoc t-03-asciidoc/TitlesUTF8.asciidoc 1>&2",
+    'run'      => "msgattrib --clear-fuzzy -o tmp/TitlesUTF8.po tmp/TitlesUTF8.po && PATH/po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesUTF8.asciidoc -p tmp/TitlesUTF8.po",
+    'test'     => "diff tmp/TitlesUTF8.asciidoc t-03-asciidoc/TitlesUTF8.asciidoc 1>&2",
     'doc'      => "translate titles with UTF-8 encoding",
     'requires' => "Unicode::GCString"
   },
   {
-    'run' =>
-"PATH/po4a-gettextize -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l t-03-asciidoc/TitlesLatin1.asciidoc -L iso-8859-1 -p tmp/TitlesLatin1.po",
-    'test' =>
-"perl compare-po.pl --no-ref t-03-asciidoc/TitlesLatin1.po tmp/TitlesLatin1.po",
+    'run' => "PATH/po4a-gettextize -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l t-03-asciidoc/TitlesLatin1.asciidoc -L iso-8859-1 -p tmp/TitlesLatin1.po",
+    'test' => "diff -u -I\'^# \' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'  t-03-asciidoc/TitlesLatin1.po tmp/TitlesLatin1.po 1>&2",
     'doc'      => "test titles with latin1 encoding",
     'requires' => "Unicode::GCString"
   },

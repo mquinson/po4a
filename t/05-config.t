@@ -22,8 +22,8 @@ $tests[0]{'run'}  =
     "${execpath}/po4a".' t-05-config/test00.conf > tmp/test00.err 2>&1';
 @{$tests[0]{'test'}} =
     ("diff -u t-05-config/test00.err tmp/test00.err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
-     "perl compare-po.pl --no-ref t-05-config/test00.fr.po-empty tmp/test00.fr.po",
+     "diff -u -I\'^#\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.pot tmp/test00.pot 1>&2",
+     "diff -u -I^# -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.fr.po-empty tmp/test00.fr.po 1>&2",
      "test ! -e tmp/test00_man.fr.1");
 
 
@@ -34,8 +34,8 @@ $tests[1]{'run'}  =
     "${execpath}/po4a".' t-05-config/test00.conf > tmp/err 2>&1';
 @{$tests[1]{'test'}} =
     ("diff -u t-05-config/test01.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test00.pot tmp/test00.pot",
-     "perl compare-po.pl --no-ref t-05-config/test00.fr.po tmp/test00.fr.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.pot tmp/test00.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.fr.po tmp/test00.fr.po 1>&2",
      "diff -u t-05-config/test00_man.fr.1 tmp/test00_man.fr.1 1>&2");
 
 
@@ -44,11 +44,11 @@ $tests[2]{'run'}  =
     "${execpath}/po4a".' t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[2]{'test'}} =
     ("diff -u t-05-config/test02.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po-empty tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po-empty tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po-empty tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po-empty tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po-empty tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po-empty tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po-empty tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po-empty tmp/test02.de.po 1>&2",
      "test ! -e tmp/test02_man.fr.1",
      "test ! -e tmp/test02_man.es.1",
      "test ! -e tmp/test02_man.it.1",
@@ -62,11 +62,11 @@ $tests[3]{'run'}  =
     "${execpath}/po4a".' t-05-config/test02.conf > tmp/err 2>&1';
 @{$tests[3]{'test'}} =
     ("diff -u t-05-config/test03.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "test ! -e tmp/test02_man.es.1",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -80,11 +80,11 @@ $tests[4]{'run'}  =
     "${execpath}/po4a".' -v -k 0 t-05-config/test02.conf >tmp/err 2>&1';
 @{$tests[4]{'test'}} =
     ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "diff -u t-05-config/test02_man.es.1 tmp/test02_man.es.1 1>&2",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -98,11 +98,11 @@ $tests[5]{'run'}  =
     "${execpath}/po4a".' -v t-05-config/test03.conf > tmp/err 2>&1';
 @{$tests[5]{'test'}} =
     ("sed -e 's,^\.* done\.,. done.,' -e 's,^tmp/test02\\.[^:]*\.po: ,,' tmp/err | diff -u t-05-config/test04.err -  1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "diff -u t-05-config/test02_man.es.1 tmp/test02_man.es.1 1>&2",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -116,11 +116,11 @@ $tests[6]{'run'}  =
     "${execpath}/po4a".' t-05-config/test04.conf > tmp/err 2>&1';
 @{$tests[6]{'test'}} =
     ("diff -u t-05-config/test06.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "diff -u t-05-config/test02_man.es.1 tmp/test02_man.es.1 1>&2",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -134,11 +134,11 @@ $tests[7]{'run'}  =
     "${execpath}/po4a".' t-05-config/test05.conf > tmp/err 2>&1';
 @{$tests[7]{'test'}} =
     ("diff -u t-05-config/test07.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "diff -u t-05-config/test02_man.es.1 tmp/test02_man.es.1 1>&2",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -152,11 +152,11 @@ $tests[8]{'run'}  =
     "${execpath}/po4a".' -f t-05-config/test08.conf > tmp/err 2>&1';
 @{$tests[8]{'test'}} =
     ("diff -u t-05-config/test03.err tmp/err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test02.pot tmp/test02.pot",
-     "perl compare-po.pl --no-ref t-05-config/test02.fr.po tmp/test02.fr.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.es.po tmp/test02.es.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.it.po tmp/test02.it.po",
-     "perl compare-po.pl --no-ref t-05-config/test02.de.po tmp/test02.de.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' -IContent-Type: t-05-config/test02.pot tmp/test02.pot 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.fr.po tmp/test02.fr.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.es.po tmp/test02.es.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.it.po tmp/test02.it.po 1>&2",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test02.de.po tmp/test02.de.po 1>&2",
      "diff -u t-05-config/test02_man.fr.1 tmp/test02_man.fr.1 1>&2",
      "test ! -e tmp/test02_man.es.1",
      "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1 1>&2",
@@ -170,7 +170,7 @@ $tests[9]{'run'}  =
     "&& ${execpath}/po4a".' --no-update t-05-config/test00.conf >> tmp/test09.err 2>&1';
 @{$tests[9]{'test'}} =
     ("diff -u t-05-config/test09.err tmp/test09.err 1>&2",
-     "perl compare-po.pl --no-ref t-05-config/test09.fr tmp/test00.fr.po",
+     "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test09.fr tmp/test00.fr.po 1>&2",
      "test tmp/test00.fr.po -ot tmp/test09.err");
 
 use Test::More tests => 95;

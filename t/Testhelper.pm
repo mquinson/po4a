@@ -66,8 +66,7 @@ sub create_tests_for_normalize {
             $test->{'run'} = $run_cmd;
 
             my $test_cmd =
-                "perl compare-po.pl"
-              . " $test_directory/$basename.pot tmp/$basename.pot"
+                "diff -u -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' $test_directory/$basename.pot tmp/$basename.pot 1>&2"
               . " && diff -u $test_directory/$basename.out tmp/$basename.out 1>&2"
               . " && diff -u $test_directory/$basename.err tmp/$basename.err 1>&2";
 
@@ -140,7 +139,8 @@ sub run_all_tests {
                         while (<FH>) {
                             diag("  $_");
                         }
-                        diag("(end of $file)");
+                        diag("(end of $file)\n");
+			diag("-------------------------------------------------------------");
                         close(FH);
                     }
                 }
