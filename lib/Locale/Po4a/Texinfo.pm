@@ -156,6 +156,7 @@ sub push_docheader {
 \@c This file was generated with po4a. Translate the source file.
 \@c
 \@c ===========================================================================
+
 END
     $docheader_pushed = 1;
 }
@@ -207,9 +208,9 @@ sub parse {
             $self->pushline($line."\n");
             $self->push_docheader();
         } elsif ($line =~ m/^$RE_COMMENT/) {
-	    if ($line =~ m/^\@(?:c|comment).*?TRANSLATORS:(.*)$/) {
-		$self->add_comment($1);
-	    }
+            if ($line =~ m/^\@(?:c|comment).*?TRANSLATORS:(.*)$/) {
+                $self->add_comment($1);
+            }
             $self->push_docheader();
             $self->pushline($line."\n");
         } elsif (    $closed
