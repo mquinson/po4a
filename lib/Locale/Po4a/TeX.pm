@@ -79,6 +79,7 @@ use vars qw(@ISA @EXPORT);
              %separated_command
              %separated_environment
              %translate_buffer_env
+             &add_comment
              &generic_command
              &register_generic_command
              &register_generic_environment);
@@ -368,6 +369,18 @@ sub post_trans {
 # They are stored in the @comments array, and then displayed as a PO
 # comment with the first translated string of the paragraph.
 my @comments = ();
+
+=item B<add_comment>
+
+Add a string as a comment to be added around the next translated element.
+This is mostly useful to the texinfo module, as comments are automatically handled in TeX.
+
+=cut
+
+sub add_comment {
+    my ($self,$comment) = @_;
+    push @comments, $comment;
+}
 
 =item B<translate>
 

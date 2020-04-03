@@ -36,8 +36,9 @@ areas where they were not expected like documentation.
 Locale::Po4a::Texinfo is a module to help the translation of Texinfo documents into
 other [human] languages.
 
-This module contains the definitions of common Texinfo commands and
-environments.
+This module contains the definitions of common Texinfo commands and environments.
+
+Only the comments starting with 'TRANSLATORS' are added to the PO files to guide the translators.
 
 =head1 STATUS OF THIS MODULE
 
@@ -206,6 +207,9 @@ sub parse {
             $self->pushline($line."\n");
             $self->push_docheader();
         } elsif ($line =~ m/^$RE_COMMENT/) {
+	    if ($line =~ m/^\@(?:c|comment).*?TRANSLATORS:(.*)$/) {
+		$self->add_comment($1);
+	    }
             $self->push_docheader();
             $self->pushline($line."\n");
         } elsif (    $closed
