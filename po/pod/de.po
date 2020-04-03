@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-01 18:09+0200\n"
-"PO-Revision-Date: 2020-03-21 10:55+0100\n"
+"PO-Revision-Date: 2020-04-03 19:45+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -1574,8 +1574,6 @@ msgstr ""
 
 #. type: =head2
 #: po4a:151
-#, fuzzy
-#| msgid "OPTIONS WHICH MODIFY POT HEADER"
 msgid "OPTIONS MODIFYING THE POT HEADER"
 msgstr "OPTIONEN, DIE POT-KOPFZEILEN VERÄNDERN"
 
@@ -1619,7 +1617,7 @@ msgstr ""
 #. type: =item
 #: po4a:155 po4a-updatepo:41 lib/Locale/Po4a/Po.pm:17
 msgid "B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)"
-msgstr ""
+msgstr "B<--wrap-po> B<no>|B<newlines>|I<Zahl> (Vorgabe: 76)"
 
 #. type: textblock
 #: po4a:156 po4a-updatepo:42 lib/Locale/Po4a/Po.pm:18
@@ -1628,6 +1626,10 @@ msgid ""
 "either files that are nicely wrapped but could lead to git conflicts, or "
 "files that are easier to handle automatically, but harder to read for humans."
 msgstr ""
+"Legt fest, wie die PO-Datei umgebrochen werden soll. Dies ermöglicht die "
+"Auswahl zwischen Dateien, die schön umgebrochen sind aber zu GIT-Konflikten "
+"führen können oder Dateien, die leichter automatisch zu handhaben, aber "
+"schwerer für Menschen zu lesen sind."
 
 #. type: textblock
 #: po4a:157 po4a-updatepo:43 lib/Locale/Po4a/Po.pm:19
@@ -1640,6 +1642,14 @@ msgid ""
 "not wrap the po file at all.  The wrapping of the reference comments is "
 "controlled by the B<--porefs> option."
 msgstr ""
+"Aus kosmetischen Gründen hat die Gettext-Programmsammlung PO-Dateien in der "
+"77.Spalte umgebrochen. Diese Option legt das Verhalten von Po4a fest. Falls "
+"auf einen numerischen Wert gesetzt, wird Po4a die PO-Datei nach dieser "
+"Spalte und nach Zeilenumbrüchen im Inhalt umbrechen. Falls auf B<newlines> "
+"gesetzt, wird Po4a die msgid und msgstr nur nach Zeilenumbrüchen im Inhalt "
+"auftrennen. Falls auf B<no> gesetzt, wird Po4a die PO-Datei überhaupt nicht "
+"umbrechen. Der Umbruch der Referenzkommentare wird mit der Option B<--"
+"porefs> gesteuert."
 
 #. type: textblock
 #: po4a:158 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:20
@@ -1647,6 +1657,9 @@ msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "ie on how newlines are added to the content of these strings."
 msgstr ""
+"Beachten Sie, dass diese Option keine Auswirkung darauf hat, wie msgid und "
+"msgstr umgebrochen werden, d.h. wie Zeilenumbrüche zu dem Inhalt dieser "
+"Zeilen hinzugefügt werden."
 
 #. type: =item
 #: po4a:159 po4a-gettextize:38 po4a-updatepo:45 lib/Locale/Po4a/Po.pm:21
@@ -2181,19 +2194,14 @@ msgstr ""
 
 #. type: textblock
 #: po4a-normalize:8
-#, fuzzy
-#| msgid ""
-#| "The generated document will be written to F<po4a-normalize.output> while "
-#| "the generated PO file will be written to F<po4a-normalize.po>. No way to "
-#| "change that ;)"
 msgid ""
 "The generated document will be written to F<po4a-normalize.output> while the "
 "generated POT file will be written to F<po4a-normalize.po> by default, but "
 "you can use the B<--localized> and B<--pot> options to change that."
 msgstr ""
 "Das erstellte Dokument wird nach F<po4a-normalize.output> geschrieben, "
-"während die erstellte PO-Datei nach F<po4a-normalize.po> geschrieben wird. "
-"Das kann nicht geändert werden ;)"
+"während die erstellte POT-Datei nach F<po4a-normalize.po> geschrieben wird. "
+"Sie können dies mit den Optionen B<--localized> und B<--pot> ändern."
 
 #. type: =item
 #: po4a-normalize:12
@@ -2223,18 +2231,18 @@ msgstr ""
 msgid ""
 "Name of the normalized file to produce (I<po4a-normalize.output> by default)."
 msgstr ""
+"Name der zu erstellenden normierten Datei (standardmäßig I<po4a-normalize."
+"output>)."
 
 #. type: =item
 #: po4a-normalize:25
-#, fuzzy
-#| msgid "B<-p>, B<--po>"
 msgid "B<p>, B<--pot>"
-msgstr "B<-p>, B<--po>"
+msgstr "B<p>, B<--pot>"
 
 #. type: textblock
 #: po4a-normalize:26
 msgid "Pot file to produce (I<po4a-normalize.po> by default)."
-msgstr ""
+msgstr "Zu erzeugende POT-Datei (standardmäßig I<po4a-normalize.po>)."
 
 #. type: textblock
 #: po4a-normalize:30
@@ -2245,10 +2253,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a-normalize:34
-#, fuzzy
-#| msgid "Copyright 2002-2012 by SPI, inc."
 msgid "Copyright 2002-2020 by SPI, inc."
-msgstr "Copyright 2002-2012 SPI, Inc."
+msgstr "Copyright 2002-2020 SPI, Inc."
 
 #. type: textblock
 #: po4a-translate:2
@@ -3158,7 +3164,7 @@ msgstr ""
 #. type: =head3
 #: doc/po4a.7.pod:49
 msgid "text"
-msgstr ""
+msgstr "text"
 
 #. type: textblock
 #: doc/po4a.7.pod:50
@@ -3166,6 +3172,8 @@ msgid ""
 "The Text format is the base format for many formats that include long blocks "
 "of text, including Markdown, debian/changelog, and debian/control."
 msgstr ""
+"Das Text-Format ist das Grundlagenformat für viele Formate, die längere "
+"Textblöcke enthalten wie Markdown, debian/changelog und debian/control."
 
 #. type: textblock
 #: doc/po4a.7.pod:51
@@ -3174,6 +3182,9 @@ msgid ""
 "other documentation systems.  See L<Locale::Po4a::Text(3pm)|Text> for "
 "details."
 msgstr ""
+"Dies unterstützt das häufige in »Static Site Generators«, READMEs und "
+"anderen Dokumentationssystemen verwandte Format. Siehe L<Locale::Po4a::"
+"Text(3pm)|Text> für Details."
 
 #. type: =head3
 #: doc/po4a.7.pod:52
@@ -6181,7 +6192,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:5
 msgid "If needed, you can disable the use of Text::WrapI18N as such:"
-msgstr ""
+msgstr "Falls notwendig können Sie Text::WrapI18N deaktiveren, indem Sie"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:6
@@ -6198,7 +6209,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:7
 msgid "instead of:"
-msgstr "geschrieben wird, anstelle von"
+msgstr "anstelle Folgendem schreiben:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Common.pm:8
@@ -6212,11 +6223,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Common.pm:9
-#, fuzzy
-#| msgid ""
-#| "Ordering is important here: as most Locale::Po4a modules themselves load "
-#| "Locale::Po4a::Common, the first time this module is loaded determines "
-#| "whether Text::WrapI18N is used."
 msgid ""
 "The ordering is important here: as most Locale::Po4a modules load themselves "
 "Locale::Po4a::Common, the first time this module is loaded determines "
@@ -10125,6 +10131,8 @@ msgid ""
 "Prevent po4a from wrapping any lines. This means that every content is "
 "handled verbatim, even simple paragraphs."
 msgstr ""
+"Verhindert, dass Po4a irgendwelche Zeilen umbricht. Das bedeutet, dass jeder "
+"Inhalt wortgetreu verarbeitet wird, selbst einfache Absätze."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:35
@@ -10145,30 +10153,24 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:40
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
 " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
+" Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:41
-#, fuzzy
-#| msgid ""
-#| "This program is free software; you may redistribute it and/or modify it "
-#| "under the terms of GPL (see the COPYING file)."
 msgid ""
 "This program is free software; you may redistribute it and/or modify it "
 "under the terms of GPL (see the COPYING file).  $"
 msgstr ""
 "Dieses Programm ist freie Software; Sie können es unter den Bedingungen der "
-"GPL (siehe die Datei COPYING) vertreiben und/oder verändern."
+"GPL (siehe die Datei COPYING) vertreiben und/oder verändern.  $"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:2
@@ -10377,14 +10379,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:29
-#, fuzzy, no-wrap
-#| msgid ""
-#| "               #   - push to output the leading tag (untranslated) and the\n"
-#| "               #     rest of the paragraph (translated)\n"
-#| "               $self->pushline(  \"<p>\"\n"
-#| "                               . $document->translate($paragraph,$pararef)\n"
-#| "                               );\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "               #   - push to output the leading tag (untranslated) and the\n"
 "               #     rest of the paragraph (translated)\n"
@@ -10396,7 +10391,7 @@ msgstr ""
 "               #   - die Ausgabe der führenden Markierung (unübersetzt) und des\n"
 "                  #     Rests des Absatzes (unübersetzt) anstoßen\n"
 "               $self->pushline(  \"<p>\"\n"
-"                               . $document->translate($paragraph,$pararef)\n"
+"                               . $self->translate($paragraph,$pararef)\n"
 "                               );\n"
 "\n"
 
