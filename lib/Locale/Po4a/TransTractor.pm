@@ -325,8 +325,6 @@ sub process {
         $self->write($params{'file_out_name'});
         print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Done write(%s)"), $params{'file_out_name'}) if $self->debug();
     }
-    chdir $params{'srcdir'}
-        if (defined $params{'srcdir'});
     if (defined $params{'po_out_name'}) {
         print STDERR wrap_mod("po4a::transtractor::process", dgettext("po4a", "Call writepo(%s)"), $params{'po_out_name'}) if $self->debug();
         $self->writepo($params{'po_out_name'});

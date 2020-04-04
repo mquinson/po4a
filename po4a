@@ -474,12 +474,18 @@ This option can be used multiple times.
 =item B<--srcdir> I<SRCDIR>
 
 Set the base directory for all input documents specified in the B<po4a>
-configuration file.
+configuration file. By default, PO files may be modified in I<srcdir>.
+
+With B<--no-update>, the PO files will not be updated at all, ensuring that the
+content of I<srcdir> will remain untouched.
+
+Another approach to prevent any modification of I<srcdir> is to specify a
+I<destdir>: the updated PO files will be placed in I<destdir>.
 
 =item B<--destdir> I<DESTDIR>
 
 Set the base directory for all the output documents specified in the B<po4a>
-configuration file.
+configuration file. If B<destdir> is specified, the fi
 
 =back
 
@@ -790,11 +796,11 @@ sub get_options {
     $opts{"no-translations"} = 1 if $opts{"rm-translations"};
 
     if (defined $opts{"srcdir"} and not -d $opts{"srcdir"}) {
-        die wrap_msg(gettext("Invalid %s. Directory %s does not exist."),
+        die wrap_msg(gettext("Option %s invalid. Directory %s does not exist."),
                      "srcdir", $opts{"srcdir"});
     }
     if (defined $opts{"destdir"} and not -d $opts{"destdir"}) {
-        die wrap_msg(gettext("Invalid %s. Directory %s does not exist."),
+        die wrap_msg(gettext("Option %s invalid. Directory %s does not exist."),
                      "destdir", $opts{"destdir"});
     }
 
@@ -1309,8 +1315,9 @@ if ($update_pot_file) {
                       'calldir'          => $po4a_opts{"calldir"});
         $potfile = $doc->getpoout();
     }
-    chdir $po4a_opts{"srcdir"}
-        if (defined $po4a_opts{"srcdir"});
+
+    chdir $po4a_opts{"destdir"}
+      if (defined $po4a_opts{"destdir"});
     if ($po4a_opts{"split"}) {
         (undef,$pot_filename)=File::Temp::tempfile("po4aXXXX",
                                                    DIR    => $ENV{TMPDIR} || "/tmp",
@@ -1328,7 +1335,7 @@ if ($update_pot_file) {
         }
     }
     chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"srcdir"});
+      if (defined $po4a_opts{"destdir"});
 
     print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
         unless ($po4a_opts{"quiet"});
@@ -1404,28 +1411,27 @@ if (not $po4a_opts{"no-update"}) {
     # update all po files
     my $lang;
     if (not scalar @{$po4a_opts{"partial"}}) {
-	foreach $lang (sort keys %po_filename) {
-	    chdir $po4a_opts{"srcdir"}
-	    if (defined $po4a_opts{"srcdir"});
-	    if (-e $po_filename{$lang}) {
-		print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
-		  if ($po4a_opts{"verbose"});
-		my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
-		$msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
-		my $cmd = "msgmerge".$Config{_exe}." -U ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt." --backup=none";
-		run_cmd($cmd);
-		my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename{$lang});
-		system (@cmd)
-		  if $po4a_opts{"verbose"};
-	    } else {
-		print wrap_msg(gettext("Creating %s:"), $po_filename{$lang})
-		  if $po4a_opts{"verbose"};
-		my $cmd = "msginit".$Config{_exe}." -i $pot_filename --locale $lang -o ".$po_filename{$lang}." --no-translator";
-		run_cmd($cmd);
-	    }
-	    chdir $po4a_opts{"calldir"}
-	    if (defined $po4a_opts{"srcdir"});
-	}
+        my $srcpath = (defined $po4a_opts{'srcdir'}  ? $po4a_opts{'srcdir'}  : $po4a_opts{'calldir'})."/";
+        my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
+        foreach $lang (sort keys %po_filename) {
+            if (-e $srcpath.$po_filename{$lang}) {
+                print wrap_msg(gettext("Updating %s:")." ", $srcpath.$po_filename{$lang})
+                    if ($po4a_opts{"verbose"});
+                my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
+                $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
+                my $cmd = "msgmerge".$Config{_exe}." ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt." --backup=none -o $dstpath".$po_filename{$lang};
+                run_cmd($cmd);
+                my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $dstpath.$po_filename{$lang});
+                system (@cmd)
+                    if $po4a_opts{"verbose"};
+            } else {
+                my $read_pot_filename = $pot_filename;
+                $read_pot_filename = $srcpath.$pot_filename if (not -e $read_pot_filename && -e $srcpath.$pot_filename);
+                $read_pot_filename = $dstpath.$pot_filename if (not -e $read_pot_filename && -e $dstpath.$pot_filename);
+                my $cmd = "msginit".$Config{_exe}." -i $pot_filename --locale $lang -o $dstpath".$po_filename{$lang}." --no-translator";
+                run_cmd($cmd);
+            }
+        }
     }
 
     if ($po4a_opts{"split"}) {
@@ -1498,14 +1504,16 @@ if (not $po4a_opts{"no-update"}) {
 if (not $po4a_opts{"no-translations"}) {
     # update all translations
 
-    foreach my $lang (sort keys %po_filename) {
+    LANG: foreach my $lang (sort keys %po_filename) {
         # Read the $lang PO once, no options for the creation
         my $po = Locale::Po4a::Po->new();
-        chdir $po4a_opts{"srcdir"}
-            if (defined $po4a_opts{"srcdir"});
+        chdir $po4a_opts{"srcdir"} if (defined $po4a_opts{"srcdir"});
+        if (not -e $po_filename{$lang}) {
+            chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
+            next LANG;
+        }
         $po->read($po_filename{$lang});
-        chdir $po4a_opts{"calldir"}
-            if (defined $po4a_opts{"srcdir"});
+        chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
 
         DOC: foreach my $master (sort { return -1 if ($a eq "");
                                         return 1 if ($b eq "");
