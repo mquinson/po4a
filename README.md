@@ -90,6 +90,16 @@ the git tree), use the PERLLIB environment variable as such:
 
   This is the SGML parser we use.
 
+* docbook: used in the tests. Without this package, the test fails with:
+  ```
+  onsgmls:<OSFD>0:1:59:W: cannot generate system identifier for public text "-//OASIS//DTD DocBook V4.1//EN"
+  onsgmls:<OSFD>0:6:0:E: reference to entity "REFENTRY" for which no system identifier could be generated
+  onsgmls:<OSFD>0:1:0: entity was defined here
+  onsgmls:<OSFD>0:6:0:E: DTD did not contain element declaration for document type name
+  po4a::sgml: Error while running onsgmls -p.  Please check if onsgmls and the DTD are installed.
+  ```
+  You don't need it if you don't want to run the tests.
+
 ## Text module specific dependencies
 
 * Unicode::GCString
