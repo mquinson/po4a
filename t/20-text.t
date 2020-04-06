@@ -10,19 +10,21 @@ use Testhelper;
 
 my @tests;
 
-push @tests,
-  {
+push @tests, {
     'doc'       => "KeyValue test",
     'normalize' => "-f text -o keyvalue t-20-text/KeyValue.text",
   };
 
-push @tests,
-  {
+push @tests, {
     'doc'       => "MarkDownNoWrap test",
     'normalize' => "-f text --master-charset UTF-8 --wrap-po=newlines -o neverwrap -o markdown t-20-text/MarkDownNoWrap.md",
   };
+  
+push @tests, {
+    'todo'      => "MarkDownNestedLists: currently broken (https://github.com/mquinson/po4a/issues/131)",
+    'normalize' => "-f text -o markdown t-20-text/MarkDownNestedLists.md",
+  };
 
-  # MarkDownNestedLists: currently broken (https://github.com/mquinson/po4a/issues/131)
 my @markdown_tests = qw(MarkDown 
   PandocHeaderMultipleLines PandocOnlyAuthor
   PandocTitleAndDate PandocMultipleAuthors PandocOnlyTitle PandocTitleAuthors

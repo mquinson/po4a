@@ -395,7 +395,7 @@ The default behavior (when B<--force> is not specified) is the following:
 =over
 
 If the POT file already exists, it is regenerated if a master document
-or the configuration file is more recent.
+or the configuration file is more recent (unless B<--no-update> is provided).
 The POT file is also written in a temporary document and B<po4a> verifies
 that the changes are really needed.
 
@@ -1415,12 +1415,19 @@ if (not $po4a_opts{"no-update"}) {
         my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
         foreach $lang (sort keys %po_filename) {
             if (-e $srcpath.$po_filename{$lang}) {
-                print wrap_msg(gettext("Updating %s:")." ", $srcpath.$po_filename{$lang})
+                print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
                     if ($po4a_opts{"verbose"});
+
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
-                my $cmd = "msgmerge".$Config{_exe}." ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt." --backup=none -o $dstpath".$po_filename{$lang};
+                my $cmd = "msgmerge".$Config{_exe}." ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt;
+                if ($po4a_opts{'calldir'}."/" eq $dstpath) { # in place
+                    $cmd .= " --backup=none --update";
+                } else {
+                    $cmd .= " --output $dstpath".$po_filename{$lang};
+                }
                 run_cmd($cmd);
+
                 my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $dstpath.$po_filename{$lang});
                 system (@cmd)
                     if $po4a_opts{"verbose"};
@@ -1428,7 +1435,7 @@ if (not $po4a_opts{"no-update"}) {
                 my $read_pot_filename = $pot_filename;
                 $read_pot_filename = $srcpath.$pot_filename if (not -e $read_pot_filename && -e $srcpath.$pot_filename);
                 $read_pot_filename = $dstpath.$pot_filename if (not -e $read_pot_filename && -e $dstpath.$pot_filename);
-                my $cmd = "msginit".$Config{_exe}." -i $pot_filename --locale $lang -o $dstpath".$po_filename{$lang}." --no-translator";
+                my $cmd = "msginit".$Config{_exe}." -i $read_pot_filename --locale $lang -o $dstpath".$po_filename{$lang}." --no-translator";
                 run_cmd($cmd);
             }
         }
