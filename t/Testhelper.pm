@@ -93,6 +93,7 @@ sub show_files {
 sub system_failed {
     my ($cmd, $doc) = @_;
     my $exit_status = system($cmd);
+    $cmd =~ s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
     if ($exit_status == 0) {
         if ($doc ne '') {
             pass($doc);
