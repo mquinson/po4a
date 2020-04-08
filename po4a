@@ -348,6 +348,11 @@ at least at 80% to get written.
 
 Show a short help message.
 
+=item B<-M>, B<--master-language>
+
+Language of the source files containing the documents to
+translate. Note that all master documents must use the same language.
+
 =item B<-M>, B<--master-charset>
 
 Charset of the files containing the documents to translate. Note that all
@@ -713,6 +718,7 @@ sub get_options {
         "no-backups"      => 0,
         "rm-backups"      => 0,
         "threshold"       => 80,
+	"mastlang"        => "",
         "mastchar"        => "",
         "locchar"         => "",
         "addchar"         => "",
@@ -734,6 +740,7 @@ sub get_options {
     GetOptions(
         'help|h'                => \$opts{"help"},
 
+        'master-language|M=s'   => \$opts{"mastlang"},
         'master-charset|M=s'    => \$opts{"mastchar"},
         'localized-charset|L=s' => \$opts{"locchar"},
         'addendum-charset|A=s'  => \$opts{"addchar"},
@@ -1281,6 +1288,7 @@ if ($update_pot_file) {
             $pot_options{$_} = $po4a_opts{$_};
         }
     }
+    $pot_options{'pot-language'} = $po4a_opts{"mastlang"};
     $pot_options{'pot-charset'} = $po4a_opts{"mastchar"};
     my $potfile=Locale::Po4a::Po->new(\%pot_options);
     chdir $po4a_opts{"calldir"}
