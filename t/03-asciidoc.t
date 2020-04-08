@@ -42,8 +42,9 @@ push @tests, {
     'normalize' => "-f asciidoc -o tablecells=1 t-03-asciidoc/TablesCells.asciidoc",
     'doc'       => "Table cells test"
   }, {
-    'run' => "msgattrib --clear-fuzzy -o tmp/TitlesLatin1.po tmp/TitlesLatin1.po && PATH/po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesLatin1.asciidoc -p tmp/TitlesLatin1.po",
-    'tests' => ["diff tmp/TitlesLatin1.asciidoc t-03-asciidoc/TitlesLatin1.asciidoc"],
+    'run' => "msgattrib --clear-fuzzy -o tmp/TitlesLatin1.po tmp/TitlesLatin1.po "
+	." && PATH/po4a-translate -f asciidoc -m t-03-asciidoc/Titles.asciidoc -l tmp/TitlesLatin1.asciidoc -L iso-8859-1 -p tmp/TitlesLatin1.po",
+    'tests' => ["diff -u tmp/TitlesLatin1.asciidoc t-03-asciidoc/TitlesLatin1.asciidoc"],
     'doc'      => "translate titles with latin1 encoding",
     'requires' => "Unicode::GCString"
   };

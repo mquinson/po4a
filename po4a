@@ -1301,8 +1301,13 @@ if ($update_pot_file) {
                                            %{$file_opts{"options"}});
 
 
-        # We ensure that the generated po will be in utf-8 if the input document
-        # isn't entirely in ascii
+        # If we know that the input isn't UTF-8, say so to the TransTractor
+        if (length $po4a_opts{"mastchar"} && (not $po4a_opts{"mastchar"} =~ /UTF-8/i) && $po4a_opts{"mastchar"} ne "CHARSET") {
+            print STDERR "mastchar: ".$po4a_opts{"mastchar"}."\n";
+            $doc->{TT}{ascii_input} = 0; # this actually mean "don't mess up with the encoding", not litteraly that it's in ascii
+        }
+
+        # We ensure that the generated po will be in utf-8 if the input document isn't entirely in ascii
         $doc->{TT}{utf_mode} = 1;
 
         $doc->setpoout($potfile);
@@ -1339,6 +1344,9 @@ if ($update_pot_file) {
 
     print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
         unless ($po4a_opts{"quiet"});
+} else {
+    print wrap_msg(gettext("POT file %s already up to date."), $pot_filename)
+        if ($po4a_opts{"verbose"});
 }
 
 if ($po4a_opts{"split"}) {
@@ -1362,9 +1370,7 @@ if ($po4a_opts{"split"}) {
             if (defined $po4a_opts{"srcdir"});
         my $dir = dirname($split_pot{$master});
         if (not -d $dir) {
-            mkdir $dir
-                or die wrap_msg(gettext("Can't create directory '%s': %s"),
-                                $dir, $!);
+            mkdir $dir or die wrap_msg(gettext("Can't create directory '%s': %s"), $dir, $!);
         }
         my $cmd = "msggrep".$Config{_exe}." -N \"$master\" -o ".
                   ($po4a_opts{"force"}?$split_pot{$master}:$tmp_file).

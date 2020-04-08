@@ -898,7 +898,7 @@ sub translate {
 
     my $in_charset;
     if ($self->{TT}{ascii_input}) {
-        $in_charset = "ascii";
+        $in_charset = "UTF-8";
     } else {
         if (defined($self->{TT}{'file_in_charset'}) and
             length($self->{TT}{'file_in_charset'}) and

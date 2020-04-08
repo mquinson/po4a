@@ -197,7 +197,7 @@ sub initialize {
     $self->{options}{'package-name'}= "PACKAGE";
     $self->{options}{'package-version'}= "VERSION";
     $self->{options}{'wrap-po'} = 76;
-    $self->{options}{'pot-charset'} = "CHARSET";
+    $self->{options}{'pot-charset'} = "UTF-8";
     foreach my $opt (keys %$options) {
 #        print STDERR "$opt: ".(defined($options->{$opt})?$options->{$opt}:"(undef)")."\n";
         if ($options->{$opt}) {
@@ -253,7 +253,7 @@ sub initialize {
                                 "Content-Type: text/plain; charset=".$self->{options}{'pot-charset'}."\n".
                                 "Content-Transfer-Encoding: 8bit\n");
 
-    $self->{encoder}=find_encoding("ascii");
+    $self->{encoder}=find_encoding("UTF-8");
     $self->{footer}=[];
 
     # To make stats about gettext hits
@@ -670,11 +670,9 @@ sub gettextize {
         $potrans->to_utf8;
         $pores->set_charset("UTF-8");
     } else {
-        if ($potrans->get_charset eq "CHARSET") {
-            $pores->set_charset("ascii");
-        } else {
-            $pores->set_charset($potrans->get_charset);
-        }
+        my $charset = $potrans->get_charset();
+        $charset = "UTF-8" if $charset eq "CHARSET";
+        $pores->set_charset($charset);
     }
     print "Po character sets:\n".
         "  original=".$poorig->get_charset."\n".
@@ -1285,7 +1283,7 @@ sub push_raw {
         if ($charset ne "CHARSET") {
             $self->{encoder}=find_encoding($charset);
         } else {
-            $self->{encoder}=find_encoding("ascii");
+            $self->{encoder}=find_encoding("UTF-8");
         }
         return;
     }
@@ -1495,7 +1493,7 @@ sub msgid_doc($$) {
 =item get_charset()
 
 Returns the character set specified in the PO header. If it hasn't been
-set, it will return "CHARSET".
+set, it will return "UTF-8".
 
 =cut
 
@@ -1507,7 +1505,7 @@ sub get_charset() {
     if (defined $1) {
         return $1;
     } else {
-        return "CHARSET";
+        return "UTF-8";
     }
 }
 
@@ -1515,7 +1513,7 @@ sub get_charset() {
 
 This sets the character set of the PO header to the value specified in its
 first argument. If you never call this function (and no file with a specified
-character set is read), the default value is left to "CHARSET". This value
+character set is read), the default value is left to "UTF-8". This value
 doesn't change the behavior of this module, it's just used to fill that field
 in the header, and to return it in get_charset().
 
