@@ -288,7 +288,7 @@ sub process {
         $newparams{$_}=$params{$_};
     }
 
-    $self->detected_charset($params{'file_in_charset'});
+    $self->detected_charset($params{'file_in_charset'}) if defined $params{'file_in_charset'};
     $self->{TT}{'file_out_charset'}=$params{'file_out_charset'};
     if (defined($self->{TT}{'file_out_charset'}) and
         length($self->{TT}{'file_out_charset'})) {
@@ -358,7 +358,7 @@ sub new {
 
     ## Create our private data
     my %po_options;
-    $po_options{'porefs'} = $self->{options}{'porefs'};
+    $po_options{'porefs'} = $options{'porefs'};
     $po_options{'copyright-holder'} = $options{'copyright-holder'};
     $po_options{'msgid-bugs-address'} = $options{'msgid-bugs-address'};
     $po_options{'package-name'} = $options{'package-name'};
@@ -887,12 +887,10 @@ sub translate {
     my ($string,$ref,$type)=(shift,shift,shift);
     my (%options)=@_;
 
-    # my $validoption="wrap wrapcol";
-    # my %validoption;
-
     return "" unless defined($string) && length($string);
 
-    # map { $validoption{$_}=1 } (split(/ /,$validoption));
+    # my %validoption;
+    # map { $validoption{$_}=1 } (qw(wrap wrapcoll));
     # foreach (keys %options) {
     #        Carp::confess "internal error: translate() called with unknown arg $_. Valid options: $validoption"
     #            unless $validoption{$_};
@@ -1022,15 +1020,10 @@ process() arguments or detected from the document.
 
 sub detected_charset {
     my ($self,$charset)=(shift,shift);
-    unless (defined($self->{TT}{'file_in_charset'}) and
-            length($self->{TT}{'file_in_charset'}) ) {
+    unless (defined($self->{TT}{'file_in_charset'}) and length($self->{TT}{'file_in_charset'}) ) {
         $self->{TT}{'file_in_charset'}=$charset;
-        if (defined $charset) {
-            $self->{TT}{'file_in_encoder'}=find_encoding($charset);
-        } else {
-            $self->{TT}{ascii_input}=1;
-            $self->{TT}{utf_mode}=0;
-        }
+        croak "Please provide a valid charset to detected_charset()" unless defined $charset;
+        $self->{TT}{'file_in_encoder'}=find_encoding($charset);
     }
 
     if (defined $self->{TT}{'file_in_charset'} and
