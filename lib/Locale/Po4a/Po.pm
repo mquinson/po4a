@@ -163,7 +163,7 @@ sub new {
     $self->initialize($options);
 
     my $filename = shift;
-    $self->read($filename) if defined($filename) && length($filename);
+    $self->read($filename) if length($filename);
     return $self;
 }
 
@@ -460,7 +460,7 @@ sub write{
     }
 
     print $fh "".format_comment($self->{header_comment},"")
-        if defined($self->{header_comment}) && length($self->{header_comment});
+        if length($self->{header_comment});
 
     print $fh "msgid \"\"\n";
     print $fh "msgstr ".quote_text($self->{header}, $self->{options}{'wrap-po'})."\n\n";
@@ -480,20 +480,15 @@ sub write{
         }
 
         $output .= format_comment($self->{po}{$msgid}{'comment'},"")
-            if    defined($self->{po}{$msgid}{'comment'})
-               && length ($self->{po}{$msgid}{'comment'});
-        if (   defined($self->{po}{$msgid}{'automatic'})
-            && length ($self->{po}{$msgid}{'automatic'})) {
-            foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'}))
-            {
+            if length ($self->{po}{$msgid}{'comment'});
+        if (length ($self->{po}{$msgid}{'automatic'})) {
+            foreach my $comment (split(/\\n/,$self->{po}{$msgid}{'automatic'})) {
                 $output .= format_comment($comment, ". ")
             }
         }
         $output .= format_comment($self->{po}{$msgid}{'type'},". type: ")
-            if    defined($self->{po}{$msgid}{'type'})
-               && length ($self->{po}{$msgid}{'type'});
-        if (   defined($self->{po}{$msgid}{'reference'})
-            && length ($self->{po}{$msgid}{'reference'})) {
+            if length ($self->{po}{$msgid}{'type'});
+        if (length ($self->{po}{$msgid}{'reference'})) {
             my $output_ref = $self->{po}{$msgid}{'reference'};
             if ($self->{options}{'porefs'} =~ m/,wrap$/) {
                 $output_ref = wrap($output_ref);
@@ -502,11 +497,9 @@ sub write{
             $output .= format_comment($output_ref,": ");
         }
         $output .= "#, ". join(", ", sort split(/\s+/,$self->{po}{$msgid}{'flags'}))."\n"
-            if    defined($self->{po}{$msgid}{'flags'})
-               && length ($self->{po}{$msgid}{'flags'});
+            if length ($self->{po}{$msgid}{'flags'});
         $output .= format_comment($self->{po}{$msgid}{'previous'},"| ")
-            if    defined($self->{po}{$msgid}{'previous'})
-               && length ($self->{po}{$msgid}{'previous'});
+            if length ($self->{po}{$msgid}{'previous'});
 
         if (exists $self->{po}{$msgid}{'plural'}) {
             if ($self->{po}{$msgid}{'plural'} == 0) {
@@ -1050,7 +1043,7 @@ sub gettext {
     my (%opt)=@_;
     my $res;
 
-    return "" unless defined($text) && length($text); # Avoid returning the header.
+    return "" unless length($text); # Avoid returning the header.
     my $validoption="reference wrap wrapcol";
     my %validoption;
 
@@ -1356,7 +1349,7 @@ sub push_raw {
     if (defined $transref) {
         $self->{po}{$msgid}{'transref'} = $transref;
     }
-    if (defined($reference) && length($reference)) {
+    if (length($reference)) {
         if (defined $self->{po}{$msgid}{'reference'}) {
 	    # Only add the new reference if it's not already included in the existing string
 	    # It'd be much easier if $self->{po}{$msgid}{'reference'} were an array instead of a joined string...
@@ -1599,7 +1592,7 @@ sub quote_text {
     my $string = shift;
     my $do_wrap = shift; # either 'no' or 'newlines', or column at which we should wrap
 
-    return '""' unless defined($string) && length($string);
+    return '""' unless length($string);
 
     return "\"$string\"" if ($do_wrap eq 'no');
 

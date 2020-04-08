@@ -1075,8 +1075,7 @@ while (<CONFIG>) {
         # Something more clever could be done to allow options in the
         # middle of a line.
         if ($args =~ m/^(.*?) +(opt(_.+)?:(.*))$/) {
-            $args = $1;
-            $args = "" unless defined $args;
+            $args = $1 // "";
             $args .= " ".parse_config_options("$config_file:$nb",
                                               $2, \%options);
         }
@@ -1425,7 +1424,7 @@ if (not $po4a_opts{"no-update"}) {
     # update all po files
     my $lang;
     if (not scalar @{$po4a_opts{"partial"}}) {
-        my $srcpath = (defined $po4a_opts{'srcdir'}  ? $po4a_opts{'srcdir'}  : $po4a_opts{'calldir'})."/";
+        my $srcpath = ($po4a_opts{'srcdir'} // $po4a_opts{'calldir'})."/";
         my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
         foreach $lang (sort keys %po_filename) {
             if (-e $srcpath.$po_filename{$lang}) {

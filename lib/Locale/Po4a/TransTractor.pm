@@ -290,8 +290,7 @@ sub process {
 
     $self->detected_charset($params{'file_in_charset'}) if defined $params{'file_in_charset'};
     $self->{TT}{'file_out_charset'}=$params{'file_out_charset'};
-    if (defined($self->{TT}{'file_out_charset'}) and
-        length($self->{TT}{'file_out_charset'})) {
+    if (length ($self->{TT}{'file_out_charset'})) {
         $self->{TT}{'file_out_encoder'} = find_encoding($self->{TT}{'file_out_charset'});
     }
     $self->{TT}{'addendum_charset'}=$params{'addendum_charset'};
@@ -654,8 +653,7 @@ sub addendum {
 
     # We only recode the addendum if an origin charset is specified, else we
     # suppose it's already in the output document's charset
-    if (defined($self->{TT}{'addendum_charset'}) &&
-        length($self->{TT}{'addendum_charset'})) {
+    if (length($self->{TT}{'addendum_charset'})) {
         Encode::from_to($content,$self->{TT}{'addendum_charset'},
             $self->get_out_charset);
     }
@@ -887,7 +885,7 @@ sub translate {
     my ($string,$ref,$type)=(shift,shift,shift);
     my (%options)=@_;
 
-    return "" unless defined($string) && length($string);
+    return "" unless length($string);
 
     # my %validoption;
     # map { $validoption{$_}=1 } (qw(wrap wrapcoll));
@@ -900,13 +898,10 @@ sub translate {
     if ($self->{TT}{ascii_input}) {
         $in_charset = "UTF-8";
     } else {
-        if (defined($self->{TT}{'file_in_charset'}) and
-            length($self->{TT}{'file_in_charset'}) and
-            $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
+        if (($self->{TT}{'file_in_charset'} // '') !~ m/ascii/i) { # // '' to have a default value
             $in_charset=$self->{TT}{'file_in_charset'};
         } else {
-            # FYI, the document charset have to be determined *before* we see the first
-            # string to recode.
+            # The document charset have to be determined *before* we see the first string to recode.
             die wrap_mod("po4a", dgettext("po4a", "Couldn't determine the input document's charset. Please specify it on the command line. (non-ASCII char at %s)"), $self->{TT}{non_ascii_ref})
         }
     }
@@ -950,7 +945,7 @@ sub translate {
         }
         if ( $in_charset !~ /^$out_charset$/i ) {
             Encode::from_to($string,$in_charset,$out_charset);
-            if (defined($options{'comment'}) and length($options{'comment'})) {
+            if (length($options{'comment'})) {
                 Encode::from_to($options{'comment'},$in_charset,$out_charset);
             }
         }
@@ -1020,14 +1015,13 @@ process() arguments or detected from the document.
 
 sub detected_charset {
     my ($self,$charset)=(shift,shift);
-    unless (defined($self->{TT}{'file_in_charset'}) and length($self->{TT}{'file_in_charset'}) ) {
+    unless (length($self->{TT}{'file_in_charset'}) ) {
         $self->{TT}{'file_in_charset'}=$charset;
         croak "Please provide a valid charset to detected_charset()" unless defined $charset;
         $self->{TT}{'file_in_encoder'}=find_encoding($charset);
     }
 
-    if (defined $self->{TT}{'file_in_charset'} and
-        length $self->{TT}{'file_in_charset'} and
+    if (length $self->{TT}{'file_in_charset'} and
         $self->{TT}{'file_in_charset'} !~ m/ascii/i) {
         $self->{TT}{ascii_input}=0;
     }
@@ -1051,8 +1045,7 @@ sub get_out_charset {
     my $charset;
 
     # Use the value specified at the command line
-    if (defined($self->{TT}{'file_out_charset'}) and
-        length($self->{TT}{'file_out_charset'})) {
+    if (length($self->{TT}{'file_out_charset'})) {
         $charset=$self->{TT}{'file_out_charset'};
     } else {
         if ($self->{TT}{utf_mode} && $self->{TT}{ascii_input}) {
@@ -1061,7 +1054,6 @@ sub get_out_charset {
             $charset=$self->{TT}{po_in}->get_charset;
             $charset=$self->{TT}{'file_in_charset'}
                 if $charset eq "CHARSET" and
-                    defined($self->{TT}{'file_in_charset'}) and
                     length($self->{TT}{'file_in_charset'});
             $charset="ascii"
                 if $charset eq "CHARSET";
@@ -1083,8 +1075,7 @@ be consistent with the global encoding.
 sub recode_skipped_text {
     my ($self,$text)=(shift,shift);
     unless ($self->{TT}{'ascii_input'}) {
-        if(defined($self->{TT}{'file_in_charset'}) and
-            length($self->{TT}{'file_in_charset'}) ) {
+        if (length($self->{TT}{'file_in_charset'}) ) {
             $text = encode_from_to($text,
                                    $self->{TT}{'file_in_encoder'},
                                    find_encoding($self->get_out_charset));
