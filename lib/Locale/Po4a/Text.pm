@@ -574,31 +574,7 @@ sub parse_markdown_yaml_front_matter {
     }
 
     sub format_scalar {
-        my $string = $_[0];
-        my $is_key = $_[1];
-
-        return '~'  unless defined $string;
-        return "''" unless length  $string;
-        if (Scalar::Util::looks_like_number($string)) {
-            # keys and values that have been used as strings get quoted
-            if ( $is_key ) {
-                return qq['$string'];
-            } else {
-                return $string;
-            }
-        }
-        if ( $string =~ /[\x00-\x09\x0b-\x0d\x0e-\x1f\x7f-\x9f\'\n]/ ) {
-            $string =~ s/\\/\\\\/g;
-            $string =~ s/"/\\"/g;
-            $string =~ s/\n/\\n/g;
-            $string =~ s/[\x85]/\\N/g;
-            $string =~ s/([\x7f-\x9f])/'\x' . sprintf("%X",ord($1))/ge;
-            return qq|"$string"|;
-        }
-        if ( $string =~ /(?:^[~!@#%&*|>?:,'"`{}\[\]]|^-+$|\s|:\z)/ ) {
-            return "'$string'";
-        }
-        return $string;
+        return YAML::Tiny::_dump_scalar("dummy", $_[0], $_[1]);
     }
     sub do_array {
         my ($self, $blockref, $array, $indent, $ctx) = @_;
