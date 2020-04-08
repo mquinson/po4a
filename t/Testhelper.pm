@@ -297,7 +297,8 @@ sub run_one_format {
             pass("  pass: $tcmd");
         } else {
             fail("Normalization result does not match.");
-            fail("  FAIL: $tcmd");
+            diag("  Failed command: $tcmd");
+            diag("  Files were produced with: $cmd");
             $fail++;
         }
     }
