@@ -26,6 +26,9 @@
 #   po4a.conf      (req): path to a config file for po4a
 #   options        (opt): extra parameters to pass to po4a, in addition to "--destdir tmp --verbose" that is unavoidable.
 
+#   diff_outfile     (opt): Command to use to check that the po4a command produced the right output
+#   expected_outfile (opt): Name of the file containing the expected output of the po4a command
+
 #   expected_files (opt): array of file names that are expected after the test execution. If provided:
 #                          - Any missing or unexpected file is a test failure.
 #                          - The expected content of $file must be provided in _$file or $file
@@ -154,7 +157,7 @@ sub run_one_po4aconf {
     my ($test, $path, $basename, $ext) = @_;
 
     my %valid_options;
-    map { $valid_options{$_} = 1 } qw(po4a.conf todo doc closed_path options setup tests teardown expected_files expected_outfile );
+    map { $valid_options{$_} = 1 } qw(po4a.conf todo doc closed_path options setup tests teardown expected_files diff_outfile expected_outfile );
     map { die "Invalid test ".$test->{'doc'}.": invalid key '$_'\n" unless exists $valid_options{$_} } (keys %{$test});
 
     $test->{'options'} = "--destdir tmp --verbose ".($test->{'options'}?$test->{'options'}:""); 
@@ -198,12 +201,15 @@ sub run_one_po4aconf {
         return;
     }
 
-    my $expected_outfile = $test->{'expected_outfile'} ? $test->{'expected_outfile'} : "$path/_output";
-    unless (-e $expected_outfile) {
-        teardown($test);
-        die "Malformed test $basename (".$test->{'doc'}."): no expected output. Please touch $expected_outfile\n";
+    my $expected_outfile = $test->{'expected_outfile'} // "$path/_output";
+    my $diff_outfile = $test->{'diff_outfile'} // "diff -u $expected_outfile tmp/$path/output";
+    unless ($test->{'diff_outfile'}) {
+        unless (-e $expected_outfile) {
+            teardown($test);
+            die "Malformed test $basename (".$test->{'doc'}."): no expected output. Please touch $expected_outfile\n";
+        }
     }
-    if (system_failed("diff -u $expected_outfile tmp/$path/output 1>&2", "Comparing output of po4a")) {
+    if (system_failed("$diff_outfile 1>&2", "Comparing output of po4a")) {
         teardown($test);
         show_files("tmp/$path/");
         return;

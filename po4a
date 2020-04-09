@@ -1209,7 +1209,7 @@ my %split_pot; # pot_files: '$master' => '$path'
 # make a big pot
 my $update_pot_file = 0;
 if ($pot_filename =~ m/\$master/) {
-    print wrap_msg(gettext("Split mode, creating a temporary POT")."\n")
+    print wrap_msg(gettext("Split mode, creating a temporary POT."))
         if $po4a_opts{"verbose"};
     if (scalar @{$po4a_opts{"partial"}}) {
         print wrap_msg(gettext("Disabling --translate-only option, it is not supported in split mode")."\n");
@@ -1356,6 +1356,9 @@ if ($update_pot_file) {
         if ($po4a_opts{"verbose"});
 }
 
+my $srcpath = ($po4a_opts{'srcdir'} // $po4a_opts{'calldir'})."/";
+my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
+
 if ($po4a_opts{"split"}) {
     # Generate a .pot for each document
     foreach my $master (keys %document) {
@@ -1369,8 +1372,7 @@ if ($po4a_opts{"split"}) {
                                                    SUFFIX => ".pot",
                                                    OPEN   => 0,
                                                    UNLINK => 0)
-                or die wrap_msg(gettext("Can't create a temporary POT file: %s"),
-                                $!);
+                or die wrap_msg(gettext("Can't create a temporary POT file: %s"), $!);
         }
 
         chdir $po4a_opts{"srcdir"}
@@ -1379,14 +1381,13 @@ if ($po4a_opts{"split"}) {
         if (not -d $dir) {
             mkdir $dir or die wrap_msg(gettext("Can't create directory '%s': %s"), $dir, $!);
         }
-        my $cmd = "msggrep".$Config{_exe}." -N \"$master\" -o ".
-                  ($po4a_opts{"force"}?$split_pot{$master}:$tmp_file).
-                  " $pot_filename";
+        my $cmd = "msggrep".$Config{_exe}." -N \"$master\" "
+                  . "-o ".($po4a_opts{"force"} ? "$dstpath$split_pot{$master}" : $tmp_file)
+            . " $pot_filename";
         run_cmd($cmd);
 
-        unless ($po4a_opts{"force"}) {
-            move_po_if_needed($tmp_file, $split_pot{$master}, 0);
-        }
+        move_po_if_needed($tmp_file, ($po4a_opts{split}?"":$dstpath).$split_pot{$master}, 0)
+            unless ($po4a_opts{"force"});
         chdir $po4a_opts{"calldir"}
             if (defined $po4a_opts{"srcdir"});
     }
@@ -1408,6 +1409,9 @@ if ($po4a_opts{"split"}) {
             $master_po =~ s/\$master/$m/g;
             if (-e "$master_po") {
                 $cmd_cat .= " $master_po";
+            } else {
+                print wrap_msg(gettext("The translation of master file '%s' in language '%s' is missing (file: %s) -- skipping."), $master, $lang, $master_po)
+                    if ($po4a_opts{"verbose"});
             }
             $split_po{$lang}{$master} = $master_po;
         }
@@ -1424,31 +1428,36 @@ if (not $po4a_opts{"no-update"}) {
     # update all po files
     my $lang;
     if (not scalar @{$po4a_opts{"partial"}}) {
-        my $srcpath = ($po4a_opts{'srcdir'} // $po4a_opts{'calldir'})."/";
-        my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
         foreach $lang (sort keys %po_filename) {
-            if (-e $srcpath.$po_filename{$lang}) {
+            my ($infile,$outfile);
+            if ($po4a_opts{"split"}) { # Do not obey the srcdir and destdir, as this is a temp file
+                ($infile,$outfile) =  ($po_filename{$lang},$po_filename{$lang});
+            } else {
+                ($infile,$outfile) =  ($srcpath.$po_filename{$lang}, $dstpath.$po_filename{$lang});
+            }
+
+            if (-e $infile) {
                 print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
                     if ($po4a_opts{"verbose"});
 
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
-                my $cmd = "msgmerge".$Config{_exe}." ".$po_filename{$lang}." $pot_filename ".$msgmerge_opt;
-                if ($po4a_opts{'calldir'}."/" eq $dstpath) { # in place
+                my $cmd = "msgmerge".$Config{_exe}." $infile $pot_filename ".$msgmerge_opt;
+                if ((not $po4a_opts{"split"}) && $po4a_opts{'calldir'}."/" eq $dstpath) { # in place
                     $cmd .= " --backup=none --update";
                 } else {
-                    $cmd .= " --output $dstpath".$po_filename{$lang};
+                    $cmd .= " --output $outfile";
                 }
                 run_cmd($cmd);
 
-                my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $dstpath.$po_filename{$lang});
+                my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $outfile);
                 system (@cmd)
                     if $po4a_opts{"verbose"};
             } else {
                 my $read_pot_filename = $pot_filename;
-                $read_pot_filename = $srcpath.$pot_filename if (not -e $read_pot_filename && -e $srcpath.$pot_filename);
-                $read_pot_filename = $dstpath.$pot_filename if (not -e $read_pot_filename && -e $dstpath.$pot_filename);
-                my $cmd = "msginit".$Config{_exe}." -i $read_pot_filename --locale $lang -o $dstpath".$po_filename{$lang}." --no-translator";
+                $read_pot_filename = $srcpath.$pot_filename if ((not -e $read_pot_filename) && -e $srcpath.$pot_filename);
+                $read_pot_filename = $dstpath.$pot_filename if ((not -e $read_pot_filename) && -e $dstpath.$pot_filename);
+                my $cmd = "msginit".$Config{_exe}." -i $read_pot_filename --locale $lang -o $outfile --no-translator";
                 run_cmd($cmd);
             }
         }
@@ -1476,24 +1485,22 @@ if (not $po4a_opts{"no-update"}) {
 		      gettext("Can't create a temporary POT file: %s"), $!);
 
 		my $cmd;
-		# Create an empty PO or copy the original PO header.
-		# This permits to keep the header.
+		# Create an empty PO or copy the original PO header (to keep the header)
 		if (-f $split_po{$lang}{$master}) {
-		    $cmd = "msggrep".$Config{_exe}." --force-po -v -K -e '.'".
+		    $cmd = "LC_ALL=C.UTF-8 msggrep".$Config{_exe}." --force-po --invert-match --msgid --regexp '.'".
 		      " -o ".$tmp_file.
 		      " ".$split_po{$lang}{$master};
 		} else {
 		    $cmd = "msginit".$Config{_exe}." --no-translator -l ".$lang.
-		      " -i ".$split_pot{$master}.
-		      " -o ".$tmp_file;
+		      " --input $dstpath".$split_pot{$master}.
+		      " --output ".$tmp_file;
 		}
 		run_cmd($cmd);
 
-		# Update the PO according to the new POT and to the big PO
-		# (compendium).
-		$cmd = "msgmerge".$Config{_exe}." -U -C ".$po_filename{$lang}.
-		  " --backup=none ".$po4a_opts{"msgmerge-opt"}.
-		  " $tmp_file ".$split_pot{$master};
+		# Update the PO according to the new POT and to the big PO (compendium).
+		$cmd = "msgmerge".$Config{_exe}." --compendium ".$po_filename{$lang}.
+        " --update --backup=none ".$po4a_opts{"msgmerge-opt"}.
+		  " $tmp_file ".$dstpath.$split_pot{$master};
 		run_cmd($cmd);
 
 		my $dir = dirname($split_po{$lang}{$master});
@@ -1503,16 +1510,10 @@ if (not $po4a_opts{"no-update"}) {
 			  $dir, $!);
 		}
 		unless ($po4a_opts{"force"}) {
-		    move_po_if_needed($tmp_file,
-			$split_po{$lang}{$master},
-			0);
+		    move_po_if_needed($tmp_file, $split_po{$lang}{$master},	0);
 		} else {
-		    move $tmp_file, $split_po{$lang}{$master}
-		      or die wrap_msg(dgettext("po4a",
-			  "Can't move %s to %s: %s."),
-			  $tmp_file,
-			  $split_po{$lang}{$master},
-			  $!);
+		    move $tmp_file, $dstpath.$split_po{$lang}{$master}
+		      or die wrap_msg(dgettext("po4a", "Can't move %s to %s: %s."), $tmp_file, $dstpath.$split_po{$lang}{$master}, $!);
 		}
 	    }
 	}
@@ -1529,10 +1530,16 @@ if (not $po4a_opts{"no-translations"}) {
         my $po = Locale::Po4a::Po->new();
         chdir $po4a_opts{"srcdir"} if (defined $po4a_opts{"srcdir"});
         if (not -e $po_filename{$lang}) {
+            print wrap_msg(gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang)
+                if ($po4a_opts{"verbose"});
             chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
             next LANG;
         }
+        print "Reading PO file ".$po_filename{$lang}." for language $lang: "
+            if ($po4a_opts{"debug"});
         $po->read($po_filename{$lang});
+        system("msgfmt".$Config{_exe}." --statistics -v -o /dev/null $po_filename{$lang}")
+            if ($po4a_opts{"debug"});
         chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
 
         DOC: foreach my $master (sort { return -1 if ($a eq "");
