@@ -573,8 +573,33 @@ sub parse_markdown_yaml_front_matter {
         $self->pushline("---\n");
     }
 
+    # Escape the string to make it valid in YAML. 
+    # This is very similar to YAML::Tiny::_dump_scalar but does not do the internal->UTF-8 decoding,
+    # as the translations that we feed into this function are already in UTF-8
     sub format_scalar {
-        return YAML::Tiny::_dump_scalar("dummy", $_[0], $_[1]);
+        my $string = $_[0];
+        my $is_key = $_[1];
+
+        return '~'  unless defined $string;
+        return "''" unless length  $string;
+        if (Scalar::Util::looks_like_number($string)) {
+            # keys and values that have been used as strings get quoted
+            if ( $is_key ) {
+                return qq['$string'];
+            } else {
+                return $string;
+            }
+        }
+        if ( $string =~ /[\\\'\n]/ ) {
+            $string =~ s/\\/\\\\/g;
+            $string =~ s/"/\\"/g;
+            $string =~ s/\n/\\n/g;
+            return qq|"$string"|;
+        }
+        if ( $string =~ /(?:^[~!@#%&*|>?:,'"`{}\[\]]|^-+$|\s|:\z)/ ) {
+            return "'$string'";
+        }
+        return $string;
     }
     sub do_array {
         my ($self, $blockref, $array, $indent, $ctx) = @_;
@@ -609,7 +634,7 @@ sub parse_markdown_yaml_front_matter {
         my ($self, $blockref, $hash, $indent, $ctx) = @_;
         foreach my $name ( sort keys %$hash ) {
             my $el   = $hash->{$name};
-            my $header = ('  ' x $indent) . format_scalar($name, 1). ":";
+            my $header = ('  ' x $indent) . YAML::Tiny::_dump_scalar("dummy", $name, 1). ":";
             my $type = ref $el;
             if ( ! $type ) {
                 $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0)). "\n");
