@@ -379,7 +379,7 @@ sub read {
             } else {
                 warn wrap_ref_mod("$filename:$linenum",
                                   "po4a::po",
-                                  dgettext("po4a", "Strange line: -->%s<--"),
+                                  dgettext("po4a", "Parse error at: -->%s<--"),
                                   $line);
             }
         }
