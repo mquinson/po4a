@@ -13,14 +13,23 @@ my @tests;
 
 push @tests,
   {
-    'doc'  => 'various input encoding',
-    'po4a.conf' => 'charset/input/po4a.conf',
+    'doc'  => 'master encoding: ascii',
+    'po4a.conf' => 'charset/input-ascii/po4a.conf',
     'closed_path' => 'charset/*/',
     'options' => '--verbose --keep 0',
-    'expected_files' => 'ascii.pod.up.po ascii.pod.pot ascii.up.pod '
-	.'iso8859.pod.up.po iso8859.pod.pot iso8859.up.pod',
-    # Ignoring any output line that contains the name of a tempfile
-    'diff_outfile' => 'diff -u -Itmp/ charset/input/_output tmp/charset/input/output',
+    'expected_files' => 'ascii.up.po ascii.pot ascii.up.pod ',
+  }, {
+    'doc'  => 'master encoding: iso8859',
+    'po4a.conf' => 'charset/input-iso8859/po4a.conf',
+    'closed_path' => 'charset/*/',
+    'options' => '--verbose --keep 0',
+    'expected_files' => 'iso8859.up.po iso8859.pot iso8859.up.pod ',
+  }, {
+    'doc'  => 'master encoding: UTF-8 (mandates --master-charset=UTF-8)',
+    'po4a.conf' => 'charset/input-utf8/po4a.conf',
+    'closed_path' => 'charset/*/',
+    'options' => '--verbose --keep 0',
+    'expected_files' => 'utf8.up.po utf8.pot utf8.up.pod ',
   };
 
 run_all_tests(@tests);
