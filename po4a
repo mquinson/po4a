@@ -1026,13 +1026,13 @@ while (<CONFIG>) {
 
         if (defined $document{$main}{'format'}) {
             warn wrap_ref_mod("$config_file:$nb", "",
-                gettext("The '%s' master file was specified earlier in the ".
-                        "configuration file.  This may cause problems with ".
+                gettext("The master file '%s' was specified earlier in the ".
+                        "configuration file. This may cause problems with ".
                         "options."), $main)
                 unless ($po4a_opts{"quiet"});
         } elsif (not -e $main) {
             die wrap_ref_mod("$config_file:$nb", "",
-                gettext("The '%s' master file does not exist."), $main);
+                gettext("The master file '%s' does not exist."), $main);
         }
         if (scalar @{$po4a_opts{"partial"}}) {
                 foreach my $file (@{$po4a_opts{"partial"}}) {
