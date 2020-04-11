@@ -4,7 +4,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 
 # po4a -- Update both the po files and translated documents in one shoot
 #
-# Copyright 2002-2012 by SPI, inc.
+# Copyright 2002-2020 by SPI, inc.
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
@@ -21,73 +21,293 @@ B<po4a> [I<options>] I<config_file>
 
 =head1 DESCRIPTION
 
-The po4a (PO for anything) project goal is to ease translations (and more
-interestingly, the maintenance of translations) using gettext tools on
-areas where they were not expected like documentation.
+po4a (PO for anything) eases the maintenance of the documentation's 
+translation using the classical gettext tools. To that extend, the
+main feature of po4a is to decouple the translatable content of a
+document from its structure. 
 
-The B<po4a> program is useful if you want to avoid calling
-L<po4a-gettextize(1)>, L<po4a-updatepo(1)>, and L<po4a-translate(1)> in
-complex Makefiles when you have multiple files to translate, different
-format, or need to specify different options for different documents.
+When you run the B<po4a> program for the first time, with the master
+documents only, it produces a POT file (also called translation
+catalog) that contains all translatable strings of the document
+in a form that ease the work of translators.
 
-=head1 Table of content
+Such files can either be translated with a specific editor such as
+the B<Gnome Translation Editor> or KDE's B<Lokalize>, or they can be 
+integrated in an online localization platform such as B<weblate> or
+B<zanata>. The translation result is a set of PO files, one per
+language.
 
-This document is organized as follow:
+When you run the B<po4a> program with both the master documents and
+the PO files, it produces the translated documents by injecting the
+content's translation (found in the PO files) into the structure of
+the original master document.
 
-=head2 DESCRIPTION
+If the master documents changed in the meanwhile, po4a will update
+the PO and POT files accordingly, so that the translators can easily
+detect the modifications and update their work. Depending on your
+settings, po4a will discard the partially translated documents, or
+produce a document mixing english (for the new or modified
+paragraphs) and the target language (for the paragraph which
+translation is already in the PO file).
 
-=head2 INTRODUCTION
+By default, the translated documents are produced when at least 80%
+of their content is translated (see the I<--keep> option below).
+Discarding translations as soon as they are not 100% may be
+discouraging for the translators, while showing "translation" that
+are too partial may be troubling for the end users.
 
-=head2 CONFIGURATION FILE SYNTAX
+You can mimick the behavior of the B<po4a> program with the other
+tools of the suite (i.e., L<po4a-gettextize(1)>, L<po4a-updatepo(1)>,
+and L<po4a-translate(1)>) using scripts and makefiles, but this
+quickly becomes bothersome and repetitive. It is highly recommanded
+to use the B<po4a> program in your build script.
 
-=head3 Specifying the template languages
+=head1 OPTIONS
 
-=head3 Specifying the paths to translator inputs
+=over 4
 
-=head3 Autodetection of the paths and languages
+=item B<-k>, B<--keep>
 
-=head3 Specifying the documents to translate
+Minimal threshold for translation percentage to keep (i.e. write) the
+resulting file (default: 80). I.e. by default, files have to be translated
+at least at 80% to be written on disk.
 
-=head3 Specifying options for the modules
+=item B<-h>, B<--help>
 
-=head3 Specifying aliases
+Show a short help message.
 
-=head3 Split mode
+=item B<-M>, B<--master-charset>
 
-=head2 OPTIONS
+Charset of the files containing the documents to translate. Note that all
+master documents must use the same charset.
 
-=head2 EXAMPLE
+=item B<-L>, B<--localized-charset>
 
-=head2 SHORTCOMINGS
+Charset of the files containing the localized documents. Note that all
+translated documents will use the same charset.
 
-=head2 SEE ALSO
+=item B<-A>, B<--addendum-charset>
 
-=head2 AUTHORS
+Charset of the addenda. Note that all the addenda should be in the same
+charset.
 
-=head2 COPYRIGHT AND LICENSE
+=item B<-V>, B<--version>
 
-=head3
+Display the version of the script and exit.
 
-=head1 INTRODUCTION
+=item B<-v>, B<--verbose>
 
-The B<po4a> program is in charge of updating both the PO files (to sync
-them to the original documents) and the translated documents (to sync
-them to the PO files). The main point is to make the use of po4a easier
-without having to remember of the command line options.
+Increase the verbosity of the program.
 
-It also allows you to mix documents having different formats into the same
-POT file so that you can have only one such file per project.
+=item B<-q>, B<--quiet>
 
-This behaviour can be mimicked by the other tools of the po4a suite (for
-example with Makefiles), but it is rather difficult to do, and exhausting to
-redo the same complicated Makefiles for each project using po4a.
+Decrease the verbosity of the program.
+
+=item B<-d>, B<--debug>
+
+Output some debugging information.
+
+=item B<-o>, B<--option>
+
+Extra option(s) to pass to the format plugin. Specify each option in the
+'I<name>B<=>I<value>' format. See the documentation of each plugin for more
+information about the valid options and their meanings.
+
+=item B<-f>, B<--force>
+
+Always generate the POT and PO files, even if B<po4a> considers it is
+not necessary.
+
+The default behavior (when B<--force> is not specified) is the following:
+
+=over
+
+If the POT file already exists, it is regenerated if a master document
+or the configuration file is more recent (unless B<--no-update> is provided).
+The POT file is also written in a temporary document and B<po4a> verifies
+that the changes are really needed.
+
+Also, a translation is regenerated only if its master document, the PO file,
+one of its addenda or the configuration file is more recent.
+To avoid trying to regenerate translations which do not pass the threshold
+test (see B<--keep>), a file with the F<.po4a-stamp> extension can be created
+(see B<--stamp>).
+
+=back
+
+If a master document includes files, you should use the B<--force> flag
+because the modification time of these included files are not taken into
+account.
+
+The PO files are always re-generated based on the POT with B<msgmerge -U>.
+
+=item B<--stamp>
+
+Tells B<po4a> to create stamp files when a translation is not generated
+because it does not reach the threshold. These stamp files are named
+according to the expected translated document, with the F<.po4a-stamp>
+extension.
+
+Note: This only activates the creation of the F<.po4a-stamp> files. The stamp
+files are always used if they exist, and they are removed with
+B<--rm-translations> or when the file is finally translated.
+
+=item B<--no-translations>
+
+Do not generate the translated documents, only update the POT and PO files.
+
+=item B<--no-update>
+
+Do not change the POT and PO files, only the translation may be updated.
+
+=item B<--keep-translations>
+
+Keeps the existing translation files even if the translation doesn't meet the threshold specified by B<--keep>.
+This option does not create new translation files with few content,
+but it will save existing translations which decay because of changes to the master files.
+
+WARNING: This flag changes the po4a behavior in a rather drastic way:
+your translated files will not get updated at all until the
+translation improves. Only use this flag if you prefer shipping an
+outdated translated documentation rather than only shipping an
+accurate untranslated documentation.
+
+=item B<--rm-translations>
+
+Remove the translated files (implies B<--no-translations>).
+
+=item B<--no-backups>
+
+This flag does nothing since 0.41, and may be removed
+in later releases.
+
+=item B<--rm-backups>
+
+This flag does nothing since 0.41, and may be removed
+in later releases.
+
+=item B<--translate-only> I<translated-file>
+
+Translate only the specified file.  It may be useful to speed up
+processing if a configuration file contains a lot of files.  Note that this
+option does not update PO and POT files.
+This option can be used multiple times.
+
+=item B<--variable> I<var>B<=>I<value>
+
+Define a variable that will be expanded in the B<po4a> configuration file.
+Every occurrence of I<$(var)> will be replaced by I<value>.
+This option can be used multiple times.
+
+=item B<--srcdir> I<SRCDIR>
+
+Set the base directory for all input documents specified in the B<po4a>
+configuration file. By default, PO files may be modified in I<srcdir>.
+
+With B<--no-update>, the PO files will not be updated at all, ensuring that the
+content of I<srcdir> will remain untouched.
+
+Another approach to prevent any modification of I<srcdir> is to specify a
+I<destdir>: the updated PO files will be placed in I<destdir>.
+
+=item B<--destdir> I<DESTDIR>
+
+Set the base directory for all the output documents specified in the
+B<po4a> configuration file. If B<destdir> is specified, all file
+modifications will occur in this directory. Files existing out of
+this directory will be read but not modified. Instead, a new version
+will be created in B<destdir>.
+
+=back
+
+=head2 Options modifying the POT header
+
+=over 4
+
+=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
+
+Specify the reference format. Argument I<type> can be one of B<never>
+to not produce any reference, B<file> to only specify the file
+without the line number, B<counter> to replace line number by an
+increasing counter, and B<full> to include complete references (default: full).
+
+Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
+References are written by default on a single line.  The B<wrap> option wraps
+references on several lines, to mimic B<gettext> tools (B<xgettext> and
+B<msgmerge>).  This option will become the default in a future release, because
+it is more sensible.  The B<nowrap> option is available so that users who want
+to keep the old behavior can do so.
+
+=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
+
+Specify how the po file should be wrapped. This gives the choice between either
+files that are nicely wrapped but could lead to git conflicts, or files that are
+easier to handle automatically, but harder to read for humans.
+
+Historically, the gettext suite has reformatted the po files at the 77th column
+for cosmetics. This option specifies the behavior of po4a. If set to a numerical
+value, po4a will wrap the po file after this column and after newlines in the
+content. If set to B<newlines>, po4a will only split the msgid and msgstr after
+newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
+The wrapping of the reference comments is controlled by the B<--porefs> option.
+
+Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+on how newlines are added to the content of these strings.
+=item B<-M>, B<--master-language>
+
+Language of the source files containing the documents to
+translate. Note that all master documents must use the same language.
+
+=item B<--msgid-bugs-address> I<email@address>
+
+Set the report address for msgid bugs. By default, the created POT files
+have no Report-Msgid-Bugs-To fields.
+
+=item B<--copyright-holder> I<string>
+
+Set the copyright holder in the POT header. The default value is
+"Free Software Foundation, Inc."
+
+=item B<--package-name> I<string>
+
+Set the package name for the POT header. The default is "PACKAGE".
+
+=item B<--package-version> I<string>
+
+Set the package version for the POT header. The default is "VERSION".
+
+=back
+
+=head2 Options to modify the PO files
+
+=over 4
+
+=item B<--msgmerge-opt> I<options>
+
+Extra options for B<msgmerge>(1).
+
+Note: B<$lang> will be extended to the current language.
+
+=item B<--no-previous>
+
+This option removes B<--previous> from the options passed to B<msgmerge>.
+This permits to support versions of B<gettext> earlier than 0.16.
+
+=item B<--previous>
+
+This option adds B<--previous> to the options passed to B<msgmerge>.
+It requires B<gettext> 0.16 or later, and is activated by default.
+
+=back
+
+=head1 DATA FLOWS
 
 The dataflow can be summarized as follow. Any changes to the master document
 will be reflected in the PO files, and all changes to the PO files (either
 manual or caused by previous step) will be reflected in translation
 documents.
 
-Normal case without specifying B<pot_in>:
+Regular case where no B<pot_in> is specified:
 
  <- source files ->|<--------- build results --------------->
 
@@ -104,7 +324,7 @@ Normal case without specifying B<pot_in>:
      release while manually updating
      the translation contents)
 
-Special case with specifying B<pot_in>:
+Special case where a B<pot_in> is specified to filter the input master document:
 
  <- source files ->|<--------- build results ----------------->
 
@@ -334,245 +554,6 @@ option:
  [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui
  [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui
 
-=head1 OPTIONS
-
-=over 4
-
-=item B<-k>, B<--keep>
-
-Minimal threshold for translation percentage to keep (i.e. write) the
-resulting file (default: 80). I.e. by default, files have to be translated
-at least at 80% to get written.
-
-=item B<-h>, B<--help>
-
-Show a short help message.
-
-=item B<-M>, B<--master-language>
-
-Language of the source files containing the documents to
-translate. Note that all master documents must use the same language.
-
-=item B<-M>, B<--master-charset>
-
-Charset of the files containing the documents to translate. Note that all
-master documents must use the same charset.
-
-=item B<-L>, B<--localized-charset>
-
-Charset of the files containing the localized documents. Note that all
-translated documents will use the same charset.
-
-=item B<-A>, B<--addendum-charset>
-
-Charset of the addenda. Note that all the addenda should be in the same
-charset.
-
-=item B<-V>, B<--version>
-
-Display the version of the script and exit.
-
-=item B<-v>, B<--verbose>
-
-Increase the verbosity of the program.
-
-=item B<-q>, B<--quiet>
-
-Decrease the verbosity of the program.
-
-=item B<-d>, B<--debug>
-
-Output some debugging information.
-
-=item B<-o>, B<--option>
-
-Extra option(s) to pass to the format plugin. Specify each option in the
-'I<name>B<=>I<value>' format. See the documentation of each plugin for more
-information about the valid options and their meanings.
-
-=item B<-f>, B<--force>
-
-Always generate the POT and PO files, even if B<po4a> considers it is
-not necessary.
-
-The default behavior (when B<--force> is not specified) is the following:
-
-=over
-
-If the POT file already exists, it is regenerated if a master document
-or the configuration file is more recent (unless B<--no-update> is provided).
-The POT file is also written in a temporary document and B<po4a> verifies
-that the changes are really needed.
-
-Also, a translation is regenerated only if its master document, the PO file,
-one of its addenda or the configuration file is more recent.
-To avoid trying to regenerate translations which do not pass the threshold
-test (see B<--keep>), a file with the F<.po4a-stamp> extension can be created
-(see B<--stamp>).
-
-=back
-
-If a master document includes files, you should use the B<--force> flag
-because the modification time of these included files are not taken into
-account.
-
-The PO files are always re-generated based on the POT with B<msgmerge -U>.
-
-=item B<--stamp>
-
-Tells B<po4a> to create stamp files when a translation is not generated
-because it does not reach the threshold. These stamp files are named
-according to the expected translated document, with the F<.po4a-stamp>
-extension.
-
-Note: This only activates the creation of the F<.po4a-stamp> files. The stamp
-files are always used if they exist, and they are removed with
-B<--rm-translations> or when the file is finally translated.
-
-=item B<--no-translations>
-
-Do not generate the translated documents, only update the POT and PO files.
-
-=item B<--no-update>
-
-Do not change the POT and PO files, only the translation may be updated.
-
-=item B<--keep-translations>
-
-Keeps the existing translation files even if the translation doesn't meet the threshold specified by B<--keep>.
-This option does not create new translation files with few content,
-but it will save existing translations which decay because of changes to the master files.
-
-WARNING: This flag changes the po4a behavior in a rather drastic way:
-your translated files will not get updated at all until the
-translation improves. Only use this flag if you prefer shipping an
-outdated translated documentation rather than only shipping an
-accurate untranslated documentation.
-
-=item B<--rm-translations>
-
-Remove the translated files (implies B<--no-translations>).
-
-=item B<--no-backups>
-
-This flag does nothing since 0.41, and may be removed
-in later releases.
-
-=item B<--rm-backups>
-
-This flag does nothing since 0.41, and may be removed
-in later releases.
-
-=item B<--translate-only> I<translated-file>
-
-Translate only the specified file.  It may be useful to speed up
-processing if a configuration file contains a lot of files.  Note that this
-option does not update PO and POT files.
-This option can be used multiple times.
-
-=item B<--variable> I<var>B<=>I<value>
-
-Define a variable that will be expanded in the B<po4a> configuration file.
-Every occurrence of I<$(var)> will be replaced by I<value>.
-This option can be used multiple times.
-
-=item B<--srcdir> I<SRCDIR>
-
-Set the base directory for all input documents specified in the B<po4a>
-configuration file. By default, PO files may be modified in I<srcdir>.
-
-With B<--no-update>, the PO files will not be updated at all, ensuring that the
-content of I<srcdir> will remain untouched.
-
-Another approach to prevent any modification of I<srcdir> is to specify a
-I<destdir>: the updated PO files will be placed in I<destdir>.
-
-=item B<--destdir> I<DESTDIR>
-
-Set the base directory for all the output documents specified in the
-B<po4a> configuration file. If B<destdir> is specified, all file
-modifications will occur in this directory. Files existing out of
-this directory will be read but not modified. Instead, a new version
-will be created in B<destdir>.
-
-=back
-
-=head2 OPTIONS MODIFYING THE POT HEADER
-
-=over 4
-
-=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
-
-Specify the reference format. Argument I<type> can be one of B<never>
-to not produce any reference, B<file> to only specify the file
-without the line number, B<counter> to replace line number by an
-increasing counter, and B<full> to include complete references (default: full).
-
-Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
-References are written by default on a single line.  The B<wrap> option wraps
-references on several lines, to mimic B<gettext> tools (B<xgettext> and
-B<msgmerge>).  This option will become the default in a future release, because
-it is more sensible.  The B<nowrap> option is available so that users who want
-to keep the old behavior can do so.
-
-=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
-
-Specify how the po file should be wrapped. This gives the choice between either
-files that are nicely wrapped but could lead to git conflicts, or files that are
-easier to handle automatically, but harder to read for humans.
-
-Historically, the gettext suite has reformatted the po files at the 77th column
-for cosmetics. This option specifies the behavior of po4a. If set to a numerical
-value, po4a will wrap the po file after this column and after newlines in the
-content. If set to B<newlines>, po4a will only split the msgid and msgstr after
-newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
-The wrapping of the reference comments is controlled by the B<--porefs> option.
-
-Note that this option has no impact on how the msgid and msgstr are wrapped, ie
-on how newlines are added to the content of these strings.
-
-=item B<--msgid-bugs-address> I<email@address>
-
-Set the report address for msgid bugs. By default, the created POT files
-have no Report-Msgid-Bugs-To fields.
-
-=item B<--copyright-holder> I<string>
-
-Set the copyright holder in the POT header. The default value is
-"Free Software Foundation, Inc."
-
-=item B<--package-name> I<string>
-
-Set the package name for the POT header. The default is "PACKAGE".
-
-=item B<--package-version> I<string>
-
-Set the package version for the POT header. The default is "VERSION".
-
-=back
-
-=head2 OPTIONS TO MODIFY PO FILES
-
-=over 4
-
-=item B<--msgmerge-opt> I<options>
-
-Extra options for B<msgmerge>(1).
-
-Note: B<$lang> will be extended to the current language.
-
-=item B<--no-previous>
-
-This option removes B<--previous> from the options passed to B<msgmerge>.
-This permits to support versions of B<gettext> earlier than 0.16.
-
-=item B<--previous>
-
-This option adds B<--previous> to the options passed to B<msgmerge>.
-It requires B<gettext> 0.16 or later, and is activated by default.
-
-=back
-
 =head2 EXAMPLE
 
 Let's assume you maintain a program named B<foo> which has a man page F<man/foo.1>
@@ -626,18 +607,6 @@ Finally if you do not store generated files into your version control system,
 you will need a line in your B<clean> target as well:
         -rm -rf man/translated
 
-=head1 SHORTCOMINGS
-
-=over 4
-
-=item
-
-Duplicates some code with the B<po4a->I<*> programs.
-
-=back
-
-Patch welcome ;)
-
 =head1 SEE ALSO
 
 L<po4a-gettextize(1)>,
@@ -654,7 +623,7 @@ L<po4a(7)>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002-2012 by SPI, inc.
+Copyright 2002-2020 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
