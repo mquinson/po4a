@@ -1428,6 +1428,11 @@ if ( not $po4a_opts{"no-update"} ) {
             } else {
                 ( $infile, $outfile ) = ( $srcpath . $po_filename{$lang}, $dstpath . $po_filename{$lang} );
             }
+            my $updated_potfile = $dstpath . $pot_filename
+              if ( -e $dstpath . $pot_filename );    # Read the produced one if possible
+            $updated_potfile //= $srcpath . $pot_filename
+              if ( -e $srcpath . $pot_filename );    # If none was produced, try the source one
+            $updated_potfile //= $pot_filename;      # As a fallback try to use the filename with no specific path
 
             if ( -e $infile ) {
                 print wrap_msg( gettext("Updating %s:") . " ", $po_filename{$lang} )
@@ -1435,7 +1440,7 @@ if ( not $po4a_opts{"no-update"} ) {
 
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
-                my $cmd = "msgmerge" . $Config{_exe} . " $infile $pot_filename " . $msgmerge_opt;
+                my $cmd = "msgmerge" . $Config{_exe} . " $infile $updated_potfile " . $msgmerge_opt;
                 if ( ( not $po4a_opts{"split"} ) && $po4a_opts{'calldir'} . "/" eq $dstpath ) {    # in place
                     $cmd .= " --backup=none --update";
                 } else {
@@ -1543,9 +1548,11 @@ if ( not $po4a_opts{"no-translations"} ) {
 
         # Read the $lang PO once, no options for the creation
         my $po     = Locale::Po4a::Po->new();
-        my $pofile = $dstpath . $po_filename{$lang} if ( -e $dstpath . $po_filename{$lang} );
-        $pofile //= $srcpath . $po_filename{$lang} if ( -e $srcpath . $po_filename{$lang} );
-        $pofile //= $po_filename{$lang};
+        my $pofile = $dstpath . $po_filename{$lang}
+          if ( -e $dstpath . $po_filename{$lang} );    # Read the produced one if possible
+        $pofile //= $srcpath . $po_filename{$lang}
+          if ( -e $srcpath . $po_filename{$lang} );    # If none was produced, try the source one
+        $pofile //= $po_filename{$lang};               # As a fallback try to use the filename with no specific path
 
         if ( not -e $pofile ) {
             print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang )
@@ -1648,6 +1655,10 @@ if ( not $po4a_opts{"no-translations"} ) {
                 'destdir'          => $po4a_opts{"destdir"},
                 'calldir'          => $po4a_opts{"calldir"}
             );
+
+            #            my ( $is_uptodate, $uptodate_diag ) = $doc->is_po_uptodate();
+            #            die wrap_msg(gettext("PO file %s needs another update after translating the documents:\n  %s\nPlease report this bug."), $po_filename{$lang}, $uptodate_diag)
+            #                unless ($is_uptodate or $po4a_opts{'no-update'});
 
             my ( $percent, $hit, $queries ) = $doc->stats();
             if ( $percent < $file_opts{"threshold"} ) {
