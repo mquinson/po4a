@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-12 12:46+0200\n"
-"PO-Revision-Date: 2020-04-12 10:41+0000\n"
+"PO-Revision-Date: 2020-04-12 14:57+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.0-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -337,6 +337,10 @@ msgid ""
 "feature of po4a is to decouple the translatable content of a document from "
 "its structure."
 msgstr ""
+"po4a («PO for anything» або «PO для усього») спрощує супровід перекладу "
+"документації з використанням класичних інструментів gettext. Основною "
+"перевагою po4a є відокремлення придатного до перекладу вмісту документа від "
+"його структури."
 
 #. type: textblock
 #: po4a:7
@@ -346,6 +350,10 @@ msgid ""
 "that contains all translatable strings of the document in a form that ease "
 "the work of translators."
 msgstr ""
+"Коли вперше запускаєте програму B<po4a>, і у вас є лише основні документи, "
+"які слід перекласти, програма створює файл POT (який також називають "
+"каталогом перекладів), у якому містяться усі рядки документів у формі, з "
+"якою можуть легко працювати перекладачі."
 
 #. type: textblock
 #: po4a:8
@@ -355,6 +363,10 @@ msgid ""
 "in an online localization platform such as B<weblate> or B<zanata>. The "
 "translation result is a set of PO files, one per language."
 msgstr ""
+"Такі файли можна перекладати або за допомогою спеціалізованого редактора, "
+"зокрема B<Редактора перекладів Gnome> або B<Lokalize> з KDE, чи інтегрувати "
+"до платформи інтернет-перекладу, зокрема B<weblate> або B<zanata>. "
+"Результатом перекладу є набір файлів PO, по одному на кожну мову перекладу."
 
 #. type: textblock
 #: po4a:9
@@ -364,6 +376,9 @@ msgid ""
 "translation (found in the PO files) into the structure of the original "
 "master document."
 msgstr ""
+"Якщо ви запустите B<po4a>, маючи вже основні документи та файли PO, програма "
+"створить перекладені документи, вставивши вміст перекладу (який зберігається "
+"у файлах PO) до структури початкових основних документів."
 
 #. type: textblock
 #: po4a:10
@@ -375,6 +390,13 @@ msgid ""
 "english (for the new or modified paragraphs) and the target language (for "
 "the paragraph which translation is already in the PO file)."
 msgstr ""
+"Якщо до основних документів було внесено зміни, po4a оновить файли PO і POT "
+"відповідним чином, отже перекладачі без проблем зможуть виявити зміни і "
+"оновити результати своєї роботи. Залежно від параметрів запуску, po4a "
+"відкидатиме частково перекладені документи або створюватиме документ, у "
+"якому поєднуватимуться неперекладені частини англійською (для нових або "
+"змінених частин) та перекладені частини (ті частини, переклад яких лишився "
+"незмінним у файлі PO)."
 
 #. type: textblock
 #: po4a:11
@@ -385,6 +407,11 @@ msgid ""
 "translators, while showing \"translation\" that are too partial may be "
 "troubling for the end users."
 msgstr ""
+"Типово, програма створюватиме перекладені документи, якщо перекладено "
+"принаймні 80% вмісту (див. опис параметра I<--keep> нижче). Відкидання "
+"перекладів, які виконано не на 100% може знизити мотивацію перекладачів, але "
+"надання «перекладів», які є фрагментарними, може призвести до проблем у "
+"кінцевих користувачів."
 
 #. type: textblock
 #: po4a:12
@@ -395,6 +422,11 @@ msgid ""
 "bothersome and repetitive. It is highly recommanded to use the B<po4a> "
 "program in your build script."
 msgstr ""
+"Ви можете відтворити поведінку програми B<po4a> за допомогою інших програм "
+"комплекту (тобто L<po4a-gettextize(1)>, L<po4a-updatepo(1)> і L<po4a-"
+"translate(1)>) з використанням скриптів та файлів makefile, втім, це доволі "
+"складно і марудно. Наполегливо рекомендуємо вам користуватися у ваших "
+"скриптах збирання саме B<po4a>."
 
 #. type: =item
 #: po4a:14 po4a-translate:28
@@ -403,11 +435,6 @@ msgstr "B<-k>, B<--keep>"
 
 #. type: textblock
 #: po4a:15
-#, fuzzy
-#| msgid ""
-#| "Minimal threshold for translation percentage to keep (i.e. write) the "
-#| "resulting file (default: 80). I.e. by default, files have to be "
-#| "translated at least at 80% to get written."
 msgid ""
 "Minimal threshold for translation percentage to keep (i.e. write) the "
 "resulting file (default: 80). I.e. by default, files have to be translated "
@@ -415,8 +442,8 @@ msgid ""
 msgstr ""
 "Мінімальне порогове значення частки перекладених рядків у відсотках, щоб "
 "файл результат було збережено, тобто записано (типове значення: 80). Інакше "
-"кажучи, типово, щоб файл було записано, його має бути перекладено принаймні "
-"на 80%."
+"кажучи, типово, щоб файл було записано на диск, його має бути перекладено "
+"принаймні на 80%."
 
 #. type: =item
 #: po4a:16 po4a-gettextize:28 po4a-normalize:15 po4a-translate:32
@@ -805,7 +832,7 @@ msgstr ""
 #. type: =head2
 #: po4a:67
 msgid "Options modifying the POT header"
-msgstr ""
+msgstr "Параметри для внесення змін до заголовка POT"
 
 #. type: =item
 #: po4a:68 po4a-updatepo:38 lib/Locale/Po4a/Po.pm:14
@@ -883,10 +910,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:74
-#, fuzzy
-#| msgid ""
-#| "Note that this option has no impact on how the msgid and msgstr are "
-#| "wrapped, ie on how newlines are added to the content of these strings."
 msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "ie on how newlines are added to the content of these strings.  =item B<-M>, "
@@ -894,7 +917,7 @@ msgid ""
 msgstr ""
 "Зауважте, що цей параметр не стосується того, яким чином переноситимуться "
 "рядки у msgid і msgstr, тобто того, у який спосіб до цих рядків "
-"додаватимуться символи розриву рядків."
+"додаватимуться символи розриву рядків.  =item B<-M>, B<--master-language>"
 
 #. type: textblock
 #: po4a:75
@@ -960,7 +983,7 @@ msgstr ""
 #. type: =head2
 #: po4a:84
 msgid "Options to modify the PO files"
-msgstr ""
+msgstr "Параметри для внесення змін до файлів PO"
 
 #. type: =item
 #: po4a:85 po4a-updatepo:26
@@ -1010,7 +1033,7 @@ msgstr ""
 #. type: =head1
 #: po4a:92
 msgid "DATA FLOWS"
-msgstr ""
+msgstr "ПРОЦЕС ОБРОБКИ"
 
 #. type: textblock
 #: po4a:93
@@ -1028,7 +1051,7 @@ msgstr ""
 #. type: textblock
 #: po4a:94
 msgid "Regular case where no B<pot_in> is specified:"
-msgstr ""
+msgstr "Звичайний випадок, коли не визначено B<pot_in>:"
 
 #. type: verbatim
 #: po4a:95
@@ -1078,6 +1101,8 @@ msgid ""
 "Special case where a B<pot_in> is specified to filter the input master "
 "document:"
 msgstr ""
+"Особливий випадок, коли визначено B<pot_in> для фільтрування вхідних даних "
+"основного документа:"
 
 #. type: verbatim
 #: po4a:98
@@ -9929,27 +9954,19 @@ msgstr "B<nobullets>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:13
-#, fuzzy
-#| msgid "Deactivate detection of bullets."
 msgid "Deactivate the detection of bullets."
 msgstr "Вимкнути виявлення пунктів списку."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:14
-#, fuzzy
-#| msgid ""
-#| "By default, when a bullet is detected, the bullet paragraph is not "
-#| "considered as a verbatim paragraph (with the no-wrap flag in the PO "
-#| "file), but the module rewraps this paragraph in the generated PO file and "
-#| "in the translation."
 msgid ""
 "By default, when a bullet is detected, the bullet paragraph is not "
 "considered as a verbatim paragraph (with the no-wrap flag in the PO file). "
 "Instead, the corresponding paragraph is rewraped in the translation."
 msgstr ""
 "Типово, модуль виявляє позначки пунктів. Абзац пункту не вважається абзацом "
-"буквального цитування (із прапорцем no-wrap у файлі PO); модуль повторно "
-"розбиває цей абзац на рядки у створеному файлі PO і у перекладі."
+"буквального цитування (із прапорцем no-wrap у файлі PO). Замість цього, "
+"відповідний абзац буде повторно розбито на рядки у перекладі."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:15
@@ -10039,7 +10056,7 @@ msgstr "Обробляти спеціальну розмітку у текста
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:30
 msgid "B<yfm_keys> (markdown-only)"
-msgstr ""
+msgstr "B<yfm_keys> (лише розмітка)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:31
@@ -10049,16 +10066,20 @@ msgid ""
 "insentive match. Arrays values are always translated unless if the "
 "B<yfm_skip_array> option is provided."
 msgstr ""
+"Список відокремлених комами ключів, які слід обробляти для перекладу у "
+"вступному розділі YAML. Усі інші ключі буде пропущено. Відповідність ключів "
+"встановлюватиметься без врахування регістру. Значення масивів завжди "
+"перекладатимуться, якщо не вказано параметр B<yfm_skip_array>."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
 msgid "B<yfm_skip_array> (markdown-only)"
-msgstr ""
+msgstr "B<yfm_skip_array> (лише розмітка)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:33
 msgid "Do not translate array values in the YAML Front Matter section."
-msgstr ""
+msgstr "Не перекладати значення масивів у вступному розділі YAML."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
