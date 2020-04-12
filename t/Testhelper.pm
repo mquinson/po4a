@@ -166,9 +166,9 @@ sub run_one_po4aconf {
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
       ( keys %{$test} );
 
-    $test->{'options'} = "--destdir tmp --verbose " . ( $test->{'options'} ? $test->{'options'} : "" );
+    $test->{'options'} = "--destdir tmp --verbose " . ( $test->{'options'} // "" );
     fail("Broken test: 'tests' is not an array as expected") if exists $test->{tests} && ref $test->{tests} ne 'ARRAY';
-    $test->{'tests'} = [] unless exists $test->{'tests'};
+    $test->{'tests'} //= [];
 
     fail("Broken test: path $path does not exist")                       unless -e $path;
     fail("Broken test: config file $path/$basename.$ext does not exist") unless -e "$path/$basename.$ext";
@@ -178,8 +178,8 @@ sub run_one_po4aconf {
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
 
     if ( $test->{'closed_path'} ) {
-        $test->{'setup'}    = () if ( not exists $test->{'setup'} );
-        $test->{'teardown'} = () if ( not exists $test->{'teardown'} );
+        $test->{'setup'}    //= ();
+        $test->{'teardown'} //= ();
         push @{ $test->{'setup'} },    "chmod -r-w-x " . $test->{'closed_path'};    # Don't even look at the closed path
         push @{ $test->{'teardown'} }, "chmod +r+w+x " . $test->{'closed_path'};    # Restore permissions
         push @{ $test->{'setup'} },    "chmod +r+x $path";                          # Look into the path of this test
@@ -189,10 +189,7 @@ sub run_one_po4aconf {
     setup($test);
 
     my $cmd =
-        "${execpath}/po4a -f "
-      . $test->{'po4a.conf'} . " "
-      . ( $test->{'options'} ? $test->{'options'} : '' )
-      . " > tmp/$path/output 2>&1";
+      "${execpath}/po4a -f " . $test->{'po4a.conf'} . " " . ( $test->{'options'} // '' ) . " > tmp/$path/output 2>&1";
 
     #    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
