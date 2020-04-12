@@ -25,10 +25,10 @@ push @tests, {
     'normalize' => "-f text -o markdown t-20-text/MarkDownNestedLists.md",
   };
 
-my @markdown_tests = qw(MarkDown 
+my @markdown_tests = qw(MarkDown MarkDownYamlFrontMatter
   PandocHeaderMultipleLines PandocOnlyAuthor
   PandocTitleAndDate PandocMultipleAuthors PandocOnlyTitle PandocTitleAuthors
-  PandocFencedCodeBlocks PandocYamlFrontMatter
+  PandocFencedCodeBlocks 
   MarkDownRules);
 
 for my $markdown_test (@markdown_tests) {    
