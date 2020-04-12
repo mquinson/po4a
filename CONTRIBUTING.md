@@ -107,7 +107,6 @@ the local ones, simply set the AUTOPKGTEST_TMP variable:
   AUTOPKGTEST_TMP=1 ./Build test
 ```
 
-
 ## Writing a test
 
 In order to define a new test, you can use some convenience
@@ -188,6 +187,11 @@ push @tests,
 ```
 
 # Submitting Your Patch
+
+Before all, please run ``tidyall -git`` to ensure that your changes
+stick to the project quality standards. You should also consider using
+a [git pre-commit hook](https://metacpan.org/pod/Code::TidyAll::Git::Precommit) 
+to that extend.
 
 When submitting a patch, please either fill a Pull Request on 
 [mquinson/po4a](https://github.com/mquinson/po4a) on GitHub or a Merge
