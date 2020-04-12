@@ -1543,19 +1543,16 @@ if ( not $po4a_opts{"no-translations"} ) {
 
         # Read the $lang PO once, no options for the creation
         my $po = Locale::Po4a::Po->new();
-        chdir $po4a_opts{"srcdir"} if ( defined $po4a_opts{"srcdir"} );
-        if ( not -e $po_filename{$lang} ) {
+        if ( not -e $srcpath . $po_filename{$lang} ) {
             print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang )
               if ( $po4a_opts{"verbose"} );
-            chdir $po4a_opts{"calldir"} if ( defined $po4a_opts{"srcdir"} );
             next LANG;
         }
-        print "Reading PO file " . $po_filename{$lang} . " for language $lang: "
+        print "Reading PO file $srcpath" . $po_filename{$lang} . " for language $lang: "
           if ( $po4a_opts{"debug"} );
-        $po->read( $po_filename{$lang} );
-        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $po_filename{$lang}" )
+        $po->read( $srcpath . $po_filename{$lang} );
+        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $srcpath$po_filename{$lang}" )
           if ( $po4a_opts{"debug"} );
-        chdir $po4a_opts{"calldir"} if ( defined $po4a_opts{"srcdir"} );
 
       DOC: foreach my $master (
             sort {
@@ -1649,7 +1646,6 @@ if ( not $po4a_opts{"no-translations"} ) {
             );
 
             my ( $percent, $hit, $queries ) = $doc->stats();
-
             if ( $percent < $file_opts{"threshold"} ) {
                 print wrap_msg(
                     gettext("Discard %s (%s of %s strings; only %s%% translated; need %s%%)."),
