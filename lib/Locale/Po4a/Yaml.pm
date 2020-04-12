@@ -138,11 +138,12 @@ These are this module's particular options:
 
 Space-separated list of hash keys to process for extraction, all
 other keys are skipped.  Keys are matched with a case-insentive match.
-Arrays values are always returned unless skipped with B<skip_array>.
+Arrays values are always returned unless if the B<skip_array> option is
+provided.
 
 =item B<skip_array>
 
-Never return array values.
+Do not translate array values.
 
 =back
 
