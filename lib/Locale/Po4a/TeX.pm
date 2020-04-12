@@ -71,18 +71,18 @@ use warnings;
 
 require Exporter;
 use vars qw(@ISA @EXPORT);
-@ISA = qw(Locale::Po4a::TransTractor);
+@ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw(%commands %environments
-             $RE_ESCAPE $ESCAPE $RE_VERBATIM
-             $no_wrap_environments
-             $verbatim_environments
-             %separated_command
-             %separated_environment
-             %translate_buffer_env
-             &add_comment
-             &generic_command
-             &register_generic_command
-             &register_generic_environment);
+  $RE_ESCAPE $ESCAPE $RE_VERBATIM
+  $no_wrap_environments
+  $verbatim_environments
+  %separated_command
+  %separated_environment
+  %translate_buffer_env
+  &add_comment
+  &generic_command
+  &register_generic_command
+  &register_generic_environment);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
@@ -95,26 +95,31 @@ use Encode::Guess;
 # hash of known commands and environments, with parsing sub.
 # See end of this file
 use vars qw(%commands %environments);
+
 # hash to describe the number of parameters and which one have to be
 # translated. Used by generic commands
-our %command_parameters = ();
+our %command_parameters     = ();
 our %environment_parameters = ();
+
 # hash to describe the separators of environments.
-our %env_separators =();
+our %env_separators = ();
 
 # The escape character used to introduce commands.
 our $RE_ESCAPE = "\\\\";
 our $ESCAPE    = "\\";
+
 # match the beginning of a verbatim block
 our $RE_VERBATIM = "\\\\begin\\{(?:verbatim)\\*?\\}";
+
 # match the beginning of a comment.
 # NOTE: It must contain a group, with chars preceding the comment
-our $RE_PRE_COMMENT= "(?<!\\\\)(?:\\\\\\\\)*";
-our $RE_COMMENT= "\\\%";
+our $RE_PRE_COMMENT = "(?<!\\\\)(?:\\\\\\\\)*";
+our $RE_COMMENT     = "\\\%";
 
 # Space separated list of environments that should not be re-wrapped.
-our $no_wrap_environments = "verbatim";
+our $no_wrap_environments  = "verbatim";
 our $verbatim_environments = "verbatim";
+
 # hash with the commands that have to be separated (or have to be joined).
 # 3 modes are currently used:
 #  '*' The command is separated if it appear at an extremity of a
@@ -123,7 +128,7 @@ our $verbatim_environments = "verbatim";
 #      with the command name for the translation
 #  '-' The command is not separated, unless it appear alone on a paragraph
 #      (e.g. \strong)
-our %separated_command = ();
+our %separated_command     = ();
 our %separated_environment = ();
 
 =item B<debug>
@@ -293,19 +298,20 @@ my $my_dirname;
 # See read_file.
 our @exclude_include;
 
-my %type_end=('{'=>'}', '['=>']', ' '=>'');
+my %type_end = ( '{' => '}', '[' => ']', ' ' => '' );
 
 #########################
 #### DEBUGGING STUFF ####
 #########################
-my %debug=('pretrans'         => 0, # see pre-conditioning of translation
-           'postrans'         => 0, # see post-conditioning of translation
-           'translate'        => 0, # see translation
-           'extract_commands' => 0, # see commands extraction
-           'commands'         => 0, # see command subroutines
-           'environments'     => 0, # see environment subroutines
-           'translate_buffer' => 0  # see buffer translation
-           );
+my %debug = (
+    'pretrans'         => 0,    # see pre-conditioning of translation
+    'postrans'         => 0,    # see post-conditioning of translation
+    'translate'        => 0,    # see translation
+    'extract_commands' => 0,    # see commands extraction
+    'commands'         => 0,    # see command subroutines
+    'environments'     => 0,    # see environment subroutines
+    'translate_buffer' => 0     # see buffer translation
+);
 
 =head1 WRITING DERIVATE MODULES
 
@@ -316,26 +322,27 @@ my %debug=('pretrans'         => 0, # see pre-conditioning of translation
 =cut
 
 sub pre_trans {
-    my ($self,$str,$ref,$type)=@_;
+    my ( $self, $str, $ref, $type ) = @_;
+
     # Preformatting, so that translators don't see
     # strange chars
-    my $origstr=$str;
+    my $origstr = $str;
     print STDERR "pre_trans($str)="
-        if ($debug{'pretrans'});
+      if ( $debug{'pretrans'} );
 
     # Accentuated characters
     # FIXME: only do this if the encoding is UTF-8?
-#    $str =~ s/${RE_ESCAPE}`a/à/g;
+    #    $str =~ s/${RE_ESCAPE}`a/à/g;
 ##    $str =~ s/${RE_ESCAPE}c{c}/ç/g; # not in texinfo: @,{c}
-#    $str =~ s/${RE_ESCAPE}^e/ê/g;
-#    $str =~ s/${RE_ESCAPE}'e/é/g;
-#    $str =~ s/${RE_ESCAPE}`e/è/g;
-#    $str =~ s/${RE_ESCAPE}`u/ù/g;
-#    $str =~ s/${RE_ESCAPE}"i/ï/g;
-#    # Non breaking space. FIXME: should we change $\sim$ to ~
-#    $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
+    #    $str =~ s/${RE_ESCAPE}^e/ê/g;
+    #    $str =~ s/${RE_ESCAPE}'e/é/g;
+    #    $str =~ s/${RE_ESCAPE}`e/è/g;
+    #    $str =~ s/${RE_ESCAPE}`u/ù/g;
+    #    $str =~ s/${RE_ESCAPE}"i/ï/g;
+    #    # Non breaking space. FIXME: should we change $\sim$ to ~
+    #    $str =~ s/~/\xA0/g; # FIXME: not in texinfo: @w{ }
 
-    print STDERR "$str\n" if ($debug{'pretrans'});
+    print STDERR "$str\n" if ( $debug{'pretrans'} );
     return $str;
 }
 
@@ -344,24 +351,24 @@ sub pre_trans {
 =cut
 
 sub post_trans {
-    my ($self,$str,$ref,$type)=@_;
-    my $transstr=$str;
+    my ( $self, $str, $ref, $type ) = @_;
+    my $transstr = $str;
 
     print STDERR "post_trans($str)="
-        if ($debug{'postrans'});
+      if ( $debug{'postrans'} );
 
     # Accentuated characters
-#    $str =~ s/à/${ESCAPE}`a/g;
+    #    $str =~ s/à/${ESCAPE}`a/g;
 ##    $str =~ s/ç/$ESCAPEc{c}/g; # FIXME: not in texinfo
-#    $str =~ s/ê/${ESCAPE}^e/g;
-#    $str =~ s/é/${ESCAPE}'e/g;
-#    $str =~ s/è/${ESCAPE}`e/g;
-#    $str =~ s/ù/${ESCAPE}`u/g;
-#    $str =~ s/ï/${ESCAPE}"i/g;
-#    # Non breaking space. FIXME: should we change ~ to $\sim$
-#    $str =~ s/\xA0/~/g; # FIXME: not in texinfo
+    #    $str =~ s/ê/${ESCAPE}^e/g;
+    #    $str =~ s/é/${ESCAPE}'e/g;
+    #    $str =~ s/è/${ESCAPE}`e/g;
+    #    $str =~ s/ù/${ESCAPE}`u/g;
+    #    $str =~ s/ï/${ESCAPE}"i/g;
+    #    # Non breaking space. FIXME: should we change ~ to $\sim$
+    #    $str =~ s/\xA0/~/g; # FIXME: not in texinfo
 
-    print STDERR "$str\n" if ($debug{'postrans'});
+    print STDERR "$str\n" if ( $debug{'postrans'} );
     return $str;
 }
 
@@ -378,7 +385,7 @@ This is mostly useful to the texinfo module, as comments are automatically handl
 =cut
 
 sub add_comment {
-    my ($self,$comment) = @_;
+    my ( $self, $comment ) = @_;
     push @comments, $comment;
 }
 
@@ -393,47 +400,44 @@ translated string of this paragraph.
 =cut
 
 sub translate {
-    my ($self,$str,$ref,$type) = @_;
-    my (%options)=@_;
-    my $origstr=$str;
+    my ( $self, $str, $ref, $type ) = @_;
+    my (%options) = @_;
+    my $origstr = $str;
     print STDERR "translate($str)="
-        if ($debug{'translate'});
+      if ( $debug{'translate'} );
 
-    return $str unless (defined $str) && length($str);
-    return $str if ($str eq "\n");
+    return $str unless ( defined $str ) && length($str);
+    return $str if ( $str eq "\n" );
 
-    $str=pre_trans($self,$str,$ref||$self->{ref},$type);
+    $str = pre_trans( $self, $str, $ref || $self->{ref}, $type );
 
     # add comments (if any and not already added to the PO)
     if (@comments) {
-        $options{'comment'} .= join('\n', @comments);
+        $options{'comment'} .= join( '\n', @comments );
 
         @comments = ();
     }
 
-# FIXME: translate may append a newline, keep the trailing spaces so we can
-# recover them.
+    # FIXME: translate may append a newline, keep the trailing spaces so we can
+    # recover them.
     my $spaces = "";
-    if ($options{'wrap'} and $str =~ m/^(.*?)(\s+)$/s) {
+    if ( $options{'wrap'} and $str =~ m/^(.*?)(\s+)$/s ) {
         $str    = $1;
         $spaces = $2;
     }
 
     # Translate this
-    $str = $self->SUPER::translate($str,
-                                   $ref||$self->{ref},
-                                   $type || $self->{type},
-                                   %options);
+    $str = $self->SUPER::translate( $str, $ref || $self->{ref}, $type || $self->{type}, %options );
 
-# FIXME: translate may append a newline, see above
-    if ($options{'wrap'}) {
+    # FIXME: translate may append a newline, see above
+    if ( $options{'wrap'} ) {
         chomp $str;
         $str .= $spaces;
     }
 
-    $str=post_trans($self,$str,$ref||$self->{ref},$type);
+    $str = post_trans( $self, $str, $ref || $self->{ref}, $type );
 
-    print STDERR "'$str'\n" if ($debug{'translate'});
+    print STDERR "'$str'\n" if ( $debug{'translate'} );
     return $str;
 }
 
@@ -476,80 +480,85 @@ touched and returned in this field.
 =cut
 
 sub get_leading_command {
-    my ($self, $buffer) = (shift,shift);
-    my $command = ""; # the command name
-    my $variant = ""; # a varriant for the command (e.g. an asterisk)
-    my @args; # array of arguments
+    my ( $self, $buffer ) = ( shift, shift );
+    my $command = "";    # the command name
+    my $variant = "";    # a varriant for the command (e.g. an asterisk)
+    my @args;            # array of arguments
     print STDERR "get_leading_command($buffer)="
-        if ($debug{'extract_commands'});
+      if ( $debug{'extract_commands'} );
 
-    if ($buffer =~ m/^$RE_ESCAPE([[:alnum:]]+)(\*?)(.*)$/s
-        && defined $separated_command{$1}) {
+    if ( $buffer =~ m/^$RE_ESCAPE([[:alnum:]]+)(\*?)(.*)$/s
+        && defined $separated_command{$1} )
+    {
         # The buffer begin by a comand (possibly preceded by some
         # whitespaces).
         $command = $1;
         $variant = $2;
         $buffer  = $3;
+
         # read the arguments (if any)
-        while ($buffer =~ m/^\s*$RE_PRE_COMMENT([\[\{])(.*)$/s) {
-            my $type = $1;
-            my $arg = "";
+        while ( $buffer =~ m/^\s*$RE_PRE_COMMENT([\[\{])(.*)$/s ) {
+            my $type  = $1;
+            my $arg   = "";
             my $count = 1;
             $buffer = $2;
+
             # stop reading the buffer when the number of ] (or }) matches the
             # the number of [ (or {).
-            while ($count > 0) {
-                if ($buffer =~ m/^(.*?$RE_PRE_COMMENT)([\[\]\{\}])(.*)$/s) {
+            while ( $count > 0 ) {
+                if ( $buffer =~ m/^(.*?$RE_PRE_COMMENT)([\[\]\{\}])(.*)$/s ) {
                     $arg .= $1;
                     $buffer = $3;
-                    if ($2 eq $type) {
+                    if ( $2 eq $type ) {
                         $count++;
-                    } elsif ($2 eq $type_end{$type}) {
+                    } elsif ( $2 eq $type_end{$type} ) {
                         $count--;
                     }
-                    if ($count > 0) {
-                        $arg .= $2
+                    if ( $count > 0 ) {
+                        $arg .= $2;
                     }
                 } else {
-                    die wrap_ref_mod($self->{ref},
-                                     "po4a::tex",
-                                     dgettext("po4a", "un-balanced %s in '%s'"),
-                                     $type,
-                                     $buffer);
+                    die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "un-balanced %s in '%s'" ),
+                        $type, $buffer );
                 }
             }
-            push @args, ($type,$arg);
+            push @args, ( $type, $arg );
         }
     }
-    if (defined $command and length $command) {
+    if ( defined $command and length $command ) {
+
         # verify the number of arguments
-        my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
-        if (not $check) {
-            die wrap_ref_mod($self->{ref}, "po4a::tex",
-                             dgettext("po4a",
-                                 "Error while checking the number of ".
-                                 "arguments of the '%s' command: %s")."\n",
-                             $command, $reason);
+        my ( $check, $reason, $remainder ) = check_arg_count( $self, $command, \@args );
+        if ( not $check ) {
+            die wrap_ref_mod(
+                $self->{ref},
+                "po4a::tex",
+                dgettext( "po4a", "Error while checking the number of " . "arguments of the '%s' command: %s" ) . "\n",
+                $command,
+                $reason
+            );
         }
 
         if (@$remainder) {
+
             # FIXME: we should also keep the spaces to be idempotent
-            my ($temp,$type,$arg);
+            my ( $temp, $type, $arg );
             while (@$remainder) {
                 $type = shift @$remainder;
                 $arg  = shift @$remainder;
-                $temp .= $type.$arg.$type_end{$type};
+                $temp .= $type . $arg . $type_end{$type};
+
                 # And remove the same number of arguments from @args
                 pop @args;
                 pop @args;
             }
-            $buffer = $temp.$buffer;
+            $buffer = $temp . $buffer;
         }
     }
 
     print STDERR "($command,$variant,@args,$buffer)\n"
-        if ($debug{'extract_commands'});
-    return ($command,$variant,\@args,$buffer);
+      if ( $debug{'extract_commands'} );
+    return ( $command, $variant, \@args, $buffer );
 }
 
 =item B<get_trailing_command>($buffer)
@@ -559,10 +568,10 @@ The same as B<get_leading_command>, but for commands at the end of a buffer.
 =cut
 
 sub get_trailing_command {
-    my ($self, $buffer) = (shift,shift);
+    my ( $self, $buffer ) = ( shift, shift );
     my $orig_buffer = $buffer;
     print STDERR "get_trailing_command($buffer)="
-        if ($debug{'extract_commands'});
+      if ( $debug{'extract_commands'} );
 
     my @args;
     my $command = "";
@@ -570,52 +579,55 @@ sub get_trailing_command {
 
     # While the buffer ends by }, consider it is a mandatory argument
     # and extract this argument.
-    while (   $buffer =~ m/^(.*$RE_PRE_COMMENT(\{).*)$RE_PRE_COMMENT\}$/s
-           or $buffer =~ m/^(.*$RE_PRE_COMMENT(\[).*)$RE_PRE_COMMENT\]$/s) {
-        my $arg = "";
+    while ($buffer =~ m/^(.*$RE_PRE_COMMENT(\{).*)$RE_PRE_COMMENT\}$/s
+        or $buffer =~ m/^(.*$RE_PRE_COMMENT(\[).*)$RE_PRE_COMMENT\]$/s )
+    {
+        my $arg   = "";
         my $count = 1;
         $buffer = $1;
         my $type = $2;
+
         # stop reading the buffer when the number of } (or ]) matches the
         # the number of { (or [).
-        while ($count > 0) {
-            if ($buffer =~ m/^(.*$RE_PRE_COMMENT)([\{\}\[\]])(.*)$/s) {
-                 $arg = $3.$arg;
-                 $buffer = $1;
-                 if ($2 eq $type) {
-                     $count--;
-                 } elsif ($2 eq $type_end{$type}) {
-                     $count++;
-                 }
-                 if ($count > 0) {
-                     $arg = $2.$arg;
-                 }
+        while ( $count > 0 ) {
+            if ( $buffer =~ m/^(.*$RE_PRE_COMMENT)([\{\}\[\]])(.*)$/s ) {
+                $arg    = $3 . $arg;
+                $buffer = $1;
+                if ( $2 eq $type ) {
+                    $count--;
+                } elsif ( $2 eq $type_end{$type} ) {
+                    $count++;
+                }
+                if ( $count > 0 ) {
+                    $arg = $2 . $arg;
+                }
             } else {
-                die wrap_ref_mod($self->{ref},
-                                 "po4a::tex",
-                                 dgettext("po4a", "un-balanced %s in '%s'"),
-                                 $type_end{$type},
-                                 $buffer);
+                die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "un-balanced %s in '%s'" ),
+                    $type_end{$type}, $buffer );
             }
         }
-        unshift @args, ($type,$arg);
+        unshift @args, ( $type, $arg );
     }
 
     # There should now be a command, maybe followed by an asterisk.
-    if ($buffer =~ m/^(.*$RE_PRE_COMMENT)$RE_ESCAPE([[:alnum:]]+)(\*?)\s*$/s
-        && defined $separated_command{$2}) {
-        $buffer = $1;
+    if ( $buffer =~ m/^(.*$RE_PRE_COMMENT)$RE_ESCAPE([[:alnum:]]+)(\*?)\s*$/s
+        && defined $separated_command{$2} )
+    {
+        $buffer  = $1;
         $command = $2;
         $variant = $3;
-        my($check,$reason,$remainder) = check_arg_count($self,$command,\@args);
-        if (not $check) {
-            die wrap_ref_mod($self->{ref}, "po4a::tex",
-                             dgettext("po4a",
-                                 "Error while checking the number of ".
-                                 "arguments of the '%s' command: %s")."\n",
-                             $command, $reason);
+        my ( $check, $reason, $remainder ) = check_arg_count( $self, $command, \@args );
+        if ( not $check ) {
+            die wrap_ref_mod(
+                $self->{ref},
+                "po4a::tex",
+                dgettext( "po4a", "Error while checking the number of " . "arguments of the '%s' command: %s" ) . "\n",
+                $command,
+                $reason
+            );
         }
         if (@$remainder) {
+
             # There are some arguments after the command.
             # We can't extract this comand.
             $command = "";
@@ -623,17 +635,18 @@ sub get_trailing_command {
     }
 
     # sanitize return values if no command was found.
-    if (!length($command)) {
+    if ( !length($command) ) {
         $command = "";
         $variant = "";
         undef @args;
         $buffer = $orig_buffer;
     }
-# verify the number of arguments
+
+    # verify the number of arguments
 
     print STDERR "($command,$variant,@args,$buffer)\n"
-        if ($debug{'extract_commands'});
-    return ($command,$variant,\@args,$buffer);
+      if ( $debug{'extract_commands'} );
+    return ( $command, $variant, \@args, $buffer );
 }
 
 =item B<translate_buffer>
@@ -649,95 +662,100 @@ translate_buffer().
 =cut
 
 our %translate_buffer_env = ();
-sub translate_buffer {
-    my ($self,$buffer,$no_wrap,@env) = (shift,shift,shift,@_);
 
-    if (@env and defined $translate_buffer_env{$env[-1]}) {
-        return &{$translate_buffer_env{$env[-1]}}($self,$buffer,$no_wrap,@env);
+sub translate_buffer {
+    my ( $self, $buffer, $no_wrap, @env ) = ( shift, shift, shift, @_ );
+
+    if ( @env and defined $translate_buffer_env{ $env[-1] } ) {
+        return &{ $translate_buffer_env{ $env[-1] } }( $self, $buffer, $no_wrap, @env );
     }
 
     print STDERR "translate_buffer($buffer,$no_wrap,@env)="
-        if ($debug{'translate_buffer'});
+      if ( $debug{'translate_buffer'} );
 
-    my ($command,$variant) = ("","");
+    my ( $command, $variant ) = ( "", "" );
     my $args;
     my $translated_buffer = "";
-    my $orig_buffer = $buffer;
-    my $t = ""; # a temporary string
+    my $orig_buffer       = $buffer;
+    my $t                 = "";        # a temporary string
 
-    if ($buffer =~ /^\s*$/s) {
+    if ( $buffer =~ /^\s*$/s ) {
         print STDERR "($buffer,@env)\n"
-            if ($debug{'translate_buffer'});
-        return ($buffer, @env);
+          if ( $debug{'translate_buffer'} );
+        return ( $buffer, @env );
     }
+
     # verbatim blocks.
     # Buffers starting by \end{verbatim} are handled after.
-    if (in_verbatim(@env) and $buffer !~ m/^\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}/) {
-        if($buffer =~ m/^(.*?)(\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}.*)$/s) {
+    if ( in_verbatim(@env) and $buffer !~ m/^\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}/ ) {
+        if ( $buffer =~ m/^(.*?)(\n?\Q$ESCAPE\Eend\{$env[-1]\*?\}.*)$/s ) {
+
             # end of a verbatim block
-            my ($begin, $end) = ($1?$1:"", $2);
-            my ($t1, $t2) = ("", "");
-            if (defined $begin) {
-                $t1 = $self->translate($begin,$self->{ref},
-                                       $env[-1],
-                                       "wrap" => 0);
+            my ( $begin, $end ) = ( $1 ? $1 : "", $2 );
+            my ( $t1, $t2 ) = ( "", "" );
+            if ( defined $begin ) {
+                $t1 = $self->translate( $begin, $self->{ref}, $env[-1], "wrap" => 0 );
             }
-            ($t2, @env) = translate_buffer($self, $end, $no_wrap, @env);
+            ( $t2, @env ) = translate_buffer( $self, $end, $no_wrap, @env );
             print STDERR "($t1$t2,@env)\n"
-                if ($debug{'translate_buffer'});
-            return ($t1.$t2, @env);
+              if ( $debug{'translate_buffer'} );
+            return ( $t1 . $t2, @env );
         } else {
-            $translated_buffer = $self->translate($buffer,$self->{ref},
-                                                  $env[-1],
-                                                  "wrap" => 0);
+            $translated_buffer = $self->translate( $buffer, $self->{ref}, $env[-1], "wrap" => 0 );
             print STDERR "($translated_buffer,@env)\n"
-                if ($debug{'translate_buffer'});
-            return ($translated_buffer, @env);
+              if ( $debug{'translate_buffer'} );
+            return ( $translated_buffer, @env );
         }
     }
+
     # early detection of verbatim environment
-    if ($buffer =~ /^($RE_VERBATIM\n?)(.*)$/s and length $2) {
-        my ($begin, $end) = ($1, $2);
-        my ($t1, $t2) = ("", "");
-        ($t1, @env) = translate_buffer($self, $begin, $no_wrap, @env);
-        ($t2, @env) = translate_buffer($self, $end,   $no_wrap, @env);
+    if ( $buffer =~ /^($RE_VERBATIM\n?)(.*)$/s and length $2 ) {
+        my ( $begin, $end ) = ( $1, $2 );
+        my ( $t1, $t2 ) = ( "", "" );
+        ( $t1, @env ) = translate_buffer( $self, $begin, $no_wrap, @env );
+        ( $t2, @env ) = translate_buffer( $self, $end,   $no_wrap, @env );
 
         print STDERR "($t1$t2,@env)\n"
-            if ($debug{'translate_buffer'});
-        return ($t1.$t2, @env);
+          if ( $debug{'translate_buffer'} );
+        return ( $t1 . $t2, @env );
     }
+
     # detect \begin and \end (if they are not commented)
-    if ($buffer =~ /^((?:.*?\n)?                # $1 is
+    if (
+        $buffer =~ /^((?:.*?\n)?                # $1 is
                       (?:[^%]                   # either not a %
                         |                       # or
                          (?<!\\)(?:\\\\)*\\%)*? # a % preceded by an odd nb of \
                      )                          # $2 is a \begin{ with the end of the line
                       (${RE_ESCAPE}(?:begin|end)\{.*)$/sx
-        and length $1) {
-        my ($begin, $end) = ($1, $2);
-        my ($t1, $t2) = ("", "");
-        if (is_closed($begin)) {
-            ($t1, @env) = translate_buffer($self, $begin, $no_wrap, @env);
-            ($t2, @env) = translate_buffer($self, $end,   $no_wrap, @env);
+        and length $1
+      )
+    {
+        my ( $begin, $end ) = ( $1, $2 );
+        my ( $t1, $t2 ) = ( "", "" );
+        if ( is_closed($begin) ) {
+            ( $t1, @env ) = translate_buffer( $self, $begin, $no_wrap, @env );
+            ( $t2, @env ) = translate_buffer( $self, $end,   $no_wrap, @env );
 
             print STDERR "($t1$t2,@env)\n"
-                if ($debug{'translate_buffer'});
-            return ($t1.$t2, @env);
+              if ( $debug{'translate_buffer'} );
+            return ( $t1 . $t2, @env );
         }
     }
 
     # remove comments from the buffer.
     # Comments are stored in an array and shown as comments in the PO.
-    while ($buffer =~ m/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)(.*)$/s) {
+    while ( $buffer =~ m/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)(.*)$/s ) {
         my $comment = $2;
-        my $end = "";
-        if ($4 =~ m/^\n/s and $buffer !~ m/^$RE_COMMENT/s) {
+        my $end     = "";
+        if ( $4 =~ m/^\n/s and $buffer !~ m/^$RE_COMMENT/s ) {
+
             # a line with comments, followed by an empty line.
             # Keep the empty line, but remove the comment.
             # This is an empirical heuristic, but seems to work;)
             $end = "\n";
         }
-        if (defined $comment and $comment !~ /^\s*$/s) {
+        if ( defined $comment and $comment !~ /^\s*$/s ) {
             push @comments, $comment;
         }
         $buffer =~ s/($RE_PRE_COMMENT)$RE_COMMENT([^\n]*)(\n[ \t]*)/$1$end/s;
@@ -748,95 +766,101 @@ sub translate_buffer {
         # keep the leading space to put them back after the translation of
         # the command.
         my $spaces = "";
-        if ($buffer =~ /^(\s+)(.*?)$/s) {
+        if ( $buffer =~ /^(\s+)(.*?)$/s ) {
             $spaces = $1;
-#            $buffer = $2; # FIXME: this also remove trailing spaces!!
+
+            #            $buffer = $2; # FIXME: this also remove trailing spaces!!
             $buffer =~ s/^\s*//s;
         }
         my $buffer_save = $buffer;
-        ($command, $variant, $args, $buffer) =
-            get_leading_command($self,$buffer);
-        if (    (length $command)
-            and (defined $separated_command{$command})
-            and ($separated_command{$command} eq '-')
-            and (   (not (defined($buffer)))
-                 or ($buffer !~ m/^\s*$/s)  )) {
+        ( $command, $variant, $args, $buffer ) = get_leading_command( $self, $buffer );
+        if (
+                ( length $command )
+            and ( defined $separated_command{$command} )
+            and ( $separated_command{$command} eq '-' )
+            and (  ( not( defined($buffer) ) )
+                or ( $buffer !~ m/^\s*$/s ) )
+          )
+        {
             # This command can be separated only if alone on a buffer.
             # We need to remove the trailing commands first, and see if it
             # will be alone on this buffer.
-            $buffer = $buffer_save;
+            $buffer  = $buffer_save;
             $command = "";
         }
-        if (length($command)) {
+        if ( length($command) ) {
+
             # call the command subroutine.
             # These command subroutines will probably call translate_buffer
             # with the content of each argument that need a translation.
-            if (defined ($commands{$command})) {
-                ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                                   $args,\@env,$no_wrap);
-                $translated_buffer .= $spaces.$t;
+            if ( defined( $commands{$command} ) ) {
+                ( $t, @env ) = &{ $commands{$command} }( $self, $command, $variant, $args, \@env, $no_wrap );
+                $translated_buffer .= $spaces . $t;
+
                 # Handle spaces after a command.
                 $spaces = "";
-                if ($buffer =~ /^(\s+)(.*?)$/s) {
+                if ( $buffer =~ /^(\s+)(.*?)$/s ) {
                     $spaces = $1;
-#                    $buffer = $2;  # FIXME: this also remove trailing spaces!!
+
+                    #                    $buffer = $2;  # FIXME: this also remove trailing spaces!!
                     $buffer =~ s/^\s*//s;
                 }
                 $translated_buffer .= $spaces;
             } else {
-                die wrap_ref_mod($self->{ref},
-                                 "po4a::tex",
-                                 dgettext("po4a", "Unknown command: '%s'"),
-                                 $command);
+                die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "Unknown command: '%s'" ), $command );
             }
         } else {
-            $buffer = $spaces.$buffer;
+            $buffer = $spaces . $buffer;
         }
-    } while (length($command));
+    } while ( length($command) );
 
     # array of trailing commands, which will be translated later.
     my @trailing_commands = ();
     do {
         my $spaces = "";
-        if ($buffer =~ /^(.*?)(\s+)$/s) {
+        if ( $buffer =~ /^(.*?)(\s+)$/s ) {
             $buffer = $1;
             $spaces = $2;
         }
         my $buffer_save = $buffer;
-        ($command, $variant, $args, $buffer) =
-            get_trailing_command($self,$buffer);
-        if (    (length $command)
-            and (defined $separated_command{$command})
-            and ($separated_command{$command} eq '-')
-            and (   (not defined $buffer)
-                 or ($buffer !~ m/^\s*$/s))) {
+        ( $command, $variant, $args, $buffer ) = get_trailing_command( $self, $buffer );
+        if (
+                ( length $command )
+            and ( defined $separated_command{$command} )
+            and ( $separated_command{$command} eq '-' )
+            and (  ( not defined $buffer )
+                or ( $buffer !~ m/^\s*$/s ) )
+          )
+        {
             # We can extract this command.
             $command = "";
-            $buffer = $buffer_save;
+            $buffer  = $buffer_save;
         }
-        if (length($command)) {
-            unshift @trailing_commands, ($command, $variant, $args, $spaces);
+        if ( length($command) ) {
+            unshift @trailing_commands, ( $command, $variant, $args, $spaces );
         } else {
             $buffer .= $spaces;
         }
-    } while (length($command));
+    } while ( length($command) );
 
     # Now, $buffer is just a block that can be translated.
 
     # environment specific treatment
-    if (@env and defined $env_separators{$env[-1]}) {
-        my $re_separator = $env_separators{$env[-1]};
-        my $buf_begin = "";
-# FIXME: the separator may have to be translated.
-        while ($buffer =~ m/^(.*?)(\s*$re_separator\s*)(.*)$/s) {
-            my ($begin, $sep, $end) = ($1, $2, $3);
+    if ( @env and defined $env_separators{ $env[-1] } ) {
+        my $re_separator = $env_separators{ $env[-1] };
+        my $buf_begin    = "";
+
+        # FIXME: the separator may have to be translated.
+        while ( $buffer =~ m/^(.*?)(\s*$re_separator\s*)(.*)$/s ) {
+            my ( $begin, $sep, $end ) = ( $1, $2, $3 );
             $buf_begin .= $begin;
-            if (is_closed($buf_begin)) {
+            if ( is_closed($buf_begin) ) {
                 my $t = "";
-                ($t, @env) = translate_buffer($self,$buf_begin,$no_wrap,@env);
-                $translated_buffer .= $t.$sep;
+                ( $t, @env ) = translate_buffer( $self, $buf_begin, $no_wrap, @env );
+                $translated_buffer .= $t . $sep;
                 $buf_begin = "";
             } else {
+
                 # the command is in a command argument
                 $buf_begin .= $sep;
             }
@@ -846,30 +870,31 @@ sub translate_buffer {
     }
 
     # finally, translate
-    if (length($buffer)) {
+    if ( length($buffer) ) {
         my $wrap = 1;
-        my ($e1, $e2);
-        NO_WRAP_LOOP: foreach $e1 (@env) {
-            foreach $e2 (split(' ', $no_wrap_environments)) {
-                if ($e1 eq $e2) {
+        my ( $e1, $e2 );
+      NO_WRAP_LOOP: foreach $e1 (@env) {
+            foreach $e2 ( split( ' ', $no_wrap_environments ) ) {
+                if ( $e1 eq $e2 ) {
                     $wrap = 0;
                     last NO_WRAP_LOOP;
                 }
             }
         }
-        $wrap = 0 if (defined $no_wrap and $no_wrap == 1);
+        $wrap = 0 if ( defined $no_wrap and $no_wrap == 1 );
+
         # Keep spaces at the end of the buffer.
         my $spaces_end = "";
-        if ($buffer =~ /^(.*?)(\s+)$/s) {
+        if ( $buffer =~ /^(.*?)(\s+)$/s ) {
             $spaces_end = $2;
-            $buffer = $1;
+            $buffer     = $1;
         }
-        if ($wrap and $buffer =~ s/^(\s+)//s) {
-                $translated_buffer .= $1;
+        if ( $wrap and $buffer =~ s/^(\s+)//s ) {
+            $translated_buffer .= $1;
         }
-        $translated_buffer .= $self->translate($buffer,$self->{ref},
-                                               @env?$env[-1]:"Plain text",
-                                               "wrap" => $wrap);
+        $translated_buffer .=
+          $self->translate( $buffer, $self->{ref}, @env ? $env[-1] : "Plain text", "wrap" => $wrap );
+
         # Restore spaces at the end of the buffer.
         $translated_buffer .= $spaces_end;
     }
@@ -880,21 +905,17 @@ sub translate_buffer {
         my $variant = shift @trailing_commands;
         my $args    = shift @trailing_commands;
         my $spaces  = shift @trailing_commands;
-        if (defined ($commands{$command})) {
-            ($t,@env) = &{$commands{$command}}($self,$command,$variant,
-                                               $args,\@env,$no_wrap);
-            $translated_buffer .= $t.$spaces;
+        if ( defined( $commands{$command} ) ) {
+            ( $t, @env ) = &{ $commands{$command} }( $self, $command, $variant, $args, \@env, $no_wrap );
+            $translated_buffer .= $t . $spaces;
         } else {
-            die wrap_ref_mod($self->{ref},
-                             "po4a::tex",
-                             dgettext("po4a", "Unknown command: '%s'"),
-                             $command);
+            die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "Unknown command: '%s'" ), $command );
         }
     }
 
     print STDERR "($translated_buffer,@env)\n"
-        if ($debug{'translate_buffer'});
-    return ($translated_buffer,@env);
+      if ( $debug{'translate_buffer'} );
+    return ( $translated_buffer, @env );
 }
 
 ################################
@@ -908,13 +929,13 @@ Overloads Transtractor's read().
 =cut
 
 sub read {
-    my $self=shift;
-    my $filename=shift;
+    my $self     = shift;
+    my $filename = shift;
 
     # keep the directory name of the main file.
     $my_dirname = dirname($filename);
 
-    push @{$self->{TT}{doc_in}}, read_file($self, $filename);
+    push @{ $self->{TT}{doc_in} }, read_file( $self, $filename );
 }
 
 =item B<read_file>
@@ -930,74 +951,75 @@ Transtractor's read.
 
 # TODO: fix DOS end of lines
 sub read_file {
-    my $self=shift;
-    my $filename=shift
-        or croak wrap_mod("po4a::tex",
-            dgettext("po4a", "Can't read from file without having a filename"));
-    my $linenum=0;
-    my @entries=();
+    my $self     = shift;
+    my $filename = shift
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't read from file without having a filename" ) );
+    my $linenum = 0;
+    my @entries = ();
 
-    open (my $in, $filename)
-        or croak wrap_mod("po4a::tex",
-            dgettext("po4a", "Can't read from %s: %s"), $filename, $!);
-    while (defined (my $textline = <$in>)) {
+    open( my $in, $filename )
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
+    while ( defined( my $textline = <$in> ) ) {
         $linenum++;
-        my $ref="$filename:$linenum";
+        my $ref = "$filename:$linenum";
+
         # TODO: add support for includeonly
         # The next regular expression matches \input or \includes that are
         # not commented (but can be preceded by a \%.
-        while ($textline =~ /^((?:[^%]|(?<!\\)(?:\\\\)*\\%)*)
+        while (
+            $textline =~ /^((?:[^%]|(?<!\\)(?:\\\\)*\\%)*)
                               \\(include|input)
-                              \{([^\{]*)\}(.*)$/x) {
-            my ($begin,$newfilename,$end) = ($1,$3,$4);
-            my $tag = $2;
+                              \{([^\{]*)\}(.*)$/x
+          )
+        {
+            my ( $begin, $newfilename, $end ) = ( $1, $3, $4 );
+            my $tag     = $2;
             my $include = 1;
             foreach my $f (@exclude_include) {
-                if ($f eq $newfilename) {
+                if ( $f eq $newfilename ) {
                     $include = 0;
-                    $begin .= "\\$tag"."{$newfilename}";
+                    $begin .= "\\$tag" . "{$newfilename}";
                     $textline = $end;
                     last;
                 }
             }
-            if ($include and ($tag eq "include")) {
+            if ( $include and ( $tag eq "include" ) ) {
                 $begin .= "\\clearpage";
             }
-            if ($begin !~ /^\s*$/) {
-                push @entries, ($begin,$ref);
+            if ( $begin !~ /^\s*$/ ) {
+                push @entries, ( $begin, $ref );
             }
             if ($include) {
+
                 # search the file
-                open (KPSEA, "kpsewhich " . $newfilename . " |");
+                open( KPSEA, "kpsewhich " . $newfilename . " |" );
                 my $newfilepath = <KPSEA>;
 
-                if ($newfilename ne "" and $newfilepath eq "") {
-                    die wrap_mod("po4a::tex",
-                                 dgettext("po4a",
-                                          "Can't find %s with kpsewhich"),
-                                 $filename);
+                if ( $newfilename ne "" and $newfilepath eq "" ) {
+                    die wrap_mod( "po4a::tex", dgettext( "po4a", "Can't find %s with kpsewhich" ), $filename );
                 }
 
-                push @entries, read_file($self,
-                                         $newfilepath);
-                if ($tag eq "include") {
-                    $textline = "\\clearpage".$end;
+                push @entries, read_file( $self, $newfilepath );
+                if ( $tag eq "include" ) {
+                    $textline = "\\clearpage" . $end;
                 } else {
                     $textline = $end;
                 }
             }
         }
-        if (length($textline)) {
-            my @entry=($textline,$ref);
+        if ( length($textline) ) {
+            my @entry = ( $textline, $ref );
             push @entries, @entry;
 
             # Detect if this file has non-ascii characters
-            if($self->{TT}{ascii_input}) {
+            if ( $self->{TT}{ascii_input} ) {
 
                 my $decoder = guess_encoding($textline);
-                if (!ref($decoder) or $decoder !~ /Encode::XS=/) {
+                if ( !ref($decoder) or $decoder !~ /Encode::XS=/ ) {
+
                     # We have detected a non-ascii line
                     $self->{TT}{ascii_input} = 0;
+
                     # Save the reference for future error message
                     $self->{TT}{non_ascii_ref} ||= $ref;
                 }
@@ -1005,8 +1027,7 @@ sub read_file {
         }
     }
     close $in
-        or croak wrap_mod("po4a::tex",
-            dgettext("po4a", "Can't close %s after reading: %s"), $filename, $!);
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't close %s after reading: %s" ), $filename, $! );
 
     return @entries;
 }
@@ -1024,26 +1045,24 @@ new commands).
 =cut
 
 sub parse_definition_file {
-    my ($self,$filename,$only_try)=@_;
+    my ( $self, $filename, $only_try ) = @_;
     my $filename_org = $filename;
 
-    open (KPSEA, "kpsewhich " . $filename . " |");
+    open( KPSEA, "kpsewhich " . $filename . " |" );
     $filename = <KPSEA>;
 
-    if (not defined $filename) {
-        warn wrap_mod("po4a::tex",
-            dgettext("po4a", "kpsewhich cannot find %s"), $filename_org);
-        if (defined $only_try && $only_try) {
+    if ( not defined $filename ) {
+        warn wrap_mod( "po4a::tex", dgettext( "po4a", "kpsewhich cannot find %s" ), $filename_org );
+        if ( defined $only_try && $only_try ) {
             return;
         } else {
             exit 1;
         }
     }
 
-    if (! open (IN,"<$filename")) {
-        warn wrap_mod("po4a::tex",
-            dgettext("po4a", "Can't open %s: %s"), $filename, $!);
-        if (defined $only_try && $only_try) {
+    if ( !open( IN, "<$filename" ) ) {
+        warn wrap_mod( "po4a::tex", dgettext( "po4a", "Can't open %s: %s" ), $filename, $! );
+        if ( defined $only_try && $only_try ) {
             return;
         } else {
             exit 1;
@@ -1051,7 +1070,7 @@ sub parse_definition_file {
     }
     while (<IN>) {
         if (/^\s*%\s*po4a\s*:/) {
-            parse_definition_line($self, $_);
+            parse_definition_line( $self, $_ );
         }
     }
 }
@@ -1065,45 +1084,46 @@ See the B<INLINE CUSTOMIZATION> section for more details.
 =cut
 
 sub parse_definition_line {
-    my ($self,$line)=@_;
+    my ( $self, $line ) = @_;
     $line =~ s/^\s*%\s*po4a\s*:\s*//;
 
-    if ($line =~ /^command\s+([-*+]?)(\w+)\s+(.*)$/) {
+    if ( $line =~ /^command\s+([-*+]?)(\w+)\s+(.*)$/ ) {
         my $command = $2;
         $line = $3;
         if ($1) {
             $separated_command{$command} = $1;
         }
-        if ($line =~ /^alias\s+(\w+)\s*$/) {
-            if (defined ($commands{$1})) {
-                $commands{$command} = $commands{$1};
+        if ( $line =~ /^alias\s+(\w+)\s*$/ ) {
+            if ( defined( $commands{$1} ) ) {
+                $commands{$command}           = $commands{$1};
                 $command_parameters{$command} = $command_parameters{$1};
             } else {
-                die wrap_mod("po4a::tex",
-                             dgettext("po4a", "Cannot use an alias to the unknown command '%s'"),
-                             $2);
+                die wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot use an alias to the unknown command '%s'" ), $2 );
             }
-        } elsif ($line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/) {
-            die wrap_ref_mod($self->{ref},
-                             "po4a::tex",
-                             dgettext("po4a", "You are using the old ".
-                                      "definitions format (%s).  ".
-                                      "Please update this definition line."),
-                             $_[1])
-        } elsif ($line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/) {
+        } elsif ( $line =~ /^(-1|\d+),(-1|\d+),(-1|[ 0-9]*),(-1|[ 0-9]*?)\s*$/ ) {
+            die wrap_ref_mod(
+                $self->{ref},
+                "po4a::tex",
+                dgettext(
+                    "po4a",
+                    "You are using the old " . "definitions format (%s).  " . "Please update this definition line."
+                ),
+                $_[1]
+            );
+        } elsif ( $line =~ m/^((?:\{_?\}|\[_?\])*)\s*$/ ) {
             register_generic_command("$command,$1");
         }
-    } elsif ($line =~ /^environment\s+([+]?\w+\*?)(.*)$/) {
+    } elsif ( $line =~ /^environment\s+([+]?\w+\*?)(.*)$/ ) {
         my $env = $1;
         $line = $2;
-        if ($line =~ m/^\s*((?:\{_?\}|\[_?\])*)\s*$/) {
+        if ( $line =~ m/^\s*((?:\{_?\}|\[_?\])*)\s*$/ ) {
             register_generic_environment("$env,$1");
         }
-    } elsif ($line =~ /^separator\s+(\w+(?:\[#[0-9]+\])?)\s+\"(.*)\"\s*$/) {
-        my $env = $1; # This is not necessarily an environment.
-                      # It can also be smth like 'title[#1]'.
+    } elsif ( $line =~ /^separator\s+(\w+(?:\[#[0-9]+\])?)\s+\"(.*)\"\s*$/ ) {
+        my $env = $1;    # This is not necessarily an environment.
+                         # It can also be smth like 'title[#1]'.
         $env_separators{$env} = $2;
-    } elsif ($line =~ /^verbatim\s+environment\s+(\w+)\s+$/) {
+    } elsif ( $line =~ /^verbatim\s+environment\s+(\w+)\s+$/ ) {
         register_verbatim_environment($1);
     }
 }
@@ -1114,21 +1134,24 @@ sub parse_definition_line {
 
 sub is_closed {
     my $paragraph = shift;
-# FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument
-    my $tmp = $paragraph;
+
+    # FIXME: [ and ] are more difficult to handle, because it is not easy to detect if it introduce an optional argument
+    my $tmp     = $paragraph;
     my $closing = 0;
     my $opening = 0;
+
     # FIXME: { and } should not be counted in verbatim blocks
     # Remove comments
     $tmp =~ s/$RE_PRE_COMMENT$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?$RE_PRE_COMMENT\{(.*)$/s) {
+    while ( $tmp =~ /^.*?$RE_PRE_COMMENT\{(.*)$/s ) {
         $opening += 1;
         $tmp = $1;
     }
     $tmp = $paragraph;
+
     # Remove comments
     $tmp =~ s/$RE_PRE_COMMENT$RE_COMMENT.*//mg;
-    while ($tmp =~ /^.*?$RE_PRE_COMMENT\}(.*)$/s) {
+    while ( $tmp =~ /^.*?$RE_PRE_COMMENT\}(.*)$/s ) {
         $closing += 1;
         $tmp = $1;
     }
@@ -1137,8 +1160,8 @@ sub is_closed {
 
 sub in_verbatim {
     foreach my $e1 (@_) {
-        foreach my $e2 (split(' ', $verbatim_environments)) {
-            if ($e1 eq $e2) {
+        foreach my $e2 ( split( ' ', $verbatim_environments ) ) {
+            if ( $e1 eq $e2 ) {
                 return 1;
             }
         }
@@ -1150,64 +1173,70 @@ sub in_verbatim {
 #############################
 #### MAIN PARSE FUNCTION ####
 #############################
+
 =item B<parse>
 
 =cut
 
 sub parse {
     my $self = shift;
-    my ($line,$ref);
-    my $paragraph = ""; # Buffer where we put the paragraph while building
-    my @env = (); # environment stack
-    my $t = "";
+    my ( $line, $ref );
+    my $paragraph = "";    # Buffer where we put the paragraph while building
+    my @env       = ();    # environment stack
+    my $t         = "";
 
   LINE:
     undef $self->{type};
-    ($line,$ref)=$self->shiftline();
+    ( $line, $ref ) = $self->shiftline();
 
-    while (defined($line)) {
+    while ( defined($line) ) {
         chomp($line);
-        $self->{ref}="$ref";
+        $self->{ref} = "$ref";
 
-        if ($line =~ /^\s*%\s*po4a\s*:/) {
-            parse_definition_line($self, $line);
+        if ( $line =~ /^\s*%\s*po4a\s*:/ ) {
+            parse_definition_line( $self, $line );
             goto LINE;
         }
 
         my $closed = is_closed($paragraph);
 
-#FIXME: what happens if a \begin{verbatim} or \end{verbatim} is in the
-#       middle of a line. (This is only an issue if the verbatim
-#       environment contains an un-closed bracket)
-        if (   ($closed and ($line =~ /^\s*$/ or
-                             $line =~ /^\s*$RE_VERBATIM\s*$/))
-            or (in_verbatim(@env) and $line =~ /^\s*\Q$ESCAPE\Eend\{$env[-1]\}\s*$/)
-           ) {
+        #FIXME: what happens if a \begin{verbatim} or \end{verbatim} is in the
+        #       middle of a line. (This is only an issue if the verbatim
+        #       environment contains an un-closed bracket)
+        if (
+            (
+                $closed and ( $line =~ /^\s*$/
+                    or $line =~ /^\s*$RE_VERBATIM\s*$/ )
+            )
+            or ( in_verbatim(@env) and $line =~ /^\s*\Q$ESCAPE\Eend\{$env[-1]\}\s*$/ )
+          )
+        {
             # An empty line. This indicates the end of the current
             # paragraph.
-            $paragraph .= $line."\n";
-            if (length($paragraph)) {
-                ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
+            $paragraph .= $line . "\n";
+            if ( length($paragraph) ) {
+                ( $t, @env ) = translate_buffer( $self, $paragraph, undef, @env );
                 $self->pushline($t);
-                $paragraph="";
-                @comments = ();
+                $paragraph = "";
+                @comments  = ();
             }
         } else {
+
             # continue the same paragraph
-            $paragraph .= $line."\n";
+            $paragraph .= $line . "\n";
         }
 
         # Reinit the loop
-        ($line,$ref)=$self->shiftline();
+        ( $line, $ref ) = $self->shiftline();
         undef $self->{type};
     }
 
-    if (length($paragraph)) {
-        ($t, @env) = translate_buffer($self,$paragraph,undef,@env);
+    if ( length($paragraph) ) {
+        ( $t, @env ) = translate_buffer( $self, $paragraph, undef, @env );
         $self->pushline($t);
-        $paragraph="";
+        $paragraph = "";
     }
-} # end of parse
+}    # end of parse
 
 =item B<docheader>
 
@@ -1216,10 +1245,8 @@ sub parse {
 =cut
 
 sub docheader {
-    return "% This file was generated with po4a. Translate the source file.\n".
-           "%\n";
+    return "% This file was generated with po4a. Translate the source file.\n" . "%\n";
 }
-
 
 ####################################
 #### DEFINITION OF THE COMMANDS ####
@@ -1272,171 +1299,165 @@ followed by an identifier of the parameter (like {#7} or [#2]).
 
 # definition of environment related commands
 
-$commands{'begin'}= sub {
+$commands{'begin'} = sub {
     my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my ( $command, $variant, $args, $env ) = ( shift, shift, shift, shift );
     my $no_wrap = shift || 0;
     print "begin($command,$variant,@$args,@$env,$no_wrap)="
-        if ($debug{'commands'} || $debug{'environments'});
-    my ($t,@e) = ("",());
+      if ( $debug{'commands'} || $debug{'environments'} );
+    my ( $t, @e ) = ( "", () );
 
     my $envir = $args->[1];
-    if (defined($envir) and $envir =~ /^(.*)\*$/) {
+    if ( defined($envir) and $envir =~ /^(.*)\*$/ ) {
         $envir = $1;
     }
 
-    if (defined($envir) && defined($environments{$envir})) {
-        ($t, @e) = &{$environments{$envir}}($self,$command,$variant,
-                                            $args,$env,$no_wrap);
+    if ( defined($envir) && defined( $environments{$envir} ) ) {
+        ( $t, @e ) = &{ $environments{$envir} }( $self, $command, $variant, $args, $env, $no_wrap );
     } else {
-        die wrap_ref_mod($self->{ref}, "po4a::tex",
-                     dgettext("po4a", "unknown environment: '%s'"),
-                     $args->[1]);
+        die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "unknown environment: '%s'" ), $args->[1] );
     }
 
     print "($t, @e)\n"
-        if ($debug{'commands'} || $debug{'environments'});
-    return ($t, @e);
+      if ( $debug{'commands'} || $debug{'environments'} );
+    return ( $t, @e );
 };
+
 # Use register_generic to set the type of arguments. The function is then
 # overwritten:
 register_generic_command("*end,{}");
-$commands{'end'}= sub {
+$commands{'end'} = sub {
     my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my ( $command, $variant, $args, $env ) = ( shift, shift, shift, shift );
     my $no_wrap = shift || 0;
     print "end($command,$variant,@$args,@$env,$no_wrap)="
-        if ($debug{'commands'} || $debug{'environments'});
+      if ( $debug{'commands'} || $debug{'environments'} );
 
     # verify that this environment was the last pushed environment.
-    if (!@$env || @$env[-1] ne $args->[1]) {
+    if ( !@$env || @$env[-1] ne $args->[1] ) {
+
         # a begin may have been hidden in the middle of a translated
         # buffer. FIXME: Just warn for now.
-        warn wrap_ref_mod($self->{'ref'}, "po4a::tex",
-                          dgettext("po4a", "unmatched end of environment '%s'"),
-                          $args->[1]);
+        warn wrap_ref_mod( $self->{'ref'}, "po4a::tex", dgettext( "po4a", "unmatched end of environment '%s'" ),
+            $args->[1] );
     } else {
         pop @$env;
     }
 
-    my ($t,@e) = generic_command($self,$command,$variant,$args,$env,$no_wrap);
+    my ( $t, @e ) = generic_command( $self, $command, $variant, $args, $env, $no_wrap );
 
     print "($t, @$env)\n"
-        if ($debug{'commands'} || $debug{'environments'});
-    return ($t, @$env);
+      if ( $debug{'commands'} || $debug{'environments'} );
+    return ( $t, @$env );
 };
 $separated_command{'begin'} = '*';
 
 sub generic_command {
     my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my ( $command, $variant, $args, $env ) = ( shift, shift, shift, shift );
     my $no_wrap = shift || 0;
     print "generic_command($command,$variant,@$args,@$env,$no_wrap)="
-        if ($debug{'commands'} || $debug{'environments'});
+      if ( $debug{'commands'} || $debug{'environments'} );
 
-    my ($t,@e)=("",());
+    my ( $t, @e ) = ( "", () );
     my $translated = "";
 
     # the number of arguments is checked during the extraction of the
     # arguments
 
-    if (   (not (defined $separated_command{$command}))
-        or $separated_command{$command} ne '+') {
+    if ( ( not( defined $separated_command{$command} ) )
+        or $separated_command{$command} ne '+' )
+    {
         # Use the information from %command_parameters to only translate
         # the needed parameters
         $translated = "$ESCAPE$command$variant";
+
         # handle arguments
-        my @arg_types = @{$command_parameters{$command}{'types'}};
-        my @arg_translated = @{$command_parameters{$command}{'translated'}};
-        my ($type, $opt);
+        my @arg_types      = @{ $command_parameters{$command}{'types'} };
+        my @arg_translated = @{ $command_parameters{$command}{'translated'} };
+        my ( $type, $opt );
         my @targs = @$args;
         my $count = 0;
         while (@targs) {
             $type = shift @targs;
             $opt  = shift @targs;
             my $have_to_be_translated = 0;
-TEST_TYPE:
-            if ($count >= scalar @arg_types) {
+          TEST_TYPE:
+            if ( $count >= scalar @arg_types ) {
+
                 # The number of arguments does not match,
                 # and a variable number of arguments was not specified
-                die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a",
-                                          "Wrong number of arguments for ".
-                                          "the '%s' command.")."\n",
-                                 $command);
-            } elsif ($type eq $arg_types[$count]) {
+                die wrap_ref_mod( $self->{ref}, "po4a::tex",
+                    dgettext( "po4a", "Wrong number of arguments for " . "the '%s' command." ) . "\n", $command );
+            } elsif ( $type eq $arg_types[$count] ) {
                 $have_to_be_translated = $arg_translated[$count];
-                $count ++;
-            } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+                $count++;
+            } elsif ( $type eq '{' and $arg_types[$count] eq '[' ) {
+
                 # an optionnal argument was not provided,
                 # try with the next argument.
                 $count++;
                 goto TEST_TYPE;
             } else {
-                my $reason = dgettext("po4a",
-                                      "An optional argument ".
-                                      "was provided, but a mandatory one ".
-                                      "is expected.");
-                die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a", "Command '%s': %s")."\n",
-                                 $command, $reason);
+                my $reason =
+                  dgettext( "po4a", "An optional argument " . "was provided, but a mandatory one " . "is expected." );
+                die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "Command '%s': %s" ) . "\n",
+                    $command, $reason );
             }
             if ($have_to_be_translated) {
-                ($t, @e) = translate_buffer($self,$opt,$no_wrap,(@$env,$command.$type."#".$count.$type_end{$type}));
+                ( $t, @e ) = translate_buffer( $self, $opt, $no_wrap,
+                    ( @$env, $command . $type . "#" . $count . $type_end{$type} ) );
             } else {
                 $t = $opt;
             }
-            $translated .= $type.$t.$type_end{$type};
+            $translated .= $type . $t . $type_end{$type};
         }
     } else {
+
         # Translate the command with all its arguments joined
         my $tmp = "$ESCAPE$command$variant";
-        my ($type, $opt);
+        my ( $type, $opt );
         while (@$args) {
             $type = shift @$args;
             $opt  = shift @$args;
-            $tmp .= $type.$opt.$type_end{$type};
+            $tmp .= $type . $opt . $type_end{$type};
         }
         @e = @$env;
         my $wrap = 1;
-        $wrap = 0 if (defined $no_wrap and $no_wrap == 1);
-        $translated = $self->translate($tmp,$self->{ref},
-                                       @e?$e[-1]:"Plain text",
-                                       "wrap" => $wrap);
+        $wrap       = 0 if ( defined $no_wrap and $no_wrap == 1 );
+        $translated = $self->translate( $tmp, $self->{ref}, @e ? $e[-1] : "Plain text", "wrap" => $wrap );
     }
 
     print "($translated, @$env)\n"
-        if ($debug{'commands'} || $debug{'environments'});
-    return ($translated, @$env);
+      if ( $debug{'commands'} || $debug{'environments'} );
+    return ( $translated, @$env );
 }
 
 sub register_generic_command {
-    if ($_[0] =~ m/^(.*),((\{_?\}|\[_?\]| _? )*)$/) {
-        my $command = $1;
+    if ( $_[0] =~ m/^(.*),((\{_?\}|\[_?\]| _? )*)$/ ) {
+        my $command   = $1;
         my $arg_types = $2;
-        if ($command =~ /^([-*+])(.*)$/) {
+        if ( $command =~ /^([-*+])(.*)$/ ) {
             $command = $2;
-            $separated_command{$command}=$1;
+            $separated_command{$command} = $1;
         }
-        my @types = ();
+        my @types      = ();
         my @translated = ();
-        while (    defined $arg_types
-               and length $arg_types
-               and $arg_types =~ m/^(?:([\{\[ ])(_?)[\}\] ])(.*)$/) {
+        while ( defined $arg_types
+            and length $arg_types
+            and $arg_types =~ m/^(?:([\{\[ ])(_?)[\}\] ])(.*)$/ )
+        {
             push @types, $1;
-            push @translated, ($2 eq "_")?1:0;
+            push @translated, ( $2 eq "_" ) ? 1 : 0;
             $arg_types = $3;
         }
-        $command_parameters{$command}{'types'} = \@types;
+        $command_parameters{$command}{'types'}      = \@types;
         $command_parameters{$command}{'translated'} = \@translated;
-        $command_parameters{$command}{'nb_args'} = "";
-        $commands{$command} = \&generic_command;
+        $command_parameters{$command}{'nb_args'}    = "";
+        $commands{$command}                         = \&generic_command;
     } else {
-        die wrap_mod("po4a::tex",
-                     dgettext("po4a",
-                              "register_generic_command: unsupported ".
-                              "format: '%s'.")."\n",
-                     $_[0]);
+        die wrap_mod( "po4a::tex",
+            dgettext( "po4a", "register_generic_command: unsupported " . "format: '%s'." ) . "\n", $_[0] );
     }
 }
 
@@ -1445,165 +1466,160 @@ sub register_generic_command {
 ########################################
 sub generic_environment {
     my $self = shift;
-    my ($command,$variant,$args,$env) = (shift,shift,shift,shift);
+    my ( $command, $variant, $args, $env ) = ( shift, shift, shift, shift );
     my $no_wrap = shift;
     print "generic_environment($command,$variant,$args,$env,$no_wrap)="
-        if ($debug{'environments'});
-    my ($t,@e)=("",());
+      if ( $debug{'environments'} );
+    my ( $t, @e ) = ( "", () );
     my $translated = "";
 
     # The first argument (the name of the environment is never translated)
     # For the others, @types and @translated are used.
     $translated = "$ESCAPE$command$variant";
-    my @targs = @$args;
-    my $type = shift @targs;
-    my $opt  = shift @targs;
+    my @targs   = @$args;
+    my $type    = shift @targs;
+    my $opt     = shift @targs;
     my $new_env = $opt;
-    $translated .= $type.$new_env.$type_end{$type};
-    if (   (not (defined $separated_environment{$new_env}))
-        or $separated_environment{$new_env} ne '+') {
+    $translated .= $type . $new_env . $type_end{$type};
+    if ( ( not( defined $separated_environment{$new_env} ) )
+        or $separated_environment{$new_env} ne '+' )
+    {
         # Use the information from %command_parameters to only translate
         # the needed parameters
-        my @arg_types = @{$environment_parameters{$new_env}{'types'}};
-        my @arg_translated = @{$environment_parameters{$new_env}{'translated'}};
+        my @arg_types      = @{ $environment_parameters{$new_env}{'types'} };
+        my @arg_translated = @{ $environment_parameters{$new_env}{'translated'} };
 
         my $count = 0;
         while (@targs) {
             $type = shift @targs;
             $opt  = shift @targs;
             my $have_to_be_translated = 0;
-TEST_TYPE:
-            if ($count >= scalar @arg_types) {
-                die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a",
-                                          "Wrong number of arguments for ".
-                                          "the '%s' command.")."\n",
-                                 $command);
-            } elsif ($type eq $arg_types[$count]) {
+          TEST_TYPE:
+            if ( $count >= scalar @arg_types ) {
+                die wrap_ref_mod( $self->{ref}, "po4a::tex",
+                    dgettext( "po4a", "Wrong number of arguments for " . "the '%s' command." ) . "\n", $command );
+            } elsif ( $type eq $arg_types[$count] ) {
                 $have_to_be_translated = $arg_translated[$count];
-                $count ++;
-            } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+                $count++;
+            } elsif ( $type eq '{' and $arg_types[$count] eq '[' ) {
+
                 # an optionnal argument was not provided,
                 # try with the next argument.
                 $count++;
                 goto TEST_TYPE;
             } else {
-                my $reason = dgettext("po4a",
-                                      "An optional argument ".
-                                      "was provided, but a mandatory one ".
-                                      "is expected.");
-                die wrap_ref_mod($self->{ref}, "po4a::tex",
-                                 dgettext("po4a", "Command '%s': %s")."\n",
-                                 $command, $reason);
+                my $reason =
+                  dgettext( "po4a", "An optional argument " . "was provided, but a mandatory one " . "is expected." );
+                die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "Command '%s': %s" ) . "\n",
+                    $command, $reason );
             }
 
             if ($have_to_be_translated) {
-                ($t, @e) = translate_buffer($self,$opt,$no_wrap,(@$env,$new_env.$type."#".$count.$type_end{$type}));
+                ( $t, @e ) = translate_buffer( $self, $opt, $no_wrap,
+                    ( @$env, $new_env . $type . "#" . $count . $type_end{$type} ) );
             } else {
                 $t = $opt;
             }
-            $translated .= $type.$t.$type_end{$type};
+            $translated .= $type . $t . $type_end{$type};
 
         }
     } else {
+
         # Translate the \begin command with all its arguments joined
-        my ($type, $opt);
+        my ( $type, $opt );
         my $buf = $translated;
         while (@targs) {
             $type = shift @targs;
             $opt  = shift @targs;
-            $buf .= $type.$opt.$type_end{$type};
+            $buf .= $type . $opt . $type_end{$type};
         }
         @e = @$env;
         my $wrap = 1;
-        $wrap = 0 if $no_wrap == 1;
-        $translated = $self->translate($buf,$self->{ref},
-                                       @e?$e[-1]:"Plain text",
-                                       "wrap" => $wrap);
+        $wrap       = 0 if $no_wrap == 1;
+        $translated = $self->translate( $buf, $self->{ref}, @e ? $e[-1] : "Plain text", "wrap" => $wrap );
     }
-    @e = (@$env, $new_env);
+    @e = ( @$env, $new_env );
 
     print "($translated,@e)\n"
-        if ($debug{'environments'});
-    return ($translated,@e);
+      if ( $debug{'environments'} );
+    return ( $translated, @e );
 }
 
-
 sub check_arg_count {
-    my $self = shift;
-    my $command = shift;
-    my $args = shift;
-    my @targs = @$args;
-    my $check = 1;
+    my $self      = shift;
+    my $command   = shift;
+    my $args      = shift;
+    my @targs     = @$args;
+    my $check     = 1;
     my @remainder = ();
-    my $reason = "";
-    my ($type, $arg);
+    my $reason    = "";
+    my ( $type, $arg );
     my @arg_types;
 
-    if ($command eq 'begin') {
+    if ( $command eq 'begin' ) {
         $type = shift @targs;
+
         # The name of the environment is mandatory
-        if (   (not defined $type)
-            or ($type ne '{')) {
-            $reason = dgettext("po4a",
-                               "The first argument of \\begin is mandatory.");
-            $check = 0;
+        if (   ( not defined $type )
+            or ( $type ne '{' ) )
+        {
+            $reason = dgettext( "po4a", "The first argument of \\begin is mandatory." );
+            $check  = 0;
         }
         my $env = shift @targs;
-        if (not defined $environment_parameters{$env}) {
-            die wrap_ref_mod($self->{ref},"po4a::tex",
-                             dgettext("po4a", "unknown environment: '%s'"),
-                             $env);
+        if ( not defined $environment_parameters{$env} ) {
+            die wrap_ref_mod( $self->{ref}, "po4a::tex", dgettext( "po4a", "unknown environment: '%s'" ), $env );
         }
-        @arg_types = @{$environment_parameters{$env}{'types'}};
+        @arg_types = @{ $environment_parameters{$env}{'types'} };
     } else {
-        @arg_types = @{$command_parameters{$command}{'types'}};
+        @arg_types = @{ $command_parameters{$command}{'types'} };
     }
 
     my $count = 0;
-    while ($check and @targs) {
+    while ( $check and @targs ) {
         $type = shift @targs;
         $arg  = shift @targs;
-TEST_TYPE:
-        if ($count >= scalar @arg_types) {
+      TEST_TYPE:
+        if ( $count >= scalar @arg_types ) {
+
             # Too many arguments some will remain
-            @remainder = ($type, $arg, @targs);
+            @remainder = ( $type, $arg, @targs );
             last;
-        } elsif ($type eq $arg_types[$count]) {
-            $count ++;
-        } elsif ($type eq '{' and $arg_types[$count] eq '[') {
+        } elsif ( $type eq $arg_types[$count] ) {
+            $count++;
+        } elsif ( $type eq '{' and $arg_types[$count] eq '[' ) {
+
             # an optionnal argument was not provided,
             # try with the next argument.
             $count++;
             goto TEST_TYPE;
         } else {
-            $check = 0;
-            $reason = dgettext("po4a",
-                               "An optional argument was ".
-                               "provided, but a mandatory one is expected.");
+            $check  = 0;
+            $reason = dgettext( "po4a", "An optional argument was " . "provided, but a mandatory one is expected." );
         }
     }
 
-    return ($check, $reason, \@remainder);
+    return ( $check, $reason, \@remainder );
 }
 
 sub register_generic_environment {
     print "register_generic_environment($_[0])\n"
-        if ($debug{'environments'});
-    if ($_[0] =~ m/^(.*),((?:\{_?\}|\[_?\])*)$/) {
-        my $env = $1;
+      if ( $debug{'environments'} );
+    if ( $_[0] =~ m/^(.*),((?:\{_?\}|\[_?\])*)$/ ) {
+        my $env       = $1;
         my $arg_types = $2;
-        if ($env =~ /^([+])(.*)$/) {
+        if ( $env =~ /^([+])(.*)$/ ) {
             $separated_environment{$2} = $1;
             $env = $2;
         }
-        my @types = ();
+        my @types      = ();
         my @translated = ();
-        while (    defined $arg_types
-               and length $arg_types
-               and $arg_types =~ m/^(?:([\{\[])(_?)[\}\]])(.*)$/) {
+        while ( defined $arg_types
+            and length $arg_types
+            and $arg_types =~ m/^(?:([\{\[])(_?)[\}\]])(.*)$/ )
+        {
             push @types, $1;
-            push @translated, ($2 eq "_")?1:0;
+            push @translated, ( $2 eq "_" ) ? 1 : 0;
             $arg_types = $3;
         }
         $environment_parameters{$env} = {
@@ -1616,70 +1632,68 @@ sub register_generic_environment {
 
 sub register_verbatim_environment {
     my $env = shift;
-    $no_wrap_environments .= " $env";
+    $no_wrap_environments  .= " $env";
     $verbatim_environments .= " $env";
-    $RE_VERBATIM = "\\\\begin\\{(?:".
-                   join("|", split(/ /, $verbatim_environments)).
-                   ")\\*?\\}";
+    $RE_VERBATIM = "\\\\begin\\{(?:" . join( "|", split( / /, $verbatim_environments ) ) . ")\\*?\\}";
     register_generic_environment("$env,")
-        unless (defined $environments{$env});
+      unless ( defined $environments{$env} );
 }
 
 ####################################
 ### INITIALIZATION OF THE PARSER ###
 ####################################
 sub initialize {
-    my $self = shift;
+    my $self    = shift;
     my %options = @_;
 
-    $self->{options}{'definitions'}='';
-    $self->{options}{'exclude_include'}='';
-    $self->{options}{'no_wrap'}='';
-    $self->{options}{'verbatim'}='';
-    $self->{options}{'debug'}='';
-    $self->{options}{'verbose'}='';
+    $self->{options}{'definitions'}     = '';
+    $self->{options}{'exclude_include'} = '';
+    $self->{options}{'no_wrap'}         = '';
+    $self->{options}{'verbatim'}        = '';
+    $self->{options}{'debug'}           = '';
+    $self->{options}{'verbose'}         = '';
 
     %debug = ();
+
     # FIXME: %commands and %separated_command should also be restored to their
     #        default values.
 
-    foreach my $opt (keys %options) {
-        if ($options{$opt}) {
-            die wrap_mod("po4a::tex",
-                         dgettext("po4a", "Unknown option: %s"), $opt)
-                unless exists $self->{options}{$opt};
+    foreach my $opt ( keys %options ) {
+        if ( $options{$opt} ) {
+            die wrap_mod( "po4a::tex", dgettext( "po4a", "Unknown option: %s" ), $opt )
+              unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options{$opt};
         }
     }
 
-    if ($options{'debug'}) {
-        foreach ($options{'debug'}) {
+    if ( $options{'debug'} ) {
+        foreach ( $options{'debug'} ) {
             $debug{$_} = 1;
         }
     }
 
-    if ($options{'exclude_include'}) {
-        foreach (split(/:/, $options{'exclude_include'})) {
-            push  @exclude_include, $_;
+    if ( $options{'exclude_include'} ) {
+        foreach ( split( /:/, $options{'exclude_include'} ) ) {
+            push @exclude_include, $_;
         }
     }
 
-    if ($options{'no_wrap'}) {
-        foreach (split(/,/, $options{'no_wrap'})) {
+    if ( $options{'no_wrap'} ) {
+        foreach ( split( /,/, $options{'no_wrap'} ) ) {
             $no_wrap_environments .= " $_";
             register_generic_environment("$_,")
-                unless (defined $environments{$_});
+              unless ( defined $environments{$_} );
         }
     }
 
-    if ($options{'verbatim'}) {
-        foreach (split(/,/, $options{'verbatim'})) {
+    if ( $options{'verbatim'} ) {
+        foreach ( split( /,/, $options{'verbatim'} ) ) {
             register_verbatim_environment($_);
         }
     }
 
-    if ($options{'definitions'}) {
-        $self->parse_definition_file($options{'definitions'})
+    if ( $options{'definitions'} ) {
+        $self->parse_definition_file( $options{'definitions'} );
     }
 }
 

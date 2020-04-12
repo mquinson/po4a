@@ -1,6 +1,6 @@
 #! /usr/bin/env perl
 eval 'exec perl -S $0 ${1+"$@"}'
-    if $running_under_some_shell;
+  if $running_under_some_shell;
 
 # po4a -- Update both the po files and translated documents in one shoot
 #
@@ -648,12 +648,11 @@ use File::Temp;
 use File::Basename;
 use File::Copy;
 use File::Spec;
-use Fcntl; # sysopen flags
-use Cwd; # cwd
+use Fcntl;    # sysopen flags
+use Cwd;      # cwd
 use Config;
 
 Locale::Po4a::Common::textdomain('po4a');
-
 
 sub show_version {
     Locale::Po4a::Common::show_version("po4a");
@@ -665,93 +664,93 @@ my @ORIGINAL_ARGV = @ARGV;
 
 # Parse the options provided on the command line, or in argument
 sub get_options {
-    if (defined $_[0]) {
+    if ( defined $_[0] ) {
         @ARGV = @_;
     } else {
         @ARGV = @ORIGINAL_ARGV;
     }
 
     # temporary array for GetOptions
-    my @verbose = ();
-    my @options = ();
+    my @verbose   = ();
+    my @options   = ();
     my @variables = ();
     my $previous;
     my $noprevious;
 
     my %opts = (
-        "help"            => 0,
-        "type"            => "",
-        "debug"           => 0,
-        "verbose"         => 0,
-        "quiet"           => 0,
-        "no-translations" => 0,
-        "no-update"       => 0,
-        "keep-translations" => 0,
-        "rm-translations" => 0,
-        "no-backups"      => 0,
-        "rm-backups"      => 0,
-        "threshold"       => 80,
-        "mastlang"        => "",
-        "mastchar"        => "",
-        "locchar"         => "",
-        "addchar"         => "",
-        "options"         => {"verbose" => 0, "debug" => 0},
-        "variables"       => {},
-        "partial"         => [],
-        "porefs"          => "full",
-        "wrap-po"         => undef,
-        "copyright-holder"=> undef,
-        "msgid-bugs-address"=> undef,
-        "package-name"    => undef,
-        "package-version" => undef,
-        "msgmerge-opt"    => "",
-        "srcdir"          => undef,
-        "destdir"         => undef,
-        "calldir"         => cwd()
+        "help"               => 0,
+        "type"               => "",
+        "debug"              => 0,
+        "verbose"            => 0,
+        "quiet"              => 0,
+        "no-translations"    => 0,
+        "no-update"          => 0,
+        "keep-translations"  => 0,
+        "rm-translations"    => 0,
+        "no-backups"         => 0,
+        "rm-backups"         => 0,
+        "threshold"          => 80,
+        "mastlang"           => "",
+        "mastchar"           => "",
+        "locchar"            => "",
+        "addchar"            => "",
+        "options"            => { "verbose" => 0, "debug" => 0 },
+        "variables"          => {},
+        "partial"            => [],
+        "porefs"             => "full",
+        "wrap-po"            => undef,
+        "copyright-holder"   => undef,
+        "msgid-bugs-address" => undef,
+        "package-name"       => undef,
+        "package-version"    => undef,
+        "msgmerge-opt"       => "",
+        "srcdir"             => undef,
+        "destdir"            => undef,
+        "calldir"            => cwd()
     );
-    Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+    Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
     GetOptions(
-        'help|h'                => \$opts{"help"},
+        'help|h' => \$opts{"help"},
 
         'master-language|M=s'   => \$opts{"mastlang"},
         'master-charset|M=s'    => \$opts{"mastchar"},
         'localized-charset|L=s' => \$opts{"locchar"},
         'addendum-charset|A=s'  => \$opts{"addchar"},
 
-        'verbose|v'             => \@verbose,
-        'debug|d'               => \$opts{"debug"},
-        'force|f'               => \$opts{"force"},
-        'stamp'                 => \$opts{"stamp"},
-        'quiet|q'               => \$opts{"quiet"},
-        'keep|k=s'              => \$opts{"threshold"},
-        'no-translations'       => \$opts{"no-translations"},
-        'no-update'             => \$opts{"no-update"},
-        'keep-translations'     => \$opts{"keep-translations"},
-        'rm-translations'       => \$opts{"rm-translations"},
-        'translate-only=s'      => \@{$opts{"partial"}},
-        'no-backups'            => \$opts{"no-backups"},
-        'rm-backups'            => \$opts{"rm-backups"},
-        'version|V'             => \&show_version,
-        'option|o=s'            => \@options,
-        'variable=s'            => \@variables,
-        'porefs=s'              => \$opts{"porefs"},
-        'wrap-po=s'             => \$opts{"wrap-po"},
-        'copyright-holder=s'    => \$opts{"copyright-holder"},
-        'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
-        'package-name=s'        => \$opts{"package-name"},
-        'package-version=s'     => \$opts{"package-version"},
-        'no-previous'           => \$noprevious,
-        'previous'              => \$previous,
-        'msgmerge-opt=s'        => \$opts{"msgmerge-opt"},
-        'srcdir=s'              => \$opts{"srcdir"},
-        'destdir=s'             => \$opts{"destdir"}
+        'verbose|v'            => \@verbose,
+        'debug|d'              => \$opts{"debug"},
+        'force|f'              => \$opts{"force"},
+        'stamp'                => \$opts{"stamp"},
+        'quiet|q'              => \$opts{"quiet"},
+        'keep|k=s'             => \$opts{"threshold"},
+        'no-translations'      => \$opts{"no-translations"},
+        'no-update'            => \$opts{"no-update"},
+        'keep-translations'    => \$opts{"keep-translations"},
+        'rm-translations'      => \$opts{"rm-translations"},
+        'translate-only=s'     => \@{ $opts{"partial"} },
+        'no-backups'           => \$opts{"no-backups"},
+        'rm-backups'           => \$opts{"rm-backups"},
+        'version|V'            => \&show_version,
+        'option|o=s'           => \@options,
+        'variable=s'           => \@variables,
+        'porefs=s'             => \$opts{"porefs"},
+        'wrap-po=s'            => \$opts{"wrap-po"},
+        'copyright-holder=s'   => \$opts{"copyright-holder"},
+        'msgid-bugs-address=s' => \$opts{"msgid-bugs-address"},
+        'package-name=s'       => \$opts{"package-name"},
+        'package-version=s'    => \$opts{"package-version"},
+        'no-previous'          => \$noprevious,
+        'previous'             => \$previous,
+        'msgmerge-opt=s'       => \$opts{"msgmerge-opt"},
+        'srcdir=s'             => \$opts{"srcdir"},
+        'destdir=s'            => \$opts{"destdir"}
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
     $opts{"msgmerge-opt"} .= " --previous" unless $noprevious;
-    $opts{"msgmerge-opt"} .= " --add-location=file" if ($opts{'porefs'} =~ m/^file/);
+    $opts{"msgmerge-opt"} .= " --add-location=file" if ( $opts{'porefs'} =~ m/^file/ );
 
     # options to transmit to the modules
     $opts{"options"} = {
@@ -760,28 +759,26 @@ sub get_options {
     };
     foreach (@options) {
         if (m/^([^=]*)=(.*)$/) {
-            $opts{"options"}{$1}="$2";
+            $opts{"options"}{$1} = "$2";
         } else {
-            $opts{"options"}{$_}=1;
+            $opts{"options"}{$_} = 1;
         }
     }
 
     foreach (@variables) {
         if (m/^([^=]*)=(.*)$/) {
-            $opts{"variables"}{$1}="$2";
+            $opts{"variables"}{$1} = "$2";
         }
     }
 
     # The rm- options imply the no-
     $opts{"no-translations"} = 1 if $opts{"rm-translations"};
 
-    if (defined $opts{"srcdir"} and not -d $opts{"srcdir"}) {
-        die wrap_msg(gettext("Option %s invalid. Directory %s does not exist."),
-                     "srcdir", $opts{"srcdir"});
+    if ( defined $opts{"srcdir"} and not -d $opts{"srcdir"} ) {
+        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist."), "srcdir", $opts{"srcdir"} );
     }
-    if (defined $opts{"destdir"} and not -d $opts{"destdir"}) {
-        die wrap_msg(gettext("Option %s invalid. Directory %s does not exist."),
-                     "destdir", $opts{"destdir"});
+    if ( defined $opts{"destdir"} and not -d $opts{"destdir"} ) {
+        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist."), "destdir", $opts{"destdir"} );
     }
 
     return %opts;
@@ -792,35 +789,35 @@ sub get_options {
 # reference to an hash). The options are sorted by category in this hash.
 # The categories are: global and the various languages.
 sub parse_config_options {
-    my $ref = shift;       # a line reference for the die messages
-    my $line = shift;      # the line to parse
-    my $orig_line = $line; # keep the original line for die messages
-    my $options = shift;   # reference to an hash of options
+    my $ref       = shift;    # a line reference for the die messages
+    my $line      = shift;    # the line to parse
+    my $orig_line = $line;    # keep the original line for die messages
+    my $options   = shift;    # reference to an hash of options
 
-    while (defined $line and $line !~ m/^\s*$/) {
-        if ($line =~ m/^\s*opt(?:_(.+?))?:\s*(.+?)\s*$/) {
+    while ( defined $line and $line !~ m/^\s*$/ ) {
+        if ( $line =~ m/^\s*opt(?:_(.+?))?:\s*(.+?)\s*$/ ) {
             my $lang = $1;
             $line = $2;
             my $opt = "";
-            if ($line =~ m/^\s*"(.+?(?<!\\)(?:\\\\)*)"(?:\s+(.+))?$/) {
+            if ( $line =~ m/^\s*"(.+?(?<!\\)(?:\\\\)*)"(?:\s+(.+))?$/ ) {
+
                 # take up to the next " not preceded by an odd number of \
-                $opt = $1;
+                $opt  = $1;
                 $line = $2;
             } else {
+
                 # Use the first space separated arg
-                if ($line =~ m/^\s*([^\s]+?)(?:\s+(.+))?$/) {
-                    $opt = $1;
+                if ( $line =~ m/^\s*([^\s]+?)(?:\s+(.+))?$/ ) {
+                    $opt  = $1;
                     $line = $2;
                 } else {
-                    die wrap_ref_mod("$ref", "",
-                                     gettext("Unparsable argument '%s' (%s)."),
-                                     $line, $orig_line);
+                    die wrap_ref_mod( "$ref", "", gettext("Unparsable argument '%s' (%s)."), $line, $orig_line );
                 }
             }
-            if (! defined $lang) {
+            if ( !defined $lang ) {
                 $lang = "global";
             }
-            if (! defined $options->{$lang}) {
+            if ( !defined $options->{$lang} ) {
                 $options->{$lang} = $opt;
             } else {
                 $options->{$lang} .= " $opt";
@@ -835,94 +832,94 @@ sub parse_config_options {
 }
 
 my %po4a_opts = get_options(@ARGV);
+
 # Argument check
-$po4a_opts{"help"} && pod2usage (-verbose => 1, -exitval => 0);
+$po4a_opts{"help"} && pod2usage( -verbose => 1, -exitval => 0 );
 
 sub run_cmd {
     my $cmd = shift;
-    print $cmd."\n" if $po4a_opts{"debug"};
+    print $cmd. "\n" if $po4a_opts{"debug"};
 
     my $out = qx/$cmd 2>&1/;
-    print $out if ($po4a_opts{"verbose"});
-    unless ($? == 0) {
+    print $out if ( $po4a_opts{"verbose"} );
+    unless ( $? == 0 ) {
         my $err = "";
-        if ($? == -1) {
-            $err = sprintf(gettext("failed to execute '%s': %s."),
-                           $cmd, $!);
-        } elsif ($? & 127) {
-            if ($? & 128) {
-                $err = sprintf(gettext("'%s' died with signal %d, ".
-                                       "with coredump."),
-                               $cmd, $? & 127);
+        if ( $? == -1 ) {
+            $err = sprintf( gettext("failed to execute '%s': %s."), $cmd, $! );
+        } elsif ( $? & 127 ) {
+            if ( $? & 128 ) {
+                $err = sprintf( gettext( "'%s' died with signal %d, " . "with coredump." ), $cmd, $? & 127 );
             } else {
-                $err = sprintf(gettext("'%s' died with signal %d, ".
-                                       "without coredump."),
-                               $cmd, $? & 127);
+                $err = sprintf( gettext( "'%s' died with signal %d, " . "without coredump." ), $cmd, $? & 127 );
             }
         } else {
-            $err = sprintf(gettext("'%s' exited with value %d."),
-                           $cmd, $? >> 8);
+            $err = sprintf( gettext("'%s' exited with value %d."), $cmd, $? >> 8 );
         }
 
-        die wrap_msg(gettext("Error: %s"), $err);
+        die wrap_msg( gettext("Error: %s"), $err );
     }
 }
 
-my $config_file= shift(@ARGV) || pod2usage();
+my $config_file = shift(@ARGV) || pod2usage();
+
 # Check file existence
--e $config_file || die wrap_msg(gettext("File %s does not exist."), $config_file);
+-e $config_file || die wrap_msg( gettext("File %s does not exist."), $config_file );
 
 # Parse the config file
 my (@langs);
-my (%aliases); # module aliases ([po4a_alias:...]
+my (%aliases);    # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
-my (%po_filename); # po_files: '$lang'=>'$path'
-my (%document); # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
+my (%po_filename);    # po_files: '$lang'=>'$path'
+my (%document)
+  ;    # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
 my $doc_count = 0;
-my %partial = ( 'master' => {}, 'files' => {}, 'lang' => {} );
-open CONFIG,"<","$config_file" or die wrap_msg(gettext("Can't open %s: %s"), $config_file, $!);
-my ($line,$nb) = ("",0);
+my %partial   = ( 'master' => {}, 'files' => {}, 'lang' => {} );
+open CONFIG, "<", "$config_file" or die wrap_msg( gettext("Can't open %s: %s"), $config_file, $! );
+my ( $line, $nb ) = ( "", 0 );
+
 while (<CONFIG>) {
     $nb++;
     s/#.*//;
-    $line.=$_;
+    $line .= $_;
     $line =~ s/\t/ /g;
     $line =~ s/ +/ /g;
-    while ($line =~ m/\$\((\w+)\)/) {
-        if (defined $po4a_opts{"variables"}{$1}) {
+    while ( $line =~ m/\$\((\w+)\)/ ) {
+        if ( defined $po4a_opts{"variables"}{$1} ) {
             $line =~ s/\$\((\Q$1\E)\)/$po4a_opts{"variables"}{$1}/g;
         } else {
-           die wrap_ref_mod("$config_file:$nb", "",
-                            gettext("Unknown variable: %s"), $1);
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("Unknown variable: %s"), $1 );
         }
     }
     $line =~ s/^ //;
     $line =~ s/ $//;
     chomp($line);
-    next if ($line =~ s/\\$//);
-    next unless ($line =~ /\S/);
+    next if ( $line =~ s/\\$// );
+    next unless ( $line =~ /\S/ );
 
     my $args = $line;
-    die wrap_ref_mod("$config_file:$nb", "", gettext("Syntax error: %s"), $line)
-      unless ($args =~ s/^\[([^\]]*)\] *//);
-    my $cmd = $1;
-    my $main = ($args=~ s/^(\S+) *// ? $1 : "");
-    my $pot_in = $main; # Default for POT file input is $main
+    die wrap_ref_mod( "$config_file:$nb", "", gettext("Syntax error: %s"), $line )
+      unless ( $args =~ s/^\[([^\]]*)\] *// );
+    my $cmd    = $1;
+    my $main   = ( $args =~ s/^(\S+) *// ? $1 : "" );
+    my $pot_in = $main;                                 # Default for POT file input is $main
 
     if (@langs) {
+
         # Expand the $lang templates
-        my($args2) = "";
-        foreach my $arg (split(/ /,$args)) {
+        my ($args2) = "";
+        foreach my $arg ( split( / /, $args ) ) {
             if ( $arg =~ /\$lang\b/ ) {
+
                 # Expand for all the langs
                 foreach my $lang (@langs) {
-                    my($arg2) = $arg;
+                    my ($arg2) = $arg;
                     $arg2 =~ s/\$lang\b/$lang/g;
-                    $args2 .= $arg2." ";
+                    $args2 .= $arg2 . " ";
                 }
             } else {
+
                 # Leave the argument as is
-                $args2 .= $arg." ";
+                $args2 .= $arg . " ";
             }
         }
         $args = $args2;
@@ -930,116 +927,112 @@ while (<CONFIG>) {
 
     print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $po4a_opts{"debug"};
 
-    if ($cmd eq "po4a_paths") {
-        die wrap_ref_mod("$config_file:$nb", "",
-            gettext("'%s' redeclared"), "po4a_path")
-          if (length $pot_filename);
+    if ( $cmd eq "po4a_paths" ) {
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_path" )
+          if ( length $pot_filename );
         $pot_filename = $main;
-        foreach my $arg (split(/ /,$args)) {
-            die wrap_ref_mod("$config_file:$nb", "",
-                gettext("Unparsable argument '%s'."), $arg)
-              unless ($arg =~ /^([^:]*):(.*)/);
-            $po_filename{$1}=$2 if $1 ne '$lang';
+        foreach my $arg ( split( / /, $args ) ) {
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable argument '%s'."), $arg )
+              unless ( $arg =~ /^([^:]*):(.*)/ );
+            $po_filename{$1} = $2 if $1 ne '$lang';
         }
 
-    } elsif ($cmd eq "po4a_langs") {
-        die wrap_ref_mod("$config_file:$nb", "",
-            gettext("'%s' redeclared"), "po4a_langs")
+    } elsif ( $cmd eq "po4a_langs" ) {
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_langs" )
           if (@langs);
-        @langs = split(/ /,$main." ".$args);
+        @langs = split( / /, $main . " " . $args );
 
-    } elsif ($cmd eq "po_directory") {
-        die wrap_ref_mod("$config_file:$nb", "",
-                         gettext("The list of languages cannot be set twice."))
-            if scalar @langs;
-        die wrap_ref_mod("$config_file:$nb", "",
-                         gettext("The POT file cannot be set twice."))
-            if length $pot_filename;
+    } elsif ( $cmd eq "po_directory" ) {
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("The list of languages cannot be set twice.") )
+          if scalar @langs;
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("The POT file cannot be set twice.") )
+          if length $pot_filename;
 
         chdir $po4a_opts{"srcdir"}
-            if (defined $po4a_opts{"srcdir"});
+          if ( defined $po4a_opts{"srcdir"} );
         my $po_directory = $main;
-        die wrap_ref_mod("$config_file:$nb", "",
-            gettext("'%s' is not a directory"), $po_directory)
-            unless (-d $po_directory);
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory"), $po_directory )
+          unless ( -d $po_directory );
         opendir PO_DIR, $po_directory
-            or die wrap_ref_mod("$config_file:$nb", "",
-                   gettext("Cannot list the '%s' directory"), $po_directory);
+          or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list the '%s' directory"), $po_directory );
 
-        foreach my $f (readdir PO_DIR) {
+        foreach my $f ( readdir PO_DIR ) {
             next unless -f "$po_directory/$f";
-            if ($f =~ m/^(.*)\.po$/) {
+            if ( $f =~ m/^(.*)\.po$/ ) {
                 push @langs, $1;
                 $po_filename{$1} = "$po_directory/$f";
             }
-            if ($f =~ m/\.pot$/) {
-                if (length $pot_filename) {
-                    die wrap_ref_mod("$config_file:$nb", "",
-                        gettext("too many POT files: %s %s"),
-                        $pot_filename, "$po_directory/$f");
+            if ( $f =~ m/\.pot$/ ) {
+                if ( length $pot_filename ) {
+                    die wrap_ref_mod( "$config_file:$nb", "", gettext("too many POT files: %s %s"),
+                        $pot_filename, "$po_directory/$f" );
                 } else {
                     $pot_filename = "$po_directory/$f";
                 }
             }
         }
 
-        if (not @langs) {
-            warn wrap_ref_mod("$config_file:$nb", "",
-                 gettext("no PO files found in %s"), $po_directory);
+        if ( not @langs ) {
+            warn wrap_ref_mod( "$config_file:$nb", "", gettext("no PO files found in %s"), $po_directory );
         }
 
         chdir $po4a_opts{"calldir"}
-            if (defined $po4a_opts{"srcdir"});
-    } elsif ($cmd =~ m/type: *(.*)/) {
+          if ( defined $po4a_opts{"srcdir"} );
+    } elsif ( $cmd =~ m/type: *(.*)/ ) {
         chdir $po4a_opts{"srcdir"}
-            if (defined $po4a_opts{"srcdir"});
+          if ( defined $po4a_opts{"srcdir"} );
 
-        if (defined $document{$main}{'format'}) {
-            warn wrap_ref_mod("$config_file:$nb", "",
-                gettext("The master file '%s' was specified earlier in the ".
-                        "configuration file. This may cause problems with ".
-                        "options."), $main)
-                unless ($po4a_opts{"quiet"});
-        } elsif (not -e $main) {
-            die wrap_ref_mod("$config_file:$nb", "",
-                gettext("The master file '%s' does not exist."), $main);
+        if ( defined $document{$main}{'format'} ) {
+            warn wrap_ref_mod(
+                "$config_file:$nb",
+                "",
+                gettext(
+                        "The master file '%s' was specified earlier in the "
+                      . "configuration file. This may cause problems with "
+                      . "options."
+                ),
+                $main
+            ) unless ( $po4a_opts{"quiet"} );
+        } elsif ( not -e $main ) {
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("The master file '%s' does not exist."), $main );
         }
-        if (scalar @{$po4a_opts{"partial"}}) {
-                foreach my $file (@{$po4a_opts{"partial"}}) {
-                        if ($args =~ m/(\S+):\Q$file\E\b/) {
-                                $partial{'lang'}{$1} = 1;
-                                $partial{'master'}{$main} = 1;
-                                $partial{'files'}{$file} = 1;
-                                last;
-                        }
+        if ( scalar @{ $po4a_opts{"partial"} } ) {
+            foreach my $file ( @{ $po4a_opts{"partial"} } ) {
+                if ( $args =~ m/(\S+):\Q$file\E\b/ ) {
+                    $partial{'lang'}{$1}      = 1;
+                    $partial{'master'}{$main} = 1;
+                    $partial{'files'}{$file}  = 1;
+                    last;
                 }
+            }
         }
         $document{$main}{'format'} = $1;
         $document{$main}{'pot_in'} = $pot_in;
-        $document{$main}{'pos'} = $doc_count;
+        $document{$main}{'pos'}    = $doc_count;
         $doc_count++;
 
         # Options
         my %options;
+
         # 1. Use the global options ([opt] ...)
-        %options = %{$document{''}{'options'}}
+        %options = %{ $document{''}{'options'} }
           if defined $document{''}{'options'};
 
         # 2. Merge the alias options
-        if (defined $aliases{$1}) {
+        if ( defined $aliases{$1} ) {
             $document{$main}{'format'} = $aliases{$1}{"module"};
-            if (defined $aliases{$1}{"options"}) {
-                %options = %{$aliases{$1}{"options"}}; # XXX not a merge, but overwrite
+            if ( defined $aliases{$1}{"options"} ) {
+                %options = %{ $aliases{$1}{"options"} };    # XXX not a merge, but overwrite
             }
         }
 
         # 3. If this file was already specified, reuse the previous
         #    options (no merge)
-        %options = %{$document{$main}{'options'}}
+        %options = %{ $document{$main}{'options'} }
           if defined $document{$main}{'options'};
 
         # 4. Handle "master:file=" flags for "$master" substitution in strings
-        if ($args =~ s/ +master:file=(\S+)//) {
+        if ( $args =~ s/ +master:file=(\S+)// ) {
             $document{$main}{'master'} = $1;
         }
 
@@ -1047,117 +1040,112 @@ while (<CONFIG>) {
         # separate the end of the line, which contains options.
         # Something more clever could be done to allow options in the
         # middle of a line.
-        if ($args =~ m/^(.*?) +(opt(_.+)?:(.*))$/) {
+        if ( $args =~ m/^(.*?) +(opt(_.+)?:(.*))$/ ) {
             $args = $1 // "";
-            $args .= " ".parse_config_options("$config_file:$nb",
-                                              $2, \%options);
+            $args .= " " . parse_config_options( "$config_file:$nb", $2, \%options );
         }
-        %{$document{$main}{'options'}} = %options;
+        %{ $document{$main}{'options'} } = %options;
 
-        my %discarded = ();
-        my @remaining_args = split(/ /,$args);
+        my %discarded      = ();
+        my @remaining_args = split( / /, $args );
         while (@remaining_args) {
             my $arg = shift(@remaining_args);
-            die wrap_ref_mod("$config_file:$nb", "",
-                gettext("Unparsable argument '%s' (%s)."), $arg, $line)
-              unless ($arg =~ /^([^:]*):(.*)/);
-            my ($lang,$trans)=($1,$2);
-            die wrap_ref_mod("$config_file:$nb", "",
-                gettext("The translated and master file are the same."))
-              if ($main eq $trans);
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable argument '%s' (%s)."), $arg, $line )
+              unless ( $arg =~ /^([^:]*):(.*)/ );
+            my ( $lang, $trans ) = ( $1, $2 );
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("The translated and master file are the same.") )
+              if ( $main eq $trans );
 
-            if ($lang =~ /^add_/) {
+            if ( $lang =~ /^add_/ ) {
                 my $modifiers;
                 $trans =~ s/^([@!?]+)// and $modifiers = $1;
-                next if defined($discarded{$trans});
-                if (defined $modifiers) {
-                    if ($modifiers =~ m/!/) {
+                next if defined( $discarded{$trans} );
+                if ( defined $modifiers ) {
+                    if ( $modifiers =~ m/!/ ) {
                         $discarded{$trans} = 1;
                         next;
                     }
-                    next if ($modifiers =~ m/\?/ and not -e $trans);
-                    if ($modifiers =~ m/@/) {
-                        open LIST,"<","$trans" or die wrap_msg(gettext("Can't open %s: %s"), $trans, $!);
+                    next if ( $modifiers =~ m/\?/ and not -e $trans );
+                    if ( $modifiers =~ m/@/ ) {
+                        open LIST, "<", "$trans" or die wrap_msg( gettext("Can't open %s: %s"), $trans, $! );
                         my @new_list = ();
-                        while(<LIST>) {
+                        while (<LIST>) {
                             chomp;
                             s/\s+$//;
                             next if length($_) == 0 or $_ =~ m/^\s*#/;
                             while (m/\$\((\w+)\)/) {
-                                if (defined $po4a_opts{"variables"}{$1}) {
+                                if ( defined $po4a_opts{"variables"}{$1} ) {
                                     s/\$\((\Q$1\E)\)/$po4a_opts{"variables"}{$1}/g;
                                 } else {
-                                   die wrap_ref_mod("$config_file:$nb", "",
-                                                    gettext("Unknown variable: %s"), $1);
+                                    die wrap_ref_mod( "$config_file:$nb", "", gettext("Unknown variable: %s"), $1 );
                                 }
                             }
-                            push(@new_list, "$lang:$_");
+                            push( @new_list, "$lang:$_" );
                         }
                         close LIST;
-                        unshift(@remaining_args, @new_list);
+                        unshift( @remaining_args, @new_list );
                     } else {
-                        push @{$document{$main}{$lang}},$trans;
+                        push @{ $document{$main}{$lang} }, $trans;
                     }
                 } else {
-                    push @{$document{$main}{$lang}},$trans;
+                    push @{ $document{$main}{$lang} }, $trans;
                 }
-            } elsif ($lang eq "pot_in") {
-                 $document{$main}{$lang} = $trans; # override POT file input
-                 print " .......... divert pot_in=$trans\n" if $po4a_opts{"debug"};
+            } elsif ( $lang eq "pot_in" ) {
+                $document{$main}{$lang} = $trans;    # override POT file input
+                print " .......... divert pot_in=$trans\n" if $po4a_opts{"debug"};
             } else {
-                die wrap_ref_mod("$config_file:$nb", "",
-                    gettext("Translation of %s in %s redefined"), $main, $lang)
-                  if (defined $document{$main}{$lang});
+                die wrap_ref_mod( "$config_file:$nb", "", gettext("Translation of %s in %s redefined"), $main, $lang )
+                  if ( defined $document{$main}{$lang} );
                 $document{$main}{$lang} = $trans;
             }
         }
         chdir $po4a_opts{"calldir"}
-            if (defined $po4a_opts{"srcdir"});
-    } elsif ($cmd =~ m/po4a_alias: *(.*)/) {
-        my $name = $1;
+          if ( defined $po4a_opts{"srcdir"} );
+    } elsif ( $cmd =~ m/po4a_alias: *(.*)/ ) {
+        my $name  = $1;
         my %alias = ();
         $alias{"module"} = $main;
         my %options;
-        $args = parse_config_options("$config_file:$nb", $args, \%options);
-        %{$alias{"options"}} = %options;
-        %{$aliases{$name}} = %alias;
-    } elsif ($cmd eq "options") {
+        $args = parse_config_options( "$config_file:$nb", $args, \%options );
+        %{ $alias{"options"} } = %options;
+        %{ $aliases{$name} } = %alias;
+    } elsif ( $cmd eq "options" ) {
         my %options;
         my $o = $line;
         $o =~ s/.*?\[options\] +//;
-        if (defined $document{''}{"options"}) {
-                %options = %{$document{''}{"options"}};
+        if ( defined $document{''}{"options"} ) {
+            %options = %{ $document{''}{"options"} };
         }
-        parse_config_options("$config_file:$nb",
-                             $o,
-                             \%options);
-        %{$document{''}{"options"}} = %options;
+        parse_config_options( "$config_file:$nb", $o, \%options );
+        %{ $document{''}{"options"} } = %options;
     } else {
-        die wrap_ref_mod("$config_file:$nb", "",
-            gettext("Unparsable command '%s'."), $cmd);
+        die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable command '%s'."), $cmd );
     }
 
     $line = "";
 }
-close CONFIG; # don't care about error here
-die wrap_msg(gettext("po4a_paths not declared. Dunno where to find the POT and PO files"))
-  unless (length $pot_filename);
+close CONFIG;    # don't care about error here
+die wrap_msg( gettext("po4a_paths not declared. Dunno where to find the POT and PO files") )
+  unless ( length $pot_filename );
 
 sub split_opts {
-    my $options = shift;
+    my $options      = shift;
     my $options_orig = $options;
-    my @opts = ();
+    my @opts         = ();
     $options =~ s/\\"/"/g;
-    while (length $options) {
+    while ( length $options ) {
         my $o = "";
-        while (length $options and $options !~ /^ /s) {
-            if (    ($options =~ m/^(["'])/)
-                and ($options !~ m/^(["'])(?:\\.|(?!\1)[^\\])*\1/)) {
-                die wrap_msg(gettext("Cannot parse option line (missing >%s<?): %s"), $1, $options_orig);
+        while ( length $options and $options !~ /^ /s ) {
+            if (    ( $options =~ m/^(["'])/ )
+                and ( $options !~ m/^(["'])(?:\\.|(?!\1)[^\\])*\1/ ) )
+            {
+                die wrap_msg( gettext("Cannot parse option line (missing >%s<?): %s"), $1, $options_orig );
             }
+
             # Extract non quoted parts
             $options =~ s/^([^\\"' ]*)//s;
             $o .= $1 if defined $1;
+
             # And extract quoted parts
             $options =~ s/^(["'])((?:\\.|(?!\1)[^\\])*)\1//s;
             $o .= $2 if defined $2;
@@ -1169,131 +1157,141 @@ sub split_opts {
     return @opts;
 }
 
-if (defined $document{''}{"options"}
-    and defined $document{''}{"options"}{"global"}) {
+if (    defined $document{''}{"options"}
+    and defined $document{''}{"options"}{"global"} )
+{
     # Merge the options with the ones specified in the configuration file
-     %po4a_opts = get_options(@ORIGINAL_ARGV,
-                              split_opts($document{''}{"options"}{"global"}));
+    %po4a_opts = get_options( @ORIGINAL_ARGV, split_opts( $document{''}{"options"}{"global"} ) );
 }
 
-my %split_po; # po_files: '$lang','$master' => '$path'
-my %split_pot; # pot_files: '$master' => '$path'
+my %split_po;     # po_files: '$lang','$master' => '$path'
+my %split_pot;    # pot_files: '$master' => '$path'
 
 # make a big pot
 my $update_pot_file = 0;
-if ($pot_filename =~ m/\$master/) {
-    print wrap_msg(gettext("Split mode, creating a temporary POT."))
-        if $po4a_opts{"verbose"};
-    if (scalar @{$po4a_opts{"partial"}}) {
-        print wrap_msg(gettext("Disabling --translate-only option, it is not supported in split mode")."\n");
+if ( $pot_filename =~ m/\$master/ ) {
+    print wrap_msg( gettext("Split mode, creating a temporary POT.") )
+      if $po4a_opts{"verbose"};
+    if ( scalar @{ $po4a_opts{"partial"} } ) {
+        print wrap_msg( gettext("Disabling --translate-only option, it is not supported in split mode") . "\n" );
         $po4a_opts{"partial"} = [];
     }
-    foreach my $master (keys %document) {
-        next if ($master eq '');
-        my $m = $document{$master}{"master"} || basename $master;
+    foreach my $master ( keys %document ) {
+        next if ( $master eq '' );
+        my $m          = $document{$master}{"master"} || basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
         $split_pot{$master} = $master_pot;
     }
+
     # The POT needs to be generated anyway.
     $update_pot_file = 1;
     $po4a_opts{"split"} = 1;
 } else {
-    if (scalar @{$po4a_opts{"partial"}}) {
+    if ( scalar @{ $po4a_opts{"partial"} } ) {
+
         # Skip documents not specified, strings are read directly from POT file
-        foreach my $master (keys %document) {
+        foreach my $master ( keys %document ) {
             next unless length $master;
             delete $document{$master} unless exists $partial{'master'}{$master};
         }
+
         # Do not read PO files if no file is processed for this language
-        foreach my $lang (keys %po_filename) {
+        foreach my $lang ( keys %po_filename ) {
             delete $po_filename{$lang} unless exists $partial{'lang'}{$lang};
         }
     }
 
-if (not scalar @{$po4a_opts{"partial"}}) {
-chdir $po4a_opts{"srcdir"}
-    if (defined $po4a_opts{"srcdir"});
-if (-e $pot_filename) {
-    my $modtime = (stat $pot_filename)[9];
-    # The POT needs to be re-generated if a master document is more recent
-    # than the POT.
-    foreach my $master (keys %document) {
-        next if ($master eq '');
-        my $pot_in = $document{$master}{'pot_in'};
-        if ((stat $pot_in)[9] >= $modtime) {
+    if ( not scalar @{ $po4a_opts{"partial"} } ) {
+        chdir $po4a_opts{"srcdir"}
+          if ( defined $po4a_opts{"srcdir"} );
+        if ( -e $pot_filename ) {
+            my $modtime = ( stat $pot_filename )[9];
+
+            # The POT needs to be re-generated if a master document is more recent
+            # than the POT.
+            foreach my $master ( keys %document ) {
+                next if ( $master eq '' );
+                my $pot_in = $document{$master}{'pot_in'};
+                if ( ( stat $pot_in )[9] >= $modtime ) {
+                    $update_pot_file = 1;
+                    last;
+                }
+            }
+
+            chdir $po4a_opts{"calldir"}
+              if ( defined $po4a_opts{"srcdir"} );
+            if ( ( stat $config_file )[9] > $modtime ) {
+
+                # The configuration file was modified after the POT.
+                # Maybe a new document, or new options
+                $update_pot_file = 1;
+            }
+
+            if ( $po4a_opts{"force"} ) {
+                $update_pot_file = 1;
+            }
+
+            if ( $po4a_opts{"no-update"} ) {
+                print wrap_msg( gettext("NOT updating %s as requested (--no-update)."), $pot_filename )
+                  if ( $update_pot_file and $po4a_opts{"verbose"} );
+                $update_pot_file = 0;
+            } else {
+                print wrap_msg( gettext("Updating %s:"), $pot_filename )
+                  if ( $update_pot_file and $po4a_opts{"verbose"} );
+            }
+        } elsif ( $po4a_opts{"no-update"} ) {
+            print wrap_msg( gettext("NOT creating %s as requested (--no-update)."), $pot_filename )
+              if $po4a_opts{"verbose"};
+        } else {
+            print wrap_msg( gettext("Creating %s:"), $pot_filename )
+              if $po4a_opts{"verbose"};
             $update_pot_file = 1;
-            last;
         }
+        chdir $po4a_opts{"calldir"}
+          if ( defined $po4a_opts{"srcdir"} );
     }
-
-    chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"srcdir"});
-    if ((stat $config_file)[9] > $modtime) {
-        # The configuration file was modified after the POT.
-        # Maybe a new document, or new options
-        $update_pot_file = 1;
-    }
-
-    if ($po4a_opts{"force"}) {
-        $update_pot_file = 1;
-    }
-
-    if ($po4a_opts{"no-update"}) {
-        print wrap_msg(gettext("NOT updating %s as requested (--no-update)."), $pot_filename)
-            if ($update_pot_file and $po4a_opts{"verbose"});
-        $update_pot_file = 0;
-    } else {
-        print wrap_msg(gettext("Updating %s:"), $pot_filename)
-            if ($update_pot_file and $po4a_opts{"verbose"});
-    }
-} elsif ($po4a_opts{"no-update"}) {
-    print wrap_msg(gettext("NOT creating %s as requested (--no-update)."), $pot_filename)
-        if $po4a_opts{"verbose"};
-} else {
-    print wrap_msg(gettext("Creating %s:"), $pot_filename)
-        if $po4a_opts{"verbose"};
-    $update_pot_file = 1;
-}
-chdir $po4a_opts{"calldir"}
-    if (defined $po4a_opts{"srcdir"});
-}
 }
 
 if ($update_pot_file) {
     chdir $po4a_opts{"srcdir"}
-        if (defined $po4a_opts{"srcdir"});
+      if ( defined $po4a_opts{"srcdir"} );
     my %pot_options;
     foreach (qw(porefs wrap-po msgid-bugs-address copyright-holder package-name package-version)) {
-        if (defined $po4a_opts{$_}) {
+        if ( defined $po4a_opts{$_} ) {
             $pot_options{$_} = $po4a_opts{$_};
         }
     }
     $pot_options{'pot-language'} = $po4a_opts{"mastlang"};
-    $pot_options{'pot-charset'} = $po4a_opts{"mastchar"};
-    my $potfile=Locale::Po4a::Po->new(\%pot_options);
+    $pot_options{'pot-charset'}  = $po4a_opts{"mastchar"};
+    my $potfile = Locale::Po4a::Po->new( \%pot_options );
     chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"srcdir"});
-    foreach my $master (sort { return -1 if ($a eq "");
-                               return 1 if ($b eq "");
-                               $document{$a}{'pos'} <=> $document{$b}{'pos'}
-                             } keys %document) {
-        next if ($master eq '');
-        my $pot_in = $document{$master}{'pot_in'};
+      if ( defined $po4a_opts{"srcdir"} );
+    foreach my $master (
+        sort {
+            return -1 if ( $a eq "" );
+            return 1  if ( $b eq "" );
+            $document{$a}{'pos'} <=> $document{$b}{'pos'}
+        } keys %document
+      )
+    {
+        next if ( $master eq '' );
+        my $pot_in    = $document{$master}{'pot_in'};
         my %file_opts = %po4a_opts;
-        my $options = $document{$master}{"options"}{"global"};
-        if (defined $options) {
-            %file_opts = get_options(@ORIGINAL_ARGV,
-                                     split_opts($options));
+        my $options   = $document{$master}{"options"}{"global"};
+        if ( defined $options ) {
+            %file_opts = get_options( @ORIGINAL_ARGV, split_opts($options) );
         }
-        my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
-                                           %{$file_opts{"options"}});
-
+        my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 
         # If we know that the input isn't UTF-8, say so to the TransTractor
-        if (length $po4a_opts{"mastchar"} && (not $po4a_opts{"mastchar"} =~ /UTF-8/i) && $po4a_opts{"mastchar"} ne "CHARSET") {
-            print STDERR "mastchar: ".$po4a_opts{"mastchar"}."\n";
-            $doc->{TT}{ascii_input} = 0; # this actually mean "don't mess up with the encoding", not litteraly that it's in ascii
+        if (   length $po4a_opts{"mastchar"}
+            && ( not $po4a_opts{"mastchar"} =~ /UTF-8/i )
+            && $po4a_opts{"mastchar"} ne "CHARSET" )
+        {
+            print STDERR "mastchar: " . $po4a_opts{"mastchar"} . "\n";
+            $doc->{TT}{ascii_input} =
+              0;    # this actually mean "don't mess up with the encoding", not litteraly that it's in ascii
         }
 
         # We ensure that the generated po will be in utf-8 if the input document isn't entirely in ascii
@@ -1302,286 +1300,328 @@ if ($update_pot_file) {
         $doc->setpoout($potfile);
         my @file_in_name;
         push @file_in_name, $pot_in;
-        $doc->process('file_in_name'     => \@file_in_name,
-                      'file_in_charset'  => $file_opts{"mastchar"},
-                      'srcdir'           => $po4a_opts{"srcdir"},
-                      'destdir'          => $po4a_opts{"destdir"},
-                      'calldir'          => $po4a_opts{"calldir"});
+        $doc->process(
+            'file_in_name'    => \@file_in_name,
+            'file_in_charset' => $file_opts{"mastchar"},
+            'srcdir'          => $po4a_opts{"srcdir"},
+            'destdir'         => $po4a_opts{"destdir"},
+            'calldir'         => $po4a_opts{"calldir"}
+        );
         $potfile = $doc->getpoout();
     }
 
     chdir $po4a_opts{"destdir"}
-      if (defined $po4a_opts{"destdir"});
-    if ($po4a_opts{"split"}) {
-        (undef,$pot_filename)=File::Temp::tempfile("po4aXXXX",
-                                                   DIR    => $ENV{TMPDIR} || "/tmp",
-                                                   SUFFIX => ".pot",
-                                                   OPEN   => 0,
-                                                   UNLINK => 0)
-            or die wrap_msg(gettext("Can't create a temporary POT file: %s"),
-                            $!);
+      if ( defined $po4a_opts{"destdir"} );
+    if ( $po4a_opts{"split"} ) {
+        ( undef, $pot_filename ) = File::Temp::tempfile(
+            "po4aXXXX",
+            DIR    => $ENV{TMPDIR} || "/tmp",
+            SUFFIX => ".pot",
+            OPEN   => 0,
+            UNLINK => 0
+        ) or die wrap_msg( gettext("Can't create a temporary POT file: %s"), $! );
         $potfile->write($pot_filename);
     } else {
-        if ($po4a_opts{"force"}) {
+        if ( $po4a_opts{"force"} ) {
             $potfile->write($pot_filename);
         } else {
             $potfile->write_if_needed($pot_filename);
         }
     }
     chdir $po4a_opts{"calldir"}
-      if (defined $po4a_opts{"destdir"});
+      if ( defined $po4a_opts{"destdir"} );
 
-    print wrap_msg(gettext(" (%d entries)"), $potfile->count_entries())
-        unless ($po4a_opts{"quiet"});
+    print wrap_msg( gettext(" (%d entries)"), $potfile->count_entries() )
+      unless ( $po4a_opts{"quiet"} );
 } else {
-    print wrap_msg(gettext("POT file %s already up to date."), $pot_filename)
-        if ($po4a_opts{"verbose"} and not $po4a_opts{"no-update"});
+    print wrap_msg( gettext("POT file %s already up to date."), $pot_filename )
+      if ( $po4a_opts{"verbose"} and not $po4a_opts{"no-update"} );
 }
 
-my $srcpath = ($po4a_opts{'srcdir'} // $po4a_opts{'calldir'})."/";
-my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'}."/" : $srcpath;
+my $srcpath = ( $po4a_opts{'srcdir'} // $po4a_opts{'calldir'} ) . "/";
+my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'} . "/" : $srcpath;
 
-if ($po4a_opts{"split"}) {
+if ( $po4a_opts{"split"} ) {
+
     # Generate a .pot for each document
-    foreach my $master (keys %document) {
-        next if ($master eq '');
+    foreach my $master ( keys %document ) {
+        next if ( $master eq '' );
         my $tmp_file;
+
         # Create a temporary POT, and check if the old one needs to be
         # updated (unless --force was specified).
-        unless ($po4a_opts{"force"}) {
-            (undef,$tmp_file)=File::Temp::tempfile("po4aXXXX",
-                                                   DIR    => $ENV{TMPDIR} || "/tmp",
-                                                   SUFFIX => ".pot",
-                                                   OPEN   => 0,
-                                                   UNLINK => 0)
-                or die wrap_msg(gettext("Can't create a temporary POT file: %s"), $!);
+        unless ( $po4a_opts{"force"} ) {
+            ( undef, $tmp_file ) = File::Temp::tempfile(
+                "po4aXXXX",
+                DIR    => $ENV{TMPDIR} || "/tmp",
+                SUFFIX => ".pot",
+                OPEN   => 0,
+                UNLINK => 0
+            ) or die wrap_msg( gettext("Can't create a temporary POT file: %s"), $! );
         }
 
         chdir $po4a_opts{"srcdir"}
-            if (defined $po4a_opts{"srcdir"});
-        my $dir = dirname($split_pot{$master});
-        if (not -d $dir) {
-            mkdir $dir or die wrap_msg(gettext("Can't create directory '%s': %s"), $dir, $!);
+          if ( defined $po4a_opts{"srcdir"} );
+        my $dir = dirname( $split_pot{$master} );
+        if ( not -d $dir ) {
+            mkdir $dir or die wrap_msg( gettext("Can't create directory '%s': %s"), $dir, $! );
         }
-        my $cmd = "msggrep".$Config{_exe}." -N \"$master\" "
-                  . "-o ".($po4a_opts{"force"} ? "$dstpath$split_pot{$master}" : $tmp_file)
-            . " $pot_filename";
+        my $cmd =
+            "msggrep"
+          . $Config{_exe}
+          . " -N \"$master\" " . "-o "
+          . ( $po4a_opts{"force"} ? "$dstpath$split_pot{$master}" : $tmp_file )
+          . " $pot_filename";
         run_cmd($cmd);
 
-        move_po_if_needed($tmp_file, ($po4a_opts{split}?"":$dstpath).$split_pot{$master}, 0)
-            unless ($po4a_opts{"force"});
+        move_po_if_needed( $tmp_file, ( $po4a_opts{split} ? "" : $dstpath ) . $split_pot{$master}, 0 )
+          unless ( $po4a_opts{"force"} );
         chdir $po4a_opts{"calldir"}
-            if (defined $po4a_opts{"srcdir"});
+          if ( defined $po4a_opts{"srcdir"} );
     }
+
     # Generate a complete .po
-    foreach my $lang (sort keys %po_filename) {
+    foreach my $lang ( sort keys %po_filename ) {
         my $tmp_bigpo;
-        (undef,$tmp_bigpo)=File::Temp::tempfile("po4aXXXX",
-                                                DIR    => $ENV{TMPDIR} || "/tmp",
-                                                SUFFIX => "-$lang.po",
-                                                OPEN   => 0,
-                                                UNLINK => 0)
-            or die wrap_msg(gettext("Can't create a temporary PO file: %s"),
-                            $!);
+        ( undef, $tmp_bigpo ) = File::Temp::tempfile(
+            "po4aXXXX",
+            DIR    => $ENV{TMPDIR} || "/tmp",
+            SUFFIX => "-$lang.po",
+            OPEN   => 0,
+            UNLINK => 0
+        ) or die wrap_msg( gettext("Can't create a temporary PO file: %s"), $! );
         my $cmd_cat = "";
-        foreach my $master (keys %document) {
-            next if ($master eq '');
-            my $m = $document{$master}{"master"} || basename $master;
+        foreach my $master ( keys %document ) {
+            next if ( $master eq '' );
+            my $m         = $document{$master}{"master"} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
-            if (-e "$master_po") {
+            if ( -e "$master_po" ) {
                 $cmd_cat .= " $master_po";
             } else {
-                print wrap_msg(gettext("The translation of master file '%s' in language '%s' is missing (file: %s) -- skipping."), $master, $lang, $master_po)
-                    if ($po4a_opts{"verbose"});
+                print wrap_msg(
+                    gettext("The translation of master file '%s' in language '%s' is missing (file: %s) -- skipping."),
+                    $master, $lang, $master_po )
+                  if ( $po4a_opts{"verbose"} );
             }
             $split_po{$lang}{$master} = $master_po;
         }
-        if (length $cmd_cat) {
-            $cmd_cat = "msgcat".$Config{_exe}." -o $tmp_bigpo $cmd_cat";
+        if ( length $cmd_cat ) {
+            $cmd_cat = "msgcat" . $Config{_exe} . " -o $tmp_bigpo $cmd_cat";
             run_cmd($cmd_cat);
         }
+
         # We do not need to keep the original name with $master
         $po_filename{$lang} = $tmp_bigpo;
     }
 }
 
-if (not $po4a_opts{"no-update"}) {
+if ( not $po4a_opts{"no-update"} ) {
+
     # update all po files
     my $lang;
-    if (not scalar @{$po4a_opts{"partial"}}) {
-        foreach $lang (sort keys %po_filename) {
-            my ($infile,$outfile);
-            if ($po4a_opts{"split"}) { # Do not obey the srcdir and destdir, as this is a temp file
-                ($infile,$outfile) =  ($po_filename{$lang},$po_filename{$lang});
+    if ( not scalar @{ $po4a_opts{"partial"} } ) {
+        foreach $lang ( sort keys %po_filename ) {
+            my ( $infile, $outfile );
+            if ( $po4a_opts{"split"} ) {    # Do not obey the srcdir and destdir, as this is a temp file
+                ( $infile, $outfile ) = ( $po_filename{$lang}, $po_filename{$lang} );
             } else {
-                ($infile,$outfile) =  ($srcpath.$po_filename{$lang}, $dstpath.$po_filename{$lang});
+                ( $infile, $outfile ) = ( $srcpath . $po_filename{$lang}, $dstpath . $po_filename{$lang} );
             }
 
-            if (-e $infile) {
-                print wrap_msg(gettext("Updating %s:")." ", $po_filename{$lang})
-                    if ($po4a_opts{"verbose"});
+            if ( -e $infile ) {
+                print wrap_msg( gettext("Updating %s:") . " ", $po_filename{$lang} )
+                  if ( $po4a_opts{"verbose"} );
 
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
-                my $cmd = "msgmerge".$Config{_exe}." $infile $pot_filename ".$msgmerge_opt;
-                if ((not $po4a_opts{"split"}) && $po4a_opts{'calldir'}."/" eq $dstpath) { # in place
+                my $cmd = "msgmerge" . $Config{_exe} . " $infile $pot_filename " . $msgmerge_opt;
+                if ( ( not $po4a_opts{"split"} ) && $po4a_opts{'calldir'} . "/" eq $dstpath ) {    # in place
                     $cmd .= " --backup=none --update";
                 } else {
                     $cmd .= " --output $outfile";
                 }
                 run_cmd($cmd);
 
-                my @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $outfile);
-                system (@cmd)
-                    if $po4a_opts{"verbose"};
+                my @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $outfile );
+                system(@cmd)
+                  if $po4a_opts{"verbose"};
             } else {
                 my $read_pot_filename = $pot_filename;
-                $read_pot_filename = $srcpath.$pot_filename if ((not -e $read_pot_filename) && -e $srcpath.$pot_filename);
-                $read_pot_filename = $dstpath.$pot_filename if ((not -e $read_pot_filename) && -e $dstpath.$pot_filename);
-                my $cmd = "msginit".$Config{_exe}." -i $read_pot_filename --locale $lang -o $outfile --no-translator";
+                $read_pot_filename = $srcpath . $pot_filename
+                  if ( ( not -e $read_pot_filename ) && -e $srcpath . $pot_filename );
+                $read_pot_filename = $dstpath . $pot_filename
+                  if ( ( not -e $read_pot_filename ) && -e $dstpath . $pot_filename );
+                my $cmd =
+                  "msginit" . $Config{_exe} . " -i $read_pot_filename --locale $lang -o $outfile --no-translator";
                 run_cmd($cmd);
             }
         }
     }
 
-    if ($po4a_opts{"split"}) {
-	chdir $po4a_opts{"srcdir"}
-        if (defined $po4a_opts{"srcdir"});
-	# We don't need the tmp big POT anymore
-	unlink($pot_filename);
+    if ( $po4a_opts{"split"} ) {
+        chdir $po4a_opts{"srcdir"}
+          if ( defined $po4a_opts{"srcdir"} );
 
-	# Split the complete PO in multiple POs
-	foreach $lang (sort keys %po_filename) {
-	    foreach my $master (keys %document) {
-		next if ($master eq '');
-		my $tmp_file;
-		# Create a temporary PO, and check if the old one needs to be
-		# updated (unless --force was specified).
-		(undef,$tmp_file)=File::Temp::tempfile("po4aXXXX",
-		    DIR    => $ENV{TMPDIR} || "/tmp",
-		    SUFFIX => ".po",
-		    OPEN   => 0,
-		    UNLINK => 0)
-		  or die wrap_msg(
-		      gettext("Can't create a temporary POT file: %s"), $!);
+        # We don't need the tmp big POT anymore
+        unlink($pot_filename);
 
-		my $cmd;
-		# Create an empty PO or copy the original PO header (to keep the header)
-		if (-f $split_po{$lang}{$master}) {
-		    $cmd = "LC_ALL=C.UTF-8 msggrep".$Config{_exe}." --force-po --invert-match --msgid --regexp '.'".
-		      " -o ".$tmp_file.
-		      " ".$split_po{$lang}{$master};
-		} else {
-		    $cmd = "msginit".$Config{_exe}." --no-translator -l ".$lang.
-		      " --input $dstpath".$split_pot{$master}.
-		      " --output ".$tmp_file;
-		}
-		run_cmd($cmd);
+        # Split the complete PO in multiple POs
+        foreach $lang ( sort keys %po_filename ) {
+            foreach my $master ( keys %document ) {
+                next if ( $master eq '' );
+                my $tmp_file;
 
-		# Update the PO according to the new POT and to the big PO (compendium).
-		$cmd = "msgmerge".$Config{_exe}." --compendium ".$po_filename{$lang}.
-        " --update --backup=none ".$po4a_opts{"msgmerge-opt"}.
-		  " $tmp_file ".$dstpath.$split_pot{$master};
-		run_cmd($cmd);
+                # Create a temporary PO, and check if the old one needs to be
+                # updated (unless --force was specified).
+                ( undef, $tmp_file ) = File::Temp::tempfile(
+                    "po4aXXXX",
+                    DIR    => $ENV{TMPDIR} || "/tmp",
+                    SUFFIX => ".po",
+                    OPEN   => 0,
+                    UNLINK => 0
+                ) or die wrap_msg( gettext("Can't create a temporary POT file: %s"), $! );
 
-		my $dir = dirname($split_po{$lang}{$master});
-		if (not -d $dir) {
-		    mkdir $dir
-		      or die wrap_msg(gettext("Can't create directory '%s': %s"),
-			  $dir, $!);
-		}
-		unless ($po4a_opts{"force"}) {
-		    move_po_if_needed($tmp_file, $split_po{$lang}{$master},	0);
-		} else {
-		    move $tmp_file, $dstpath.$split_po{$lang}{$master}
-		      or die wrap_msg(dgettext("po4a", "Can't move %s to %s: %s."), $tmp_file, $dstpath.$split_po{$lang}{$master}, $!);
-		}
-	    }
-	}
-	chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"srcdir"});
+                my $cmd;
+
+                # Create an empty PO or copy the original PO header (to keep the header)
+                if ( -f $split_po{$lang}{$master} ) {
+                    $cmd =
+                        "LC_ALL=C.UTF-8 msggrep"
+                      . $Config{_exe}
+                      . " --force-po --invert-match --msgid --regexp '.'" . " -o "
+                      . $tmp_file . " "
+                      . $split_po{$lang}{$master};
+                } else {
+                    $cmd =
+                        "msginit"
+                      . $Config{_exe}
+                      . " --no-translator -l "
+                      . $lang
+                      . " --input $dstpath"
+                      . $split_pot{$master}
+                      . " --output "
+                      . $tmp_file;
+                }
+                run_cmd($cmd);
+
+                # Update the PO according to the new POT and to the big PO (compendium).
+                $cmd =
+                    "msgmerge"
+                  . $Config{_exe}
+                  . " --compendium "
+                  . $po_filename{$lang}
+                  . " --update --backup=none "
+                  . $po4a_opts{"msgmerge-opt"}
+                  . " $tmp_file "
+                  . $dstpath
+                  . $split_pot{$master};
+                run_cmd($cmd);
+
+                my $dir = dirname( $split_po{$lang}{$master} );
+                if ( not -d $dir ) {
+                    mkdir $dir
+                      or die wrap_msg( gettext("Can't create directory '%s': %s"), $dir, $! );
+                }
+                unless ( $po4a_opts{"force"} ) {
+                    move_po_if_needed( $tmp_file, $split_po{$lang}{$master}, 0 );
+                } else {
+                    move $tmp_file,
+                      $dstpath
+                      . $split_po{$lang}{$master}
+                      or die wrap_msg(
+                        dgettext( "po4a", "Can't move %s to %s: %s." ), $tmp_file,
+                        $dstpath . $split_po{$lang}{$master}, $!
+                      );
+                }
+            }
+        }
+        chdir $po4a_opts{"calldir"}
+          if ( defined $po4a_opts{"srcdir"} );
     }
-} # update po/pot files
+}    # update po/pot files
 
-if (not $po4a_opts{"no-translations"}) {
+if ( not $po4a_opts{"no-translations"} ) {
+
     # update all translations
 
-    LANG: foreach my $lang (sort keys %po_filename) {
+  LANG: foreach my $lang ( sort keys %po_filename ) {
+
         # Read the $lang PO once, no options for the creation
         my $po = Locale::Po4a::Po->new();
-        chdir $po4a_opts{"srcdir"} if (defined $po4a_opts{"srcdir"});
-        if (not -e $po_filename{$lang}) {
-            print wrap_msg(gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang)
-                if ($po4a_opts{"verbose"});
-            chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
+        chdir $po4a_opts{"srcdir"} if ( defined $po4a_opts{"srcdir"} );
+        if ( not -e $po_filename{$lang} ) {
+            print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang )
+              if ( $po4a_opts{"verbose"} );
+            chdir $po4a_opts{"calldir"} if ( defined $po4a_opts{"srcdir"} );
             next LANG;
         }
-        print "Reading PO file ".$po_filename{$lang}." for language $lang: "
-            if ($po4a_opts{"debug"});
-        $po->read($po_filename{$lang});
-        system("msgfmt".$Config{_exe}." --statistics -v -o /dev/null $po_filename{$lang}")
-            if ($po4a_opts{"debug"});
-        chdir $po4a_opts{"calldir"} if (defined $po4a_opts{"srcdir"});
+        print "Reading PO file " . $po_filename{$lang} . " for language $lang: "
+          if ( $po4a_opts{"debug"} );
+        $po->read( $po_filename{$lang} );
+        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $po_filename{$lang}" )
+          if ( $po4a_opts{"debug"} );
+        chdir $po4a_opts{"calldir"} if ( defined $po4a_opts{"srcdir"} );
 
-        DOC: foreach my $master (sort { return -1 if ($a eq "");
-                                        return 1 if ($b eq "");
-                                        $document{$a}{'pos'} <=>
-                                        $document{$b}{'pos'} } keys %document) {
-            next if ($master eq '');
+      DOC: foreach my $master (
+            sort {
+                return -1 if ( $a eq "" );
+                return 1  if ( $b eq "" );
+                $document{$a}{'pos'} <=> $document{$b}{'pos'}
+            } keys %document
+          )
+        {
+            next if ( $master eq '' );
             next unless defined $document{$master}{$lang};
-            if (scalar @{$po4a_opts{"partial"}}) {
-                next unless defined $partial{'files'}{$document{$master}{$lang}};
+            if ( scalar @{ $po4a_opts{"partial"} } ) {
+                next unless defined $partial{'files'}{ $document{$master}{$lang} };
             }
 
-            unless ($po4a_opts{"force"}) {
+            unless ( $po4a_opts{"force"} ) {
                 chdir $po4a_opts{"destdir"}
-                    if (defined $po4a_opts{"destdir"});
+                  if ( defined $po4a_opts{"destdir"} );
                 my $stampfile = $document{$master}{$lang};
-                unless (-e $document{$master}{$lang}) {
-                    $stampfile = $document{$master}{$lang}.".po4a-stamp";
+                unless ( -e $document{$master}{$lang} ) {
+                    $stampfile = $document{$master}{$lang} . ".po4a-stamp";
                 }
                 $stampfile = File::Spec->rel2abs($stampfile);
                 chdir $po4a_opts{"calldir"}
-                    if (defined $po4a_opts{"destdir"});
+                  if ( defined $po4a_opts{"destdir"} );
 
-                my @files = ($master,
-                             $po_filename{$lang},
-                             File::Spec->rel2abs($config_file));
-                if (defined $document{$master}{"add_$lang"}) {
-                    push @files, @{$document{$master}{"add_$lang"}};
+                my @files = ( $master, $po_filename{$lang}, File::Spec->rel2abs($config_file) );
+                if ( defined $document{$master}{"add_$lang"} ) {
+                    push @files, @{ $document{$master}{"add_$lang"} };
                 }
 
                 chdir $po4a_opts{"srcdir"}
-                    if (defined $po4a_opts{"srcdir"});
-                unless (is_older($stampfile, @files)) {
-                    print wrap_msg(gettext("%s doesn't need to be updated."),
-                                   $document{$master}{$lang})
-                        if ($po4a_opts{"verbose"});
+                  if ( defined $po4a_opts{"srcdir"} );
+                unless ( is_older( $stampfile, @files ) ) {
+                    print wrap_msg( gettext("%s doesn't need to be updated."), $document{$master}{$lang} )
+                      if ( $po4a_opts{"verbose"} );
                     chdir $po4a_opts{"calldir"}
-                        if (defined $po4a_opts{"srcdir"});
+                      if ( defined $po4a_opts{"srcdir"} );
                     next DOC;
                 }
                 chdir $po4a_opts{"calldir"}
-                    if (defined $po4a_opts{"srcdir"});
+                  if ( defined $po4a_opts{"srcdir"} );
             }
 
             my %file_opts = %po4a_opts;
-            my $options = "";
-            if (defined $document{$master}{"options"}{"global"}) {
+            my $options   = "";
+            if ( defined $document{$master}{"options"}{"global"} ) {
                 $options .= $document{$master}{"options"}{"global"};
             }
+
             # append the language options
-            if (defined $document{$master}{"options"}{$lang}) {
-                $options .= " ".$document{$master}{"options"}{$lang};
+            if ( defined $document{$master}{"options"}{$lang} ) {
+                $options .= " " . $document{$master}{"options"}{$lang};
             }
-            if (defined $options) {
+            if ( defined $options ) {
+
                 # also use the options provided on the command line
-                %file_opts = get_options(@ORIGINAL_ARGV,
-                                         split_opts($options));
+                %file_opts = get_options( @ORIGINAL_ARGV, split_opts($options) );
             }
-            my $doc=Locale::Po4a::Chooser::new($document{$master}{'format'},
-                                               %{$file_opts{"options"}});
+            my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 
             my @file_in_name;
             push @file_in_name, $master;
@@ -1591,153 +1631,160 @@ if (not $po4a_opts{"no-translations"}) {
             $doc->{TT}{po_in} = $po;
             $doc->{TT}{po_in}->stats_clear();
 
-	    my $translation_out;
-	    if ($po4a_opts{"keep-translations"} &&
-		-e $document{$master}{$lang}) {
-	      (undef,$translation_out) =
-		    File::Temp::tempfile("$document{$master}{$lang}.new-XXXX",
-					 OPEN   => 0,
-					 UNLINK => 0);
-	    }
-	    else {
-	      $translation_out=$document{$master}{$lang};
-	    }
+            my $translation_out;
+            if ( $po4a_opts{"keep-translations"}
+                && -e $document{$master}{$lang} )
+            {
+                ( undef, $translation_out ) = File::Temp::tempfile(
+                    "$document{$master}{$lang}.new-XXXX",
+                    OPEN   => 0,
+                    UNLINK => 0
+                );
+            } else {
+                $translation_out = $document{$master}{$lang};
+            }
 
-            $doc->process('file_in_name'  => \@file_in_name,
-                          'file_out_name' => $translation_out,
-                          'file_in_charset'  => $file_opts{"mastchar"},
-                          'file_out_charset' => $file_opts{"locchar"},
-                          'addendum_charset' => $file_opts{"addchar"},
-                          'srcdir'           => $po4a_opts{"srcdir"},
-                          'destdir'          => $po4a_opts{"destdir"},
-                          'calldir'          => $po4a_opts{"calldir"});
+            $doc->process(
+                'file_in_name'     => \@file_in_name,
+                'file_out_name'    => $translation_out,
+                'file_in_charset'  => $file_opts{"mastchar"},
+                'file_out_charset' => $file_opts{"locchar"},
+                'addendum_charset' => $file_opts{"addchar"},
+                'srcdir'           => $po4a_opts{"srcdir"},
+                'destdir'          => $po4a_opts{"destdir"},
+                'calldir'          => $po4a_opts{"calldir"}
+            );
 
-            my ($percent,$hit,$queries) = $doc->stats();
+            my ( $percent, $hit, $queries ) = $doc->stats();
 
-            if ($percent<$file_opts{"threshold"})  {
-                print wrap_msg(gettext("Discard %s (%s of %s strings; only %s%% translated; need %s%%)."),
-                    $document{$master}{$lang}, $hit, $queries,
-                    $percent, $file_opts{"threshold"});
+            if ( $percent < $file_opts{"threshold"} ) {
+                print wrap_msg(
+                    gettext("Discard %s (%s of %s strings; only %s%% translated; need %s%%)."),
+                    $document{$master}{$lang},
+                    $hit, $queries, $percent, $file_opts{"threshold"}
+                );
                 chdir $po4a_opts{"destdir"}
-                    if (defined $po4a_opts{"destdir"});
-                unlink($document{$master}{$lang})
-		  if (! $po4a_opts{"keep-translations"} &&
-		      -e $document{$master}{$lang});
+                  if ( defined $po4a_opts{"destdir"} );
+                unlink( $document{$master}{$lang} )
+                  if ( !$po4a_opts{"keep-translations"}
+                    && -e $document{$master}{$lang} );
                 unlink($translation_out)
-		  if ($po4a_opts{"keep-translations"} &&
-		      -e $translation_out);
-                unless ($po4a_opts{"force"}) {
-                    if ($po4a_opts{"stamp"}) {
-                    touch($document{$master}{$lang}.".po4a-stamp");
-                    print wrap_msg(gettext("Timestamp %s created."),
-                                   $document{$master}{$lang}.".po4a-stamp")
-                        if ($po4a_opts{"verbose"});
+                  if ( $po4a_opts{"keep-translations"}
+                    && -e $translation_out );
+                unless ( $po4a_opts{"force"} ) {
+                    if ( $po4a_opts{"stamp"} ) {
+                        touch( $document{$master}{$lang} . ".po4a-stamp" );
+                        print wrap_msg( gettext("Timestamp %s created."), $document{$master}{$lang} . ".po4a-stamp" )
+                          if ( $po4a_opts{"verbose"} );
                     }
                 }
                 chdir $po4a_opts{"calldir"}
-                    if (defined $po4a_opts{"destdir"});
+                  if ( defined $po4a_opts{"destdir"} );
                 next DOC;
+            } else {
+                rename( $translation_out, $document{$master}{$lang} );
             }
-	    else {
-	      rename ($translation_out, $document{$master}{$lang});
-	    }
-            unless ($po4a_opts{"force"}) {
+            unless ( $po4a_opts{"force"} ) {
                 chdir $po4a_opts{"destdir"}
-                    if (defined $po4a_opts{"destdir"});
-                if (-e $document{$master}{$lang}.".po4a-stamp") {
-                    unlink $document{$master}{$lang}.".po4a-stamp";
-                    print wrap_msg(gettext("Timestamp %s removed."),
-                                   $document{$master}{$lang}.".po4a-stamp")
-                        if ($po4a_opts{"verbose"});
+                  if ( defined $po4a_opts{"destdir"} );
+                if ( -e $document{$master}{$lang} . ".po4a-stamp" ) {
+                    unlink $document{$master}{$lang} . ".po4a-stamp";
+                    print wrap_msg( gettext("Timestamp %s removed."), $document{$master}{$lang} . ".po4a-stamp" )
+                      if ( $po4a_opts{"verbose"} );
                 }
                 chdir $po4a_opts{"calldir"}
-                    if (defined $po4a_opts{"destdir"});
+                  if ( defined $po4a_opts{"destdir"} );
             }
 
-            if (defined ($document{$master}{"add_$lang"})) {
+            if ( defined( $document{$master}{"add_$lang"} ) ) {
                 chdir $po4a_opts{"srcdir"}
-                    if (defined $po4a_opts{"srcdir"});
-                foreach my $add (@{$document{$master}{"add_$lang"}}) {
+                  if ( defined $po4a_opts{"srcdir"} );
+                foreach my $add ( @{ $document{$master}{"add_$lang"} } ) {
                     if ( !$doc->addendum($add) ) {
-                        die wrap_msg(gettext("Addendum %s does NOT apply to %s (translation discarded)."),
-                            $add, $document{$master}{$lang});
+                        die wrap_msg( gettext("Addendum %s does NOT apply to %s (translation discarded)."),
+                            $add, $document{$master}{$lang} );
                         chdir $po4a_opts{"destdir"}
-                            if (defined $po4a_opts{"destdir"});
-                        unlink($document{$master}{$lang}) if (-e $document{$master}{$lang});
+                          if ( defined $po4a_opts{"destdir"} );
+                        unlink( $document{$master}{$lang} ) if ( -e $document{$master}{$lang} );
                         chdir $po4a_opts{"calldir"}
-                            if (defined $po4a_opts{"destdir"});
+                          if ( defined $po4a_opts{"destdir"} );
                         next DOC;
                     }
                 }
                 chdir $po4a_opts{"calldir"}
-                    if (defined $po4a_opts{"srcdir"});
+                  if ( defined $po4a_opts{"srcdir"} );
             }
-            if ($file_opts{"verbose"}) {
-                if ($percent == 100) {
-                    print wrap_msg(gettext("%s is 100%% translated (%s strings)."),
-                        $document{$master}{$lang}, $queries);
+            if ( $file_opts{"verbose"} ) {
+                if ( $percent == 100 ) {
+                    print wrap_msg( gettext("%s is 100%% translated (%s strings)."),
+                        $document{$master}{$lang}, $queries );
                 } else {
-                    print wrap_msg(gettext("%s is %s%% translated (%s of %s strings)."),
-                        $document{$master}{$lang}, $percent, $hit, $queries);
+                    print wrap_msg(
+                        gettext("%s is %s%% translated (%s of %s strings)."),
+                        $document{$master}{$lang},
+                        $percent, $hit, $queries
+                    );
                 }
             }
 
             chdir $po4a_opts{"destdir"}
-                if (defined $po4a_opts{"destdir"});
-            $doc->write($document{$master}{$lang});
+              if ( defined $po4a_opts{"destdir"} );
+            $doc->write( $document{$master}{$lang} );
             chdir $po4a_opts{"calldir"}
-                if (defined $po4a_opts{"destdir"});
+              if ( defined $po4a_opts{"destdir"} );
         }
     }
 }
 
-if ($po4a_opts{"split"}) {
+if ( $po4a_opts{"split"} ) {
     chdir $po4a_opts{"srcdir"}
-        if (defined $po4a_opts{"srcdir"});
+      if ( defined $po4a_opts{"srcdir"} );
+
     # We don't need the tmp big POs anymore
-    foreach my $lang (keys %po_filename) {
+    foreach my $lang ( keys %po_filename ) {
         unlink $po_filename{$lang};
     }
     chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"srcdir"});
+      if ( defined $po4a_opts{"srcdir"} );
 }
 
-if ($po4a_opts{"rm-translations"}) {
+if ( $po4a_opts{"rm-translations"} ) {
+
     # Delete the translated documents
     chdir $po4a_opts{"destdir"}
-        if (defined $po4a_opts{"destdir"});
-    foreach my $lang (keys %po_filename) {
-        foreach my $master (keys %document) {
-            next if ($master eq '');
+      if ( defined $po4a_opts{"destdir"} );
+    foreach my $lang ( keys %po_filename ) {
+        foreach my $master ( keys %document ) {
+            next if ( $master eq '' );
             unlink $document{$master}{$lang};
-            unlink $document{$master}{$lang}.".po4a-stamp";
+            unlink $document{$master}{$lang} . ".po4a-stamp";
         }
     }
     chdir $po4a_opts{"calldir"}
-        if (defined $po4a_opts{"destdir"});
+      if ( defined $po4a_opts{"destdir"} );
 }
 
 sub touch {
     my $file = shift;
-    if (-e $file) {
+    if ( -e $file ) {
         utime undef, undef, $file;
     } else {
-        sysopen(FH,$file,O_WRONLY|O_CREAT|O_NONBLOCK|O_NOCTTY)
-            or croak("Can't create $file : $!");
+        sysopen( FH, $file, O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY )
+          or croak("Can't create $file : $!");
         close FH or croak("Can't close $file : $!");
     }
 }
 
 sub is_older {
-    my $file = shift;
+    my $file  = shift;
     my @files = @_;
-    return 1 unless (-e $file);
+    return 1 unless ( -e $file );
     my $older = 0;
 
-    my $modtime = (stat $file)[9];
+    my $modtime = ( stat $file )[9];
 
     for my $f (@files) {
-        if (-e $f and (stat $f)[9] > $modtime) {
+        if ( -e $f and ( stat $f )[9] > $modtime ) {
             $older = 1;
             last;
         }

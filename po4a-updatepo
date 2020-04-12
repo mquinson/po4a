@@ -1,6 +1,6 @@
 #! /usr/bin/env perl
 eval 'exec perl -S $0 ${1+"$@"}'
-    if $running_under_some_shell;
+  if $running_under_some_shell;
 
 # pod-updatepo -- update the PO translation of POD data.
 #
@@ -199,52 +199,52 @@ sub show_version {
     exit 0;
 }
 
-
 # init commandline parser
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
 
 # Parse our options
-my (@masterfiles,@pofiles);
-my ($help,$help_fmt,$verbose,$debug,$format,@options);
-my ($copyright_holder, $msgid_bugs_address, $package_name, $package_version);
+my ( @masterfiles, @pofiles );
+my ( $help, $help_fmt, $verbose, $debug, $format, @options );
+my ( $copyright_holder, $msgid_bugs_address, $package_name, $package_version );
 my $mastchar;
 my $previous;
 my $noprevious;
 my $msgmerge_opt = "";
-my $porefs = "full";
+my $porefs       = "full";
 my $wrappo;
-GetOptions('help|h'      => \$help,
-           'help-format' => \$help_fmt,
+GetOptions(
+    'help|h'      => \$help,
+    'help-format' => \$help_fmt,
 
-           'master|m=s'  => \@masterfiles,
-           'po|p=s'      => \@pofiles,
-           'format|f=s'  => \$format,
+    'master|m=s' => \@masterfiles,
+    'po|p=s'     => \@pofiles,
+    'format|f=s' => \$format,
 
-           'master-charset|M=s' => \$mastchar,
+    'master-charset|M=s' => \$mastchar,
 
-           'option|o=s'  => \@options,
+    'option|o=s' => \@options,
 
-           'no-previous' => \$noprevious,
-           'wrap-po'     => \$wrappo,
-           'previous'    => \$previous,
-           'msgmerge-opt=s'      => \$msgmerge_opt,
-           'copyright-holder=s'  => \$copyright_holder,
-           'msgid-bugs-address=s'=> \$msgid_bugs_address,
-           'package-name=s'      => \$package_name,
-           'package-version=s'   => \$package_version,
-           'porefs=s'            => \$porefs,
+    'no-previous'          => \$noprevious,
+    'wrap-po'              => \$wrappo,
+    'previous'             => \$previous,
+    'msgmerge-opt=s'       => \$msgmerge_opt,
+    'copyright-holder=s'   => \$copyright_holder,
+    'msgid-bugs-address=s' => \$msgid_bugs_address,
+    'package-name=s'       => \$package_name,
+    'package-version=s'    => \$package_version,
+    'porefs=s'             => \$porefs,
 
-           'verbose|v'   => \$verbose,
-           'debug|d'     => \$debug,
-           'version|V'   => \&show_version)
-    or pod2usage();
+    'verbose|v' => \$verbose,
+    'debug|d'   => \$debug,
+    'version|V' => \&show_version
+) or pod2usage();
 
-$help && pod2usage (-verbose => 1, -exitval => 0);
+$help && pod2usage( -verbose => 1, -exitval => 0 );
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage () if scalar @masterfiles < 1 || scalar @pofiles < 1;
+pod2usage() if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 $msgmerge_opt .= " --previous" unless $noprevious;
-$msgmerge_opt .= " --add-location=file" if ($porefs =~ m/^file/);
+$msgmerge_opt .= " --add-location=file" if ( $porefs =~ m/^file/ );
 $msgmerge_opt =~ s/^\s+//;
 
 my %options = (
@@ -255,62 +255,63 @@ my %options = (
     "package-name"       => $package_name,
     "package-version"    => $package_version,
     "porefs"             => $porefs,
-    "wrap-po"            => $wrappo);
+    "wrap-po"            => $wrappo
+);
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
-        $options{$1}="$2";
+        $options{$1} = "$2";
     } else {
-        $options{$_}=1;
+        $options{$_} = 1;
     }
 }
 
 # parser
-my $doc = Locale::Po4a::Chooser::new($format,%options);
+my $doc = Locale::Po4a::Chooser::new( $format, %options );
 
-map { -e $_ || die wrap_msg(gettext("File %s does not exist."), $_) } @masterfiles;
-map { die wrap_msg(gettext("po4a-updatepo can't take the input PO from stdin."))
-        if $_ eq '-'  && !-e '-'} @pofiles;
+map { -e $_ || die wrap_msg( gettext("File %s does not exist."), $_ ) } @masterfiles;
+map { die wrap_msg( gettext("po4a-updatepo can't take the input PO from stdin.") ) if $_ eq '-' && !-e '-' } @pofiles;
 
 my ($pot_filename);
-(undef,$pot_filename)=File::Temp::tempfile("po4a-updatepoXXXX",
-                                           DIR    => $ENV{TMPDIR} || "/tmp",
-                                           SUFFIX => ".pot",
-                                           OPEN   => 0,
-                                           UNLINK => 0)
-    or die wrap_msg(gettext("Can't create a temporary POT file: %s"), $!);
+( undef, $pot_filename ) = File::Temp::tempfile(
+    "po4a-updatepoXXXX",
+    DIR    => $ENV{TMPDIR} || "/tmp",
+    SUFFIX => ".pot",
+    OPEN   => 0,
+    UNLINK => 0
+) or die wrap_msg( gettext("Can't create a temporary POT file: %s"), $! );
 
-
-print STDERR wrap_msg(gettext("Parse input files… ")) if $verbose;
+print STDERR wrap_msg( gettext("Parse input files… ") ) if $verbose;
 
 $doc->{TT}{utf_mode} = 1;
 
-$doc->process('file_in_name'    => \@masterfiles,
-              'file_in_charset' => $mastchar,
-              'po_out_name'     => $pot_filename,
-              'debug'           => $debug,
-              'verbose'         => $verbose);
+$doc->process(
+    'file_in_name'    => \@masterfiles,
+    'file_in_charset' => $mastchar,
+    'po_out_name'     => $pot_filename,
+    'debug'           => $debug,
+    'verbose'         => $verbose
+);
 
-print STDERR wrap_msg(gettext("done.")) if $verbose;
+print STDERR wrap_msg( gettext("done.") ) if $verbose;
 
-
-while (my $po_filename=shift @pofiles) {
-    if (-e $po_filename) {
-        print STDERR wrap_msg(gettext("Updating %s:"), $po_filename)
+while ( my $po_filename = shift @pofiles ) {
+    if ( -e $po_filename ) {
+        print STDERR wrap_msg( gettext("Updating %s:"), $po_filename )
           if $verbose;
-        my @cmd = ("msgmerge".$Config{_exe});
-        push (@cmd, split(/\s+/, $msgmerge_opt)) if length($msgmerge_opt);
-        push @cmd, ("-U", $po_filename, $pot_filename);
-        system (@cmd) == 0
-          or die wrap_msg(gettext("Error while running msgmerge: %s"), $!);
-        @cmd = ("msgfmt".$Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename);
-        system (@cmd)
+        my @cmd = ( "msgmerge" . $Config{_exe} );
+        push( @cmd, split( /\s+/, $msgmerge_opt ) ) if length($msgmerge_opt);
+        push @cmd, ( "-U", $po_filename, $pot_filename );
+        system(@cmd) == 0
+          or die wrap_msg( gettext("Error while running msgmerge: %s"), $! );
+        @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename );
+        system(@cmd)
           if $verbose;
     } else {
-        print STDERR wrap_msg(gettext("Creating %s:"), $po_filename)
+        print STDERR wrap_msg( gettext("Creating %s:"), $po_filename )
           if $verbose;
-        copy ($pot_filename,$po_filename)
-          or die wrap_msg(gettext("Error while copying the PO file: %s"), $!);
+        copy( $pot_filename, $po_filename )
+          or die wrap_msg( gettext("Error while copying the PO file: %s"), $! );
     }
 }
 

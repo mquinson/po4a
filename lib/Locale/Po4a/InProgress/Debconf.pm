@@ -57,7 +57,6 @@ DO NOT USE THIS MODULE TO PRODUCE TEMPLATES. It's only good to extract data.
 # }
 # toto({print "ok"});
 
-
 package Locale::Po4a::Debconf;
 
 use 5.006;
@@ -66,58 +65,62 @@ use warnings;
 
 require Exporter;
 use vars qw(@ISA @EXPORT);
-@ISA = qw(Locale::Po4a::TransTractor);
+@ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
-
-sub initialize {}
+sub initialize { }
 
 sub parse {
     my $self = shift;
 
-    my ($line,$lref);
+    my ( $line, $lref );
 
-    my ($field, $value, $extended,$ref,$type)=('', '', '', '','');
-    my $verb = 0; # whether we are in verbatim mode
+    my ( $field, $value, $extended, $ref, $type ) = ( '', '', '', '', '' );
+    my $verb = 0;    # whether we are in verbatim mode
 
     my $escape = sub {
-        my $str=shift;
+        my $str = shift;
         $str =~ s/"/\\"/g;
         return $str;
     };
 
     # function in charge of pushing the accumulated material to output
     my $handle_field = sub {
-        my $field=shift;
-        my $value=shift;
-        my $extended=shift;
-        my $ref = shift;
-        my $type = shift;
+        my $field    = shift;
+        my $value    = shift;
+        my $extended = shift;
+        my $ref      = shift;
+        my $type     = shift;
 
         $field =~ s/^(_*)(.*)$/$2/;
-        my $undercount = length($1) || 0; # number of _ leading the field name
+        my $undercount = length($1) || 0;    # number of _ leading the field name
 
         # Only one leading _: regular translated field
-        if ($undercount == 1) {
+        if ( $undercount == 1 ) {
+
             # the untranslated field
             $self->pushline("$field: $value");
-            map {$self->pushline(' '.($_||'.'))} split (/\n/,$extended);
+            map { $self->pushline( ' ' . ( $_ || '.' ) ) } split( /\n/, $extended );
 
-            my $eval='$self->pushline("'.$field.'[FIXME:LANGCODE.ENCODING]: "'; # what to multi-eval
-            $eval .= '.$self->translate("'.$escape->($value)."\",\"$ref\",\"$type/$field\",wrap=>1)".'."\n".'."\n";
+            my $eval = '$self->pushline("' . $field . '[FIXME:LANGCODE.ENCODING]: "';    # what to multi-eval
+            $eval .=
+              '.$self->translate("' . $escape->($value) . "\",\"$ref\",\"$type/$field\",wrap=>1)" . '."\n".' . "\n";
 
             my $count = 0;
-            foreach my $para (split(/\n\n/, $extended)) {
+            foreach my $para ( split( /\n\n/, $extended ) ) {
                 my $wrap = 1;
-                if ($para =~ /(^|\n)\s/m) {
+                if ( $para =~ /(^|\n)\s/m ) {
                     $wrap = 0;
                 }
-                $eval .= ($count?'.':'');
-                $count ++;
-                $eval .= '$self->translate("'.$escape->($para)."\",\"$ref\",\"$type/$field\[$count\]\",wrap=>$wrap)"."\n";
+                $eval .= ( $count ? '.' : '' );
+                $count++;
+                $eval .=
+                    '$self->translate("'
+                  . $escape->($para)
+                  . "\",\"$ref\",\"$type/$field\[$count\]\",wrap=>$wrap)" . "\n";
             }
 
             $eval .= ")\n";
@@ -125,17 +128,20 @@ sub parse {
             eval $eval;
             print STDERR "XXXXXXXXXXXXXXXXX\n" if $self->{options}{'debug'};
 
-        # two leading _: split on coma and multi-translate each part. No extended value.
-        } elsif ($undercount == 2) {
-            $self->pushline("$field: $value"); # the untranslated field
+            # two leading _: split on coma and multi-translate each part. No extended value.
+        } elsif ( $undercount == 2 ) {
+            $self->pushline("$field: $value");    # the untranslated field
 
-            my $eval='$self->pushline("'.$field.'FIXME[LANGCODE]: "'; # what to multi-eval
+            my $eval = '$self->pushline("' . $field . 'FIXME[LANGCODE]: "';    # what to multi-eval
 
             my $first = 1;
-            for my $part (split(/(?<!\\), */, $value, 0))
-            {
+            for my $part ( split( /(?<!\\), */, $value, 0 ) ) {
                 $part =~ s/\\,/,/g;
-                $eval .= ($first?'':'.", "').'.$self->translate("'.$escape->($part)."\",\"$ref\",\"$type/$field chunk\",wrap=>1)";
+                $eval .=
+                    ( $first ? '' : '.", "' )
+                  . '.$self->translate("'
+                  . $escape->($part)
+                  . "\",\"$ref\",\"$type/$field chunk\",wrap=>1)";
                 $first = 0;
             }
             $eval .= ")\n";
@@ -143,63 +149,64 @@ sub parse {
             print $eval if $self->{options}{'debug'};
             eval $eval;
 
-        # no leading _: don't touch it
+            # no leading _: don't touch it
         } else {
             $self->pushline("$field: $value");
-            map {$self->pushline(' '.($_||'.'))} split (/\n/,$extended);
+            map { $self->pushline( ' ' . ( $_ || '.' ) ) } split( /\n/, $extended );
         }
     };
 
     # main loop
-    ($line,$lref)=$self->shiftline();
+    ( $line, $lref ) = $self->shiftline();
 
-    while (defined($line)) {
+    while ( defined($line) ) {
+
         # a new field (within a stanza)
-        if ($line=~/^([-_.A-Za-z0-9]*):\s?(.*)/) {
+        if ( $line =~ /^([-_.A-Za-z0-9]*):\s?(.*)/ ) {
 
-            $handle_field->($field, $value, $extended, $ref,$type); # deal with previously accumulated
-            ($field, $value, $extended,$verb)=('', '', '', 0);
+            $handle_field->( $field, $value, $extended, $ref, $type );    # deal with previously accumulated
+            ( $field, $value, $extended, $verb ) = ( '', '', '', 0 );
 
-            $field=$1;
-            $value=$2;
-            $value=~s/\s*$//;
-            $extended='';
-            $ref=$lref;
+            $field = $1;
+            $value = $2;
+            $value =~ s/\s*$//;
+            $extended = '';
+            $ref      = $lref;
 
             $type = $value if $field eq 'Type';
 
-            die wrap_mod("po4a::debconf", dgettext("po4a", "Translated field in master document: %s"), $field)
+            die wrap_mod( "po4a::debconf", dgettext( "po4a", "Translated field in master document: %s" ), $field )
               if $field =~ m/-/;
 
-        # paragraph separator within extended value
-        } elsif ($line=~/^\s\.$/) {
-            $extended.="\n\n";
+            # paragraph separator within extended value
+        } elsif ( $line =~ /^\s\.$/ ) {
+            $extended .= "\n\n";
 
-        # continuation of extended value
-        } elsif ($line=~/^\s(.*)/) {
+            # continuation of extended value
+        } elsif ( $line =~ /^\s(.*)/ ) {
 
-            my $bit=$1;
-            $verb = 1 if ($bit =~ m/^\s/);
+            my $bit = $1;
+            $verb = 1 if ( $bit =~ m/^\s/ );
 
-            $bit=~s/\s*$//;
+            $bit =~ s/\s*$//;
 
-            $extended .= ($verb ? "\n" : ' ') if length $extended && $extended !~ /[\n ]$/;
-            $extended .= $bit.($verb ? "\n" : "");
+            $extended .= ( $verb        ? "\n" : ' ' ) if length $extended && $extended !~ /[\n ]$/;
+            $extended .= $bit . ( $verb ? "\n" : "" );
 
-        # this may be an empty line closing the stanza, a comment or even a parse error (if file not DebConf-clean).
+            # this may be an empty line closing the stanza, a comment or even a parse error (if file not DebConf-clean).
         } else {
 
-            $handle_field->($field, $value, $extended, $ref,$type);
-            ($field, $value, $extended,$verb)=('', '', '', 0);
+            $handle_field->( $field, $value, $extended, $ref, $type );
+            ( $field, $value, $extended, $verb ) = ( '', '', '', 0 );
 
             $self->pushline($line);
 
         }
 
-        ($line,$lref)=$self->shiftline();
+        ( $line, $lref ) = $self->shiftline();
     }
 
-    $handle_field->($field, $value, $extended, $ref,$type);
+    $handle_field->( $field, $value, $extended, $ref, $type );
 }
 
 1;

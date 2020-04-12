@@ -25,89 +25,88 @@ require Exporter;
 use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
 
-sub initialize {}
+sub initialize { }
 
 sub translate {
-    my ($self,$str,$ref,$type) = @_;
-    my (%options)=@_;
+    my ( $self, $str, $ref, $type ) = @_;
+    my (%options) = @_;
 
-    $str = $self->pre_trans($str,$ref,$type);
-    $str = $self->SUPER::translate($str, $ref, $type, %options);
-    $str = $self->post_trans($str,$ref,$type);
+    $str = $self->pre_trans( $str, $ref, $type );
+    $str = $self->SUPER::translate( $str, $ref, $type, %options );
+    $str = $self->post_trans( $str, $ref, $type );
 
     return $str;
 }
 
 sub pre_trans {
-    my ($self,$str,$ref,$type)=@_;
+    my ( $self, $str, $ref, $type ) = @_;
 
     return $str;
 }
 
 sub post_trans {
-    my ($self,$str,$ref,$type)=@_;
+    my ( $self, $str, $ref, $type ) = @_;
 
     # Change ascii non-breaking space to POD one
-    my $nbs_out = "\xA0";
-    my $enc_length = Encode::from_to($nbs_out, "latin1",
-                                               $self->get_out_charset);
-    if (defined $enc_length) {
-        while ($str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s) {
-            my ($begin, $m1, $m2, $end) = ($1, $2, $3, $4);
-            $str  = (defined $begin)?$begin:"";
+    my $nbs_out    = "\xA0";
+    my $enc_length = Encode::from_to( $nbs_out, "latin1", $self->get_out_charset );
+    if ( defined $enc_length ) {
+        while ( $str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s ) {
+            my ( $begin, $m1, $m2, $end ) = ( $1, $2, $3, $4 );
+            $str = ( defined $begin ) ? $begin : "";
+
             # Remove the non-breaking spaces in the string that will be
             # between S<...>
             $m2 =~ s/\Q$nbs_out\E/ /g;
             $str .= "S<$m1 $m2>";
-            $str .= (defined $end)?$end:"";
+            $str .= ( defined $end ) ? $end : "";
         }
     }
 
     return $str;
 }
 
-
 sub command {
-    my ($self, $command, $paragraph, $line_num) = @_;
-#    print STDOUT "cmd: '$command' '$paragraph' at $line_num\n";
-    if ($command eq 'back'
+    my ( $self, $command, $paragraph, $line_num ) = @_;
+
+    #    print STDOUT "cmd: '$command' '$paragraph' at $line_num\n";
+    if (   $command eq 'back'
         || $command eq 'cut'
-        || $command eq 'pod') {
+        || $command eq 'pod' )
+    {
         $self->pushline("=$command\n\n");
-    } elsif ($command eq 'over') {
-        $self->pushline("=$command $paragraph".(length($paragraph)?"":"\n\n"));
-    } elsif ($command eq 'encoding') {
+    } elsif ( $command eq 'over' ) {
+        $self->pushline( "=$command $paragraph" . ( length($paragraph) ? "" : "\n\n" ) );
+    } elsif ( $command eq 'encoding' ) {
         my $charset = $paragraph;
         $charset =~ s/^\s*(.*?)\s*$/$1/s;
         $self->detected_charset($charset)
-        # The =encoding line will be added by docheader
+
+          # The =encoding line will be added by docheader
     } else {
-        $paragraph=$self->translate($paragraph,
-                                    $self->input_file().":$line_num",
-                                    "=$command",
-                                    "wrap"=>1);
+        $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", "=$command", "wrap" => 1 );
         $self->pushline("=$command $paragraph\n\n");
     }
 }
 
 sub verbatim {
-    my ($self, $paragraph, $line_num) = @_;
-#    print "verb: '$paragraph' at $line_num\n";
+    my ( $self, $paragraph, $line_num ) = @_;
 
-    if ($paragraph eq "\n") {
+    #    print "verb: '$paragraph' at $line_num\n";
+
+    if ( $paragraph eq "\n" ) {
         $self->pushline("$paragraph\n");
         return;
     }
-    $paragraph=$self->translate($paragraph,
-                                $self->input_file().":$line_num",
-                                "verbatim");
+    $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", "verbatim" );
     $paragraph =~ s/\n$//m;
     $self->pushline("$paragraph\n");
 }
 
 sub textblock {
-    my ($self, $paragraph, $line_num) = @_;
-#    print "text: '$paragraph' at $line_num\n";
+    my ( $self, $paragraph, $line_num ) = @_;
+
+    #    print "text: '$paragraph' at $line_num\n";
 
     # Fix a pretty damned bug.
     # Podlators don't wrap explicitelly the text, and groff won't seem to
@@ -117,43 +116,41 @@ sub textblock {
     # That way, we'll declare more paragraphs as verbatim than needed, but
     #  that's harmless (only less confortable for translators).
 
-    if ($paragraph eq "\n") {
+    if ( $paragraph eq "\n" ) {
         $self->pushline("$paragraph\n");
         return;
     }
-    if ($paragraph =~ m/^[ \t]/m) {
-        $self->verbatim($paragraph, $line_num) ;
+    if ( $paragraph =~ m/^[ \t]/m ) {
+        $self->verbatim( $paragraph, $line_num );
         return;
     }
 
-    $paragraph=$self->translate($paragraph,
-                                $self->input_file().":$line_num",
-                                'textblock',
-                                "wrap"=>1);
-    $paragraph=~ s/ +\n/\n/gm;
+    $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", 'textblock', "wrap" => 1 );
+    $paragraph =~ s/ +\n/\n/gm;
     $self->pushline("$paragraph\n\n");
 }
 
-sub end_pod {}
+sub end_pod { }
 
 sub read {
-    my ($self,$filename)=@_;
+    my ( $self, $filename ) = @_;
 
-    push @{$self->{DOCPOD}{infile}}, $filename;
+    push @{ $self->{DOCPOD}{infile} }, $filename;
     $self->Locale::Po4a::TransTractor::read($filename);
 }
 
 sub parse {
-    my $self=shift;
-    map {$self->parse_from_file($_)} @{$self->{DOCPOD}{infile}};
+    my $self = shift;
+    map { $self->parse_from_file($_) } @{ $self->{DOCPOD}{infile} };
 }
 
 sub docheader {
-    my $self=shift;
+    my $self     = shift;
     my $encoding = $self->get_out_charset();
-    if (    (defined $encoding)
-        and (length $encoding)
-        and ($encoding ne "ascii")) {
+    if (    ( defined $encoding )
+        and ( length $encoding )
+        and ( $encoding ne "ascii" ) )
+    {
         $encoding = "\n=encoding $encoding\n";
     } else {
         $encoding = "";

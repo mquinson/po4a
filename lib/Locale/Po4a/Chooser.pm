@@ -11,7 +11,6 @@
 # Modules and declarations
 ############################################################################
 
-
 package Locale::Po4a::Chooser;
 
 use 5.006;
@@ -20,37 +19,36 @@ use warnings;
 use Locale::Po4a::Common;
 
 sub new {
-    my ($module)=shift;
-    my (%options)=@_;
+    my ($module)  = shift;
+    my (%options) = @_;
 
-    die wrap_mod("po4a::chooser", gettext("Need to provide a module name"))
+    die wrap_mod( "po4a::chooser", gettext("Need to provide a module name") )
       unless defined $module;
 
     my $modname;
-    if ($module eq 'kernelhelp') {
+    if ( $module eq 'kernelhelp' ) {
         $modname = 'KernelHelp';
-    } elsif ($module eq 'newsdebian') {
+    } elsif ( $module eq 'newsdebian' ) {
         $modname = 'NewsDebian';
-    } elsif ($module eq 'latex') {
+    } elsif ( $module eq 'latex' ) {
         $modname = 'LaTeX';
-    } elsif ($module eq 'bibtex') {
+    } elsif ( $module eq 'bibtex' ) {
         $modname = 'BibTex';
-    } elsif ($module eq 'tex') {
+    } elsif ( $module eq 'tex' ) {
         $modname = 'TeX';
-    } elsif ($module eq 'asciidoc') {
+    } elsif ( $module eq 'asciidoc' ) {
         $modname = 'AsciiDoc';
-    } elsif ($module eq 'Rd' || $module eq 'rubydoc') {
+    } elsif ( $module eq 'Rd' || $module eq 'rubydoc' ) {
         $modname = 'RubyDoc';
     } else {
         $modname = ucfirst($module);
     }
-    if (! UNIVERSAL::can("Locale::Po4a::$modname", 'new')) {
+    if ( !UNIVERSAL::can( "Locale::Po4a::$modname", 'new' ) ) {
         eval qq{use Locale::Po4a::$modname};
         if ($@) {
-            my $error=$@;
-            warn wrap_msg(gettext("Unknown format type: %s."), $module);
-            warn wrap_mod("po4a::chooser",
-                gettext("Module loading error: %s"), $error)
+            my $error = $@;
+            warn wrap_msg( gettext("Unknown format type: %s."), $module );
+            warn wrap_mod( "po4a::chooser", gettext("Module loading error: %s"), $error )
               if defined $options{'verbose'} && $options{'verbose'} > 0;
             list(1);
         }
@@ -59,26 +57,46 @@ sub new {
 }
 
 sub list {
-    warn wrap_msg(gettext("List of valid formats:")
-#       ."\n  - ".gettext("bibtex: BibTex bibliography format.")
-        ."\n  - ".gettext("asciidoc: AsciiDoc format.")
-        ."\n  - ".gettext("dia: uncompressed Dia diagrams.")
-        ."\n  - ".gettext("docbook: DocBook XML.")
-        ."\n  - ".gettext("guide: Gentoo Linux's XML documentation format.")
-        ."\n  - ".gettext("ini: INI format.")
-        ."\n  - ".gettext("kernelhelp: Help messages of each kernel compilation option.")
-        ."\n  - ".gettext("latex: LaTeX format.")
-        ."\n  - ".gettext("man: Good old manual page format.")
-        ."\n  - ".gettext("pod: Perl Online Documentation format.")
-        ."\n  - ".gettext("rubydoc: Ruby Documentation (RD) format.")
-        ."\n  - ".gettext("sgml: either DebianDoc or DocBook DTD.")
-        ."\n  - ".gettext("texinfo: The info page format.")
-        ."\n  - ".gettext("tex: generic TeX documents (see also latex).")
-        ."\n  - ".gettext("text: simple text document.")
-        ."\n  - ".gettext("wml: WML documents.")
-        ."\n  - ".gettext("xhtml: XHTML documents.")
-        ."\n  - ".gettext("xml: generic XML documents (see also docbook).")
-        ."\n  - ".gettext("yaml: YAML documents.")
+    warn wrap_msg(
+        gettext("List of valid formats:")
+
+          #       ."\n  - ".gettext("bibtex: BibTex bibliography format.")
+          . "\n  - "
+          . gettext("asciidoc: AsciiDoc format.")
+          . "\n  - "
+          . gettext("dia: uncompressed Dia diagrams.")
+          . "\n  - "
+          . gettext("docbook: DocBook XML.")
+          . "\n  - "
+          . gettext("guide: Gentoo Linux's XML documentation format.")
+          . "\n  - "
+          . gettext("ini: INI format.")
+          . "\n  - "
+          . gettext("kernelhelp: Help messages of each kernel compilation option.")
+          . "\n  - "
+          . gettext("latex: LaTeX format.")
+          . "\n  - "
+          . gettext("man: Good old manual page format.")
+          . "\n  - "
+          . gettext("pod: Perl Online Documentation format.")
+          . "\n  - "
+          . gettext("rubydoc: Ruby Documentation (RD) format.")
+          . "\n  - "
+          . gettext("sgml: either DebianDoc or DocBook DTD.")
+          . "\n  - "
+          . gettext("texinfo: The info page format.")
+          . "\n  - "
+          . gettext("tex: generic TeX documents (see also latex).")
+          . "\n  - "
+          . gettext("text: simple text document.")
+          . "\n  - "
+          . gettext("wml: WML documents.")
+          . "\n  - "
+          . gettext("xhtml: XHTML documents.")
+          . "\n  - "
+          . gettext("xml: generic XML documents (see also docbook).")
+          . "\n  - "
+          . gettext("yaml: YAML documents.")
     );
     exit shift;
 }

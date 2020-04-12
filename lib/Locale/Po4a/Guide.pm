@@ -82,12 +82,12 @@ use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::Xml);
 
 sub initialize {
-    my $self = shift;
+    my $self    = shift;
     my %options = @_;
 
-#TODO: <include href="..."> includes a file
+    #TODO: <include href="..."> includes a file
     $self->SUPER::initialize(%options);
-    $self->{options}{'_default_translated'}.='
+    $self->{options}{'_default_translated'} .= '
         w<abstract>
         <author>
         <b>
@@ -122,7 +122,7 @@ sub initialize {
         <var>
         <version>
         w<warn>';
-    $self->{options}{'_default_attributes'}.='
+    $self->{options}{'_default_attributes'} .= '
         <author>title
         <figure>caption
         <figure>link
@@ -131,7 +131,7 @@ sub initialize {
         <guide>link
         <p>by
         <pre>caption';
-    $self->{options}{'_default_inline'}.='
+    $self->{options}{'_default_inline'} .= '
         <b>
         <brite>
         <c>
@@ -148,6 +148,6 @@ sub initialize {
         <sup>
         <uri>
         <var>';
-    print wrap_mod("po4a::guide", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
+    print wrap_mod( "po4a::guide", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
     $self->treat_options;
 }

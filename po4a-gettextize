@@ -1,6 +1,6 @@
 #! /usr/bin/env perl
 eval 'exec perl -S $0 ${1+"$@"}'
-    if $running_under_some_shell;
+  if $running_under_some_shell;
 
 # po4a-gettextize -- convert an original file to a PO file
 #
@@ -170,102 +170,103 @@ use Pod::Usage qw(pod2usage);
 
 Locale::Po4a::Common::textdomain('po4a');
 
-
 sub show_version {
     Locale::Po4a::Common::show_version("po4a-gettextize");
     exit 0;
 }
 
 my %opts = (
-    "verbose"             => 0,
-    "debug"               => 0,
-    "copyright-holder"    => undef,
-    "msgid-bugs-address"  => undef,
-    "package-name"        => undef,
-    "package-version"     => undef);
+    "verbose"            => 0,
+    "debug"              => 0,
+    "copyright-holder"   => undef,
+    "msgid-bugs-address" => undef,
+    "package-name"       => undef,
+    "package-version"    => undef
+);
 
-my ($pofile)=('-');
-my (@masterfile,@locfile,$help_fmt,$help,$type,@options);
-my ($mastchar,$locchar);
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+my ($pofile) = ('-');
+my ( @masterfile, @locfile, $help_fmt, $help, $type, @options );
+my ( $mastchar, $locchar );
+Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
 GetOptions(
-        'help|h'        => \$help,
-        'help-format'   => \$help_fmt,
+    'help|h'      => \$help,
+    'help-format' => \$help_fmt,
 
-        'master|m=s'    => \@masterfile,
-        'localized|l=s' => \@locfile,
-        'po|p=s'        => \$pofile,
-        'format|f=s'    => \$type,
+    'master|m=s'    => \@masterfile,
+    'localized|l=s' => \@locfile,
+    'po|p=s'        => \$pofile,
+    'format|f=s'    => \$type,
 
-        'master-charset|M=s'    => \$mastchar,
-        'localized-charset|L=s' => \$locchar,
+    'master-charset|M=s'    => \$mastchar,
+    'localized-charset|L=s' => \$locchar,
 
-        'option|o=s'            => \@options,
+    'option|o=s' => \@options,
 
-        'copyright-holder=s'    => \$opts{"copyright-holder"},
-        'msgid-bugs-address=s'  => \$opts{"msgid-bugs-address"},
-        'package-name=s'        => \$opts{"package-name"},
-        'package-version=s'     => \$opts{"package-version"},
+    'copyright-holder=s'   => \$opts{"copyright-holder"},
+    'msgid-bugs-address=s' => \$opts{"msgid-bugs-address"},
+    'package-name=s'       => \$opts{"package-name"},
+    'package-version=s'    => \$opts{"package-version"},
 
-        'verbose|v'             => \$opts{"verbose"},
-        'debug|d'               => \$opts{"debug"},
-        'version|V'             => \&show_version
+    'verbose|v' => \$opts{"verbose"},
+    'debug|d'   => \$opts{"debug"},
+    'version|V' => \&show_version
 ) or pod2usage();
 
 # Argument check
-$help && pod2usage (-verbose => 1, -exitval => 0);
+$help && pod2usage( -verbose => 1, -exitval => 0 );
 $help_fmt && Locale::Po4a::Chooser::list(0);
-pod2usage () if (scalar @ARGV > 1) || (scalar @masterfile < 1);
+pod2usage() if ( scalar @ARGV > 1 ) || ( scalar @masterfile < 1 );
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
-        $opts{$1}="$2";
+        $opts{$1} = "$2";
     } else {
-        $opts{$_}=1;
+        $opts{$_} = 1;
     }
 }
+
 # Check file existence
-foreach my $file (@masterfile, @locfile) {
-    $file eq '-' || -e $file || die wrap_msg(gettext("File %s does not exist."), $file);
+foreach my $file ( @masterfile, @locfile ) {
+    $file eq '-' || -e $file || die wrap_msg( gettext("File %s does not exist."), $file );
 }
 
 # Declare the TransTractor parsers
-my ($mastertt,$transtt)=(Locale::Po4a::Chooser::new($type,%opts),
-                         Locale::Po4a::Chooser::new($type,%opts));
+my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Locale::Po4a::Chooser::new( $type, %opts ) );
 
 # Parse master file forcing conversion to utf if it's not in ascii
 foreach my $file (@masterfile) {
     $mastertt->read($file);
 }
 $mastertt->{TT}{utf_mode} = 1;
-if ($mastertt->{TT}{ascii_input}) {
+if ( $mastertt->{TT}{ascii_input} ) {
     $mastertt->detected_charset('ascii');
-} elsif (defined($mastchar)) {
+} elsif ( defined($mastchar) ) {
     $mastertt->detected_charset($mastchar);
     $mastertt->{TT}{po_in}->set_charset($mastchar);
 }
 $mastertt->parse;
 
+unless ( scalar @locfile >= 1 ) {
 
-unless (scalar @locfile >= 1) {
-  # Ok, outputing the pot extracted from original is enough
-  $mastertt->writepo($pofile);
+    # Ok, outputing the pot extracted from original is enough
+    $mastertt->writepo($pofile);
 } else {
-  # We have to merge two transtractor files
 
-  foreach my $file (@locfile) {
-      $transtt->read($file);
-  }
-  # We force the conversion to utf if the master document wasn't in ascii
-  $transtt->{TT}{utf_mode} = !$mastertt->{TT}{ascii_input};
-  $transtt->detected_charset($locchar);
-  $transtt->{TT}{po_in}->set_charset($locchar);
-  $transtt->parse;
+    # We have to merge two transtractor files
 
-  my $mergedpo = Locale::Po4a::Po->gettextize($mastertt->getpoout(),
-                                              $transtt->getpoout());
+    foreach my $file (@locfile) {
+        $transtt->read($file);
+    }
 
-  $mergedpo->write($pofile);
+    # We force the conversion to utf if the master document wasn't in ascii
+    $transtt->{TT}{utf_mode} = !$mastertt->{TT}{ascii_input};
+    $transtt->detected_charset($locchar);
+    $transtt->{TT}{po_in}->set_charset($locchar);
+    $transtt->parse;
+
+    my $mergedpo = Locale::Po4a::Po->gettextize( $mastertt->getpoout(), $transtt->getpoout() );
+
+    $mergedpo->write($pofile);
 }
 
 __END__

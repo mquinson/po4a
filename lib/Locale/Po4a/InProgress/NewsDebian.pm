@@ -59,76 +59,76 @@ use warnings;
 
 require Exporter;
 use vars qw(@ISA @EXPORT);
-@ISA = qw(Locale::Po4a::TransTractor);
+@ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
-
-sub initialize {}
+sub initialize { }
 
 sub parse {
     my $self = shift;
 
-    my ($blanklines)=(""); # We want to preserve the blank lines inside the entry, and strip the extrem ones
+    my ($blanklines) = ("");    # We want to preserve the blank lines inside the entry, and strip the extrem ones
 
-    my ($body)=""; # the accumulated paragraph
-    my ($bodyref)="";
-    my ($bodytype)="";
+    my ($body)     = "";        # the accumulated paragraph
+    my ($bodyref)  = "";
+    my ($bodytype) = "";
 
-    my ($line,$lref);
+    my ( $line, $lref );
 
     # main loop
-    ($line,$lref)=$self->shiftline();
+    ( $line, $lref ) = $self->shiftline();
     print "seen >>$line<<\n" if $self->{options}{'debug'};
-    while (defined($line)) {
+    while ( defined($line) ) {
 
         # Begining of an entry
-        if ($line =~ m/^(\w[-+0-9a-z.]*) \(([^\(\) \t]+)\)((\s+[-0-9a-z]+)+)\;/i) {
+        if ( $line =~ m/^(\w[-+0-9a-z.]*) \(([^\(\) \t]+)\)((\s+[-0-9a-z]+)+)\;/i ) {
 
-            die wrap_ref_mod($lref, "po4a::newsdebian", dgettext("po4a", "Begin of a new entry before the end of previous one"))
-              if (length ($body));
+            die wrap_ref_mod( $lref, "po4a::newsdebian",
+                dgettext( "po4a", "Begin of a new entry before the end of previous one" ) )
+              if ( length($body) );
 
-            $self->pushline($line."\n");
+            $self->pushline( $line . "\n" );
 
             # Signature of this entry
-            $bodyref = $lref;
+            $bodyref  = $lref;
             $bodytype = $line;
 
             # eat all leading empty lines
-            ($line,$lref)=$self->shiftline();
-            while (defined($line) && $line =~ m/^\s*$/) {
+            ( $line, $lref ) = $self->shiftline();
+            while ( defined($line) && $line =~ m/^\s*$/ ) {
                 print "Eat >>$line<<\n" if $self->{options}{'debug'};
-                ($line,$lref)=$self->shiftline();
+                ( $line, $lref ) = $self->shiftline();
             }
-            # ups, ate one line too much. Put it back.
-            $self->unshiftline($line,$lref);
 
+            # ups, ate one line too much. Put it back.
+            $self->unshiftline( $line, $lref );
 
             # get ready to read the entry (cleanups)
             $blanklines = "";
 
-        # End of current entry
-        } elsif ($line =~ m/^ \-\- (.*) <(.*)>  .*$/) { #((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?) *$/) {
+            # End of current entry
+        } elsif ( $line =~ m/^ \-\- (.*) <(.*)>  .*$/ )
+        {    #((\w+\,\s*)?\d{1,2}\s+\w+\s+\d{4}\s+\d{1,2}:\d\d:\d\d\s+[-+]\d{4}(\s+\([^\\\(\)]\))?) *$/) {
 
-            $self->translate($body, $bodyref, $bodytype,
-                             wrap=>0);
-            $body="";
+            $self->translate( $body, $bodyref, $bodytype, wrap => 0 );
+            $body = "";
 
-        # non-specific line
+            # non-specific line
         } else {
 
-            if ($line =~ /^\s*$/) {
+            if ( $line =~ /^\s*$/ ) {
                 $blanklines .= "$line";
             } else {
-                $body .= $blanklines.$line;
+                $body .= $blanklines . $line;
                 $blanklines = "";
             }
         }
 
-        ($line,$lref)=$self->shiftline();
-        print "seen >>".($line || '')."<<\n" if $self->{options}{'debug'};
+        ( $line, $lref ) = $self->shiftline();
+        print "seen >>" . ( $line || '' ) . "<<\n" if $self->{options}{'debug'};
     }
 }
 

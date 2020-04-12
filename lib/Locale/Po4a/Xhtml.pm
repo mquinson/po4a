@@ -105,74 +105,78 @@ use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::Xml);
 
 sub tag_extract_SSI {
-        my ($self,$remove)=(shift,shift);
-        my ($eof,@tag)=$self->get_string_until("-->",
-                                               {include=>1,
-                                                remove=>$remove,
-                                                unquoted=>1});
-        my ($t,$r) = @tag;
-        if ($t =~ m/<!--#include (file|virtual)="(.*?)"\s-->/s) {
-                my $includefile;
-                if ($1 eq "file") {
-                        $includefile = ".";
-                } else {
-                        $includefile = $self->{options}{'includessi'};
-                }
-                $includefile .= $2;
-                if (!$remove) {
-                        $self->get_string_until("-->",
-                                                {include=>1,
-                                                 remove=>1,
-                                                 unquoted=>1});
-                }
-                my $linenum=0;
-                my @include;
-
-                open (my $in, $includefile)
-                    or croak wrap_mod("po4a::xml",
-                                     dgettext("po4a", "Can't read from %s: %s"),
-                                      $includefile, $!);
-                while (defined (my $includeline = <$in>)) {
-                        $linenum++;
-                        my $includeref=$includefile.":$linenum";
-                        push @include, ($includeline,$includeref);
-                }
-                close $in
-                    or croak wrap_mod("po4a::xml",
-                           dgettext("po4a", "Can't close %s after reading: %s"),
-                                      $includefile, $!);
-
-                while (@include) {
-                        my ($ir, $il) = (pop @include, pop @include);
-                        $self->unshiftline($il,$ir);
-                }
-                $t =~ s/<!--#include/<!-- SSI included by po4a: /;
-                $self->unshiftline($t, $r);
+    my ( $self, $remove ) = ( shift, shift );
+    my ( $eof, @tag ) = $self->get_string_until(
+        "-->",
+        {
+            include  => 1,
+            remove   => $remove,
+            unquoted => 1
         }
-        return ($eof,@tag);
+    );
+    my ( $t, $r ) = @tag;
+    if ( $t =~ m/<!--#include (file|virtual)="(.*?)"\s-->/s ) {
+        my $includefile;
+        if ( $1 eq "file" ) {
+            $includefile = ".";
+        } else {
+            $includefile = $self->{options}{'includessi'};
+        }
+        $includefile .= $2;
+        if ( !$remove ) {
+            $self->get_string_until(
+                "-->",
+                {
+                    include  => 1,
+                    remove   => 1,
+                    unquoted => 1
+                }
+            );
+        }
+        my $linenum = 0;
+        my @include;
+
+        open( my $in, $includefile )
+          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Can't read from %s: %s" ), $includefile, $! );
+        while ( defined( my $includeline = <$in> ) ) {
+            $linenum++;
+            my $includeref = $includefile . ":$linenum";
+            push @include, ( $includeline, $includeref );
+        }
+        close $in
+          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Can't close %s after reading: %s" ), $includefile, $! );
+
+        while (@include) {
+            my ( $ir, $il ) = ( pop @include, pop @include );
+            $self->unshiftline( $il, $ir );
+        }
+        $t =~ s/<!--#include/<!-- SSI included by po4a: /;
+        $self->unshiftline( $t, $r );
+    }
+    return ( $eof, @tag );
 }
 
 sub initialize {
-        my $self = shift;
-        my %options = @_;
+    my $self    = shift;
+    my %options = @_;
 
-        $self->{options}{'includessi'}='';
+    $self->{options}{'includessi'} = '';
 
-        $self->SUPER::initialize(%options);
+    $self->SUPER::initialize(%options);
 
-        $self->{options}{'wrap'}=1;
-        $self->{options}{'doctype'}=$self->{options}{'doctype'} || 'html';
+    $self->{options}{'wrap'}    = 1;
+    $self->{options}{'doctype'} = $self->{options}{'doctype'} || 'html';
 
-        # Default tags are translated (text rewrapped), and introduce a break.
-        # The following list indicates the list of tags which should be
-        # translated without rewrapping.
-        $self->{options}{'_default_translated'}.='
+    # Default tags are translated (text rewrapped), and introduce a break.
+    # The following list indicates the list of tags which should be
+    # translated without rewrapping.
+    $self->{options}{'_default_translated'} .= '
                 W<pre>
         ';
 
-        # The following list indicates the list of tags which should be
-        # translated inside the current block, without introducing a break.
-        $self->{options}{'_default_inline'}.='
+    # The following list indicates the list of tags which should be
+    # translated inside the current block, without introducing a break.
+    $self->{options}{'_default_inline'} .= '
                 <a>
                 <abbr>
                 <acronym>
@@ -205,33 +209,35 @@ sub initialize {
                 <var>
         ';
 
-        # Ignored tags: <img>
-        # Technically, <img> is an inline tag, but setting it as such is
-        # annoying, and not usually useful, unless you use images to
-        # write text (in which case you have bigger problems than this
-        # program not inlining img: you now have to translate all your
-        # images. That'll teach you).
-        # If you choose to translate images, you may also want to set
-        # <map> as placeholder and <area> as inline.
+    # Ignored tags: <img>
+    # Technically, <img> is an inline tag, but setting it as such is
+    # annoying, and not usually useful, unless you use images to
+    # write text (in which case you have bigger problems than this
+    # program not inlining img: you now have to translate all your
+    # images. That'll teach you).
+    # If you choose to translate images, you may also want to set
+    # <map> as placeholder and <area> as inline.
 
-        $self->{options}{'_default_attributes'}.='
+    $self->{options}{'_default_attributes'} .= '
                 alt
                 lang
                 title
                 ';
-        print wrap_mod("po4a::Xhtml", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
-        $self->treat_options;
+    print wrap_mod( "po4a::Xhtml", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
+    $self->treat_options;
 
-        if (    defined $self->{options}{'includessi'}
-            and length $self->{options}{'includessi'}) {
-                foreach (@tag_types) {
-                        if ($_->{beginning} eq "!--#") {
-                                $_->{f_extract} = \&tag_extract_SSI;
-                        }
-                }
-                # FIXME: the directory may be named "1" ;(
-                if ($self->{options}{'includessi'} eq "1") {
-                        $self->{options}{'includessi'} = ".";
-                }
+    if ( defined $self->{options}{'includessi'}
+        and length $self->{options}{'includessi'} )
+    {
+        foreach (@tag_types) {
+            if ( $_->{beginning} eq "!--#" ) {
+                $_->{f_extract} = \&tag_extract_SSI;
+            }
         }
+
+        # FIXME: the directory may be named "1" ;(
+        if ( $self->{options}{'includessi'} eq "1" ) {
+            $self->{options}{'includessi'} = ".";
+        }
+    }
 }

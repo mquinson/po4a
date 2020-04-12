@@ -23,85 +23,88 @@ use warnings;
 require Exporter;
 
 use vars qw(@ISA @EXPORT $AUTOLOAD);
-@ISA = qw(Locale::Po4a::TransTractor);
+@ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();
 
 sub initialize {
-    my $self = shift;
+    my $self    = shift;
     my %options = @_;
 
-    $self->{options}{'keys'}='';
-    $self->{options}{'debug'}=0;
-    $self->{options}{'verbose'} = 1;
+    $self->{options}{'keys'}       = '';
+    $self->{options}{'debug'}      = 0;
+    $self->{options}{'verbose'}    = 1;
     $self->{options}{'skip_array'} = 0;
 
-    foreach my $opt (keys %options) {
-        die wrap_mod("po4a::yaml",
-                     dgettext("po4a", "Unknown option: %s"), $opt)
-            unless exists $self->{options}{$opt};
+    foreach my $opt ( keys %options ) {
+        die wrap_mod( "po4a::yaml", dgettext( "po4a", "Unknown option: %s" ), $opt )
+          unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
     }
 
     $self->{options}{keys} =~ s/^\s*//;
-    foreach my $attr (split(/\s+/, $self->{options}{keys})) {
-        $self->{keys}{lc($attr)}='';
+    foreach my $attr ( split( /\s+/, $self->{options}{keys} ) ) {
+        $self->{keys}{ lc($attr) } = '';
     }
 }
 
 sub read {
-    my ($self,$filename)=@_;
-    push @{$self->{DOCPOD}{infile}}, $filename;
+    my ( $self, $filename ) = @_;
+    push @{ $self->{DOCPOD}{infile} }, $filename;
     $self->Locale::Po4a::TransTractor::read($filename);
 }
 
 sub parse {
-    my $self=shift;
-    map {$self->parse_file($_)} @{$self->{DOCPOD}{infile}};
+    my $self = shift;
+    map { $self->parse_file($_) } @{ $self->{DOCPOD}{infile} };
 }
 
 sub parse_file {
-    my ($self,$filename)=@_;
+    my ( $self, $filename ) = @_;
     my $yaml = YAML::Tiny->read($filename)
-        || die "Couldn't read YAML file $filename : $!";
+      || die "Couldn't read YAML file $filename : $!";
 
-    for my $i (0 .. $#{$yaml}) {
-        &walk_yaml($self, $yaml->[$i], "");
+    for my $i ( 0 .. $#{$yaml} ) {
+        &walk_yaml( $self, $yaml->[$i], "" );
     }
-    $self->pushline(Encode::encode_utf8($yaml->write_string()));
+    $self->pushline( Encode::encode_utf8( $yaml->write_string() ) );
 }
 
 sub walk_yaml {
-    my $self=shift;
-    my $el=shift;
-    my $reference=shift;
+    my $self      = shift;
+    my $el        = shift;
+    my $reference = shift;
 
-    if (ref $el eq 'HASH') {
-        print STDERR  "begin a hash\n" if $self->{'options'}{'debug'};
-        foreach my $key (sort keys %$el) {
-            if (ref $el->{$key} ne ref "") {
-                &walk_yaml($self, $el->{$key}, "$reference>$key");
+    if ( ref $el eq 'HASH' ) {
+        print STDERR "begin a hash\n" if $self->{'options'}{'debug'};
+        foreach my $key ( sort keys %$el ) {
+            if ( ref $el->{$key} ne ref "" ) {
+                &walk_yaml( $self, $el->{$key}, "$reference>$key" );
             } else {
-                next if (($self->{options}{keys} ne "") and (!exists $self->{keys}{lc($key)}));
-                my $trans = $self->translate(Encode::encode_utf8($el->{$key}), $reference, "Hash Value - Key: $key", 'wrap' => 0);
-                $el->{$key} = Encode::decode_utf8($trans); # Save the translation
+                next if ( ( $self->{options}{keys} ne "" ) and ( !exists $self->{keys}{ lc($key) } ) );
+                my $trans = $self->translate(
+                    Encode::encode_utf8( $el->{$key} ),
+                    $reference,
+                    "Hash Value - Key: $key",
+                    'wrap' => 0
+                );
+                $el->{$key} = Encode::decode_utf8($trans);    # Save the translation
             }
         }
-    }
-    elsif (ref $el eq 'ARRAY') {
-        print STDERR  "begin an array\n" if $self->{'options'}{'debug'};
-        for my $i (0 .. $#{$el}) {
-            if (ref $el->[$i] ne ref "") {
-                &walk_yaml($self, $el->[$i], "$reference>");
-            } elsif (!$self->{options}{skip_array}) { # translate that element only if not asked to skip arrays
-                my $trans = $self->translate(Encode::encode_utf8($el->[$i]), $reference, "Array Element", 'wrap' => 0);
-                $el->[$i] = Encode::decode_utf8($trans); # Save the translation
+    } elsif ( ref $el eq 'ARRAY' ) {
+        print STDERR "begin an array\n" if $self->{'options'}{'debug'};
+        for my $i ( 0 .. $#{$el} ) {
+            if ( ref $el->[$i] ne ref "" ) {
+                &walk_yaml( $self, $el->[$i], "$reference>" );
+            } elsif ( !$self->{options}{skip_array} ) {       # translate that element only if not asked to skip arrays
+                my $trans =
+                  $self->translate( Encode::encode_utf8( $el->[$i] ), $reference, "Array Element", 'wrap' => 0 );
+                $el->[$i] = Encode::decode_utf8($trans);      # Save the translation
             }
         }
-    }
-    else {
-        print STDERR  "got a string - this is unexpected in yaml\n" if $self->{'options'}{'debug'};
-        my $trans = $self->translate(Encode::encode_utf8($$el), $reference, "String", 'wrap' => 0);
-        $$el = Encode::decode_utf8($trans); # Save the translation
+    } else {
+        print STDERR "got a string - this is unexpected in yaml\n" if $self->{'options'}{'debug'};
+        my $trans = $self->translate( Encode::encode_utf8($$el), $reference, "String", 'wrap' => 0 );
+        $$el = Encode::decode_utf8($trans);                   # Save the translation
     }
 }
 

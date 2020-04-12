@@ -90,25 +90,24 @@ use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::Xml);
 
 sub initialize {
-    my $self = shift;
+    my $self    = shift;
     my %options = @_;
 
     $self->SUPER::initialize(%options);
-    $self->{options}{'nostrip'}=1;
-    $self->{options}{'_default_translated'}.=' <dia:string>';
-    print wrap_mod("po4a::dia", dgettext("po4a", "Call treat_options")) if $self->{options}{'debug'};
+    $self->{options}{'nostrip'} = 1;
+    $self->{options}{'_default_translated'} .= ' <dia:string>';
+    print wrap_mod( "po4a::dia", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
     $self->treat_options;
 }
 
 sub found_string {
-    my ($self,$text,$ref,$options)=@_;
+    my ( $self, $text, $ref, $options ) = @_;
     return $text if $text =~ m/^\s*$/s;
 
     #We skip the paper type string
     if ( $self->get_path() !~ /<dia:diagramdata>/ ) {
         $text =~ /^#(.*)#$/s;
-        $text = "#".$self->translate($1,$ref,"String",
-            'wrap'=>$self->{options}{'wrap'})."#";
+        $text = "#" . $self->translate( $1, $ref, "String", 'wrap' => $self->{options}{'wrap'} ) . "#";
     }
 
     return $text;

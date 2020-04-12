@@ -20,7 +20,7 @@
 
 # This accepts several type of tests:
 #
-# 
+#
 # * po4a.conf test. List of accepted keys:
 #   doc            (opt): Free string
 #   po4a.conf      (req): path to a config file for po4a
@@ -48,7 +48,6 @@
 #                           - 'chmod +r-w+x' the test directory
 #                           - 'chmod +r-w' all files in the test directory
 
-
 package Testhelper;
 
 use strict;
@@ -61,26 +60,28 @@ use Exporter qw(import);
 our @EXPORT = qw(run_all_tests);
 
 # Set the right environment variables to normalize the outputs
-$ENV{'LC_ALL'}="C";
-$ENV{'COLUMNS'}="80";
+$ENV{'LC_ALL'}  = "C";
+$ENV{'COLUMNS'} = "80";
 
 # Path to the tested executables. AUTOPKGTEST_TMP is set on salsa CI for Debian packages.
 my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 
 # small helper function to add an element in a list only if no existing element match with the provided pattern
 sub add_unless_found {
-    my ($list, $pattern, $to_add) = @_;
-    map {return if (/$pattern/)} @{$list};
-#    print STDERR "ADD because $pattern not found\n";
+    my ( $list, $pattern, $to_add ) = @_;
+    map { return if (/$pattern/) } @{$list};
+
+    #    print STDERR "ADD because $pattern not found\n";
     push @{$list}, $to_add;
 }
 
-my $PODIFF = "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
+my $PODIFF =
+  "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
 
 sub show_files {
     my $basename = shift;
-    foreach my $file (glob("${basename}*")) {
-        if (-s $file) {
+    foreach my $file ( glob("${basename}*") ) {
+        if ( -s $file ) {
             diag("Produced file $file:");
             open FH, "$file" || die "Cannot open exisiting $file, I'm puzzled";
             while (<FH>) {
@@ -92,13 +93,15 @@ sub show_files {
         }
     }
 }
+
 # Returns whether the details should be shown
 sub system_failed {
-    my ($cmd, $doc) = @_;
+    my ( $cmd, $doc ) = @_;
     my $exit_status = system($cmd);
-    $cmd =~ s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-    if ($exit_status == 0) {
-        if ($doc ne '') {
+    $cmd =~
+      s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+    if ( $exit_status == 0 ) {
+        if ( $doc ne '' ) {
             pass($doc);
             pass("  Command: $cmd");
         } else {
@@ -107,8 +110,8 @@ sub system_failed {
         return 0;
     } else {
         $doc = 'Provided command' unless $doc ne '';
-        fail($doc. " (retcode: $exit_status)");
-        diag ("  Command: $cmd");
+        fail( $doc . " (retcode: $exit_status)" );
+        diag("  Command: $cmd");
         return 1;
     }
 }
@@ -119,76 +122,82 @@ sub teardown {
     return unless $test->{'teardown'};
 
     my @cmds;
-    push @cmds, @{$test->{'teardown'}} if (ref $test->{'teardown'} eq 'ARRAY');
-    push @cmds, $test->{'teardown'} if (ref $test->{'teardown'} eq ref '');
+    push @cmds, @{ $test->{'teardown'} } if ( ref $test->{'teardown'} eq 'ARRAY' );
+    push @cmds, $test->{'teardown'}      if ( ref $test->{'teardown'} eq ref '' );
     fail "Invalid key 'teardown'. It must be either an array or a string" unless scalar @cmds;
 
     foreach my $cmd (@cmds) {
-        if (system("$cmd 1>&2")) {
+        if ( system("$cmd 1>&2") ) {
             diag("Error during teardown: $!");
             diag("  Command: $cmd");
         } else {
-            pass("Teardown command: $cmd")
+            pass("Teardown command: $cmd");
         }
     }
 }
+
 sub setup {
     my $test = shift;
 
     return unless $test->{'setup'};
 
     my @cmds;
-    push @cmds, @{$test->{'setup'}} if (ref $test->{'setup'} eq 'ARRAY');
-    push @cmds, $test->{'setup'} if (ref $test->{'setup'} eq ref '');
+    push @cmds, @{ $test->{'setup'} } if ( ref $test->{'setup'} eq 'ARRAY' );
+    push @cmds, $test->{'setup'}      if ( ref $test->{'setup'} eq ref '' );
     fail "Invalid key 'setup'. It must be either an array or a string" unless scalar @cmds;
 
     foreach my $cmd (@cmds) {
-        if (system("$cmd 1>&2")) {
+        if ( system("$cmd 1>&2") ) {
             diag("Error during setup: $!");
             diag("  Command: $cmd");
             teardown($test);
         } else {
-            pass("Setup command: $cmd")
+            pass("Setup command: $cmd");
         }
     }
 }
 
 sub run_one_po4aconf {
-    my ($test, $path, $basename, $ext) = @_;
+    my ( $test, $path, $basename, $ext ) = @_;
 
     my %valid_options;
-    map { $valid_options{$_} = 1 } qw(po4a.conf todo doc closed_path options setup tests teardown expected_files diff_outfile expected_outfile );
-    map { die "Invalid test ".$test->{'doc'}.": invalid key '$_'\n" unless exists $valid_options{$_} } (keys %{$test});
+    map { $valid_options{$_} = 1 }
+      qw(po4a.conf todo doc closed_path options setup tests teardown expected_files diff_outfile expected_outfile );
+    map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
+      ( keys %{$test} );
 
-    $test->{'options'} = "--destdir tmp --verbose ".($test->{'options'}?$test->{'options'}:""); 
+    $test->{'options'} = "--destdir tmp --verbose " . ( $test->{'options'} ? $test->{'options'} : "" );
     fail("Broken test: 'tests' is not an array as expected") if exists $test->{tests} && ref $test->{tests} ne 'ARRAY';
     $test->{'tests'} = [] unless exists $test->{'tests'};
 
-
-    fail("Broken test: path $path does not exist") unless -e $path;
+    fail("Broken test: path $path does not exist")                       unless -e $path;
     fail("Broken test: config file $path/$basename.$ext does not exist") unless -e "$path/$basename.$ext";
-    return unless -e "$path/$basename.$ext";
+    return                                                               unless -e "$path/$basename.$ext";
 
-    system("rm -rf tmp/$path/")  && die "Cannot cleanup tmp/$path/ on startup: $!";
+    system("rm -rf tmp/$path/")   && die "Cannot cleanup tmp/$path/ on startup: $!";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
 
-    if ($test->{'closed_path'}) {
-        $test->{'setup'} = ()    if (not exists $test->{'setup'});
-        $test->{'teardown'} = () if (not exists $test->{'teardown'});
-        push @{$test->{'setup'}},    "chmod -r-w-x ".$test->{'closed_path'}; # Don't even look at the closed path
-        push @{$test->{'teardown'}}, "chmod +r+w+x ".$test->{'closed_path'}; # Restore permissions
-        push @{$test->{'setup'}},    "chmod +r+x $path";  # Look into the path of this test
-        push @{$test->{'setup'}},    "chmod -w -R $path"; # But don't change any file in there
-        push @{$test->{'teardown'}}, "chmod +w -R $path"; # Restore permissions
+    if ( $test->{'closed_path'} ) {
+        $test->{'setup'}    = () if ( not exists $test->{'setup'} );
+        $test->{'teardown'} = () if ( not exists $test->{'teardown'} );
+        push @{ $test->{'setup'} },    "chmod -r-w-x " . $test->{'closed_path'};    # Don't even look at the closed path
+        push @{ $test->{'teardown'} }, "chmod +r+w+x " . $test->{'closed_path'};    # Restore permissions
+        push @{ $test->{'setup'} },    "chmod +r+x $path";                          # Look into the path of this test
+        push @{ $test->{'setup'} },    "chmod -w -R $path";                         # But don't change any file in there
+        push @{ $test->{'teardown'} }, "chmod +w -R $path";                         # Restore permissions
     }
     setup($test);
 
-    my $cmd = "${execpath}/po4a -f ".$test->{'po4a.conf'}." ".($test->{'options'}?$test->{'options'}:'')." > tmp/$path/output 2>&1";
+    my $cmd =
+        "${execpath}/po4a -f "
+      . $test->{'po4a.conf'} . " "
+      . ( $test->{'options'} ? $test->{'options'} : '' )
+      . " > tmp/$path/output 2>&1";
 
-#    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
+    #    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
 
-    if (system_failed($cmd, "Executing po4a")) {
+    if ( system_failed( $cmd, "Executing po4a" ) ) {
         diag("Produced output:");
         open FH, "tmp/$path/output" || die "Cannot open output file that I just created, I'm puzzled";
         while (<FH>) {
@@ -202,59 +211,68 @@ sub run_one_po4aconf {
     }
 
     my $expected_outfile = $test->{'expected_outfile'} // "$path/_output";
-    my $diff_outfile = $test->{'diff_outfile'} // "diff -u $expected_outfile tmp/$path/output";
-    unless ($test->{'diff_outfile'}) {
-        unless (-e $expected_outfile) {
+    my $diff_outfile     = $test->{'diff_outfile'}     // "diff -u $expected_outfile tmp/$path/output";
+    unless ( $test->{'diff_outfile'} ) {
+        unless ( -e $expected_outfile ) {
             teardown($test);
-            die "Malformed test $basename (".$test->{'doc'}."): no expected output. Please touch $expected_outfile\n";
+            die "Malformed test $basename ("
+              . $test->{'doc'}
+              . "): no expected output. Please touch $expected_outfile\n";
         }
     }
-    if (system_failed("$diff_outfile 1>&2", "Comparing output of po4a")) {
+    if ( system_failed( "$diff_outfile 1>&2", "Comparing output of po4a" ) ) {
         teardown($test);
         show_files("tmp/$path/");
         return;
     }
 
-    if (exists $test->{'expected_files'}) {
+    if ( exists $test->{'expected_files'} ) {
         my %expected;
         map { $expected{$_} = 1 } split / +/, $test->{'expected_files'};
-        if (length $test->{expected_files} == 0) {
+        if ( length $test->{expected_files} == 0 ) {
             note("Expecting no output file.");
         } else {
-            note("Expecting ".(scalar %expected)." output files: ".$test->{'expected_files'});
+            note( "Expecting " . ( scalar %expected ) . " output files: " . $test->{'expected_files'} );
         }
         $expected{'output'} = 1;
-        FILE: foreach my $file (glob("tmp/${path}/*")) {
+      FILE: foreach my $file ( glob("tmp/${path}/*") ) {
             $file =~ s|tmp/$path/||;
-            unless ($expected{$file}) {
+            unless ( $expected{$file} ) {
                 teardown($test);
                 fail "Unexpected file '$file'";
             }
             delete $expected{$file};
 
             next FILE if $file eq 'output';
-            if (-e "$path/_$file") {
-                add_unless_found($test->{tests}, "$path/_$file *tmp/$path/$file",
-                                 ($file =~ 'pot?$' ? "PODIFF -I#: ": "diff -u")." $path/_$file tmp/$path/$file");
-            } elsif (-e "$path/$file") {
-                add_unless_found($test->{tests}, "$path/$file *tmp/$path/$file",
-                                 ($file =~ 'pot?$' ? "PODIFF -I#: ": "diff -u")." $path/$file tmp/$path/$file");
+            if ( -e "$path/_$file" ) {
+                add_unless_found(
+                    $test->{tests},
+                    "$path/_$file *tmp/$path/$file",
+                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file tmp/$path/$file"
+                );
+            } elsif ( -e "$path/$file" ) {
+                add_unless_found(
+                    $test->{tests},
+                    "$path/$file *tmp/$path/$file",
+                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file tmp/$path/$file"
+                );
             } else {
                 teardown($test);
                 fail("Broken test $path/$basename: $path/_$file should be the expected content of produced file $file");
             }
         }
-        foreach my $file (keys %expected) {
+        foreach my $file ( keys %expected ) {
             fail "Missing file '$file'";
         }
     }
 
-    if (scalar $test->{tests}) {
-        for my $tcmd (@{$test->{tests}}) {
+    if ( scalar $test->{tests} ) {
+        for my $tcmd ( @{ $test->{tests} } ) {
+
             #        print STDERR "cmd: $tcmd\n";
             $tcmd =~ s/PATH/${execpath}/g;
             $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
-            if (system_failed("$tcmd 1>&2", "")) {
+            if ( system_failed( "$tcmd 1>&2", "" ) ) {
                 teardown($test);
                 show_files("tmp/$path/");
                 return;
@@ -273,13 +291,14 @@ sub run_one_format {
 
     ####
     # Normalize the document
-    my $cmd = "${execpath}/po4a-normalize "
-        . "--pot ${tmpbase}.pot --localized ${tmpbase}.out $options $test_directory/$basename.$ext"
-        . " > ${tmpbase}.err 2>&1";
-    my $name = "$basename (".$test->{'doc'}.")";
+    my $cmd =
+        "${execpath}/po4a-normalize "
+      . "--pot ${tmpbase}.pot --localized ${tmpbase}.out $options $test_directory/$basename.$ext"
+      . " > ${tmpbase}.err 2>&1";
+    my $name = "$basename (" . $test->{'doc'} . ")";
 
     my $exit_status = system($cmd);
-    if ($exit_status == 0) {
+    if ( $exit_status == 0 ) {
         pass("Normalizing $name");
         pass("  Pass: $cmd");
     } else {
@@ -297,9 +316,10 @@ sub run_one_format {
 
     foreach my $tcmd (@cmds) {
         $tcmd =~ s/PODIFF/diff -u $PODIFF/g;
-        $exit_status = system($tcmd." 1>&2");
-        $tcmd =~ s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-        if ($exit_status == 0) {
+        $exit_status = system( $tcmd. " 1>&2" );
+        $tcmd =~
+          s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+        if ( $exit_status == 0 ) {
             pass("  pass: $tcmd");
         } else {
             fail("Normalization result does not match.");
@@ -308,7 +328,7 @@ sub run_one_format {
             $fail++;
         }
     }
-    unless ($fail == 0) {
+    unless ( $fail == 0 ) {
         show_files($tmpbase);
         return;
     }
@@ -316,12 +336,13 @@ sub run_one_format {
     ####
     # If there's a translation, also test the translated output.
     if ( -f "$test_directory/$basename.trans.po" ) {
-        $cmd = "${execpath}/po4a-translate $options --master $test_directory/$basename.$ext"
-            . " --po $test_directory/$basename.trans.po --localized ${tmpbase}.trans.out"
-            . " > ${tmpbase}.trans.err 2>&1";
+        $cmd =
+            "${execpath}/po4a-translate $options --master $test_directory/$basename.$ext"
+          . " --po $test_directory/$basename.trans.po --localized ${tmpbase}.trans.out"
+          . " > ${tmpbase}.trans.err 2>&1";
 
         $exit_status = system($cmd);
-        if ($exit_status == 0) {
+        if ( $exit_status == 0 ) {
             pass("Translation of $name");
             pass("  Pass: $cmd");
         } else {
@@ -338,16 +359,16 @@ sub run_one_format {
         push @cmds, "diff -u $test_directory/$basename.trans.out ${tmpbase}.trans.out";
         push @cmds, "diff -u $test_directory/$basename.trans.err ${tmpbase}.trans.err";
         foreach my $tcmd (@cmds) {
-            $exit_status = system($tcmd." 1>&2");
-            if ($exit_status == 0) {
+            $exit_status = system( $tcmd. " 1>&2" );
+            if ( $exit_status == 0 ) {
                 pass("  pass: $tcmd");
             } else {
                 fail("Translation result does not match.");
                 fail("  FAIL: $tcmd");
-                $fail ++;
+                $fail++;
             }
         }
-        unless ($fail == 0) {
+        unless ( $fail == 0 ) {
             show_files($tmpbase);
             return;
         }
@@ -361,10 +382,10 @@ sub run_all_tests {
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
 
-    remove_tree("tmp") if (-e "tmp");
+    remove_tree("tmp") if ( -e "tmp" );
     make_path("tmp");
 
-    TEST: foreach my $test (@cases) {
+  TEST: foreach my $test (@cases) {
         if ( exists $test->{'normalize'} ) {
             if ( $test->{'normalize'} =~ m|^(.*) (.*)/([^/]*)\.([^/]*)$| ) {
                 my ( $options, $path, $basename, $ext ) = ( $1, $2, $3, $4 );
@@ -373,12 +394,12 @@ sub run_all_tests {
 
                 if ( exists $test->{'todo'} ) {
                   TODO: {
-                      print STDERR "TODO: ".$test->{doc}."\n";
-                      local our $TODO = $test->{'todo'};
-                      subtest $test->{'doc'} => sub { run_one_format($test, $options, $path, $basename, $ext); }
+                        print STDERR "TODO: " . $test->{doc} . "\n";
+                        local our $TODO = $test->{'todo'};
+                        subtest $test->{'doc'} => sub { run_one_format( $test, $options, $path, $basename, $ext ); }
                     }
                 } else {
-                    subtest $test->{'doc'} => sub { run_one_format($test, $options, $path, $basename, $ext); }
+                    subtest $test->{'doc'} => sub { run_one_format( $test, $options, $path, $basename, $ext ); }
                 }
 
             } else {
@@ -386,18 +407,18 @@ sub run_all_tests {
             }
         } elsif ( exists $test->{'po4a.conf'} ) {
 
-            if ($test->{'po4a.conf'} =~ m|^(.*)/([^/]*)\.([^./]*)$|) {
-                my ($path, $basename, $ext) = ($1, $2, $3);
-                if (exists $test->{'todo'}) {
+            if ( $test->{'po4a.conf'} =~ m|^(.*)/([^/]*)\.([^./]*)$| ) {
+                my ( $path, $basename, $ext ) = ( $1, $2, $3 );
+                if ( exists $test->{'todo'} ) {
                   TODO: {
-                      local our $TODO = $test->{'todo'};
-                      subtest $test->{'doc'} => sub { run_one_po4aconf($test, $path, $basename, $ext); }
+                        local our $TODO = $test->{'todo'};
+                        subtest $test->{'doc'} => sub { run_one_po4aconf( $test, $path, $basename, $ext ); }
                     }
                 } else {
-                    subtest $test->{'doc'} => sub { run_one_po4aconf($test, $path, $basename, $ext);}
+                    subtest $test->{'doc'} => sub { run_one_po4aconf( $test, $path, $basename, $ext ); }
                 }
             } else {
-                fail "Test ".$test->{'doc'}." malformed. Cannot parse the conf filename.";
+                fail "Test " . $test->{'doc'} . " malformed. Cannot parse the conf filename.";
             }
 
         } elsif ( exists $test->{'run'} ) {
@@ -405,21 +426,23 @@ sub run_all_tests {
             my $cmd = $test->{'run'};
             $cmd =~ s/PATH/${execpath}/;
             my $exit_status = system($cmd);
-            is( $exit_status, 0, "Executing ".$test->{'doc'}." -- Command: $cmd" );
-            next TEST unless ($exit_status == 0);
+            is( $exit_status, 0, "Executing " . $test->{'doc'} . " -- Command: $cmd" );
+            next TEST unless ( $exit_status == 0 );
 
-            fail "Malformed test ".$test->{'doc'}.": missing tests." unless scalar $test->{tests};
-            for my $cmd (@{$test->{tests}}) {
-#                print STDERR "cmd: $cmd\n";
+            fail "Malformed test " . $test->{'doc'} . ": missing tests." unless scalar $test->{tests};
+            for my $cmd ( @{ $test->{tests} } ) {
+
+                #                print STDERR "cmd: $cmd\n";
                 $cmd =~ s/PODIFF/diff -u $PODIFF/g;
-                $exit_status = system($cmd.' 1>&2');
-                $cmd =~ s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-                is( $exit_status, 0, "Test of ".$test->{'doc'}." -- Command: $cmd" );
-                next TEST unless ($exit_status == 0);
+                $exit_status = system( $cmd. ' 1>&2' );
+                $cmd =~
+                  s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+                is( $exit_status, 0, "Test of " . $test->{'doc'} . " -- Command: $cmd" );
+                next TEST unless ( $exit_status == 0 );
             }
 
         } else {
-            fail "Test ".$test->{'doc'}." does not have any 'po4a.conf' nor 'normalize' nor 'run' field";
+            fail "Test " . $test->{'doc'} . " does not have any 'po4a.conf' nor 'normalize' nor 'run' field";
         }
     }
 

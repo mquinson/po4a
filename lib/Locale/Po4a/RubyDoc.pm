@@ -62,39 +62,32 @@ my $insiderubydoc = 0;
 #  Methods  #
 #############
 
-sub
-initialize
-{
-    my $self = shift;
+sub initialize {
+    my $self    = shift;
     my %options = @_;
 
-    $self->{options}{'debug'} = 1;
+    $self->{options}{'debug'}   = 1;
     $self->{options}{'verbose'} = 1;
     $self->{options}{'puredoc'} = 0;
 
-    foreach my $opt (keys %options)
-      {
-        die wrap_mod("po4a::text",
-                     dgettext("po4a", "Unknown option: %s"), $opt)
-            unless exists $self->{options}{$opt};
+    foreach my $opt ( keys %options ) {
+        die wrap_mod( "po4a::text", dgettext( "po4a", "Unknown option: %s" ), $opt )
+          unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
-      }
+    }
 
-    if (defined $options{'puredoc'})
-      {
+    if ( defined $options{'puredoc'} ) {
+
         # initially assume to be already inside the Ruby Document
         $insiderubydoc = 1;
-      }
-    else
-      {
+    } else {
+
         # initially assume to be outside the Ruby Document
         $insiderubydoc = 0;
-      }
+    }
 }
 
-sub
-docheader
-{
+sub docheader {
     return <<EOT;
 #
 #       *****************************************************
@@ -111,13 +104,11 @@ docheader
 EOT
 }
 
-sub
-parse
-{
+sub parse {
     my $self = shift;
 
     # start with baseline and firstindent corresponding to no indentation
-    my $baseline = 0;
+    my $baseline    = 0;
     my $firstindent = 0;
 
     # start in non-verbatim mode
@@ -126,328 +117,317 @@ parse
     # we have not yet seen any Term, hence we are not yet waiting for a
     # Description
     my $waitfordesc = 0;
-    my $methodterm = "";
+    my $methodterm  = "";
 
     # flag to remember that we have reached the end of the document
     my $eof = 0;
 
-    PARAGRAPH: while ()
-      {
+  PARAGRAPH: while () {
+
         # start accumulating a new paragraph and corresponding variables
-        my ($para,$pref,$ptype,$pwrap,$symbol,$tail) = ("","","",1,"","");
+        my ( $para, $pref, $ptype, $pwrap, $symbol, $tail ) = ( "", "", "", 1, "", "" );
 
-        LINE: while ()
-          {
+      LINE: while () {
+
             # fetch next line and its reference
-            my ($line,$lref) = $self->shiftline();
+            my ( $line, $lref ) = $self->shiftline();
 
-            unless (defined($line))
-              {
+            unless ( defined($line) ) {
+
                 # we reached the end of the document
                 $eof = 1;
                 last LINE;
-              }
+            }
 
-            if ($line =~ /^=begin\s*(\bRD\b.*)?\s*$/)
-              {
+            if ( $line =~ /^=begin\s*(\bRD\b.*)?\s*$/ ) {
+
                 # we are entering a Ruby Document part
                 $insiderubydoc = 1;
-                $baseline = 0;
-                $verbmode = 0;
-                $waitfordesc = 0;
+                $baseline      = 0;
+                $verbmode      = 0;
+                $waitfordesc   = 0;
                 $self->pushline($line);
                 next PARAGRAPH;
-              }
+            }
 
-            if ($line =~ /^=end/)
-              {
+            if ( $line =~ /^=end/ ) {
+
                 # we are exiting a Ruby Document part
                 $insiderubydoc = 0;
-                $baseline = 0;
-                $verbmode = 0;
-                $waitfordesc = 0;
-                $tail = $line;
+                $baseline      = 0;
+                $verbmode      = 0;
+                $waitfordesc   = 0;
+                $tail          = $line;
                 last LINE;
-              }
+            }
 
             # do nothing while outside the Ruby Document
             next PARAGRAPH unless ($insiderubydoc);
 
             # we encountered a Comment: ignore it entirely
-            next LINE if ($line =~ /^#/);
+            next LINE if ( $line =~ /^#/ );
 
-            if ($line =~ /^(={1,4})(?!=)\s*(?=\S)(.*)/ or
-                $line =~ /^(\+{1,2})(?!\+)\s*(?=\S)(.*)/)
-              {
+            if (   $line =~ /^(={1,4})(?!=)\s*(?=\S)(.*)/
+                or $line =~ /^(\+{1,2})(?!\+)\s*(?=\S)(.*)/ )
+            {
                 # we encountered a Headline: this is a paragraph on its own
-                if (length($para))
-                  {
+                if ( length($para) ) {
+
                     # we already have some paragraph to be processed:
                     # reput the current line in input and end paragraph
-                    $self->unshiftline($line,$lref);
+                    $self->unshiftline( $line, $lref );
                     last LINE;
-                  }
-                else
-                  {
+                } else {
+
                     # we are at the beginning of a paragraph, but a Headline
                     # is a single-line paragraph: define the variables
                     # and end paragraph
-                    $symbol = "$1 ";
-                    $para = $2;
-                    $pref = $lref;
-                    $ptype = "Headline $1";
-                    $baseline = 0;
-                    $verbmode = 0;
+                    $symbol      = "$1 ";
+                    $para        = $2;
+                    $pref        = $lref;
+                    $ptype       = "Headline $1";
+                    $baseline    = 0;
+                    $verbmode    = 0;
                     $waitfordesc = 0;
                     last LINE;
-                  }
-              }
+                }
+            }
 
-            if ($line =~ /^<<<\s*(\S+)/)
-              {
+            if ( $line =~ /^<<<\s*(\S+)/ ) {
+
                 # we encountered an Include line: end paragraph
                 $tail = $line;
                 last LINE;
-              }
+            }
 
             # compute indentation
             $line =~ /^(\s*)/;
             my $indent = length($1);
 
-            if ($verbmode)
-              {
+            if ($verbmode) {
+
                 # use verbatim mode rules
                 # -----------------------
 
-                if ($indent >= $firstindent)
-                  {
+                if ( $indent >= $firstindent ) {
+
                     # indentation matches first line or is deeper:
                     # the Verbatim goes on
                     $para .= $line;
                     next LINE;
-                  }
-                else
-                  {
+                } else {
+
                     # indentation is shallower than first line:
                     # reput the current line in input, exit verbatim mode
                     # and end paragraph
-                    $self->unshiftline($line,$lref);
-                    $verbmode = 0;
+                    $self->unshiftline( $line, $lref );
+                    $verbmode    = 0;
                     $waitfordesc = 0;
                     last LINE;
-                  }
-              }
-            else
-              {
+                }
+            } else {
+
                 # use non-verbatim mode rules
                 # ---------------------------
 
-                if ($line =~ /^\s*$/)
-                  {
+                if ( $line =~ /^\s*$/ ) {
+
                     # we encountered a WHITELINE: end paragraph
                     $tail = $line;
                     last LINE;
-                  }
+                }
 
-                if ($line =~ /^(\s*)\*(\s*)(.*)/)
-                  {
+                if ( $line =~ /^(\s*)\*(\s*)(.*)/ ) {
+
                     # we encountered the first line of a ItemListItem
-                    if (length($para))
-                      {
+                    if ( length($para) ) {
+
                         # we already have some paragraph to be processed:
                         # reput the current line in input and end paragraph
-                        $self->unshiftline($line,$lref);
+                        $self->unshiftline( $line, $lref );
                         last LINE;
-                      }
-                    else
-                      {
+                    } else {
+
                         # we are at the beginning of a paragraph:
                         # define the variables
                         $symbol = "$1*$2";
                         $para .= $3;
-                        $pref = $lref;
-                        $ptype = "ItemListItem *";
-                        $baseline = length($symbol);
+                        $pref        = $lref;
+                        $ptype       = "ItemListItem *";
+                        $baseline    = length($symbol);
                         $waitfordesc = 0;
                         next LINE;
-                      }
-                  }
+                    }
+                }
 
-                if ($line =~ /^(\s*)(\(\d+\))(\s*)(.*)/)
-                  {
+                if ( $line =~ /^(\s*)(\(\d+\))(\s*)(.*)/ ) {
+
                     # we encountered the first line of an EnumListItem
-                    if (length($para))
-                      {
+                    if ( length($para) ) {
+
                         # we already have some paragraph to be processed:
                         # reput the current line in input and end paragraph
-                        $self->unshiftline($line,$lref);
+                        $self->unshiftline( $line, $lref );
                         last LINE;
-                      }
-                    else
-                      {
+                    } else {
+
                         # we are at the beginning of a paragraph:
                         # define the variables
                         $symbol = "$1$2$3";
                         $para .= $4;
-                        $pref = $lref;
-                        $ptype = "EnumListItem $2";
-                        $baseline = length($symbol);
+                        $pref        = $lref;
+                        $ptype       = "EnumListItem $2";
+                        $baseline    = length($symbol);
                         $waitfordesc = 0;
                         next LINE;
-                      }
-                  }
+                    }
+                }
 
-                if ($line =~ /^(\s*):(\s*)(.*)/)
-                  {
+                if ( $line =~ /^(\s*):(\s*)(.*)/ ) {
+
                     # we encountered the Term line of a DescListItem
-                    if (length($para))
-                      {
+                    if ( length($para) ) {
+
                         # we already have some paragraph to be processed:
                         # reput the current line in input and end paragraph
-                        $self->unshiftline($line,$lref);
+                        $self->unshiftline( $line, $lref );
                         last LINE;
-                      }
-                    else
-                      {
+                    } else {
+
                         # we are at the beginning of a paragraph, but the Term
                         # part of a DescListItem is a single-line paragraph:
                         # define the variables and end paragraph
-                        $symbol = "$1:$2";
-                        $para = $3;
-                        $pref = $lref;
-                        $ptype = "DescListItem Term :";
-                        $baseline = length($symbol);
+                        $symbol      = "$1:$2";
+                        $para        = $3;
+                        $pref        = $lref;
+                        $ptype       = "DescListItem Term :";
+                        $baseline    = length($symbol);
                         $waitfordesc = 1;
                         last LINE;
-                      }
-                  }
+                    }
+                }
 
-                if ($line =~ /^(\s*)---(?!-|\s*$)(\s*)(.*)/)
-                  {
+                if ( $line =~ /^(\s*)---(?!-|\s*$)(\s*)(.*)/ ) {
+
                     # we encountered the Term line of a MethodListItem
-                    if (length($para))
-                      {
+                    if ( length($para) ) {
+
                         # we already have some paragraph to be processed:
                         # reput the current line in input and end paragraph
-                        $self->unshiftline($line,$lref);
+                        $self->unshiftline( $line, $lref );
                         last LINE;
-                      }
-                    else
-                      {
+                    } else {
+
                         # we are at the beginning of a paragraph, but the Term
                         # part of a MethodListItem is a single-line paragraph;
                         # moreover, it's not translatable: end paragraph
-                        $baseline = length("$1---$2");
+                        $baseline    = length("$1---$2");
                         $waitfordesc = 2;
-                        $tail = $line;
-                        $methodterm = "--- $3";
+                        $tail        = $line;
+                        $methodterm  = "--- $3";
                         last LINE;
-                      }
-                  }
+                    }
+                }
 
                 # we apparently encountered a STRINGLINE
-                if (length($para))
-                  {
+                if ( length($para) ) {
+
                     # we already have some paragraph to be processed:
-                    if ($indent == $baseline)
-                      {
+                    if ( $indent == $baseline ) {
+
                         # indentation matches baseline:
                         # append the STRINGLINE to the paragraph
                         $para .= $line;
-                      }
-                    else
-                      {
+                    } else {
+
                         # indentation differs from baseline:
                         # reput the current line in input and end paragraph
-                        $self->unshiftline($line,$lref);
+                        $self->unshiftline( $line, $lref );
                         last LINE;
-                      }
-                  }
-                else
-                  {
+                    }
+                } else {
+
                     # we are at the beginning of a paragraph:
                     # define the variables
-                    if ($waitfordesc)
-                      {
+                    if ($waitfordesc) {
+
                         # we were waiting for a DescListItem Description:
                         # we have just found it
-                        if ($waitfordesc == 1)
-                          {
+                        if ( $waitfordesc == 1 ) {
                             $ptype = "DescListItem Description";
-                          }
-                        else
-                          {
+                        } else {
                             $ptype = "MethodListItem Description $methodterm";
-                          }
-                        $baseline = $indent;
+                        }
+                        $baseline    = $indent;
                         $waitfordesc = 0;
+
                         # reproduce the original indentation
                         $symbol = " " x $indent;
-                      }
-                    else
-                      {
-                        if ($indent > $baseline)
-                          {
+                    } else {
+                        if ( $indent > $baseline ) {
+
                             # indentation is deeper than baseline:
                             # we are entering a Verbatim
-                            $verbmode = 1;
-                            $ptype = "Verbatim";
-                            $pwrap = 0;
+                            $verbmode    = 1;
+                            $ptype       = "Verbatim";
+                            $pwrap       = 0;
                             $firstindent = $indent;
-                          }
-                        else
-                          {
+                        } else {
+
                             # indentation is not deeper than baseline:
                             # this is a TextBlock
-                            $ptype = "TextBlock";
+                            $ptype    = "TextBlock";
                             $baseline = $indent;
+
                             # reproduce the original indentation
                             $symbol = " " x $indent;
-                          }
-                      }
+                        }
+                    }
                     $para .= $line;
                     $pref = $lref;
-                  }
-              }
+                }
+            }
 
-          }
+        }
 
-        if (length($para))
-          {
+        if ( length($para) ) {
+
             # set wrap column at 76 - identation, but never less than 26
             my $ni = length($symbol);
             my $wc = 76 - $ni;
-            $wc = 26 if ($wc < 26);
+            $wc = 26 if ( $wc < 26 );
 
             # get the translated paragraph
-            my $translated = $self->translate($para,
-                                              $pref,
-                                              $ptype,
-                                              'wrap' => $pwrap,
-                                              'wrapcol' => $wc);
+            my $translated = $self->translate(
+                $para,
+                $pref,
+                $ptype,
+                'wrap'    => $pwrap,
+                'wrapcol' => $wc
+            );
 
-            if ($pwrap)
-              {
+            if ($pwrap) {
+
                 # reformat the translated paragraph
                 my $is = " " x $ni;
                 chomp $translated;
                 $translated =~ s/\n/\n$is/g;
                 $translated .= "\n";
-              }
+            }
 
             # push the paragraph to the translated document
-            $self->pushline($symbol.$translated);
-          }
+            $self->pushline( $symbol . $translated );
+        }
 
-        if (length($tail))
-          {
+        if ( length($tail) ) {
+
             # push the non translatable tail to the translated document
             $self->pushline($tail);
-          }
+        }
 
         # stop processing, if we have already reached the end of the document
         return if ($eof);
-      }
+    }
 }
 
 ##########################
