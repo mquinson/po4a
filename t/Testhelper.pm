@@ -233,12 +233,12 @@ sub run_one_po4aconf {
             delete $expected{$file};
 
             next FILE if $file eq 'output';
-            if (-e "$path/$file") {
-                add_unless_found($test->{tests}, "$path/$file *tmp/$path/$file",
-                                 ($file =~ 'pot?$' ? "PODIFF -I#: ": "diff -u")." $path/$file tmp/$path/$file");
-            } elsif (-e "$path/_$file") {
+            if (-e "$path/_$file") {
                 add_unless_found($test->{tests}, "$path/_$file *tmp/$path/$file",
                                  ($file =~ 'pot?$' ? "PODIFF -I#: ": "diff -u")." $path/_$file tmp/$path/$file");
+            } elsif (-e "$path/$file") {
+                add_unless_found($test->{tests}, "$path/$file *tmp/$path/$file",
+                                 ($file =~ 'pot?$' ? "PODIFF -I#: ": "diff -u")." $path/$file tmp/$path/$file");
             } else {
                 teardown($test);
                 fail("Broken test $path/$basename: $path/_$file should be the expected content of produced file $file");
