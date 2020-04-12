@@ -1542,16 +1542,20 @@ if ( not $po4a_opts{"no-translations"} ) {
   LANG: foreach my $lang ( sort keys %po_filename ) {
 
         # Read the $lang PO once, no options for the creation
-        my $po = Locale::Po4a::Po->new();
-        if ( not -e $srcpath . $po_filename{$lang} ) {
+        my $po     = Locale::Po4a::Po->new();
+        my $pofile = $dstpath . $po_filename{$lang} if ( -e $dstpath . $po_filename{$lang} );
+        $pofile //= $srcpath . $po_filename{$lang} if ( -e $srcpath . $po_filename{$lang} );
+        $pofile //= $po_filename{$lang};
+
+        if ( not -e $pofile ) {
             print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang )
               if ( $po4a_opts{"verbose"} );
             next LANG;
         }
-        print "Reading PO file $srcpath" . $po_filename{$lang} . " for language $lang: "
+        print "Reading PO file $pofile for language $lang: "
           if ( $po4a_opts{"debug"} );
-        $po->read( $srcpath . $po_filename{$lang} );
-        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $srcpath$po_filename{$lang}" )
+        $po->read($pofile);
+        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $pofile" )
           if ( $po4a_opts{"debug"} );
 
       DOC: foreach my $master (
