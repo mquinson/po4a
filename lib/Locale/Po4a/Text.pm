@@ -78,11 +78,11 @@ my $keyvalue = 0;
 
 =item B<nobullets>
 
-Deactivate detection of bullets.
+Deactivate the detection of bullets.
 
 By default, when a bullet is detected, the bullet paragraph is not considered
-as a verbatim paragraph (with the no-wrap flag in the PO file), but the module
-rewraps this paragraph in the generated PO file and in the translation.
+as a verbatim paragraph (with the no-wrap flag in the PO file). Instead, the
+corresponding paragraph is rewraped in the translation.
 
 =cut
 
@@ -145,6 +145,24 @@ Handle some special markup in Markdown-formatted texts.
 
 my $markdown = 0;
 
+=item B<yfm_keys> (markdown-only)
+
+Coma-separated list of keys to process for translation in the YAML Front Matter
+section. All other keys are skipped. Keys are matched with a case-insentive
+match. Arrays values are always translated unless if the B<yfm_skip_array> option is provided.
+
+=cut
+
+my %yfm_keys = ();
+
+=item B<yfm_skip_array> (markdown-only)
+
+Do not translate array values in the YAML Front Matter section.
+
+=cut
+
+my $yfm_skip_array = 0;
+
 =item B<control>[B<=>I<taglist>]
 
 Handle control files.
@@ -180,6 +198,8 @@ sub initialize {
     $self->{options}{'debug'} = 1;
     $self->{options}{'fortunes'} = 1;
     $self->{options}{'markdown'} = 1;
+    $self->{options}{'yfm_keys'} = '';
+    $self->{options}{'yfm_skip_array'} = 0;
     $self->{options}{'nobullets'} = 1;
     $self->{options}{'keyvalue'} = 1;
     $self->{options}{'tabs'} = 1;
@@ -193,38 +213,29 @@ sub initialize {
         $self->{options}{$opt} = $options{$opt};
     }
 
-    if (defined $options{'keyvalue'}) {
-        $keyvalue = 1;
-        print "setting keyvalue\n";
-    }
+    $keyvalue = 1 if (defined $options{'keyvalue'});
+    $bullets = 0 if (defined $options{'nobullets'});
+    $tabs = $options{'tabs'} if (defined $options{'tabs'});
+    $breaks = $options{'breaks'} if (defined $options{'breaks'});
+    $defaultwrap = 0 if (defined $options{'neverwrap'});
 
-    if (defined $options{'nobullets'}) {
-        $bullets = 0;
-    }
-
-    if (defined $options{'tabs'}) {
-        $tabs = $options{'tabs'};
-    }
-
-    if (defined $options{'breaks'}) {
-        $breaks = $options{'breaks'};
-    }
-
-    if (defined $options{'neverwrap'}) {
-        $defaultwrap = 0;
-    }
-
-    if (defined $options{'debianchangelog'}) {
-        $parse_func = \&parse_debianchangelog;
-    }
-
-    if (defined $options{'fortunes'}) {
-        $parse_func = \&parse_fortunes;
-    }
+    $parse_func = \&parse_debianchangelog if (defined $options{'debianchangelog'});
+    $parse_func = \&parse_fortunes if(defined $options{'fortunes'});
 
     if (defined $options{'markdown'}) {
         $parse_func = \&parse_markdown;
         $markdown=1;
+        map {
+            $_ =~ s/^\s+|\s+$//g; # Trim the keys before using them
+            $yfm_keys{ $_ } = 1
+        } (split(',', $self->{options}{'yfm_keys'}));
+#        map { print STDERR "key $_\n"; } (keys %yfm_keys);
+        $yfm_skip_array = $self->{options}{'yfm_skip_array'};
+    } else {
+        foreach my $opt (qw(yfm_keys yfm_skip_array)) {
+            die wrap_mod("po4a::text", dgettext("po4a", "Option %s is only valid when parsing markdown files."), $opt)
+                if exists $options{$opt};
+        }
     }
 
     if (defined $options{'control'}) {
@@ -607,7 +618,11 @@ sub parse_markdown_yaml_front_matter {
            my $header = ('  ' x $indent) . '- ';
            my $type = ref $el;
            if ( ! $type ) {
-               $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx", "wrap" => 0)). "\n");
+               if ($yfm_skip_array) {
+                   $self->pushline($header . YAML::Tiny::_dump_scalar("dummy", $el, 0)."\n");
+               } else {
+                   $self->pushline($header . format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx", "wrap" => 0)). "\n");
+               }
 
            } elsif ( $type eq 'ARRAY' ) {
                if ( @$el ) {
@@ -637,7 +652,11 @@ sub parse_markdown_yaml_front_matter {
             my $header = ('  ' x $indent) . YAML::Tiny::_dump_scalar("dummy", $name, 1). ":";
             my $type = ref $el;
             if ( ! $type ) {
-                $self->pushline($header . " ". format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0)). "\n");
+                if ((not %yfm_keys) || $yfm_keys{$name}) { # either no key is provided, or the key we need is also provided
+                    $self->pushline($header . ' '. format_scalar($self->translate($el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0)). "\n");
+                } else {
+                    $self->pushline($header . ' '. YAML::Tiny::_dump_scalar("dummy", $el, 0)."\n");
+                }
 
             } elsif ( $type eq 'ARRAY' ) {
                 if ( @$el ) {

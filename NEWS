@@ -15,6 +15,9 @@ Markdown:
  * Avoid translating Markdown fenced code block info string (GitHub's #194)
  * List Markdown fenced code block info string as text type (GitHub's #195)
  * Support YAML Front Matter (GitHub's #196). This requires YAML::Tiny.
+ * Introduce options yfm_keys and yfm_skip_array to respectively
+   specify which YAML keys should be translated, and that the array
+   content should not be translated.
  
 Text:
  * Honor the (existing) --neverwrap option to handle every content verbatim.
@@ -30,10 +33,8 @@ po4a tool:
  * Do not touch source dir when --destdir is provided (Debian #602387)
  * Pass --add-location=file to msgmerge when receiving option porefs.
    (requires gettext >= 0.19 -- June 2014)
- * Use the value of --master-charset for the charset of the generated
-   POT file.
- * Use the value of --master-language for the language of the generated
-   POT file.
+ * Option --master-charset sets the charset of the generated POT file.
+ * Option --master-language sets the language of the generated POT file.
 
 Core:
  * Use UTF-8 by default (the 20th century is over, now).
@@ -45,7 +46,7 @@ Core:
    conflicts, or ugly files that are easy to automatically deal with.
 
 Tests:
- * Completely refactor some tests. They are now more reliable and the
+ * Completely refactor most tests. They are now more reliable and the
    error messages are much more useful to understand the issues.
 
 Documentation:

@@ -18,6 +18,9 @@ push @tests, {
 push @tests, {
     'doc'       => "MarkDownNoWrap test",
     'normalize' => "-f text --master-charset UTF-8 --wrap-po=newlines -o neverwrap -o markdown t-20-text/MarkDownNoWrap.md",
+  }, {
+    'doc'       => "That the yfm_keys and yfm_skip_array options actually work",
+    'normalize' => "-f text -o markdown -o yfm_skip_array -o yfm_keys='title , subtitle,paragraph' t-20-text/MarkDownYamlFrontMatterOptions.md",
   };
   
 push @tests, {
