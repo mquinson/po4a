@@ -62,8 +62,7 @@ push @tests, {
 
   },
   {
-    'doc' =>
-      'Single language, translation that would be fuzzied during the update, but with --no-update command-line option',
+    'doc'            => 'Single language, translation would be fuzzied if --no-update were not given',
     'po4a.conf'      => 'cfg/single-fuzzied-noup/po4a.conf',
     'options'        => '--no-update',
     'closed_path'    => 'cfg/*/',
@@ -76,9 +75,15 @@ push @tests, {
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single-newstr.fr.po single-newstr.pot single-newstr.man.fr.1',
 
+  },
+  {
+    'doc'            => 'Multiple languages, no pot no po',
+    'po4a.conf'      => 'cfg/multiple-nopotpo/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
+
   };
 
-# TODO: single:  fuzzied / fuzzied-noup / partial
 # TODO: split: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
 # TODO: multi: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
 # TODO: language-specific option overriding generic option
@@ -87,19 +92,6 @@ push @tests, {
 
 my @ignored_tests;
 push @ignored_tests,
-  {
-    'doc' => 'single config file - with a provided translation',
-    'run' => 'cp t-05-config/test00.fr.po tmp/test00.fr.po && '
-      . 'chmod u+w tmp/test00.fr.po && '
-      . "PATH/po4a"
-      . ' t-05-config/test00.conf > tmp/err 2>&1',
-    'tests' => [
-        "diff -u t-05-config/test01.err tmp/err",
-        "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.pot tmp/test00.pot",
-        "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test00.fr.po tmp/test00.fr.po",
-        "diff -u t-05-config/test00_man.fr.1 tmp/test00_man.fr.1"
-    ]
-  },
   {
     'doc'       => 'template languages',
     'po4a.conf' => 't-05-config/test02.conf',
@@ -223,18 +215,6 @@ push @ignored_tests,
         "test ! -e tmp/test02_man.es.1",
         "diff -u t-05-config/test02_man.it.1 tmp/test02_man.it.1",
         "test ! -e tmp/test02_man.de.1"
-    ]
-  },
-  {
-    'doc' => 'Check that no-update actually does not update the po file',
-    'run' => 'cp t-05-config/test00.fr.po tmp '
-      . '&& printf "\n#. Fake entry\nmsgid \"This entry will disappear if pofile is updated\"\nmsgstr \"\"\n" >> tmp/test00.fr.po '
-      . '&& touch -d "2 hours ago" tmp/test00.fr.po '
-      . '&& PATH/po4a --no-update t-05-config/test00.conf >> tmp/test09.err 2>&1',
-    'tests' => [
-        "diff -u t-05-config/test09.err tmp/test09.err",
-        "diff -u -I\'^#:\' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' t-05-config/test09.fr tmp/test00.fr.po",
-        "test tmp/test00.fr.po -ot tmp/test09.err"
     ]
   },
   {
