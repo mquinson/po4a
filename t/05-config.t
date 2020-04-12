@@ -34,7 +34,6 @@ push @tests, {
     'doc' => 'Single language, with translation to create',
     'po4a.conf' => 'cfg/single/single.conf',
     'closed_path' => 'cfg/*/',
-
     'expected_files' => 'single.fr.po  single.pot single.man.fr.1',
 
   }, {
@@ -60,10 +59,16 @@ push @tests, {
     'po4a.conf' => 'cfg/single-fuzzied-noup/po4a.conf',
     'options' => '--no-update',
     'closed_path' => 'cfg/*/',
-      
     'expected_files' => '',
-      
-      
+
+  }, {
+    'todo' => 'BUG: po files are not updated when the master file changes',
+
+    'doc' => 'Single language, with a new string appearing in the master doc',
+    'po4a.conf' => 'cfg/single-newstr/po4a.conf',
+    'closed_path' => 'cfg/*/',
+    'expected_files' => '',
+
   };
 
 
