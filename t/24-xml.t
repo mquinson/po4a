@@ -21,7 +21,8 @@ push @tests,
   },
   {
     'doc' => 'Options normalisation test',
-    'normalize' => "-f xml -o translated='w<translate1w> W<translate2W> <translate5> i<inline6> ' -o untranslated='<untranslated4>' t-24-xml/options.xml",
+    'normalize' =>
+      "-f xml -o translated='w<translate1w> W<translate2W> <translate5> i<inline6> ' -o untranslated='<untranslated4>' t-24-xml/options.xml",
   },
   {
     'doc'       => 'CDATA normalisation test',
