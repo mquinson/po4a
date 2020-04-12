@@ -23,13 +23,10 @@ push @tests, {
     'expected_files' => 'single.fr.po  single.pot',
 
   }, {
-    'todo' => 'BUG: the pot file is generated despite the --no-update',
-
     'doc' => 'Single language, no po, --no-update',
     'po4a.conf' => 'cfg/single-nopo/single.conf',
     'options' => ' --no-update',
     'closed_path' => 'cfg/*/',
-
     'expected_outfile' => 'cfg/single-nopo/_output-noupdate',
     'expected_files'   => '',
 
@@ -44,21 +41,33 @@ push @tests, {
     'doc' => 'Single language, translation uptodate',
     'po4a.conf' => 'cfg/single-uptodate/single-uptodate.conf',
     'closed_path' => 'cfg/*/',
-      
     'expected_files' => 'single-uptodate.fr.po  single-uptodate.pot single-uptodate.man.fr.1',
 
   }, {
     'doc' => 'Single language, translation already fuzzy',
     'po4a.conf' => 'cfg/single-fuzzy/po4a.conf',
     'closed_path' => 'cfg/*/',
-      
     'expected_files' => 'single-fuzzy.fr.po single-fuzzy.pot',
+
+  }, {
+    'doc' => 'Single language, translation fuzzied during the update',
+    'po4a.conf' => 'cfg/single-fuzzied/po4a.conf',
+    'closed_path' => 'cfg/*/',
+    'expected_files' => 'single-fuzzied.fr.po single-fuzzied.pot',
+	
+  }, {
+    'doc' => 'Single language, translation that would be fuzzied during the update, but with --no-update command-line option',
+    'po4a.conf' => 'cfg/single-fuzzied-noup/po4a.conf',
+    'options' => '--no-update',
+    'closed_path' => 'cfg/*/',
+      
+    'expected_files' => '',
       
       
   };
 
 
-# TODO: single:  fuzzied / fuzzied-noupdate
+# TODO: single:  fuzzied / fuzzied-noup / partial
 # TODO: split: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
 # TODO: multi: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
 # TODO: language-specific option overriding generic option

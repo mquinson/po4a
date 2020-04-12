@@ -691,7 +691,7 @@ sub get_options {
         "no-backups"      => 0,
         "rm-backups"      => 0,
         "threshold"       => 80,
-	"mastlang"        => "",
+        "mastlang"        => "",
         "mastchar"        => "",
         "locchar"         => "",
         "addchar"         => "",
@@ -1239,8 +1239,17 @@ if (-e $pot_filename) {
         $update_pot_file = 1;
     }
 
-    print wrap_msg(gettext("Updating %s:"), $pot_filename)
-        if ($update_pot_file and $po4a_opts{"verbose"});
+    if ($po4a_opts{"no-update"}) {
+        print wrap_msg(gettext("NOT updating %s as requested (--no-update)."), $pot_filename)
+            if ($update_pot_file and $po4a_opts{"verbose"});
+        $update_pot_file = 0;
+    } else {
+        print wrap_msg(gettext("Updating %s:"), $pot_filename)
+            if ($update_pot_file and $po4a_opts{"verbose"});
+    }
+} elsif ($po4a_opts{"no-update"}) {
+    print wrap_msg(gettext("NOT creating %s as requested (--no-update)."), $pot_filename)
+        if $po4a_opts{"verbose"};
 } else {
     print wrap_msg(gettext("Creating %s:"), $pot_filename)
         if $po4a_opts{"verbose"};
@@ -1326,7 +1335,7 @@ if ($update_pot_file) {
         unless ($po4a_opts{"quiet"});
 } else {
     print wrap_msg(gettext("POT file %s already up to date."), $pot_filename)
-        if ($po4a_opts{"verbose"});
+        if ($po4a_opts{"verbose"} and not $po4a_opts{"no-update"});
 }
 
 my $srcpath = ($po4a_opts{'srcdir'} // $po4a_opts{'calldir'})."/";
