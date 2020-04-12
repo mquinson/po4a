@@ -19,7 +19,7 @@ push @tests, {
   }, {
     'doc' => 'Single language, no po',
     'po4a.conf' => 'cfg/single-nopo/single.conf',
-    'closed_path' => 'cfg/*/', # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',
     'expected_files' => 'single.fr.po  single.pot',
 
   }, {
@@ -28,7 +28,7 @@ push @tests, {
     'doc' => 'Single language, no po, --no-update',
     'po4a.conf' => 'cfg/single-nopo/single.conf',
     'options' => ' --no-update',
-    'closed_path' => 'cfg/*/', # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',
 
     'expected_outfile' => 'cfg/single-nopo/_output-noupdate',
     'expected_files'   => '',
@@ -36,25 +36,34 @@ push @tests, {
   }, {
     'doc' => 'Single language, with translation to create',
     'po4a.conf' => 'cfg/single/single.conf',
-    'closed_path' => 'cfg/*/', # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',
 
     'expected_files' => 'single.fr.po  single.pot single.man.fr.1',
 
   }, {
     'doc' => 'Single language, translation uptodate',
     'po4a.conf' => 'cfg/single-uptodate/single-uptodate.conf',
-    'closed_path' => 'cfg/*/', # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',
       
     'expected_files' => 'single-uptodate.fr.po  single-uptodate.pot single-uptodate.man.fr.1',
+
+  }, {
+    'doc' => 'Single language, translation already fuzzy',
+    'po4a.conf' => 'cfg/single-fuzzy/po4a.conf',
+    'closed_path' => 'cfg/*/',
       
-    'tests' => [
-	"PODIFF -I^# cfg/single-uptodate/single-uptodate.pot       tmp/cfg/single-uptodate/single-uptodate.pot",
-	"PODIFF -I^# cfg/single-uptodate/single-uptodate.fr.po     tmp/cfg/single-uptodate/single-uptodate.fr.po",
-	"diff -u     cfg/single-uptodate/single-uptodate.man.fr.1  tmp/cfg/single-uptodate/single-uptodate.man.fr.1"
-    ],
+    'expected_files' => 'single-fuzzy.fr.po single-fuzzy.pot',
+      
       
   };
 
+
+# TODO: single:  fuzzied / fuzzied-noupdate
+# TODO: split: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
+# TODO: multi: nopotpo / nopo / nopo-noupdate / notrans / uptodate / fuzzy / fuzzied / fuzzied-noupdate
+# TODO: language-specific option overriding generic option
+# TODO: command line option overriding generic option
+# TODO: command line option overriding language-specific option
 
 my @ignored_tests;
 push @ignored_tests, {
