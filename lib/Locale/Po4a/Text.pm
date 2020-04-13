@@ -82,7 +82,7 @@ Deactivate the detection of bullets.
 
 By default, when a bullet is detected, the bullet paragraph is not considered
 as a verbatim paragraph (with the no-wrap flag in the PO file). Instead, the
-corresponding paragraph is rewraped in the translation.
+corresponding paragraph is rewrapped in the translation.
 
 =cut
 
