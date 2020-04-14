@@ -20,7 +20,7 @@ $VERSION = "0.58-alpha";
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::TransTractor $VERSION");
 
-use Carp qw(croak);
+use Carp qw(croak confess);
 use Locale::Po4a::Po;
 use Locale::Po4a::Common;
 
@@ -304,57 +304,63 @@ sub process {
             File::Spec->abs2rel( $params{'srcdir'} )
         ) if $self->debug();
     }
+
+    our ( $destdir, $srcdir, $calldir ) = ( $params{'destdir'}, $params{'srcdir'}, $params{'calldir'} );
+
+    sub _input_file {
+        my $filename = $_[0];
+        return $filename if ( File::Spec->file_name_is_absolute($filename) );
+        foreach ( ( $destdir, $srcdir, $calldir ) ) {
+            next unless defined $_;
+            my $p = File::Spec->catfile( $_, $filename );
+            return $p if -e $p;
+        }
+        return $filename;
+    }
+
+    sub _output_file {
+        my $filename = $_[0];
+        return $filename if ( File::Spec->file_name_is_absolute($filename) );
+        foreach ( ( $destdir, $calldir ) ) {
+            next unless defined $_;
+            return File::Spec->catfile( $_, $filename ) if -d $_ and -w $_;
+        }
+        return $filename;
+    }
+
     foreach my $file ( @{ $params{'po_in_name'} } ) {
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call readpo(%s)" ), $file )
+        my $infile = _input_file($file);
+        print STDERR wrap_mod( "po4a::transtractor::process", "Read PO file $infile" )
           if $self->debug();
-        $self->readpo($file);
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done readpo(%s)" ), $file )
-          if $self->debug();
+        $self->readpo($infile);
     }
     foreach my $file ( @{ $params{'file_in_name'} } ) {
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call read(%s)" ), $file )
+        my $infile = _input_file($file);
+        print STDERR wrap_mod( "po4a::transtractor::process", "Read document $infile" )
           if $self->debug();
-        $self->read($file);
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done read(%s)" ), $file )
-          if $self->debug();
+        $self->read( $infile, $file );
     }
-    print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call parse()" ) ) if $self->debug();
+    print STDERR wrap_mod( "po4a::transtractor::process", "Call parse()" ) if $self->debug();
     $self->parse();
-    print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done parse()" ) ) if $self->debug();
+    print STDERR wrap_mod( "po4a::transtractor::process", "Done parse()" ) if $self->debug();
     foreach my $file ( @{ $params{'addendum'} } ) {
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call addendum(%s)" ), $file )
+        my $infile = _input_file($file);
+        print STDERR wrap_mod( "po4a::transtractor::process", "Apply addendum $infile" )
           if $self->debug();
         $self->addendum($file) || die "An addendum failed\n";
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done addendum(%s)" ), $file )
-          if $self->debug();
     }
-    chdir $params{'destdir'}
-      if ( defined $params{'destdir'} );
+
     if ( defined $params{'file_out_name'} ) {
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call write(%s)" ),
-            $params{'file_out_name'} )
+        my $outfile = _output_file( $params{'file_out_name'} );
+        print STDERR wrap_mod( "po4a::transtractor::process", "Write document $outfile" )
           if $self->debug();
-        $self->write( $params{'file_out_name'} );
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done write(%s)" ),
-            $params{'file_out_name'} )
-          if $self->debug();
+        $self->write($outfile);
     }
     if ( defined $params{'po_out_name'} ) {
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Call writepo(%s)" ),
-            $params{'po_out_name'} )
+        my $outfile = _output_file( $params{'po_out_name'} );
+        print STDERR wrap_mod( "po4a::transtractor::process", "Write PO file $outfile" )
           if $self->debug();
-        $self->writepo( $params{'po_out_name'} );
-        print STDERR wrap_mod( "po4a::transtractor::process", dgettext( "po4a", "Done writepo(%s)" ),
-            $params{'po_out_name'} )
-          if $self->debug();
-    }
-    if ( defined $params{'calldir'} ) {
-        chdir $params{'calldir'};
-        print STDERR wrap_mod(
-            "po4a::transtractor::process",
-            dgettext( "po4a", "Chdir %s (calldir)" ),
-            File::Spec->abs2rel( $params{'calldir'} )
-        ) if $self->debug();
+        $self->writepo($outfile);
     }
     return $self;
 }
@@ -420,36 +426,36 @@ sub new {
 
 =over 4
 
-=item read($)
+=item read($$)
 
 Add another input document data at the end of the existing array
-C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read.
+C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read. If a second
+argument is provided, it is the filename to use in the references.
 
 This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an
 array of strings with alternating meanings.
  * The string C<$textline> holding each line of the input text data.
  * The string C<< $filename:$linenum >> holding its location and called as
-   "reference".
+   "reference" (C<linenum> starts with 1).
 
 Please note that it does not parse anything. You should use the parse()
 function when you're done with packing input files into the document.
 
-Please note C<$linenum> starts with 1.
-
 =cut
 
-#'
 sub read() {
-    my $self     = shift;
-    my $filename = shift
-      or croak wrap_msg( dgettext( "po4a", "Can't read from file without having a filename" ) );
+    my $self = shift;
+    my ( $filename, $refname ) = ( shift, shift );
+    confess "read() requires a filename. Please report that bug."
+      unless defined $filename;
+    $refname //= $filename;
     my $linenum = 0;
 
     open INPUT, "<$filename"
       or croak wrap_msg( dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <INPUT> ) ) {
         $linenum++;
-        my $ref = "$filename:$linenum";
+        my $ref = "$refname:$linenum";
         $textline =~ s/\r$//;
         my @entry = ( $textline, $ref );
         push @{ $self->{TT}{doc_in} }, @entry;

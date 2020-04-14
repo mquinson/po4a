@@ -235,7 +235,7 @@ my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Local
 
 # Parse master file forcing conversion to utf if it's not in ascii
 foreach my $file (@masterfile) {
-    $mastertt->read($file);
+    $mastertt->read( $file, $file );
 }
 $mastertt->{TT}{utf_mode} = 1;
 if ( $mastertt->{TT}{ascii_input} ) {
@@ -255,7 +255,7 @@ unless ( scalar @locfile >= 1 ) {
     # We have to merge two transtractor files
 
     foreach my $file (@locfile) {
-        $transtt->read($file);
+        $transtt->read( $file, $file );
     }
 
     # We force the conversion to utf if the master document wasn't in ascii

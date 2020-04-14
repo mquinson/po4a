@@ -173,7 +173,7 @@ $parser->{TT}{file_in_charset} = $mastchar;
 my $filename = shift || pod2usage(1);
 $filename eq '-' || -e $filename || die wrap_msg( gettext("File %s does not exist."), $filename );
 
-$parser->read($filename);
+$parser->read( $filename, $filename );
 my %pot_options = ( 'wrap-po' => $wrappo );
 $parser->setpoout( Locale::Po4a::Po->new( \%pot_options ) );
 $parser->parse();

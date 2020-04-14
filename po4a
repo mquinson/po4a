@@ -202,21 +202,17 @@ This option can be used multiple times.
 =item B<--srcdir> I<SRCDIR>
 
 Set the base directory for all input documents specified in the B<po4a>
-configuration file. By default, PO files may be modified in I<srcdir>.
+configuration file. 
 
-With B<--no-update>, the PO files will not be updated at all, ensuring that the
-content of I<srcdir> will remain untouched.
-
-Another approach to prevent any modification of I<srcdir> is to specify a
-I<destdir>: the updated PO files will be placed in I<destdir>.
+If both I<destdir> and I<srcdir> are specified, input files are
+searched in the following directories, in order: I<destdir>,
+I<srcdir>, I<current dir>. Output files are written to I<destdir> if
+specified, or to the current directory.
 
 =item B<--destdir> I<DESTDIR>
 
 Set the base directory for all the output documents specified in the
-B<po4a> configuration file. If B<destdir> is specified, all file
-modifications will occur in this directory. Files existing out of
-this directory will be read but not modified. Instead, a new version
-will be created in B<destdir>.
+B<po4a> configuration file (see B<--srcdir> above).
 
 =back
 
@@ -683,6 +679,7 @@ sub get_options {
         "debug"              => 0,
         "verbose"            => 0,
         "quiet"              => 0,
+        "force"              => 0,
         "no-translations"    => 0,
         "no-update"          => 0,
         "keep-translations"  => 0,
@@ -1253,6 +1250,32 @@ if ( $pot_filename =~ m/\$master/ ) {
     }
 }
 
+our ( $destdir, $srcdir, $calldir ) = ( $po4a_opts{'destdir'}, $po4a_opts{'srcdir'}, $po4a_opts{'calldir'} );
+
+sub input_file {
+    my $filename = $_[0];
+    return $filename if ( File::Spec->file_name_is_absolute($filename) );
+    foreach ( ( $destdir, $srcdir, $calldir ) ) {
+        next unless defined $_;
+        my $p = File::Spec->catfile( $_, $filename );
+        return $p if -e $p;
+    }
+    return $filename;
+}
+
+sub output_file {
+    my $filename = $_[0];
+    return $filename if ( File::Spec->file_name_is_absolute($filename) );
+    foreach ( ( $destdir, $calldir ) ) {
+        next unless defined $_;
+        return File::Spec->catfile( $_, $filename ) if -d $_ and -w $_;
+    }
+    return $filename;
+}
+
+my $srcpath = ( $po4a_opts{'srcdir'} // $po4a_opts{'calldir'} ) . "/";
+my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'} . "/" : $srcpath;
+
 if ($update_pot_file) {
     chdir $po4a_opts{"srcdir"}
       if ( defined $po4a_opts{"srcdir"} );
@@ -1300,6 +1323,7 @@ if ($update_pot_file) {
         $doc->setpoout($potfile);
         my @file_in_name;
         push @file_in_name, $pot_in;
+
         $doc->process(
             'file_in_name'    => \@file_in_name,
             'file_in_charset' => $file_opts{"mastchar"},
@@ -1338,9 +1362,6 @@ if ($update_pot_file) {
       if ( $po4a_opts{"verbose"} and not $po4a_opts{"no-update"} );
 }
 
-my $srcpath = ( $po4a_opts{'srcdir'} // $po4a_opts{'calldir'} ) . "/";
-my $dstpath = defined $po4a_opts{'destdir'} ? $po4a_opts{'destdir'} . "/" : $srcpath;
-
 if ( $po4a_opts{"split"} ) {
 
     # Generate a .pot for each document
@@ -1360,9 +1381,7 @@ if ( $po4a_opts{"split"} ) {
             ) or die wrap_msg( gettext("Can't create a temporary POT file: %s"), $! );
         }
 
-        chdir $po4a_opts{"srcdir"}
-          if ( defined $po4a_opts{"srcdir"} );
-        my $dir = dirname( $split_pot{$master} );
+        my $dir = dirname( $dstpath . $split_pot{$master} );
         if ( not -d $dir ) {
             mkdir $dir or die wrap_msg( gettext("Can't create directory '%s': %s"), $dir, $! );
         }
@@ -1376,8 +1395,6 @@ if ( $po4a_opts{"split"} ) {
 
         move_po_if_needed( $tmp_file, ( $po4a_opts{split} ? "" : $dstpath ) . $split_pot{$master}, 0 )
           unless ( $po4a_opts{"force"} );
-        chdir $po4a_opts{"calldir"}
-          if ( defined $po4a_opts{"srcdir"} );
     }
 
     # Generate a complete .po

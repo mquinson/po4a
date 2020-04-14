@@ -25,6 +25,8 @@ require Exporter;
 use vars qw(@ISA);
 @ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
 
+use Carp qw(croak confess);
+
 sub initialize { }
 
 sub translate {
@@ -133,14 +135,15 @@ sub textblock {
 sub end_pod { }
 
 sub read {
-    my ( $self, $filename ) = @_;
+    my ( $self, $filename, $refname ) = @_;
 
     push @{ $self->{DOCPOD}{infile} }, $filename;
-    $self->Locale::Po4a::TransTractor::read($filename);
+    $self->Locale::Po4a::TransTractor::read( $filename, $refname );
 }
 
 sub parse {
     my $self = shift;
+
     map { $self->parse_from_file($_) } @{ $self->{DOCPOD}{infile} };
 }
 

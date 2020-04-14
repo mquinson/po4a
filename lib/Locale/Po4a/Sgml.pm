@@ -271,10 +271,10 @@ sub initialize {
 }
 
 sub read {
-    my ( $self, $filename ) = @_;
+    my ( $self, $filename, $refname ) = @_;
 
     push @{ $self->{DOCPOD}{infile} }, $filename;
-    $self->Locale::Po4a::TransTractor::read($filename);
+    $self->Locale::Po4a::TransTractor::read( $filename, $refname );
 }
 
 sub parse {
