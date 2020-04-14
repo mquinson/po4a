@@ -137,7 +137,7 @@ use Time::Local;
 use Encode;
 use Config;
 
-my @known_flags = qw(wrap no-wrap c-format fuzzy);
+my @known_flags = qw(wrap no-wrap c-format markdown-text fuzzy);
 
 our %debug = (
     'canonize' => 0,

@@ -997,6 +997,7 @@ sub translate {
         'reference' => $ref,
         'type'      => $type,
         'automatic' => $options{'comment'},
+        'flags'     => $options{'flags'},
         'wrap'      => $options{'wrap'} || 0,
         'wrapcol'   => $options{'wrapcol'}
     );
