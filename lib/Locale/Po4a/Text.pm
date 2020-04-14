@@ -770,7 +770,8 @@ sub parse_markdown {
 
         # Remove the trailing newline from the title
         chomp($paragraph);
-        my $t = $self->translate( $paragraph, $self->{ref}, "Title $level", "wrap" => 0 );
+        my $t = $self->translate( $paragraph, $self->{ref}, "Title $level", "wrap" => 0,
+				  "flags" => "markdown-text" );
 
         # Add the newline again for the output
         $self->pushline( $t . "\n" );
@@ -787,7 +788,8 @@ sub parse_markdown {
         do_paragraph( $self, $paragraph, $wrapped_mode );
         $wrapped_mode = 0;
         $paragraph    = "";
-        my $t = $self->translate( $title, $self->{ref}, "Title $titlelevel1", "wrap" => 0 );
+        my $t = $self->translate( $title, $self->{ref}, "Title $titlelevel1", "wrap" => 0,
+				  "flags" => "markdown-text" );
         $self->pushline( $titlelevel1 . $titlespaces . $t . $titlelevel2 . "\n" );
         $wrapped_mode = $defaultwrap;
     } elsif ( $line =~ /^[ ]{0,3}([*_-])\s*(?:\1\s*){2,}$/ ) {
@@ -917,6 +919,11 @@ sub parse {
 sub do_paragraph {
     my ( $self, $paragraph, $wrap ) = ( shift, shift, shift );
     my $type = shift || $self->{type} || "Plain text";
+    my $flags = "";
+    if ($type eq "Plain text" and $markdown) {
+	$flags = "markdown-text";
+    }
+
     return if ( $paragraph eq "" );
 
     $wrap = 0 unless $defaultwrap;
@@ -963,6 +970,7 @@ sub do_paragraph {
                         $text,
                         $self->{ref},
                         "Bullet: '$indent1$bullet'",
+                        "flags" => "markdown-text",
                         "wrap"    => $defaultwrap,
                         "wrapcol" => -( length $indent2 )
                     );
@@ -992,6 +1000,7 @@ sub do_paragraph {
         $self->{ref},
         $type,
         "comment" => join( "\n", @comments ),
+        "flags"   => $flags,
         "wrap"    => $wrap
     );
     @comments = ();
