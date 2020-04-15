@@ -137,7 +137,39 @@ use Time::Local;
 use Encode;
 use Config;
 
-my @known_flags = qw(wrap no-wrap c-format markdown-text fuzzy);
+my @known_flags = qw(
+  wrap no-wrap fuzzy
+  c-format no-c-format
+  objc-format no-objc-format
+  sh-format no-sh-format
+  python-format no-python-format
+  python-brace-format no-python-brace-format
+  lisp-format no-lisp-format
+  elisp-format no-elisp-format
+  librep-format no-librep-format
+  scheme-format no-scheme-format
+  smalltalk-format no-smalltalk-format
+  java-format no-java-format
+  csharp-format no-csharp-format
+  awk-format no-awk-format
+  object-pascal-format no-object-pascal-format
+  ycp-format no-ycp-format
+  tcl-format no-tcl-format
+  perl-format no-perl-format
+  perl-brace-format no-perl-brace-format
+  php-format no-php-format
+  gcc-internal-format no-gcc-internal-format
+  gfc-internal-format no-gfc-internal-format
+  qt-format no-qt-format
+  qt-plural-format no-qt-plural-format
+  kde-format no-kde-format
+  boost-format no-boost-format
+  lua-format no-lua-format
+  javascript-format no-javascript-format
+);
+
+# Custom flags, used for example by weblate
+push @known_flags, 'markdown-text';
 
 our %debug = (
     'canonize' => 0,
