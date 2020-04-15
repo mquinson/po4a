@@ -772,10 +772,12 @@ sub get_options {
     $opts{"no-translations"} = 1 if $opts{"rm-translations"};
 
     if ( defined $opts{"srcdir"} and not -d $opts{"srcdir"} ) {
-        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist."), "srcdir", $opts{"srcdir"} );
+        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist (current directory: %s)."),
+            "srcdir", $opts{"srcdir"}, cwd() );
     }
     if ( defined $opts{"destdir"} and not -d $opts{"destdir"} ) {
-        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist."), "destdir", $opts{"destdir"} );
+        die wrap_msg( gettext("Option %s invalid. Directory %s does not exist (current directory: %s)."),
+            "destdir", $opts{"destdir"}, cwd() );
     }
 
     return %opts;
@@ -829,6 +831,33 @@ sub parse_config_options {
 }
 
 my %po4a_opts = get_options(@ARGV);
+
+our ( $destdir, $srcdir, $calldir ) = ( $po4a_opts{'destdir'}, $po4a_opts{'srcdir'}, $po4a_opts{'calldir'} );
+
+sub find_input_file {
+    my $filename = $_[0];
+    my $debug    = $_[1];
+    print STDERR "Search for input file $filename\n" if $debug;
+    return $filename if ( File::Spec->file_name_is_absolute($filename) );
+    foreach ( ( $destdir, $srcdir, $calldir ) ) {
+        next unless defined $_;
+        my $p = File::Spec->catfile( $_, $filename );
+        print STDERR "Test $p: " . ( -e $p ? "OK" : "nope" ) . "\n"
+          if defined $debug;
+        return $p if -e $p;
+    }
+    return $filename;
+}
+
+sub find_output_file {
+    my $filename = $_[0];
+    return $filename if ( File::Spec->file_name_is_absolute($filename) );
+    foreach ( ( $destdir, $calldir ) ) {
+        next unless defined $_;
+        return File::Spec->catfile( $_, $filename ) if -d $_ and -w $_;
+    }
+    return $filename;
+}
 
 # Argument check
 $po4a_opts{"help"} && pod2usage( -verbose => 1, -exitval => 0 );
@@ -945,16 +974,14 @@ while (<CONFIG>) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("The POT file cannot be set twice.") )
           if length $pot_filename;
 
-        chdir $po4a_opts{"srcdir"}
-          if ( defined $po4a_opts{"srcdir"} );
         my $po_directory = $main;
         die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory"), $po_directory )
-          unless ( -d $po_directory );
-        opendir PO_DIR, $po_directory
+          unless ( -d find_input_file($po_directory) );
+        opendir PO_DIR, find_input_file($po_directory)
           or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list the '%s' directory"), $po_directory );
 
         foreach my $f ( readdir PO_DIR ) {
-            next unless -f "$po_directory/$f";
+            next unless -f find_input_file("$po_directory/$f");
             if ( $f =~ m/^(.*)\.po$/ ) {
                 push @langs, $1;
                 $po_filename{$1} = "$po_directory/$f";
@@ -973,25 +1000,20 @@ while (<CONFIG>) {
             warn wrap_ref_mod( "$config_file:$nb", "", gettext("no PO files found in %s"), $po_directory );
         }
 
-        chdir $po4a_opts{"calldir"}
-          if ( defined $po4a_opts{"srcdir"} );
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
-        chdir $po4a_opts{"srcdir"}
-          if ( defined $po4a_opts{"srcdir"} );
 
         if ( defined $document{$main}{'format'} ) {
             warn wrap_ref_mod(
                 "$config_file:$nb",
                 "",
                 gettext(
-                        "The master file '%s' was specified earlier in the "
-                      . "configuration file. This may cause problems with "
-                      . "options."
+                    "The master file '%s' was specified earlier in the configuration file. This may cause problems with options."
                 ),
                 $main
             ) unless ( $po4a_opts{"quiet"} );
-        } elsif ( not -e $main ) {
-            die wrap_ref_mod( "$config_file:$nb", "", gettext("The master file '%s' does not exist."), $main );
+        } elsif ( not -e find_input_file($main) ) {
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("The master file '%s' does not exist."),
+                find_input_file($main) );
         }
         if ( scalar @{ $po4a_opts{"partial"} } ) {
             foreach my $file ( @{ $po4a_opts{"partial"} } ) {
@@ -1062,7 +1084,7 @@ while (<CONFIG>) {
                         $discarded{$trans} = 1;
                         next;
                     }
-                    next if ( $modifiers =~ m/\?/ and not -e $trans );
+                    next if ( $modifiers =~ m/\?/ and not -e find_input_file($trans) );
                     if ( $modifiers =~ m/@/ ) {
                         open LIST, "<", "$trans" or die wrap_msg( gettext("Can't open %s: %s"), $trans, $! );
                         my @new_list = ();
@@ -1096,8 +1118,6 @@ while (<CONFIG>) {
                 $document{$main}{$lang} = $trans;
             }
         }
-        chdir $po4a_opts{"calldir"}
-          if ( defined $po4a_opts{"srcdir"} );
     } elsif ( $cmd =~ m/po4a_alias: *(.*)/ ) {
         my $name  = $1;
         my %alias = ();
@@ -1200,24 +1220,20 @@ if ( $pot_filename =~ m/\$master/ ) {
     }
 
     if ( not scalar @{ $po4a_opts{"partial"} } ) {
-        chdir $po4a_opts{"srcdir"}
-          if ( defined $po4a_opts{"srcdir"} );
-        if ( -e $pot_filename ) {
-            my $modtime = ( stat $pot_filename )[9];
+        if ( -e find_input_file($pot_filename) ) {
+            my $modtime = ( stat find_input_file($pot_filename) )[9];
 
             # The POT needs to be re-generated if a master document is more recent
             # than the POT.
             foreach my $master ( keys %document ) {
                 next if ( $master eq '' );
-                my $pot_in = $document{$master}{'pot_in'};
+                my $pot_in = find_input_file( $document{$master}{'pot_in'} );
                 if ( ( stat $pot_in )[9] >= $modtime ) {
                     $update_pot_file = 1;
                     last;
                 }
             }
 
-            chdir $po4a_opts{"calldir"}
-              if ( defined $po4a_opts{"srcdir"} );
             if ( ( stat $config_file )[9] > $modtime ) {
 
                 # The configuration file was modified after the POT.
@@ -1245,37 +1261,10 @@ if ( $pot_filename =~ m/\$master/ ) {
               if $po4a_opts{"verbose"};
             $update_pot_file = 1;
         }
-        chdir $po4a_opts{"calldir"}
-          if ( defined $po4a_opts{"srcdir"} );
     }
-}
-
-our ( $destdir, $srcdir, $calldir ) = ( $po4a_opts{'destdir'}, $po4a_opts{'srcdir'}, $po4a_opts{'calldir'} );
-
-sub find_input_file {
-    my $filename = $_[0];
-    return $filename if ( File::Spec->file_name_is_absolute($filename) );
-    foreach ( ( $destdir, $srcdir, $calldir ) ) {
-        next unless defined $_;
-        my $p = File::Spec->catfile( $_, $filename );
-        return $p if -e $p;
-    }
-    return $filename;
-}
-
-sub find_output_file {
-    my $filename = $_[0];
-    return $filename if ( File::Spec->file_name_is_absolute($filename) );
-    foreach ( ( $destdir, $calldir ) ) {
-        next unless defined $_;
-        return File::Spec->catfile( $_, $filename ) if -d $_ and -w $_;
-    }
-    return $filename;
 }
 
 if ($update_pot_file) {
-    chdir $po4a_opts{"srcdir"}
-      if ( defined $po4a_opts{"srcdir"} );
     my %pot_options;
     foreach (qw(porefs wrap-po msgid-bugs-address copyright-holder package-name package-version)) {
         if ( defined $po4a_opts{$_} ) {
@@ -1285,8 +1274,6 @@ if ($update_pot_file) {
     $pot_options{'pot-language'} = $po4a_opts{"mastlang"};
     $pot_options{'pot-charset'}  = $po4a_opts{"mastchar"};
     my $potfile = Locale::Po4a::Po->new( \%pot_options );
-    chdir $po4a_opts{"calldir"}
-      if ( defined $po4a_opts{"srcdir"} );
     foreach my $master (
         sort {
             return -1 if ( $a eq "" );
@@ -1331,8 +1318,6 @@ if ($update_pot_file) {
         $potfile = $doc->getpoout();
     }
 
-    chdir $po4a_opts{"destdir"}
-      if ( defined $po4a_opts{"destdir"} );
     if ( $po4a_opts{"split"} ) {
         ( undef, $pot_filename ) = File::Temp::tempfile(
             "po4aXXXX",
@@ -1344,13 +1329,11 @@ if ($update_pot_file) {
         $potfile->write($pot_filename);
     } else {
         if ( $po4a_opts{"force"} ) {
-            $potfile->write($pot_filename);
+            $potfile->write( find_output_file($pot_filename) );
         } else {
-            $potfile->write_if_needed($pot_filename);
+            $potfile->write_if_needed( find_output_file($pot_filename) );
         }
     }
-    chdir $po4a_opts{"calldir"}
-      if ( defined $po4a_opts{"destdir"} );
 
     print wrap_msg( gettext(" (%d entries)"), $potfile->count_entries() )
       unless ( $po4a_opts{"quiet"} );
@@ -1410,7 +1393,7 @@ if ( $po4a_opts{"split"} ) {
             my $m         = $document{$master}{"master"} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
-            if ( -e "$master_po" ) {
+            if ( -e find_input_file($master_po) ) {
                 $cmd_cat .= " $master_po";
             } else {
                 print wrap_msg(
@@ -1467,8 +1450,6 @@ if ( not $po4a_opts{"no-update"} ) {
     }
 
     if ( $po4a_opts{"split"} ) {
-        chdir $po4a_opts{"srcdir"}
-          if ( defined $po4a_opts{"srcdir"} );
 
         # We don't need the tmp big POT anymore
         unlink($pot_filename);
@@ -1536,8 +1517,6 @@ if ( not $po4a_opts{"no-update"} ) {
                 }
             }
         }
-        chdir $po4a_opts{"calldir"}
-          if ( defined $po4a_opts{"srcdir"} );
     }
 }    # update po/pot files
 
@@ -1577,32 +1556,21 @@ if ( not $po4a_opts{"no-translations"} ) {
             }
 
             unless ( $po4a_opts{"force"} ) {
-                chdir $po4a_opts{"destdir"}
-                  if ( defined $po4a_opts{"destdir"} );
-                my $stampfile = $document{$master}{$lang};
-                unless ( -e $document{$master}{$lang} ) {
-                    $stampfile = $document{$master}{$lang} . ".po4a-stamp";
-                }
+                my $outfile   = find_input_file( $document{$master}{$lang} );
+                my $stampfile = ( -e $outfile ? $outfile : "$outfile.po4a-stamp" );
+
                 $stampfile = File::Spec->rel2abs($stampfile);
-                chdir $po4a_opts{"calldir"}
-                  if ( defined $po4a_opts{"destdir"} );
 
                 my @files = ( $master, $po_filename{$lang}, File::Spec->rel2abs($config_file) );
                 if ( defined $document{$master}{"add_$lang"} ) {
                     push @files, @{ $document{$master}{"add_$lang"} };
                 }
 
-                chdir $po4a_opts{"srcdir"}
-                  if ( defined $po4a_opts{"srcdir"} );
                 unless ( is_older( $stampfile, @files ) ) {
                     print wrap_msg( gettext("%s doesn't need to be updated."), $document{$master}{$lang} )
                       if ( $po4a_opts{"verbose"} );
-                    chdir $po4a_opts{"calldir"}
-                      if ( defined $po4a_opts{"srcdir"} );
                     next DOC;
                 }
-                chdir $po4a_opts{"calldir"}
-                  if ( defined $po4a_opts{"srcdir"} );
             }
 
             my %file_opts = %po4a_opts;
@@ -1631,7 +1599,7 @@ if ( not $po4a_opts{"no-translations"} ) {
 
             my $translation_out;
             if ( $po4a_opts{"keep-translations"}
-                && -e $document{$master}{$lang} )
+                && -e find_output_file( $document{$master}{$lang} ) )
             {
                 ( undef, $translation_out ) = File::Temp::tempfile(
                     "$document{$master}{$lang}.new-XXXX",
@@ -1664,56 +1632,39 @@ if ( not $po4a_opts{"no-translations"} ) {
                     $document{$master}{$lang},
                     $hit, $queries, $percent, $file_opts{"threshold"}
                 );
-                chdir $po4a_opts{"destdir"}
-                  if ( defined $po4a_opts{"destdir"} );
-                unlink( $document{$master}{$lang} )
-                  if ( !$po4a_opts{"keep-translations"}
-                    && -e $document{$master}{$lang} );
-                unlink($translation_out)
-                  if ( $po4a_opts{"keep-translations"}
-                    && -e $translation_out );
+                unlink( find_output_file( $document{$master}{$lang} ) )
+                  if ( !$po4a_opts{"keep-translations"} );
+                unlink( find_output_file($translation_out) )
+                  if ( $po4a_opts{"keep-translations"} );
                 if ( $po4a_opts{"stamp"} && ( not $po4a_opts{"force"} ) ) {
-                    touch( $document{$master}{$lang} . ".po4a-stamp" );
+                    touch( find_output_file( $document{$master}{$lang} ) . ".po4a-stamp" );
                     print wrap_msg( gettext("Timestamp %s created."), $document{$master}{$lang} . ".po4a-stamp" )
                       if ( $po4a_opts{"verbose"} );
                 }
-                chdir $po4a_opts{"calldir"}
-                  if ( defined $po4a_opts{"destdir"} );
                 next DOC;
 
             } else {    # The translated document reached the threshold and was kept
-                rename( $translation_out, $document{$master}{$lang} );
+                rename( $translation_out, find_output_file( $document{$master}{$lang} ) );
 
                 unless ( $po4a_opts{"force"} ) {
-                    chdir $po4a_opts{"destdir"}
-                      if ( defined $po4a_opts{"destdir"} );
                     if ( -e $document{$master}{$lang} . ".po4a-stamp" ) {
-                        unlink $document{$master}{$lang} . ".po4a-stamp";
+                        unlink find_output_file( $document{$master}{$lang} ) . ".po4a-stamp";
                         print wrap_msg( gettext("Timestamp %s removed."), $document{$master}{$lang} . ".po4a-stamp" )
                           if ( $po4a_opts{"verbose"} );
                     }
-                    chdir $po4a_opts{"calldir"}
-                      if ( defined $po4a_opts{"destdir"} );
                 }
             }
 
             if ( defined( $document{$master}{"add_$lang"} ) ) {
-                chdir $po4a_opts{"srcdir"}
-                  if ( defined $po4a_opts{"srcdir"} );
                 foreach my $add ( @{ $document{$master}{"add_$lang"} } ) {
                     if ( !$doc->addendum($add) ) {
                         die wrap_msg( gettext("Addendum %s does NOT apply to %s (translation discarded)."),
                             $add, $document{$master}{$lang} );
-                        chdir $po4a_opts{"destdir"}
-                          if ( defined $po4a_opts{"destdir"} );
-                        unlink( $document{$master}{$lang} ) if ( -e $document{$master}{$lang} );
-                        chdir $po4a_opts{"calldir"}
-                          if ( defined $po4a_opts{"destdir"} );
+                        my $outfile = find_output_file( $document{$master}{$lang} );
+                        unlink($outfile) if ( -e $outfile );
                         next DOC;
                     }
                 }
-                chdir $po4a_opts{"calldir"}
-                  if ( defined $po4a_opts{"srcdir"} );
             }
             if ( $file_opts{"verbose"} ) {
                 if ( $percent == 100 ) {
@@ -1728,41 +1679,30 @@ if ( not $po4a_opts{"no-translations"} ) {
                 }
             }
 
-            chdir $po4a_opts{"destdir"}
-              if ( defined $po4a_opts{"destdir"} );
-            $doc->write( $document{$master}{$lang} );
-            chdir $po4a_opts{"calldir"}
-              if ( defined $po4a_opts{"destdir"} );
+            $doc->write( find_output_file( $document{$master}{$lang} ) );
         }
     }
 }
 
 if ( $po4a_opts{"split"} ) {
-    chdir $po4a_opts{"srcdir"}
-      if ( defined $po4a_opts{"srcdir"} );
 
     # We don't need the tmp big POs anymore
     foreach my $lang ( keys %po_filename ) {
         unlink $po_filename{$lang};
     }
-    chdir $po4a_opts{"calldir"}
-      if ( defined $po4a_opts{"srcdir"} );
 }
 
 if ( $po4a_opts{"rm-translations"} ) {
 
     # Delete the translated documents
-    chdir $po4a_opts{"destdir"}
-      if ( defined $po4a_opts{"destdir"} );
     foreach my $lang ( keys %po_filename ) {
         foreach my $master ( keys %document ) {
             next if ( $master eq '' );
-            unlink $document{$master}{$lang};
-            unlink $document{$master}{$lang} . ".po4a-stamp";
+            my $outfile = find_output_file( $document{$master}{$lang} );
+            unlink $outfile;
+            unlink "$outfile.po4a-stamp";
         }
     }
-    chdir $po4a_opts{"calldir"}
-      if ( defined $po4a_opts{"destdir"} );
 }
 
 sub touch {

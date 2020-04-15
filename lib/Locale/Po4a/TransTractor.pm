@@ -296,15 +296,6 @@ sub process {
     }
     $self->{TT}{'addendum_charset'} = $params{'addendum_charset'};
 
-    if ( defined $params{'srcdir'} ) {
-        chdir $params{'srcdir'};
-        print STDERR wrap_mod(
-            "po4a::transtractor::process",
-            dgettext( "po4a", "Chdir %s (srcdir)" ),
-            File::Spec->abs2rel( $params{'srcdir'} )
-        ) if $self->debug();
-    }
-
     our ( $destdir, $srcdir, $calldir ) = ( $params{'destdir'}, $params{'srcdir'}, $params{'calldir'} );
 
     sub _input_file {

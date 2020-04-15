@@ -11,10 +11,9 @@ use Testhelper;
 
 my @tests;
 push @tests, {
-    'todo'        => 'ongoing: srcdir specified',
-    'doc'         => 'Single language, no pot no po',
+    'doc'         => 'Single language, no pot no po (with srcdir)',
     'po4a.conf'   => 'cfg/single-nopotpo/single.conf',
-    'closed_path' => 'cfg/*/',                           # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',                                        # Do not use or modify the other tests
     'options'        => '--srcdir cfg/single-nopotpo --destdir tmp/cfg/single-nopotpo',
     'expected_files' => 'single.fr.po  single.pot',
 

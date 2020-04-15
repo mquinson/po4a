@@ -189,7 +189,12 @@ sub run_one_po4aconf {
     setup($test);
 
     my $cmd =
-      "${execpath}/po4a -f " . $test->{'po4a.conf'} . " " . ( $test->{'options'} // '' ) . " > tmp/$path/output 2>&1";
+        "${execpath}/po4a -f "
+      . $test->{'po4a.conf'} . " "
+      . ( $test->{'options'} // '' )
+      . " 2>&1 | cat > tmp/$path/output";
+
+    #    . " 2>&1 | sed -e 's|tmp/||' -e 's|$path/||' > tmp/$path/output";
 
     #    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
