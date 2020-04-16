@@ -175,7 +175,6 @@ sub run_one_po4aconf {
     map { push @teardown, $_; } $t->{'teardown'} if exists $t->{'teardown'};
 
     fail("Broken test: path $path does not exist") unless -e $path;
-    fail("Broken test: config file $path/$basename.$ext does not exist") unless -e "$path/$basename.$ext";
 
     if ($closed_path) {
         push @setup,    "chmod -r-w-x " . $closed_path;    # Don't even look at the closed path
@@ -218,7 +217,6 @@ sub run_one_po4aconf {
 
     my $cmd = "$execpath/po4a -f $cwd/$po4aconf $options > $cwd/$tmppath/output 2>&1";
 
-    #    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
     system("mkdir -p $tmppath/") && die "Cannot create $tmppath/: $!";
 
     chdir $run_from || fail "Cannot change directory to $run_from: $!";
@@ -248,7 +246,7 @@ sub run_one_po4aconf {
     unless ( $t->{'diff_outfile'} ) {
         unless ( -e $expected_outfile ) {
             teardown( \@teardown );
-            die "Malformed test $basename ($doc): no expected output. Please touch $expected_outfile\n";
+            die "Malformed test $path ($doc): no expected output. Please touch $expected_outfile\n";
         }
     }
     if ( system_failed( "$diff_outfile 2>&1 > $tmppath/diff_output", "Comparing output of po4a" ) ) {
@@ -275,28 +273,30 @@ sub run_one_po4aconf {
     $expected{'diff_output'} = 1;
   FILE: foreach my $file ( glob("$tmppath/*") ) {
         $file =~ s|$tmppath/||;
-        if ( ( $mode eq 'srcdir' || $mode eq 'dstdir' || $mode eq 'srcdstdir' ) && ( !$expected{$file} ) ) {
-            teardown( \@teardown );
-            fail "Unexpected file '$file'";
-        }
-        delete $expected{$file};
-
-        next FILE if $file eq 'output' || $file eq 'diff_output';
-        if ( -e "$path/_$file" ) {
-            add_unless_found(
-                \@tests,
-                "$path/_$file *$tmppath/$file",
-                ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file"
-            );
-        } elsif ( -e "$path/$file" ) {
-            add_unless_found(
-                \@tests,
-                "$path/$file *$tmppath/$file",
-                ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file"
-            );
+        if ( not $expected{$file} ) {
+            if ( ( $mode eq 'srcdir' || $mode eq 'dstdir' || $mode eq 'srcdstdir' ) ) {
+                teardown( \@teardown );
+                fail "Unexpected file '$file'";
+            }
         } else {
-            teardown( \@teardown );
-            fail("Broken test $path/$basename: $path/_$file should be the expected content of produced file $file");
+            delete $expected{$file};
+            next FILE if $file eq 'output' || $file eq 'diff_output';
+            if ( -e "$path/_$file" ) {
+                add_unless_found(
+                    \@tests,
+                    "$path/_$file *$tmppath/$file",
+                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file"
+                );
+            } elsif ( -e "$path/$file" ) {
+                add_unless_found(
+                    \@tests,
+                    "$path/$file *$tmppath/$file",
+                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file"
+                );
+            } else {
+                teardown( \@teardown );
+                fail("Broken test $path: $path/_$file should be the expected content of produced file $file");
+            }
         }
     }
     foreach my $file ( keys %expected ) {
