@@ -11,23 +11,21 @@ use Testhelper;
 
 my @tests;
 push @tests, {
-    'doc'         => 'Single language, no pot no po (with srcdir)',
-    'po4a.conf'   => 'cfg/single-nopotpo/single.conf',
-    'closed_path' => 'cfg/*/',                                        # Do not use or modify the other tests
-    'options'        => '--srcdir cfg/single-nopotpo --destdir tmp/cfg/single-nopotpo',
+    'doc'            => 'Single language, no pot no po',
+    'po4a.conf'      => 'cfg/single-nopotpo/po4a.conf',
+    'closed_path'    => 'cfg/*/',                          # Do not use or modify the other tests
     'expected_files' => 'single.fr.po  single.pot',
-
   },
   {
     'doc'            => 'Single language, no po',
-    'po4a.conf'      => 'cfg/single-nopo/single.conf',
+    'po4a.conf'      => 'cfg/single-nopo/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single.fr.po  single.pot',
 
   },
   {
     'doc'              => 'Single language, no po, --no-update',
-    'po4a.conf'        => 'cfg/single-nopo/single.conf',
+    'po4a.conf'        => 'cfg/single-nopo/po4a.conf',
     'options'          => ' --no-update',
     'closed_path'      => 'cfg/*/',
     'expected_outfile' => 'cfg/single-nopo/_output-noupdate',

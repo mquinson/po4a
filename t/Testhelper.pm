@@ -47,6 +47,14 @@
 #                           - 'chmod 0' the directories marked 'closed_path'
 #                           - 'chmod +r-w+x' the test directory
 #                           - 'chmod +r-w' all files in the test directory
+# * 'format' tests: TODO. For now, they are normalize tests, the old way of doing this
+# * 'run' test: ancient, unconverted tests
+#
+# po4a.conf tests are run 4 times each, in the following modes:
+#  - srcdir: cd tmp/$path ; po4a --srcdir  $cwd/$path     ; cd $cwd; <all tests>
+#  - dstdir: cd $path     ; po4a --destdir $cwd/tmp/$path ; cd $cwd: <all tests>
+#  - srcdstdir: po4a --srcdir $cwd/$path --destdir $cwd/tmp/$path ;  <all tests>
+#  - curdir: cp $path/* tmp/$path ; cd tmp/$path ; po4a ; cd $cwd;   <all tests but the one checking that only expected files were created>
 
 package Testhelper;
 
@@ -111,20 +119,14 @@ sub system_failed {
     } else {
         $doc = 'Provided command' unless $doc ne '';
         fail( $doc . " (retcode: $exit_status)" );
-        diag("  Command: $cmd");
+        note("FAILED command: $cmd");
         return 1;
     }
 }
 
 sub teardown {
-    my $test = shift;
-
-    return unless $test->{'teardown'};
-
-    my @cmds;
-    push @cmds, @{ $test->{'teardown'} } if ( ref $test->{'teardown'} eq 'ARRAY' );
-    push @cmds, $test->{'teardown'}      if ( ref $test->{'teardown'} eq ref '' );
-    fail "Invalid key 'teardown'. It must be either an array or a string" unless scalar @cmds;
+    my $ref  = shift;
+    my @cmds = @{$ref};
 
     foreach my $cmd (@cmds) {
         if ( system("$cmd 1>&2") ) {
@@ -137,152 +139,183 @@ sub teardown {
 }
 
 sub setup {
-    my $test = shift;
-
-    return unless $test->{'setup'};
-
-    my @cmds;
-    push @cmds, @{ $test->{'setup'} } if ( ref $test->{'setup'} eq 'ARRAY' );
-    push @cmds, $test->{'setup'}      if ( ref $test->{'setup'} eq ref '' );
-    fail "Invalid key 'setup'. It must be either an array or a string" unless scalar @cmds;
+    my $ref  = shift;
+    my @cmds = @{$ref};
 
     foreach my $cmd (@cmds) {
         if ( system("$cmd 1>&2") ) {
             diag("Error during setup: $!");
             diag("  Command: $cmd");
-            teardown($test);
+            return 0;
         } else {
             pass("Setup command: $cmd");
         }
     }
+    return 1;
 }
 
 sub run_one_po4aconf {
-    my ( $test, $path, $basename, $ext ) = @_;
+    my ( $t, $path, $basename, $ext, $mode ) = @_;
 
     my %valid_options;
     map { $valid_options{$_} = 1 }
       qw(po4a.conf todo doc closed_path options setup tests teardown expected_files diff_outfile expected_outfile );
-    map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
-      ( keys %{$test} );
+    map { die "Invalid test " . $t->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} } ( keys %{$t} );
 
-    $test->{'options'} = "--destdir tmp --verbose " . ( $test->{'options'} // "" );
-    fail("Broken test: 'tests' is not an array as expected") if exists $test->{tests} && ref $test->{tests} ne 'ARRAY';
-    $test->{'tests'} //= [];
+    my $po4aconf       = $t->{'po4a.conf'} || fail("Broken test: po4a.conf must be provided");
+    my $options        = "--verbose " . ( $t->{'options'} // "" );
+    my $closed_path    = $t->{'closed_path'};
+    my $doc            = $t->{'doc'};
+    my $expected_files = $t->{'expected_files'} // "";
 
-    fail("Broken test: path $path does not exist")                       unless -e $path;
+    fail("Broken test: 'tests' is not an array as expected") if exists $t->{tests} && ref $t->{tests} ne 'ARRAY';
+    my ( @tests, @setup, @teardown ) = ( (), (), () );
+    map { push @tests,    $_; } $t->{'tests'}    if exists $t->{'tests'};
+    map { push @setup,    $_; } $t->{'setup'}    if exists $t->{'setup'};
+    map { push @teardown, $_; } $t->{'teardown'} if exists $t->{'teardown'};
+
+    fail("Broken test: path $path does not exist") unless -e $path;
     fail("Broken test: config file $path/$basename.$ext does not exist") unless -e "$path/$basename.$ext";
-    return                                                               unless -e "$path/$basename.$ext";
 
-    system("rm -rf tmp/$path/")   && die "Cannot cleanup tmp/$path/ on startup: $!";
-    system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
-
-    if ( $test->{'closed_path'} ) {
-        $test->{'setup'}    //= ();
-        $test->{'teardown'} //= ();
-        push @{ $test->{'setup'} },    "chmod -r-w-x " . $test->{'closed_path'};    # Don't even look at the closed path
-        push @{ $test->{'teardown'} }, "chmod +r+w+x " . $test->{'closed_path'};    # Restore permissions
-        push @{ $test->{'setup'} },    "chmod +r+x $path";                          # Look into the path of this test
-        push @{ $test->{'setup'} },    "chmod -w -R $path";                         # But don't change any file in there
-        push @{ $test->{'teardown'} }, "chmod +w -R $path";                         # Restore permissions
+    if ($closed_path) {
+        push @setup,    "chmod -r-w-x " . $closed_path;    # Don't even look at the closed path
+        push @teardown, "chmod +r+w+x " . $closed_path;    # Restore permissions
+        push @setup,    "chmod +r+x $path";                # Look into the path of this test
+        push @setup,    "chmod -w -R $path";               # But don't change any file in there
+        push @teardown, "chmod +w -R $path";               # Restore permissions
     }
-    setup($test);
 
-    my $cmd =
-        "${execpath}/po4a -f "
-      . $test->{'po4a.conf'} . " "
-      . ( $test->{'options'} // '' )
-      . " 2>&1 | cat > tmp/$path/output";
+    my $cwd     = cwd();
+    my $tmppath = "tmp/$path";
+    $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
-    #    . " 2>&1 | sed -e 's|tmp/||' -e 's|$path/||' > tmp/$path/output";
+    my $run_from = '.';
+    if ( $mode eq 'srcdir' ) {
+        $tmppath .= '-src';
+        $run_from = $tmppath;
+        $options  = "--srcdir $cwd/$path $options";
+    } elsif ( $mode eq 'dstdir' ) {
+        $tmppath .= '-dst';
+        $run_from = $path;
+        $options  = "--destdir $cwd/$tmppath $options";
+    } elsif ( $mode eq 'srcdstdir' ) {
+        $tmppath .= '-srcdst';
+        $options = "--srcdir $path --destdir $tmppath $options";
+    } elsif ( $mode eq 'curdir' ) {
+        push @setup, "cp $path/* $tmppath";
+        push @setup, "chmod +w $tmppath/*";
+        $run_from = $tmppath;
+    } else {
+        die "Malformed test: mode $mode unknown\n";
+    }
+
+    system("rm -rf $tmppath/")   && die "Cannot cleanup $tmppath/ on startup: $!";
+    system("mkdir -p $tmppath/") && die "Cannot create $tmppath/: $!";
+    unless ( setup( \@setup ) ) {    # Failed
+        teardown( \@teardown );
+        return;
+    }
+
+    my $cmd = "$execpath/po4a -f $cwd/$po4aconf $options > $cwd/$tmppath/output 2>&1";
 
     #    print STDERR "Path: $path; Basename: $basename; Ext: $ext\n";
-    system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
+    system("mkdir -p $tmppath/") && die "Cannot create $tmppath/: $!";
 
+    chdir $run_from || fail "Cannot change directory to $run_from: $!";
+    pass("Change directory to $run_from");
+    die "Malformed test: conf file $cwd/$po4aconf does not exist from " . cwd() . " (mode:$mode)\n"
+      unless -e "$cwd/$po4aconf";
     if ( system_failed( $cmd, "Executing po4a" ) ) {
-        diag("Produced output:");
-        open FH, "tmp/$path/output" || die "Cannot open output file that I just created, I'm puzzled";
+        chdir $cwd || fail "Cannot change directory back to $cwd: $!";
+        note("Produced output:");
+        open FH, "$tmppath/output" || die "Cannot open output file that I just created, I'm puzzled";
         while (<FH>) {
-            diag("  $_");
+            note("  $_");
         }
-        diag("(end of command output)\n");
+        note("(end of command output)\n");
 
-        teardown($test);
-        show_files("tmp/$path/");
+        teardown( \@teardown );
+
+        #        show_files("$tmppath/");
         return;
     }
+    chdir $cwd || fail "Cannot change directory back to $cwd: $!";
+    pass("Change directory back to $cwd");
 
-    my $expected_outfile = $test->{'expected_outfile'} // "$path/_output";
-    my $diff_outfile     = $test->{'diff_outfile'}     // "diff -u $expected_outfile tmp/$path/output";
-    unless ( $test->{'diff_outfile'} ) {
+    my $expected_outfile = $t->{'expected_outfile'} // "$path/_output";
+    my $diff_outfile     = $t->{'diff_outfile'}
+      // " sed -e 's|$cwd/||' -e 's|$tmppath/||' -e 's|$path/||' $tmppath/output | " . "diff -u $expected_outfile -";
+    unless ( $t->{'diff_outfile'} ) {
         unless ( -e $expected_outfile ) {
-            teardown($test);
-            die "Malformed test $basename ("
-              . $test->{'doc'}
-              . "): no expected output. Please touch $expected_outfile\n";
+            teardown( \@teardown );
+            die "Malformed test $basename ($doc): no expected output. Please touch $expected_outfile\n";
         }
     }
-    if ( system_failed( "$diff_outfile 1>&2", "Comparing output of po4a" ) ) {
-        teardown($test);
-        show_files("tmp/$path/");
+    if ( system_failed( "$diff_outfile 2>&1 > $tmppath/diff_output", "Comparing output of po4a" ) ) {
+        note("Output difference:");
+        open FH, "$tmppath/diff_output" || die "Cannot open output file that I just created, I'm puzzled";
+        while (<FH>) {
+            chomp;
+            note("  $_");
+        }
+        note("(end of diff)\n");
+        teardown( \@teardown );
+        show_files("$tmppath/");
         return;
     }
 
-    if ( exists $test->{'expected_files'} ) {
-        my %expected;
-        map { $expected{$_} = 1 } split / +/, $test->{'expected_files'};
-        if ( length $test->{expected_files} == 0 ) {
-            note("Expecting no output file.");
+    my %expected;
+    map { $expected{$_} = 1 } split / +/, $expected_files;
+    if ( length $expected_files == 0 ) {
+        note("Expecting no output file.");
+    } else {
+        note( "Expecting " . ( scalar %expected ) . " output files: $expected_files" );
+    }
+    $expected{'output'}      = 1;
+    $expected{'diff_output'} = 1;
+  FILE: foreach my $file ( glob("$tmppath/*") ) {
+        $file =~ s|$tmppath/||;
+        if ( ( $mode eq 'srcdir' || $mode eq 'dstdir' || $mode eq 'srcdstdir' ) && ( !$expected{$file} ) ) {
+            teardown( \@teardown );
+            fail "Unexpected file '$file'";
+        }
+        delete $expected{$file};
+
+        next FILE if $file eq 'output' || $file eq 'diff_output';
+        if ( -e "$path/_$file" ) {
+            add_unless_found(
+                \@tests,
+                "$path/_$file *$tmppath/$file",
+                ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file"
+            );
+        } elsif ( -e "$path/$file" ) {
+            add_unless_found(
+                \@tests,
+                "$path/$file *$tmppath/$file",
+                ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file"
+            );
         } else {
-            note( "Expecting " . ( scalar %expected ) . " output files: " . $test->{'expected_files'} );
+            teardown( \@teardown );
+            fail("Broken test $path/$basename: $path/_$file should be the expected content of produced file $file");
         }
-        $expected{'output'} = 1;
-      FILE: foreach my $file ( glob("tmp/${path}/*") ) {
-            $file =~ s|tmp/$path/||;
-            unless ( $expected{$file} ) {
-                teardown($test);
-                fail "Unexpected file '$file'";
-            }
-            delete $expected{$file};
+    }
+    foreach my $file ( keys %expected ) {
+        fail "Missing file '$file'";
+    }
 
-            next FILE if $file eq 'output';
-            if ( -e "$path/_$file" ) {
-                add_unless_found(
-                    $test->{tests},
-                    "$path/_$file *tmp/$path/$file",
-                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file tmp/$path/$file"
-                );
-            } elsif ( -e "$path/$file" ) {
-                add_unless_found(
-                    $test->{tests},
-                    "$path/$file *tmp/$path/$file",
-                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file tmp/$path/$file"
-                );
-            } else {
-                teardown($test);
-                fail("Broken test $path/$basename: $path/_$file should be the expected content of produced file $file");
-            }
-        }
-        foreach my $file ( keys %expected ) {
-            fail "Missing file '$file'";
+    for my $tcmd (@tests) {
+
+        #        print STDERR "cmd: $tcmd\n";
+        $tcmd =~ s/PATH/${execpath}/g;
+        $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
+        if ( system_failed( "$tcmd 1>&2", "" ) ) {
+            teardown( \@teardown );
+            show_files("$tmppath/");
+            return;
         }
     }
 
-    if ( scalar $test->{tests} ) {
-        for my $tcmd ( @{ $test->{tests} } ) {
-
-            #        print STDERR "cmd: $tcmd\n";
-            $tcmd =~ s/PATH/${execpath}/g;
-            $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
-            if ( system_failed( "$tcmd 1>&2", "" ) ) {
-                teardown($test);
-                show_files("tmp/$path/");
-                return;
-            }
-        }
-    }
-
-    teardown($test);
+    teardown( \@teardown );
 }
 
 sub run_one_format {
@@ -325,8 +358,8 @@ sub run_one_format {
             pass("  pass: $tcmd");
         } else {
             fail("Normalization result does not match.");
-            diag("  Failed command: $tcmd");
-            diag("  Files were produced with: $cmd");
+            fail("  Failed command: $tcmd");
+            fail("  Files were produced with: $cmd");
             $fail++;
         }
     }
@@ -414,10 +447,24 @@ sub run_all_tests {
                 if ( exists $test->{'todo'} ) {
                   TODO: {
                         local our $TODO = $test->{'todo'};
-                        subtest $test->{'doc'} => sub { run_one_po4aconf( $test, $path, $basename, $ext ); }
+                        subtest $test->{'doc'}
+                          . " (dstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'dstdir' ); };
+                        subtest $test->{'doc'}
+                          . " (srcdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdir' ); };
+                        subtest $test->{'doc'}
+                          . " (srcdstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdstdir' ); };
+                        subtest $test->{'doc'}
+                          . " (curdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'curdir' ); };
                     }
                 } else {
-                    subtest $test->{'doc'} => sub { run_one_po4aconf( $test, $path, $basename, $ext ); }
+                    subtest $test->{'doc'}
+                      . " (dstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'dstdir' ); };
+                    subtest $test->{'doc'}
+                      . " (srcdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdir' ); };
+                    subtest $test->{'doc'}
+                      . " (srcdstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdstdir' ); };
+                    subtest $test->{'doc'}
+                      . " (curdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'curdir' ); };
                 }
             } else {
                 fail "Test " . $test->{'doc'} . " malformed. Cannot parse the conf filename.";
