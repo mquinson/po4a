@@ -867,7 +867,6 @@ sub run_cmd {
     print $cmd. "\n" if $po4a_opts{"debug"};
 
     my $out = qx/$cmd 2>&1/;
-    print $out if ( $po4a_opts{"verbose"} );
     unless ( $? == 0 ) {
         my $err = "";
         if ( $? == -1 ) {
@@ -884,6 +883,7 @@ sub run_cmd {
 
         die wrap_msg( gettext("Error: %s"), $err );
     }
+    return $out;
 }
 
 my $config_file = shift(@ARGV) || pod2usage();
@@ -1320,7 +1320,7 @@ if ($update_pot_file) {
 
     if ( $po4a_opts{"split"} ) {
         ( undef, $pot_filename ) = File::Temp::tempfile(
-            "po4aXXXX",
+            "po4a-temp-pot-XXXX",
             DIR    => $ENV{TMPDIR} || "/tmp",
             SUFFIX => ".pot",
             OPEN   => 0,
@@ -1365,13 +1365,12 @@ if ( $po4a_opts{"split"} ) {
         if ( not -d $dir ) {
             mkdir $dir or die wrap_msg( gettext("Can't create directory '%s': %s"), $dir, $! );
         }
-        my $cmd =
-            "msggrep"
-          . $Config{_exe}
-          . " -N \"$master\" " . "-o "
-          . ( $po4a_opts{"force"} ? find_output_file( $split_pot{$master} ) : $tmp_file )
-          . " $pot_filename";
+        my $outfile = $po4a_opts{"force"} ? find_output_file( $split_pot{$master} ) : $tmp_file;
+        my $cmd     = "msggrep$Config{_exe} -N \"$master\" -o $outfile $pot_filename";
         run_cmd($cmd);
+
+        die "msggrep did not create $outfile. Please report that bug, along the information allowing to reproduce it\n"
+          unless ( -e $outfile );
 
         move_po_if_needed( $tmp_file, find_output_file( $split_pot{$master} ), 0 )
           unless ( $po4a_opts{"force"} );
@@ -1388,13 +1387,13 @@ if ( $po4a_opts{"split"} ) {
             UNLINK => 0
         ) or die wrap_msg( gettext("Can't create a temporary PO file: %s"), $! );
         my $cmd_cat = "";
-        foreach my $master ( keys %document ) {
+        foreach my $master ( sort keys %document ) {
             next if ( $master eq '' );
             my $m         = $document{$master}{"master"} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
             if ( -e find_input_file($master_po) ) {
-                $cmd_cat .= " $master_po";
+                $cmd_cat .= " " . find_input_file($master_po);
             } else {
                 print wrap_msg(
                     gettext("The translation of master file '%s' in language '%s' is missing (file: %s) -- skipping."),
@@ -1424,8 +1423,10 @@ if ( not $po4a_opts{"no-update"} ) {
             my $updated_potfile = find_output_file($pot_filename);
 
             if ( -e $infile ) {
-                print wrap_msg( gettext("Updating %s:"), $po_filename{$lang} )
-                  if ( $po4a_opts{"verbose"} );
+                printf(
+                    gettext("Updating %s:"),
+                    ( $po4a_opts{'split'} ? "the translation in language $lang" : $po_filename{$lang} )
+                ) if ( $po4a_opts{"verbose"} );
 
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
@@ -1437,13 +1438,16 @@ if ( not $po4a_opts{"no-update"} ) {
                 }
                 run_cmd($cmd);
 
-                my @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $outfile );
-                system(@cmd)
-                  if $po4a_opts{"verbose"};
+                if ( $po4a_opts{"verbose"} ) {
+                    my $stat = qx(msgfmt$Config{_exe} --statistics -v -o /dev/null $outfile 2>&1);
+                    $stat =~ s/^[^:]*://;
+                    print STDERR $stat;
+                }
+
             } else {
                 my $read_pot_filename = find_input_file($pot_filename);
                 my $cmd =
-                  "msginit" . $Config{_exe} . " -i $read_pot_filename --locale $lang -o $outfile --no-translator";
+                  "msginit$Config{_exe} -i $read_pot_filename --locale $lang -o $outfile --no-translator >/dev/null";
                 run_cmd($cmd);
             }
         }
@@ -1453,6 +1457,7 @@ if ( not $po4a_opts{"no-update"} ) {
 
         # We don't need the tmp big POT anymore
         unlink($pot_filename);
+        print STDERR "Unlink the big POT file $pot_filename\n" if $po4a_opts{'debug'};
 
         # Split the complete PO in multiple POs
         foreach $lang ( sort keys %po_filename ) {
@@ -1473,25 +1478,24 @@ if ( not $po4a_opts{"no-update"} ) {
                 my $cmd;
 
                 # Create an empty PO or copy the original PO header (to keep the header)
-                if ( -f $split_po{$lang}{$master} ) {
+                if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
                     $cmd =
                         "LC_ALL=C.UTF-8 msggrep$Config{_exe}"
                       . " --force-po --invert-match --msgid --regexp '.'"
                       . " --output $tmp_file "
-                      . $split_po{$lang}{$master};
+                      . find_input_file( $split_po{$lang}{$master} );
                 } else {
                     $cmd =
                         "msginit$Config{_exe} "
                       . "--no-translator -l $lang --input "
                       . find_output_file( $split_pot{$master} )
-                      . "--output $tmp_file";
+                      . " --output $tmp_file  >/dev/null";
                 }
                 run_cmd($cmd);
 
                 # Update the PO according to the new POT and to the big PO (compendium).
                 $cmd =
-                    "msgmerge"
-                  . $Config{_exe}
+                    "msgmerge$Config{_exe} "
                   . " --compendium "
                   . $po_filename{$lang}
                   . " --update --backup=none "
@@ -1517,7 +1521,7 @@ if ( not $po4a_opts{"no-update"} ) {
                 }
             }
         }
-    }
+    }    # if split
 }    # update po/pot files
 
 if ( not $po4a_opts{"no-translations"} ) {
@@ -1531,7 +1535,8 @@ if ( not $po4a_opts{"no-translations"} ) {
         my $pofile = find_input_file( $po_filename{$lang} );
 
         if ( not -e $pofile ) {
-            print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."), $po_filename{$lang}, $lang )
+            print wrap_msg( gettext("PO file %sfor language %s is missing -- skipping."),
+                ( File::Spec->file_name_is_absolute( $po_filename{$lang} ) ? "" : $po_filename{$lang} . " " ), $lang )
               if ( $po4a_opts{"verbose"} );
             next LANG;
         }

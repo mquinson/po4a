@@ -308,11 +308,19 @@ sub run_one_po4aconf {
         #        print STDERR "cmd: $tcmd\n";
         $tcmd =~ s/PATH/${execpath}/g;
         $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
-        if ( system_failed( "$tcmd 1>&2", "" ) ) {
+        if ( system_failed( "$tcmd 1>&2 > $tmppath/_cmd_output", "" ) ) {
+            note("Command output:");
+            open FH, "$tmppath/_cmd_output" || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                chomp;
+                note("| $_");
+            }
+            note("(end of output)\n");
             teardown( \@teardown );
             show_files("$tmppath/");
             return;
         }
+        unlink("$tmppath/_cmd_output");
     }
 
     teardown( \@teardown );
