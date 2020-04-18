@@ -1338,7 +1338,7 @@ if ($update_pot_file) {
           ( $document{''}{"options"}{"global"} // '' ) . ' ' .        # global options (if any) as default values
           ( $document{$master}{"options"}{"global"} // '' ) . ' ';    # file's global options (if any) to override them
         $options =~ s/ *$//;
-        print STDERR "Options for $master in $lang: $options\n" if $po4a_opts{'debug'};
+        print STDERR "Options for $master while generating pot: $options\n" if $po4a_opts{'debug'};
         %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV ) if ( length $options );
 
         my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
