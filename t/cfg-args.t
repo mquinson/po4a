@@ -63,14 +63,6 @@ push @tests, {
 
   };
 
-my @ignored_tests;
-push @ignored_tests, {
-    'doc'   => 'Detect broken po files',
-    'run'   => 'cp t-05-config/test50.* tmp/ ' . '&& PATH/po4a -f t-05-config/test50.conf > tmp/test50.err 2>&1',
-    'tests' => [ 'diff -u t-05-config/test50.err tmp/test50.err', 'test ! -e tmp/test50.en.1' ]
-
-};
-
 run_all_tests(@tests);
 
 0;
