@@ -947,7 +947,7 @@ my (%document)
   ;    # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
 my $doc_count = 0;
 my %partial   = ( 'master' => {}, 'files' => {}, 'lang' => {} );
-open CONFIG, "<", "$config_file" or die wrap_msg( gettext("Can't open %s: %s"), $config_file, $! );
+open CONFIG, "<", "$config_file" or die wrap_msg( gettext("Cannot open %s: %s"), $config_file, $! );
 my ( $line, $nb ) = ( "", 0 );
 
 while (<CONFIG>) {
@@ -1135,7 +1135,8 @@ while (<CONFIG>) {
                     }
                     next if ( $modifiers =~ m/\?/ and not -e find_input_file($trans) );
                     if ( $modifiers =~ m/@/ ) {
-                        open LIST, "<", "$trans" or die wrap_msg( gettext("Can't open %s: %s"), $trans, $! );
+                        open LIST, "<", find_input_file($trans)
+                          or die wrap_msg( gettext("Cannot open %s: %s"), $trans, $! );
                         my @new_list = ();
                         while (<LIST>) {
                             chomp;

@@ -19,10 +19,10 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Lists of addendums (XML format)',
-    'po4a.conf'      => 'add/list/list.conf',
+    'doc'            => 'Lists of addendums (asciidoc format)',
+    'po4a.conf'      => 'add/list/po4a.conf',
     'closed_path'    => 'add/*/',
-    'expected_files' => 'output-1.xml up.po list.pot',
+    'expected_files' => 'output-1 output-2 output-3 output-123 output-list up.po list.pot',
   };
 
 my @ignored_tests;
