@@ -483,33 +483,76 @@ something like:
  [type: pod] script $lang:doc/$lang/script.1 \
              add_$lang:doc/l10n/script.$lang.add
 
-=head2 Specifying options for the modules
+=head2 Specifying options
 
-B<po4a> accepts options that will be passed to the module. These options are
-module specific and are specified with the B<-o> switch.
+You can specify two types of options in the configuration file: I<po4a options>
+are default values to the po4a command line options while I<format options> are
+used to change the behavior of the format parsers. As a I<po4a options>, you
+could for example specify in your configuration file that the default value of
+the B<--keep> command line parameter is 50% instead of 80%. I<Format options>
+are documented on the specific page of each parsing module, e.g.
+Locale::Po4a::Xml(1). You could for example pass B<nostrip> to the XML parser to
+not strip the spaces around the extracted strings.
 
-If you need a specific option for one of the documents you want to
-translate, you can also specify it in the configuration file. Options are
-introduced by the B<opt> keyword. The argument of the B<opt> keyword must be
-quoted with double quotes if it contains a space (e.g. if you specify
-multiple options, or an option with an argument).
-You can also specify options that will only apply to a specific language
-by using the B<opt_>I<lang> keyword.
+There is several ways of specifying these options, listed below by order of
+decreasing priority. For example, options provided on the command line override
+any value in the configuration file while the global options of the
+configuration provide default values that can be overridden by more specific
+settings.
 
-Here is an example:
- [type:man] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
-            opt:"-k 75" opt_it:"-L UTF-8" opt_fr:-v
+=over 2
 
-Arguments may contain spaces if you use single quotes or escaped double
-quotes:
- [po4a_alias:man] man opt:"-o \"mdoc=NAME,SEE ALSO\" -k 20"
+=item Options the command line:
 
-If you want to specify the same options for many documents, you may want
-to use an alias (see the B<Specifying aliases> section below).
+Either directly for po4a options, or through B<--option> for format options.
+For example:
 
-You can also set options for all the documents specified in the
-configuration file:
- [options] opt:"..." opt_fr:"..."
+  po4a --keep 50 --option nostrip
+
+Every command line option can be abbreviated:
+
+  po4a -k 50 -o nostrip
+
+=item Option specific to a master file.
+
+This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line defining the master document.
+Options passed through B<opt:> chunks are applied for all translations while B<opt_>I<lang> ones are specific to the given language I<lang>.
+
+In the following example, the threshold will be 0% for the French translation and 20% for the other ones.
+The B<nostrip> option will only be given to the XML parser for the French language.
+
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20" opt_fr:"--keep 0" opt_fr:"-o nostrip"
+
+The above line is equivalent to the following ones:
+
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20" opt_fr:"--keep 0 -o nostrip"
+
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt_fr:"--keep 0 -o nostrip"
+
+=item Options specific to a format alias.
+
+This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line defining the format alias.
+In this example, the option will only be used for the B<it> language.
+
+  [po4a_alias:test] man opt_it:"--keep 0"
+
+=item Global options from the configuration file.
+
+They are specified through B<[options]> lines in your configuration file, which
+content is handled as if their content were appended to the command line. Example:
+
+  [options] --keep 20 --option nostrip
+
+=back
+
+Here is an example showing how to quote the spaces and quotes:
+
+ [options] --master-charset UTF-8
+ 
+ [po4a_alias:MAN] man opt:"-o \"mdoc=NAME,SEE ALSO\""
+ 
+ [type:MAN] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
+            opt:"-k 75" opt_it:"-L UTF-8" opt_fr:--verbose
 
 =head2 Specifying aliases
 
@@ -662,6 +705,8 @@ my @ORIGINAL_ARGV = @ARGV;
 sub get_options {
     if ( defined $_[0] ) {
         @ARGV = @_;
+
+        #        map {print "o: $_\n"} @ARGV;
     } else {
         @ARGV = @ORIGINAL_ARGV;
     }
@@ -794,8 +839,8 @@ sub parse_config_options {
     my $options   = shift;    # reference to an hash of options
 
     while ( defined $line and $line !~ m/^\s*$/ ) {
-        if ( $line =~ m/^\s*opt(?:_(.+?))?:\s*(.+?)\s*$/ ) {
-            my $lang = $1;
+        if ( $line =~ m/^\s*(?:opt(?:_(.+?))?:)?\s*(.+?)\s*$/ ) {
+            my $lang = $1 // 'global';
             $line = $2;
             my $opt = "";
             if ( $line =~ m/^\s*"(.+?(?<!\\)(?:\\\\)*)"(?:\s+(.+))?$/ ) {
@@ -803,25 +848,22 @@ sub parse_config_options {
                 # take up to the next " not preceded by an odd number of \
                 $opt  = $1;
                 $line = $2;
-            } else {
+            } elsif ( $line =~ m/^\s*([^\s]+?)(?:\s+(.+))?$/ ) {
 
                 # Use the first space separated arg
-                if ( $line =~ m/^\s*([^\s]+?)(?:\s+(.+))?$/ ) {
-                    $opt  = $1;
-                    $line = $2;
-                } else {
-                    die wrap_ref_mod( "$ref", "", gettext("Unparsable argument '%s' (%s)."), $line, $orig_line );
-                }
+                $opt  = $1;
+                $line = $2;
+            } else {
+                die wrap_ref_mod( "$ref", "", gettext("Unparsable option chunk '%s' (%s)."), $line, $orig_line );
             }
-            if ( !defined $lang ) {
-                $lang = "global";
-            }
+
             if ( !defined $options->{$lang} ) {
                 $options->{$lang} = $opt;
             } else {
                 $options->{$lang} .= " $opt";
             }
         } else {
+            print STDERR wrap_ref_mod( "$ref", "", gettext("Skipping option chunk '%s'."), $line );
             last;
         }
     }
@@ -951,7 +993,7 @@ while (<CONFIG>) {
         $args = $args2;
     }
 
-    print "cmd=[$cmd]; main=$main; args=\"$args\"\n" if $po4a_opts{"debug"};
+    print "cmd=[$cmd]; $main / $args\n" if $po4a_opts{"debug"};
 
     if ( $cmd eq "po4a_paths" ) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_path" )
@@ -1034,13 +1076,15 @@ while (<CONFIG>) {
         my %options;
 
         # 1. Use the global options ([opt] ...)
-        %options = %{ $document{''}{'options'} }
-          if defined $document{''}{'options'};
+        #        %options = %{ $document{''}{'options'} }
+        #          if defined $document{''}{'options'};
 
-        # 2. Merge the alias options
+        # 2. Use the alias options if any
         if ( defined $aliases{$1} ) {
             $document{$main}{'format'} = $aliases{$1}{"module"};
             if ( defined $aliases{$1}{"options"} ) {
+
+                #                print STDERR "Override the global options with the alias ones\n";
                 %options = %{ $aliases{$1}{"options"} };    # XXX not a merge, but overwrite
             }
         }
@@ -1050,7 +1094,7 @@ while (<CONFIG>) {
         %options = %{ $document{$main}{'options'} }
           if defined $document{$main}{'options'};
 
-        # 4. Handle "master:file=" flags for "$master" substitution in strings
+        # 4. Save the name of the master doc, to handle "$master" substitution in strings
         if ( $args =~ s/ +master:file=(\S+)// ) {
             $document{$main}{'master'} = $1;
         }
@@ -1128,12 +1172,9 @@ while (<CONFIG>) {
         %{ $aliases{$name} } = %alias;
     } elsif ( $cmd eq "options" ) {
         my %options;
-        my $o = $line;
-        $o =~ s/.*?\[options\] +//;
-        if ( defined $document{''}{"options"} ) {
-            %options = %{ $document{''}{"options"} };
-        }
-        parse_config_options( "$config_file:$nb", $o, \%options );
+        %options = %{ $document{''}{"options"} } if ( defined $document{''}{"options"} );  # Add to the existing options
+
+        parse_config_options( "$config_file:$nb", "$main $args", \%options );
         %{ $document{''}{"options"} } = %options;
     } else {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable command '%s'."), $cmd );
@@ -1141,10 +1182,12 @@ while (<CONFIG>) {
 
     $line = "";
 }
-close CONFIG;    # don't care about error here
-die wrap_msg( gettext("po4a_paths not declared. Dunno where to find the POT and PO files") )
+close CONFIG;                                                                              # don't care about error here
+die wrap_msg( gettext("po4a_paths not declared in the configuration file. Where are the POT and PO files?") )
   unless ( length $pot_filename );
 
+# Parse a vector of parameters, and split them on spaces.
+# If passed ('aa', 'bb', 'cc dd'), it splits the last parameter and returns ('aa', 'bb', 'cc', 'dd'),
 sub split_opts {
     my $options      = shift;
     my $options_orig = $options;
@@ -1174,11 +1217,11 @@ sub split_opts {
     return @opts;
 }
 
+# Adds the parameters passed in the global section of the config file to the ones passed on the command line
 if (    defined $document{''}{"options"}
     and defined $document{''}{"options"}{"global"} )
 {
-    # Merge the options with the ones specified in the configuration file
-    %po4a_opts = get_options( @ORIGINAL_ARGV, split_opts( $document{''}{"options"}{"global"} ) );
+    %po4a_opts = get_options( split_opts( $document{''}{"options"}{"global"} ), @ORIGINAL_ARGV );
 }
 
 my %split_po;     # po_files: '$lang','$master' => '$path'
@@ -1187,7 +1230,7 @@ my %split_pot;    # pot_files: '$master' => '$path'
 # make a big pot
 my $update_pot_file = 0;
 if ( $pot_filename =~ m/\$master/ ) {
-    print wrap_msg( gettext("Split mode, creating a temporary POT.") )
+    printf( gettext("Split mode, creating a temporary POT:") )
       if $po4a_opts{"verbose"};
     if ( scalar @{ $po4a_opts{"partial"} } ) {
         print wrap_msg( gettext("Disabling --translate-only option, it is not supported in split mode") . "\n" );
@@ -1250,14 +1293,14 @@ if ( $pot_filename =~ m/\$master/ ) {
                   if ( $update_pot_file and $po4a_opts{"verbose"} );
                 $update_pot_file = 0;
             } else {
-                print wrap_msg( gettext("Updating %s:"), $pot_filename )
+                printf( gettext("Updating %s:"), $pot_filename )
                   if ( $update_pot_file and $po4a_opts{"verbose"} );
             }
         } elsif ( $po4a_opts{"no-update"} ) {
             print wrap_msg( gettext("NOT creating %s as requested (--no-update)."), $pot_filename )
               if $po4a_opts{"verbose"};
         } else {
-            print wrap_msg( gettext("Creating %s:"), $pot_filename )
+            printf( gettext("Creating %s:"), $pot_filename )
               if $po4a_opts{"verbose"};
             $update_pot_file = 1;
         }
@@ -1423,10 +1466,6 @@ if ( not $po4a_opts{"no-update"} ) {
             my $updated_potfile = find_output_file($pot_filename);
 
             if ( -e $infile ) {
-                printf(
-                    gettext("Updating %s:"),
-                    ( $po4a_opts{'split'} ? "the translation in language $lang" : $po_filename{$lang} )
-                ) if ( $po4a_opts{"verbose"} );
 
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
@@ -1439,9 +1478,15 @@ if ( not $po4a_opts{"no-update"} ) {
                 run_cmd($cmd);
 
                 if ( $po4a_opts{"verbose"} ) {
+                    if ( $po4a_opts{'split'} ) {
+                        printf( gettext("Updating the translation in language %s:"), $lang );
+                    } else {
+                        printf( gettext("Updating %s:"), $po_filename{$lang} );
+                    }
+
                     my $stat = qx(msgfmt$Config{_exe} --statistics -v -o /dev/null $outfile 2>&1);
                     $stat =~ s/^[^:]*://;
-                    print STDERR $stat;
+                    print $stat;
                 }
 
             } else {
@@ -1579,19 +1624,25 @@ if ( not $po4a_opts{"no-translations"} ) {
             }
 
             my %file_opts = %po4a_opts;
-            my $options   = "";
-            if ( defined $document{$master}{"options"}{"global"} ) {
-                $options .= $document{$master}{"options"}{"global"};
-            }
+            my $options =
 
-            # append the language options
-            if ( defined $document{$master}{"options"}{$lang} ) {
-                $options .= " " . $document{$master}{"options"}{$lang};
-            }
-            if ( defined $options ) {
+              # global options (if any) as default values
+              ( $document{''}{"options"}{"global"} // '' ) . ' ' .
+
+              # file's global options (if any) to override them
+              ( $document{$master}{"options"}{"global"} // '' ) . ' ' .
+
+              # file's language options (if any) overriding everything
+              ( $document{$master}{"options"}{$lang} // '' );
+            $options =~ s/ *$//;
+            print STDERR "Options for $master in $lang: $options\n" if $po4a_opts{'debug'};
+
+            if ( length $options ) {
 
                 # also use the options provided on the command line
-                %file_opts = get_options( @ORIGINAL_ARGV, split_opts($options) );
+                %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV );
+
+                #                print STDERR "Thres: ".$file_opts{'threshold'}."\n";
             }
             my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 

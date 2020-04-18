@@ -47,14 +47,16 @@
 #                           - 'chmod 0' the directories marked 'closed_path'
 #                           - 'chmod +r-w+x' the test directory
 #                           - 'chmod +r-w' all files in the test directory
+#   modes          (opt): space separated modes to apply. Valid values:
+#                         - srcdir: cd tmp/$path ; po4a --srcdir  $cwd/$path     ; cd $cwd; <all tests>
+#                         - dstdir: cd $path     ; po4a --destdir $cwd/tmp/$path ; cd $cwd: <all tests>
+#                         - srcdstdir: po4a --srcdir $cwd/$path --destdir $cwd/tmp/$path ;  <all tests>
+#                         - curdir: cp $path/* tmp/$path ; cd tmp/$path ; po4a ; cd $cwd;   <all tests but the one checking that only expected files were created>
+#                         If several values are provided, the tests are run several times. By default: run all modes.
+#
+
 # * 'format' tests: TODO. For now, they are normalize tests, the old way of doing this
 # * 'run' test: ancient, unconverted tests
-#
-# po4a.conf tests are run 4 times each, in the following modes:
-#  - srcdir: cd tmp/$path ; po4a --srcdir  $cwd/$path     ; cd $cwd; <all tests>
-#  - dstdir: cd $path     ; po4a --destdir $cwd/tmp/$path ; cd $cwd: <all tests>
-#  - srcdstdir: po4a --srcdir $cwd/$path --destdir $cwd/tmp/$path ;  <all tests>
-#  - curdir: cp $path/* tmp/$path ; cd tmp/$path ; po4a ; cd $cwd;   <all tests but the one checking that only expected files were created>
 
 package Testhelper;
 
@@ -241,14 +243,16 @@ sub run_one_po4aconf {
     pass("Change directory back to $cwd");
 
     my $expected_outfile = $t->{'expected_outfile'} // "$path/_output";
-    my $diff_outfile     = $t->{'diff_outfile'}
-      // " sed -e 's|$cwd/||' -e 's|$tmppath/||' -e 's|$path/||' $tmppath/output | " . "diff -u $expected_outfile -";
     unless ( $t->{'diff_outfile'} ) {
+        $expected_outfile = "$path/$expected_outfile"
+          if ( not -e $expected_outfile ) && ( -e "$path/$expected_outfile" );
         unless ( -e $expected_outfile ) {
             teardown( \@teardown );
             die "Malformed test $path ($doc): no expected output. Please touch $expected_outfile\n";
         }
     }
+    my $diff_outfile = $t->{'diff_outfile'}
+      // " sed -e 's|$cwd/||' -e 's|$tmppath/||' -e 's|$path/||' $tmppath/output | " . "diff -u $expected_outfile -";
     if ( system_failed( "$diff_outfile 2>&1 > $tmppath/diff_output", "Comparing output of po4a" ) ) {
         note("Output difference:");
         open FH, "$tmppath/diff_output" || die "Cannot open output file that I just created, I'm puzzled";
@@ -452,27 +456,32 @@ sub run_all_tests {
 
             if ( $test->{'po4a.conf'} =~ m|^(.*)/([^/]*)\.([^./]*)$| ) {
                 my ( $path, $basename, $ext ) = ( $1, $2, $3 );
+
+                my @modes;
+                if ( exists $test->{'modes'} ) {
+                    push @modes, split( / /, $test->{'modes'} );
+                    delete $test->{'modes'};
+                } else {
+                    push @modes, (qw(dstdir srcdir srcdstdir curdir));
+                }
+                map {
+                    die "Malformed test: mode '$_' invalid."
+                      unless $_ eq 'dstdir' || $_ eq 'srcdir' || $_ eq 'srcdstdir' || $_ eq 'curdir';
+                } @modes;
+
                 if ( exists $test->{'todo'} ) {
                   TODO: {
                         local our $TODO = $test->{'todo'};
-                        subtest $test->{'doc'}
-                          . " (dstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'dstdir' ); };
-                        subtest $test->{'doc'}
-                          . " (srcdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdir' ); };
-                        subtest $test->{'doc'}
-                          . " (srcdstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdstdir' ); };
-                        subtest $test->{'doc'}
-                          . " (curdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'curdir' ); };
+                        foreach my $mode (@modes) {
+                            subtest $test->{'doc'}
+                              . " ($mode)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, $mode ); };
+                        }
                     }
                 } else {
-                    subtest $test->{'doc'}
-                      . " (dstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'dstdir' ); };
-                    subtest $test->{'doc'}
-                      . " (srcdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdir' ); };
-                    subtest $test->{'doc'}
-                      . " (srcdstdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'srcdstdir' ); };
-                    subtest $test->{'doc'}
-                      . " (curdir)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, 'curdir' ); };
+                    foreach my $mode (@modes) {
+                        subtest $test->{'doc'}
+                          . " ($mode)" => sub { run_one_po4aconf( $test, $path, $basename, $ext, $mode ); };
+                    }
                 }
             } else {
                 fail "Test " . $test->{'doc'} . " malformed. Cannot parse the conf filename.";
