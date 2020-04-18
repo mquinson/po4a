@@ -515,8 +515,11 @@ Every command line option can be abbreviated:
 
 =item Option specific to a master file.
 
-This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line defining the master document.
-Options passed through B<opt:> chunks are applied for all translations while B<opt_>I<lang> ones are specific to the given language I<lang>.
+This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line
+defining the master document. Options passed through B<opt:> chunks are applied
+for all translations while B<opt_>I<lang> ones are specific to the given
+language I<lang>. The language specific options are obviously not used when
+updating the POT file.
 
 In the following example, the threshold will be 0% for the French translation and 20% for the other ones.
 The B<nostrip> option will only be given to the XML parser for the French language.
@@ -1328,12 +1331,16 @@ if ($update_pot_file) {
       )
     {
         next if ( $master eq '' );
-        my $pot_in    = $document{$master}{'pot_in'};
+        my $pot_in = $document{$master}{'pot_in'};
+
         my %file_opts = %po4a_opts;
-        my $options   = $document{$master}{"options"}{"global"};
-        if ( defined $options ) {
-            %file_opts = get_options( @ORIGINAL_ARGV, split_opts($options) );
-        }
+        my $options =
+          ( $document{''}{"options"}{"global"} // '' ) . ' ' .        # global options (if any) as default values
+          ( $document{$master}{"options"}{"global"} // '' ) . ' ';    # file's global options (if any) to override them
+        $options =~ s/ *$//;
+        print STDERR "Options for $master in $lang: $options\n" if $po4a_opts{'debug'};
+        %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV ) if ( length $options );
+
         my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 
         # If we know that the input isn't UTF-8, say so to the TransTractor
@@ -1632,25 +1639,14 @@ if ( not $po4a_opts{"no-translations"} ) {
 
             my %file_opts = %po4a_opts;
             my $options =
-
-              # global options (if any) as default values
-              ( $document{''}{"options"}{"global"} // '' ) . ' ' .
-
-              # file's global options (if any) to override them
-              ( $document{$master}{"options"}{"global"} // '' ) . ' ' .
-
-              # file's language options (if any) overriding everything
-              ( $document{$master}{"options"}{$lang} // '' );
+              ( $document{''}{"options"}{"global"} // '' ) . ' ' .      # global options (if any) as default values
+              ( $document{$master}{"options"}{"global"} // '' ) . ' '
+              .                                                 # file's global options (if any) to override them
+              ( $document{$master}{"options"}{$lang} // '' );   # file's language options (if any) overriding everything
             $options =~ s/ *$//;
             print STDERR "Options for $master in $lang: $options\n" if $po4a_opts{'debug'};
+            %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV ) if ( length $options );
 
-            if ( length $options ) {
-
-                # also use the options provided on the command line
-                %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV );
-
-                #                print STDERR "Thres: ".$file_opts{'threshold'}."\n";
-            }
             my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 
             my @file_in_name;
