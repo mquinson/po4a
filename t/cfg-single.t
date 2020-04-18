@@ -73,6 +73,13 @@ push @tests, {
     'po4a.conf'      => 'cfg/single-newstr/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single-newstr.fr.po single-newstr.pot single-newstr.man.fr.1',
+  },
+  {
+    'doc'              => 'Single language, with a validation error reported by msgfmt',
+    'po4a.conf'        => 'cfg/single-invalid/po4a.conf',
+    'closed_path'      => 'cfg/*/',
+    'expected_retcode' => 256,
+    'expected_files'   => 'single.fr.po single.pot',
   };
 
 run_all_tests(@tests);

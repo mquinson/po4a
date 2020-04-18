@@ -28,6 +28,7 @@
 
 #   diff_outfile     (opt): Command to use to check that the po4a command produced the right output
 #   expected_outfile (opt): Name of the file containing the expected output of the po4a command
+#   expected_retcode (opt): Return value expected for po4a (0 by default). Useful to test invalid inputs.
 
 #   expected_files (opt): array of file names that are expected after the test execution. If provided:
 #                          - Any missing or unexpected file is a test failure.
@@ -106,11 +107,12 @@ sub show_files {
 
 # Returns whether the details should be shown
 sub system_failed {
-    my ( $cmd, $doc ) = @_;
+    my ( $cmd, $doc, $expected_exit_status ) = @_;
+    $expected_exit_status //= 0;
     my $exit_status = system($cmd);
     $cmd =~
       s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-    if ( $exit_status == 0 ) {
+    if ( $exit_status == $expected_exit_status ) {
         if ( $doc ne '' ) {
             pass($doc);
             pass("  Command: $cmd");
@@ -121,6 +123,7 @@ sub system_failed {
     } else {
         $doc = 'Provided command' unless $doc ne '';
         fail( $doc . " (retcode: $exit_status)" );
+        note("Expected retcode: $expected_exit_status");
         note("FAILED command: $cmd");
         return 1;
     }
@@ -161,14 +164,15 @@ sub run_one_po4aconf {
 
     my %valid_options;
     map { $valid_options{$_} = 1 }
-      qw(po4a.conf todo doc closed_path options setup tests teardown expected_files diff_outfile expected_outfile );
+      qw(po4a.conf todo doc closed_path options setup tests teardown expected_retcode expected_files diff_outfile expected_outfile );
     map { die "Invalid test " . $t->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} } ( keys %{$t} );
 
-    my $po4aconf       = $t->{'po4a.conf'} || fail("Broken test: po4a.conf must be provided");
-    my $options        = "--verbose " . ( $t->{'options'} // "" );
-    my $closed_path    = $t->{'closed_path'};
-    my $doc            = $t->{'doc'};
-    my $expected_files = $t->{'expected_files'} // "";
+    my $po4aconf         = $t->{'po4a.conf'} || fail("Broken test: po4a.conf must be provided");
+    my $options          = "--verbose " . ( $t->{'options'} // "" );
+    my $closed_path      = $t->{'closed_path'};
+    my $doc              = $t->{'doc'};
+    my $expected_files   = $t->{'expected_files'} // "";
+    my $expected_retcode = $t->{'expected_retcode'} // 0;
 
     fail("Broken test: 'tests' is not an array as expected") if exists $t->{tests} && ref $t->{tests} ne 'ARRAY';
     my ( @tests, @setup, @teardown ) = ( (), (), () );
@@ -225,7 +229,7 @@ sub run_one_po4aconf {
     pass("Change directory to $run_from");
     die "Malformed test: conf file $cwd/$po4aconf does not exist from " . cwd() . " (mode:$mode)\n"
       unless -e "$cwd/$po4aconf";
-    if ( system_failed( $cmd, "Executing po4a" ) ) {
+    if ( system_failed( $cmd, "Executing po4a", $expected_retcode ) ) {
         chdir $cwd || fail "Cannot change directory back to $cwd: $!";
         note("Produced output:");
         open FH, "$tmppath/output" || die "Cannot open output file that I just created, I'm puzzled";
