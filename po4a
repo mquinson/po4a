@@ -1580,9 +1580,14 @@ if ( not $po4a_opts{"no-translations"} ) {
         my $pofile = find_input_file( $po_filename{$lang} );
 
         if ( not -e $pofile ) {
-            print wrap_msg( gettext("PO file %sfor language %s is missing -- skipping."),
-                ( File::Spec->file_name_is_absolute( $po_filename{$lang} ) ? "" : $po_filename{$lang} . " " ), $lang )
-              if ( $po4a_opts{"verbose"} );
+            if ( $po4a_opts{"verbose"} ) {
+                if ( File::Spec->file_name_is_absolute( $po_filename{$lang} ) ) {
+                    print wrap_msg( gettext("PO file for language %s is missing -- skipping."), $lang );
+                } else {
+                    print wrap_msg( gettext("PO file %s for language %s is missing -- skipping."),
+                        $po_filename{$lang}, $lang );
+                }
+            }
             next LANG;
         }
         print "Reading PO file $pofile for language $lang: "
