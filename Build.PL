@@ -30,7 +30,7 @@ my $build = Po4aBuilder->new
                        },
       script_files => ['po4a-gettextize', 'po4a-updatepo',
           'po4a-translate', 'po4a-normalize', 'po4a', 'msguntypot',
-          'scripts/po4aman-display-po', 'scripts/po4apod-display-po'],
+          'scripts/po4a-display-man', 'scripts/po4a-display-pod'],
       add_to_cleanup => ['t/tmp','po/bin/*.gmo', 'blib', '_build'],
       dist_abstract => 'tools to ease the translation of documentation',
       dist_author => ['Martin Quinson (mquinson#debian.org)',

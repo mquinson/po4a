@@ -238,7 +238,7 @@ sub ACTION_man {
     }
 
     # Install the manpages written in XML DocBook
-    foreach $file (qw(po4aman-display-po.xml po4apod-display-po.xml)) {
+    foreach $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
         copy ( File::Spec->catdir("share", "doc", $file), $man1path) or die;
     }
     foreach $file (@{$self->rscan_dir($manpath, qr{\.xml$})}) {

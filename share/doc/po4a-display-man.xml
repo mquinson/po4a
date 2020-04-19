@@ -2,23 +2,23 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
                    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <!-- lifted from troff+man by doclifter -->
-<refentry id='po4amandisplaypo1' xml:lang="en">
+<refentry id='po4adisplayman1' xml:lang="en">
 <refentryinfo><date>2006-04-08</date></refentryinfo>
 <refmeta>
-<refentrytitle>PO4AMAN-DISPLAY-PO</refentrytitle>
+<refentrytitle>PO4A-DISPLAY-MAN</refentrytitle>
 <manvolnum>1</manvolnum>
-<refmiscinfo class='date'>2006-04-08</refmiscinfo>
+<refmiscinfo class='date'>2020-04-19</refmiscinfo>
 <refmiscinfo class='source'>Po4a Tools</refmiscinfo>
 <refmiscinfo class='manual'>Po4a Tools</refmiscinfo>
 </refmeta>
 <refnamediv id='name'>
-<refname>po4aman-display-po</refname>
+<refname>po4a-display-man</refname>
 <refpurpose>display a translated man page according to a PO</refpurpose>
 </refnamediv>
 <!-- body begins here -->
 <refsynopsisdiv id='synopsis'>
 <cmdsynopsis>
-  <command>po4aman-display-po</command>
+  <command>po4a-display-man</command>
     <arg choice='plain'><option>-p</option> </arg>
     <arg choice='plain'><replaceable>PO_FILE</replaceable></arg>
     <arg choice='opt'><arg choice='plain'><option>-m</option> </arg><arg choice='plain'><replaceable>MASTER_FILE</replaceable></arg></arg>
@@ -29,17 +29,17 @@
 
 
 <refsect1 id='description'><title>DESCRIPTION</title>
-<para><command>po4aman-display-po</command> can be used by a translator who wants to check
-how the man page being translated in a PO will be displayed.</para>
+<para>Translators can use <command>po4a-display-man</command> to see
+how their translation of a man page will be rendered to the end
+users, without recompiling and reinstalling the whole project.</para>
 
-<para>The manual page must be in one of the formats supported by the po4a's
-<emphasis remap='I'>man</emphasis> module.
-The manual page can be provided on the command line, or installed on the
-system.</para>
-
-<para>Manual pages generated from other formats, like DocBook or POD, are not
+<para>This script only works with man pages written directly in
+<emphasis remap='I'>nroff</emphasis> and handled by the po4a's
+<emphasis remap='I'>man</emphasis> module. 
+Manual pages generated from other formats, like DocBook or POD, are not
 supported.
-See <citerefentry><refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum></citerefentry> for an equivalent supporting <emphasis remap='I'>POD</emphasis> documents.</para>
+See <citerefentry><refentrytitle>po4a-display-pod</refentrytitle><manvolnum>1</manvolnum></citerefentry> for an equivalent supporting <emphasis remap='I'>POD</emphasis> documents.
+</para>
 
 </refsect1>
 
@@ -60,7 +60,7 @@ or not), the name of the man page or the name and section of the man page
 (using the man.section format).
 <!-- .br -->
 When the master document is not provided with the <option>-m</option> option,
-<command>po4aman-display-po</command> tries to find the original man page
+<command>po4a-display-man</command> tries to find the original man page
 based on the line reference of the first string in the PO.</para>
   </listitem>
   </varlistentry>
@@ -77,7 +77,7 @@ based on the line reference of the first string in the PO.</para>
 <refsect1 id='see_also'><title>SEE ALSO</title>
 <para>
   <citerefentry>
-    <refentrytitle>po4apod-display-po</refentrytitle><manvolnum>1</manvolnum>
+    <refentrytitle>po4a-display-pod</refentrytitle><manvolnum>1</manvolnum>
   </citerefentry>
 </para>
 

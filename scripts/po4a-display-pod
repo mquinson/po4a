@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# po4a-display-pod shows a translated pod document, recompiling everything on the fly with po4a.
+# Translators can see the effects of their work without reinstalling everything.
+#
 
 MASTER=""
 NAME=""
@@ -53,7 +57,7 @@ fi
 #NAME=$(basename $MASTER .pod | sed -e 's/\..//')
 #SECTION=$(basename $MASTER .pod | sed -e 's/.*\.//')
 
-po4a-translate -f pod -m $MASTER -p $PO -L UTF-8 $OPTIONS \
+po4a-translate -f pod -m $MASTER -p $PO -L UTF-8 -k 0 $OPTIONS \
 	| pod2man -r '' -c TRANSLATED -n $MASTER --utf8 \
 	| man -l -
 
