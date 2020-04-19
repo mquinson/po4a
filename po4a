@@ -250,7 +250,7 @@ The wrapping of the reference comments is controlled by the B<--porefs> option.
 Note that this option has no impact on how the msgid and msgstr are wrapped, ie
 on how newlines are added to the content of these strings.
 
-=item B<-M>, B<--master-language>
+=item B<--master-language>
 
 Language of the source files containing the documents to
 translate. Note that all master documents must use the same language.
@@ -757,7 +757,7 @@ sub get_options {
     GetOptions(
         'help|h' => \$opts{"help"},
 
-        'master-language|M=s'   => \$opts{"mastlang"},
+        'master-language=s'     => \$opts{"mastlang"},
         'master-charset|M=s'    => \$opts{"mastchar"},
         'localized-charset|L=s' => \$opts{"locchar"},
         'addendum-charset|A=s'  => \$opts{"addchar"},
