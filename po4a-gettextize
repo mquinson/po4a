@@ -27,33 +27,20 @@ The po4a (PO for anything) project goal is to ease translations (and more
 interestingly, the maintenance of translations) using gettext tools on
 areas where they were not expected like documentation.
 
-The B<po4a-gettextize> script is in charge of converting documentation
-files to PO files.  If you start a new translation, B<po4a-gettextize>
-will extract the translatable strings from the documentation file and
-write a POT file from it.
+The B<po4a-gettextize> script is in charge of converting documentation files into
+PO files. You only need it to setup your translation project with po4a, never afterward.
 
-If you already have a translated file, B<po4a-gettextize> will try to
-extract the translations it contains and put them in place in the written
-PO file. Be warned that very few intelligence is used in this process: the
-Nth string of the translated file is supposed to be the translation of the
-Nth string in the original. If it's not the case, you're dead. That's why
-it is very important that both files share exactly the same structure.
+If you start from scratch, B<po4a-gettextize> will extract the translatable
+strings from the documentation and write a POT file. If you provide a previously
+existing translated file with the B<-l> flag, B<po4a-gettextize> will try to use
+the translations that it contains in the produced PO file. This process remains
+tedious and manual, as explained in Section 'Converting a manual translation to
+po4a' below.
 
-However, B<po4a-gettextize> will diagnose your death by detecting any
-desynchronisation between files, and reporting where they occur. In that
-case, you should edit manually the files to solve the reported
-disparity. Even if no error were reported, you should check carefully that the
-generated PO file is correct (i.e. that each msgstr is the translation of
-the associated msgid, and not the one before or after).
-
-Even if the script manages to do its job without any apparent problem, it still
-marks all extracted translations as fuzzy, to make sure that the translator
-will have a look at them, and detect any remaining problem.
-
-If the master document has non-ASCII characters, the new generated PO file
-will be in UTF-8, in order to allow non-standard characters in a culture
-independent way. Else (if the master document is completely in ASCII), the
-generated PO will use the encoding of the translated input document.
+If the master document has non-ASCII characters, the new generated PO file will
+be in UTF-8. Else (if the master document is completely in ASCII), the generated
+PO will use the encoding of the translated input document, or UTF-8 if no
+translated document is provided.
 
 =head1 OPTIONS
 
@@ -134,12 +121,179 @@ Set the package version for the POT header. The default is "VERSION".
 
 =back
 
+=head2 Converting a manual translation to po4a
+
+B<po4a-gettextize> will try to extract the content of any provided translation
+file, and use this content as msgstr in the produced PO file. Be warned that
+this process is very fragile: the Nth string of the translated file is supposed
+to be the translation of the Nth string in the original. This will naturally not
+work unless both files share exactly the same structure.
+
+Internally, each po4a parser reports the syntactical type of each extracted
+strings. This is how desynchronization are detected during the gettextization.
+For example, if the files have the following structure, it is very unlikely that
+the 4th string in translation (of type 'chapter') is the translation of the 4th
+string in original (of type 'paragraph'). It is more likely that a new
+paragraph was added to the original, or that two original paragraphs were merged
+together in the translation.
+
+    Original         Translation
+
+  chapter            chapter
+    paragraph          paragraph
+    paragraph          paragraph
+    paragraph        chapter
+  chapter              paragraph
+    paragraph          paragraph
+
+B<po4a-gettextize> will verbosely diagnose any detected structure
+desynchronization. When this happens, you should manually edit the files (this
+probably requires that you have some notions of the target language). You must
+add fake paragraphs or remove some content in one of the documents (or both) to
+fix the reported disparities, until the structure of both documents perfectly
+match. Some tricks are given in the next section.
+
+Even when the document is successfully processed, undetected disparities and
+silent errors are still possible. That is why any translation associated
+automatically by po4a-gettextize is marked as I<fuzzy> to require an manual
+inspection by humans. One has to check that each retrieved msgstr is actually
+the translation of the associated msgid, and not the string before or after.
+
+As you can see, the key here is to have the exact same structure in the
+translated document and in the original one. The best is to do the
+gettextization on the exact version of F<master.doc> that was used for the
+translation, and only update the PO file against the latest master file once the
+gettextization was successful.
+
+If you are lucky enough to have a a perfect match in the file structures,
+building a correct PO file is a matter of seconds. Otherwise, you will soon
+understand why this process has such an ugly name :) But remember that this
+grunt work is the price to pay to get the comfort of po4a afterward. Once
+converted, the synchronization between master documents and translations will
+always be fully automatic.
+
+Even when things go wrong, gettextization often remains faster than translating
+everything again. I was able to gettextize the existing French translation of
+the whole Perl documentation in one day, even though the structure of many
+documents were desynchronized. That was more than two megabytes of original text
+(2 millions of signs): restarting the translation from scratch would have
+required several months of work.
+
+=head2 Hints and tricks for the gettextization process
+
+The gettextization stops as soon as a desynchronization is detected. In theory,
+it should probably be possible resynchronize the gettextization later in the
+documents using e.g. the same algorithm than the B<diff(1)> utility. But a manual
+intervention would still be mandatory to manually match the elements that
+couldn't be automatically matched, explaining why automatic resynchronization is
+not implemented (yet?).
+
+When this happens, the whole game comes down to the alignment of these damn
+files' structures again through manual edits. B<po4a-gettextize> is rather
+verbose about what went wrong when it happens. It reports the strings that don't
+match, their positions in the text, and the type of each of them. Moreover, the
+PO file generated so far is dumped as F<gettextization.failed.po> for further
+inspection.
+
+Here are some other tricks to help you in this tedious process:
+
+=over
+
+=item
+
+Remove all extra content of the translations, such as the section giving credits
+to the translators. You can add them back in po4a afterward, using an addenda
+(see L<po4a(7)).
+
+=item
+
+If you need to edit the files to align their structures, you should prefer
+editing the translation if possible. Indeed, if the changes to the original are
+too intrusive, the old and new versions will not be matched during the PO
+update, and the corresponding translation will be dumped anyway. But do not
+hesitate to also edit the original document if required: the important thing is
+to get a first PO file to start with.
+
+=item
+
+Do not hesitate to kill any original content that would not exist in the
+translated version. This content will be automatically reintroduced afterward,
+when synchronizing the PO file with the document.
+
+=item
+
+You should probably inform the original author of any structural change in the
+translation that seems justified. Issues in the original document should reported
+to the author. Fixing them in your translation only fixes them for a part of the
+community. Plus, it is impossible to do so when using po4a ;)
+
+=item
+
+Sometimes, the paragraph content does match, but not their types. Fixing it is
+rather format-dependent. In POD and man, it often comes from the fact that one
+of them contains a line beginning with a white space while the other does not.
+In those formats, such paragraph cannot be wrapped and thus become a different
+type. Just remove the space and you are fine. It may also be a typo in the tag
+name in XML.
+
+Likewise, two paragraphs may get merged together in POD when the separating
+line contains some spaces, or when there is no empty line between the B<=item>
+line and the content of the item.
+
+=item
+
+Sometimes, the desynchronization message seems odd because the translation is
+attached to the wrong original paragraph. It is the sign of an undetected issue
+earlier in the process. Search for the actual desynchronization point by
+inspecting F<gettextization.failed.po>, and fix the problem where it really is.
+
+=item
+
+In some unfortunate settings, you will get the feeling that po4a ate some parts
+of the text, either the original or the translation. F<gettextization.failed.po>
+indicates that both files matched as expected up to the paragraph N. But then,
+an (unsuccessful) attempt is made to match the N+1 paragraph in the original
+file not with the N+1 paragraph in the translation as it should, but with the
+N+2 paragraph. Just as if the N+1 paragraph that you see in the document simply
+disappeared from the file during the process.
+
+This unfortunate situation happens when the same paragraph is repeated over
+the document. In that case, no new entry is created in the PO file, but a
+new reference is added to the existing one instead.
+
+So, the previous situation occurs when two similar but different paragraphs are
+translated in the exact same way. This will apparently remove a paragraph of the
+translation. To fix the problem, it is sufficient to slightly alter one of the
+translations in the document. You can also prefer to kill the second paragraph
+in the original document.
+
+To the opposite, if the same paragraph appearing twice in the original document
+is not translated in the exact same way at both locations, you will get the
+feeling that one paragraph of the original document just vanished. Just copy the
+best translation over the other one in the translated document to fix the
+problem.
+
+=item
+
+As a final note, do not be too surprised if the first synchronization of your PO
+file takes a long time. This is because most of the msgid of the PO file
+resulting from the gettextization don't match exactly any element of the POT
+file built from the recent master files. This forces gettext to search for the
+closest one using a costly string proximity algorithm.
+
+For example, the first B<po4a-updatepo> of the Perl documentation's French
+translation (5.5 Mb PO file) took about 48 hours (yes, two days) while the
+subsequent ones only take a dozen of seconds.
+
+=back
+
 =head1 SEE ALSO
 
+L<po4a(1)>,
 L<po4a-normalize(1)>,
 L<po4a-translate(1)>,
 L<po4a-updatepo(1)>,
-L<po4a(7)>
+L<po4a(7)>.
 
 =head1 AUTHORS
 
@@ -245,6 +399,11 @@ if ( $mastertt->{TT}{ascii_input} ) {
     $mastertt->{TT}{po_in}->set_charset($mastchar);
 }
 $mastertt->parse;
+
+# Implementation note:
+# In practice, po4a-gettextize uses the po4a parsers on both the original and the
+# translation files to extract two PO files. A third PO file is built from them
+# taking strings from the second as translation of strings from the first.
 
 unless ( scalar @locfile >= 1 ) {
 
