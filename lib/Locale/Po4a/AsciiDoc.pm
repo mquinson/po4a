@@ -697,7 +697,7 @@ sub parse {
             $self->pushline(".$t\n");
             @comments = ();
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^(\s*)((?:[-*o+]+|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\)|\.{1,3})\s+)(.*)$/ ) )
+            and ( $line =~ m/^(\s*)((?:[-*o+\.]+|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\))\s+)(.*)$/ ) )
         {
             my $indent = $1 || "";
             my $bullet = $2;
