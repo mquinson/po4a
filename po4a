@@ -21,15 +21,15 @@ B<po4a> [I<options>] I<config_file>
 
 =head1 DESCRIPTION
 
-po4a (PO for anything) eases the maintenance of the documentation's
-translation using the classical gettext tools. To that extend, the
-main feature of po4a is to decouple the translatable content of a
-document from its structure.
+po4a (PO for anything) eases the maintenance of the documentation's translation
+using the classical gettext tools. To that extend, the main feature of po4a is
+to decouple the translatable content of a document from its structure. Please
+refer to the page L<po4a(7)> for a gentle introduction to this project.
 
-When you run the B<po4a> program for the first time, with the master
-documents only, it produces a POT file (also called translation
-template) that contains all translatable strings of the document
-in a form that ease the work of translators.
+When you run the B<po4a> program for the first time, with only a configuration
+file and the documents to translate (called master documents), it produces a POT
+file (also called translation template) that contains all translatable strings
+of the document in a form that ease the work of translators.
 
 Such files can either be translated with a specific editor such as
 the B<GNOME Translation Editor>, KDE's B<Lokalize> or B<poedit>, or they can be
@@ -53,14 +53,31 @@ translation is already in the PO file).
 By default, the translated documents are produced when at least 80%
 of their content is translated (see the I<--keep> option below).
 Discarding translations as soon as they are not 100% may be
-discouraging for the translators, while showing "translation" that
+discouraging for the translators, while showing "translations" that
 are too partial may be troubling for the end users.
 
-You can mimic the behavior of the B<po4a> program with the other
-tools of the suite (i.e., L<po4a-gettextize(1)>, L<po4a-updatepo(1)>,
-and L<po4a-translate(1)>) using scripts and makefiles, but this
-quickly becomes bothersome and repetitive. It is highly recommended
-to use the B<po4a> program in your build script.
+=head2 Graphical overview
+
+
+ master documents ---+---->-------->---------+
+  (doc authoring)    |                       |
+                     V   (po4a executions)   >-----+--> translations
+                     |                       |     |
+ existing PO files -->--> updated PO files >-+     |
+      ^                            |               |
+      |                            V               |
+      +----------<---------<-------+               ^
+       (manual translation process)                |
+                                                   |
+ addendum -->--------------------------------------+
+
+The master documents are authored by the documentation writers. Any changes is
+automatically reflected by po4a in the PO files, that are then completed by the
+translators. All changes to the PO files (either manual or by po4a) is
+automatically reflected in translated documents. You can mimic this behavior
+using the L<po4a-updatepo(1)> and L<po4a-translate(1)> scripts in makefiles, but
+this quickly becomes bothersome and repetitive (see L<po4a(7)>). It is highly
+recommended to use the B<po4a> program in your build process.
 
 =head1 OPTIONS
 
@@ -297,161 +314,232 @@ It requires B<gettext> 0.16 or later, and is activated by default.
 
 =back
 
-=head1 DATA FLOWS
+=head1 CONFIGURATION FILE
 
-The dataflow can be summarized as follow. Any changes to the master document
-will be reflected in the PO files, and all changes to the PO files (either
-manual or caused by previous step) will be reflected in translation
-documents.
+po4a expects a configuration file as argument. This file must contain the
+following elements:
 
-Regular case where no B<pot_in> is specified:
+=over
 
- <- source files ->|<--------- build results --------------->
+=item
 
- addendum ----------------------------------+
-                                            |
- master document --+---------------------+  |
-                   V                     +--+--> translations
- old PO files -----+--> updated PO files +  
-      ^                      |
-      |                      V
-      +<.....................+
-    (the updated PO files are manually
-     copied to the source of the next
-     release while manually updating
-     the translation contents)
+The path to the PO files and the list of languages existing in the project;
 
-Special case where a B<pot_in> is specified to filter the input master document:
+=item
 
- <- source files ->|<--------- build results ----------------->
+Optionally, some global options and so-called configuration aliases that are
+used as templates to configure individual master files ;
 
- master document --+--------------------------+
-                   :                          |
- external          :    filtered              |
- filtering ========X..> master                |
- program                document              |
-                        |                     |
-                        V                     +--> translations
- old PO files ----------+--> updated PO files +
-      ^                           |
-      |                           V
-      +<..........................+
-    (the updated PO files are manually
-     copied to the source of the next
-     release while manually updating
-     the translation contents)
+=item
 
-The dataflow cannot be reversed in this tool, and changes in translations
-are overwritten by the content of the PO files. As a matter of fact, this
-tool cannot be used to convert existing translations to the po4a system. For
-that task, please refer to L<po4a-gettextize(1)>.
+The list of each master file to translate, along with specific parameters.
 
-=head1 CONFIGURATION FILE SYNTAX
+=back
 
-The (mandatory) argument is the path to the configuration file to use.
-Its syntax aims at being simple and close to the configuration files used
-by the intl-tools projects.
+All lines contain a command between square braces, followed by its parameters.
+Comments begin with the char '#' and run until the end of the line. You can
+escape the end of line to spread a command over several lines.
 
-Comments in these files are noted by the char '#'. It comments everything
-until the end of the line. Lines can be continued by escaping the end of line.
-All non blank lines must begin with a [] command, followed by its arguments.
-(sound difficult said that way, but it is rather easy, I hope ;)
+=head2 Finding the PO and POT files
 
-=head2 Specifying the template languages
+The simplest solution is to give the path to the directory containing your
+translation project as follows.
 
-B<Note:> It is recommended to use B<[po_directory]> rather than B<[po4a_langs]>
-and B<[po4a_paths]>.
-See section B<Autodetection of the paths and languages> below.
+ [po_directory] man/po/
 
-This is an optional command that can simplify the whole config file, and will
-make it more scalable. You have to specify a list of the languages in which
-you want to translate the documents. This is as simple as:
+The provided directory must contain a set of PO files, each named F<XX.po> with
+C<XX> the iso631 of the language used in this file. The directory must also
+contain a single POT file, with the C<.pot> file extension.
+
+If you prefer, you can give the same information explicitly as follows:
+
+ [po4a_paths] man/po/project.pot de:man/po/de.po fr:man/po/fr.po
+
+This specifies the path to the POT file first, and then the paths to the German
+and French PO files.
+
+Finally, the same information can be written as follows:
 
  [po4a_langs] fr de
+ [po4a_paths] man/po/project.pot $lang:man/po/$lang.po
 
-This will enable you to expand B<$lang> to all the specified languages in the rest
-of the config file.
+The C<$lang> component is automatically expended using the provided languages
+list, reducing the risk of copy/paste error when a new language is added.
 
-=head2 Specifying the paths to translator inputs
+=head3 Centralized or split PO files?
 
-B<Note:> It is recommended to use B<[po_directory]> rather than B<[po4a_langs]>
-and B<[po4a_paths]>.
-See section B<Autodetection of the paths and languages> below.
+By default, po4a produces one single PO file per target language, containing the
+whole content of your translation project. As your project grows, the size of
+these files may become problematic. When using weblate, it is possible to a
+specific priorities to the translations so that the important strings get
+translated first, but some translation teams still prefer to split the content
+in several files.
 
-First, you have to specify where the translator input files (I.E. the files
-used by translators to do their job) are located. It can be done by such a line:
-
- [po4a_paths] doc/l10n/project.doc.pot \
-              fr:doc/l10n/fr.po de:doc/l10n/de.po
-
-The command is thus B<[po4a_paths]>. The first argument is the path to the POT
-file to use. All subsequent arguments are of the self-explanatory form:
-
-    <lang>:<path to the PO file for this lang>
-
-If you've defined the template languages, you can rewrite the line above this
-way:
-
- [po4a_paths] doc/l10n/project.doc.pot $lang:doc/l10n/$lang.po
-
-You can also use B<$master> to refer to the document filename. In this case,
-B<po4a> will use a split mode: one POT and one PO (for each language) will
-be created for each document specified in the B<po4a> configuration file.
-See the B<Split mode> section.
+To have one PO file per master file, you simply have to use the string
+C<$master> in the name of your PO files on the C<[po4a_paths]> line, as follows.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
 
-=head2 Autodetection of the paths and languages
+If there are name conflicts because several files have the same filename,
+the name of the master file can be specified by adding a C<master:file=>I<name>
+option:
 
-Another command can be used to specify the name of a directory where the
-PO and POT files are located.
-When it is used, B<po4a> will detect the POT file as the only F<*.pot> file
-from the specified directory.
-B<po4a> will also use the list of F<*.po> files to define the list of
-languages (by stripping out the extension).
-These languages will be used for the substitution of the B<$lang> variable in
-the rest of the configuration file.
+ [po4a_langs] de fr ja
+ [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
+ [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui
+ [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui
 
-This command should not be used together with the B<[po4a_langs]> or B<[po4a_paths]>
-commands.
-
-When using this command, you have to create an empty POT file on the first
-invocation of B<po4a> to let it know the name of the POT file.
-
- [po_directory] po4a/po/
+In split mode, B<po4a> builds a temporary compendium during the PO update, to
+share the translations between all the PO files. If two PO files have different
+translations for the same string, B<po4a> will mark this string as fuzzy and
+will submit both translations in all the PO files containing this string. When
+unfuzzied by the translator, the translation is used in every PO files
+automatically.
 
 =head2 Specifying the documents to translate
 
-You now naturally have to specify which documents are translated, their
-format, and where to put the translations. It can be made by such lines:
+You must also list the documents that should be translated. For each master
+file, you must specify the format parser to use, the location of the translated
+document to produce, and optionally some configuration. Here is an example:
 
  [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \
               de:doc/de/mein_kram.sgml
- [type: pod] script fr:doc/fr/script.1 de:doc/de/script.1 \
-             add_fr:doc/l10n/script.fr.add
+ [type: man] script fr:doc/fr/script.1 de:doc/de/script.1
  [type: docbook] doc/script.xml fr:doc/fr/script.xml \
-             de:doc/de/script.xml \
-             pot_in:doc/script.filtered.xml
+             de:doc/de/script.xml
 
-This should be rather self-explanatory also. Note that in the second case,
-F<doc/l10n/script.fr.add> is an addendum to add to the French version of this document.
-Please refer to L<po4a(7)> for more information about the addenda.
+But again, these complex lines are difficult to read and modify, e.g. when adding a new
+language. It is much simpler to reorganize things using the C<$lang> template as follows:
 
-More formally, the format is:
+ [type: sgml]    doc/my_stuff.sgml $lang:doc/$lang/my_stuff.sgml
+ [type: man]     script.1          $lang:po/$lang/script.1
+ [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml
 
- [type: <format>] <master_doc> (<lang>:<localized_doc>)* \
-                  (pot_in:<filtered_master_doc>)? \
-                  (add_<lang>:<modifier>*<addendum_path>)*
+=head2 Specifying options
 
-If B<pot_in> is specified, I<filtered_master_doc> is used to create POT file
-instead of I<master_doc>.  This feature allows user to create flexible ways to
-avoid contents which shouldn't be included in the PO files.  Tools such as C
-preprocessor (B<cpp>) or XSL Transformation utility (e.g., B<xsltproc>) can be
-used to create the external filtering program and call it before invoking
-B<po4a>.
+There is two types of options: I<po4a options> are default values to the po4a
+command line options while I<format options> are used to change the behavior of
+the format parsers. As a I<po4a options>, you could for example specify in your
+configuration file that the default value of the B<--keep> command line
+parameter is 50% instead of 80%. I<Format options> are documented on the
+specific page of each parsing module, e.g. L<Locale::Po4a::Xml(3pm)>. You could
+for example pass B<nostrip> to the XML parser to not strip the spaces around the
+extracted strings.
 
-If there is no modifier, I<addendum_path> is a path to an addendum.
-Modifiers are
+You can pass these options for a specific master file, of even for a specific
+translation of that file, using C<opt:> and C<opt_XX:> for the C<XX> language.
+In the following example, the B<nostrip> option is passed to the XML parser (for
+all languages), while the threshold will be reduced to 0% for the French
+translation (that is thus always kept).
+
+ [type:xml] toto.xml $lang:toto.$lang.xml opt:"-o nostrip" opt_fr:"--keep 0"
+
+In any case, these configuration chunks must be located at the end of the line.
+The declaration of files must come first, then the addendum if any (see below),
+and then only the options. The grouping of configuration chunks is not very
+important, since elements are internally concatenated as strings. The following
+examples are all equivalent:
+
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20" opt:"-o nostrip" opt_fr:"--keep 0"
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20 -o nostrip" opt_fr:"--keep 0"
+  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:nostrip opt_fr:--keep opt_fr:0
+
+Note that language specific options are not used when building the POT file. It
+is for example impossible to pass B<nostrip> to the parser only when building
+the French translation, because the same POT file is used to update every
+languages. So the only options that can be language-specific are the ones that
+are used when producing the translation, as the C<--keep> option.
+
+=head3 Configuration aliases
+
+To pass the same options to several files, the best is to define a type alias as
+follows. In the next example, C<--keep 0> is passed to every Italian translation
+using this C<test> type, that is an extension of the C<man> type.
+
+  [po4a_alias:test] man opt_it:"--keep 0"
+  [type: test] man/page.1 $lang:man/$lang/page.1
+
+You can also extend an existing type reusing the same name for the alias as
+follows. This is not interpreted as as an erroneous recursive definition.
+
+  [po4a_alias:man] man opt_it:"--keep 0"
+  [type: man] man/page.1 $lang:man/$lang/page.1
+
+=head3 Global default options
+
+You can also use C<[options]> lines to define options that must be used for all
+files, regardless of their type.
+
+  [options] --keep 20 --option nostrip
+
+As with the command line options, you can abbreviate the parameters passed in
+the configuration file:
+
+  [options] -k 20 -o nostrip
+
+=head3 Option priorities
+
+The options of every sources are concatenated, ensuring that the default values
+can easily be overridden by more specific options. The order is as follows:
+
+=over
+
+=item
+
+C<[options]> lines provide default values that can be overridden by any other source.
+
+=item
+
+Type aliases are then used. Language specific settings override the ones
+applicable to all languages.
+
+=item
+
+Settings that are specific to a given master file override both the default ones
+and the ones coming from the type alias. In this case also, language specific
+settings override the global ones.
+
+=item
+
+Finally, parameters provided on the B<po4a> command line override any settings
+from the configuration file.
+
+=back
+
+=head3 Example
+
+Here is an example showing how to quote the spaces and quotes:
+
+ [po_directory] man/po/
+ 
+ [options] --master-charset UTF-8
+ 
+ [po4a_alias:man] man opt:"-o \"mdoc=NAME,SEE ALSO\""
+ [type:man] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
+            opt:"-k 75" opt_it:"-L UTF-8" opt_fr:--verbose
+
+=head2 Addendum: Adding extra content in the translation
+
+If you want to add an extra section to the translation, for example to give
+credit to the translator, then you need to define an addendum to the line
+defining your master file. Please refer to the page L<po4a(7)> for more details
+on the syntax of addendum files.
+
+ [type: pod] script fr:doc/fr/script.1 \
+             add_fr:doc/l10n/script.fr.add
+
+You can also use language templates as follow:
+
+ [type: pod] script $lang:doc/$lang/script.1 \
+             add_$lang:doc/l10n/script.$lang.add
+
+If an addendum fails to apply, the translation is discarded.
+
+=head3 Modifiers for the addendum declaration
+
+Addendum modifiers can simplify the configuration file in the case where not all
+languages provide an addendum, or when the list of addenda changes from one
+language to the other. The modifier is a single char located before the file name.
 
 =over 2
 
@@ -471,133 +559,38 @@ any further addendum specification.
 
 =back
 
-If you've defined the template languages, you can rewrite the line above this
-way:
+The following includes an addendum in any language, but if only it exists. No
+error is reported if the addendum does not exist.
 
- [type: pod] script $lang:doc/$lang/script.1 \
-             add_fr:doc/l10n/script.fr.add
+ [type: pod] script $lang:doc/$lang/script.1  add_$lang:?doc/l10n/script.$lang.add
 
-If all the languages had addenda with similar paths, you could also write
-something like:
+The following includes a list of addendum for every language:
 
- [type: pod] script $lang:doc/$lang/script.1 \
-             add_$lang:doc/l10n/script.$lang.add
+ [type: pod] script $lang:doc/$lang/script.1  add_$lang:@doc/l10n/script.$lang.add
 
-=head2 Specifying options
+=head2 Filtering the translated strings
 
-You can specify two types of options in the configuration file: I<po4a options>
-are default values to the po4a command line options while I<format options> are
-used to change the behavior of the format parsers. As a I<po4a options>, you
-could for example specify in your configuration file that the default value of
-the B<--keep> command line parameter is 50% instead of 80%. I<Format options>
-are documented on the specific page of each parsing module, e.g.
-Locale::Po4a::Xml(1). You could for example pass B<nostrip> to the XML parser to
-not strip the spaces around the extracted strings.
+Sometimes, you don't want to hide some strings from the translation process. To
+that extend, you can give a C<pot_in> parameter to your master file to specify
+the name of the file to use instead of the real master when building the POT
+file. Here is an example:
 
-There are several ways of specifying these options, listed below by order of
-decreasing priority. For example, options provided on the command line override
-any value in the configuration file while the global options of the
-configuration provide default values that can be overridden by more specific
-settings.
+  [type:docbook] book.xml          \
+          pot_in:book-filtered.xml \
+          $lang:book.$lang.xml
 
-=over 2
+With this setting, the strings to translate will be extracted from the
+F<book-filtered.xml> (that must be produced before calling B<po4a>) while the
+translated files will be built from F<book.xml>. As a result, any string that is
+part of F<book.xml> but not in F<book-filtered.xml> will not be included in the
+PO files, preventing the translators from providing a translation for them. So
+these string will be left unmodified when producing the translated documents.
+This naturally decreases the level of translation, so you may need the C<--keep>
+option to ensure that the document is produced anyway.
 
-=item Options on the command line:
+=head2 CONFIGURATION EXAMPLE
 
-Either directly for po4a options, or through B<--option> for format options.
-For example:
-
-  po4a --keep 50 --option nostrip
-
-Every command line option can be abbreviated:
-
-  po4a -k 50 -o nostrip
-
-=item Option specific to a master file.
-
-This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line
-defining the master document. Options passed through B<opt:> chunks are applied
-for all translations while B<opt_>I<lang> ones are specific to the given
-language I<lang>. The language specific options are obviously not used when
-updating the POT file.
-
-In the following example, the threshold will be 0% for the French translation and 20% for the other ones.
-The B<nostrip> option will only be given to the XML parser for the French language.
-
-  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20" opt_fr:"--keep 0" opt_fr:"-o nostrip"
-
-The above line is equivalent to the following ones:
-
-  [type:xml] toto.xml $lang:toto.$lang.xml opt:"--keep 20" opt_fr:"--keep 0 -o nostrip"
-
-  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt_fr:"--keep 0 -o nostrip"
-
-=item Options specific to a format alias.
-
-This is done by adding B<opt:> and B<opt_>I<lang>: chunks at the end of the line defining the format alias.
-In this example, the option will only be used for the B<it> language.
-
-  [po4a_alias:test] man opt_it:"--keep 0"
-
-=item Global options from the configuration file.
-
-They are specified through B<[options]> lines in your configuration file, which
-content is handled as if their content were appended to the command line. Example:
-
-  [options] --keep 20 --option nostrip
-
-=back
-
-Here is an example showing how to quote the spaces and quotes:
-
- [options] --master-charset UTF-8
- 
- [po4a_alias:MAN] man opt:"-o \"mdoc=NAME,SEE ALSO\""
- 
- [type:MAN] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
-            opt:"-k 75" opt_it:"-L UTF-8" opt_fr:--verbose
-
-=head2 Specifying aliases
-
-If you must specify the same options for multiple files, you may be
-interested in defining a module alias. This can be done this way:
-
- [po4a_alias:test] man opt:"-k 21" opt_es:"-o debug=splitargs"
-
-This defines a module alias named B<test>, based on the B<man> module, with
-the B<-k 21> applied to all the languages and with B<-o debug=splitargs>
-applied to the Spanish translation.
-
-This module alias can then be used like a regular module:
-
- [type:test] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
-            opt_it:"-L UTF-8" opt_fr:-v
-
-Note that you can specify additional options on a per file basis.
-
-=head2 Split mode
-
-The split mode is used when B<$master> is used in the B<[po4a_paths]> line.
-
-When the split mode is used, a temporary big POT and temporary big POs
-are used. This permits to share the translations between all the POs.
-
-If two POs have different translations for the same string, B<po4a> will mark
-this string as fuzzy and will submit both translations in all the POs
-which contain this string. Then, when a translator updates the translation
-and removes the fuzzy tag in one PO, the translation of this string will
-be updated in every POs automatically.
-
-If there are name conflicts because several files have the same filename,
-the name of the master file can be specified by adding a C<master:file=>I<name>
-option:
-
- [po4a_langs] de fr ja
- [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
- [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui
- [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui
-
-=head2 EXAMPLE
+TODO: Is this section really useful?
 
 Let's assume you maintain a program named B<foo> which has a man page F<man/foo.1>
 which naturally is maintained in English only. Now you as the upstream or
@@ -656,7 +649,7 @@ L<po4a-gettextize(1)>,
 L<po4a-normalize(1)>,
 L<po4a-translate(1)>,
 L<po4a-updatepo(1)>,
-L<po4a(7)>
+L<po4a(7)>.
 
 =head1 AUTHORS
 
