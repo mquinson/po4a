@@ -2,6 +2,7 @@
 title: "YAML: does it fit in Markdown?"
 subtitle: "I mean: why not?"
 author: test
+numeric_ignored_value: 22
 tags:
 - yaml
 - markdown

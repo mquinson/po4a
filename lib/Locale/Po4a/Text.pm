@@ -710,7 +710,14 @@ sub parse_markdown_yaml_front_matter {
                           . "\n"
                     );
                 } else {
-                    $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el, 0 ) . "\n" );
+
+                    # Work around a bug in YAML::Tiny that quotes numbers
+                    # See https://github.com/Perl-Toolchain-Gang/YAML-Tiny#additional-perl-specific-notes
+                    if ( Scalar::Util::looks_like_number($el) ) {
+                        $self->pushline("$header $el\n");
+                    } else {
+                        $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );
+                    }
                 }
 
             } elsif ( $type eq 'ARRAY' ) {
@@ -770,8 +777,11 @@ sub parse_markdown {
 
         # Remove the trailing newline from the title
         chomp($paragraph);
-        my $t = $self->translate( $paragraph, $self->{ref}, "Title $level", "wrap" => 0,
-				  "flags" => "markdown-text" );
+        my $t = $self->translate(
+            $paragraph, $self->{ref}, "Title $level",
+            "wrap"  => 0,
+            "flags" => "markdown-text"
+        );
 
         # Add the newline again for the output
         $self->pushline( $t . "\n" );
@@ -788,8 +798,11 @@ sub parse_markdown {
         do_paragraph( $self, $paragraph, $wrapped_mode );
         $wrapped_mode = 0;
         $paragraph    = "";
-        my $t = $self->translate( $title, $self->{ref}, "Title $titlelevel1", "wrap" => 0,
-				  "flags" => "markdown-text" );
+        my $t = $self->translate(
+            $title, $self->{ref}, "Title $titlelevel1",
+            "wrap"  => 0,
+            "flags" => "markdown-text"
+        );
         $self->pushline( $titlelevel1 . $titlespaces . $t . $titlelevel2 . "\n" );
         $wrapped_mode = $defaultwrap;
     } elsif ( $line =~ /^[ ]{0,3}([*_-])\s*(?:\1\s*){2,}$/ ) {
@@ -918,10 +931,10 @@ sub parse {
 
 sub do_paragraph {
     my ( $self, $paragraph, $wrap ) = ( shift, shift, shift );
-    my $type = shift || $self->{type} || "Plain text";
+    my $type  = shift || $self->{type} || "Plain text";
     my $flags = "";
-    if ($type eq "Plain text" and $markdown) {
-	$flags = "markdown-text";
+    if ( $type eq "Plain text" and $markdown ) {
+        $flags = "markdown-text";
     }
 
     return if ( $paragraph eq "" );
@@ -970,7 +983,7 @@ sub do_paragraph {
                         $text,
                         $self->{ref},
                         "Bullet: '$indent1$bullet'",
-                        "flags" => "markdown-text",
+                        "flags"   => "markdown-text",
                         "wrap"    => $defaultwrap,
                         "wrapcol" => -( length $indent2 )
                     );
