@@ -4,51 +4,52 @@ po4a - framework to translate documentation and other materials
 
 =head1 Introduction
 
-po4a (PO for anything) eases the maintenance of the documentation's
-translation using the classical gettext tools. To that extend, the
-main feature of po4a is to decouple the translatable content of a
-document from its structure.
+po4a (PO for anything) eases the maintenance of documentation translation using
+the classical gettext tools. The main feature of po4a is that it decouples the
+translation of content from its document structure.
 
-This document serves as an introduction to the po4a project, particularly useful
-to potential users considering whether to use this tool, and to the curious ones
-wanting to understand why things are the way they are.
+This document serves as an introduction to the po4a project with a focus on
+potential users considering whether to use this tool and on the curious wanting
+to understand why things are the way they are.
 
 =head1 Why po4a?
 
 The philosophy of Free Software is to make the technology truly available to
-everyone. But the licensing is not the only restriction at stake: non-translated
-free software is useless for non-English speakers, and we still have some work
-to make it available to really everybody out there.
+everyone. But licensing is not the only consideration: untranslated free
+software is useless for non-English speakers. Therefore, we still have some
+work to do to make software available to everybody.
 
-The situation is well-perceived by most actors and everybody is now convinced of
-the necessity to translate everything. Yet, the actual translation represent a
-huge effort of many individuals, crippled by small technical difficulties.
+This situation is well understood by most projects and everybody is now
+convinced of the necessity to translate everything. Yet, the actual
+translations represent a huge effort of many individuals, crippled by small
+technical difficulties.
 
-The open-source software are actually very well translated, thanks to the
+Thankfully, Open Source software is actually very well translated using the
 gettext tool suite. These tools are used to to extract the strings to translate
 from a program and present the strings to translate in a standardized format
-(called PO files, or translation catalogs). A whole ecosystem of tools emerged
-to help the translators actually translating these PO files. The result is then
-displayed by gettext at run time to display translated messages to the end
+(called PO files, or translation catalogs). A whole ecosystem of tools has
+emerged to help the translators actually translate these PO files. The result
+is then used by gettext at run time to display translated messages to the end
 users.
 
-Regarding the documentation, the situation still somewhat disappointing. At
-first, translating a documentation may seem easier than translating a program:
-you just have to copy the documentation source file, and start translating the
-content. But when the original documentation is modified, keeping track of the
-modifications quickly turns into a nightmare for the translators. If done
-manually, this task reveals unpleasant and error prone.
+Regarding documentation, however, the situation still somewhat disappointing.
+At first translating documentation may seem to be easier than translating a
+program as it would seem that you just have to copy the documentation source
+file and start translating the content. However, when the original
+documentation is modified, keeping track of the modifications quickly turns
+into a nightmare for the translators. If done manually, this task is unpleasant
+and error prone.
 
-Outdated translations are often worse than no translation at all: the end-users
-are tricked by a documentation describing an old behavior of the program, but
-they cannot interact directly with the maintainers since they don't speak
-English. Even if they could, the maintainer cannot fix the problem as they don't
-master every language in which their documentation is translated. These
-difficulties undermines the motivation of volunteer translators, further
-aggravating the problem.
+Outdated translations are often worse than no translation at all. End-users can
+be tricked by documentation describing an old behavior of the program.
+Furthermore, they cannot interact directly with the maintainers since they
+don't speak English. Additionally, the maintainer cannot fix the problem as
+they don't know every language in which their documentation is translated.
+These difficulties, often caused by poor tooling, can undermine the motivation
+of volunteer translators, further aggravating the problem.
 
-B<The goal of the po4a project is ease the work of documentation translators>.
-In particular, it makes the documentation translations I<maintainable>.
+B<The goal of the po4a project is to ease the work of documentation translators>.
+In particular, it makes documentation translations I<maintainable>.
 
 The idea is to reuse and adapt the gettext approach to this field. As with
 gettext, texts are extracted from their original locations and presented to
@@ -57,10 +58,10 @@ classical gettext tools to monitor the work to do, collaborate and organize as
 teams. po4a then injects the translations directly into the documentation
 structure to produce translated source files that can be processed and
 distributed just like the English files. Any paragraph that is not translated
-yet is left in English in the resulting document, ensuring that the end users
-never see an outdated documentation.
+is left in English in the resulting document, ensuring that the end users never
+see an outdated translation in the documentation.
 
-This automatizes most of the grunt work of the translation maintenance.
+This automates most of the grunt work of the translation maintenance.
 Discovering the paragraphs needing an update becomes very easy, and the process
 is completely automated when elements are reordered without further
 modification. Specific verification can also be used to reduce the chance of
@@ -78,55 +79,55 @@ of text formatting formats:
 
 =item man (mature parser)
 
-The good old manual pages' format, used by so much programs out there. The
-po4a support is very welcome here since this format is somewhat difficult to
-use and not really friendly to the newbies.
-The L<Locale::Po4a::Man(3pm)|Man> module also supports the mdoc format,
-used by the BSD man pages (they are also quite common on Linux).
+The good old manual pages' format, used by so many programs out there. po4a
+support is very welcome here since this format is somewhat difficult to use and
+not really friendly to newbies.
+
+The L<Locale::Po4a::Man(3pm)|Man> module also supports the mdoc format, used by
+the BSD man pages (they are also quite common on Linux).
 
 =item AsciiDoc (mature parser)
 
 This format is a lightweight markup format intended to ease the authoring of
-documentation. It is for example used to document the git system, which manpages
-are translated using po4a.
+documentation. It is for example used to document the git system. Those
+manpages are translated using po4a.
 
 =item pod (mature parser)
 
 This is the Perl Online Documentation format. The language and extensions
-themselves are documented that way, as well as most of the existing Perl
+themselves are documented using this format in addition to most existing Perl
 scripts. It makes easy to keep the documentation close to the actual code by
-embedding them both in the same file. It makes programmer life easier, but
-unfortunately, not the translator one. Until you use po4a.
+embedding them both in the same file. It makes programmer's life easier, but
+unfortunately, not the translator's, until you use po4a.
 
 =item sgml (mature parser)
 
 Even if superseded by XML nowadays, this format is still used for documents
 which are more than a few screens long. It can even be used for complete books.
-Documents of this length can reveal very challenging to update. B<diff> often
+Documents of this length can be very challenging to update. B<diff> often
 reveals useless when the original text was re-indented after update.
-Fortunately, po4a can help you in that process.
+Fortunately, po4a can help you after that process.
 
-Currently, only the DebianDoc and DocBook DTD are supported, but adding
-support to a new one is really easy. It is even possible to use po4a on an
-unknown SGML DTD without changing the code by providing the needed
-information on the command line. See L<Locale::Po4a::Sgml(3pm)> for details.
+Currently, only DebianDoc and DocBook DTD are supported, but adding support for
+a new one is really easy. It is even possible to use po4a on an unknown SGML
+DTD without changing the code by providing the needed information on the
+command line. See L<Locale::Po4a::Sgml(3pm)> for details.
 
 =item TeX / LaTeX (mature parser)
 
 The LaTeX format is a major documentation format used in the Free Software
 world and for publications.
+
 The L<Locale::Po4a::LaTeX(3pm)|LaTeX> module was tested with the Python
 documentation, a book and some presentations.
 
 =item text (mature parser)
 
-The Text format is the base format for many formats that include long
-blocks of text, including Markdown, debian/changelog, and
-debian/control.
+The Text format is the base format for many formats that include long blocks of
+text, including Markdown, debian/changelog, and debian/control.
 
-This supports the common format used in Static Site Generators,
-READMEs, and other documentation systems.  See
-L<Locale::Po4a::Text(3pm)|Text> for details.
+This supports the common format used in Static Site Generators, READMEs, and
+other documentation systems. See L<Locale::Po4a::Text(3pm)|Text> for details.
 
 =item xml and XHMTL (probably mature parser)
 
@@ -137,26 +138,26 @@ XHTML are supported by po4a.
 
 =item texinfo (very highly experimental parser)
 
-All the GNU documentation is written in this format (that's even one of
-the requirement to become an official GNU project).  The support for
+All of the GNU documentation is written in this format (it's even one of the
+requirements to become an official GNU project). The support for
 L<Locale::Po4a::Texinfo(3pm)|Texinfo> in po4a is still at the beginning.
 Please report bugs and feature requests.
 
 =item Others supported formats
 
 Po4a can also handle some more rare or specialized formats, such as the
-documentation of compilation options for the 2.4+ Linux kernels or the
-diagrams produced by the dia tool. Adding a new one is often very easy and
-the main task is to come up with a parser of your target format. See
+documentation of compilation options for the 2.4+ Linux kernels or the diagrams
+produced by the dia tool. Adding a new format is often very easy and the main
+task is to come up with a parser for your target format. See
 L<Locale::Po4a::TransTractor(3pm)> for more information about this.
 
 =item Unsupported formats
 
 Unfortunately, po4a still lacks support for several documentation formats. Many
-of them would be easy to support in po4a, and not only documentation ones. This
-includes package descriptions (deb and rpm), package installation scripts
-questions, package changelogs, and all specialized file formats used by the
-programs such as game scenarios or wine resource files.
+of them would be easy to support in po4a. This includes formats not just used
+for documentation, such as, package descriptions (deb and rpm), package
+installation scripts questions, package changelogs, and all the specialized
+file formats used by programs such as game scenarios or wine resource files.
 
 =back
 
@@ -190,11 +191,11 @@ described in the documentation of L<po4a(1)>.
 =head2 Graphical overview of the po4a scripts
 
 The following schema gives an overview of how each po4a script can be used.
-Here, F<master.doc> an example name for the documentation to be translated;
+Here, F<master.doc> is an example name for the documentation to be translated;
 F<XX.doc> is the corresponding translation catalog in the language XX while
 F<doc.XX.po> is the translation catalog for that document in the XX language.
 Documentation authors will mostly be concerned with F<master.doc> (which can be
-a manpage, a XML document, an asciidoc file or similar); the translators will be
+a manpage, an XML document, an asciidoc file or similar); the translators will be
 mostly concerned with the PO file, while the end users will only see the
 F<XX.doc> file.
 
@@ -319,18 +320,20 @@ output of this process.
 
 =head2 Using addenda to add extra text to translations
 
-Adding new text to the translation is probably the only thing that is easier on
-the long run when you translate files manually :) This happens when you want to
-add an extra section to the translated document, not corresponding to any
+Adding new text to the translation is probably the only thing that is easier in
+the long run when you translate files manually :). This happens when you want
+to add an extra section to the translated document, not corresponding to any
 content in the original document. The classical use case is to give credits to
-the translation team, and to indicate how to report translation-specific issues.
+the translation team, and to indicate how to report translation-specific
+issues.
 
-With po4a, you have to specify B<addendum> files, that can be seen as a sort of
-patches applied to the localized document after processing. Each addendum must
-be provided as a separate file, which format is however very different from the
-classical patches. The first line is a I<header line>, defining the insertion
-point of the addendum (with an unfortunately cryptic syntax -- see below) while
-the rest of the file is added verbatim at the determined position.
+With po4a, you have to specify B<addendum> files, that can be conceptually
+viewed as patches applied to the localized document after processing. Each
+addendum must be provided as a separate file, which format is however very
+different from the classical patches. The first line is a I<header line>,
+defining the insertion point of the addendum (with an unfortunately cryptic
+syntax -- see below) while the rest of the file is added verbatim at the
+determined position.
 
 The header line must begin with the string B<PO4A-HEADER:>, followed by a
 semi-colon separated list of I<key>B<=>I<value> fields.
@@ -339,7 +342,7 @@ the XML section containing the string C<About this document> in translation.
 
 =cut
 
-#TRANSLATORS: you can keep the French example here, or invert it: Use an header in your own language at the beginning, and then say that it shouldn't be in English, translating the second header example to English
+#TRANSLATORS: you can keep the French example here, or invert it: Use a header in your own language at the beginning, and then say that it shouldn't be in English, translating the second header example to English
 
 =pod
 
@@ -409,8 +412,8 @@ there is enough trailing spaces in the translated document.
 
 Although this context search may be considered to operate roughly on each line
 of the B<translated> document, it actually operates on the internal data string of
-the translated document.  This internal data string may be a text spanning a
-paragraph containing multiple lines or may be a XML tag itself alone.  The
+the translated document. This internal data string may be a text spanning a
+paragraph containing multiple lines or may be a XML tag itself alone. The
 exact I<insertion point> of the addendum must be before or after the internal
 data string and can not be within the internal data string.
 
@@ -432,9 +435,9 @@ If you want to add something after the following nroff section:
 
   .SH "AUTHORS"
 
-You should select two step approach by setting B<mode=after>.  Then you should
+You should select a two step approach by setting B<mode=after>. Then you should
 narrow down search to the line after B<AUTHORS> with the B<position> argument
-regex.  Then, you should match the beginning of the next section (i.e.,
+regex. Then, you should match the beginning of the next section (i.e.,
 B<^\.SH>) with the B<beginboundary> argument regex. That is to say:
 
  PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\.SH
