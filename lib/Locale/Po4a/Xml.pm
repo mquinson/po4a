@@ -368,6 +368,11 @@ String indicating the path (e.g. E<lt>bbbE<gt>E<lt>aaaE<gt>) of a tag
 where a lang="..." attribute shall be added. The language will be defined
 as the basename of the PO file without any .po extension.
 
+=item B<optionalclosingtag>
+
+Boolean indicating whether closing tags are optional (as in HTML). By default,
+missing closing tags raise an error handled according to C<ontagerror>.
+
 =item B<tags>
 
 Note: This option is deprecated.
@@ -1008,6 +1013,20 @@ sub tag_trans_close {
 
     my $test = pop @path;
     if ( !defined($test) || $test ne $name ) {
+
+        # Check whether it's simply a missing closing tag that I could survive
+        if ( ( $self->{options}{'optionalclosingtag'} // 0 ) == 1 ) {
+            my $found = 0;
+            map { $found = 1 if $_ eq $name } @path;
+            if ($found)
+            {    # The opening tag corresponding to the one closed now exists in the path. Pop everything in between
+                while ( $test ne $name ) {
+                    $test = pop @path;
+                }
+                return $self->join_lines(@tag);
+            }
+        }
+
         my $ontagerror = $self->{options}{'ontagerror'};
         if ( $ontagerror eq "warn" ) {
             warn wrap_ref_mod(

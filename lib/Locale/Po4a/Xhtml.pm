@@ -222,7 +222,10 @@ sub initialize {
                 alt
                 lang
                 title
-                ';
+        ';
+
+    $self->{options}{'optionalclosingtag'} = 1;
+
     print wrap_mod( "po4a::Xhtml", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
     $self->treat_options;
 

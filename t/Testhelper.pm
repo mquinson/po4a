@@ -354,7 +354,14 @@ sub run_one_format {
         pass("  Pass: $cmd");
     } else {
         fail("Normalizing $name: $exit_status");
-        fail("  FAIL: $cmd");
+        note("  FAIL: $cmd");
+        note("Produced output:");
+        open FH, "$tmpbase.err" || die "Cannot open output file that I just created, I'm puzzled";
+        while (<FH>) {
+            note("  $_");
+        }
+        note("(end of command output)\n");
+
     }
 
     ####
