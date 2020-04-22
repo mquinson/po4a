@@ -936,7 +936,8 @@ my $config_file = shift(@ARGV) || pod2usage();
 my (@langs);
 my (%aliases);    # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
-my (%po_filename);    # po_files: '$lang'=>'$path'
+my (%po_filename);     # po_files: '$lang'=>'$path'
+my (%add_filename);    # Global addendum_files: '$lang'=>array of '$path'
 my (%document)
   ;    # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
 my $doc_count = 0;
@@ -1001,7 +1002,43 @@ while (<CONFIG>) {
         foreach my $arg ( split( / /, $args ) ) {
             die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable argument '%s'."), $arg )
               unless ( $arg =~ /^([^:]*):(.*)/ );
-            $po_filename{$1} = $2 if $1 ne '$lang';
+            my ( $component, $path ) = ( $1, $2 );
+            if ( $component =~ m/^add_(.*)$/ ) {
+                my $lang    = $1;
+                my @addlist = ($path);
+                while ( scalar @addlist ) {
+                    my $elem = shift @addlist;
+                    my $modifiers;
+                    $elem =~ s/^([@!?]+)// and $modifiers = $1;
+                    if ( defined $modifiers ) {
+                        next if ( $modifiers =~ m/!/ );
+                        next if ( $modifiers =~ m/\?/ and not -e find_input_file($elem) );
+                        if ( $modifiers =~ m/@/ ) {
+                            open LIST, "<", find_input_file($elem)
+                              or die wrap_msg( gettext("Cannot open %s: %s"), $elem, $! );
+                            while (<LIST>) {
+                                chomp;
+                                s/\s+$//;
+                                next if length($_) == 0 or $_ =~ m/^\s*#/;
+                                while (m/\$\((\w+)\)/) {
+                                    if ( defined $po4a_opts{"variables"}{$1} ) {
+                                        s/\$\((\Q$1\E)\)/$po4a_opts{"variables"}{$1}/g;
+                                    } else {
+                                        die wrap_ref_mod( "$config_file:$nb", "", gettext("Unknown variable: %s"), $1 );
+                                    }
+                                }
+                                push @addlist, $_;
+                            }
+                            close LIST;
+                            next;
+                        }
+                    }
+                    push @{ $add_filename{$lang} }, $elem;
+                }
+
+            } else {    # Not an addendum. It must be a po filename
+                $po_filename{$1} = $path;
+            }
         }
 
     } elsif ( $cmd eq "po4a_langs" ) {
@@ -1624,6 +1661,7 @@ if ( not $po4a_opts{"no-translations"} ) {
                 if ( defined $document{$master}{"add_$lang"} ) {
                     push @files, @{ $document{$master}{"add_$lang"} };
                 }
+                push @files, @{ $add_filename{$lang} } if ( defined $add_filename{$lang} );
 
                 unless ( is_older( $stampfile, @files ) ) {
                     print wrap_msg( gettext("%s doesn't need to be updated."), $document{$master}{$lang} )
@@ -1709,15 +1747,19 @@ if ( not $po4a_opts{"no-translations"} ) {
                 }
             }
 
-            if ( defined( $document{$master}{"add_$lang"} ) ) {
-                foreach my $add ( @{ $document{$master}{"add_$lang"} } ) {
-                    if ( !$doc->addendum( find_input_file($add) ) ) {
-                        die wrap_msg( gettext("Addendum %s does NOT apply to %s (translation discarded)."),
-                            $add, $document{$master}{$lang} );
-                        my $outfile = find_output_file( $document{$master}{$lang} );
-                        unlink($outfile) if ( -e $outfile );
-                        next DOC;
-                    }
+            my @addlist;
+            push @addlist, @{ $document{$master}{"add_$lang"} }
+              if ( defined( $document{$master}{"add_$lang"} ) );
+            push @addlist, @{ $add_filename{$lang} }
+              if ( defined( $add_filename{$lang} ) );
+
+            foreach my $add (@addlist) {
+                if ( !$doc->addendum( find_input_file($add) ) ) {
+                    die wrap_msg( gettext("Addendum %s does NOT apply to %s (translation discarded)."),
+                        $add, $document{$master}{$lang} );
+                    my $outfile = find_output_file( $document{$master}{$lang} );
+                    unlink($outfile) if ( -e $outfile );
+                    next DOC;
                 }
             }
             if ( $file_opts{"verbose"} ) {

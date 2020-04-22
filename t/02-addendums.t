@@ -23,6 +23,15 @@ push @tests, {
     'po4a.conf'      => 'add/list/po4a.conf',
     'closed_path'    => 'add/*/',
     'expected_files' => 'output-1 output-2 output-3 output-123 output-list up.po list.pot',
+
+  },
+  {
+    'doc'            => 'Same path to addenda for all languages',
+    'po4a.conf'      => 'add/path/po4a.conf',
+    'closed_path'    => 'add/*/',
+    'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
+      . 'multiple.man.de.1 multiple.man.es.1 multiple.man.fr.1 multiple.man.it.1 multiple.pot',
+
   };
 
 my @ignored_tests;
