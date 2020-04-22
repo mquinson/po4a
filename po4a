@@ -1449,12 +1449,17 @@ if ( $po4a_opts{"split"} ) {
         if ( not -d $dir ) {
             mkdir $dir or die wrap_msg( gettext("Can't create directory '%s': %s"), $dir, $! );
         }
-        my $outfile = $po4a_opts{"force"} ? find_output_file( $split_pot{$master} ) : $tmp_file;
-        my $cmd     = "msggrep$Config{_exe} -N \"$master\" -o $outfile $pot_filename";
+        my $outfile       = $po4a_opts{"force"} ? find_output_file( $split_pot{$master} ) : $tmp_file;
+        my $searched_file = $document{$master}{'pot_in'} // $master;
+        my $cmd           = "msggrep$Config{_exe} -N \"$searched_file\" -o $outfile $pot_filename";
         run_cmd($cmd);
 
-        die "msggrep did not create $outfile. Please report that bug, along the information allowing to reproduce it\n"
-          unless ( -e $outfile );
+        die wrap_msg(
+            gettext(
+                "msggrep did not create '%s'. Used command:\n  %s\nPlease report that bug, along the information allowing to reproduce it.\n"
+            ),
+            $outfile, $cmd
+        ) unless ( -e $outfile );
 
         move_po_if_needed( $tmp_file, find_output_file( $split_pot{$master} ), 0 )
           unless ( $po4a_opts{"force"} );

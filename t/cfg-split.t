@@ -84,6 +84,13 @@ push @tests, {
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'first.man.de first.man.de.po first.man.fr first.man.fr.po first.man.pot '
       . 'second.man.de second.man.de.po second.man.fr second.man.fr.po second.man.pot',
+  },
+  {
+    'doc'            => 'Split settings, with a separate pot_in file',
+    'po4a.conf'      => 'cfg/split-potin/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'first.man.de first.man.de.po first.man.fr first.man.fr.po first.man.pot '
+      . 'second.man.de second.man.de.po second.man.fr second.man.fr.po second.man.pot',
   };
 
 run_all_tests(@tests);

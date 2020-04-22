@@ -80,6 +80,12 @@ push @tests, {
     'closed_path'      => 'cfg/*/',
     'expected_retcode' => 256,
     'expected_files'   => 'single.fr.po single.pot',
+  },
+  {
+    'doc'            => 'Single language, with a separate pot_in file',
+    'po4a.conf'      => 'cfg/single-potin/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'single.man.fr.1 single.fr.po single.pot',
   };
 
 run_all_tests(@tests);

@@ -11,20 +11,20 @@ use Testhelper;
 
 my @tests;
 push @tests, {
-    'doc'         => 'Multiple language, no pot no po',
+    'doc'         => 'Multiple languages, no pot no po',
     'po4a.conf'   => 'cfg/multiple-nopotpo/po4a.conf',
-    'closed_path' => 'cfg/*/',                            # Do not use or modify the other tests
+    'closed_path' => 'cfg/*/',                             # Do not use or modify the other tests
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
   },
   {
-    'doc'            => 'Multiple language, no po',
+    'doc'            => 'Multiple languages, no po',
     'po4a.conf'      => 'cfg/multiple-nopo/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
 
   },
   {
-    'doc'              => 'Multiple language, no po, --no-update',
+    'doc'              => 'Multiple languages, no po, --no-update',
     'po4a.conf'        => 'cfg/multiple-nopo/po4a.conf',
     'options'          => ' --no-update',
     'closed_path'      => 'cfg/*/',
@@ -33,7 +33,7 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Multiple language, with translation to create',
+    'doc'            => 'Multiple languages, with translation to create',
     'po4a.conf'      => 'cfg/multiple/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
@@ -41,7 +41,7 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Multiple language, translation uptodate',
+    'doc'            => 'Multiple languages, translation uptodate',
     'po4a.conf'      => 'cfg/multiple-uptodate/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
@@ -49,21 +49,21 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Multiple language, translation already fuzzy',
+    'doc'            => 'Multiple languages, translation already fuzzy',
     'po4a.conf'      => 'cfg/multiple-fuzzy/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
 
   },
   {
-    'doc'            => 'Multiple language, translation fuzzied during the update',
+    'doc'            => 'Multiple languages, translation fuzzied during the update',
     'po4a.conf'      => 'cfg/multiple-fuzzied/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
 
   },
   {
-    'doc'            => 'Multiple language, translation would be fuzzied if --no-update were not given',
+    'doc'            => 'Multiple languages, translation would be fuzzied if --no-update were not given',
     'po4a.conf'      => 'cfg/multiple-fuzzied-noup/po4a.conf',
     'options'        => '--no-update',
     'closed_path'    => 'cfg/*/',
@@ -71,8 +71,16 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Multiple language, with a new string appearing in the master doc',
+    'doc'            => 'Multiple languages, with a new string appearing in the master doc',
     'po4a.conf'      => 'cfg/multiple-newstr/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
+      . 'multiple.man.de.1 multiple.man.es.1 multiple.man.fr.1 multiple.man.it.1 multiple.pot',
+
+  },
+  {
+    'doc'            => 'Multiple languages, with a separate pot_in file',
+    'po4a.conf'      => 'cfg/multiple-potin/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
       . 'multiple.man.de.1 multiple.man.es.1 multiple.man.fr.1 multiple.man.it.1 multiple.pot',
