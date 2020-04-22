@@ -244,6 +244,7 @@ weblate, integrate the changes locally, push your changes to the git,
 pull them on weblate, and unlock it. You need to be a maintainer of
 the project on weblate for that.
 ```sh
+git pull salsa master ; git push # Get the German and Italian translations
 wlc lock
 wlc commit
 wlc push
@@ -254,6 +255,7 @@ perl Build.PL
 ./Build
 git commit -m "update po files" po
 git push
+git push salsa
 wlc pull
 wlc unlock
 ```
