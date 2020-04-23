@@ -16,7 +16,7 @@ foreach my $t (qw(SingleFortune SeveralFortunes MultipleLines)) {
       {
         'format'  => 'text',
         'options' => '-o fortunes',
-        'input'   => "fmt/fortunes/$t.txt"
+        'input'   => "fmt/txt-fortunes/$t.txt"
       };
 }
 
