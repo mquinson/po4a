@@ -379,11 +379,12 @@ sub run_one_format {
     my (@tests);
 
     if ( -e "$path/$basename.desc" ) {
-        open FH, "<$path/$basename.options" || die "Cannot read $path/$basename.options: $!";
+        open FH, "<$path/$basename.desc" || die "Cannot read $path/$basename.desc: $!";
         while (<FH>) {
             chomp;
             s{#(.*)$}{} and $doc = $1;
-            next unless m{\S};
+            s{^[ \t]+}{};
+            next if m{^$};
             $options .= "$_ ";
         }
     }

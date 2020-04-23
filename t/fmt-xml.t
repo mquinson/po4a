@@ -10,11 +10,17 @@ use Testhelper;
 
 my @tests;
 
+for my $g (qw(basic)) {
+  push @tests, {'format'=>'guide','input'=>"fmt/xml/$g.xml"};
+}
+
 push @tests,
-  {
-    'doc'       => 'General normalisation test',
-    'normalize' => "-f guide t-24-xml/general.xml",
-  },
+#  {
+#  'format'=>'guide',
+#  'input' =>'fmt/xml/basic.xml'
+#    'doc'       => 'General normalisation test',
+#    'normalize' => "-f guide t-24-xml/general.xml",
+#  },
   {
     'doc'       => 'Comments normalisation test',
     'normalize' => "-f guide t-24-xml/comments.xml",
