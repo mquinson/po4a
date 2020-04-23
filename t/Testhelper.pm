@@ -56,6 +56,20 @@
 #                         If several values are provided, the tests are run several times. By default: run all modes.
 #
 
+# * 'format' test: modern tests to the formats. This kind of tests are mostly configured through files. Accepted keys
+#   - format (req): the module to use
+#   - input (req) : input file name (decomposed as $basename.$ext in the following)
+#   - norm (default: $basename.norm): expected normalized document (translated with inexistant language)
+#   - potfile (default: $basname.pot): expected POT file
+#   - pofile (default: $basname.po): PO file used as input
+#   - stderr (optional -- default: $basename.stderr): expected output of the normalization.
+#            If the file does not exist, the normalization is expected to not output anything
+#   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
+#            If the file does not exist, the normalization is expected to not output anything
+#   - options (optional): options to pass to the translation and normalization
+#
+#     if a file $basename.desc exists, any comment is used as test description while the rest is added to the options
+
 # * 'format' tests: TODO. For now, they are normalize tests, the old way of doing this
 # * 'run' test: ancient, unconverted tests
 
@@ -335,10 +349,129 @@ sub run_one_po4aconf {
 }
 
 sub run_one_format {
+    my ( $test, $input ) = @_;
+
+    my $doc = $test->{'doc'} // "Format testing '$input'";
+
+    my %valid_options;
+    map { $valid_options{$_} = 1 } qw(format input norm potfile pofile stderr trans_stderr doc options);
+    map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
+      ( keys %{$test} );
+
+    die "Broken test: input file $input does not exist or not readable." unless -e $input && -r $input;
+
+    my $format = $test->{'format'} // die "Broken test $input: no format provided\n";
+
+    $input =~ m|^(.*)/([^/]*)\.([^/]*)$| || die "Broken test: input file '$input' is not of form PATH/BASE.EXT";
+    my ( $path, $basename, $ext ) = ( $1, $2, $3 );
+
+    my $output = $test->{'norm'} // "$path/$basename.norm";
+    fail "Broken test $basename: expected normalized file '$output' does not exist" unless -e $output;
+    my $potfile = $test->{'potfile'} // "$path/$basename.pot";
+    fail "Broken test $basename: expected POT file '$potfile' does not exist" unless -e $potfile;
+    my $pofile = $test->{'pofile'} // "$path/$basename.po";
+    fail "Broken test $basename: expected PO file '$pofile' does not exist" unless -e $pofile;
+
+    my $stderr   = $test->{'stderr'}       // "$path/$basename.stderr";          # this file is optionnal
+    my $transerr = $test->{'trans_stderr'} // "$path/$basename.trans.stderr";    # this file is optionnal
+
+    my $options = $test->{'options'} // "";
+    my (@tests);
+
+    if ( -e "$path/$basename.desc" ) {
+        open FH, "<$path/$basename.options" || die "Cannot read $path/$basename.options: $!";
+        while (<FH>) {
+            chomp;
+            s{#(.*)$}{} and $doc = $1;
+            next unless m{\S};
+            $options .= "$_ ";
+        }
+    }
+
+    system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
+    my $tmpbase = "tmp/$path/$basename";
+    my $cwd     = cwd();
+    $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
+
+    # Normalize the document
+    my $cmd =
+        "${execpath}/po4a-normalize -f $format "
+      . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
+      . " > $cwd/tmp/$path/stderr 2>&1";
+
+    chdir $path || fail "Cannot change directory to $path: $!";
+    note("Change directory to $path");
+    my $exit_status = system($cmd);
+    chdir $cwd || fail "Cannot change directory back to $cwd: $!";
+    note("Change directory back to $cwd");
+
+    my $real_stderr = "tmp/$path/stderr";
+    if ( $exit_status == 0 ) {
+        pass("Normalizing $doc");
+        note("  Pass: $cmd");
+    } else {
+        fail("Normalizing $doc: $exit_status");
+        note("  FAIL: $cmd");
+        note("Produced output:");
+        open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
+        while (<FH>) {
+            note("  $_");
+        }
+        note("(end of command output)\n");
+
+    }
+
+    push @tests, "diff -uN $stderr $real_stderr";
+    push @tests, "PODIFF  $path/$basename.pot  $tmpbase.pot";
+    push @tests, "diff -u $path/$basename.norm $tmpbase.norm";
+
+    # Translate the document
+    $cmd =
+        "${execpath}/po4a-translate -f $format $options --master $path/$basename.$ext"
+      . " --po $path/$basename.po --localized ${tmpbase}.trans"
+      . " > $cwd/tmp/$path/trans.stderr 2>&1";
+
+    if ( system_failed( $cmd, "" ) ) {
+        note("Produced output:");
+        open FH, "$cwd/tmp/$path/trans.stderr" || die "Cannot open output file that I just created, I'm puzzled";
+        while (<FH>) {
+            note("  $_");
+        }
+        note("(end of command output)\n");
+    }
+
+    push @tests, "diff -uN $transerr $cwd/tmp/$path/trans.stderr";
+    push @tests, "diff -uN $path/$basename.trans  $tmpbase.trans";
+
+    # Run all accumulated tests
+    for my $tcmd (@tests) {
+        $tcmd =~ s/PATH/${execpath}/g;
+        $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
+        if ( system_failed( "$tcmd  > $tmpbase.cmd_output 2>&1", "" ) ) {
+            note("Command output:");
+            open FH, "$tmpbase.cmd_output" || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                chomp;
+                note("| $_");
+            }
+            note("(end of output)\n");
+            show_files("tmp/$path");
+            return;
+        }
+        unlink("$tmpbase.cmd_output");
+    }
+}
+
+sub run_one_normalize {
     my ( $test, $options, $test_directory, $basename, $ext ) = @_;
 
     system("mkdir -p tmp/$basename/") && die "Cannot create tmp/$basename/: $!";
     my $tmpbase = "tmp/$basename/$basename";
+
+    unless ( -e "$test_directory/$basename.pot" ) {
+        fail("Broken test: Expected outfile ${tmpbase}.pot does not exist");
+        return;
+    }
 
     ####
     # Normalize the document
@@ -454,14 +587,27 @@ sub run_all_tests {
                   TODO: {
                         print STDERR "TODO: " . $test->{doc} . "\n";
                         local our $TODO = $test->{'todo'};
-                        subtest $test->{'doc'} => sub { run_one_format( $test, $options, $path, $basename, $ext ); }
+                        subtest $test->{'doc'} => sub { run_one_normalize( $test, $options, $path, $basename, $ext ); }
                     }
                 } else {
-                    subtest $test->{'doc'} => sub { run_one_format( $test, $options, $path, $basename, $ext ); }
+                    subtest $test->{'doc'} => sub { run_one_normalize( $test, $options, $path, $basename, $ext ); }
                 }
 
             } else {
                 die "Invalid 'normalize' key in test definition: $test->{'doc'}\n";
+            }
+        } elsif ( exists $test->{'format'} ) {
+            my $input = $test->{'input'} // die "Broken test: 'format' tests must declare an 'input' key'";
+            $test->{'doc'} = "Format $input" unless exists $test->{'doc'};
+
+            if ( exists $test->{'todo'} ) {
+              TODO: {
+                    print STDERR "TODO: " . $test->{doc} . "\n";
+                    local our $TODO = $test->{'todo'};
+                    subtest $test->{'doc'} => sub { run_one_format( $test, $input ); }
+                }
+            } else {
+                subtest $test->{'doc'} => sub { run_one_format( $test, $input ); }
             }
         } elsif ( exists $test->{'po4a.conf'} ) {
 
