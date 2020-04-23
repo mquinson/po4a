@@ -201,7 +201,7 @@ sub initialize {
     $self->{options}{'markdown'}        = 1;
     $self->{options}{'yfm_keys'}        = '';
     $self->{options}{'yfm_skip_array'}  = 0;
-    $self->{options}{'nobullets'}       = 1;
+    $self->{options}{'nobullets'}       = 0;
     $self->{options}{'keyvalue'}        = 1;
     $self->{options}{'tabs'}            = 1;
     $self->{options}{'verbose'}         = 1;
