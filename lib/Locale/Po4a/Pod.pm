@@ -86,7 +86,7 @@ sub command {
 
           # The =encoding line will be added by docheader
     } else {
-        $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", "=$command", "wrap" => 1 );
+        $paragraph = $self->translate( $paragraph, $self->{DOCPOD}{refname} . ":$line_num", "=$command", "wrap" => 1 );
         $self->pushline("=$command $paragraph\n\n");
     }
 }
@@ -100,7 +100,7 @@ sub verbatim {
         $self->pushline("$paragraph\n");
         return;
     }
-    $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", "verbatim" );
+    $paragraph = $self->translate( $paragraph, $self->{DOCPOD}{refname} . ":$line_num", "verbatim" );
     $paragraph =~ s/\n$//m;
     $self->pushline("$paragraph\n");
 }
@@ -127,7 +127,7 @@ sub textblock {
         return;
     }
 
-    $paragraph = $self->translate( $paragraph, $self->input_file() . ":$line_num", 'textblock', "wrap" => 1 );
+    $paragraph = $self->translate( $paragraph, $self->{DOCPOD}{refname} . ":$line_num", 'textblock', "wrap" => 1 );
     $paragraph =~ s/ +\n/\n/gm;
     $self->pushline("$paragraph\n\n");
 }
@@ -137,14 +137,19 @@ sub end_pod { }
 sub read {
     my ( $self, $filename, $refname ) = @_;
 
-    push @{ $self->{DOCPOD}{infile} }, $filename;
+    push @{ $self->{DOCPOD}{infile} }, ( $filename, $refname );
     $self->Locale::Po4a::TransTractor::read( $filename, $refname );
 }
 
 sub parse {
     my $self = shift;
 
-    map { $self->parse_from_file($_) } @{ $self->{DOCPOD}{infile} };
+    my @list = @{ $self->{DOCPOD}{infile} };
+    while ( scalar @list ) {
+        my ( $filename, $refname ) = ( shift @list, shift @list );
+        $self->{DOCPOD}{refname} = $refname;
+        $self->parse_from_file($filename);
+    }
 }
 
 sub docheader {
