@@ -1,8 +1,16 @@
+This serves as testcase for simple lists.
+
+ * Item 1
+ * This item paragraph runs over
+   several lines.
+
 This serves as testcase for nested lists.
 
  * Item 1
- * Item 2
+ * This item paragraph runs over
+   several lines.
    * Nested item 1
+     * Sub-sub item
    * Nested item 2
 
 Normal paragraph.
