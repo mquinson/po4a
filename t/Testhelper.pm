@@ -91,15 +91,6 @@ $ENV{'COLUMNS'} = "80";
 # Path to the tested executables. AUTOPKGTEST_TMP is set on salsa CI for Debian packages.
 my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 
-# small helper function to add an element in a list only if no existing element match with the provided pattern
-sub add_unless_found {
-    my ( $list, $pattern, $to_add ) = @_;
-    map { return if (/$pattern/) } @{$list};
-
-    #    print STDERR "ADD because $pattern not found\n";
-    push @{$list}, $to_add;
-}
-
 my $PODIFF =
   "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
 
@@ -190,9 +181,9 @@ sub run_one_po4aconf {
 
     fail("Broken test: 'tests' is not an array as expected") if exists $t->{tests} && ref $t->{tests} ne 'ARRAY';
     my ( @tests, @setup, @teardown ) = ( (), (), () );
-    map { push @tests,    $_; } $t->{'tests'}    if exists $t->{'tests'};
-    map { push @setup,    $_; } $t->{'setup'}    if exists $t->{'setup'};
-    map { push @teardown, $_; } $t->{'teardown'} if exists $t->{'teardown'};
+    map { push @tests,    $_; } @{ $t->{'tests'} }    if exists $t->{'tests'};
+    map { push @setup,    $_; } @{ $t->{'setup'} }    if exists $t->{'setup'};
+    map { push @teardown, $_; } @{ $t->{'teardown'} } if exists $t->{'teardown'};
 
     fail("Broken test: path $path does not exist") unless -e $path;
 
@@ -214,13 +205,13 @@ sub run_one_po4aconf {
         $run_from = $tmppath;
         $options  = "--srcdir $cwd/$path $options";
     } elsif ( $mode eq 'dstdir' ) {
-        $tmppath .= '-dst';
         $run_from = $path;
         $options  = "--destdir $cwd/$tmppath $options";
     } elsif ( $mode eq 'srcdstdir' ) {
         $tmppath .= '-srcdst';
         $options = "--srcdir $path --destdir $tmppath $options";
     } elsif ( $mode eq 'curdir' ) {
+        $tmppath .= '-cur';
         push @setup, "cp $path/* $tmppath";
         push @setup, "chmod +w $tmppath/*";
         $run_from = $tmppath;
@@ -303,18 +294,12 @@ sub run_one_po4aconf {
         } else {
             delete $expected{$file};
             next FILE if $file eq 'output' || $file eq 'diff_output';
-            if ( -e "$path/_$file" ) {
-                add_unless_found(
-                    \@tests,
-                    "$path/_$file *$tmppath/$file",
-                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file"
-                );
+            if ( scalar grep { m{$tmppath/$file} } @tests ) {
+                note("Using the provided test to compare the content of $file");
+            } elsif ( -e "$path/_$file" ) {
+                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file";
             } elsif ( -e "$path/$file" ) {
-                add_unless_found(
-                    \@tests,
-                    "$path/$file *$tmppath/$file",
-                    ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file"
-                );
+                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file";
             } else {
                 teardown( \@teardown );
                 fail("Broken test $path: $path/_$file should be the expected content of produced file $file");
@@ -330,7 +315,7 @@ sub run_one_po4aconf {
         #        print STDERR "cmd: $tcmd\n";
         $tcmd =~ s/PATH/${execpath}/g;
         $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
-        if ( system_failed( "$tcmd 1>&2 > $tmppath/_cmd_output", "" ) ) {
+        if ( system_failed( "$tcmd 2>&1 > $tmppath/_cmd_output", "" ) ) {
             note("Command output:");
             open FH, "$tmppath/_cmd_output" || die "Cannot open output file that I just created, I'm puzzled";
             while (<FH>) {
