@@ -238,19 +238,12 @@ B<po4a> configuration file (see B<--srcdir> above).
 
 =over 4
 
-=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
+=item B<--porefs> I<type>
 
 Specify the reference format. Argument I<type> can be one of B<never>
 to not produce any reference, B<file> to only specify the file
 without the line number, B<counter> to replace line number by an
 increasing counter, and B<full> to include complete references (default: full).
-
-Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
-References are written by default on a single line.  The B<wrap> option wraps
-references on several lines, to mimic B<gettext> tools (B<xgettext> and
-B<msgmerge>).  This option will become the default in a future release, because
-it is more sensible.  The B<nowrap> option is available so that users who want
-to keep the old behavior can do so.
 
 =item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
 
@@ -263,7 +256,7 @@ for cosmetics. This option specifies the behavior of po4a. If set to a numerical
 value, po4a will wrap the po file after this column and after newlines in the
 content. If set to B<newlines>, po4a will only split the msgid and msgstr after
 newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
-The wrapping of the reference comments is controlled by the B<--porefs> option.
+The reference comments are always wrapped by the gettext tools that we use internally.
 
 Note that this option has no impact on how the msgid and msgstr are wrapped, ie
 on how newlines are added to the content of these strings.
@@ -714,6 +707,7 @@ sub get_options {
     my @variables = ();
     my $previous;
     my $noprevious;
+    my $msgmerge_opt = '';
 
     my %opts = (
         "help"               => 0,
@@ -742,7 +736,6 @@ sub get_options {
         "msgid-bugs-address" => undef,
         "package-name"       => undef,
         "package-version"    => undef,
-        "msgmerge-opt"       => "",
         "srcdir"             => undef,
         "destdir"            => undef,
         "calldir"            => cwd()
@@ -780,7 +773,7 @@ sub get_options {
         'package-version=s'    => \$opts{"package-version"},
         'no-previous'          => \$noprevious,
         'previous'             => \$previous,
-        'msgmerge-opt=s'       => \$opts{"msgmerge-opt"},
+        'msgmerge-opt=s'       => \$msgmerge_opt,
         'srcdir=s'             => \$opts{"srcdir"},
         'destdir=s'            => \$opts{"destdir"}
     ) or pod2usage();
@@ -788,8 +781,10 @@ sub get_options {
     $opts{"verbose"} = scalar @verbose;
     $opts{"verbose"} = 0 if $opts{"quiet"};
     $opts{"verbose"} ||= 1 if $opts{"debug"};
-    $opts{"msgmerge-opt"} .= " --previous" unless $noprevious;
-    $opts{"msgmerge-opt"} .= " --add-location=file" if ( $opts{'porefs'} =~ m/^file/ );
+    $opts{"msgmerge-opt"} = '';
+    $opts{"msgmerge-opt"} .= "--previous " unless $noprevious;
+    $opts{"msgmerge-opt"} .= "--add-location=file " if ( $opts{'porefs'} =~ m/^file/ );
+    $opts{"msgmerge-opt"} .= $msgmerge_opt;
 
     # options to transmit to the modules
     $opts{"options"} = {
@@ -822,6 +817,7 @@ sub get_options {
             "destdir", $opts{"destdir"}, cwd() );
     }
 
+    #    print STDERR "msgmerge: ".$opts{"msgmerge-opt"}."\n";
     return %opts;
 }
 

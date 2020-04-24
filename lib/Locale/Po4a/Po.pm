@@ -51,19 +51,12 @@ from this.
 
 =over 4
 
-=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
+=item B<--porefs> I<type>
 
 Specify the reference format. Argument I<type> can be one of B<never>
 to not produce any reference, B<file> to only specify the file
 without the line number, B<counter> to replace line number by an
 increasing counter, and B<full> to include complete references (default: full).
-
-Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
-References are written by default on a single line.  The B<wrap> option wraps
-references on several lines, to mimic B<gettext> tools (B<xgettext> and
-B<msgmerge>).  This option will become the default in a future release, because
-it is more sensible.  The B<nowrap> option is available so that users who want
-to keep the old behavior can do so.
 
 =item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
 
@@ -76,7 +69,7 @@ for cosmetics. This option specifies the behavior of po4a. If set to a numerical
 value, po4a will wrap the po file after this column and after newlines in the
 content. If set to B<newlines>, po4a will only split the msgid and msgstr after
 newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
-The wrapping of the reference comments is controlled by the B<--porefs> option.
+The reference comments are always wrapped by the gettext tools that we use internally.
 
 Note that this option has no impact on how the msgid and msgstr are wrapped, ie
 on how newlines are added to the content of these strings.
@@ -226,7 +219,7 @@ sub initialize {
     my $date = strftime( "%Y-%m-%d %H:%M", localtime($time) ) . timezone($time);
     chomp $date;
 
-    $self->{options}{'porefs'}             = 'full,nowrap';
+    $self->{options}{'porefs'}             = 'full';
     $self->{options}{'msgid-bugs-address'} = undef;
     $self->{options}{'copyright-holder'}   = "Free Software Foundation, Inc.";
     $self->{options}{'package-name'}       = "PACKAGE";
@@ -251,13 +244,13 @@ sub initialize {
         $self->{options}{'wrap-po'}
       );
 
-    $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none|never)(,(no)?wrap)?$/
+    $self->{options}{'porefs'} =~ /^(full|counter|noline|file|none|never)?$/
       || die wrap_mod(
         "po4a::po",
         dgettext(
             "po4a",
             "Invalid value for option 'porefs' ('%s' is "
-              . "not one of 'full', 'counter', 'noline', 'file' or 'never' + eventually ',wrap' or ',nowrap')"
+              . "not one of 'full', 'counter', 'noline', 'file' or 'never')"
         ),
         $self->{options}{'porefs'}
       );
@@ -540,12 +533,10 @@ sub write {
         }
         $output .= format_comment( $self->{po}{$msgid}{'type'}, ". type: " )
           if length( $self->{po}{$msgid}{'type'} );
+
         if ( length( $self->{po}{$msgid}{'reference'} ) ) {
-            my $output_ref = $self->{po}{$msgid}{'reference'};
-            if ( $self->{options}{'porefs'} =~ m/,wrap$/ ) {
-                $output_ref = wrap($output_ref);
-                $output_ref =~ s/\s+$//mg;
-            }
+            my $output_ref = wrap( $self->{po}{$msgid}{'reference'} );
+            $output_ref =~ s/\s+$//mg;
             $output .= format_comment( $output_ref, ": " );
         }
         $output .= "#, " . join( ", ", sort split( /\s+/, $self->{po}{$msgid}{'flags'} ) ) . "\n"
