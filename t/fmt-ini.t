@@ -13,8 +13,8 @@ my @tests;
 
 push @tests,
   {
-    'doc'       => 'normalisation test',
-    'normalize' => "-f ini t-10-ini/test1.ini",
+    'format' => 'ini',
+    'input'  => 'fmt/ini/basic.ini'
   };
 
 run_all_tests(@tests);
