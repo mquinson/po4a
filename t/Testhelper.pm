@@ -228,8 +228,6 @@ sub run_one_po4aconf {
 
     my $cmd = "$execpath/po4a -f $cwd/$po4aconf $options > $cwd/$tmppath/output 2>&1";
 
-    system("mkdir -p $tmppath/") && die "Cannot create $tmppath/: $!";
-
     chdir $run_from || fail "Cannot change directory to $run_from: $!";
     pass("Change directory to $run_from");
     die "Malformed test: conf file $cwd/$po4aconf does not exist from " . cwd() . " (mode:$mode)\n"
@@ -339,7 +337,7 @@ sub run_one_format {
     my $doc = $test->{'doc'} // "Format testing '$input'";
 
     my %valid_options;
-    map { $valid_options{$_} = 1 } qw(format input norm potfile pofile stderr trans_stderr doc options);
+    map { $valid_options{$_} = 1 } qw(format input norm potfile pofile trans stderr trans_stderr doc options);
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
       ( keys %{$test} );
 
@@ -356,6 +354,8 @@ sub run_one_format {
     fail "Broken test $basename: expected POT file '$potfile' does not exist" unless -e $potfile;
     my $pofile = $test->{'pofile'} // "$path/$basename.po";
     fail "Broken test $basename: expected PO file '$pofile' does not exist" unless -e $pofile;
+    my $transfile = $test->{'trans'} // "$path/$basename.trans";
+    fail "Broken test $basename: expected translated file '$transfile' does not exist" unless -e $transfile;
 
     my $stderr   = $test->{'stderr'}       // "$path/$basename.stderr";          # this file is optionnal
     my $transerr = $test->{'trans_stderr'} // "$path/$basename.trans.stderr";    # this file is optionnal
@@ -374,6 +374,7 @@ sub run_one_format {
         }
     }
 
+    system("rm -rf tmp/$path/")   && die "Cannot cleanup tmp/$path/ on startup: $!";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
     my $tmpbase = "tmp/$path/$basename";
     my $cwd     = cwd();
@@ -408,13 +409,13 @@ sub run_one_format {
     }
 
     push @tests, "diff -uN $stderr $real_stderr";
-    push @tests, "PODIFF  $path/$basename.pot  $tmpbase.pot";
-    push @tests, "diff -u $path/$basename.norm $tmpbase.norm";
+    push @tests, "PODIFF  $potfile  $tmpbase.pot";
+    push @tests, "diff -u $output   $tmpbase.norm";
 
     # Translate the document
     $cmd =
         "${execpath}/po4a-translate -f $format $options --master $path/$basename.$ext"
-      . " --po $path/$basename.po --localized ${tmpbase}.trans"
+      . " --po $pofile --localized ${tmpbase}.trans"
       . " > $cwd/tmp/$path/trans.stderr 2>&1";
 
     if ( system_failed( $cmd, "" ) ) {
@@ -426,8 +427,8 @@ sub run_one_format {
         note("(end of command output)\n");
     }
 
-    push @tests, "diff -uN $transerr $cwd/tmp/$path/trans.stderr";
-    push @tests, "diff -uN $path/$basename.trans  $tmpbase.trans";
+    push @tests, "diff -uN $transerr  $cwd/tmp/$path/trans.stderr";
+    push @tests, "diff -uN $transfile $tmpbase.trans";
 
     # Run all accumulated tests
     for my $tcmd (@tests) {
