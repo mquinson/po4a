@@ -420,7 +420,7 @@ specific page of each parsing module, e.g. L<Locale::Po4a::Xml(3pm)>. You could
 for example pass B<nostrip> to the XML parser to not strip the spaces around the
 extracted strings.
 
-You can pass these options for a specific master file, of even for a specific
+You can pass these options for a specific master file, or even for a specific
 translation of that file, using C<opt:> and C<opt_XX:> for the C<XX> language.
 In the following example, the B<nostrip> option is passed to the XML parser (for
 all languages), while the threshold will be reduced to 0% for the French
@@ -564,7 +564,7 @@ The following includes a list of addendum for every language:
 
 =head2 Filtering the translated strings
 
-Sometimes, you don't want to hide some strings from the translation process. To
+Sometimes, you want to hide some strings from the translation process. To
 that extend, you can give a C<pot_in> parameter to your master file to specify
 the name of the file to use instead of the real master when building the POT
 file. Here is an example:
@@ -578,7 +578,7 @@ F<book-filtered.xml> (that must be produced before calling B<po4a>) while the
 translated files will be built from F<book.xml>. As a result, any string that is
 part of F<book.xml> but not in F<book-filtered.xml> will not be included in the
 PO files, preventing the translators from providing a translation for them. So
-these string will be left unmodified when producing the translated documents.
+these strings will be left unmodified when producing the translated documents.
 This naturally decreases the level of translation, so you may need the C<--keep>
 option to ensure that the document is produced anyway.
 
