@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-26 01:10+0200\n"
-"PO-Revision-Date: 2020-04-25 21:11+0000\n"
+"PO-Revision-Date: 2020-04-27 16:11+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.0.2-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -864,10 +864,8 @@ msgstr "Параметри для внесення змін до заголов�
 
 #. type: =item
 #: po4a:69 lib/Locale/Po4a/Po.pm:14
-#, fuzzy
-#| msgid "B<--porefs> I<type>[,B<wrap>|B<nowrap>]"
 msgid "B<--porefs> I<type>"
-msgstr "B<--porefs> I<тип>[,B<wrap>|B<nowrap>]"
+msgstr "B<--porefs> I<тип>"
 
 #. type: textblock
 #: po4a:70 po4a-updatepo:39 lib/Locale/Po4a/Po.pm:15
@@ -901,15 +899,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:73 lib/Locale/Po4a/Po.pm:18
-#, fuzzy
-#| msgid ""
-#| "Historically, the gettext suite has reformatted the po files at the 77th "
-#| "column for cosmetics. This option specifies the behavior of po4a. If set "
-#| "to a numerical value, po4a will wrap the po file after this column and "
-#| "after newlines in the content. If set to B<newlines>, po4a will only "
-#| "split the msgid and msgstr after newlines in the content. If set to "
-#| "B<no>, po4a will not wrap the po file at all.  The wrapping of the "
-#| "reference comments is controlled by the B<--porefs> option."
 msgid ""
 "Historically, the gettext suite has reformatted the po files at the 77th "
 "column for cosmetics. This option specifies the behavior of po4a. If set to "
@@ -927,7 +916,8 @@ msgstr ""
 "рядках. Якщо встановити значення B<newlines>, po4a розриватиме рядки у msgid "
 "і msgstr лише після символів нового рядка у вмісті. Якщо встановити значення "
 "B<no>, po4a не переноситиме рядки у файлі po взагалі. Перенесення рядків у "
-"коментарях контролюється за допомогою параметра B<--porefs>."
+"коментарях виконується завжди інструментами gettext, які програма "
+"використовує на внутрішньому рівні."
 
 #. type: textblock
 #: po4a:74 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:19
@@ -1369,13 +1359,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:123
-#, fuzzy
-#| msgid ""
-#| "You can pass these options for a specific master file, of even for a "
-#| "specific translation of that file, using C<opt:> and C<opt_XX:> for the "
-#| "C<XX> language.  In the following example, the B<nostrip> option is "
-#| "passed to the XML parser (for all languages), while the threshold will be "
-#| "reduced to 0% for the French translation (that is thus always kept)."
 msgid ""
 "You can pass these options for a specific master file, or even for a "
 "specific translation of that file, using C<opt:> and C<opt_XX:> for the "
@@ -1385,8 +1368,8 @@ msgid ""
 msgstr ""
 "Ви можете передати ці параметри для певного основного файла або навіть для "
 "певного перекладу цього файла за допомогою C<opt:> і C<opt_XX:> для мови "
-"C<XX>. У наступному прикладі параметр B<nostrip> передається обробнику XML "
-"(для усіх мов), а пороговий відсоток перекладу зменшено до 0% для перекладу "
+"C<XX>. У наступному прикладі параметр B<nostrip> передається обробнику XML ("
+"для усіх мов), а пороговий відсоток перекладу зменшено до 0% для перекладу "
 "французькою (тобто визначено, що цей переклад зберігатиметься завжди)."
 
 #. type: verbatim
@@ -1789,12 +1772,6 @@ msgstr "Фільтрування перекладених рядків"
 
 #. type: textblock
 #: po4a:168
-#, fuzzy
-#| msgid ""
-#| "Sometimes, you don't want to hide some strings from the translation "
-#| "process. To that extend, you can give a C<pot_in> parameter to your "
-#| "master file to specify the name of the file to use instead of the real "
-#| "master when building the POT file. Here is an example:"
 msgid ""
 "Sometimes, you want to hide some strings from the translation process. To "
 "that extend, you can give a C<pot_in> parameter to your master file to "
@@ -1822,17 +1799,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:170
-#, fuzzy
-#| msgid ""
-#| "With this setting, the strings to translate will be extracted from the "
-#| "F<book-filtered.xml> (that must be produced before calling B<po4a>) while "
-#| "the translated files will be built from F<book.xml>. As a result, any "
-#| "string that is part of F<book.xml> but not in F<book-filtered.xml> will "
-#| "not be included in the PO files, preventing the translators from "
-#| "providing a translation for them. So these string will be left unmodified "
-#| "when producing the translated documents.  This naturally decreases the "
-#| "level of translation, so you may need the C<--keep> option to ensure that "
-#| "the document is produced anyway."
 msgid ""
 "With this setting, the strings to translate will be extracted from the "
 "F<book-filtered.xml> (that must be produced before calling B<po4a>) while "
@@ -1844,8 +1810,8 @@ msgid ""
 "translation, so you may need the C<--keep> option to ensure that the "
 "document is produced anyway."
 msgstr ""
-"У прикладі, рядки для перекладу буде видобуто з файла F<book-filtered.xml> "
-"(який має бути створено до виклику B<po4a>), а перекладені файли буде "
+"У прикладі, рядки для перекладу буде видобуто з файла F<book-filtered.xml> ("
+"який має бути створено до виклику B<po4a>), а перекладені файли буде "
 "створено з файла F<book.xml>. У результаті, усі рядки, які є частиною файла "
 "F<book.xml>, але не є частиною F<book-filtered.xml> не буде включено до "
 "файлів PO, а отже, перекладачі не витрачатимуть час на переклад цих рядків. "
@@ -2623,11 +2589,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:70
-#, fuzzy
-#| msgid ""
-#| "For example, the first B<po4a-updatepo> of the Perl documentation's "
-#| "French translation (5.5 Mb PO file) took about 48 hours (yes, two days) "
-#| "while the subsequent ones only take a dozen of seconds."
 msgid ""
 "For example, the first B<po4a-updatepo> of the Perl documentation's French "
 "translation (5.5 MB PO file) took about 48 hours (yes, two days) while the "
@@ -3771,16 +3732,6 @@ msgstr "Графічний огляд скриптів po4a"
 
 #. type: textblock
 #: doc/po4a.7.pod:48
-#, fuzzy
-#| msgid ""
-#| "The following schema gives an overview of how each po4a script can be "
-#| "used.  Here, F<master.doc> is an example name for the documentation to be "
-#| "translated; F<XX.doc> is the corresponding translation catalog in the "
-#| "language XX while F<doc.XX.po> is the translation catalog for that "
-#| "document in the XX language.  Documentation authors will mostly be "
-#| "concerned with F<master.doc> (which can be a manpage, an XML document, an "
-#| "asciidoc file or similar); the translators will be mostly concerned with "
-#| "the PO file, while the end users will only see the F<XX.doc> file."
 msgid ""
 "The following schema gives an overview of how each po4a script can be used.  "
 "Here, F<master.doc> is an example name for the documentation to be "
@@ -3795,9 +3746,9 @@ msgstr ""
 "зі скриптів.  На схемі F<основний.документ> — приклад назви документації, "
 "яку слід перекласти; F<XX.документ> — відповідний перекладений документ "
 "мовою XX, а F<doc.XX.po> — каталог перекладу для цього документа мовою XX. "
-"Автори документації, здебільшого мають перейматися файлом F<основний."
-"документ> (це може бути сторінка підручника (man), документ XML, файл "
-"asciidoc або подібний документ); перекладачі, здебільшого, працюють із "
+"Автори документації, здебільшого мають перейматися файлом "
+"F<основний.документ> (це може бути сторінка підручника (man), документ XML, "
+"файл asciidoc або подібний документ); перекладачі, здебільшого, працюють із "
 "файлом PO, а кінцеві користувачі бачать лише файл F<XX.документ>."
 
 #. type: verbatim
