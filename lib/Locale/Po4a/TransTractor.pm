@@ -930,7 +930,7 @@ sub translate {
         $in_charset = "UTF-8";
     } else {
         if ( ( $self->{TT}{'file_in_charset'} // '' ) !~ m/ascii/i ) {    # // '' to have a default value
-            $in_charset = $self->{TT}{'file_in_charset'};
+            $in_charset = $self->{TT}{'file_in_charset'} // "UTF-8";
         } else {
 
             # The document charset have to be determined *before* we see the first string to recode.
@@ -971,7 +971,7 @@ sub translate {
     # If the input document isn't completely in ascii, we should see what to
     # do with the current string
     unless ( $self->{TT}{ascii_input} ) {
-        my $out_charset = $self->{TT}{po_out}->get_charset;
+        my $out_charset = $self->{TT}{po_out}->get_charset // "UTF-8";
 
         # We set the output po charset
         if ( $out_charset eq "CHARSET" ) {

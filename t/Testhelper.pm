@@ -390,10 +390,11 @@ sub run_one_format {
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
     # Normalize the document
+    my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
     my $cmd =
         "${execpath}/po4a-normalize -f $format "
       . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
-      . " > $cwd/tmp/$path/stderr 2>&1";
+      . " > $real_stderr 2>&1";
 
     chdir $path || fail "Cannot change directory to $path: $!";
     note("Change directory to $path");
@@ -401,7 +402,6 @@ sub run_one_format {
     $cmd =~ s{$root_dir/}{}g;
     $cmd =~ s{t/../po4a}{po4a};
 
-    my $real_stderr = "$cwd/tmp/$path/stderr";
     if ( $error == 0 && $exit_status == 0 ) {
         pass("Normalizing $doc");
         note("  Pass: $cmd (retcode: $exit_status)");
@@ -430,17 +430,17 @@ sub run_one_format {
         $cmd =
             "${execpath}/po4a-translate -f $format $options --master $basename.$ext"
           . " --po $cwd/$pofile --localized $cwd/${tmpbase}.trans"
-          . " > $cwd/tmp/$path/trans.stderr 2>&1";
+          . " > $cwd/$tmpbase.trans.stderr 2>&1";
 
         if ( system_failed( $cmd, "Translating $doc" ) ) {
             note("Produced output:");
-            open FH, "$cwd/tmp/$path/trans.stderr" || die "Cannot open output file that I just created, I'm puzzled";
+            open FH, "$cwd/$tmpbase.trans.stderr" || die "Cannot open output file that I just created, I'm puzzled";
             while (<FH>) {
                 note("  $_");
             }
             note("(end of command output)\n");
         }
-        push @tests, "diff -uN $trans_stderr $cwd/tmp/$path/trans.stderr";
+        push @tests, "diff -uN $trans_stderr $tmpbase.trans.stderr";
         push @tests, "diff -uN $transfile $tmpbase.trans";
 
         # Update PO
