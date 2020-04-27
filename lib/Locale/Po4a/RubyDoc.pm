@@ -71,7 +71,7 @@ sub initialize {
     $self->{options}{'puredoc'} = 0;
 
     foreach my $opt ( keys %options ) {
-        die wrap_mod( "po4a::text", dgettext( "po4a", "Unknown option: %s" ), $opt )
+        die wrap_mod( "po4a::rubydoc", dgettext( "po4a", "Unknown option: %s" ), $opt )
           unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
     }
