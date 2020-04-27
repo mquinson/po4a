@@ -372,6 +372,7 @@ sub new {
     $self->{options}{'msgid-bugs-address'} = '';
     $self->{options}{'package-name'}       = '';
     $self->{options}{'package-version'}    = '';
+    $self->{options}{'wrap-po'}            = '';
 
     # let the plugin parse the options and such
     $self->initialize(%options);
@@ -383,6 +384,7 @@ sub new {
     $po_options{'msgid-bugs-address'} = $options{'msgid-bugs-address'};
     $po_options{'package-name'}       = $options{'package-name'};
     $po_options{'package-version'}    = $options{'package-version'};
+    $po_options{'wrap-po'}            = $options{'wrap-po'};
 
     # private data
     $self->{TT}         = ();
@@ -831,7 +833,7 @@ sub unshiftline {
 }
 
 sub pushline { push @{ $_[0]->{TT}{doc_out} }, $_[1] if defined $_[1]; }
-sub popline { return pop @{ $_[0]->{TT}{doc_out} }; }
+sub popline  { return pop @{ $_[0]->{TT}{doc_out} }; }
 
 =head2 Marking strings as translatable
 
