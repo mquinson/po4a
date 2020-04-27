@@ -1,0 +1,35 @@
+.TH test 1 test test
+.SH Section1
+
+.\" double quotes in a quoted arguments
+.B """"""
+
+.\" Other similar ugly quotes
+.BR """c""" " and " """posix""" .
+.BR 1. " ""libvga.config"" options"
+
+.SH 1. """libvga.config""" OPTIONS
+
+.\" this works, but inserts a space between the quotes and the parenthesis
+.B setlocale(lc_all, """""")
+
+.\" However, I recommend to use these quotes:
+.B setlocale(lc_all, \(dq\(dq)
+
+.\" Lets be nasty
+This:
+
+.BI -help , -h , -? , /?
+
+should be equivalent to:
+
+.BI "-help", "-h", "-?", "/?"
+
+This also:
+
+.BI -help" a -h a -? a /?
+
+should be equivalent to:
+
+.BI "-help"""a "-h"a "-?"a "/?"
+
