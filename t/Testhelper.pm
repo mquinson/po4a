@@ -384,7 +384,6 @@ sub run_one_format {
         }
     }
 
-    system("rm -rf tmp/$path/")   && die "Cannot cleanup tmp/$path/ on startup: $!";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
     my $tmpbase = "tmp/$path/$basename";
     my $cwd     = cwd();
