@@ -579,7 +579,7 @@ sub initialize {
     $self->{options}{'attributes'}             = '';
     $self->{options}{'foldattributes'}         = 0;
     $self->{options}{'inline'}                 = '';
-    $self->{options}{'break-pi'}        = 0;
+    $self->{options}{'break-pi'}               = 0;
     $self->{options}{'placeholder'}            = '';
     $self->{options}{'customtag'}              = '';
     $self->{options}{'doctype'}                = '';
@@ -831,7 +831,7 @@ our @tag_types = (
     {
         beginning   => "?",
         end         => "?",
-        breaking    => 0, # Can be changed with option break-pi
+        breaking    => 0,                    # Can be changed with option break-pi
         f_translate => \&tag_trans_procins
     },
     {
@@ -870,7 +870,7 @@ our @tag_types = (
 
 sub tag_extract_comment {
     my ( $self, $remove ) = ( shift, shift );
-    my ( $eof, @tag ) = $self->get_string_until( '-->', { include => 1, remove => $remove } );
+    my ( $eof,  @tag )    = $self->get_string_until( '-->', { include => 1, remove => $remove } );
     return ( $eof, @tag );
 }
 
@@ -1053,7 +1053,7 @@ sub tag_trans_close {
 
 sub CDATA_extract {
     my ( $self, $remove ) = ( shift, shift );
-    my ( $eof, @tag ) = $self->get_string_until( ']]>', { include => 1, unquoted => 0, remove => $remove } );
+    my ( $eof,  @tag )    = $self->get_string_until( ']]>', { include => 1, unquoted => 0, remove => $remove } );
 
     return ( $eof, @tag );
 }
@@ -1272,7 +1272,7 @@ sub breaking_tag {
         $break = &{ $tag_types[$type]->{f_breaking} }( $self, @lines );
     }
 
-#    print "TAG TYPE = ".$type." (<".$tag_types[$type]->{beginning}.") break:$break\n";
+    #    print "TAG TYPE = ".$type." (<".$tag_types[$type]->{beginning}.") break:$break\n";
     return $break;
 }
 
@@ -1292,7 +1292,7 @@ sub treat_tag {
     my $type = $self->tag_type;
 
     my ( $match1, $match2 ) = ( $tag_types[$type]->{beginning}, $tag_types[$type]->{end} );
-    my ( $eof, @lines ) = $self->extract_tag( $type, 1 );
+    my ( $eof,    @lines )  = $self->extract_tag( $type, 1 );
 
     # Please note even index of array @lines holds actual text of input line
     # Please note  odd index of array @lines holds its reference = $filename:$flinenum
@@ -1472,7 +1472,8 @@ sub get_translate_options {
     my $path = shift;
 
     if ( defined $translate_options_cache{$path} ) {
-#        print "option($path)=".$translate_options_cache{$path}." (cached)\n";
+
+        #        print "option($path)=".$translate_options_cache{$path}." (cached)\n";
         return $translate_options_cache{$path};
     }
 
@@ -1589,7 +1590,8 @@ sub get_translate_options {
     }
 
     $translate_options_cache{$path} = $options;
-#    print "option($path)=".$translate_options_cache{$path}." (new)\n";
+
+    #    print "option($path)=".$translate_options_cache{$path}." (new)\n";
 
     #print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: options: '%s'"), $path, $options) if $self->{options}{'debug'};
     return $options;
@@ -1689,7 +1691,7 @@ sub treat_content {
                 }
             );
 
-#            print "cur: ".$self->get_tag_name(@tag)."\n";
+            #            print "cur: ".$self->get_tag_name(@tag)."\n";
 
             # Append or remove the opening/closing tag from the tag path
             if ( $tag_types[$type]->{'end'} eq "" ) {
@@ -2205,10 +2207,11 @@ sub treat_options {
           unless $list_nodefault{$2}
           or defined $self->{customtag}->{$2};
     }
+
     # If break-pi is provided, we should ensure that: $tag_types[the one of PI]->breaking is 1
-    if ($self->{options}{'break-pi'}) {
-        for(my $i=0;$i<@tag_types;$i++) {
-            if ($tag_types[$i]->{beginning} eq '?' && $tag_types[$i]->{end} eq '?') {
+    if ( $self->{options}{'break-pi'} ) {
+        for ( my $i = 0 ; $i < @tag_types ; $i++ ) {
+            if ( $tag_types[$i]->{beginning} eq '?' && $tag_types[$i]->{end} eq '?' ) {
                 $tag_types[$i]->{breaking} = 1;
             }
         }
@@ -2335,9 +2338,9 @@ sub get_string_until {
     if ( defined( $options->{unquoted} ) ) { $unquoted = $options->{unquoted}; }
     if ( defined( $options->{regex} ) )    { $regex    = $options->{regex}; }
 
-    my ( $line, $ref ) = $self->shiftline();
+    my ( $line, $ref )   = $self->shiftline();
     my ( @text, $paragraph );
-    my ( $eof, $found ) = ( 0, 0 );
+    my ( $eof,  $found ) = ( 0, 0 );
 
     $search = "\Q$search\E" unless $regex;
     while ( defined($line) and !$found ) {
