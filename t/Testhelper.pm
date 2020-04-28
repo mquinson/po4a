@@ -70,11 +70,10 @@
 #            If so, the translation is not attempted (and the translation files don't have to exist)
 #   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
 #            If the file does not exist, the normalization is expected to not output anything
-#   - options (optional): options to pass to the translation and normalization
+#   - options (optional): options to pass to the translation, updatepo and normalization
 #
 #     if a file $basename.desc exists, any comment is used as test description while the rest is added to the options
 
-# * 'format' tests: TODO. For now, they are normalize tests, the old way of doing this
 # * 'run' test: ancient, unconverted tests
 
 package Testhelper;
@@ -485,111 +484,6 @@ sub run_one_format {
     }
 }
 
-sub run_one_normalize {
-    my ( $test, $options, $test_directory, $basename, $ext ) = @_;
-
-    system("mkdir -p tmp/$basename/") && die "Cannot create tmp/$basename/: $!";
-    my $tmpbase = "tmp/$basename/$basename";
-
-    unless ( -e "$test_directory/$basename.pot" ) {
-        fail("Broken test: Expected outfile ${tmpbase}.pot does not exist");
-        return;
-    }
-
-    ####
-    # Normalize the document
-    my $cmd =
-        "${execpath}/po4a-normalize "
-      . "--pot ${tmpbase}.pot --localized ${tmpbase}.out $options $test_directory/$basename.$ext"
-      . " > ${tmpbase}.err 2>&1";
-    my $name = "$basename (" . $test->{'doc'} . ")";
-
-    my $exit_status = system($cmd);
-    if ( $exit_status == 0 ) {
-        pass("Normalizing $name");
-        pass("  Pass: $cmd");
-    } else {
-        fail("Normalizing $name: $exit_status");
-        note("  FAIL: $cmd");
-        note("Produced output:");
-        open FH, "$tmpbase.err" || die "Cannot open output file that I just created, I'm puzzled";
-        while (<FH>) {
-            note("  $_");
-        }
-        note("(end of command output)\n");
-
-    }
-
-    ####
-    # Check that the normalize result matches the expectations
-    my $fail = 0;
-    my @cmds;
-    push @cmds, "PODIFF -I^#: $test_directory/$basename.pot ${tmpbase}.pot";
-    push @cmds, "diff -u $test_directory/$basename.out ${tmpbase}.out";
-    push @cmds, "diff -u $test_directory/$basename.err ${tmpbase}.err";
-
-    foreach my $tcmd (@cmds) {
-        $tcmd =~ s/PODIFF/diff -u $PODIFF/g;
-        $exit_status = system( $tcmd. " 1>&2" );
-        $tcmd =~
-          s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-        if ( $exit_status == 0 ) {
-            pass("  pass: $tcmd");
-        } else {
-            fail("Normalization result does not match.");
-            fail("  Failed command: $tcmd");
-            fail("  Files were produced with: $cmd");
-            $fail++;
-        }
-    }
-    unless ( $fail == 0 ) {
-        show_files($tmpbase);
-        return;
-    }
-
-    ####
-    # If there's a translation, also test the translated output.
-    if ( -f "$test_directory/$basename.trans.po" ) {
-        $cmd =
-            "${execpath}/po4a-translate $options --master $test_directory/$basename.$ext"
-          . " --po $test_directory/$basename.trans.po --localized ${tmpbase}.trans.out"
-          . " > ${tmpbase}.trans.err 2>&1";
-
-        $exit_status = system($cmd);
-        if ( $exit_status == 0 ) {
-            pass("Translation of $name");
-            pass("  Pass: $cmd");
-        } else {
-            fail("Translation of $name");
-            fail("  FAIL: $cmd");
-            show_files($tmpbase);
-            return;
-        }
-
-        ####
-        # Check that the translation result matches the expectations
-        $fail = 0;
-        @cmds = ();
-        push @cmds, "diff -u $test_directory/$basename.trans.out ${tmpbase}.trans.out";
-        push @cmds, "diff -u $test_directory/$basename.trans.err ${tmpbase}.trans.err";
-        foreach my $tcmd (@cmds) {
-            $exit_status = system( $tcmd. " 1>&2" );
-            if ( $exit_status == 0 ) {
-                pass("  pass: $tcmd");
-            } else {
-                fail("Translation result does not match.");
-                fail("  FAIL: $tcmd");
-                $fail++;
-            }
-        }
-        unless ( $fail == 0 ) {
-            show_files($tmpbase);
-            return;
-        }
-
-    }
-}
-
 sub run_all_tests {
     my @cases = @_;
 
@@ -599,26 +493,7 @@ sub run_all_tests {
     make_path("tmp");
 
   TEST: foreach my $test (@cases) {
-        if ( exists $test->{'normalize'} ) {
-            if ( $test->{'normalize'} =~ m|^(.*) (.*)/([^/]*)\.([^/]*)$| ) {
-                my ( $options, $path, $basename, $ext ) = ( $1, $2, $3, $4 );
-
-                $test->{'doc'} = "Normalizing $basename" unless exists $test->{'doc'};
-
-                if ( exists $test->{'todo'} ) {
-                  TODO: {
-                        print STDERR "TODO: " . $test->{doc} . "\n";
-                        local our $TODO = $test->{'todo'};
-                        subtest $test->{'doc'} => sub { run_one_normalize( $test, $options, $path, $basename, $ext ); }
-                    }
-                } else {
-                    subtest $test->{'doc'} => sub { run_one_normalize( $test, $options, $path, $basename, $ext ); }
-                }
-
-            } else {
-                die "Invalid 'normalize' key in test definition: $test->{'doc'}\n";
-            }
-        } elsif ( exists $test->{'format'} ) {
+        if ( exists $test->{'format'} ) {
             my $input = $test->{'input'} // die "Broken test: 'format' tests must declare an 'input' key'";
             $test->{'doc'} = "Format $input" unless exists $test->{'doc'};
 
@@ -687,7 +562,7 @@ sub run_all_tests {
             }
 
         } else {
-            fail "Test " . $test->{'doc'} . " does not have any 'po4a.conf' nor 'normalize' nor 'run' field";
+            fail "Test " . $test->{'doc'} . " does not have any 'po4a.conf' nor 'format' nor 'run' field";
         }
     }
 
