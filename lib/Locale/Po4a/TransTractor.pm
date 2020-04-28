@@ -1057,6 +1057,7 @@ process() arguments or detected from the document.
 
 sub detected_charset {
     my ( $self, $charset ) = ( shift, shift );
+    $charset //= "UTF-8";
     unless ( length( $self->{TT}{'file_in_charset'} ) ) {
         $self->{TT}{'file_in_charset'} = $charset;
         croak "Please provide a valid charset to detected_charset()" unless defined $charset;
