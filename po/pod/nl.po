@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.55\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-26 01:10+0200\n"
-"PO-Revision-Date: 2020-04-27 16:11+0000\n"
+"PO-Revision-Date: 2020-04-28 23:08+0000\n"
 "Last-Translator: Frans Spiesschaert <frans.spiesschaert@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/po4a/po4a-doc/nl/>"
 "\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0.2-dev\n"
+"X-Generator: Weblate 4.0.2\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -1134,11 +1134,16 @@ msgid ""
 "with C<XX> the iso631 of the language used in this file. The directory must "
 "also contain a single POT file, with the C<.pot> file extension."
 msgstr ""
+"De opgegeven map moet een aantal PO-bestanden bevatten, elk met een naam "
+"F<XX.po>, waarbij C<XX> de iso631-code is van de taal die in dit bestand "
+"wordt gebruikt. De map moet ook één enkel POT-bestand bevatten, met als "
+"bestandsextensie C<.pot>."
 
 #. type: textblock
 #: po4a:103
 msgid "If you prefer, you can give the same information explicitly as follows:"
 msgstr ""
+"Indien u dit verkiest, kunt u dezelfde informatie als volgt expliciet geven:"
 
 #. type: verbatim
 #: po4a:104
@@ -1147,6 +1152,8 @@ msgid ""
 " [po4a_paths] man/po/project.pot de:man/po/de.po fr:man/po/fr.po\n"
 "\n"
 msgstr ""
+" [po4a_paths] man/po/project.pot nl:man/po/nl.po fr:man/po/fr.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:105
@@ -1154,11 +1161,13 @@ msgid ""
 "This specifies the path to the POT file first, and then the paths to the "
 "German and French PO files."
 msgstr ""
+"Dit specificeert eerst het pad naar het POT-bestand, en daarna de paden naar "
+"de Nederlandse en Franse PO-bestanden."
 
 #. type: textblock
 #: po4a:106
 msgid "Finally, the same information can be written as follows:"
-msgstr ""
+msgstr "Tenslotte kan dezelfde informatie ook als volgt geschreven worden:"
 
 #. type: verbatim
 #: po4a:107
@@ -1168,6 +1177,9 @@ msgid ""
 " [po4a_paths] man/po/project.pot $lang:man/po/$lang.po\n"
 "\n"
 msgstr ""
+" [po4a_langs] fr nl\n"
+" [po4a_paths] man/po/project.pot $lang:man/po/$lang.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:108
@@ -1176,11 +1188,14 @@ msgid ""
 "languages list, reducing the risk of copy/paste error when a new language is "
 "added."
 msgstr ""
+"De component C<$lang> wordt automatisch vervangen door gebruik te maken van "
+"de opgegeven taallijst. Dit beperkt het risico op een fout van het type kopië"
+"ren/plakken wanneer een nieuwe taal toegevoegd wordt."
 
 #. type: =head3
 #: po4a:109
 msgid "Centralized or split PO files?"
-msgstr ""
+msgstr "Centrale of gesplitste PO-bestanden?"
 
 #. type: textblock
 #: po4a:110
@@ -1192,6 +1207,13 @@ msgid ""
 "strings get translated first, but some translation teams still prefer to "
 "split the content in several files."
 msgstr ""
+"Standaard produceert po4a één enkel PO-bestand per doeltaal. Dit bevat de "
+"volledige inhoud van uw vertaalproject. Als uw project uitgebreider wordt, "
+"kan de omvang van deze bestanden problematisch worden. Indien weblate "
+"gebruikt wordt , is het mogelijk specifieke prioriteiten toe te kennen aan "
+"vertalingen, zodat de belangrijkste tekstfragmenten eerst vertaald worden. "
+"Maar sommige vertaalteams geven er nog steeds de voorkeur aan de inhoud op "
+"te splitsen in verschillende bestanden."
 
 #. type: textblock
 #: po4a:111
@@ -1200,6 +1222,9 @@ msgid ""
 "$master> in the name of your PO files on the C<[po4a_paths]> line, as "
 "follows."
 msgstr ""
+"Om één PO-bestand per hoofdbestand te hebben, moet u gewoon op de volgende "
+"manier de tekenreeks C<$master> gebruiken in de naam van uw PO-bestanden op "
+"de regel C<[po4a_paths]>."
 
 #. type: verbatim
 #: po4a:112
@@ -1208,6 +1233,8 @@ msgid ""
 " [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
 "\n"
 msgstr ""
+" [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
+"\n"
 
 #. type: textblock
 #: po4a:113
@@ -1216,6 +1243,9 @@ msgid ""
 "the name of the master file can be specified by adding a C<master:"
 "file=>I<name> option:"
 msgstr ""
+"Indien naamgevingsconflicten ontstaan omdat verschillende bestanden dezelfde "
+"bestandsnaam hebben, kunt u de naam van het hoofdbestand specificeren door "
+"de optie C<master:file=>I<naam> toe te voegen:"
 
 #. type: verbatim
 #: po4a:114
@@ -1227,6 +1257,11 @@ msgid ""
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
 "\n"
 msgstr ""
+" [po4a_langs] de fr nl\n"
+" [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
+"\n"
 
 #. type: textblock
 #: po4a:115
@@ -1238,11 +1273,18 @@ msgid ""
 "string. When unfuzzied by the translator, the translation is used in every "
 "PO files automatically."
 msgstr ""
+"In gesplitste modus bouwt B<po4a> een tijdelijk compendium op tijdens het "
+"bijwerken van de PO-bestanden, om de vertaling met alle PO-bestanden te "
+"delen. Indien twee PO-bestanden voor hetzelfde tekstfragment verschillende "
+"vertalingen bevatten, zal B<po4a> dit tekstfragment als verward (fuzzy) "
+"markeren en beide vertalingen invoegen in alle PO-bestanden die dat "
+"tekstfragment bevatten. Wanneer de vertaler de vertaling ontwart, zal deze "
+"vertaling automatisch is elk PO-bestand gebruikt worden."
 
 #. type: =head2
 #: po4a:116
 msgid "Specifying the documents to translate"
-msgstr ""
+msgstr "De te vertalen documenten specificeren"
 
 #. type: textblock
 #: po4a:117
@@ -1252,6 +1294,10 @@ msgid ""
 "translated document to produce, and optionally some configuration. Here is "
 "an example:"
 msgstr ""
+"U moet ook de documenten die vertaald moeten worden, vermelden. Voor elk "
+"hoofdbestand moet u de te gebruiken indelingsontleder opgeven, de locatie "
+"van het te produceren vertaalde bestand en facultatief enige configuratie. "
+"Hier volgt een voorbeeld:"
 
 #. type: verbatim
 #: po4a:118
@@ -1264,6 +1310,12 @@ msgid ""
 "             de:doc/de/script.xml\n"
 "\n"
 msgstr ""
+" [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
+"              nl:doc/nl/mijn_spullen.sgml\n"
+" [type: man] script fr:doc/fr/script.1 nl:doc/nl/script.1\n"
+" [type: docbook] doc/script.xml fr:doc/fr/script.xml \\\n"
+"             nl:doc/nl/script.xml\n"
+"\n"
 
 #. type: textblock
 #: po4a:119
@@ -1272,6 +1324,10 @@ msgid ""
 "adding a new language. It is much simpler to reorganize things using the C<"
 "$lang> template as follows:"
 msgstr ""
+"Maar ook hier zijn deze complexe regels moeilijk te lezen en aan te passen, "
+"bijvoorbeeld bij het toevoegen van een nieuwe taal. Het is veel eenvoudiger "
+"om deze zaken als volgt te herorganiseren met behulp van het "
+"C<$lang>-sjabloon:"
 
 #. type: verbatim
 #: po4a:120
@@ -1282,6 +1338,10 @@ msgid ""
 " [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
 "\n"
 msgstr ""
+" [type: sgml]    doc/my_stuff.sgml $lang:doc/$lang/my_stuff.sgml\n"
+" [type: man]     script.1          $lang:po/$lang/script.1\n"
+" [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
+"\n"
 
 #. type: =head2
 #: po4a:121
