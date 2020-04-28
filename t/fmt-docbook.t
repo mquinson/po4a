@@ -18,9 +18,10 @@ push @tests,
     'options' => "-M UTF-8 -o nodefault='<bookinfo>' -o break='<bookinfo>' -o untranslated='<bookinfo>'",
   },
   {
-    'todo'      => 'This bug is not solved yet',
-    'doc'       => 'GH#170: <?hard-pagebreak?> breaks processing',
-    'normalize' => "-f docbook docbook/hard-pagebreak.xml",
+    'todo'   => 'This bug is not solved yet',
+    'doc'    => 'GH#170: <?hard-pagebreak?> breaks processing',
+    'format' => 'docbook',
+    'input'  => "fmt/docbook/hard-pagebreak.xml",
   };
 
 run_all_tests(@tests);
