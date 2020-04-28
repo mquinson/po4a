@@ -109,6 +109,36 @@ Increase the verbosity of the program.
 
 Output some debugging information.
 
+=item B<--porefs> I<type>[,B<wrap>|B<nowrap>]
+
+Specify the reference format. Argument I<type> can be one of B<never>
+to not produce any reference, B<file> to only specify the file
+without the line number, B<counter> to replace line number by an
+increasing counter, and B<full> to include complete references (default: full).
+
+Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
+References are written by default on a single line.  The B<wrap> option wraps
+references on several lines, to mimic B<gettext> tools (B<xgettext> and
+B<msgmerge>).  This option will become the default in a future release, because
+it is more sensible.  The B<nowrap> option is available so that users who want
+to keep the old behavior can do so.
+
+=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
+
+Specify how the po file should be wrapped. This gives the choice between either
+files that are nicely wrapped but could lead to git conflicts, or files that are
+easier to handle automatically, but harder to read for humans.
+
+Historically, the gettext suite has reformatted the po files at the 77th column
+for cosmetics. This option specifies the behavior of po4a. If set to a numerical
+value, po4a will wrap the po file after this column and after newlines in the
+content. If set to B<newlines>, po4a will only split the msgid and msgstr after
+newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
+The wrapping of the reference comments is controlled by the B<--porefs> option.
+
+Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+on how newlines are added to the content of these strings.
+
 =back
 
 =head1 Adding content (beside translations) to generated files
