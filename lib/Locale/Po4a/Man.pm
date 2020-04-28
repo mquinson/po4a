@@ -790,7 +790,7 @@ sub shiftline {
     # a .B and then followed bysome text; note that in this case,
     # only one \fR must be inserted at the end of the text)
     my $insert_font = "";
-    while ( $line =~ /\\$/ || $line =~ /^(\.[BI])\s*$/ ) {
+    while ( $line =~ /\\$/ || $line =~ /^(\.[BI])\s*$/ || $line =~ /^\.[BI][\t ].*?\\c$/ ) {
         my ( $l2, $r2 ) = $self->SUPER::shiftline();
         chomp($l2);
         if ( $line =~ /^(\.[BI])\s*$/ ) {
@@ -841,6 +841,7 @@ sub shiftline {
             }
         } else {
             $line =~ s/\\$//;
+            $line =~ s/\\c$//;
             $line .= $l2;
         }
     }
@@ -1127,9 +1128,9 @@ sub post_trans {
                 my $tmp2 = $tmp . $begin;
                 if (   ( $begin =~ m/(?<!\\)(\\\\)*\\s$/s )
                     or ( $begin =~ m/(?<!\\)(\\\\)*\\\((.|E<[gl]t>)?$/s )
-                    or ( $tmp2 =~ m/(?<!\\)(\\\\)*\\[ZHhCv]'([^']|(?<!\\)(\\\\)*\\')*$/ )
-                    or ( $tmp2 =~ m/(?<!\\)(\\\\)*\\(\*)?\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/ )
-                    or ( $tmp2 =~ m/(?<!\\)(\\\\)*\\\*\(.?$/ ) )
+                    or ( $tmp2  =~ m/(?<!\\)(\\\\)*\\[ZHhCv]'([^']|(?<!\\)(\\\\)*\\')*$/ )
+                    or ( $tmp2  =~ m/(?<!\\)(\\\\)*\\(\*)?\[([^\]]|(?<!\\)(\\\\)*\\\[)*$/ )
+                    or ( $tmp2  =~ m/(?<!\\)(\\\\)*\\\*\(.?$/ ) )
                 {
                     # Do not change - to \- for
                     #  * \s-n (reduce font size)
@@ -1971,7 +1972,7 @@ $macro{'SS'} = $macro{'SH'} = sub {
 
         # The argument is on the next line.
         my ( $self, $macroname ) = ( shift, shift );
-        my ( $l2, $ref2 ) = $self->shiftline();
+        my ( $l2,   $ref2 )      = $self->shiftline();
         if ( $l2 =~ /^\./ ) {
             $self->SUPER::unshiftline( $l2, $ref2 );
         } else {

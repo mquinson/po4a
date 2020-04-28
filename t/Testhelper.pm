@@ -62,8 +62,10 @@
 #   - norm (default: $basename.norm): expected normalized document (translated with inexistant language)
 #   - potfile (default: $basname.pot): expected POT file
 #   - pofile (default: $basname.po): PO file used as input
-#   - stderr (optional -- default: $basename.stderr): expected output of the normalization.
+#   - norm_stderr (optional -- default: $basename.norm.stderr): expected output of the normalization.
 #            If the file does not exist, the normalization is expected to not output anything
+#   - error (optional boolean -- default: false): whether the normalization is expected to fail
+#            If so, the translation is not attempted (and the translation files don't have to exist)
 #   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
 #            If the file does not exist, the normalization is expected to not output anything
 #   - options (optional): options to pass to the translation and normalization
@@ -110,6 +112,8 @@ sub show_files {
     }
 }
 
+my $root_dir = cwd();
+
 # Returns whether the details should be shown
 sub system_failed {
     my ( $cmd, $doc, $expected_exit_status ) = @_;
@@ -117,6 +121,9 @@ sub system_failed {
     my $exit_status = system($cmd);
     $cmd =~
       s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+    $cmd =~ s{$root_dir/}{}g;
+    $cmd =~ s{t/../po4a}{po4a};
+
     if ( $exit_status == $expected_exit_status ) {
         if ( $doc ne '' ) {
             pass($doc);
@@ -335,9 +342,12 @@ sub run_one_format {
     my ( $test, $input ) = @_;
 
     my $doc = $test->{'doc'} // "Format testing '$input'";
+    my $error = $test->{'error'} // 0;    # Whether a normalization error is expected to interrupt the test
 
     my %valid_options;
-    map { $valid_options{$_} = 1 } qw(format input norm potfile pofile trans stderr trans_stderr doc options);
+    map { $valid_options{$_} = 1 } qw(format input potfile pofile doc options
+      norm   norm_stderr   error
+      trans  trans_stderr );
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
       ( keys %{$test} );
 
@@ -349,16 +359,16 @@ sub run_one_format {
     my ( $path, $basename, $ext ) = ( $1, $2, $3 );
 
     my $output = $test->{'norm'} // "$path/$basename.norm";
-    fail "Broken test $basename: expected normalized file '$output' does not exist" unless -e $output;
+    fail "Broken test $basename: expected normalized file '$output' does not exist" unless -e $output || $error;
     my $potfile = $test->{'potfile'} // "$path/$basename.pot";
-    fail "Broken test $basename: expected POT file '$potfile' does not exist" unless -e $potfile;
+    fail "Broken test $basename: expected POT file '$potfile' does not exist" unless -e $potfile || $error;
     my $pofile = $test->{'pofile'} // "$path/$basename.po";
-    fail "Broken test $basename: expected PO file '$pofile' does not exist" unless -e $pofile;
+    fail "Broken test $basename: expected PO file '$pofile' does not exist" unless -e $pofile || $error;
     my $transfile = $test->{'trans'} // "$path/$basename.trans";
-    fail "Broken test $basename: expected translated file '$transfile' does not exist" unless -e $transfile;
+    fail "Broken test $basename: expected translated file '$transfile' does not exist" unless -e $transfile || $error;
 
-    my $stderr   = $test->{'stderr'}       // "$path/$basename.stderr";          # this file is optionnal
-    my $transerr = $test->{'trans_stderr'} // "$path/$basename.trans.stderr";    # this file is optionnal
+    my $norm_stderr  = $test->{'norm_stderr'}  // "$path/$basename.norm.stderr";     # this file is optionnal
+    my $trans_stderr = $test->{'trans_stderr'} // "$path/$basename.trans.stderr";    # this file is optionnal
 
     my $options = $test->{'options'} // "";
     my (@tests);
@@ -374,28 +384,30 @@ sub run_one_format {
         }
     }
 
-    system("rm -rf tmp/$path/")   && die "Cannot cleanup tmp/$path/ on startup: $!";
     system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
     my $tmpbase = "tmp/$path/$basename";
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
     # Normalize the document
+    my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
     my $cmd =
         "${execpath}/po4a-normalize -f $format "
       . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
-      . " > $cwd/tmp/$path/stderr 2>&1";
+      . " > $real_stderr 2>&1";
 
     chdir $path || fail "Cannot change directory to $path: $!";
     note("Change directory to $path");
     my $exit_status = system($cmd);
-    chdir $cwd || fail "Cannot change directory back to $cwd: $!";
-    note("Change directory back to $cwd");
+    $cmd =~ s{$root_dir/}{}g;
+    $cmd =~ s{t/../po4a}{po4a};
 
-    my $real_stderr = "tmp/$path/stderr";
-    if ( $exit_status == 0 ) {
+    if ( $error == 0 && $exit_status == 0 ) {
         pass("Normalizing $doc");
-        note("  Pass: $cmd");
+        note("  Pass: $cmd (retcode: $exit_status)");
+    } elsif ( $error != 0 && $exit_status != 0 ) {
+        pass("Expected error detected in $doc");
+        note("  Failing as expected: $cmd (retcode: $exit_status)");
     } else {
         fail("Normalizing $doc: $exit_status");
         note("  FAIL: $cmd");
@@ -408,27 +420,49 @@ sub run_one_format {
 
     }
 
-    push @tests, "diff -uN $stderr $real_stderr";
-    push @tests, "PODIFF  $potfile  $tmpbase.pot";
-    push @tests, "diff -u $output   $tmpbase.norm";
+    push @tests, "diff -uN $norm_stderr $real_stderr";
+    push @tests, "PODIFF  $potfile  $tmpbase.pot" unless $error;
+    push @tests, "diff -u $output   $tmpbase.norm" unless $error;
 
-    # Translate the document
-    $cmd =
-        "${execpath}/po4a-translate -f $format $options --master $path/$basename.$ext"
-      . " --po $pofile --localized ${tmpbase}.trans"
-      . " > $cwd/tmp/$path/trans.stderr 2>&1";
+    unless ($error) {
 
-    if ( system_failed( $cmd, "" ) ) {
-        note("Produced output:");
-        open FH, "$cwd/tmp/$path/trans.stderr" || die "Cannot open output file that I just created, I'm puzzled";
-        while (<FH>) {
-            note("  $_");
+        # Translate the document
+        $cmd =
+            "${execpath}/po4a-translate -f $format $options --master $basename.$ext"
+          . " --po $cwd/$pofile --localized $cwd/${tmpbase}.trans"
+          . " > $cwd/$tmpbase.trans.stderr 2>&1";
+
+        if ( system_failed( $cmd, "Translating $doc" ) ) {
+            note("Produced output:");
+            open FH, "$cwd/$tmpbase.trans.stderr" || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                note("  $_");
+            }
+            note("(end of command output)\n");
         }
-        note("(end of command output)\n");
-    }
+        push @tests, "diff -uN $trans_stderr $tmpbase.trans.stderr";
+        push @tests, "diff -uN $transfile $tmpbase.trans";
 
-    push @tests, "diff -uN $transerr  $cwd/tmp/$path/trans.stderr";
-    push @tests, "diff -uN $transfile $tmpbase.trans";
+        # Update PO
+        system("cp $cwd/$pofile $cwd/${tmpbase}.po_updated") && fail "Cannot copy $pofile before updating it";
+        $cmd =
+            "${execpath}/po4a-updatepo -f $format $options "
+          . "--master $basename.$ext --po $cwd/${tmpbase}.po_updated"
+          . " > $cwd/tmp/$path/update.stderr 2>&1";
+
+        if ( system_failed( $cmd, "" ) ) {
+            note("Produced output:");
+            open FH, "$cwd/tmp/$path/update.stderr" || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                note("  $_");
+            }
+            note("(end of command output)\n");
+        }
+
+        push @tests, "PODIFF $pofile ${tmpbase}.po_updated";
+    }
+    chdir $cwd || fail "Cannot change directory back to $cwd: $!";
+    note("Change directory back to $cwd");
 
     # Run all accumulated tests
     for my $tcmd (@tests) {
