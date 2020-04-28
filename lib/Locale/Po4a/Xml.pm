@@ -448,6 +448,11 @@ The tags must be in the form <aaa>, but you can join some
 (<bbb><aaa>), if a tag (<aaa>) should only be considered
 when it's within another tag (<bbb>).
 
+=item B<break-pi>
+
+By default, Processing Instructions (i.e., C<<? ... ?>> tags) are handled as inline tags.
+Pass this option if you want the PI to be handled as breaking tag.
+
 =item B<nodefault>
 
 Space separated list of tags that the module should not try to set by
@@ -574,6 +579,7 @@ sub initialize {
     $self->{options}{'attributes'}             = '';
     $self->{options}{'foldattributes'}         = 0;
     $self->{options}{'inline'}                 = '';
+    $self->{options}{'break-pi'}        = 0;
     $self->{options}{'placeholder'}            = '';
     $self->{options}{'customtag'}              = '';
     $self->{options}{'doctype'}                = '';
@@ -825,7 +831,7 @@ our @tag_types = (
     {
         beginning   => "?",
         end         => "?",
-        breaking    => 1,
+        breaking    => 0, # Can be changed with option break-pi
         f_translate => \&tag_trans_procins
     },
     {
@@ -1258,7 +1264,6 @@ sub breaking_tag {
     my $type = $self->tag_type;
     if ( $type == -1 ) { return 0; }
 
-    #print "TAG TYPE = ".$type."\n";
     $break = $tag_types[$type]->{breaking};
     if ( !defined($break) ) {
 
@@ -1267,7 +1272,7 @@ sub breaking_tag {
         $break = &{ $tag_types[$type]->{f_breaking} }( $self, @lines );
     }
 
-    #print "break = ".$break."\n";
+#    print "TAG TYPE = ".$type." (<".$tag_types[$type]->{beginning}.") break:$break\n";
     return $break;
 }
 
@@ -1299,8 +1304,7 @@ sub treat_tag {
     my $space2 = $2;
     $lines[ $#lines - 1 ] = $1;
 
-    # Calling this tag type's specific handling (translation of
-    # attributes...)
+    # Calling this tag type's specific handling (translation of attributes...)
     my $line = &{ $tag_types[$type]->{f_translate} }( $self, @lines );
     print wrap_mod( "po4a::xml::treat_tag", dgettext( "po4a", "%s: type=%s <%s%s%s%s%s>" ),
         $lines[1], $type, $match1, $space1, $line, $space2, $match2 )
@@ -1468,6 +1472,7 @@ sub get_translate_options {
     my $path = shift;
 
     if ( defined $translate_options_cache{$path} ) {
+#        print "option($path)=".$translate_options_cache{$path}." (cached)\n";
         return $translate_options_cache{$path};
     }
 
@@ -1584,6 +1589,7 @@ sub get_translate_options {
     }
 
     $translate_options_cache{$path} = $options;
+#    print "option($path)=".$translate_options_cache{$path}." (new)\n";
 
     #print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: options: '%s'"), $path, $options) if $self->{options}{'debug'};
     return $options;
@@ -1683,8 +1689,9 @@ sub treat_content {
                 }
             );
 
-            # Append or remove the opening/closing tag from
-            # the tag path
+#            print "cur: ".$self->get_tag_name(@tag)."\n";
+
+            # Append or remove the opening/closing tag from the tag path
             if ( $tag_types[$type]->{'end'} eq "" ) {
                 if ( $tag_types[$type]->{'beginning'} eq "" ) {
 
@@ -2197,6 +2204,14 @@ sub treat_options {
         $self->{customtag}->{$2} = $1 || ""
           unless $list_nodefault{$2}
           or defined $self->{customtag}->{$2};
+    }
+    # If break-pi is provided, we should ensure that: $tag_types[the one of PI]->breaking is 1
+    if ($self->{options}{'break-pi'}) {
+        for(my $i=0;$i<@tag_types;$i++) {
+            if ($tag_types[$i]->{beginning} eq '?' && $tag_types[$i]->{end} eq '?') {
+                $tag_types[$i]->{breaking} = 1;
+            }
+        }
     }
 
     foreach my $tagtype (qw(untranslated)) {
