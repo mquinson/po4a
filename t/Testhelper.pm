@@ -62,6 +62,8 @@
 #   - norm (default: $basename.norm): expected normalized document (translated with inexistant language)
 #   - potfile (default: $basname.pot): expected POT file
 #   - pofile (default: $basname.po): PO file used as input
+#        All existing 'format' tests use uppercase as a translation language, so that everybody can work on them.
+#        f=fmt/asciidoc/TablesCells; msgen $f.pot | msgfilter -o $f.po sed -e 's/./\U&/g' ; msgmerge -U $f.po $f.pot
 #   - norm_stderr (optional -- default: $basename.norm.stderr): expected output of the normalization.
 #            If the file does not exist, the normalization is expected to not output anything
 #   - error (optional boolean -- default: false): whether the normalization is expected to fail

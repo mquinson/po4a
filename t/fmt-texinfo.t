@@ -13,8 +13,8 @@ my @tests;
 for my $test (qw(longmenu comments)) {
     push @tests,
       {
-        'doc'       => "$test normalization test",
-        'normalize' => "-f texinfo t-18-texinfo/$test.texi",
+        'format' => 'texinfo',
+        'input'  => "fmt/texinfo/$test.texi",
       };
 }
 
