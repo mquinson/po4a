@@ -347,7 +347,7 @@ sub run_one_format {
     my $error = $test->{'error'} // 0;    # Whether a normalization error is expected to interrupt the test
 
     my %valid_options;
-    map { $valid_options{$_} = 1 } qw(format input potfile pofile doc options
+    map { $valid_options{$_} = 1 } qw(format input potfile pofile doc options todo
       norm   norm_stderr   error
       trans  trans_stderr );
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
@@ -596,7 +596,6 @@ sub run_all_tests {
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
 
-    remove_tree("tmp") if ( -e "tmp" );
     make_path("tmp");
 
   TEST: foreach my $test (@cases) {
