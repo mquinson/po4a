@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-29 01:08+0200\n"
-"PO-Revision-Date: 2020-04-30 21:19+0200\n"
+"PO-Revision-Date: 2020-05-01 08:01+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -1329,6 +1329,10 @@ msgid ""
 "adding a new language. It is much simpler to reorganize things using the C<"
 "$lang> template as follows:"
 msgstr ""
+"Aber diese drei komplexen Zeilen sind wieder schwer zu lesen und zu "
+"verändern, z.B. wenn neue Sprachen hinzugefügt werden. Es ist viel "
+"einfacher, die Dinge neu mittels der Vorlage C<$lang> wie folgt zu "
+"organisieren:"
 
 #. type: verbatim
 #: po4a:120
@@ -2466,16 +2470,9 @@ msgstr ""
 "F<gettextization.failed.po> untersuchen, und beheben Sie das Problem, wo es "
 "wirklich ist."
 
+# FIXME The sentence starting with "But" is inconsistent
 #. type: textblock
 #: po4a-gettextize:65
-#, fuzzy
-#| msgid ""
-#| "Sometimes, you get the strong feeling that po4a ate some parts of the "
-#| "text, either the original or the translation. F<gettextization.failed.po> "
-#| "indicates that both of them were gently matching, and then the "
-#| "gettextization fails because it tried to match one paragraph with the one "
-#| "after (or before) the right one, as if the right one disappeared. Curse "
-#| "po4a as I did when it first happened to me. Generously."
 msgid ""
 "In some unfortunate settings, you will get the feeling that po4a ate some "
 "parts of the text, either the original or the translation. F<gettextization."
@@ -2485,13 +2482,15 @@ msgid ""
 "should, but with the N+2 paragraph. Just as if the N+1 paragraph that you "
 "see in the document simply disappeared from the file during the process."
 msgstr ""
-"Manchmal erhalten Sie das starke Gefühl, dass Po4a Teile des Texts "
+"In manchen unglücklichen Umständen werden Sie das Gefühl bekommen, dass Po4a "
+"Teile des Texts "
 "aufgefuttert hat, entweder vom Original oder von der Übersetzung. "
-"F<gettextization.failed.po> können Sie entnehmen, dass beide gut aufeinander "
-"gepasst haben und dann schlug die Gettextisierung fehl, da versucht wurde, "
-"einen Absatz mit einem Absatz vor (oder hinter) dem Richtigen zu paaren, als "
-"ob der richtige Absatz verschwunden wäre. Verfluchen Sie Po4a wie ich es "
-"getan habe, als es mir das erste Mal passierte. Gründlich."
+"F<gettextization.failed.po> können Sie entnehmen, dass beide Dateien bis zum "
+"Absatz N wie erwartet passten. Dann wird aber ein (nicht erfolgreicher) "
+"Versuch unternommen, den Absatz N+1 in der Ursprungsdatei nicht dem Absatz "
+"N+1 in der Übersetzung zuzuordnen, wie dies der Fall sein sollte, sondern "
+"dem Absatz N+2. So als ob der Absatz N+1, den Sie in dem Dokument gesehen "
+"haben, einfach während des Prozesses aus der Datei verschwunden wäre."
 
 #. type: textblock
 #: po4a-gettextize:66
@@ -2514,16 +2513,14 @@ msgid ""
 "slightly alter one of the translations in the document. You can also prefer "
 "to kill the second paragraph in the original document."
 msgstr ""
+"Die vorhergehende Situation taucht also auf, wenn zwei ähnliche aber "
+"verschiedene Absätze auf die gleiche Weise übersetzt werden. Dies wird "
+"anscheinend einen Absatz der Übersetzung entfernen. Um das Problem zu "
+"beheben, reicht es aus, einen der Übersetzungen leicht zu verändern. Sie "
+"können auch den zweiten Absatz im Ursprungsdokument entfernen."
 
 #. type: textblock
 #: po4a-gettextize:68
-#, fuzzy
-#| msgid ""
-#| "So, when the same paragraph appears twice in the original but both are "
-#| "not translated in the exact same way each time, you will get the feeling "
-#| "that a paragraph of the original disappeared. Just kill the new "
-#| "translation. If you prefer to kill the first translation instead when the "
-#| "second one was actually better, replace the first one with the second."
 msgid ""
 "To the opposite, if the same paragraph appearing twice in the original "
 "document is not translated in the exact same way at both locations, you will "
@@ -2531,12 +2528,11 @@ msgid ""
 "Just copy the best translation over the other one in the translated document "
 "to fix the problem."
 msgstr ""
-"Wenn daher der gleiche Absatz zwei Mal im Original auftaucht, aber nicht "
-"jedes Mal exakt identisch übersetzt wurde, bekommen Sie den Eindruck, dass "
-"ein Absatz des Originals verschwunden ist. Entfernen Sie einfach die neue "
-"Übersetzung. Falls Sie bevorzugen, stattdessen die erste Übersetzung zu "
-"entfernen, da die zweite einfach besser war, ersetzen Sie die erste durch "
-"die zweite."
+"Im gegenteiligen Fall, wenn der gleiche Absatz zweimal im Ursprungsdokument "
+"auftaucht, aber nicht auf die gleiche Weise an beiden Stellen übersetzt ist, "
+"werden Sie das Gefühl bekommen, dass ein Absatz im Ursprungsdokument einfach "
+"verschwunden wäre. Kopieren Sie einfach die beste Übersetzung über die "
+"andere in dem übersetzten Dokument, um das Problem zu beheben."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2547,6 +2543,12 @@ msgid ""
 "the POT file built from the recent master files. This forces gettext to "
 "search for the closest one using a costly string proximity algorithm."
 msgstr ""
+"Abschließend sei bemerkt, dass Sie nicht zu überrascht sein sollten, wenn "
+"die erste Synchronisation Ihrer PO-Datei sehr lange dauert. Dies kommt "
+"daher, dass die meisten msgid der aus der Gettextisierung entstehenden PO-"
+"Datei nicht genau auf ein Element der POT-Datei, die aus der neuen Master-"
+"Datei gebaut wurde, passen. Dies zwingt Gettext, mit einem aufwändigen "
+"Zeichenketten-Umgebungssuche-Algorithmus nach dem ähnlichsten zu suchen."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -4159,29 +4161,32 @@ msgid ""
 " 'after' |'beginboundary'| first after 'position' | Right before the selected boundary\n"
 "\n"
 msgstr ""
+"  Modus  | Begrenzungsart |  Verwandte Begrenzung | Einfügepunkt im Vergleich zur Begrenzung\n"
+" ========|================|=======================|=========================================\n"
+" 'before'| 'endboundary'  | letzte vor 'Position' | direkt nach der ausgewählten Begrenzung\n"
+" 'before'|'beginboundary' | letzte vor 'Position' | direkt vor der ausgewählten Begrenzung\n"
+" 'after' | 'endboundary'  | erste nach 'Position' | direkt nach der ausgewählten Begrenzung\n"
+" 'after' |'beginboundary' | erste nach 'Position' | direkt vor der ausgewählten Begrenzung\n"
+"\n"
 
 #. type: =head3
 #: doc/po4a.7.pod:82
 msgid "Hint and tricks about addenda"
 msgstr "Tipps und Tricks rund um Addenda"
 
-# Beispiel passt nur im Englischen, daher geändert
 #. type: textblock
 #: doc/po4a.7.pod:83
-#, fuzzy
-#| msgid ""
-#| "don't use B<.fi> as B<endboundary>, because it will match with "
-#| "\"the[ fi]le\", which is obviously not what you expect. The correct "
-#| "B<endboundary> in that case is: B<^\\.fi$>."
 msgid ""
 "Remember that these are regexp. For example, if you want to match the end of "
 "a nroff section ending with the line C<.fi>, do not use C<.fi> as "
 "B<endboundary>, because it will match with C<the[ fi]le>, which is obviously "
 "not what you expect. The correct B<endboundary> in that case is: C<^\\.fi$>."
 msgstr ""
-"endet, benutzen Sie B<.fi> nicht als B<endboundary>, weil es auf "
-"»e[rfi]nden« passt, was vermutlich nicht das ist, was sie erwarten. Das "
-"korrekte B<endboundary> ist in diesem Fall: B<^\\.fi$>."
+"Denken Sie daran, dass dies reguläre Ausdrücke sind. Falls Sie "
+"beispielsweise das Ende eines Nroff-Abschnittes, das auf die Zeile C<.fi> "
+"endet, vergleichen wollen, verwenden Sie nicht C<.fi> als B<endboundary>, da "
+"es auf C<the[ fi]le> passen wird, was sie offensichtlich nicht erwarten "
+"würden. Das korrekte B<endboundary> ist in diesem Fall: B<^\\.fi$>."
 
 #. type: textblock
 #: doc/po4a.7.pod:84
@@ -4190,6 +4195,10 @@ msgid ""
 "So the two following lines B<are different>. The second one will only be "
 "found if there is enough trailing spaces in the translated document."
 msgstr ""
+"Leerzeichen SIND im Inhalt von C<position> und Begrenzungen wichtig. Daher "
+"B<unterscheiden> sich die beiden nachfolgenden Zeilen. Die zweite wird nur "
+"gefunden, falls im übersetzen Dokument ausreichend angehängte Leerzeichen "
+"sind."
 
 #. type: verbatim
 #: doc/po4a.7.pod:85
@@ -4283,19 +4292,14 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:93
-#, fuzzy
-#| msgid ""
-#| "If you want to add something into a section (like after \"Copyright Big "
-#| "Dude\")  instead of adding a whole section, give a B<position> matching "
-#| "this line, and give a B<beginboundary> matching any line."
 msgid ""
 "If you want to add something right after a given line (e.g. after the line "
 "\"Copyright Big Dude\"), use a B<position> matching this line, B<mode=after> "
 "and give a B<beginboundary> matching any line."
 msgstr ""
-"Falls Sie einem Abschnitt etwas hinzufügen möchten (etwa hinter »Copyright "
-"Großer Kerl«), statt einen ganzen Abschnitt hinzuzufügen, geben Sie eine "
-"B<Position> an, die zu dieser Zeile passt und geben Sie ein B<beginboundary> "
+"Falls Sie etwas direkt nach einer Zeile hinzufügen möchten (etwa hinter »Copyright "
+"Großer Kerl«), verwenden Sie eine "
+"B<Position>, die auf diese Zeile passt und geben Sie ein B<beginboundary> "
 "an, das zu irgendeiner Zeile passt."
 
 #. type: verbatim
@@ -4468,20 +4472,15 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:109
-#, fuzzy
-#| msgid ""
-#| "The po4a architecture is object oriented (in Perl. Isn't that neat?). The "
-#| "common ancestor to all parser classes is called TransTractor. This "
-#| "strange name comes from the fact that it is at the same time in charge of "
-#| "translating document and extracting strings."
 msgid ""
 "The po4a architecture is object oriented. The L<Locale::Po4a::"
 "TransTractor(3pm)|TransTractor> class is the common ancestor to all po4a "
 "parsers. This strange name comes from the fact that it is at the same time "
 "in charge of translating document and extracting strings."
 msgstr ""
-"Die Po4a-Architektur ist objektorientiert (in Perl. Ist das nicht schön?). "
-"Der gemeinsame Vorfahr zu allen Auswertungsklassen nennt sich TransTractor. "
+"Die Po4a-Architektur ist objektorientiert. Die Klasse L<Locale::Po4a::"
+"TransTractor(3pm)|TransTractor> ist der gemeinsame Vorfahr von allen "
+"Auswertungsklassen. "
 "Dieser merkwürdige Name ist der Tatsache zu verdanken, dass er gleichzeitig "
 "für das Übersetzen des Dokuments und das Extrahieren von Zeichenketten "
 "zuständig ist."
@@ -4526,14 +4525,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:112
-#, fuzzy
-#| msgid ""
-#| "This little bone is the core of all the po4a architecture. If you omit "
-#| "the input PO and the output document, you get B<po4a-gettextize>. If you "
-#| "provide both input and disregard the output PO, you get B<po4a-"
-#| "translate>.  The B<po4a> calls TransTractor twice and calls B<msgmerge -"
-#| "U> between these TransTractor invocations to provide one-stop solution "
-#| "with a single configuration file."
 msgid ""
 "This little bone is the core of all the po4a architecture. If you omit the "
 "input PO and the output document, you get B<po4a-gettextize>. If you provide "
@@ -4549,7 +4540,8 @@ msgstr ""
 "nicht beachten, erhalten Sie B<po4a-translate>. B<po4a> ruft TransTractor "
 "zweimal auf und ruft B<msgmerge -U> zwischen diesen TransTractor-Aufrufen "
 "auf, um Lösungen aus einer Hand mit einer einzelnen Konfigurationsdatei "
-"bereitzustellen."
+"bereitzustellen. Bitte lesen Sie L<Locale::Po4a::TransTractor(3pm)> für "
+"weitere Details."
 
 #. type: =head1
 #: doc/po4a.7.pod:113
@@ -9159,12 +9151,6 @@ msgstr "Deaktiviert die Erkennung von Aufzählungszeichen"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:14
-#, fuzzy
-#| msgid ""
-#| "By default, when a bullet is detected, the bullet paragraph is not "
-#| "considered as a verbatim paragraph (with the no-wrap flag in the PO "
-#| "file), but the module rewrap this paragraph in the generated PO file and "
-#| "in the translation."
 msgid ""
 "By default, when a bullet is detected, the bullet paragraph is not "
 "considered as a verbatim paragraph (with the no-wrap flag in the PO file). "
@@ -9172,8 +9158,8 @@ msgid ""
 msgstr ""
 "Standardmäßig wird bei der Erkennung von Aufzählungszeichen der betroffene "
 "Absatz nicht als wörtlicher Absatz betrachtet (mit dem Schalter »no-wrap« in "
-"der PO-Datei), sondern das Modul bricht diesen Absatz in der erstellten PO-"
-"Datei und der Übersetzung neu um."
+"der PO-Datei). Stattdessen wird der entsprechende Absatz in der Übersetzung "
+"neu umgebrochen."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:15
@@ -9859,28 +9845,19 @@ msgstr "read($$)"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:74
-#, fuzzy
-#| msgid ""
-#| "Add another input document data at the end of the existing array C<< "
-#| "@{$self->{TT}{doc_in}} >>. The argument is the filename to read."
 msgid ""
 "Add another input document data at the end of the existing array C<< @{$self-"
 ">{TT}{doc_in}} >>. The argument is the filename to read. If a second "
 "argument is provided, it is the filename to use in the references."
 msgstr ""
 "fügt am Ende des existierenden Feldes C<< @{$self->{TT}{doc_in}} >> ein "
-"weiteres Eingabedokument ein. Das Argument ist der zu lesende Dateiname."
+"weiteres Eingabedokument ein. Das Argument ist der zu lesende Dateiname. "
+"Falls ein zweiter Dateiname bereitgestellt wird, ist dies der in der "
+"Referenz zu verwendende Dateiname."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:75
-#, fuzzy, no-wrap
-#| msgid ""
-#| "This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an\n"
-#| "array of strings with alternating meanings.\n"
-#| " * The string C<$textline> holding each line of the input text data.\n"
-#| " * The string C<< $filename:$linenum >> holding its location and called as\n"
-#| "   \"reference\".\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an\n"
 "array of strings with alternating meanings.\n"
@@ -9893,7 +9870,7 @@ msgstr ""
 "Feld von Zeichenketten mit abwechselnden Bedeutungen.\n"
 " * Die Zeichenkette C<$textline> hält jede Zeile der Eingabetextdaten.\n"
 " * Die Zeichenkette C<< $filename:$linenum >> hält ihren Ort und wird\n"
-"   »reference« genannt.\n"
+"   »reference« genannt (C<linenum> beginnt mit 1).\n"
 "\n"
 
 #. type: textblock
@@ -10479,7 +10456,7 @@ msgid ""
 msgstr ""
 "Das Modul funktioniert für einige einfache Dokumente, ist aber noch jung. "
 "Derzeit ist das größte Problem des Moduls wahrscheinlich, dass es mit keinen "
-"Dokumenten umgehen kann, die nicht XML-inline-Markierungen verwenden, wie "
+"Dokumenten umgehen kann, die nicht XML-innenliegende-Markierungen verwenden, wie "
 "<email \"foo@example.org\">, die oft in WML definiert sind. Verbesserungen "
 "werden in zukünftigen Veröffentlichungen hinzugefügt."
 
@@ -11030,10 +11007,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:67
-#, fuzzy
-#| msgid "B<break>"
 msgid "B<break-pi>"
-msgstr "B<break>"
+msgstr "B<break-pi>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:68
@@ -11042,6 +11017,10 @@ msgid ""
 "inline tags.  Pass this option if you want the PI to be handled as breaking "
 "tag."
 msgstr ""
+"Standardmäßig werden Verarbeitungsanweisungen (d.h. C<<? ... ?>>-"
+"Markierungen) als innenliegende Markierungen behandelt. Übergeben Sie diese "
+"Option, wenn Sie möchten, dass die Verarbeitungshinweise als unterbrechende "
+"Markierungen behandelt werden sollen."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:69
@@ -11216,7 +11195,7 @@ msgid ""
 "translatable breaking tag, I<i> setting is dropped and I<w> or I<W> is set "
 "depending on the <wrap> option."
 msgstr ""
-"Bitte beachten Sie, dass eine übersetzbare Inline-Markierung in einer "
+"Bitte beachten Sie, dass eine übersetzbare innenliegende Markierung in einer "
 "unübersetzbaren Markierung als eine übersetzbare unterbrechende Markierung "
 "behandelt wird, die Einstellung I<i> entfällt und I<w> oder I<W> werden "
 "abhängig von der Option <wrap> gesetzt."
@@ -11739,7 +11718,7 @@ msgid ""
 "functions."
 msgstr ""
 "Diese Funktion erhält Text aus dem Eingabedatenstrom bis zur nächsten "
-"unterbrechenden Markierung (nicht inline). Übersetzen Sie ihn mittels der "
+"unterbrechenden Markierung (nicht innenliegende). Übersetzen Sie ihn mittels der "
 "angepassten Übersetzungsfunktionen jedes Markierungstyps."
 
 #. type: =head2
