@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-29 01:08+0200\n"
-"PO-Revision-Date: 2020-05-01 08:01+0200\n"
+"PO-Revision-Date: 2020-05-02 13:53+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -1365,6 +1365,15 @@ msgid ""
 "Xml(3pm)>. You could for example pass B<nostrip> to the XML parser to not "
 "strip the spaces around the extracted strings."
 msgstr ""
+"Es gibt zwei Arten von Optionen: I<Po4a-Optionen> sind Vorgabewerte für die "
+"Po4a-Befehlszeilenoptionen, während I<Formatoptionen> zur Änderung des "
+"Verhaltens der Formatauswertprogramme verwandt werden. Als I<Po4a-Option> "
+"könnten Sie beispielsweise in Ihrer Konfigurationsdatei festlegen, dass der "
+"Vorgabewert für den Befehlszeilenparameter von B<--keep> 50% statt 80% "
+"beträgt. I<Formatoptionen> sind in ihren speziellen Handbuchseiten für jedes "
+"Auswertmodul dokumentiert, z.B. L<Locale::Po4a::Xml(3pm)>. Sie könnten "
+"beispielsweise B<nostrip> an das XML-Auswertprogramm übergeben, um die "
+"Leerzeichen rund um herausgelöste Zeichenketten nicht zu entfernen."
 
 #. type: textblock
 #: po4a:123
@@ -1375,6 +1384,12 @@ msgid ""
 "to the XML parser (for all languages), while the threshold will be reduced "
 "to 0% for the French translation (that is thus always kept)."
 msgstr ""
+"Sie können diese Optionen für eine bestimmte Masterdatei oder sogar für eine "
+"bestimmte Übersetzung dieser Datei mittels C<opt:> und C<opt_XX:> für die "
+"Sprache C<XX> übergeben. Im nachfolgenden Beispiel wird die Option "
+"B<nostrip> für den XML-Auswerter (für alle Sprachen) übergeben, während der "
+"Schwellwert für die französische Übersetzung auf 0% reduziert wird (diese "
+"wird daher immer beibehalten)."
 
 #. type: verbatim
 #: po4a:124
@@ -1395,6 +1410,12 @@ msgid ""
 "is not very important, since elements are internally concatenated as "
 "strings. The following examples are all equivalent:"
 msgstr ""
+"Auf jeden Fall müssen diese Konfigurationsteile sich am Ende der Zeile "
+"befinden. Die Erklärung der Dateien muss zuerst kommen, dann das Addendum, "
+"falls vorhanden, (siehe unten) und dann nur die Optionen. Die Gruppierung "
+"der Konfigurationsteile ist nicht sehr wichtig, da die Elemente intern als "
+"Zeichenketten aneinandergehängt werden. Die folgenden Beispiele sind alle "
+"äquivalent:"
 
 #. type: verbatim
 #: po4a:126
@@ -1419,6 +1440,13 @@ msgid ""
 "every languages. So the only options that can be language-specific are the "
 "ones that are used when producing the translation, as the C<--keep> option."
 msgstr ""
+"Beachten Sie, dass beim Bau von POT-Dateien die sprachspezifischen Optionen "
+"nicht verwandt werden. Es ist beispielsweise unmöglich, B<nostrip> nur an "
+"das Auswertprogramm zu übergeben, wenn die französische Übersetzung gebaut "
+"wird, da die gleiche POT-Datei zur Aktualisierung aller Sprachen verwandt "
+"wird. Daher sind die einzigen sprachspezifischen Optionen diejenigen, die "
+"bei der Erstellung der Übersetzung verwandt werden können, wie die Option C<-"
+"-keep>."
 
 #. type: =head3
 #: po4a:128
@@ -1433,6 +1461,10 @@ msgid ""
 "Italian translation using this C<test> type, that is an extension of the "
 "C<man> type."
 msgstr ""
+"Um die gleiche Option an mehrere Dateien zu übergeben, ist es am besten, wie "
+"folgt einen Typ-Alias zu definieren. Im nächsten Beispiel wird C<--keep 0> "
+"an jede italienische Übersetzung mittels dieses Typs C<test> übergeben, der "
+"eine Erweiterung des Typs C<man> ist."
 
 #. type: verbatim
 #: po4a:130
@@ -1452,6 +1484,9 @@ msgid ""
 "You can also extend an existing type reusing the same name for the alias as "
 "follows. This is not interpreted as as an erroneous recursive definition."
 msgstr ""
+"Sie können auch einen bestehenden Typ wie folgt erweitern, um den gleichen "
+"Aliasnamen erneut zu benutzen. Dies wird nicht als fehlerhafte rekursive "
+"Definition interpretiert."
 
 #. type: verbatim
 #: po4a:132
@@ -1468,7 +1503,7 @@ msgstr ""
 #. type: =head3
 #: po4a:133
 msgid "Global default options"
-msgstr ""
+msgstr "Globale Vorgabeoptionen"
 
 #. type: textblock
 #: po4a:134
@@ -1476,6 +1511,8 @@ msgid ""
 "You can also use C<[options]> lines to define options that must be used for "
 "all files, regardless of their type."
 msgstr ""
+"Sie können auch C<[options]>-Zeilen verwenden, um Optionen zu definieren, "
+"die für alle Dateien, unabhängig von deren Typ, verwandt werden müssen."
 
 #. type: verbatim
 #: po4a:135
@@ -1493,6 +1530,8 @@ msgid ""
 "As with the command line options, you can abbreviate the parameters passed "
 "in the configuration file:"
 msgstr ""
+"Wie bei Befehlszeilenoptionen können Sie die in der Konfigurationsdatei "
+"übergebenen Parameter abkürzen:"
 
 #. type: verbatim
 #: po4a:137
@@ -1507,7 +1546,7 @@ msgstr ""
 #. type: =head3
 #: po4a:138
 msgid "Option priorities"
-msgstr ""
+msgstr "Optionsprioritäten"
 
 #. type: textblock
 #: po4a:139
@@ -1516,6 +1555,9 @@ msgid ""
 "values can easily be overridden by more specific options. The order is as "
 "follows:"
 msgstr ""
+"Die Optionen jeder Quelle werden aneinandergehängt, wodurch sichergestellt "
+"wird, dass die Vorgabewerte leicht durch speziellere Optionen außer Kraft "
+"gesetzt werden können. Die Reihenfolge ist wie folgt:"
 
 #. type: textblock
 #: po4a:140
@@ -1523,6 +1565,8 @@ msgid ""
 "C<[options]> lines provide default values that can be overridden by any "
 "other source."
 msgstr ""
+"C<[options]>-Zeilen stellen Vorgabewerte bereit, die durch jede andere "
+"Quelle außer Kraft gesetzt werden können."
 
 #. type: textblock
 #: po4a:141
@@ -1530,6 +1574,8 @@ msgid ""
 "Type aliases are then used. Language specific settings override the ones "
 "applicable to all languages."
 msgstr ""
+"Dann werden Typ-Aliase verwandt. Sprachspezifische Einstellungen setzen die "
+"für alle Sprachen angewandten Einstellungen außer Kraft."
 
 #. type: textblock
 #: po4a:142
@@ -1538,6 +1584,10 @@ msgid ""
 "ones and the ones coming from the type alias. In this case also, language "
 "specific settings override the global ones."
 msgstr ""
+"Einstellungen, die für eine gegebene Master-Datei spezifisch sind, setzen "
+"sowohl die Vorgabe- als auch die von Typ-Alias kommenden Einstellungen außer "
+"Kraft. In diesem Fall setzen auch sprachspezifische Einstellungen die "
+"globalen außer Kraft."
 
 #. type: textblock
 #: po4a:143
@@ -1545,6 +1595,8 @@ msgid ""
 "Finally, parameters provided on the B<po4a> command line override any "
 "settings from the configuration file."
 msgstr ""
+"Schließlich setzen auf der B<po4a>-Befehlszeile bereitgestellte Parameter "
+"alle Einstellungen aus Konfigurationsdateien außer Kraft."
 
 #. type: =head3
 #: po4a:144
@@ -1555,6 +1607,8 @@ msgstr "Beispiel"
 #: po4a:145
 msgid "Here is an example showing how to quote the spaces and quotes:"
 msgstr ""
+"Hier ist ein Beispiel, das zeigt, wie Leer- und Anführungszeichen maskiert "
+"werden:"
 
 #. type: verbatim
 #: po4a:146
@@ -1603,6 +1657,11 @@ msgid ""
 "defining your master file. Please refer to the page L<po4a(7)> for more "
 "details on the syntax of addendum files."
 msgstr ""
+"Falls Sie einen zusätzlichen Abschnitt zu der Übersetzung hinzufügen "
+"möchten, beispielsweise für Danksagungen an den Übersetzer, müssen Sie ein "
+"Addendum für die Zeile, die ihre Master-Datei definiert, hinzufügen. In der "
+"Handbuchseite L<po4a(7)> finden Sie weitere Details zu der Syntax von "
+"Addendum-Dateien."
 
 #. type: verbatim
 #: po4a:151
@@ -1637,11 +1696,13 @@ msgstr ""
 #: po4a:154
 msgid "If an addendum fails to apply, the translation is discarded."
 msgstr ""
+"Falls ein Addendum nicht angewandt werden kann, wird die Übersetzung "
+"verworfen."
 
 #. type: =head3
 #: po4a:155
 msgid "Modifiers for the addendum declaration"
-msgstr ""
+msgstr "Attribute für die Addendum-Angabe"
 
 #. type: textblock
 #: po4a:156
@@ -1651,6 +1712,10 @@ msgid ""
 "one language to the other. The modifier is a single char located before the "
 "file name."
 msgstr ""
+"Addendum-Attribute können die Konfigurationsdatei in Fällen, in denen nicht "
+"alle Sprachen ein Addendum bereitstellen oder wenn sich Addenda von Sprache "
+"zu Sprache verändern, vereinfachen. Das Attribut ist ein einzelnes Zeichen, "
+"das sich vor dem Dateinamen befindet."
 
 #. type: =item
 #: po4a:157
