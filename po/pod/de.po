@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-04-29 01:08+0200\n"
-"PO-Revision-Date: 2020-05-02 13:53+0200\n"
+"PO-Revision-Date: 2020-05-02 21:32+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -1764,6 +1764,8 @@ msgid ""
 "The following includes an addendum in any language, but if only it exists. "
 "No error is reported if the addendum does not exist."
 msgstr ""
+"Folgendes Beispiel enthält ein Addendum für jede Sprache, aber nur, falls es "
+"existiert. Falls es nicht existiert, wird kein Fehler gemeldet."
 
 #. type: verbatim
 #: po4a:164
@@ -1778,7 +1780,7 @@ msgstr ""
 #. type: textblock
 #: po4a:165
 msgid "The following includes a list of addendum for every language:"
-msgstr ""
+msgstr "Folgendes Beispiel enthält eine Liste von Addenda für jede Sprache:"
 
 #. type: verbatim
 #: po4a:166
@@ -1803,6 +1805,11 @@ msgid ""
 "specify the name of the file to use instead of the real master when building "
 "the POT file. Here is an example:"
 msgstr ""
+"Manchmal möchten Sie einige Zeichenketten vor dem Übersetzungsprozess "
+"verstecken. Um dies zu erreichen, können Sie einen C<pot_in>-Parameter an "
+"Ihre Masterdatei übegeben, um den Namen der Datei festzulegen, die statt des "
+"echten Masters für den Bau der POT-Datei verwandt werden soll. Hier ist ein "
+"Beispiel:"
 
 #. type: verbatim
 #: po4a:169
@@ -1831,6 +1838,16 @@ msgid ""
 "translation, so you may need the C<--keep> option to ensure that the "
 "document is produced anyway."
 msgstr ""
+"Mit dieser Einstellung werden die zu übersetzenden Zeichenketten aus F<book-"
+"filtered.xml> herausgelöst (diese Datei muss vor dem Aufruf von B<po4a> "
+"erstellt worden sein), während die übersetzten Dateien aus F<book.xml> "
+"heraus gebaut werden. Damit wird jede Zeichenkette, die Teil von F<book."
+"xml> ist, aber nicht in F<book-filtered.xml> vorkommt, nicht Teil der PO-"
+"Dateien sein und damit verhindert, dass die Übersetzer eine Übersetzung "
+"davon bereitstellen. Daher verbleiben diese Zeichenketten bei der Erstellung "
+"übersetzter Dokumente unverändert. Damit wird logischerweise der Anteil der "
+"Übersetzung reduziert und Sie könnten die Option C<--keep> verwenden müssen, "
+"um sicherzustellen, dass das Dokument trotzdem erstellt wird."
 
 #. type: =head2
 #: po4a:171
@@ -1840,7 +1857,7 @@ msgstr "KONFIGURATIONSBEISPIEL"
 #. type: textblock
 #: po4a:172
 msgid "TODO: Is this section really useful?"
-msgstr ""
+msgstr "TODO: Ist dieser Abschnitt wirklich nützlich?"
 
 #. type: textblock
 #: po4a:173
@@ -2462,6 +2479,13 @@ msgid ""
 "not hesitate to also edit the original document if required: the important "
 "thing is to get a first PO file to start with."
 msgstr ""
+"Falls Sie die Dateien bearbeiten müssen, um ihre Strukturen abzugleichen, "
+"sollten Sie bevorzugt die Übersetzung bearbeiten. Falls die Änderungen am "
+"Original zu umfangreich sind, passen die alten und neuen Versionen während "
+"der PO-Aktualisierung nicht mehr zusammen und die entsprechende Überestzung "
+"wird trotzdem verworfen. Haben Sie aber keine Scheu, falls notwendig auch "
+"das Ursprungsdokument zu bearbeiten: das Wichtigste ist, eine erste PO-Datei "
+"zum Starten zu bekommen."
 
 #. type: textblock
 #: po4a-gettextize:60
@@ -3892,6 +3916,15 @@ msgid ""
 "translation to convert, you can forget about this and focus on the right "
 "part of the schema."
 msgstr ""
+"Der linke Teil stellt dar, wie L<po4a-gettextize(1)> verwandt werden kann, "
+"um ein bestehendes Übersetzungsprojekt in die Po4a-Infrastruktur zu "
+"überführen. Dieses Skript akzeptiert ein Ursprungsdokument und sein "
+"übersetztes Gegenstück und versucht, eine entsprechende PO-Datei daraus zu "
+"bauen. Eine solche manuelle Umwandlung ist recht beschwerlich (lesen Sie die "
+"Dokumentation von L<po4a-gettextize(1)> für weitere Details), sie wird aber "
+"nur einmalig notwendig, um Ihre bestehende Übersetzungen zu überführen. "
+"Falls Sie keine Übersetzungen überführen müssen, können Sie diesen Schritt "
+"ignorieren und sich auf den rechten Teil des Schemas konzentrieren."
 
 #. type: textblock
 #: doc/po4a.7.pod:52
@@ -3925,6 +3958,14 @@ msgid ""
 "translation result is a set of PO files, one per language. Please refer to "
 "the gettext documentation for more details."
 msgstr ""
+"Dann stellt der I<manuelles Bearbeiten> die Aktionen der Übersetzer dar, die "
+"die PO-Dateien verändern, um Übersetzungen für jede Ursprungszeichenkette "
+"und jeden Absatz bereitzustellen. Dies kann entweder mit einem speziellen "
+"Editor wie dem B<GNONME-Übersetzungs-Editor>, KDEs B<Lokalize> oder "
+"B<poedit> erfolgen, oder mittels einer Online-Lokalisierungsplattform wie "
+"B<Weblate> oder B<Pootle>. Das Übersetzungsergebnis ist eine Gruppe von PO-"
+"Dateien, eine pro Sprache. Bitte lesen Sie die Gettext-Dokumentation für "
+"weitere Details."
 
 #. type: textblock
 #: doc/po4a.7.pod:54
@@ -4117,6 +4158,14 @@ msgid ""
 "syntax -- see below) while the rest of the file is added verbatim at the "
 "determined position."
 msgstr ""
+"Mit Po4a müssen Sie B<addendum>-Dateien angeben, die konzeptionell als "
+"Patches angesehen werden können, die auf das lokalisierte Dokument nach der "
+"Verarbeitung angewandt werden. Jedes Addendum muss als separate Datei "
+"bereitgestellt werden, wobei das Format sich allerdings deutlich von "
+"klassischen Patches unterscheidet. Die erste Zeile ist eine I<Kopfzeile>, "
+"die den Einschubpunkt des Addendums definiert (mit einer unglücklicherweise "
+"kryptischen Syntax -- siehe unten), während der Rest der Datei unverändert "
+"an der festgelegten Position eingefügt wird."
 
 #. type: textblock
 #: doc/po4a.7.pod:72
@@ -4151,6 +4200,12 @@ msgid ""
 "in English, but your line should probably read as follows if you intend your "
 "addendum to apply to the French translation of the document."
 msgstr ""
+"In der Praxis wird Po4a beim Versuch, ein Addendum anzuwenden, nach der "
+"ersten Zeile, die auf das Argument C<Position> passt, suchen (C<Position> "
+"kann ein regulärer Ausdruck sein). Vergessen Sie nicht, dass Po4a hier das "
+"B<übersetzte> Dokument betrachtet. Das Ursprungsdokument ist auf Englisch, "
+"aber Ihre Zeile sollte wahrscheinlich wie folgt aussehen, falls Sie möchten, "
+"dass sie auf die französische Übersetzung des Dokuments angewandt wird."
 
 #. type: verbatim
 #: doc/po4a.7.pod:75
@@ -4162,6 +4217,7 @@ msgstr ""
 " PO4A-HEADER: position=À propos de ce document; mode=after; endboundary=</section>\n"
 "\n"
 
+# FIXME ie → i.e.
 #. type: textblock
 #: doc/po4a.7.pod:76
 msgid ""
@@ -4170,6 +4226,11 @@ msgid ""
 "The addendum is added right B<after> that line (because we provided an "
 "I<endboundary>, ie a boundary ending the current section)."
 msgstr ""
+"Sobald die C<Position> im Zieldokument gefunden wurde, sucht Po4a für die "
+"nächste Zeile nach der C<Position>, die auf das bereitgestellte "
+"C<endboundary> passt. Das Addendum wird direkt B<nach> dieser Zeile "
+"eingefügt (da wir eine I<endboundary> bereitstellten, d.h. eine Begrenzung, "
+"die den aktuellen Abschnitt beendet)."
 
 #. type: textblock
 #: doc/po4a.7.pod:77
@@ -4190,6 +4251,7 @@ msgstr ""
 " PO4A-HEADER: position=Über dieses Dokument; mode=after; beginboundary=<section>\n"
 "\n"
 
+# FIXME ie → i.e.
 #. type: textblock
 #: doc/po4a.7.pod:79
 msgid ""
@@ -4202,7 +4264,18 @@ msgid ""
 "tag. This is equivalent to the previous example because what you really want "
 "is to add this addendum either after C</section>> or before C<<section>>."
 msgstr ""
+"Hier sucht Po4a in der Übersetzung nach der ersten Zeile, die auf "
+"C<<section>> passt und nach der auf C<Über dieses Dokument> passenden Zeile "
+"liegt, und fügt das Addendum B<vor> dieser Zeile ein, da wir ein "
+"I<beginboundary> bereitgestellt haben, d.h. eine Begrenzungsmarkierung, die "
+"den Anfang des nächsten Abschnitts markiert. Daher verlangt diese Kopfzeile, "
+"dass das Addendum nach dem Abschnitt, der C<Über dieses Dokument> enthält, "
+"gesetzt wird, und weist Po4a an, dass dieser Abschnitt mit einer Zeile, die "
+"die Markierung C<<section>> enthält, beginnt. Dies ist zum vorherigen "
+"Beispiel äquivalent, da Sie in Wirklichkeit möchten, dass dieses Addendum "
+"entweder nach C</section>> oder vor C<<section>> hinzugefügt wird."
 
+# FIXME: Parts (2x) broken: … that the last potentail boundary line …
 #. type: textblock
 #: doc/po4a.7.pod:80
 msgid ""
@@ -4213,6 +4286,13 @@ msgid ""
 "C<beginboundary> will put the addendum just B<before> the matched boundary, "
 "that the last potential boundary line before the C<position>."
 msgstr ""
+"Sie können den Einfüge-I<Modus> auch auf den Wert C<before> setzen, mit "
+"einer ähnlichen Semantik: Kombinierung von C<mode=before> mit einem "
+"C<endboundary> wird dass Addendum genau B<nach> der passenden Begrenzung "
+"setzen. Dies ist die letzte mögliche Begrenzungszeile vor der C<Position>. "
+"Kombinierung von C<mode=before> mit einer C<beginboundary> setzt das "
+"Addendum genau B<vor> die passende Begrenzung. Dies ist die letzte mögliche "
+"Begrenzung vor der C<Position>."
 
 #. type: verbatim
 #: doc/po4a.7.pod:81
@@ -4625,6 +4705,9 @@ msgid ""
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
 "strange sense of humor :)"
 msgstr ""
+"Ich persönlich spreche es als L<https://en.wiktionary.org/wiki/pouah|pouah> "
+"aus, was auf Französich lautmalerisch anstelle von »Bäh« verwandt wird :) "
+"Vielleicht habe ich einen merkwürdigen Humor :)"
 
 #. type: =head2
 #: doc/po4a.7.pod:116
@@ -4633,6 +4716,7 @@ msgstr ""
 "Was ist mit den anderen Übersetzungswerkzeugen für Dokumentation, die "
 "Gettext benutzen?"
 
+# FIMXE: And localize?
 #. type: textblock
 #: doc/po4a.7.pod:117
 msgid "As far as I know, there are only two of them:"
@@ -9317,6 +9401,7 @@ msgstr ""
 msgid "B<yfm_keys> (markdown-only)"
 msgstr "B<yfm_keys> (nur Markdown)"
 
+# FIMXE Coma → Comma
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:31
 msgid ""
@@ -9325,6 +9410,11 @@ msgid ""
 "insensitive match. Arrays values are always translated, unless the "
 "B<yfm_skip_array> option is provided."
 msgstr ""
+"Kommata-getrennte Liste von Schlüsseln, die für Übersetzungen in dem Yaml-"
+"Front-Matter-Abschnitt verarbeitet werden sollen. Alle anderen Schlüssel "
+"werden übersprungen. Schlüssel werden unabhängig von der Groß-/"
+"Kleinschreibung verglichen. Feldwerte werden immer übersetzt, außer die "
+"Option B<yfm_skip_array> wird bereitgestellt."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
@@ -10872,7 +10962,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:41
 msgid "B<optionalclosingtag>"
-msgstr ""
+msgstr "B<optionalclosingtag>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:42
@@ -10881,6 +10971,9 @@ msgid ""
 "default, missing closing tags raise an error handled according to "
 "C<ontagerror>."
 msgstr ""
+"Logischer Wert, der angibt, ob schließende Markierungen optional sind (wie "
+"in HTML). Standardmäßig lösen fehlende schließende Markierungen einen Fehler "
+"aus, der entsprechend C<ontagerror> behandelt wird."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:43
