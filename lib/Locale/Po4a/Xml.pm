@@ -2324,6 +2324,11 @@ This removes the returned stream from the input
 
 This ensures that the searched text is outside any quotes
 
+=item B<regex>
+
+This denotes that the first argument is a regular expression rather than
+an plain string
+
 =back
 
 =cut
