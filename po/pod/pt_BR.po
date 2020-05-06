@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.45\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2020-05-04 10:13+0200\n"
-"PO-Revision-Date: 2020-04-27 16:11+0000\n"
+"POT-Creation-Date: 2020-04-29 01:08+0200\n"
+"PO-Revision-Date: 2020-05-05 23:11+0000\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/pt_BR/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.0.2-dev\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -1341,7 +1341,7 @@ msgstr ""
 "po4a>, você pode, por exemplo, especificar em seu arquivo de configuração "
 "que o valor padrão do parâmetro de linha de comando B<--keep> é de 50% em "
 "vez de 80%. I<Opções de formato> estão documentadas na página específica de "
-"cada módulo de análise, por exemplo,  L<Locale::Po4a::Xml(3pm)>. Você pode, "
+"cada módulo de análise, por exemplo, L<Locale::Po4a::Xml(3pm)>. Você pode, "
 "por exemplo, passar B<nostrip> para o analisador XML para não remover os "
 "espaços ao redor das strings extraídas."
 
@@ -4125,6 +4125,12 @@ msgid ""
 "in English, but your line should probably read as follows if you intend your "
 "addendum to apply to the French translation of the document."
 msgstr ""
+"Na prática, ao tentar aplicar um adendo, o po4a pesquisa a primeira linha "
+"correspondente ao argumento C<position> (isso pode ser um regexp). Não "
+"esqueça que o po4a considera o documento B<translated> aqui. Esta "
+"documentação está em inglês, mas sua linha provavelmente deve ser a "
+"seguinte, se você pretende que seu adendo se aplique à tradução em francês "
+"do documento."
 
 #. type: verbatim
 #: doc/po4a.7.pod:75
@@ -4133,6 +4139,9 @@ msgid ""
 " PO4A-HEADER: position=À propos de ce document; mode=after; endboundary=</section>\n"
 "\n"
 msgstr ""
+" PO4A-HEADER: position=À propos de ce document; mode=after; "
+"endboundary=</section>\n"
+"\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:76
@@ -4142,6 +4151,10 @@ msgid ""
 "The addendum is added right B<after> that line (because we provided an "
 "I<endboundary>, i.e. a boundary ending the current section)."
 msgstr ""
+"Depois que a C<position> é encontrada no documento de destino, o po4a "
+"procura a próxima linha após a C<position> que corresponde ao C<endboundary> "
+"fornecido. O adendo é adicionado à direita B<after> essa linha (porque "
+"fornecemos um I<endboundary>, ou seja, um limite que termina a seção atual)."
 
 #. type: textblock
 #: doc/po4a.7.pod:77
@@ -4149,18 +4162,18 @@ msgid ""
 "The exact same effect could be obtained with the following header, that is "
 "equivalent:"
 msgstr ""
+"O exato mesmo efeito pode ser obtido com o seguinte cabeçalho, que é "
+"equivalente:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:78
-#, fuzzy, no-wrap
-#| msgid ""
-#| " PO4A-HEADER:mode=after;position=About this document;beginboundary=FakePo4aBoundary\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " PO4A-HEADER: position=About this document; mode=after; beginboundary=<section>\n"
 "\n"
 msgstr ""
-" PO4A-HEADER:mode=after;position=Sobre este documento;beginboundary=FakePo4aBoundary\n"
+" PO4A-HEADER: position=About this document; mode=after; "
+"beginboundary=<section>\n"
 "\n"
 
 #. type: textblock
@@ -4175,6 +4188,15 @@ msgid ""
 "tag. This is equivalent to the previous example because what you really want "
 "is to add this addendum either after C</section>> or before C<<section>>."
 msgstr ""
+"Aqui, o po4a pesquisa a primeira linha correspondente a C<<section>> após a "
+"linha correspondente a C<About this document> na tradução e adicione o "
+"adendo B<before> dessa linha, pois fornecemos um I<beginboundary>, ou seja, "
+"um limite que marca o início da próxima seção. Portanto, essa linha de "
+"cabeçalho exige a inserção do adendo após a seção que contém C<About this "
+"document> e instrui o po4a que uma seção começa com uma linha que contém a "
+"tag C<<section>>. Isso é equivalente ao exemplo anterior, porque o que você "
+"realmente deseja é adicionar este adendo após C</section>> ou antes de "
+"C<<section>>."
 
 #. type: textblock
 #: doc/po4a.7.pod:80
@@ -4186,6 +4208,12 @@ msgid ""
 "C<beginboundary> will put the addendum just B<before> the matched boundary, "
 "that the last potential boundary line before the C<position>."
 msgstr ""
+"Você também pode definir a inserção I<modo> como o valor C<before>, com uma "
+"semântica semelhante: a combinação de C<mode=before> com um C<endboundary> "
+"colocará o adendo apenas B<after> o limite correspondente, que a última "
+"linha limite potencial antes da C<position>. Combinar C<mode=before> com um "
+"C<beginboundary> colocará o adendo apenas B<before> do limite "
+"correspondente, que é a última linha limite potencial antes da C<position>."
 
 #. type: verbatim
 #: doc/po4a.7.pod:81
@@ -4199,28 +4227,38 @@ msgid ""
 " 'after' |'beginboundary'| first after 'position' | Right before the selected boundary\n"
 "\n"
 msgstr ""
+"  Modo   | Tipo de limite |       Limite usado         | Ponto de inserção "
+"am comparação ao limite\n"
+" ========|================|============================|====================="
+"=====================\n"
+" 'before'| 'endboundary'  | último antes de 'position' | Logo após o limite "
+"selecionado\n"
+" 'before'|'beginboundary' | último antes de 'position' | Logo antes do "
+"limite selecionado\n"
+" 'after' | 'endboundary'  |  primeiro após 'position'  | Logo após o limite "
+"selecionado\n"
+" 'after' |'beginboundary' |  primeiro após 'position'  | Logo antes do "
+"limite selecionado\n"
+"\n"
 
 #. type: =head3
 #: doc/po4a.7.pod:82
 msgid "Hint and tricks about addenda"
-msgstr ""
+msgstr "Dicas e truques sobre adendos"
 
 #. type: textblock
 #: doc/po4a.7.pod:83
-#, fuzzy
-#| msgid ""
-#| "don't use B<.fi> as B<endboundary>, because it will match with "
-#| "\"the[ fi]le\", which is obviously not what you expect. The correct "
-#| "B<endboundary> in that case is: B<^\\.fi$>."
 msgid ""
 "Remember that these are regexp. For example, if you want to match the end of "
 "a nroff section ending with the line C<.fi>, do not use C<.fi> as "
 "B<endboundary>, because it will match with C<the[ fi]le>, which is obviously "
 "not what you expect. The correct B<endboundary> in that case is: C<^\\.fi$>."
 msgstr ""
-"não use B<.fi> como B<endboundary> porque ele vai corresponder a \"the[ fi]le"
-"\", o que obviamente não é o que está esperando. O B<endboundary> correto "
-"neste caso é: B<^\\.fi$>."
+"Lembre-se de que estes são regexp. Por exemplo, se você deseja combinar o "
+"final de uma seção nroff que termina com a linha C<.fi>, não use C<.fi> como "
+"B<endboundary> porque ele vai corresponder a C<the[ fi]le>, o que obviamente "
+"não é o que está esperando. O B<endboundary> correto neste caso é: C<^\\"
+".fi$>."
 
 #. type: textblock
 #: doc/po4a.7.pod:84
@@ -4229,34 +4267,26 @@ msgid ""
 "So the two following lines B<are different>. The second one will only be "
 "found if there is enough trailing spaces in the translated document."
 msgstr ""
+"Espaços em branco SÃO importantes no conteúdo da C<position> e limites. "
+"Portanto, as duas linhas seguintes B<são diferentes>. O segundo só será "
+"encontrado se houver espaços à direita suficientes no documento traduzido."
 
 #. type: verbatim
 #: doc/po4a.7.pod:85
-#, fuzzy, no-wrap
-#| msgid ""
-#| " PO4A-HEADER: mode=after; position=About this document; endboundary=</section>\n"
-#| " PO4A-HEADER: mode=after; position=About this document; beginboundary=<section>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " PO4A-HEADER: position=About this document; mode=after; beginboundary=<section>\n"
 " PO4A-HEADER: position=About this document ; mode=after; beginboundary=<section>\n"
 "\n"
 msgstr ""
-" PO4A-HEADER: mode=after; position=Sobre este documento; endboundary=</section>\n"
-" PO4A-HEADER: mode=after; position=Sobre este documento; beginboundary=<section>\n"
+" PO4A-HEADER: position=Sobre este documento; mode=after; "
+"beginboundary=<section>\n"
+" PO4A-HEADER: position=Sobre este documento; mode=after; "
+"beginboundary=<section>\n"
 "\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:86
-#, fuzzy
-#| msgid ""
-#| "Although this context search may be considered to operate roughly on each "
-#| "line of the translated document, it actually operates on the internal "
-#| "data string of the translated document.  This internal data string may be "
-#| "a text spanning a paragraph containing multiple lines or may be a XML tag "
-#| "itself alone.  The exact I<insertion point> of the addendum must be "
-#| "before or after the internal data string and can not be within the "
-#| "internal data string."
 msgid ""
 "Although this context search may be considered to operate roughly on each "
 "line of the B<translated> document, it actually operates on the internal "
@@ -4267,12 +4297,12 @@ msgid ""
 "string."
 msgstr ""
 "Embora essa pesquisa de contexto possa ser considerada como operando "
-"aproximadamente em cada linha do documento traduzido, ela realmente opera na "
-"cadeia de dados interna do documento traduzido. Essa cadeia de dados interna "
-"pode ser um texto abrangendo um parágrafo contendo várias linhas ou pode ser "
-"uma tag XML sozinha. O exato I<ponto de inserção> do adendo deve ser "
-"anterior ou posterior à sequência de dados interna e não pode estar dentro "
-"da cadeia de dados interna."
+"aproximadamente em cada linha do documento B<traduzido>, ela realmente opera "
+"na cadeia de dados interna do documento traduzido. Essa cadeia de dados "
+"interna pode ser um texto abrangendo um parágrafo contendo várias linhas ou "
+"pode ser uma tag XML sozinha. O exato I<ponto de inserção> do adendo deve "
+"ser anterior ou posterior à sequência de dados interna e não pode estar "
+"dentro da cadeia de dados interna."
 
 #. type: textblock
 #: doc/po4a.7.pod:87
@@ -4281,11 +4311,15 @@ msgid ""
 "the translation. It may also help to run po4a in debug mode to see the "
 "actual internal data string when your addendum does not apply."
 msgstr ""
+"Passe o argumento B<-vv> para po4a para entender como os adendos são "
+"adicionados à tradução. Também pode ajudar a executar po4a no modo de "
+"depuração para ver a string de dados interna real quando o seu adendo não se "
+"aplica."
 
 #. type: =head3
 #: doc/po4a.7.pod:88
 msgid "Addenda examples"
-msgstr ""
+msgstr "Exemplos de adendos"
 
 #. type: textblock
 #: doc/po4a.7.pod:89
@@ -4304,24 +4338,17 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:91
-#, fuzzy
-#| msgid ""
-#| "You should select two step approach by setting B<mode=after>.  Then you "
-#| "should narrow down search to the line after B<AUTHORS> with the "
-#| "B<position> argument regex.  Then, you should match the beginning of the "
-#| "next section (i.e., B<^\\.SH>) with the B<beginboundary> argument regex. "
-#| "That is to say:"
 msgid ""
 "You should select a two step approach by setting B<mode=after>. Then you "
 "should narrow down search to the line after B<AUTHORS> with the B<position> "
 "argument regex. Then, you should match the beginning of the next section (i."
 "e., B<^\\.SH>) with the B<beginboundary> argument regex. That is to say:"
 msgstr ""
-"Você deve selecionar a abordagem em duas etapas configurando B<mode=after>. "
-"Em seguida, você deve restringir a pesquisa à linha após B<AUTHORS> com a "
+"Você deve selecionar uma abordagem em duas etapas configurando B<mode=after>"
+". Em seguida, você deve restringir a pesquisa à linha após B<AUTHORS> com a "
 "regex de argumento B<position>. Então, você deve combinar o início da "
-"próxima seção (isto é, B<^ \\. SH>) com a regex de argumento "
-"B<beginboundary>. Isso é para dizer:"
+"próxima seção (isto é, B<^ \\. SH>) com a regex de argumento B<beginboundary>"
+". Isso é para dizer:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:92
@@ -4335,20 +4362,14 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:93
-#, fuzzy
-#| msgid ""
-#| "If you want to add something into a section (like after \"Copyright Big "
-#| "Dude\")  instead of adding a whole section, give a B<position> matching "
-#| "this line, and give a B<beginboundary> matching any line."
 msgid ""
 "If you want to add something right after a given line (e.g. after the line "
 "\"Copyright Big Dude\"), use a B<position> matching this line, B<mode=after> "
 "and give a B<beginboundary> matching any line."
 msgstr ""
-"Se você quiser adicionar alguma coisa a uma seção (como após \"Copyright "
-"Grande Cara\") ao invés de adicionar uma seção inteira, forneça um "
-"B<position> correspondendo a esta linha e forneça um B<beginboundary> "
-"correspondendo a qualquer linha."
+"Se você quiser adicionar alguma coisa após a linha dada (ex,. após a linha \""
+"Copyright Grande Cara\") use um B<position> correspondendo a esta linha, "
+"B<mode=after> e forneça um B<beginboundary> correspondendo a qualquer linha."
 
 #. type: verbatim
 #: doc/po4a.7.pod:94
@@ -4515,22 +4536,16 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:109
-#, fuzzy
-#| msgid ""
-#| "The po4a architecture is object oriented (in Perl. Isn't that neat?). The "
-#| "common ancestor to all parser classes is called TransTractor. This "
-#| "strange name comes from the fact that it is at the same time in charge of "
-#| "translating document and extracting strings."
 msgid ""
 "The po4a architecture is object oriented. The L<Locale::Po4a::"
 "TransTractor(3pm)|TransTractor> class is the common ancestor to all po4a "
 "parsers. This strange name comes from the fact that it is at the same time "
 "in charge of translating document and extracting strings."
 msgstr ""
-"A arquitetura do po4a é orientada a objeto (em Perl. Isso não é legal?). O "
-"antepassado comum para todas as classes analisadoras é chamado de "
-"TransTractor. Esse nome estranho vem do fato que ele é ao mesmo tempo o "
-"encarregado por tradução de documento e extração de strings."
+"A arquitetura do po4a é orientada a objeto. A classe "
+"L<Locale::Po4a::TransTractor(3pm)|TransTractor> é um antepassado comum para "
+"todos analisadores do po4a. Esse nome estranho vem do fato que ele é ao "
+"mesmo tempo o encarregado por tradução de documento e extração de strings."
 
 #. type: textblock
 #: doc/po4a.7.pod:110
@@ -4571,14 +4586,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:112
-#, fuzzy
-#| msgid ""
-#| "This little bone is the core of all the po4a architecture. If you omit "
-#| "the input PO and the output document, you get B<po4a-gettextize>. If you "
-#| "provide both input and disregard the output PO, you get B<po4a-"
-#| "translate>.  The B<po4a> calls TransTractor twice and calls B<msgmerge -"
-#| "U> between these TransTractor invocations to provide one-stop solution "
-#| "with a single configuration file."
 msgid ""
 "This little bone is the core of all the po4a architecture. If you omit the "
 "input PO and the output document, you get B<po4a-gettextize>. If you provide "
@@ -4591,9 +4598,10 @@ msgstr ""
 "Esse pequeno osso é o núcleo de toda arquitetura do po4a. Se você omitir o "
 "PO de entrada e o documento de saída, você obtém B<po4a-gettextize>. Se você "
 "fornecer ambos arquivos de entrada e desconsiderar o PO de saída, você obtém "
-"B<po4a-translate>. O B<po4a> chama o TransTractor duas vezes e chama "
-"B<msgmerge -U> entre essas chamadas do TransTractor para fornecer uma "
-"solução completa com um único arquivo de configuração."
+"B<po4a-translate>. O B<po4a> chama o TransTractor duas vezes e chama B<"
+"msgmerge -U> entre essas chamadas do TransTractor para fornecer uma solução "
+"completa com um único arquivo de configuração. Por favor, veja "
+"L<Locale::Po4a::TransTractor(3pm)> para mais detalhes."
 
 #. type: =head1
 #: doc/po4a.7.pod:113
@@ -4602,10 +4610,8 @@ msgstr "FAQ"
 
 #. type: =head2
 #: doc/po4a.7.pod:114
-#, fuzzy
-#| msgid "How to use po4a?"
 msgid "How do you pronounce po4a?"
-msgstr "Como usar po4a?"
+msgstr "Como você pronuncia po4a?"
 
 #. type: textblock
 #: doc/po4a.7.pod:115
@@ -4614,6 +4620,9 @@ msgid ""
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
 "strange sense of humor :)"
 msgstr ""
+"Eu pessoalmente vocalizo-o como L<https://en.wiktionary.org/wiki/pouah|pouah>"
+", que é um onomatopoético francês que usamos no lugar de \"eca\" :) eu posso "
+"ter um senso de humor estranho :)"
 
 #. type: =head2
 #: doc/po4a.7.pod:116
@@ -4818,18 +4827,16 @@ msgstr ""
 msgid ""
 "The documentation of the all-in-one tool that you should use: L<po4a(1)>."
 msgstr ""
+"A documentação da ferramenta multifuncional que você deve usar: L<po4a(1)>."
 
 #. type: textblock
 #: doc/po4a.7.pod:139
-#, fuzzy
-#| msgid ""
-#| "L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, "
-#| "L<po4a(7)>"
 msgid ""
 "The documentation of the individual po4a scripts: L<po4a-gettextize(1)>, "
 "L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
 msgstr ""
-"L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a(7)>"
+"A documentação dos scripts individuais do po4a: L<po4a-gettextize(1)>, L"
+"<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
 
 #. type: textblock
 #: doc/po4a.7.pod:140
@@ -4837,39 +4844,35 @@ msgid ""
 "The additional helping scripts: L<msguntypot(1)>, L<po4a-display-man(1)>, "
 "L<po4a-display-pod(1)>."
 msgstr ""
+"Os scripts de ajuda adicionais: L<msguntypot(1)>, L<po4a-display-man(1)>, L"
+"<po4a-display-pod(1)>."
 
 #. type: textblock
 #: doc/po4a.7.pod:141
-#, fuzzy
-#| msgid ""
-#| "L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
-#| "Guide(3pm)>, L<Locale::Po4a::Halibut(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
-#| "L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::"
-#| "Po4a::Man(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::"
-#| "RubyDoc(3pm)>, L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, "
-#| "L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, L<Locale::"
-#| "Po4a::Wml(3pm)>.  L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Xml(3pm)>, "
-#| "L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Yaml(3pm)>."
 msgid ""
 "The parsers of each formats, in particular to see the options accepted by "
 "each of them: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
-"L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, L<Locale::Po4a::"
-"KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::RubyDoc(3pm)>, "
-"L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::"
-"Xhtml(3pm)>, L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::BibTeX(3pm)>, "
-"L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::Halibut(3pm)>, L<Locale::"
-"Po4a::LaTeX(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::Sgml(3pm)>, "
-"L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::"
-"Xml(3pm)>."
+"L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
+"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, "
+"L<Locale::Po4a::RubyDoc(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, "
+"L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::Xhtml(3pm)>, "
+"L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::BibTeX(3pm)>, "
+"L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::Halibut(3pm)>, "
+"L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Pod(3pm)>, "
+"L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, "
+"L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 msgstr ""
-"L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
-"Guide(3pm)>, L<Locale::Po4a::Halibut(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
-"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::"
-"Po4a::Man(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::RubyDoc(3pm)>, "
-"L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::"
-"Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::Wml(3pm)>.  "
-"L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::"
-"Wml(3pm)>, L<Locale::Po4a::Yaml(3pm)>."
+"Os analisadores de cada formato, em particular para ver as opções aceitas "
+"por cada um deles: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
+"L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
+"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, "
+"L<Locale::Po4a::RubyDoc(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, "
+"L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::Xhtml(3pm)>, "
+"L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::BibTeX(3pm)>, "
+"L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::Halibut(3pm)>, "
+"L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Pod(3pm)>, "
+"L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, "
+"L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 
 #. type: textblock
 #: doc/po4a.7.pod:142
@@ -4880,6 +4883,11 @@ msgid ""
 "L<Locale::Po4a::Common(3pm)>. Please also check the F<CONTRIBUTING.md> file "
 "in the source tree."
 msgstr ""
+"A implementação da infraestrutura principal: "
+"L<Locale::Po4a::TransTractor(3pm)> (particularmente importante para entender "
+"a organização do código), L<Locale::Po4a::Chooser(3pm)>, "
+"L<Locale::Po4a::Po(3pm)>, L<Locale::Po4a::Common(3pm)>. Por favor, verifique "
+"também o arquivo F<CONTRIBUTING.md> na árvore de fonts."
 
 #. type: verbatim
 #: doc/po4a.7.pod:144
@@ -10760,7 +10768,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:41
 msgid "B<optionalclosingtag>"
-msgstr ""
+msgstr "B<optionalclosingtag>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:42
@@ -10769,6 +10777,9 @@ msgid ""
 "default, missing closing tags raise an error handled according to "
 "C<ontagerror>."
 msgstr ""
+"Booleano indicando se as tags de fechamento são opcionais (como em HTML). "
+"Por padrão, as tags de fechamento ausentes geram um erro tratado de acordo "
+"com C<ontagerror>."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:43
@@ -10957,10 +10968,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:67
-#, fuzzy
-#| msgid "B<break>"
 msgid "B<break-pi>"
-msgstr "B<break>"
+msgstr "B<break-pi>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:68
@@ -10969,6 +10978,9 @@ msgid ""
 "inline tags.  Pass this option if you want the PI to be handled as breaking "
 "tag."
 msgstr ""
+"Por padrão, as Instruções de Processamento (ou seja, tags C<<? ... ?>>) são "
+"tratadas como tags embutidas. Passe essa opção se desejar que as I.P. sejam "
+"tratadas como tag de quebra."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:69
