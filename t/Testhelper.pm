@@ -95,7 +95,7 @@ $ENV{'COLUMNS'} = "80";
 my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 
 my $PODIFF =
-  "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
+  "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
 
 sub show_files {
     my $basename = shift;
@@ -121,7 +121,7 @@ sub system_failed {
     $expected_exit_status //= 0;
     my $exit_status = system($cmd);
     $cmd =~
-      s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+      s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."Project-Id-Version:' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
     $cmd =~ s{$root_dir/}{}g;
     $cmd =~ s{t/../po4a}{po4a};
 
