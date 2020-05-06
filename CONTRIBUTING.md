@@ -253,7 +253,7 @@ git pull
 # Do and commit your local changes
 perl Build.PL
 ./Build
-git commit -m "update po files" po
+git commit -m "update POT files" po/*/*.pot # don't commit PO files to reduce conflicts; weblate update them
 git push
 git push salsa
 wlc pull
