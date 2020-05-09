@@ -20,6 +20,11 @@ foreach my $t (
 
 push @tests,
   {
+    'format' => 'asciidoc',
+    'todo'   => 'https://github.com/mquinson/po4a/issues/226',
+    'input'  => "fmt/asciidoc/TablesImageText.adoc",
+  },
+  {
     'format'  => 'asciidoc',
     'options' => '-o noimagetargets=1',
     'input'   => "fmt/asciidoc/NoImageTarget.adoc",
