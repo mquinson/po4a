@@ -394,14 +394,21 @@ sub parse {
             and
 
             # subtract one because chars includes the newline on the paragraph
-            ( ( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) - 1 ) == ( length($line) ) )
+            ( abs( ( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) - 1 ) - length($line) ) < 3 )
           )
         {
             # Found title
+
             $wrapped_mode = 0;
             my $level = $line;
             $level     =~ s/^(.).*$/$1/;
             $paragraph =~ s/\n$//s;
+
+            if (chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) )
+            {
+                print STDERR "$ref: Two line title type '$level' detected for '$paragraph' but the underlines is not within the tolerance +/- 2 chars of length of title\n"
+            }
+
             my $t = $self->translate(
                 $paragraph,
                 $self->{ref},
