@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: po4a 0.55\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-05-06 22:43+0200\n"
-"PO-Revision-Date: 2020-04-28 23:08+0000\n"
+"PO-Revision-Date: 2020-05-10 14:28+0000\n"
 "Last-Translator: Frans Spiesschaert <frans.spiesschaert@gmail.com>\n"
-"Language-Team: Dutch <https://hosted.weblate.org/projects/po4a/po4a-doc/nl/"
-">\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/po4a/po4a-doc/nl/>"
+"\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0.2\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -1346,7 +1346,7 @@ msgstr ""
 #. type: =head2
 #: po4a:121
 msgid "Specifying options"
-msgstr ""
+msgstr "Opties specificeren"
 
 #. type: textblock
 #: po4a:122
@@ -1360,6 +1360,15 @@ msgid ""
 "Xml(3pm)>. You could for example pass B<nostrip> to the XML parser to not "
 "strip the spaces around the extracted strings."
 msgstr ""
+"Er bestaan twee types opties: I<po4a-opties> zijn standaardwaarden voor de "
+"po4a commandoregelopties, terwijl I<opmaakopties> gebruikt worden om het "
+"gedrag van de opmaakparsers te beïnvloeden. U zou bijvoorbeeld in uw "
+"configuratiebestand kunnen specificeren dat de standaardwaarde voor de "
+"commandoregelparameter B<--keep> 50% is in plaats van 80%. I<Opmaakopties> "
+"worden gedocumenteerd op de specifieke pagina van iedere parsermodule, bijv. "
+"L<Locale::Po4a::Xml(3pm)>. U zou bijvoorbeeld B<nostrip> kunnen meegeven aan "
+"de XML-parser om de spaties rond de geëxtraheerde tekstfragmenten niet te "
+"laten weghalen."
 
 #. type: textblock
 #: po4a:123
@@ -1370,6 +1379,12 @@ msgid ""
 "to the XML parser (for all languages), while the threshold will be reduced "
 "to 0% for the French translation (that is thus always kept)."
 msgstr ""
+"U kunt deze opties meegeven voor een specifiek hoofdbestand, of zelfs voor "
+"een specifieke vertaling van dat bestand met C<opt:> of met C<opt_XX:> voor "
+"de taal C<XX>. In het volgende voorbeeld wordt de optie B<nostrip> "
+"meegegeven aan de XML-parser (voor alle talen), terwijl de drempelwaarde tot "
+"0% teruggebracht wordt voor de Franse vertaling (welke dus steeds behouden "
+"blijft)."
 
 #. type: verbatim
 #: po4a:124
@@ -1378,6 +1393,9 @@ msgid ""
 " [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
 "\n"
 msgstr ""
+" [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep "
+"0\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:125
@@ -1388,6 +1406,12 @@ msgid ""
 "is not very important, since elements are internally concatenated as "
 "strings. The following examples are all equivalent:"
 msgstr ""
+"Deze configuratieonderdelen moeten in ieder geval aan het einde van de regel "
+"staan. Eerst moet de declaratie van bestanden komen, dan het eventuele "
+"addendum (zie hierna) en dan pas de opties. Het groeperen van "
+"configuratieonderdelen is niet erg belangrijk, omdat elementen intern "
+"samengevoegd worden tot tekenreeksen. De volgende voorbeelden zijn allemaal "
+"gelijkwaardig:"
 
 #. type: verbatim
 #: po4a:126
@@ -1398,6 +1422,13 @@ msgid ""
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:nostrip opt_fr:--keep opt_fr:0\n"
 "\n"
 msgstr ""
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20\" opt:\"-o "
+"nostrip\" opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20 -o nostrip\" "
+"opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:"
+"nostrip opt_fr:--keep opt_fr:0\n"
+"\n"
 
 #. type: textblock
 #: po4a:127
@@ -1408,11 +1439,17 @@ msgid ""
 "every languages. So the only options that can be language-specific are the "
 "ones that are used when producing the translation, as the C<--keep> option."
 msgstr ""
+"Merk op dat taalspecifieke opties niet gebruikt worden bij het bouwen van "
+"het POT-bestand. Het is bijvoorbeeld niet mogelijk om de optie B<nostrip> "
+"mee te geven aan de parser wanneer enkel de Franse vertaling wordt gebouwd, "
+"omdat het POT-bestand gebruikt wordt om elke taal te updaten. Dus zijn de "
+"enige opties die taalspecifiek kunnen zijn, die opties welke gebruikt worden "
+"bij het produceren van de vertaling, zoals de optie C<--keep>."
 
 #. type: =head3
 #: po4a:128
 msgid "Configuration aliases"
-msgstr ""
+msgstr "Configuratiealiassen"
 
 #. type: textblock
 #: po4a:129
@@ -1422,6 +1459,11 @@ msgid ""
 "Italian translation using this C<test> type, that is an extension of the "
 "C<man> type."
 msgstr ""
+"De beste manier om dezelfde optie mee te geven aan verschillende bestanden "
+"is als volgt een alias voor een type te definiëren. In het volgende "
+"voorbeeld wordt de optie C<--keep 0> aan iedere Italiaanse vertaling "
+"meegegeven met dit C<test>-type, welke een uitbreiding is van het "
+"C<man>-type."
 
 #. type: verbatim
 #: po4a:130
@@ -1431,6 +1473,9 @@ msgid ""
 "  [type: test] man/page.1 $lang:man/$lang/page.1\n"
 "\n"
 msgstr ""
+"  [po4a_alias:test] man opt_it:\"--keep 0\"\n"
+"  [type: test] man/page.1 $lang:man/$lang/page.1\n"
+"\n"
 
 #. type: textblock
 #: po4a:131
@@ -1438,6 +1483,9 @@ msgid ""
 "You can also extend an existing type reusing the same name for the alias as "
 "follows. This is not interpreted as as an erroneous recursive definition."
 msgstr ""
+"U kunt een bestaand type ook uitbreiden door als volgt dezelfde naam te "
+"gebruiken voor de alias. Dit wordt niet geïnterpreteerd als een foutieve "
+"recursieve definitie."
 
 #. type: verbatim
 #: po4a:132
@@ -1447,11 +1495,14 @@ msgid ""
 "  [type: man] man/page.1 $lang:man/$lang/page.1\n"
 "\n"
 msgstr ""
+"  [po4a_alias:man] man opt_it:\"--keep 0\"\n"
+"  [type: man] man/page.1 $lang:man/$lang/page.1\n"
+"\n"
 
 #. type: =head3
 #: po4a:133
 msgid "Global default options"
-msgstr ""
+msgstr "Globale standaardopties"
 
 #. type: textblock
 #: po4a:134
@@ -1459,6 +1510,8 @@ msgid ""
 "You can also use C<[options]> lines to define options that must be used for "
 "all files, regardless of their type."
 msgstr ""
+"U kunt ook C<[options]>-regels gebruiken om opties te definiëren welke voor "
+"alle bestanden gebruikt moeten worden, ongeacht hun type."
 
 #. type: verbatim
 #: po4a:135
@@ -1467,6 +1520,8 @@ msgid ""
 "  [options] --keep 20 --option nostrip\n"
 "\n"
 msgstr ""
+"  [options] --keep 20 --option nostrip\n"
+"\n"
 
 #. type: textblock
 #: po4a:136
@@ -1474,6 +1529,8 @@ msgid ""
 "As with the command line options, you can abbreviate the parameters passed "
 "in the configuration file:"
 msgstr ""
+"Zoals het geval is voor de commandoregelopties, kunt u de parameters die in "
+"het configuratiebestand meegegeven worden, afkorten:"
 
 #. type: verbatim
 #: po4a:137
@@ -1482,11 +1539,13 @@ msgid ""
 "  [options] -k 20 -o nostrip\n"
 "\n"
 msgstr ""
+"  [options] -k 20 -o nostrip\n"
+"\n"
 
 #. type: =head3
 #: po4a:138
 msgid "Option priorities"
-msgstr ""
+msgstr "Optieprioriteiten"
 
 #. type: textblock
 #: po4a:139
