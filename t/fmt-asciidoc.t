@@ -12,7 +12,7 @@ use Testhelper;
 my @tests;
 
 foreach my $t (
-    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks Lists Footnotes Callouts Comments Tables TablesCells Attributes StyleMacro)
+    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks Lists Footnotes Callouts Comments Tables Attributes StyleMacro)
   )
 {
     push @tests, { 'format' => 'asciidoc', 'input' => "fmt/asciidoc/$t.adoc" };
@@ -23,6 +23,12 @@ push @tests,
     'format' => 'asciidoc',
     'todo'   => 'https://github.com/mquinson/po4a/issues/226',
     'input'  => "fmt/asciidoc/TablesImageText.adoc",
+  },
+  {
+    'format'  => 'asciidoc',
+    'options' => '-o tablecells=1',
+    'input'   => 'fmt/asciidoc/TablesCells.adoc',
+    'doc'     => 'test table cells segmentation',
   },
   {
     'format'  => 'asciidoc',
