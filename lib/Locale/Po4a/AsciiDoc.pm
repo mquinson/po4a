@@ -338,7 +338,7 @@ sub parse {
             and ( $line !~ m/^\|===/ )
             and ( $self->{options}{"tablecells"} ) )
         {
-            # inside a table
+            # inside a table, and we should split per cell
             my $new_line = "";
             my @texts    = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/, $line;
             my @seps     = ($line) =~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/g;
@@ -656,6 +656,7 @@ sub parse {
             my $macroparam  = $4;
 
             # Found a macro
+#            print STDERR "macro: $macroname|type: $macrotype|target: $macrotarget|param: $macroparam\n";
 
             # Don't process include macros in tables, pass them through
             if (    ( $macroname eq "include" )
@@ -717,15 +718,23 @@ sub parse {
             $self->{indent} = "";
             $self->{bullet} = $bullet;
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
-
-            # Break paragraphs on empty lines or lines containing only spaces
-            # Except when we are in a table
+            # When not in table, empty lines or lines containing only spaces do break paragraphs
             print STDERR "Empty new line. Wrap: " . ( defined( $self->{verbatim} ) ? "yes. " : "no. " ) . "\n"
-              if $debug{parse};
+                if $debug{parse};
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
             $wrapped_mode = 1 unless defined( $self->{verbatim} );
             $self->pushline( $line . "\n" );
+
+        } elsif ( ( $line =~ /^\s*$/ ) ) {
+
+            # When in table, empty lines are either added to the current paragraph if it not empty, or pushed verbatim if not
+            if (length $paragraph) {
+                $paragraph .= $line . "\n";
+            } else {
+            $self->pushline( $line . "\n" );
+            }
+            #print STDERR ">>$paragraph<<\n";
         } elsif ( not defined $self->{verbatim}
             and ( defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/ ) )
         {
@@ -797,7 +806,6 @@ sub parse {
         } elsif ( $line =~ /^\|===/ ) {
 
             # This is a table, treat it as a non-wrapped paragraph
-            # TODO: Consider whether this should really try to deconstruct it by cell
             print STDERR "Found Table delimiter\n" if ( $debug{parse} );
             if ( ( $paragraph eq "" ) or ( defined( $self->{type} ) and ( $self->{type} =~ /^delimited block/i ) ) ) {
 
