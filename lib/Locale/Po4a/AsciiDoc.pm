@@ -252,7 +252,7 @@ sub parse_definition_file {
     my $self     = shift;
     my $filename = shift;
     if ( !open( IN, "<", $filename ) ) {
-        die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Can't open %s: %s" ), $filename, $! );
+        die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Cannot open %s: %s" ), $filename, $! );
     }
     while (<IN>) {
         chomp;
@@ -286,7 +286,8 @@ BEGIN {
                 die wrap_mod(
                     "po4a::asciidoc",
                     dgettext(
-                        "po4a", "Detection of two line titles failed at %s\nInstall the Unicode::GCString module!"
+                        "po4a",
+                        "Detection of two line titles failed at %s\nPlease install the Unicode::GCString module."
                     ),
                     shift
                 );
@@ -406,10 +407,16 @@ sub parse {
             $level     =~ s/^(.).*$/$1/;
             $paragraph =~ s/\n$//s;
 
-            if (chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) )
-            {
-                print STDERR "$ref: Two line title type '$level' detected for '$paragraph' but the underlines is not within the tolerance +/- 2 chars of length of title\n"
-            }
+            warn wrap_mod(
+                "$ref",
+                dgettext(
+                    "po4a",
+                    "'%s' seems to be a two-lines title underlined with '%s', but the underlines are too short or too long compared to the title length. "
+                      . "You may want to fix your master document."
+                ),
+                $paragraph,
+                $level
+            ) if ( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) );
 
             my $t = $self->translate(
                 $paragraph,
@@ -665,7 +672,7 @@ sub parse {
             my $macroparam  = $4;
 
             # Found a macro
-#            print STDERR "macro: $macroname|type: $macrotype|target: $macrotarget|param: $macroparam\n";
+            #            print STDERR "macro: $macroname|type: $macrotype|target: $macrotarget|param: $macroparam\n";
 
             # Don't process include macros in tables, pass them through
             if (    ( $macroname eq "include" )
@@ -727,9 +734,10 @@ sub parse {
             $self->{indent} = "";
             $self->{bullet} = $bullet;
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
+
             # When not in table, empty lines or lines containing only spaces do break paragraphs
             print STDERR "Empty new line. Wrap: " . ( defined( $self->{verbatim} ) ? "yes. " : "no. " ) . "\n"
-                if $debug{parse};
+              if $debug{parse};
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
             $wrapped_mode = 1 unless defined( $self->{verbatim} );
@@ -738,12 +746,13 @@ sub parse {
         } elsif ( ( $line =~ /^\s*$/ ) ) {
 
             # When in table, empty lines are either added to the current paragraph if it not empty, or pushed verbatim if not
-            if (length $paragraph) {
+            if ( length $paragraph ) {
                 $paragraph .= $line . "\n";
             } else {
-            $self->pushline( $line . "\n" );
+                $self->pushline( $line . "\n" );
             }
-            #print STDERR ">>$paragraph<<\n";
+
+            # print STDERR ">>$paragraph<<\n";
         } elsif ( not defined $self->{verbatim}
             and ( defined $self->{bullet} and $line =~ m/^(\s+)(.*)$/ ) )
         {
@@ -804,7 +813,6 @@ sub parse {
             && ( $line =~ m/^(\s*)((?:[-*o+]+|([0-9]+[.\)])|\([0-9]+\))\s+)/s ) )
         {
             # If the next line starts with a bullet, process this immediately and setup the next line
-            print STDERR "IM HERE\n";
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
             $wrapped_mode = 0;
@@ -856,9 +864,15 @@ sub parse {
 
                 # Second line of an item block is not indented. It is unindented
                 # (and allowed) additional text or a new list item.
-                print STDERR "$ref: It seems that you are adding unindented content to an item.\n"
-                  . "The standard allows this, but you may still want to change your document\n"
-                  . "to use indented text to provide better visual clues to writers.\n";
+                warn wrap_mod(
+                    "$ref",
+                    dgettext(
+                        "po4a",
+                        "It seems that you are adding unindented content to an item. "
+                          . "The standard allows this, but you may still want to change your document "
+                          . "to use indented text to provide better visual clues to writers."
+                    )
+                );
             } else {
                 undef $self->{bullet};
                 undef $self->{indent};
