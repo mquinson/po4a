@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+# http://asciidoc.org/userguide.html
+
 =encoding UTF-8
 
 =head1 NAME
