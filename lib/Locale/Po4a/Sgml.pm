@@ -404,14 +404,13 @@ sub parse_file {
         );
         print $tmpfh $origfile;
         close $tmpfh
-          or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Can't close tempfile: %s" ), $! );
+          or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot close tempfile: %s" ), $! );
         if ( system("onsgmls -p < $tmpfile") ) {
             unlink($tmpfile);
             die wrap_mod(
                 "po4a::sgml",
                 dgettext(
-                    "po4a",
-                    "Error while running onsgmls -p.  " . "Please check if onsgmls and the " . "DTD are installed."
+                    "po4a", "Error while running onsgmls -p.  Please check if onsgmls and the DTD are installed."
                 )
             );
         }
@@ -607,7 +606,7 @@ sub parse_file {
         my $pre     = scalar @begin;
         my $len     = ( scalar @ignored ) - 1;
         $pre++ if ( $begin =~ /\n$/s );
-        $len++ if ( $end =~ /^\n/s );
+        $len++ if ( $end   =~ /^\n/s );
 
         # remove the references of the ignored lines
         splice @refs, $pre + 1, $len - 1;
@@ -668,7 +667,7 @@ sub parse_file {
             } else {
                 $prolog = $begin . $end;
                 ( -e $filename && open IN, "<$filename" )
-                  || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Can't open %s (content of entity %s%s;): %s" ),
+                  || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot open %s (content of entity %s%s;): %s" ),
                     $filename, '%', $key, $! );
                 local $/ = undef;
                 $prologentincl{$key} = <IN>;
@@ -752,7 +751,7 @@ sub parse_file {
 
             # Preload the content of the entity
             ( -e $filename && open IN, "<$filename" )
-              || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Can't open %s (content of entity %s%s;): %s" ),
+              || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot open %s (content of entity %s%s;): %s" ),
                 $filename, '&', $key, $! );
             local $/ = undef;
             $entincl{$key}{'content'} = <IN>;
@@ -857,12 +856,12 @@ sub parse_file {
         UNLINK => 0
     );
     print $tmpfh $origfile;
-    close $tmpfh or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Can't close tempfile: %s" ), $! );
+    close $tmpfh or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot close tempfile: %s" ), $! );
 
     my $cmd = "onsgmls -l -E 0 -wno-valid < $tmpfile" . ( $debug{'onsgmls'} ? "" : " 2>/dev/null" ) . " |";
     print STDERR "CMD=$cmd\n" if ( $debug{'generic'} or $debug{'onsgmls'} );
 
-    open( IN, $cmd ) || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Can't run onsgmls: %s" ), $! );
+    open( IN, $cmd ) || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot run onsgmls: %s" ), $! );
 
     # The kind of tags
     my ( %translate, %empty, %verbatim, %indent, %exist, %attribute, %qualify );
@@ -918,7 +917,7 @@ sub parse_file {
     # and push("<!ENTITY myentity \"".$self->translate("definition_of_my_entity")
     if ( $prolog =~ m/(.*?\[)(.*)(\]>)/s ) {
         warn "Pre=~~$1~~;Post=~~$3~~\n" if ( $debug{'entities'} );
-        $self->pushline( $1 . "\n" ) if ( length($1) );
+        $self->pushline( $1 . "\n" )    if ( length($1) );
         $prolog = $2;
         my ($post) = $3;
         while ( $prolog =~ m/^(.*?)<!ENTITY\s+(\S*)\s+"([^"]*)"\s*>(.*)$/is ) {    #" ){
@@ -931,7 +930,7 @@ sub parse_file {
         $self->pushline( $prolog . "\n" ) if ( length($prolog) );
     } else {
         warn "No entity declaration detected in ~~$prolog~~...\n" if ( $debug{'entities'} );
-        $self->pushline($prolog) if length($prolog);
+        $self->pushline($prolog)                                  if length($prolog);
     }
 
     # The parse object.

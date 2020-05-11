@@ -116,7 +116,7 @@ sub shiftline {
                 next if ($tmp_in_comment);
 
                 open( my $in, $entities{$k} )
-                  or croak wrap_mod( "po4a::xml::shiftline", dgettext( "po4a", "%s: Can't read from %s: %s" ),
+                  or croak wrap_mod( "po4a::xml::shiftline", dgettext( "po4a", "%s: Cannot read from %s: %s" ),
                     $ref, $entities{$k}, $! );
                 while ( defined( my $textline = <$in> ) ) {
                     $linenum++;
@@ -124,7 +124,8 @@ sub shiftline {
                     push @textentries, ( $textline, $textref );
                 }
                 close $in
-                  or croak wrap_mod( "po4a::xml::shiftline", dgettext( "po4a", "%s: Can't close %s after reading: %s" ),
+                  or
+                  croak wrap_mod( "po4a::xml::shiftline", dgettext( "po4a", "%s: Cannot close %s after reading: %s" ),
                     $ref, $entities{$k}, $! );
 
                 push @textentries, ( $after, $ref );
@@ -633,7 +634,7 @@ sub initialize {
     # by this module or sub-module (unless specified in an option)
     $self->{nodefault} = ();
 
-    print wrap_mod( "po4a::xml::initialize", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 
     #  Clear cache
@@ -1307,7 +1308,7 @@ sub treat_tag {
 
     # Calling this tag type's specific handling (translation of attributes...)
     my $line = &{ $tag_types[$type]->{f_translate} }( $self, @lines );
-    print wrap_mod( "po4a::xml::treat_tag", dgettext( "po4a", "%s: type=%s <%s%s%s%s%s>" ),
+    print wrap_mod( "po4a::xml::treat_tag", "%s: type=%s <%s%s%s%s%s>",
         $lines[1], $type, $match1, $space1, $line, $space2, $match2 )
       if $self->{options}{'debug'};
     $self->pushline( "<" . $match1 . $space1 . $line . $space2 . $match2 . ">" );
@@ -1664,7 +1665,7 @@ sub treat_content {
             # if tag is <!--# ... --> or <!-- ... -->, remove this tag from the
             # input stream and save its content to @comments for use by
             # translate_paragraph.
-            print wrap_mod( "po4a::xml::treat_content", dgettext( "po4a", "%s: type='%s'" ), $paragraph[1], $type )
+            print wrap_mod( "po4a::xml::treat_content", "%s: type='%s'", $paragraph[1], $type )
               if $self->{options}{'debug'};
             ( $eof, @text ) = $self->extract_tag( $type, 1 );
 
@@ -1966,7 +1967,7 @@ sub translate_paragraph {
             # This tag should be translated
             print wrap_mod(
                 "po4a::xml::translate_paragraph",
-                dgettext( "po4a", "%s: path='%s', translation option='%s'" ),
+                "%s: path='%s', translation option='%s'",
                 $paragraph[1], $self->get_path, $translate
             ) if $self->{options}{'debug'};
             $self->pushline(
@@ -1985,7 +1986,7 @@ sub translate_paragraph {
             # Inform that this tag isn't translated in debug mode
             print wrap_mod(
                 "po4a::xml::translate_paragraph",
-                dgettext( "po4a", "%s: path='%s', translation option='%s' (no translation)" ),
+                "%s: path='%s', translation option='%s' (no translation)",
                 $paragraph[1], $self->get_path, $translate
             ) if $self->{options}{'debug'};
             $self->pushline( $self->recode_skipped_text($para) );
@@ -2256,7 +2257,7 @@ sub treat_options {
                     }
                 }
                 print "\n";
-                print wrap_mod( "po4a::xml::treat_options", dgettext( "po4a", "%s: translation option='%s' (valid)" ),
+                print wrap_mod( "po4a::xml::treat_options", "%s: translation option='%s' (valid)",
                     $tag, $self->get_translate_options($tag) );
             }
         }

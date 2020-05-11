@@ -106,7 +106,7 @@ use vars qw(@ISA);
 
 sub tag_extract_SSI {
     my ( $self, $remove ) = ( shift, shift );
-    my ( $eof, @tag ) = $self->get_string_until(
+    my ( $eof,  @tag )    = $self->get_string_until(
         "-->",
         {
             include  => 1,
@@ -137,14 +137,14 @@ sub tag_extract_SSI {
         my @include;
 
         open( my $in, $includefile )
-          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Can't read from %s: %s" ), $includefile, $! );
+          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Cannot read from %s: %s" ), $includefile, $! );
         while ( defined( my $includeline = <$in> ) ) {
             $linenum++;
             my $includeref = $includefile . ":$linenum";
             push @include, ( $includeline, $includeref );
         }
         close $in
-          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Can't close %s after reading: %s" ), $includefile, $! );
+          or croak wrap_mod( "po4a::xml", dgettext( "po4a", "Cannot close %s after reading: %s" ), $includefile, $! );
 
         while (@include) {
             my ( $ir, $il ) = ( pop @include, pop @include );
@@ -226,7 +226,7 @@ sub initialize {
 
     $self->{options}{'optionalclosingtag'} = 1;
 
-    print wrap_mod( "po4a::Xhtml", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 
     if ( defined $self->{options}{'includessi'}

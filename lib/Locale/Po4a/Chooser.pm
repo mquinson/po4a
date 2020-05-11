@@ -22,7 +22,7 @@ sub new {
     my ($module)  = shift;
     my (%options) = @_;
 
-    die wrap_mod( "po4a::chooser", gettext("Need to provide a module name") )
+    die wrap_mod( "po4a::chooser", gettext("Please provide a module name") )
       unless defined $module;
 
     my $modname;

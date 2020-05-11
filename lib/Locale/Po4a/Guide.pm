@@ -148,6 +148,6 @@ sub initialize {
         <sup>
         <uri>
         <var>';
-    print wrap_mod( "po4a::guide", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 }

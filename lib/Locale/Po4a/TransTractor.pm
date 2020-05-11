@@ -445,7 +445,7 @@ sub read() {
     my $linenum = 0;
 
     open INPUT, "<$filename"
-      or croak wrap_msg( dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
+      or croak wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <INPUT> ) ) {
         $linenum++;
         my $ref = "$refname:$linenum";
@@ -470,7 +470,7 @@ sub read() {
         }
     }
     close INPUT
-      or croak wrap_msg( dgettext( "po4a", "Can't close %s after reading: %s" ), $filename, $! );
+      or croak wrap_msg( dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
 
 }
 
@@ -487,7 +487,7 @@ This translated document data are provided by:
 sub write {
     my $self     = shift;
     my $filename = shift
-      or croak wrap_msg( dgettext( "po4a", "Can't write to a file without filename" ) );
+      or croak wrap_msg( dgettext( "po4a", "Cannot write to a file without filename" ) );
 
     my $fh;
     if ( $filename eq '-' ) {
@@ -503,14 +503,14 @@ sub write {
               if ( length($dir) && !-e $dir );
         }
         open $fh, ">$filename"
-          or croak wrap_msg( dgettext( "po4a", "Can't write to %s: %s" ), $filename, $! );
+          or croak wrap_msg( dgettext( "po4a", "Cannot write to %s: %s" ), $filename, $! );
     }
 
     map { print $fh $_ } $self->docheader();
     map { print $fh $_ } @{ $self->{TT}{doc_out} };
 
     if ( $filename ne '-' ) {
-        close $fh or croak wrap_msg( dgettext( "po4a", "Can't close %s after writing: %s" ), $filename, $! );
+        close $fh or croak wrap_msg( dgettext( "po4a", "Cannot close %s after writing: %s" ), $filename, $! );
     }
 
 }
@@ -598,12 +598,12 @@ sub addendum_parse {
     my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = ( 1, "", "", "", "", "" );
 
     unless ( open( INS, "<$filename" ) ) {
-        warn wrap_msg( dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
+        warn wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
         goto END_PARSE_ADDFILE;
     }
 
     unless ( defined( $header = <INS> ) && $header ) {
-        warn wrap_msg( dgettext( "po4a", "Can't read po4a header from %s." ), $filename );
+        warn wrap_msg( dgettext( "po4a", "Cannot read po4a header from %s." ), $filename );
         goto END_PARSE_ADDFILE;
     }
 
@@ -676,7 +676,7 @@ sub addendum {
     print STDERR wrap_mod( "po4a::transtractor::addendum", dgettext( "po4a", "Apply addendum: %s" ), $filename )
       if $self->debug();
     unless ($filename) {
-        warn wrap_msg( dgettext( "po4a", "Can't apply addendum when not given the filename" ) );
+        warn wrap_msg( dgettext( "po4a", "Cannot apply addendum when not given the filename" ) );
         return 0;
     }
     die wrap_msg( dgettext( "po4a", "Addendum %s does not exist." ), $filename )

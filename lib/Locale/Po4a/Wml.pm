@@ -77,7 +77,7 @@ sub initialize {
 
     $self->SUPER::initialize(%options);
 
-    print wrap_mod( "po4a::wml", dgettext( "po4a", "Call treat_options" ) ) if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 }
 
@@ -90,7 +90,7 @@ sub read {
         SUFFIX => ".xml",
         OPEN   => 0,
         UNLINK => 0
-    ) or die wrap_msg( gettext("Can't create a temporary XML file: %s"), $! );
+    ) or die wrap_msg( gettext("Cannot create a temporary XML file: %s"), $! );
     my $file;
     open FILEIN, "$filename" or die "Cannot read $filename: $!\n";
     {

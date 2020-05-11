@@ -337,7 +337,7 @@ sub read {
         $fh = *STDIN;
     } else {
         open $fh, "<$filename"
-          or croak wrap_mod( "po4a::po", dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
+          or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     }
 
     ## Read paragraphs line-by-line
@@ -349,7 +349,7 @@ sub read {
 
     #    close INPUT
     #        or croak (sprintf(dgettext("po4a",
-    #                                   "Can't close %s after reading: %s"),
+    #                                   "Cannot close %s after reading: %s"),
     #                          $filename,$!)."\n");
 
     my $linenum = 0;
@@ -487,7 +487,7 @@ Writes the current catalog to the given file.
 sub write {
     my $self     = shift;
     my $filename = shift
-      or croak dgettext( "po4a", "Can't write to a file without filename" ) . "\n";
+      or croak dgettext( "po4a", "Cannot write to a file without filename" ) . "\n";
 
     my $fh;
     if ( $filename eq '-' ) {
@@ -504,7 +504,7 @@ sub write {
               if ( length($dir) && !-e $dir );
         }
         open $fh, ">$filename"
-          or croak wrap_mod( "po4a::po", dgettext( "po4a", "Can't write to %s: %s" ), $filename, $! );
+          or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot write to %s: %s" ), $filename, $! );
     }
 
     print $fh "" . format_comment( $self->{header_comment}, "" )
@@ -577,7 +577,7 @@ sub write {
                       "msgstr[1] " . quote_text( $self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
                 }
             } else {
-                die wrap_msg( dgettext( "po4a", "Can't write PO files with more than two plural forms." ) );
+                die wrap_msg( dgettext( "po4a", "Cannot write PO files with more than two plural forms." ) );
             }
         } else {
             if ( $self->get_charset =~ /^utf-8$/i ) {
@@ -599,7 +599,7 @@ sub write {
     #    if ($filename ne '-') {
     #        close $fh
     #            or croak (sprintf(dgettext("po4a",
-    #                                       "Can't close %s after writing: %s\n"),
+    #                                       "Cannot close %s after writing: %s\n"),
     #                              $filename,$!));
     #    }
 }
@@ -622,25 +622,25 @@ sub move_po_if_needed {
         $diff = qx(diff -q $diff_ignore $old_po $new_po);
         if ( $diff eq "" ) {
             unlink $new_po
-              or die wrap_msg( dgettext( "po4a", "Can't unlink %s: %s." ), $new_po, $! );
+              or die wrap_msg( dgettext( "po4a", "Cannot unlink %s: %s." ), $new_po, $! );
 
             # touch the old PO
             my ( $atime, $mtime ) = ( time, time );
             utime $atime, $mtime, $old_po;
         } else {
             move $new_po, $old_po
-              or die wrap_msg( dgettext( "po4a", "Can't move %s to %s: %s." ), $new_po, $old_po, $! );
+              or die wrap_msg( dgettext( "po4a", "Cannot move %s to %s: %s." ), $new_po, $old_po, $! );
         }
     } else {
         move $new_po, $old_po
-          or die wrap_msg( dgettext( "po4a", "Can't move %s to %s: %s." ), $new_po, $old_po, $! );
+          or die wrap_msg( dgettext( "po4a", "Cannot move %s to %s: %s." ), $new_po, $old_po, $! );
     }
 }
 
 sub write_if_needed {
     my $self     = shift;
     my $filename = shift
-      or croak dgettext( "po4a", "Can't write to a file without filename" ) . "\n";
+      or croak dgettext( "po4a", "Cannot write to a file without filename" ) . "\n";
 
     if ( -e $filename ) {
         my ($tmp_filename);
@@ -1018,7 +1018,7 @@ sub filter {
     print STDERR "CODE = $code\n"
       if $debug{'filter'};
     eval $code;
-    die wrap_mod( "po4a::po", dgettext( "po4a", "Eval failure: %s" ), $@ )
+    die wrap_mod( "po4a::po", dgettext( "po4a", "Evaluating the provided filter failed: %s" ), $@ )
       if $@;
 
     for ( my $cpt = (0) ; $cpt < $self->count_entries() ; $cpt++ ) {

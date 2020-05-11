@@ -953,12 +953,12 @@ Transtractor's read.
 sub read_file {
     my $self     = shift;
     my $filename = shift
-      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't read from file without having a filename" ) );
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from file without having a filename" ) );
     my $linenum = 0;
     my @entries = ();
 
     open( my $in, $filename )
-      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't read from %s: %s" ), $filename, $! );
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <$in> ) ) {
         $linenum++;
         my $ref = "$filename:$linenum";
@@ -996,7 +996,7 @@ sub read_file {
                 my $newfilepath = <KPSEA>;
 
                 if ( $newfilename ne "" and $newfilepath eq "" ) {
-                    die wrap_mod( "po4a::tex", dgettext( "po4a", "Can't find %s with kpsewhich" ), $filename );
+                    die wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot find %s with kpsewhich" ), $filename );
                 }
 
                 push @entries, read_file( $self, $newfilepath );
@@ -1027,7 +1027,7 @@ sub read_file {
         }
     }
     close $in
-      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Can't close %s after reading: %s" ), $filename, $! );
+      or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
 
     return @entries;
 }
@@ -1061,7 +1061,7 @@ sub parse_definition_file {
     }
 
     if ( !open( IN, "<$filename" ) ) {
-        warn wrap_mod( "po4a::tex", dgettext( "po4a", "Can't open %s: %s" ), $filename, $! );
+        warn wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot open %s: %s" ), $filename, $! );
         if ( defined $only_try && $only_try ) {
             return;
         } else {
@@ -1105,8 +1105,7 @@ sub parse_definition_line {
                 $self->{ref},
                 "po4a::tex",
                 dgettext(
-                    "po4a",
-                    "You are using the old " . "definitions format (%s).  " . "Please update this definition line."
+                    "po4a", "You are using the old definitions format (%s).  Please update this definition line."
                 ),
                 $_[1]
             );

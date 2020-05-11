@@ -2051,7 +2051,7 @@ sub initialize {
         lang
         xml:lang';
 
-    print wrap_mod( "po4a::docbook::initialize", dgettext( "po4a", "Call treat_options" ) )
+    print "Call treat_options\n"
       if $self->{options}{'debug'};
     $self->treat_options;
 }
