@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-05-10 16:38+0200\n"
-"PO-Revision-Date: 2020-05-10 14:28+0000\n"
-"Last-Translator: Andrei Stepanov <adem4ik@gmail.com>\n"
+"PO-Revision-Date: 2020-05-11 12:33+0000\n"
+"Last-Translator: Golubev Alexander <fatzer2@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a-doc/ru/"
 ">\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.1-dev\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
@@ -109,6 +109,9 @@ msgid ""
 "translation of a man page will be rendered to the end users, without "
 "recompiling and reinstalling the whole project."
 msgstr ""
+"Переводчики могут посмотреть, как в итоге будет выглядеть их перевод man-"
+"страницы, с помощью <command>po4a-display-man</command>. При этом "
+"перекомпилировать или переустанавливать весь проект не потребуется."
 
 #. type: Content of: <refentry><refsect1><para>
 #: share/doc/po4a-display-man.xml:13
@@ -337,6 +340,11 @@ msgid ""
 "decouples the translation of content from its document structure.  Please "
 "refer to the page L<po4a(7)> for a gentle introduction to this project."
 msgstr ""
+"po4a (PO for anything, PO для всего) упрощает поддержку переводов "
+"документации, используя обычные инструменты gettext. Основная идея po4a "
+"состоит в том, что оно отделяет перевод содержимого от структуры документа. "
+"Пошаговое вводное руководство по работе с данным проектом можно посмотреть "
+"на странице L<po4a(7)>."
 
 #. type: textblock
 #: po4a:7
@@ -347,6 +355,11 @@ msgid ""
 "of the translatable strings in the document in a form that eases the work of "
 "translators."
 msgstr ""
+"Если вы запускаете программу B<po4a> в первый раз, когда у вас есть только "
+"файл настроек и сами документы, которые вы собираетесь переводить ("
+"называемые мастер-документами), то она создаёт POT-файл (также называемый «"
+"шаблон перевода»), который содержит все переводимые строки документа в "
+"формате, который облегчает труд переводчиков."
 
 #. type: textblock
 #: po4a:8
@@ -356,6 +369,11 @@ msgid ""
 "integrated in an online localization platform such as B<weblate> or "
 "B<pootle>.  The translation result is a set of PO files, one per language."
 msgstr ""
+"Такие POT-файлы можно переводить с помощью специальных редакторов, как, "
+"например, B<GNOME Translation Editor>, B<Lokalize> из KDE или B<poedit>, или "
+"же процесс их перевода можно интегрировать в онлайн-платформу локализации, "
+"как B<weblate> или B<pootle>. Результат перевода — это набор PO-файлов; по "
+"одному для каждого языка."
 
 #. type: textblock
 #: po4a:9
@@ -365,6 +383,9 @@ msgid ""
 "translation (found in the PO files) into the structure of the original "
 "master document."
 msgstr ""
+"Если вы запускаете программу B<po4a>, когда у вас есть и мастер-документ, и "
+"PO-файлы, то она создаёт переведённые документы, вставляя содержимое "
+"переводов (из PO-файлов) в структуру оригинального мастер-документа."
 
 #. type: textblock
 #: po4a:10
@@ -376,6 +397,12 @@ msgid ""
 "English (for the new or modified paragraphs) and the target language (for "
 "paragraphs where translation is already in the PO file)."
 msgstr ""
+"Если мастер-документы будут изменены в процессе работы, po4a обновит PO и "
+"POT-файлы в соответствии с изменениями, дабы переводчики без проблем "
+"заметили эти изменения и обновили свои переводы. В зависимости от ваших "
+"настроек, po4a или отбросит частично переведённые документы, или создаст "
+"документ, сочетая текст на Английском (для новых или изменённых абзацев) и "
+"на целевом языке перевода (для абзацев уже присутствующих в PO-файле)."
 
 #. type: textblock
 #: po4a:11
@@ -386,6 +413,12 @@ msgid ""
 "translators, while showing \"translations\" that are too incomplete may be "
 "troubling for the end users."
 msgstr ""
+"По умолчанию переведённые документы создаются, когда переведено, как "
+"минимум, 80% содержимого (см. описание параметра I<--keep> ниже). Если вы "
+"будете отбрасывать весь перевод в случае, когда он завершён не на все 100%, "
+"то это будет обескураживающим фактором для переводчиков; с другой стороны, "
+"вы можете вызвать у конечных пользователей затруднения, предоставляя им "
+"«переводы», которые слишком далеки от завершения."
 
 #. type: =head2
 #: po4a:12
@@ -434,6 +467,14 @@ msgid ""
 "L<po4a(7)>). It is highly recommended to use the B<po4a> program in your "
 "build process."
 msgstr ""
+"Мастер-документы создаются авторами, пишущими документацию. Любые изменения "
+"po4a автоматически отображает в PO-файлах, которые затем обновляются "
+"переводчиками. Все изменения в PO-файлах (как сделанные po4a, так и вручную) "
+"автоматически отображаются в переведённых документах. Вы можете сымитировать "
+"это поведение с помощью сценариев L<po4a-updatepo(1)> и L<po4a-translate(1)>"
+", вызывая их из make-файлов, но это монотонное и докучливое занятие (см. "
+"L<po4a(7)>). Настоятельно рекомендуется, вместо этого использовать программу "
+"B<po4a>."
 
 #. type: =item
 #: po4a:16 po4a-translate:28
@@ -799,6 +840,10 @@ msgid ""
 "directory. Output files are written to I<destdir> if specified, or to the "
 "current directory."
 msgstr ""
+"Если заданы оба параметра I<destdir> и I<srcdir>, то po4a будет искать "
+"входные файлы в следующих каталогах (в порядке перечисления): I<destdir>, "
+"I<srcdir>, текущий каталог. Выходные файлы будут записываться в I<destdir>, "
+"если этот параметр задан, иначе — в текущий каталог."
 
 #. type: =item
 #: po4a:66
@@ -817,7 +862,7 @@ msgstr ""
 #. type: =head2
 #: po4a:68
 msgid "Options modifying the POT header"
-msgstr "Параметры изменения заголовка POT"
+msgstr "Параметры, изменяющие заголовок POT-файла"
 
 #. type: =item
 #: po4a:69 lib/Locale/Po4a/Po.pm:14
@@ -841,7 +886,7 @@ msgstr ""
 #. type: =item
 #: po4a:71 po4a-translate:45 po4a-updatepo:41 lib/Locale/Po4a/Po.pm:16
 msgid "B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)"
-msgstr ""
+msgstr "B<--wrap-po> B<no>|B<newlines>|I<число> (по умолчанию: 76)"
 
 #. type: textblock
 #: po4a:72 po4a-translate:46 po4a-updatepo:42 lib/Locale/Po4a/Po.pm:17
@@ -850,6 +895,11 @@ msgid ""
 "either files that are nicely wrapped but could lead to git conflicts, or "
 "files that are easier to handle automatically, but harder to read for humans."
 msgstr ""
+"Задаёт, как должны переносится строки в PO-файле. С помощью этого параметра "
+"можно выбрать или чтобы в файлах были удобно расставлены переносы строк, "
+"хотя это и может привести к конфликтам в git, или чтобы файлы больше "
+"подходили для автоматической обработки, хотя это и снизит удобство чтения "
+"оных людьми."
 
 #. type: textblock
 #: po4a:73 lib/Locale/Po4a/Po.pm:18
@@ -862,6 +912,15 @@ msgid ""
 "not wrap the po file at all.  The reference comments are always wrapped by "
 "the gettext tools that we use internally."
 msgstr ""
+"Исторически, gettext переносил строки в PO-файлах на 77-м столбце по "
+"косметическим соображениям. Этот параметр задаёт поведение po4a. Если в нём "
+"указано число, po4a будет переносить строки в PO-файле после данного столбца "
+"и после символов перевода строки в содержимом. Если указано B<newlines>, то "
+"po4a будет разделять msgid и msgstr на строки только в местах перевода строк "
+"в самом их содержимом. Если же указано B<no>, то po4a вообще не будет "
+"переносить строки в PO-файле. Строки комментариев со ссылками на "
+"местоположение строки в исходном документе всегда разбиваются на строки по "
+"усмотрению инструментов gettext, которые используются внутри po4a."
 
 #. type: textblock
 #: po4a:74 po4a-translate:48 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:19
@@ -869,6 +928,9 @@ msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "ie on how newlines are added to the content of these strings."
 msgstr ""
+"Замечание: этот параметр ни как не влияет на то, как будут расставлены "
+"переносы строк внутри самих msgid и msgstr, т.е. на то, как переносы строк "
+"будут добавляться к их содержимому."
 
 #. type: =item
 #: po4a:75
@@ -938,7 +1000,7 @@ msgstr ""
 #. type: =head2
 #: po4a:85
 msgid "Options to modify the PO files"
-msgstr ""
+msgstr "Параметры, изменяющие PO-файлы"
 
 #. type: =item
 #: po4a:86 po4a-updatepo:26
@@ -2055,8 +2117,8 @@ msgstr ""
 "извлечённой строки. Это и помогает определить рассинхрон файлов во время "
 "геттекстизации. Например, если у файлов будет следующая структура, очень "
 "маловероятно, что 4-я строка в переводе (типа «глава») является переводом 4-"
-"й строки в оригинале (типа «параграф»). Скорее новый параграф был добавлен в "
-"оригинал или два параграфа оригинала были объединены в переводе."
+"й строки в оригинале (типа «параграф»). Скорее в оригинал был добавлен новый "
+"параграф или два параграфа оригинала были объединены в переводе."
 
 #. type: verbatim
 #: po4a-gettextize:47
@@ -2140,14 +2202,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:53
-#, fuzzy
-#| msgid ""
-#| "Even when things go wrong, gettextization often remains faster than "
-#| "translating everything again. I was able to gettextize the existing "
-#| "French translation of the whole Perl documentation in one day, even "
-#| "though the structure of many documents were desynchronized. That was more "
-#| "than two megabytes of original text (2 millions of signs): restarting the "
-#| "translation from scratch would have required several months of work."
 msgid ""
 "Even when things go wrong, gettextization often remains faster than "
 "translating everything again. I was able to gettextize the existing French "
@@ -2274,12 +2328,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:64
-#, fuzzy
-#| msgid ""
-#| "Sometimes, there is a desynchronization between the files, and the "
-#| "translation is attached to the wrong original paragraph. It is the sign "
-#| "that the real problem was before in the files. Check F<gettextization."
-#| "failed.po> to see when the desynchronization begins, and fix it there."
 msgid ""
 "Sometimes, the desynchronization message seems odd because the translation "
 "is attached to the wrong original paragraph. It is the sign of an undetected "
@@ -2287,21 +2335,13 @@ msgid ""
 "by inspecting F<gettextization.failed.po>, and fix the problem where it "
 "really is."
 msgstr ""
-"Иногда происходит рассинхронизация между файлами, и перевод сопоставляется "
-"неверному абзацу оригинала. Это признак того, что настоящая проблема "
-"находится где-то выше. Посмотрите в F<gettextization.failed.po>, в каком "
-"месте в ваших файлах начинается рассинхронизация, и поправьте их."
+"Иногда сообщения о рассинхронизации кажутся странными так как перевод "
+"привязан не к тома абзац оригинала. Это признак того, что проблема где-то "
+"выше не была обнаружена. Ищите истинную точку рассинхронизации, исследуя "
+"содержимое F<gettextization.failed.po> и исправьте проблему в этом месте."
 
 #. type: textblock
 #: po4a-gettextize:65
-#, fuzzy
-#| msgid ""
-#| "Sometimes, you get the strong feeling that po4a ate some parts of the "
-#| "text, either the original or the translation. F<gettextization.failed.po> "
-#| "indicates that both of them were gently matching, and then the "
-#| "gettextization fails because it tried to match one paragraph with the one "
-#| "after (or before) the right one, as if the right one disappeared. Curse "
-#| "po4a as I did when it first happened to me. Generously."
 msgid ""
 "In some unfortunate settings, you will get the feeling that po4a ate some "
 "parts of the text, either the original or the translation. F<gettextization."
@@ -2311,13 +2351,13 @@ msgid ""
 "should, but with the N+2 paragraph. Just as if the N+1 paragraph that you "
 "see in the document simply disappeared from the file during the process."
 msgstr ""
-"Иногда у вас может появиться стойкое ощущение, что po4a съедает некоторые "
-"части текста, либо оригинала, либо перевода. F<gettextization.failed.po> "
-"указывает на то, что оба они правильно сопоставлены, а затем геттекстизация "
-"проваливается, потому что po4a пытается сопоставить абзац с тем что идёт "
-"после (до) верного, будто бы верный куда-то исчез. В этом случае грязно "
-"выругайтесь в адрес po4a, как это сделал я, когда это впервые случилось со "
-"мной."
+"В некоторых неблагоприятных обстоятельствах, у вас может появиться ощущение, "
+"что po4a съедает некоторые части текста, либо оригинала, либо перевода. "
+"F<gettextization.failed.po> указывает на то, что оба файла были сопоставлены "
+"правильно вплоть до абзаца N. Но затем происходит (неудачная) попытка "
+"сопоставить абзац N+1 оригинального файла не с абзацем N+1 перевода, как "
+"следовало бы, а с абзацем N+2. Так, как будто бы, абзац N+1, который вы "
+"видите в переводе, просто испарился бы."
 
 #. type: textblock
 #: po4a-gettextize:66
@@ -2342,13 +2382,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:68
-#, fuzzy
-#| msgid ""
-#| "So, when the same paragraph appears twice in the original but both are "
-#| "not translated in the exact same way each time, you will get the feeling "
-#| "that a paragraph of the original disappeared. Just kill the new "
-#| "translation. If you prefer to kill the first translation instead when the "
-#| "second one was actually better, replace the first one with the second."
 msgid ""
 "To the opposite, if the same paragraph appearing twice in the original "
 "document is not translated in the exact same way at both locations, you will "
@@ -2356,11 +2389,11 @@ msgid ""
 "Just copy the best translation over the other one in the translated document "
 "to fix the problem."
 msgstr ""
-"Таким образом, если один и тот же параграф встречается несколько раз в "
-"оригинале, но переводится по-разному в разных случаях, у вас создаётся "
-"впечатление, будто второе появление этого абзаца проглатывается в оригинале. "
-"Просто удалите второй перевод. Если вы предпочтёте удалить первый, так как "
-"считаете, что второй лучше, то просто замените им первый."
+"Напротив, если один и тот же абзац встречается дважды в оригинальном "
+"документе, но переводится не в точности одинаково в разных случаях, у вас "
+"создаётся впечатление, будто один из параграфов оригинала просто пропадает. "
+"Чтобы исправить проблему, просто скопируйте выберете лучший вариант перевода "
+"и скопируйте его вместо второго в переведённом документе."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -3032,26 +3065,17 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:7
-#, fuzzy
-#| msgid ""
-#| "I like the idea of open-source software, making it possible for everybody "
-#| "to access software and its source code. But being French, I'm well aware "
-#| "that the licensing is not the only restriction to the openness of "
-#| "software: non-translated free software is useless for non-English "
-#| "speakers, and we still have some work to make it available to really "
-#| "everybody out there."
 msgid ""
 "The philosophy of Free Software is to make the technology truly available to "
 "everyone. But licensing is not the only consideration: untranslated free "
 "software is useless for non-English speakers. Therefore, we still have some "
 "work to do to make software available to everybody."
 msgstr ""
-"Мне нравится идея программного обеспечения (ПО) с открытым исходным кодом, "
-"которое предоставляет доступ всем как к ПО, так и к собственному исходному "
-"коду. Но как француз я не по наслышке знаю, что лицензия — это не "
-"единственное ограничение открытости ПО: непереведённое свободное ПО "
-"бесполезно для неанглоговорящих пользователей. И нам предстоит ещё кое-какая "
-"работа, чтобы сделать его доступным по-настоящему для всех."
+"Философия свободного программного обеспечения (ПО) состоит в том, чтобы "
+"сделать технологии по-настоящему доступными всем. Но лицензирование — это не "
+"единственное, о чём стоит задуматься: непереведённое свободное ПО бесполезно "
+"для неанглоговорящих пользователей. И нам предстоит ещё кое-какая работа, "
+"чтобы сделать его доступным по-настоящему для всех."
 
 #. type: textblock
 #: doc/po4a.7.pod:8
@@ -3064,13 +3088,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:9
-#, fuzzy
-#| msgid ""
-#| "Actually, open-source software themselves benefit of a rather decent "
-#| "level of translation, thanks to the wonderful gettext tool suite. It is "
-#| "able to extract the strings to translate from the program, present a "
-#| "uniform format to translators, and then use the result of their works at "
-#| "run time to display translated messages to the user."
 msgid ""
 "Thankfully, Open Source software is actually very well translated using the "
 "gettext tool suite. These tools are used to to extract the strings to "
@@ -3080,11 +3097,14 @@ msgid ""
 "these PO files. The result is then used by gettext at run time to display "
 "translated messages to the end users."
 msgstr ""
-"Вообще говоря, у открытого ПО достаточно хорошие переводы, спасибо за это "
-"великолепным инструментам gettext. Они извлекают строки для перевода из "
-"программ, предоставляют переводчикам единообразный формат и в итоге, "
-"используя результат их работы, отображают переведённые сообщения во время "
-"исполнения."
+"К счастью, у ПО с открытым исходным кодом достаточно хорошие переводы, "
+"которые удобно поддерживать благодаря инструментам из пакета gettext. Они "
+"извлекают строки для перевода из программ, и предоставляют их переводчикам в "
+"единообразном формате (называемом PO-файлы, или translation catalogs, "
+"каталоги переводов).Целая экосистема различных инструментов выросла вокруг "
+"оных, дабы помочь переводчикам собственно переводить эти PO-файлы. Результат "
+"их работы затем используется библиотекой gettext во время исполнения "
+"программы, чтобы отображать переведённые сообщения пользователю."
 
 #. type: textblock
 #: doc/po4a.7.pod:10
@@ -3185,9 +3205,7 @@ msgid ""
 msgstr ""
 "Старый добрый формат man-страниц, который используют так много программ. "
 "Поддержка po4a приходится здесь очень кстати, ибо этот формат в некоторой "
-"степени сложен, и не особо дружелюбен к новичкам. Модуль L<Locale::Po4a::"
-"Man(3pm)|Man> также поддерживает формат mdoc из man-страниц BSD (они также "
-"достаточно часто встречаются в Linux)."
+"степени сложен, и не особо дружелюбен к новичкам."
 
 #. type: textblock
 #: doc/po4a.7.pod:20
@@ -3252,12 +3270,12 @@ msgid ""
 "often reveals useless when the original text was re-indented after update.  "
 "Fortunately, po4a can help you after that process."
 msgstr ""
-"Даже если он отчасти и заменён XML в наши дни, этот формат всё ещё "
-"используется достаточно часто для тех документов, что длиннее нескольких "
-"экранов. Он позволяет вам создавать целые книги. Обновлять перевод таких "
-"длинных документов может быть настоящим кошмаром. В частности, B<diff> "
-"зачастую показывает себя абсолютно бесполезным, когда в исходном тексте "
-"изменяются отступы после обновления. К счастью, po4a может с этим помочь."
+"Даже если он и заменён XML в наши дни, этот формат всё ещё используется в "
+"тех документах, что длиннее нескольких экранов. Он может даже использоваться "
+"для целых книг. Обновлять переводы таких длинных документов может быть "
+"настоящим вызовом. В частности, B<diff> зачастую показывает себя абсолютно "
+"бесполезным, когда в исходном тексте изменяются отступы после обновления. К "
+"счастью, po4a может с этим помочь."
 
 #. type: textblock
 #: doc/po4a.7.pod:27
@@ -3397,13 +3415,12 @@ msgid ""
 "specialized file formats used by programs such as game scenarios or wine "
 "resource files."
 msgstr ""
-"Есть целая куча других форматов, поддержку которых мы хотели бы видеть в "
-"po4a. И не только форматов документации. На самом деле, мы собираемся "
-"заткнуть все «дыры на рынке», оставленные обычным инструментарием gettext. "
-"Это включает описание пакетов (deb и rpm), вопросы, задаваемые "
-"интерактивными сценариями установки пакетов, файлы changelogs пакетов, и все "
-"специализированные форматы файлов, которые используются в программах, такие "
-"как сценарии игр или файлы ресурсов wine."
+"К сожалению, в po4a всё ещё нет поддержки нескольких форматов документации. "
+"Поддержку многих из них было бы не так cложно добавить в po4a. Это включает "
+"не только форматы документации, но и например описание пакетов (deb и rpm), "
+"вопросы, задаваемые интерактивными сценариями установки пакетов, файлы "
+"changelogs пакетов, и все специализированные форматы файлов, которые "
+"используются в программах, такие как сценарии игр или файлы ресурсов wine."
 
 #. type: =head1
 #: doc/po4a.7.pod:43
@@ -3715,7 +3732,7 @@ msgstr ""
 #, fuzzy
 #| msgid "build translated documentation"
 msgid "Generating a translated document"
-msgstr "собрать переведённую документацию"
+msgstr "Сборка переведённых документов"
 
 #. type: textblock
 #: doc/po4a.7.pod:66
@@ -5657,10 +5674,10 @@ msgid ""
 "rewrapping rules used by groff aren't very clear. For example, two spaces "
 "after a parenthesis are sometimes preserved."
 msgstr ""
-"Параграфы без отступов будут автоматически переформатированы для "
-"переводчика. Это может привести к некоторым незначительным отличиям в "
-"выходных файлах, т.к. правила форматирования используемые groff не совсем "
-"чёткие. Например, иногда резервируется два пробела после скобок."
+"Абзацы без отступов будут автоматически переформатированы для переводчика. "
+"Это может привести к некоторым незначительным отличиям в выходных файлах, "
+"т.к. правила форматирования используемые groff не совсем чёткие. Например, "
+"иногда резервируется два пробела после скобок."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:10
@@ -5669,7 +5686,7 @@ msgid ""
 "in wrapped paragraph, and I think it's worth."
 msgstr ""
 "В любом случае, отличия будут только в положении дополнительных пробелов в "
-"переформатированном параграфе и, как мне кажется, это мелочь."
+"переформатированном абзаце и, как мне кажется, это мелочь."
 
 #. type: =head2
 #: lib/Locale/Po4a/Man.pm:11
@@ -6121,9 +6138,9 @@ msgid ""
 "and I<baz qux> its arguments."
 msgstr ""
 "Данный параметр определяет разделённый запятыми список макросов, которые не "
-"должны разделять текущий параграф. Переводимая строка будет содержать I<foo "
-"E<lt>.bar baz quxE<gt> quux>, где I<bar> — это команда, переданная "
-"B<inline>, а I<baz> и I<qux> — её аргументы."
+"должны разбивать текущий абзац. Переводимая строка будет содержать I<foo "
+"E<lt>.bar baz quxE<gt> quux>, где I<bar> — это команда, переданная B<inline>"
+", а I<baz> и I<qux> — её аргументы."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:71
@@ -10017,7 +10034,7 @@ msgid ""
 "tag)."
 msgstr ""
 "Поддержка директив препроцессора Си. Когда этот параметр установлен, po4a "
-"будет считать директивы препроцессора разделителями параграфов. Это важно, "
+"будет считать директивы препроцессора разделителями абзацев. Это важно, "
 "когда XML-файл должен быть обработан препроцессором, ибо в противном случае "
 "директивы могут быть вставлены в середину переводимых строк, если po4a "
 "решит, что они принадлежат текущему параграфу, так что они могут быть не "
@@ -10773,7 +10790,7 @@ msgid ""
 "format returned by get_string_until), skips his heading spaces and returns "
 "them as a simple string."
 msgstr ""
-"Эта функция принимает ссылку на параграф (в формате возвращённом "
+"Эта функция принимает ссылку на абзац (в формате возвращённом "
 "get_string_until), пропускает начальные пробелы и возвращает их (пробелы) в "
 "виде строки."
 
