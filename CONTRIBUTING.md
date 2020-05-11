@@ -269,6 +269,7 @@ git pull
 # Merge the other PR on github
 git pull
 rm -rf po_orig ; cp -r po po_orig # Copy existing po files
+# Fix the typo in the doc
 ./Build postats # Refresh the pot and po files (both doc and bin)
 cp po_orig/bin/*.po po/bin # Restore po files; msguntypot will handle typos in msgids
 cp po_orig/pod/*.po po/pod
