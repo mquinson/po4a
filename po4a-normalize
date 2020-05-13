@@ -123,7 +123,7 @@ sub show_version {
     exit 0;
 }
 
-my ( $blank, $help_fmt, $help, $type, $debug, $verbose, $wrappo, @options );
+my ( $blank, $help_fmt, $help, $type, $debug, $verbose, $quiet, $wrappo, @options );
 my ($mastchar);
 my ( $localized, $potfile ) = ( 'po4a-normalize.output', 'po4a-normalize.po' );
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
@@ -142,6 +142,7 @@ GetOptions(
     'wrap-po=s'  => \$wrappo,
 
     'verbose|v' => \$verbose,
+    'quiet|q'   => \$quiet,
     'debug|d'   => \$debug,
     'version|V' => \&show_version
 ) or pod2usage();
@@ -172,6 +173,7 @@ $parser->{TT}{file_in_charset} = $mastchar;
 
 my $filename = shift || pod2usage(1);
 $filename eq '-' || -e $filename || die wrap_msg( gettext("File %s does not exist."), $filename );
+die wrap_msg( gettext("Options %s and %s cannot be provided together"), "quiet", "verbose" ) if $verbose && $quiet;
 
 $parser->read( $filename, $filename );
 my %pot_options = ( 'wrap-po' => $wrappo );
@@ -193,7 +195,11 @@ if ($blank) {
     $parser->{TT}{file_in_charset} = $mastchar;
     $parser->parse();
 }
+print wrap_msg( dgettext( "po4a", "Write the normalized document to %s." ), $localized )
+  unless $quiet;
 $parser->write($localized);
+print wrap_msg( dgettext( "po4a", "Write the normalized PO file to %s." ), $potfile )
+  unless $quiet;
 $parser->writepo($potfile);
 
 __END__

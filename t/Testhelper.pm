@@ -393,7 +393,7 @@ sub run_one_format {
     # Normalize the document
     my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
     my $cmd =
-        "${execpath}/po4a-normalize -f $format "
+        "${execpath}/po4a-normalize -f $format --quiet "
       . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
       . " > $real_stderr 2>&1";
 
