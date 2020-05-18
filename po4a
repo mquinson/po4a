@@ -1510,7 +1510,7 @@ if ( not $po4a_opts{"no-update"} ) {
         foreach $lang ( sort keys %po_filename ) {
             my ( $infile, $outfile ) =
               ( find_input_file( $po_filename{$lang} ), find_output_file( $po_filename{$lang} ) );
-            my $updated_potfile = find_output_file($pot_filename);
+            my $updated_potfile = find_input_file($pot_filename);
 
             if ( -e $infile ) {
                 my $dir = dirname( $outfile );
