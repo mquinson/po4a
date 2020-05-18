@@ -86,6 +86,17 @@ push @tests, {
     'po4a.conf'      => 'cfg/single-potin/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single.man.fr.1 single.fr.po single.pot',
+  },
+  {
+    'doc'            => 'Single language, using po_directory in the config file',
+    'po4a.conf'      => 'cfg/single-podirectory/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'po single.man.fr.1',
+    'tests'          => [
+        'PODIFF -I#: $path/po/fr.po $tmppath/po/fr.po',    #
+        'PODIFF -I#: $path/po/single.pot $tmppath/po/single.pot'
+    ]
+
   };
 
 run_all_tests(@tests);
