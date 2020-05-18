@@ -122,7 +122,7 @@ sub system_failed {
     my $exit_status = system($cmd);
     $cmd =~
       s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."Project-Id-Version:' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
-    $cmd =~ s{$root_dir/}{}g;
+    $cmd =~ s{$root_dir/}{BUILDPATH/}g;
     $cmd =~ s{t/../po4a}{po4a};
 
     if ( $exit_status == $expected_exit_status ) {
