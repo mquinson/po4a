@@ -1075,7 +1075,8 @@ while (<CONFIG>) {
         }
 
         if ( not @langs ) {
-            warn wrap_ref_mod( "$config_file:$nb", "", gettext("no PO files found in %s"), $po_directory );
+            warn wrap_ref_mod( "$config_file:$nb", "", gettext("no PO files found in %s"),
+                find_input_file($po_directory) );
         }
 
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
