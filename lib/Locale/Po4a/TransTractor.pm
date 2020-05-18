@@ -673,7 +673,7 @@ sub mychomp {
 sub addendum {
     my ( $self, $filename ) = @_;
 
-    print STDERR wrap_mod( "po4a::transtractor::addendum", dgettext( "po4a", "Apply addendum: %s" ), $filename )
+    print STDERR wrap_mod( "po4a::transtractor::addendum", "Apply addendum %s", $filename )
       if $self->debug();
     unless ($filename) {
         warn wrap_msg( dgettext( "po4a", "Cannot apply addendum when not given the filename" ) );
@@ -773,7 +773,7 @@ sub addendum {
         } while ( scalar @{ $self->{TT}{doc_out} } );
         @{ $self->{TT}{doc_out} } = @newres;
     }
-    print STDERR wrap_mod( "po4a::transtractor::addendum", dgettext( "po4a", "Done addendum: %s" ), $filename )
+    print STDERR wrap_mod( "po4a::transtractor::addendum", "Done with addendum %s", $filename )
       if $self->debug();
     return 1;
 }
