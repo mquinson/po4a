@@ -198,7 +198,7 @@ sub run_one_po4aconf {
     if ($closed_path) {
         push @setup,    "chmod -r-w-x " . $closed_path;    # Don't even look at the closed path
         push @teardown, "chmod +r+w+x " . $closed_path;    # Restore permissions
-        push @setup,    "chmod +r+x -R $path";             # Look into the path of this test
+        push @setup,    "chmod +r+x    $path";             # Look into the path of this test
         push @setup,    "chmod -w   -R $path";             # But don't change any file in there
         push @teardown, "chmod +w   -R $path";             # Restore permissions
     }
