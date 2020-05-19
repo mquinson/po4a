@@ -730,14 +730,17 @@ sub addendum {
         print STDERR "Start searching addendum insertion position...\n";
     }
 
-    my $found = scalar grep { /$position/ } @{ $self->{TT}{doc_out} };
-    if ( $found == 0 ) {
-        warn wrap_msg( dgettext( "po4a", "No candidate position for the addendum %s." ), $filename );
-        return 0;
-    }
-    if ( $found > 1 ) {
-        warn wrap_msg( dgettext( "po4a", "More than one candidate position found for the addendum %s." ), $filename );
-        return 0;
+    unless ( $mode eq 'eof' ) {
+        my $found = scalar grep { /$position/ } @{ $self->{TT}{doc_out} };
+        if ( $found == 0 ) {
+            warn wrap_msg( dgettext( "po4a", "No candidate position for the addendum %s." ), $filename );
+            return 0;
+        }
+        if ( $found > 1 ) {
+            warn wrap_msg( dgettext( "po4a", "More than one candidate position found for the addendum %s." ),
+                $filename );
+            return 0;
+        }
     }
 
     if ( $mode eq "eof" ) {
