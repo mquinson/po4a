@@ -12,10 +12,11 @@ use Testhelper;
 my @tests;
 
 push @tests, {
-    'doc'            => 'Several kind of positioning (examples of the doc) POD format',
-    'po4a.conf'      => 'add/positioning/positioning.conf',
-    'closed_path'    => 'add/*/',
-    'expected_files' => 'file-before.pod.fr file-after.pod.fr file-eof.pod.fr fr.po positioning.pot',
+    'doc'         => 'Several kind of positioning (examples of the doc) POD format',
+    'po4a.conf'   => 'add/positioning/positioning.conf',
+    'closed_path' => 'add/*/',
+    'expected_files' =>
+      'file-before.pod.fr file-after.pod.fr file-eof.pod.fr file-eofmode.pod.fr fr.po positioning.pot',
 
   },
   {

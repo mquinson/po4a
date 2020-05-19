@@ -638,19 +638,32 @@ sub addendum_parse {
         warn wrap_msg( dgettext( "po4a", "The po4a header of %s does not define the mode." ), $filename );
         goto END_PARSE_ADDFILE;
     }
-    unless ( $mode eq "before" || $mode eq "after" ) {
+    unless ( $mode eq "before" || $mode eq "after" || $mode eq "eof" ) {
         warn wrap_msg(
-            dgettext( "po4a", "Mode invalid in the po4a header of %s: should be 'before' or 'after' not %s." ),
-            $filename, $mode );
+            dgettext(
+                "po4a",
+                "Mode invalid in the po4a header of %s: should be 'before', 'after' or 'eof'. Instead, it is '%s'."
+            ),
+            $filename,
+            $mode
+        );
         goto END_PARSE_ADDFILE;
     }
 
-    unless ( length($position) ) {
+    unless ( length($position) || $mode eq "eof" ) {
         warn wrap_msg( dgettext( "po4a", "The po4a header of %s does not define the position." ), $filename );
         goto END_PARSE_ADDFILE;
     }
-    unless ( $mode eq "before" || length($boundary) ) {
+    if ( $mode eq "after" && length($boundary) == 0 ) {
         warn wrap_msg( dgettext( "po4a", "No ending boundary given in the po4a header, but mode=after." ) );
+        goto END_PARSE_ADDFILE;
+    }
+    if ( $mode eq "eof" && length($position) ) {
+        warn wrap_msg( dgettext( "po4a", "No position needed when mode=eof." ) );
+        goto END_PARSE_ADDFILE;
+    }
+    if ( $mode eq "eof" && length($boundary) ) {
+        warn wrap_msg( dgettext( "po4a", "No ending boundary needed when mode=eof." ) );
         goto END_PARSE_ADDFILE;
     }
 
@@ -727,7 +740,9 @@ sub addendum {
         return 0;
     }
 
-    if ( $mode eq "before" ) {
+    if ( $mode eq "eof" ) {
+        push @{ $self->{TT}{doc_out} }, $content;
+    } elsif ( $mode eq "before" ) {
         if ( $self->verbose() > 1 || $self->debug() ) {
             map {
                 print STDERR wrap_msg( dgettext( "po4a", "Addendum '%s' applied before this line: %s" ), $filename, $_ )

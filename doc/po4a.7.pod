@@ -342,8 +342,16 @@ determined position.
 
 The header line must begin with the string B<PO4A-HEADER:>, followed by a
 semi-colon separated list of I<key>B<=>I<value> fields.
-For example, the following header declares an addendum that must be placed after
-the XML section containing the string C<About this document> in translation.
+
+For example, the following header declares an addendum that must be placed
+at the very end of the translation.
+
+ PO4A-HEADER: mode=eof
+
+This are more complex when you want to add your extra content in the middle
+of the document. The following header declares an addendum that must be
+placed after the XML section containing the string C<About this document> in
+translation.
 
 =cut
 
@@ -392,6 +400,7 @@ line before the C<position>.
  'before'|'beginboundary'| last before 'position' | Right before the selected boundary
  'after' | 'endboundary' | first after 'position' | Right after the selected boundary
  'after' |'beginboundary'| first after 'position' | Right before the selected boundary
+ 'eof'   |   (none)      |  n/a                   | End of file
 
 =head3 Hint and tricks about addenda
 
