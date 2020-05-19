@@ -1059,7 +1059,7 @@ while (<CONFIG>) {
             if ( $f =~ m/^(.*)\.po$/ ) {
                 push @langs, $1;
                 $po_filename{$1} = "$po_directory/$f";
-                print wrap_msg( gettext("Found language '%s' in the provided po_directory"), $1 )
+                print wrap_msg( gettext("Found language '%s' in the provided po_directory."), $1 )
                   if $po4a_opts{"verbose"};
             }
             if ( $f =~ m/\.pot$/ ) {
@@ -1068,7 +1068,7 @@ while (<CONFIG>) {
                         $pot_filename, "$po_directory/$f" );
                 } else {
                     $pot_filename = "$po_directory/$f";
-                    print wrap_msg( gettext("Found POT file '%s' in the provided po_directory"), $pot_filename )
+                    print wrap_msg( gettext("Found POT file '%s' in the provided po_directory."), $pot_filename )
                       if $po4a_opts{"verbose"};
                 }
             }
