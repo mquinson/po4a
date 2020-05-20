@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2020-05-19 02:45+0200\n"
+"POT-Creation-Date: 2020-05-20 00:38+0200\n"
 "PO-Revision-Date: 2020-05-20 07:33+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
@@ -12,8 +12,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
-"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -177,7 +177,7 @@ msgstr ""
 #. type: =head1
 #: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:187
 #: po4a-gettextize:71 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
-#: msguntypot:29 doc/po4a.7.pod:149 lib/Locale/Po4a/Chooser.pm:7
+#: msguntypot:29 doc/po4a.7.pod:150 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Guide.pm:10 lib/Locale/Po4a/Halibut.pm:14
 #: lib/Locale/Po4a/Ini.pm:8 lib/Locale/Po4a/KernelHelp.pm:7
@@ -1188,12 +1188,20 @@ msgstr "Централізовані чи поділені файли PO?"
 
 #. type: textblock
 #: po4a:110
+#, fuzzy
+#| msgid ""
+#| "By default, po4a produces one single PO file per target language, "
+#| "containing the whole content of your translation project. As your project "
+#| "grows, the size of these files may become problematic. When using "
+#| "weblate, it is possible to add a specific priorities to the translations "
+#| "so that the important strings get translated first, but some translation "
+#| "teams still prefer to split the content in several files."
 msgid ""
 "By default, po4a produces one single PO file per target language, containing "
 "the whole content of your translation project. As your project grows, the "
 "size of these files may become problematic. When using weblate, it is "
-"possible to add a specific priorities to the translations so that the "
-"important strings get translated first, but some translation teams still "
+"possible to specify priorities for each translation segment (i.e., msgid) so "
+"that the important ones get translated first. Still, some translation teams "
 "prefer to split the content in several files."
 msgstr ""
 "Типово, po4a створює по одному файлу PO для кожної мови перекладу. У цих "
@@ -2002,7 +2010,7 @@ msgstr ""
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:73 po4a-normalize:31 po4a-translate:56
-#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:155
+#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:156
 #: lib/Locale/Po4a/AsciiDoc.pm:36 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
@@ -4264,18 +4272,12 @@ msgid ""
 " 'eof'   |   (none)      |  n/a                   | End of file\n"
 "\n"
 msgstr ""
-"  Режим  |    Тип межі   |     Використана межа     | Точка вставляння "
-"відносно межі\n"
-" ========|===============|==========================|========================"
-"===============\n"
-" 'before'| 'endboundary' | остання перед 'position' | Одразу після вибраної "
-"межі\n"
-" 'before'|'beginboundary'| остання перед 'position' | Одразу перед вибраною "
-"межею\n"
-" 'after' | 'endboundary' | перша після 'position'   | Одразу після вибраної "
-"межі\n"
-" 'after' |'beginboundary'| перша після 'position'   | Одразу перед вибраною "
-"межею\n"
+"  Режим  |    Тип межі   |     Використана межа     | Точка вставляння відносно межі\n"
+" ========|===============|==========================|=======================================\n"
+" 'before'| 'endboundary' | остання перед 'position' | Одразу після вибраної межі\n"
+" 'before'|'beginboundary'| остання перед 'position' | Одразу перед вибраною межею\n"
+" 'after' | 'endboundary' | перша після 'position'   | Одразу після вибраної межі\n"
+" 'after' |'beginboundary'| перша після 'position'   | Одразу перед вибраною межею\n"
 " 'eof'   |   (немає)     |  н/д                   | Кінець файла\n"
 "\n"
 
@@ -4677,8 +4679,13 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:121
+#, fuzzy
+#| msgid ""
+#| "L<f-droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): "
+#| "installable catalogue of FOSS (Free and Open Source Software) "
+#| "applications for the Android platform."
 msgid ""
-"L<f-droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): "
+"L<F-Droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): "
 "installable catalogue of FOSS (Free and Open Source Software) applications "
 "for the Android platform."
 msgstr ""
@@ -4706,27 +4713,40 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:124
+#, fuzzy
+#| msgid ""
+#| "This project provides an infrastructure for translating many manpages to "
+#| "different languages, ready for integration into several major "
+#| "distributions (ArchLinux, Debian and derivatives, Fedora)."
 msgid ""
 "This project provides an infrastructure for translating many manpages to "
 "different languages, ready for integration into several major distributions "
-"(ArchLinux, Debian and derivatives, Fedora)."
+"(Arch Linux, Debian and derivatives, Fedora)."
 msgstr ""
 "Цей проєкт надає інфраструктуру для перекладу багатьох сторінок підручника "
 "різними мовами. Результати інтегруються до декількох основних дистрибутивів "
 "(ArchLinux, Debian і похідні, Fedora)."
 
-#. type: =head1
+#. type: textblock
 #: doc/po4a.7.pod:125
+msgid ""
+"L<Stellarium|https://github.com/Stellarium/stellarium> (HTML): a free open "
+"source planetarium for your computer. po4a is used to translate the sky "
+"culture descriptions."
+msgstr ""
+
+#. type: =head1
+#: doc/po4a.7.pod:126
 msgid "FAQ"
 msgstr "Поширені питання"
 
 #. type: =head2
-#: doc/po4a.7.pod:126
+#: doc/po4a.7.pod:127
 msgid "How do you pronounce po4a?"
 msgstr "Як вимовляти po4a?"
 
 #. type: textblock
-#: doc/po4a.7.pod:127
+#: doc/po4a.7.pod:128
 msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
@@ -4737,23 +4757,23 @@ msgstr ""
 "гумору :)"
 
 #. type: =head2
-#: doc/po4a.7.pod:128
+#: doc/po4a.7.pod:129
 msgid "What about the other translation tools for documentation using gettext?"
 msgstr ""
 "Як щодо інших засобів перекладу документації, де використовується gettext?"
 
 #. type: textblock
-#: doc/po4a.7.pod:129
+#: doc/po4a.7.pod:130
 msgid "As far as I know, there are only two of them:"
 msgstr "Наскільки мені відомо, є лише два інших комплекти програм:"
 
 #. type: =item
-#: doc/po4a.7.pod:130
+#: doc/po4a.7.pod:131
 msgid "B<poxml>"
 msgstr "B<poxml>"
 
 #. type: textblock
-#: doc/po4a.7.pod:131
+#: doc/po4a.7.pod:132
 msgid ""
 "This is the tool developed by KDE people to handle DocBook XML. AFAIK, it "
 "was the first program to extract strings to translate from documentation to "
@@ -4764,7 +4784,7 @@ msgstr ""
 "документації до файлів PO і вставляла ці рядки назад після перекладу."
 
 #. type: textblock
-#: doc/po4a.7.pod:132
+#: doc/po4a.7.pod:133
 msgid ""
 "It can only handle XML, and only a particular DTD. I'm quite unhappy with "
 "the handling of lists, which end in one big msgid. When the list become big, "
@@ -4776,12 +4796,12 @@ msgstr ""
 "великий, перекладати його стає дуже складно."
 
 #. type: =item
-#: doc/po4a.7.pod:133
+#: doc/po4a.7.pod:134
 msgid "B<po-debiandoc>"
 msgstr "B<po-debiandoc>"
 
 #. type: textblock
-#: doc/po4a.7.pod:134
+#: doc/po4a.7.pod:135
 msgid ""
 "This program done by Denis Barbier is a sort of precursor of the po4a SGML "
 "module, which more or less deprecates it. As the name says, it handles only "
@@ -4793,7 +4813,7 @@ msgstr ""
 "лише з DTD DebianDoc, який є більшою чи меншою мірою застарілим DTD."
 
 #. type: textblock
-#: doc/po4a.7.pod:135
+#: doc/po4a.7.pod:136
 msgid ""
 "The main advantages of po4a over them are the ease of extra content addition "
 "(which is even worse there) and the ability to achieve gettextization."
@@ -4803,12 +4823,12 @@ msgstr ""
 "перетворення даних до стандартного формату gettext."
 
 #. type: =head2
-#: doc/po4a.7.pod:136
+#: doc/po4a.7.pod:137
 msgid "SUMMARY of the advantages of the gettext based approach"
 msgstr "РЕЗЮМЕ щодо переваг заснованого на gettext підходу"
 
 #. type: textblock
-#: doc/po4a.7.pod:137
+#: doc/po4a.7.pod:138
 msgid ""
 "The translations are not stored along with the original, which makes it "
 "possible to detect if translations become out of date."
@@ -4817,7 +4837,7 @@ msgstr ""
 "перекладів, які застаріли."
 
 #. type: textblock
-#: doc/po4a.7.pod:138
+#: doc/po4a.7.pod:139
 msgid ""
 "The translations are stored in separate files from each other, which "
 "prevents translators of different languages from interfering, both when "
@@ -4828,7 +4848,7 @@ msgstr ""
 "на рівні кодування даних у файлах."
 
 #. type: textblock
-#: doc/po4a.7.pod:139
+#: doc/po4a.7.pod:140
 msgid ""
 "It is based internally on B<gettext> (but B<po4a> offers a very simple "
 "interface so that you don't need to understand the internals to use it).  "
@@ -4842,7 +4862,7 @@ msgstr ""
 "вважати, що ці інструменти більшою чи меншою мірою вільні від вад."
 
 #. type: textblock
-#: doc/po4a.7.pod:140
+#: doc/po4a.7.pod:141
 msgid ""
 "Nothing changed for the end-user (beside the fact translations will "
 "hopefully be better maintained). The resulting documentation file "
@@ -4852,7 +4872,7 @@ msgstr ""
 "перекладів). Остаточний файл документації розповсюджується у звичний спосіб."
 
 #. type: textblock
-#: doc/po4a.7.pod:141
+#: doc/po4a.7.pod:142
 msgid ""
 "No need for translators to learn a new file syntax and their favorite PO "
 "file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just "
@@ -4863,7 +4883,7 @@ msgstr ""
 "Gtranslator) легко може бути використана для перекладу."
 
 #. type: textblock
-#: doc/po4a.7.pod:142
+#: doc/po4a.7.pod:143
 msgid ""
 "gettext offers a simple way to get statistics about what is done, what "
 "should be reviewed and updated, and what is still to do. Some example can be "
@@ -4874,7 +4894,7 @@ msgstr ""
 "роботи, яку ще треба виконати. Приклади можна знайти за цими адресами:"
 
 #. type: verbatim
-#: doc/po4a.7.pod:143
+#: doc/po4a.7.pod:144
 #, no-wrap
 msgid ""
 " - https://docs.kde.org/stable5/en/kdesdk/lokalize/project-view.html\n"
@@ -4886,7 +4906,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:144
+#: doc/po4a.7.pod:145
 msgid ""
 "But everything isn't green, and this approach also has some disadvantages we "
 "have to deal with."
@@ -4895,12 +4915,12 @@ msgstr ""
 "доводиться мати справу."
 
 #. type: textblock
-#: doc/po4a.7.pod:145
+#: doc/po4a.7.pod:146
 msgid "Addenda are… strange at the first glance."
 msgstr "Додатки… вони на перший погляд доволі дивні."
 
 #. type: textblock
-#: doc/po4a.7.pod:146
+#: doc/po4a.7.pod:147
 msgid ""
 "You can't adapt the translated text to your preferences, like splitting a "
 "paragraph here, and joining two other ones there. But in some sense, if "
@@ -4912,7 +4932,7 @@ msgstr ""
 "усе одно довелося б повідомити авторові тексту."
 
 #. type: textblock
-#: doc/po4a.7.pod:147
+#: doc/po4a.7.pod:148
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
 msgstr ""
@@ -4920,7 +4940,7 @@ msgstr ""
 "роботі з яким слід навчатися."
 
 #. type: textblock
-#: doc/po4a.7.pod:148
+#: doc/po4a.7.pod:149
 msgid ""
 "One of my dreams would be to integrate somehow po4a to Gtranslator or "
 "Lokalize. When a documentation file is opened, the strings are automatically "
@@ -4936,7 +4956,7 @@ msgstr ""
 "професійні перекладачі."
 
 #. type: textblock
-#: doc/po4a.7.pod:150
+#: doc/po4a.7.pod:151
 msgid ""
 "The documentation of the all-in-one tool that you should use: L<po4a(1)>."
 msgstr ""
@@ -4944,7 +4964,7 @@ msgstr ""
 "L<po4a(1)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:151
+#: doc/po4a.7.pod:152
 msgid ""
 "The documentation of the individual po4a scripts: L<po4a-gettextize(1)>, "
 "L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
@@ -4953,7 +4973,7 @@ msgstr ""
 "updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:152
+#: doc/po4a.7.pod:153
 msgid ""
 "The additional helping scripts: L<msguntypot(1)>, L<po4a-display-man(1)>, "
 "L<po4a-display-pod(1)>."
@@ -4962,7 +4982,7 @@ msgstr ""
 "L<po4a-display-pod(1)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:153
+#: doc/po4a.7.pod:154
 msgid ""
 "The parsers of each formats, in particular to see the options accepted by "
 "each of them: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
@@ -4987,7 +5007,7 @@ msgstr ""
 "Xml(3pm)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:154
+#: doc/po4a.7.pod:155
 msgid ""
 "The implementation of the core infrastructure: L<Locale::Po4a::"
 "TransTractor(3pm)> (particularly important to understand the code "
@@ -5001,7 +5021,7 @@ msgstr ""
 "ознайомтеся також із файлом F<CONTRIBUTING.md> у дереві початкового коду."
 
 #. type: verbatim
-#: doc/po4a.7.pod:156
+#: doc/po4a.7.pod:157
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier,linuxfr.org>\n"
