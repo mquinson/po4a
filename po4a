@@ -1054,7 +1054,7 @@ while (<CONFIG>) {
         opendir PO_DIR, find_input_file($po_directory)
           or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list the '%s' directory"), $po_directory );
 
-        foreach my $f ( readdir PO_DIR ) {
+        foreach my $f ( sort readdir PO_DIR ) {
             next unless -f find_input_file("$po_directory/$f");
             if ( $f =~ m/^(.*)\.po$/ ) {
                 push @langs, $1;
