@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a bin\n"
 "Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
-"POT-Creation-Date: 2020-05-19 01:56+0200\n"
-"PO-Revision-Date: 2020-05-19 00:02+0000\n"
+"POT-Creation-Date: 2020-05-19 02:45+0200\n"
+"PO-Revision-Date: 2020-05-19 19:27+0000\n"
 "Last-Translator: Martin Quinson <martin.quinson@ens-rennes.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a/fr/>\n"
 "Language: fr\n"
@@ -840,60 +840,74 @@ msgstr "Paramètre invalide dans l’en-tête po4a du fichier %s : %s"
 msgid "The po4a header of %s does not define the mode."
 msgstr "L’en-tête po4a de %s ne définit pas de mode."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:643
-#, perl-format
+#: ../../lib/Locale/Po4a/TransTractor.pm:645
+#, fuzzy, perl-format
+#| msgid ""
+#| "Mode invalid in the po4a header of %s: should be 'before' or 'after' not "
+#| "%s."
 msgid ""
-"Mode invalid in the po4a header of %s: should be 'before' or 'after' not %s."
+"Mode invalid in the po4a header of %s: should be 'before', 'after' or 'eof'. "
+"Instead, it is '%s'."
 msgstr ""
 "Mode invalide dans l’en-tête po4a de %s (devrait être « before » ou "
 "« after ») : %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:649
+#: ../../lib/Locale/Po4a/TransTractor.pm:654
 #, perl-format
 msgid "The po4a header of %s does not define the position."
 msgstr "L’en-tête po4a de %s ne définit pas de position."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:653
+#: ../../lib/Locale/Po4a/TransTractor.pm:658
 msgid "No ending boundary given in the po4a header, but mode=after."
 msgstr "Pas de frontière de fin dans l’en-tête po4a, mais « mode=after »."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:679
+#: ../../lib/Locale/Po4a/TransTractor.pm:662
+msgid "No position needed when mode=eof."
+msgstr ""
+
+#: ../../lib/Locale/Po4a/TransTractor.pm:666
+#, fuzzy
+#| msgid "No ending boundary given in the po4a header, but mode=after."
+msgid "No ending boundary needed when mode=eof."
+msgstr "Pas de frontière de fin dans l’en-tête po4a, mais « mode=after »."
+
+#: ../../lib/Locale/Po4a/TransTractor.pm:692
 msgid "Cannot apply addendum when not given the filename"
 msgstr "Impossible d’appliquer un addendum dont le nom n’est pas donné"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:682
+#: ../../lib/Locale/Po4a/TransTractor.pm:695
 #, perl-format
 msgid "Addendum %s does not exist."
 msgstr "L’addendum %s n’existe pas."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:722
+#: ../../lib/Locale/Po4a/TransTractor.pm:735
 #, perl-format
 msgid "No candidate position for the addendum %s."
 msgstr "L’addendum %s n’a pas de position candidate."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:726
+#: ../../lib/Locale/Po4a/TransTractor.pm:739
 #, perl-format
 msgid "More than one candidate position found for the addendum %s."
 msgstr "L’addendum %s a plus d’une position candidate."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:733
-#: ../../lib/Locale/Po4a/TransTractor.pm:755
+#: ../../lib/Locale/Po4a/TransTractor.pm:748
+#: ../../lib/Locale/Po4a/TransTractor.pm:770
 #, perl-format
 msgid "Addendum '%s' applied before this line: %s"
 msgstr "Ajout de l’addendum « %s » avant la ligne : %s"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:761
+#: ../../lib/Locale/Po4a/TransTractor.pm:776
 #, perl-format
 msgid "Addendum '%s' applied after the line: %s."
 msgstr "Ajout de l’addendum « %s » après la ligne : %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:768
+#: ../../lib/Locale/Po4a/TransTractor.pm:783
 #, perl-format
 msgid "Addendum '%s' applied at the end of the file."
 msgstr "Application de l’addendum « %s » à la fin du fichier."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:941
-#: ../../lib/Locale/Po4a/TransTractor.pm:1129
+#: ../../lib/Locale/Po4a/TransTractor.pm:956
+#: ../../lib/Locale/Po4a/TransTractor.pm:1144
 #, perl-format
 msgid ""
 "Couldn't determine the input document's charset. Please specify it on the "
@@ -910,7 +924,7 @@ msgstr "Impossible de créer un fichier XML temporaire : %s"
 #: ../../lib/Locale/Po4a/Xml.pm:119
 #, perl-format
 msgid "%s: Cannot read from %s: %s"
-msgstr "%s: Impossible de lire depuis %s : %s"
+msgstr "%s : Impossible de lire depuis %s : %s"
 
 #: ../../lib/Locale/Po4a/Xml.pm:128
 #, perl-format
@@ -995,8 +1009,8 @@ msgstr ""
 #, perl-format
 msgid "%s: foldattributes setting ignored since '%s' is not inline tag"
 msgstr ""
-"%s: le paramètre foldattributes est ignoré car '%s' n'est pas un marqueur en-"
-"ligne"
+"%s : le paramètre foldattributes est ignoré car '%s' n'est pas un marqueur "
+"en-ligne"
 
 #: ../../lib/Locale/Po4a/Xml.pm:2093 ../../lib/Locale/Po4a/Xml.pm:2108
 #, perl-format
@@ -1147,9 +1161,10 @@ msgid "Cannot list the '%s' directory"
 msgstr "Impossible de lister le répertoire « %s »"
 
 #: ../../po4a:1062
-#, perl-format
-msgid "Found language '%s' in the provided po_directory"
-msgstr ""
+#, fuzzy, perl-format
+#| msgid "Found language '%s' in the provided po_directory"
+msgid "Found language '%s' in the provided po_directory."
+msgstr "Langue « %s » trouvée dans le répertoire indiqué par po_directory"
 
 #: ../../po4a:1067
 #, perl-format
@@ -1157,9 +1172,10 @@ msgid "too many POT files: %s %s"
 msgstr "trop de fichiers POT : %s %s"
 
 #: ../../po4a:1071
-#, perl-format
-msgid "Found POT file '%s' in the provided po_directory"
-msgstr ""
+#, fuzzy, perl-format
+#| msgid "Found POT file '%s' in the provided po_directory"
+msgid "Found POT file '%s' in the provided po_directory."
+msgstr "Fichier POT « %s » trouvé dans le répertoire indiqué par po_directory"
 
 #: ../../po4a:1078
 #, perl-format
@@ -1340,17 +1356,17 @@ msgstr "%s est traduit à %s%% (%s chaînes sur %s)."
 #: ../../po4a-normalize:176
 #, perl-format
 msgid "Options %s and %s cannot be provided together"
-msgstr ""
+msgstr "Les options %s et %s ne peuvent pas être passées ensemble"
 
 #: ../../po4a-normalize:198
 #, perl-format
 msgid "Write the normalized document to %s."
-msgstr ""
+msgstr "Écriture du document normalisé %s."
 
 #: ../../po4a-normalize:201
 #, perl-format
 msgid "Write the normalized PO file to %s."
-msgstr ""
+msgstr "Écriture du fichier PO normalisé %s."
 
 #: ../../po4a-translate:279
 #, perl-format
