@@ -10,8 +10,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a_0.52-1\n"
-"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
-"POT-Creation-Date: 2020-05-19 01:56+0200\n"
+"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"POT-Creation-Date: 2020-05-19 02:45+0200\n"
 "PO-Revision-Date: 2020-05-19 19:27+0000\n"
 "Last-Translator: Frans Spiesschaert <frans.spiesschaert@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/po4a/po4a/nl/>\n"
@@ -60,8 +60,8 @@ msgid ""
 "are too short or too long compared to the title length. You may want to fix "
 "your master document."
 msgstr ""
-"'%s' lijkt een uit twee regels bestaande titel te zijn, onderstreept met '%"
-"s', maar de onderstreping is te kort of te lang in vergelijking met de "
+"'%s' lijkt een uit twee regels bestaande titel te zijn, onderstreept met "
+"'%s', maar de onderstreping is te kort of te lang in vergelijking met de "
 "lengte van de titel. Misschien wilt u uw hoofddocument corrigeren."
 
 #: ../../lib/Locale/Po4a/AsciiDoc.pm:871
@@ -850,63 +850,79 @@ msgstr "Ongeldig argument in de po4a-koptekst van %s: %s"
 msgid "The po4a header of %s does not define the mode."
 msgstr "De po4a-koptekst van %s definieert de modus niet."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:643
-#, perl-format
+#: ../../lib/Locale/Po4a/TransTractor.pm:645
+#, fuzzy, perl-format
+#| msgid ""
+#| "Mode invalid in the po4a header of %s: should be 'before' or 'after' not "
+#| "%s."
 msgid ""
-"Mode invalid in the po4a header of %s: should be 'before' or 'after' not %s."
+"Mode invalid in the po4a header of %s: should be 'before', 'after' or 'eof'. "
+"Instead, it is '%s'."
 msgstr ""
 "Ongeldige modus in de po4a-koptekst van %s: moet 'before' of 'after' zijn en "
 "niet %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:649
+#: ../../lib/Locale/Po4a/TransTractor.pm:654
 #, perl-format
 msgid "The po4a header of %s does not define the position."
 msgstr "De po4a-koptekst van %s definieert de positie niet."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:653
+#: ../../lib/Locale/Po4a/TransTractor.pm:658
 msgid "No ending boundary given in the po4a header, but mode=after."
 msgstr ""
 "In de po4a-koptekst werd geen afgrenzing voor het einde opgegeven, maar de "
 "modus=after."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:679
+#: ../../lib/Locale/Po4a/TransTractor.pm:662
+msgid "No position needed when mode=eof."
+msgstr ""
+
+#: ../../lib/Locale/Po4a/TransTractor.pm:666
+#, fuzzy
+#| msgid "No ending boundary given in the po4a header, but mode=after."
+msgid "No ending boundary needed when mode=eof."
+msgstr ""
+"In de po4a-koptekst werd geen afgrenzing voor het einde opgegeven, maar de "
+"modus=after."
+
+#: ../../lib/Locale/Po4a/TransTractor.pm:692
 msgid "Cannot apply addendum when not given the filename"
 msgstr ""
 "Kan het addendum niet toepassen omdat de bestandsnaam niet opgegeven werd"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:682
+#: ../../lib/Locale/Po4a/TransTractor.pm:695
 #, perl-format
 msgid "Addendum %s does not exist."
 msgstr "Addendum %s bestaat niet."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:722
+#: ../../lib/Locale/Po4a/TransTractor.pm:735
 #, perl-format
 msgid "No candidate position for the addendum %s."
 msgstr "Geen kandidaat-positie voor het addendum %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:726
+#: ../../lib/Locale/Po4a/TransTractor.pm:739
 #, perl-format
 msgid "More than one candidate position found for the addendum %s."
 msgstr "Meer dan één kandidaat-positie aangetroffen voor het addendum %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:733
-#: ../../lib/Locale/Po4a/TransTractor.pm:755
+#: ../../lib/Locale/Po4a/TransTractor.pm:748
+#: ../../lib/Locale/Po4a/TransTractor.pm:770
 #, perl-format
 msgid "Addendum '%s' applied before this line: %s"
 msgstr "Addendum '%s' werd toegepast voor deze regel: %s"
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:761
+#: ../../lib/Locale/Po4a/TransTractor.pm:776
 #, perl-format
 msgid "Addendum '%s' applied after the line: %s."
 msgstr "Addendum '%s' werd toegepast na de regel: %s."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:768
+#: ../../lib/Locale/Po4a/TransTractor.pm:783
 #, perl-format
 msgid "Addendum '%s' applied at the end of the file."
 msgstr "Addendum '%s' werd toegepast aan het einde van het bestand."
 
-#: ../../lib/Locale/Po4a/TransTractor.pm:941
-#: ../../lib/Locale/Po4a/TransTractor.pm:1129
+#: ../../lib/Locale/Po4a/TransTractor.pm:956
+#: ../../lib/Locale/Po4a/TransTractor.pm:1144
 #, perl-format
 msgid ""
 "Couldn't determine the input document's charset. Please specify it on the "
@@ -1155,8 +1171,9 @@ msgid "Cannot list the '%s' directory"
 msgstr "Kan inhoud van map '%s' niet weergeven"
 
 #: ../../po4a:1062
-#, perl-format
-msgid "Found language '%s' in the provided po_directory"
+#, fuzzy, perl-format
+#| msgid "Found language '%s' in the provided po_directory"
+msgid "Found language '%s' in the provided po_directory."
 msgstr "Taal '%s' aangetroffen in de map die door po_directory aangeduid wordt"
 
 #: ../../po4a:1067
@@ -1165,8 +1182,9 @@ msgid "too many POT files: %s %s"
 msgstr "te veel POT-bestanden: %s %s"
 
 #: ../../po4a:1071
-#, perl-format
-msgid "Found POT file '%s' in the provided po_directory"
+#, fuzzy, perl-format
+#| msgid "Found POT file '%s' in the provided po_directory"
+msgid "Found POT file '%s' in the provided po_directory."
 msgstr ""
 "POT-bestand '%s' aangetroffen in de map die door po_directory aangeduid wordt"
 
