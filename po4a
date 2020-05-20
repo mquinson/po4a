@@ -223,8 +223,8 @@ Set the base directory for all input documents specified in the B<po4a>
 configuration file. 
 
 If both I<destdir> and I<srcdir> are specified, input files are
-searched in the following directories, in order: I<destdir>,
-I<srcdir> and the current directory. Output files are written to I<destdir> if
+searched in the following directories, in order: I<destdir>, the current
+directory and I<srcdir>. Output files are written to I<destdir> if
 specified, or to the current directory.
 
 =item B<--destdir> I<DESTDIR>
@@ -876,7 +876,7 @@ sub find_input_file {
     my $debug    = $_[1];
     print STDERR "Search for input file $filename\n" if $debug;
     return $filename                                 if ( File::Spec->file_name_is_absolute($filename) );
-    foreach ( ( $destdir, $srcdir, $calldir ) ) {
+    foreach ( ( $destdir, $calldir, $srcdir ) ) {
         next unless defined $_;
         my $p = File::Spec->catfile( $_, $filename );
         print STDERR "Test $p: " . ( -e $p ? "OK" : "nope" ) . "\n"
