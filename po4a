@@ -1048,35 +1048,105 @@ while (<CONFIG>) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("The POT file cannot be set twice.") )
           if length $pot_filename;
 
+        # Search for the candidate PO and POT files
+        # The difficulty is that the directory itself must be searched in destdir, calldir, srcdir and then the PO files must be searched in there.
+        # This mechanism is easy to get wrong (see eg #960892), so let's get cautionous and verbose on error.
+        # Step 1. collect the files in every candidate po_directory we find.
         my $po_directory = $main;
-        die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory"), $po_directory )
-          unless ( -d find_input_file($po_directory) );
-        opendir PO_DIR, find_input_file($po_directory)
-          or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list the '%s' directory"), $po_directory );
+        my @po_files;
+        if ( File::Spec->file_name_is_absolute($po_directory) ) {
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory"), $po_directory )
+              unless ( -d $po_directory );
 
-        foreach my $f ( sort readdir PO_DIR ) {
-            next unless -f find_input_file("$po_directory/$f");
-            if ( $f =~ m/^(.*)\.po$/ ) {
-                push @langs, $1;
-                $po_filename{$1} = "$po_directory/$f";
-                print wrap_msg( gettext("Found language '%s' in the provided po_directory."), $1 )
-                  if $po4a_opts{"verbose"};
-            }
-            if ( $f =~ m/\.pot$/ ) {
-                if ( length $pot_filename ) {
-                    die wrap_ref_mod( "$config_file:$nb", "", gettext("too many POT files: %s %s"),
-                        $pot_filename, "$po_directory/$f" );
-                } else {
-                    $pot_filename = "$po_directory/$f";
-                    print wrap_msg( gettext("Found POT file '%s' in the provided po_directory."), $pot_filename )
-                      if $po4a_opts{"verbose"};
+            opendir PO_DIR, find_input_file($po_directory)
+              or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list the '%s' directory"), $po_directory );
+            map { push @po_files, $_ if -e $_; } ( sort readdir PO_DIR );
+        } else {
+            my $found = 0;
+            foreach my $basedir ( $destdir, $calldir // ".", $srcdir ) {
+                next unless defined $basedir;
+                my $candidate = "$basedir/$po_directory";
+                if ( -e $candidate && -d $candidate ) {
+                    $found = 1;
+
+                    opendir PO_DIR,
+                      $candidate
+                      or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list directory '%s' in '%s' "),
+                        $po_directory, $basedir );
+                    map { push @po_files, "$po_directory/$_" if -e "$candidate/$_"; } ( sort readdir PO_DIR );
                 }
+            }
+            unless ($found) {
+                die wrap_ref_mod( "$config_file:$nb", "", gettext("Directory '%s' not found in '%s'."),
+                    $po_directory, $calldir )
+                  if ( not defined $destdir && not defined $srcdir );
+                die wrap_ref_mod( "$config_file:$nb", "", gettext("Directory '%s' not found in '%s' nor in '%s'."),
+                    $po_directory, $destdir, $calldir )
+                  if ( defined $destdir && not defined $srcdir );
+                die wrap_ref_mod( "$config_file:$nb", "", gettext("Directory '%s' not found in '%s' nor in '%s'."),
+                    $po_directory, $calldir, $srcdir )
+                  if ( not defined $destdir && defined $srcdir );
+                die wrap_ref_mod( "$config_file:$nb", "",
+                    gettext("Directory '%s' not found in '%s' nor in '%s' nor in '%s'."),
+                    $po_directory, $destdir, $calldir, $srcdir );
             }
         }
 
+        # Step 2: separate the PO and POT files we found in all traversed directories
+        foreach my $f (@po_files) {
+            if ( $f =~ m|^(.*?)/([^/]*)\.po$| ) {
+                push @langs, $2;
+                die wrap_ref_mod( "$config_file:$nb", gettext("Language '%s' found twice in '%s' and '%s'."),
+                    $po_filename{$2}, $f )
+                  if defined $po_filename{$2} && $po_filename{$2} ne $f;
+                $po_filename{$2} = $f;
+                print wrap_msg( gettext("Found language '%s' in the provided po_directory: %s"), $2, $f )
+                  if $po4a_opts{"verbose"};
+            }
+            if ( $f =~ m/\.pot$/ ) {
+                die wrap_ref_mod( "$config_file:$nb", gettext("too many POT files: '%s' and '%s'."), $pot_filename, $f )
+                  if ( length $pot_filename );
+                $pot_filename = $f;
+                print wrap_msg( gettext("Found POT file '%s' in the provided po_directory."), $pot_filename )
+                  if $po4a_opts{"verbose"};
+            }
+        }
+
+        # Step 3: if no PO file found, make a sensible error message.
+        # We could factorize the error message, but it would break gettext()
         if ( not @langs ) {
-            warn wrap_ref_mod( "$config_file:$nb", "", gettext("no PO files found in %s"),
-                find_input_file($po_directory) );
+            if ( not defined $destdir && not defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No PO files found in '%s'/'%s'."), $calldir,
+                    $main );
+            } elsif ( defined $destdir && not defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No PO files found in '%s'/'%s' nor in '%s'/'%s'."),
+                    $destdir, $main, $calldir, $main );
+            } elsif ( not defined $destdir && defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No PO files found in '%s'/'%s' nor in '%s'/'%s'."),
+                    $calldir, $main, $srcdir, $main );
+            } else {
+                warn wrap_ref_mod( "$config_file:$nb", "",
+                    gettext("No PO files found in '%s'/'%s' nor in '%s'/'%s' nor in '%s'/'%s'."),
+                    $destdir, $main, $calldir, $main, $srcdir, $main );
+            }
+        }
+
+        # Step 4: if no POT file found, make a sensible error message
+        if ( length $pot_filename == 0 ) {
+            if ( not defined $destdir && not defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No POT files found in '%s'/'%s'."), $calldir,
+                    $main );
+            } elsif ( defined $destdir && not defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No POT files found in '%s'/'%s' nor in '%s'/'%s'."),
+                    $destdir, $main, $calldir, $main );
+            } elsif ( not defined $destdir && defined $srcdir ) {
+                warn wrap_ref_mod( "$config_file:$nb", "", gettext("No POT files found in '%s'/'%s' nor in '%s'/'%s'."),
+                    $calldir, $main, $srcdir, $main );
+            } else {
+                warn wrap_ref_mod( "$config_file:$nb", "",
+                    gettext("No POT files found in '%s'/'%s' nor in '%s'/'%s' nor in '%s'/'%s'."),
+                    $destdir, $main, $calldir, $main, $srcdir, $main );
+            }
         }
 
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
