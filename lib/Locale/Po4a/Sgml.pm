@@ -988,7 +988,9 @@ sub parse_file {
             # Which tag did we see?
             my $tag = '';
             $tag .= '<' . lc( $event->data->name() );
-            while ( my ( $attr, $val ) = each %{ $event->data->attributes() } ) {
+            foreach my $attr ( sort $event->data->attribute_names() ) {
+
+                my $val   = ${ $event->data->attributes() }{$attr};
                 my $value = $val->value();
 
                 #                if ($val->type() eq 'IMPLIED') {
