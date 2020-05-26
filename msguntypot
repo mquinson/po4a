@@ -209,7 +209,7 @@ while (my $poarg = shift) {
     if (system("msgmerge $msgmergeOpts -o $pofile $poarg $oldfile 2>/dev/null")) {
         my $msg = $!;
         unlink ($pofile);
-        die wrap_msg(gettext("Error while running msgmerge: %s"), $msg);
+        die wrap_msg(gettext("Could not run msgmerge: %s"), $msg);
     }
     my $po=Locale::Po4a::Po->new();
     $po->read($pofile);
