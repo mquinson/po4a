@@ -306,7 +306,7 @@ while ( my $po_filename = shift @pofiles ) {
         push @cmd, ( "-U", $po_filename, $pot_filename );
         print STDERR join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd) == 0
-          or die wrap_msg( gettext("Error while running msgmerge: %s"), $! );
+          or die wrap_msg( gettext("Could not run msgmerge: %s"), $! );
         @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename );
         print STDERR join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd)
@@ -315,7 +315,7 @@ while ( my $po_filename = shift @pofiles ) {
         print STDERR wrap_msg( gettext("Creating %s:"), $po_filename )
           if $verbose;
         copy( $pot_filename, $po_filename )
-          or die wrap_msg( gettext("Error while copying the PO file (%s -> %s): %s"), $pot_filename, $po_filename, $! );
+          or die wrap_msg( gettext("Could not copy the PO file (%s → %s): %s"), $pot_filename, $po_filename, $! );
     }
 }
 
