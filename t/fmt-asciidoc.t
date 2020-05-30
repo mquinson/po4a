@@ -21,6 +21,12 @@ foreach my $t (
 push @tests,
   {
     'format'  => 'asciidoc',
+    'options' => '-o compat=asciidoctor',
+    'input'   => 'fmt/asciidoc/StrictDelimitedBlocks.adoc',
+    'doc'     => 'asciidoctor block fence parsing',
+  },
+  {
+    'format'  => 'asciidoc',
     'options' => '-o tablecells=1',
     'input'   => 'fmt/asciidoc/TablesCells.adoc',
     'doc'     => 'test table cells segmentation',

@@ -73,6 +73,12 @@ this option.
 This option is a flag that enables sub-table segmentation into cell content.
 The segmentation is limited to cell content, without any parsing inside of it.
 
+=item B<compat>
+
+Switch parsing rules to compatibility with different tools. Available options are
+"asciidoc" or "asciidoctor". Asciidoctor has stricter parsing rules, such as
+equality of length of opening and closing block fences.
+
 =back
 
 =head1 INLINE CUSTOMIZATION
@@ -144,6 +150,7 @@ sub initialize {
     $self->{options}{'definitions'}    = '';
     $self->{options}{'noimagetargets'} = 0;
     $self->{options}{'tablecells'}     = 0;
+    $self->{options}{'compat'}         = 'asciidoc';
 
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -456,7 +463,9 @@ sub parse {
             # Found one delimited block
             my $t = $line;
             $t =~ s/^(.).*$/$1/;
+            my $l = length $line;
             my $type = "delimited block $t";
+            $type = "$type $l"  if ( $self->{options}{'compat'} eq 'asciidoctor' );
             if ( defined $self->{verbatim} and ( $self->{type} ne $type ) ) {
                 $paragraph .= "$line\n";
             } else {
