@@ -62,6 +62,12 @@ Space-separated list of macro definitions.
 
 Space-separated list of style definitions.
 
+=item B<forcewrap>
+
+Force po4a to wrap any text lines. The lines may be wrapped in the source, but
+they are normally kept on a single line in the output. You can force wrapping
+with this option.
+
 =item B<noimagetargets>
 
 By default, the targets of block images are translatable to give opportunity
@@ -142,6 +148,7 @@ sub initialize {
     my %options = @_;
 
     $self->{options}{'nobullets'}      = 1;
+    $self->{options}{'forcewrap'}      = 0;
     $self->{options}{'debug'}          = '';
     $self->{options}{'verbose'}        = 1;
     $self->{options}{'entry'}          = '';
@@ -990,13 +997,20 @@ sub do_paragraph {
         $paragraph =~ s/^(.*?)(\n*)$/$1/s;
         $end = $2 || "";
     }
+
     my $t = $self->translate(
         $paragraph,
         $self->{ref},
         $type,
         "comment" => join( "\n", @comments ),
         "wrap"    => $wrap
-    );
+        );
+
+    my $unwrap_result = ! $self->{options}{'forcewrap'} && $wrap;
+    if ( $unwrap_result ) {
+        $t =~ s/(\n| )+/ /g;
+    }
+
     @comments = ();
     if ( defined $self->{bullet} ) {
         my $bullet  = $self->{bullet};
