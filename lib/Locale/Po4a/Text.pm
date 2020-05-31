@@ -968,7 +968,7 @@ sub do_paragraph {
             my $indent1 = $1;
             my $indent2 = "$1" . ( ' ' x length $bullet );
             my $text    = $4;
-            while ( $para !~ m/$indent2(?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+/
+            while ( $para !~ m/^$indent2(?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+/
                 and $para =~ s/^$indent2(\S[^\n]*\n)//s )
             {
                 $text .= $1;
@@ -978,7 +978,10 @@ sub do_paragraph {
             if ( $text !~ m/\S[ \t][ \t][ \t]+\S/s ) {
                 my $bullet_regex = quotemeta( $indent1 . $bullet );
                 $bullet_regex =~ s/[0-9]+/\\d\+/;
-                if ( $para eq '' or $para =~ m/^$bullet_regex\S/s ) {
+                if ( $para eq ''
+                    or $para =~ m/^(\s*)((?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+)([^\n]*\n)(.*)$/s
+                    or $para =~ m/^$bullet_regex\S/s )
+                {
                     my $trans = $self->translate(
                         $text,
                         $self->{ref},

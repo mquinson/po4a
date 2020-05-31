@@ -23,7 +23,6 @@ push @tests,
     'input'   => "fmt/txt-markdown/NoWrap.md",
   },
   {
-    'todo'    => "NestedLists: currently broken (https://github.com/mquinson/po4a/issues/131)",
     'format'  => 'text',
     'options' => '-o markdown',
     'input'   => "fmt/txt-markdown/NestedLists.md",
