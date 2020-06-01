@@ -158,6 +158,12 @@ sub initialize {
         $self->{options}{$opt} = $options{$opt};
     }
 
+    my $compat = $self->{options}{'compat'};
+    die wrap_mod( "po4a::asciidoc",
+        dgettext( "po4a", "Invalid compatibility setting: '%s'. It must be either '%s' or '%s'." ),
+        $compat, 'asciidoc', 'asciidoctor' )
+      if ( defined $compat && $compat ne "asciidoc" && $compat ne "asciidoctor" );
+
     if ( $options{'debug'} ) {
         foreach ( $options{'debug'} ) {
             $debug{$_} = 1;
@@ -463,9 +469,9 @@ sub parse {
             # Found one delimited block
             my $t = $line;
             $t =~ s/^(.).*$/$1/;
-            my $l = length $line;
+            my $l    = length $line;
             my $type = "delimited block $t";
-            $type = "$type $l"  if ( $self->{options}{'compat'} eq 'asciidoctor' );
+            $type = "$type $l" if ( $self->{options}{'compat'} eq 'asciidoctor' );
             if ( defined $self->{verbatim} and ( $self->{type} ne $type ) ) {
                 $paragraph .= "$line\n";
             } else {
