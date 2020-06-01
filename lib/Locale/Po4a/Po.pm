@@ -1531,15 +1531,19 @@ sub equals_msgid($$) {
 
     unless ( $self->count_entries() == $other->count_entries() ) {
         return ( 0,
-                "The amount of entries differ between files: "
-              . $self->count_entries()
-              . " is not "
-              . $other->count_entries()
-              . "\n" );
+                wrap_msg(
+                  dgettext(
+                        "po4a",
+                        "The amount of entries differ between files: %d"
+                        . " is not %d"
+                         ),
+                    $self->count_entries(), $other->count_entries()
+                )
+              );
     }
     foreach my $msgid ( keys %{ $self->{po} } ) {
         unless ( defined( $self->{po}{$msgid} ) && defined( $other->{po}{$msgid} ) ) {
-            return ( 0, "msgid declared in one file only: $msgid\n" );
+            return ( 0, wrap_msg( dgettext("po4a", "msgid declared in one file only: %s\n" ), $msgid ) );
         }
     }
     return ( 1, "" );
