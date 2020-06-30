@@ -1622,10 +1622,6 @@ if ( not $po4a_opts{"no-update"} ) {
 
     if ( $po4a_opts{"split"} ) {
 
-        # We don't need the tmp big POT anymore
-        unlink($pot_filename);
-        print STDERR "Unlink the big POT file $pot_filename\n" if $po4a_opts{'debug'};
-
         # Split the complete PO in multiple POs
         foreach $lang ( sort keys %po_filename ) {
             foreach my $master ( keys %document ) {
@@ -1690,6 +1686,13 @@ if ( not $po4a_opts{"no-update"} ) {
         }
     }    # if split
 }    # update po/pot files
+
+if ( $po4a_opts{"split"} ) {
+
+    # We don't need the tmp big POT anymore
+    unlink($pot_filename);
+    print STDERR "Unlink the big POT file $pot_filename\n" if $po4a_opts{'debug'};
+}
 
 if ( not $po4a_opts{"no-translations"} ) {
 
