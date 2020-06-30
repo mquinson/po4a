@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.43-1\n"
 "Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
-"POT-Creation-Date: 2020-05-25 00:12+0200\n"
+"POT-Creation-Date: 2020-06-01 12:40+0200\n"
 "PO-Revision-Date: 2018-11-06 19:39+0100\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <debian-l10n-danish@lists.debian.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:149 ../../lib/Locale/Po4a/Man.pm:496
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:156 ../../lib/Locale/Po4a/Man.pm:496
 #: ../../lib/Locale/Po4a/Po.pm:235 ../../lib/Locale/Po4a/RubyDoc.pm:74
 #: ../../lib/Locale/Po4a/Sgml.pm:258 ../../lib/Locale/Po4a/TeX.pm:1662
 #: ../../lib/Locale/Po4a/Text.pm:211 ../../lib/Locale/Po4a/Xml.pm:598
@@ -30,19 +30,24 @@ msgstr ""
 msgid "Unknown option: %s"
 msgstr "Ukendt tilvalg: %s"
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:208
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:163
+#, perl-format
+msgid "Invalid compatibility setting: '%s'. It must be either '%s' or '%s'."
+msgstr ""
+
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:221
 #, perl-format
 msgid "Unable to parse macro definition: %s"
 msgstr ""
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:255 ../../lib/Locale/Po4a/TeX.pm:1064
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:268 ../../lib/Locale/Po4a/TeX.pm:1064
 #: ../../po4a:942 ../../po4a:1015 ../../po4a:1242 ../../po4a-translate:298
 #, fuzzy, perl-format
 #| msgid "Can't open %s: %s"
 msgid "Cannot open %s: %s"
 msgstr "Kan ikke åbne %s: %s"
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:290
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:303
 #, fuzzy, perl-format
 #| msgid ""
 #| "Detection of two line titles failed at %s\n"
@@ -54,7 +59,7 @@ msgstr ""
 "Detektion af tolinjetitler mislykkedes på %s\n"
 "Installer modulet Unicode::GCString!"
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:414
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:427
 #, perl-format
 msgid ""
 "'%s' seems to be a two-lines title underlined with '%s', but the underlines "
@@ -62,7 +67,7 @@ msgid ""
 "your master document."
 msgstr ""
 
-#: ../../lib/Locale/Po4a/AsciiDoc.pm:871
+#: ../../lib/Locale/Po4a/AsciiDoc.pm:886
 msgid ""
 "It seems that you are adding unindented content to an item. The standard "
 "allows this, but you may still want to change your document to use indented "
@@ -588,6 +593,17 @@ msgstr ""
 "%s\n"
 " Gammel oversættelse fjernet."
 
+#: ../../lib/Locale/Po4a/Po.pm:1537
+#, perl-format
+msgid "The amount of entries differ between files: %d is not %d"
+msgstr ""
+
+#: ../../lib/Locale/Po4a/Po.pm:1546
+#, fuzzy, perl-format
+#| msgid "msgid defined twice: %s"
+msgid "msgid declared in one file only: %s\n"
+msgstr "msgid defineret to gange: %s"
+
 #: ../../lib/Locale/Po4a/Sgml.pm:220
 msgid ""
 "The needed module SGMLS.pm was not found and needs to be installed. It can "
@@ -1091,9 +1107,10 @@ msgid "Handling %s"
 msgstr "Håndterer %s"
 
 #: ../../msguntypot:212 ../../po4a-updatepo:309
-#, perl-format
-msgid "Error while running msgmerge: %s"
-msgstr "Der opstod en fejl under kørsel af msgmerge: %s"
+#, fuzzy, perl-format
+#| msgid "Can't run nsgmls: %s"
+msgid "Could not run msgmerge: %s"
+msgstr "Kan ikke køre nsgmls: %s"
 
 #: ../../msguntypot:234
 #, perl-format
@@ -1476,8 +1493,11 @@ msgstr "færdig."
 #: ../../po4a-updatepo:318
 #, fuzzy, perl-format
 #| msgid "Error while copying the PO file: %s"
-msgid "Error while copying the PO file (%s -> %s): %s"
+msgid "Could not copy the PO file (%s → %s): %s"
 msgstr "Der opstod en fejl under kopiering af PO-filen: %s"
+
+#~ msgid "Error while running msgmerge: %s"
+#~ msgstr "Der opstod en fejl under kørsel af msgmerge: %s"
 
 #~ msgid "Can't open %s: %s"
 #~ msgstr "Kan ikke åbne %s: %s"
