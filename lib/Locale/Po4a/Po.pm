@@ -618,8 +618,7 @@ sub move_po_if_needed {
     my $diff;
 
     if ( -e $old_po ) {
-        my $diff_ignore = "-I'^#:' " . "-I'^\"POT-Creation-Date:' " . "-I'^\"PO-Revision-Date:'";
-        $diff = qx(diff -q $diff_ignore $old_po $new_po);
+        $diff = qx(diff -q -I'^#:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' $old_po $new_po);
         if ( $diff eq "" ) {
             unlink $new_po
               or die wrap_msg( dgettext( "po4a", "Cannot unlink %s: %s." ), $new_po, $! );
