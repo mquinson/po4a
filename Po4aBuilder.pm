@@ -126,7 +126,6 @@ sub ACTION_install {
 sub ACTION_dist {
     my ($self) = @_;
 
-    $ENV{PO4AFLAGS} ||= '--force';
     $self->depends_on('distcheck');
     $self->depends_on('test');
     $self->depends_on('binpo');
