@@ -243,7 +243,13 @@ sub ACTION_man {
     foreach $file (@{$self->rscan_dir($manpath, qr{\.xml$})}) {
         if ($file =~ m,(.*/man(.))/([^/]*)\.xml$,) {
             my ($outdir, $section, $outfile) = ($1, $2, $3);
-            system("xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file") and die;
+	    if (-e "/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl") { # Location on Debian at least
+		print "Convert $outdir/$outfile.$section (local docbook.xsl file). ";
+		system("xsltproc -o $outdir/$outfile.$section --nonet /usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl $file") and die;
+	    } else { # Not found locally, use the XSL file online
+		print "Convert $outdir/$outfile.$section (online docbook.xsl file). ";
+		system("xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file") and die;
+	    }
             system ("gzip -9 -f $outdir/$outfile.$section") and die;
         }
         unlink "$file" || die;

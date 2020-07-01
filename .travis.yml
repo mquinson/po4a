@@ -9,7 +9,7 @@ addons:
       - libtest-pod-perl
       - gettext
 #      - docbook-xml 
-#      - docbook-xsl
+      - docbook-xsl
       - docbook
       - xsltproc
       - texlive-binaries
@@ -29,7 +29,7 @@ install:
 
 script:
   - perl Build.PL
-  - ./Build verbose=1
+  - COLUMNS=120 ./Build verbose=1
   - ./Build test verbose=1
 
 notifications:
