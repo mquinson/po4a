@@ -238,7 +238,7 @@ sub pushline {
     # => in translate_paragraph?
 
     if (   ( $#save_holders > 0 )
-        or ( $translation =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s ) )
+        or ( $translation =~ m/<placeholder\s/s ) )
     {
         $holder->{'translation'} = $translation;
     } else {
@@ -2006,8 +2006,17 @@ sub translate_paragraph {
         my $count = 0;
         my $str   = $translation;
         while ( ( defined $str )
-            and ( $str =~ m/^.*?<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>(.*)$/s ) )
+            and ( $str =~ m/^.*?<placeholder\s+[^>]*>(.*)$/s ) )
         {
+            die wrap_mod(
+                "po4a::xml",
+                dgettext(
+                    "po4a",
+                    "Invalid placeholder in the translation (the 'type' and 'id' must be present, in this order).\n%s\n\nPlease fix your translation."
+                ),
+                $str
+            ) unless ( $str =~ m/^.*?<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>(.*)$/s );
+
             $count += 1;
             $str = $2;
             if ( $holder->{'sub_translations'}->[$1] =~ m/<placeholder\s+type="[^"]+"\s+id="(\d+)"\s*\/>/s ) {
