@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-06-01 12:30+0200\n"
-"PO-Revision-Date: 2020-05-22 22:41+0000\n"
-"Last-Translator: Martin Quinson <martin.quinson@ens-rennes.fr>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/"
-">\n"
+"PO-Revision-Date: 2020-07-10 21:39+0000\n"
+"Last-Translator: Jean-Baptiste <jean-baptiste@holcroft.fr>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -466,6 +466,15 @@ msgid ""
 "L<po4a(7)>). It is highly recommended to use the B<po4a> program in your "
 "build process."
 msgstr ""
+"Les documents maîtres sont écrits par les rédacteurs de documentation. Tout "
+"changement est automatiquement reflété par po4a dans les fichiers PO, qui "
+"sont ensuite mis à jour par les traducteurs. Tous les changements sur les "
+"fichiers PO (manuels ou par po4a) sont automatiquement reflétés dans les "
+"documents traduits. Vous pouvez simuler ce comportement en utilisant les "
+"scripts L<po4a-updatepo(1)> et L<po4a-translate(1)> dans des makefiles, mais "
+"cela devient rapidement ennuyeux et répétitif (voir L<po4a(7)>). Il est "
+"fortement recommandé d’utiliser le programme B<po4a> dans votre processus de "
+"construction."
 
 #. type: =item
 #: po4a:16 po4a-translate:28
@@ -589,21 +598,17 @@ msgstr "B<-o>, B<--option>"
 #. type: textblock
 #: po4a:35 po4a-gettextize:25 po4a-normalize:11 po4a-translate:27
 #: po4a-updatepo:21
-#, fuzzy
-#| msgid ""
-#| "Extra option(s) to pass to the format plugin. Specify each option in the "
-#| "'I<name>B<=>I<value>' format. See the documentation of each plugin for "
-#| "more information about the valid options and their meanings."
 msgid ""
 "Extra option(s) to pass to the format plugin. See the documentation of each "
 "plugin for more information about the valid options and their meanings. For "
 "example, you could pass '-o tablecells' to the AsciiDoc parser, while the "
 "text parser would accept '-o tabs=split'."
 msgstr ""
-"Passe une ou des options supplémentaires au greffon de format. Spécifiez "
-"chaque option en utilisant le format I<name>B<=>I<value>. Veuillez vous "
+"Passe une ou des options supplémentaires au greffon de format. Veuillez vous "
 "référer à la documentation de chaque greffon pour la liste des options "
-"valides et leurs significations."
+"valides et leurs significations. Par exemple, vous pourriez passer « -o "
+"tablecells » au parseur AsciiDoc, tandis que le parseur de texte accepterait "
+"« -o tabs=split »."
 
 #. type: =item
 #: po4a:36
@@ -845,6 +850,10 @@ msgid ""
 "I<srcdir>. Output files are written to I<destdir> if specified, or to the "
 "current directory."
 msgstr ""
+"Si I<destdir> et I<srcdir> sont renseignés, les fichiers d’entrée sont "
+"cherchés dans les dossiers suivants et dans cet ordre : I<destdir>, le "
+"dossier courant et I<srcdir>. Les fichiers de sortie sont écrits dans "
+"I<destdir> si renseigné, sinon dans le dossier courant."
 
 #. type: =item
 #: po4a:66
@@ -863,7 +872,7 @@ msgstr ""
 #. type: =head2
 #: po4a:68
 msgid "Options modifying the POT header"
-msgstr ""
+msgstr "Options modifiant l’en-tête du POT"
 
 #. type: =item
 #: po4a:69 lib/Locale/Po4a/Po.pm:14
@@ -887,7 +896,7 @@ msgstr ""
 #. type: =item
 #: po4a:71 po4a-translate:45 po4a-updatepo:41 lib/Locale/Po4a/Po.pm:16
 msgid "B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)"
-msgstr ""
+msgstr "B<--wrap-po> B<no>|B<newlines>|I<nombre> (par défaut : 76)"
 
 #. type: textblock
 #: po4a:72 po4a-translate:46 po4a-updatepo:42 lib/Locale/Po4a/Po.pm:17
@@ -896,6 +905,10 @@ msgid ""
 "either files that are nicely wrapped but could lead to git conflicts, or "
 "files that are easier to handle automatically, but harder to read for humans."
 msgstr ""
+"Détermine la façon de formater le fichier po. Cela donne le choix entre des "
+"fichiers joliment reformatés mais pouvant mener à des conflits git, ou des "
+"fichiers plus facile à prendre en main automatiquement, mais plus difficile "
+"à lire pour les humains."
 
 #. type: textblock
 #: po4a:73 lib/Locale/Po4a/Po.pm:18
@@ -2328,14 +2341,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:65
-#, fuzzy
-#| msgid ""
-#| "Sometimes, you get the strong feeling that po4a ate some parts of the "
-#| "text, either the original or the translation. F<gettextization.failed.po> "
-#| "indicates that both of them were gently matching, and then the "
-#| "gettextization fails because it tried to match one paragraph with the one "
-#| "after (or before) the right one, as if the right one disappeared. Curse "
-#| "po4a as I did when it first happened to me. Generously."
 msgid ""
 "In some unfortunate settings, you will get the feeling that po4a ate some "
 "parts of the text, either the original or the translation. F<gettextization."
@@ -2345,13 +2350,14 @@ msgid ""
 "should, but with the N+2 paragraph. Just as if the N+1 paragraph that you "
 "see in the document simply disappeared from the file during the process."
 msgstr ""
-"D’autres fois, vous aurez l’impression que po4a a oublié des parties du "
-"texte original ou de la traduction. F<gettextization.failed.po> indique que "
-"les deux correspondent correctement, mais la gettextization échoue parce que "
-"po4a essaie de faire correspondre un paragraphe avec le paragraphe suivant "
-"(ou précédant) de celui qui devrait lui être associé, comme si celui-ci "
-"avait disparu. Vous pesterez sûrement contre po4a comme je l’ai fait quand "
-"ça m’est arrivé."
+"Dans certaines configurations malheureuses, vous aurez l’impression que po4a "
+"a oublié des parties du texte original ou de la traduction. "
+"F<gettextization.failed.po> indique que les fichiers correspondent jusqu’au "
+"paragraphe N. Mais après, une tentative (infructueuse) est réalisée pour "
+"faire correspondre le paragraphe N+1 du fichier original non pas avec le "
+"paragraphe N+1 de la traduction comme il le faudrait, mais avec le "
+"paragraphe N+2. Comme si le paragraphe N+1 que vous voyez dans le document "
+"avait simplement disparu du fichier durant le processus."
 
 #. type: textblock
 #: po4a-gettextize:66
@@ -2376,13 +2382,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:68
-#, fuzzy
-#| msgid ""
-#| "So, when the same paragraph appears twice in the original but both are "
-#| "not translated in the exact same way each time, you will get the feeling "
-#| "that a paragraph of the original disappeared. Just kill the new "
-#| "translation. If you prefer to kill the first translation instead when the "
-#| "second one was actually better, replace the first one with the second."
 msgid ""
 "To the opposite, if the same paragraph appearing twice in the original "
 "document is not translated in the exact same way at both locations, you will "
@@ -2390,12 +2389,11 @@ msgid ""
 "Just copy the best translation over the other one in the translated document "
 "to fix the problem."
 msgstr ""
-"Donc, lorsque le même paragraphe apparaît deux fois dans l’original mais "
-"n’est pas traduit exactement de la même façon chaque fois, vous aurez "
-"l’impression qu’un paragraphe de l’original a disparu. Supprimez juste la "
-"nouvelle traduction. Si vous préférez plutôt supprimer la première "
-"traduction parce que la nouvelle traduction est meilleure, remplacez la "
-"première par la seconde."
+"À l'opposé, si le même paragraphe apparaît deux fois dans l’original mais n’"
+"est pas traduit exactement de la même façon chaque fois, vous aurez l’"
+"impression qu’un paragraphe de l’original a disparu. Copiez simplement la "
+"meilleure traduction à la place de l'autre dans le document traduit pour "
+"résoudre le problème."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2513,10 +2511,8 @@ msgstr ""
 
 #. type: =item
 #: po4a-normalize:25
-#, fuzzy
-#| msgid "B<-p>, B<--po>"
 msgid "B<-p>, B<--pot>"
-msgstr "B<-p>, B<--po>"
+msgstr "B<-p>, B<--pot>"
 
 #. type: textblock
 #: po4a-normalize:26
@@ -3060,27 +3056,17 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:7
-#, fuzzy
-#| msgid ""
-#| "I like the idea of open-source software, making it possible for everybody "
-#| "to access software and its source code. But being French, I'm well aware "
-#| "that the licensing is not the only restriction to the openness of "
-#| "software: non-translated free software is useless for non-English "
-#| "speakers, and we still have some work to make it available to really "
-#| "everybody out there."
 msgid ""
 "The philosophy of Free Software is to make the technology truly available to "
 "everyone. But licensing is not the only consideration: untranslated free "
 "software is useless for non-English speakers. Therefore, we still have some "
 "work to do to make software available to everybody."
 msgstr ""
-"J’aime le concept des logiciels à sources ouverts, qui permettent de donner "
-"à tous un accès au logiciel et à son code source. Mais, étant moi-même "
-"français, je suis conscient que la licence n’est pas le seul frein à "
-"l’ouverture d’un S<logiciel :> les logiciels non traduits, même s’ils sont "
-"libres, sont sans aucune utilité pour ceux qui ne comprennent pas l’anglais, "
-"et il y a encore beaucoup de travail pour les rendre accessibles à vraiment "
-"tout le monde."
+"Le concept des logiciels à sources ouverts est de rendre la technologie "
+"réellement disponible pour tout le monde. Mais, la licence n’est pas la "
+"seule préoccupation, un logiciel ouvert est inutile pour des utilisateurs "
+"non anglophones. En conséquence, nous avons encore du travail pour rendre le "
+"logiciel disponible pour tous."
 
 #. type: textblock
 #: doc/po4a.7.pod:8
@@ -3093,13 +3079,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:9
-#, fuzzy
-#| msgid ""
-#| "Actually, open-source software themselves benefit of a rather decent "
-#| "level of translation, thanks to the wonderful gettext tool suite. It is "
-#| "able to extract the strings to translate from the program, present a "
-#| "uniform format to translators, and then use the result of their works at "
-#| "run time to display translated messages to the user."
 msgid ""
 "Thankfully, Open Source software is actually very well translated using the "
 "gettext tool suite. These tools are used to extract the strings to translate "
@@ -3109,12 +3088,13 @@ msgid ""
 "result is then used by gettext at run time to display translated messages to "
 "the end users."
 msgstr ""
-"Les logiciels aux sources ouverts bénéficient d’un niveau de traduction "
-"relativement bon, grâce à la formidable suite d’outils gettext. Ces outils "
-"permettent d’extraire les chaînes à traduire du programme, de les présenter "
-"sous une forme standard pour les traducteurs, puis d’utiliser le résultat de "
-"leur travail lors de l’exécution pour afficher les messages traduits aux "
-"utilisateurs."
+"Heureusement, les logiciels ouverts sont réllement très bien traduits en "
+"utilisant la suite d’outils gettext. Ces outils sont utilisés pour extraire "
+"les chaînes à traduire d’un programme et pour présenter les chaînes à "
+"traduire dans un format standardisé (appelés fichiers PO ou catalogue de "
+"traduction). Tout un écosystème d’outils a émergé pour aider les traducteurs "
+"à traduire réellement ces fichiers PO. Le résultat est alors utilisé par "
+"gettext à l'exécution pour afficher les messages traduits aux utilisateurs."
 
 #. type: textblock
 #: doc/po4a.7.pod:10
@@ -3202,13 +3182,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:19
-#, fuzzy
-#| msgid ""
-#| "The good old manual pages' format, used by so much programs out there. "
-#| "The po4a support is very welcome here since this format is somewhat "
-#| "difficult to use and not really friendly to the newbies.  The L<Locale::"
-#| "Po4a::Man(3pm)|Man> module also supports the mdoc format, used by the BSD "
-#| "man pages (they are also quite common on Linux)."
 msgid ""
 "The good old manual pages' format, used by so many programs out there. po4a "
 "support is very welcome here since this format is somewhat difficult to use "
@@ -3216,9 +3189,7 @@ msgid ""
 msgstr ""
 "Le bon vieux format des pages de manuel, utilisé par beaucoup de programmes. "
 "Le support de po4a pour ce format est très utile parce que ce format est "
-"assez compliqué, surtout pour les débutants. Le module L<Locale::Po4a::"
-"Man(3pm)|Man> supporte également le format mdoc, utilisé par les pages de "
-"manuel BSD (elles sont également assez fréquentes sous Linux)."
+"assez compliqué, surtout pour les débutants."
 
 #. type: textblock
 #: doc/po4a.7.pod:20
@@ -3247,13 +3218,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:24
-#, fuzzy
-#| msgid ""
-#| "This is the Perl Online Documentation format. The language and extensions "
-#| "themselves are documented that way, as well as most of the existing Perl "
-#| "scripts. It makes easy to keep the documentation close to the actual code "
-#| "by embedding them both in the same file. It makes programmer life easier, "
-#| "but unfortunately, not the translator one."
 msgid ""
 "This is the Perl Online Documentation format. The language and extensions "
 "themselves are documented using this format in addition to most existing "
@@ -3262,11 +3226,11 @@ msgid ""
 "easier, but unfortunately, not the translator's, until you use po4a."
 msgstr ""
 "C’est le format pour la documentation en ligne de Perl (S<« Perl> Online "
-"S<Documentation »>). Le langage et ses documentations sont documentés de "
-"cette façon, ainsi que la plupart des scripts Perl existants. Il permet de "
-"garder la documentation plus fidèle au code en les intégrant tous deux au "
-"même fichier. Il rend la vie du programmeur plus simple, mais "
-"malheureusement pas celle du traducteur."
+"S<Documentation »>). Le langage et ses documentations sont documentés en "
+"utilisant ce format en plus de la majorité des scripts Perl existants. Il "
+"permet de garder la documentation plus fidèle au code en les intégrant tous "
+"deux au même fichier. Il rend la vie du programmeur plus simple, mais "
+"malheureusement pas celle du traducteur jusqu'à ce que vous utilisiez po4a."
 
 #. type: =item
 #: doc/po4a.7.pod:25
@@ -3275,14 +3239,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:26
-#, fuzzy
-#| msgid ""
-#| "Even if somewhat superseded by XML nowadays, this format is still used "
-#| "rather often for documents which are more than a few screens long. It "
-#| "allows you to make complete books. Updating the translation of so long "
-#| "documents can reveal to be a real nightmare. B<diff> reveals often "
-#| "useless when the original text was re-indented after update. Fortunately, "
-#| "po4a can help you in that process."
 msgid ""
 "Even if superseded by XML nowadays, this format is still used for documents "
 "which are more than a few screens long. It can even be used for complete "
@@ -3292,20 +3248,13 @@ msgid ""
 msgstr ""
 "Même s’il est de plus en plus remplacé par le XML, ce format est encore "
 "assez utilisé pour les documents dont la taille dépasse plusieurs écrans. Il "
-"permet de faire des livres complets. La mise à jours de documents aussi "
-"longs est un vrai cauchemar. B<diff> se montre souvent inutile quand le "
-"document original a été réindenté après une mise à jour. Heureusement, po4a "
-"vous aide dans cette tâche."
+"permet même de faire des livres complets. Des documents aussi longs peuvent "
+"être vraiment complexes à traduire. B<diff> se montre souvent inutile quand "
+"le document original a été réindenté après une mise à jour. Heureusement, "
+"po4a vous aide dans cette tâche."
 
 #. type: textblock
 #: doc/po4a.7.pod:27
-#, fuzzy
-#| msgid ""
-#| "Currently, only the DebianDoc and DocBook DTD are supported, but adding "
-#| "support to a new one is really easy. It is even possible to use po4a on "
-#| "an unknown SGML DTD without changing the code by providing the needed "
-#| "information on the command line. See L<Locale::Po4a::Sgml(3pm)> for "
-#| "details."
 msgid ""
 "Currently, only DebianDoc and DocBook DTD are supported, but adding support "
 "for a new one is really easy. It is even possible to use po4a on an unknown "
@@ -3313,10 +3262,10 @@ msgid ""
 "the command line. See L<Locale::Po4a::Sgml(3pm)> for details."
 msgstr ""
 "Actuellement, seules les DTD DebianDoc et DocBook sont prises en charge, "
-"mais l’ajout d’une nouvelle est très facile. Il est même possible d’utiliser "
-"po4a avec une DTD SGML inconnue sans modifier le code en fournissant les "
-"informations nécessaires sur la ligne de commande. Veuillez consulter "
-"L<Locale::Po4a::Sgml(3pm)> pour plus de détails."
+"mais l’ajout d’une nouvelle DTD est très facile. Il est même possible d’"
+"utiliser po4a avec une DTD SGML inconnue sans modifier le code en "
+"fournissant les informations nécessaires sur la ligne de commande. Veuillez "
+"consulter L<Locale::Po4a::Sgml(3pm)> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:28
@@ -3325,37 +3274,21 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:29
-#, fuzzy
-#| msgid ""
-#| "The LaTeX format is a major documentation format used in the Free "
-#| "Software world and for publications.  The L<Locale::Po4a::LaTeX(3pm)|"
-#| "LaTeX> module was tested with the Python documentation, a book and some "
-#| "presentations."
 msgid ""
 "The LaTeX format is a major documentation format used in the Free Software "
 "world and for publications."
 msgstr ""
 "Le format LaTeX est un format majeur utilisé pour les documentations dans le "
-"monde du logiciel libre ou pour des publications. Le module L<Locale::Po4a::"
-"LaTeX(3pm)|LaTeX> a été testé avec la documentation de Python, un livre et "
-"avec quelques présentations."
+"monde du logiciel libre ou pour des publications."
 
 #. type: textblock
 #: doc/po4a.7.pod:30
-#, fuzzy
-#| msgid ""
-#| "The LaTeX format is a major documentation format used in the Free "
-#| "Software world and for publications.  The L<Locale::Po4a::LaTeX(3pm)|"
-#| "LaTeX> module was tested with the Python documentation, a book and some "
-#| "presentations."
 msgid ""
 "The L<Locale::Po4a::LaTeX(3pm)|LaTeX> module was tested with the Python "
 "documentation, a book and some presentations."
 msgstr ""
-"Le format LaTeX est un format majeur utilisé pour les documentations dans le "
-"monde du logiciel libre ou pour des publications. Le module L<Locale::Po4a::"
-"LaTeX(3pm)|LaTeX> a été testé avec la documentation de Python, un livre et "
-"avec quelques présentations."
+"Le module L<Locale::Po4a::LaTeX(3pm)|LaTeX> a été testé avec la "
+"documentation de Python, un livre et avec quelques présentations."
 
 #. type: =item
 #: doc/po4a.7.pod:31
@@ -3389,16 +3322,12 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:36
-#, fuzzy
-#| msgid ""
-#| "Currently, the DocBook DTD is supported by po4a. See L<Locale::Po4a::"
-#| "Docbook(3pm)> for details."
 msgid ""
 "Currently, the DocBook DTD (see L<Locale::Po4a::Docbook(3pm)> for details) "
 "and XHTML are supported by po4a."
 msgstr ""
-"À ce jour, la DTD DocBook est prise en charge par po4a. Veuillez consulter "
-"L<Locale::Po4a::Docbook(3pm)> pour plus de détails."
+"À ce jour, la DTD DocBook (veuillez consulter L<Locale::Po4a::Docbook(3pm)> "
+"pour plus de détails) et XHTML sont pris en charge par po4a."
 
 #. type: =item
 #: doc/po4a.7.pod:37
@@ -3407,12 +3336,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:38
-#, fuzzy
-#| msgid ""
-#| "All the GNU documentation is written in this format (that's even one of "
-#| "the requirement to become an official GNU project).  The support for "
-#| "L<Locale::Po4a::Texinfo(3pm)|Texinfo> in po4a is still at the beginning.  "
-#| "Please report bugs and feature requests."
 msgid ""
 "All of the GNU documentation is written in this format (it's even one of the "
 "requirements to become an official GNU project). The support for L<Locale::"
@@ -3420,27 +3343,18 @@ msgid ""
 "report bugs and feature requests."
 msgstr ""
 "Toutes les documentations du projet GNU sont écrites dans ce format (c’est "
-"même une des exigences pour devenir un projet officiel du projet GNU). Le "
-"support pour L<Locale::Po4a::Texinfo(3pm)|Texinfo> dans po4a en est encore à "
-"ses début. Veuillez nous envoyer des rapports de bogue ou des demandes de "
-"nouvelle fonctionnalité."
+"même une des exigences pour devenir un projet officiel du projet GNU). La "
+"prise en charge pour L<Locale::Po4a::Texinfo(3pm)|Texinfo> dans po4a en est "
+"encore à ses début. Veuillez nous envoyer des rapports de bogue ou des "
+"demandes de nouvelle fonctionnalité."
 
 #. type: =item
 #: doc/po4a.7.pod:39
-#, fuzzy
-#| msgid "Unsupported formats"
 msgid "Others supported formats"
-msgstr "Formats non supportés"
+msgstr "Autres formats supportés"
 
 #. type: textblock
 #: doc/po4a.7.pod:40
-#, fuzzy
-#| msgid ""
-#| "Po4a can also handle some more rare or specialized formats, such as the "
-#| "documentation of compilation options for the 2.4+ Linux kernels or the "
-#| "diagrams produced by the dia tool. Adding a new one is often very easy "
-#| "and the main task is to come up with a parser of your target format. See "
-#| "L<Locale::Po4a::TransTractor(3pm)> for more information about this."
 msgid ""
 "Po4a can also handle some more rare or specialized formats, such as the "
 "documentation of compilation options for the 2.4+ Linux kernels or the "
@@ -3449,11 +3363,11 @@ msgid ""
 "L<Locale::Po4a::TransTractor(3pm)> for more information about this."
 msgstr ""
 "Po4a peut également gérer des formats plus rares et plus spécifiques, tels "
-"que celui de la documentation des options de compilation des noyaux Linux "
-"2.4+ ou les diagrammes produits par l’outil dia. L’ajout d’un nouveau format "
+"que celui de la documentation des options de compilation des noyaux Linux 2."
+"4+ ou les diagrammes produits par l’outil dia. L’ajout d’un nouveau format "
 "est souvent très simple, et consiste principalement à fournir un "
-"interpréteur pour le format voulu. Veuillez consulter L<Locale::Po4a::"
-"TransTractor(3pm)> pour plus d’informations à ce sujet."
+"interpréteur pour le format voulu. Veuillez consulter "
+"L<Locale::Po4a::TransTractor(3pm)> pour plus d’informations à ce sujet."
 
 #. type: =item
 #: doc/po4a.7.pod:41
@@ -3462,14 +3376,6 @@ msgstr "Formats non supportés"
 
 #. type: textblock
 #: doc/po4a.7.pod:42
-#, fuzzy
-#| msgid ""
-#| "There is a whole bunch of other formats we would like to support in po4a, "
-#| "and not only documentation ones. Indeed, we aim at plugging all \"market "
-#| "holes\" left by the classical gettext tools.  It encompass package "
-#| "descriptions (deb and rpm), package installation scripts questions, "
-#| "package changelogs, and all specialized file formats used by the programs "
-#| "such as game scenarios or wine resource files."
 msgid ""
 "Unfortunately, po4a still lacks support for several documentation formats. "
 "Many of them would be easy to support in po4a. This includes formats not "
@@ -3478,13 +3384,13 @@ msgid ""
 "specialized file formats used by programs such as game scenarios or wine "
 "resource files."
 msgstr ""
-"Il y a une quantité d’autres formats que nous aimerions supporter avec po4a, "
-"et pas seulement des formats de documentation. En fait, nous visons toutes "
-"les S<« niches »> laissées par les outils gettext classiques. Cela va de la "
-"traduction de la documentation des descriptions des paquets Debian et "
-"paquetages rpm, aux les questions posées par les scripts d’installation, ex "
-"passant par les fichiers changelog, et de tous les formats spécifiques tels "
-"que les scénarios de jeux ou les fichiers de ressource pour wine."
+"Malheureusement, po4a soufre d’un manque de prise en charge de divers "
+"formats de documentation. Beaucoup d’entre eux seraient simple à prendre en "
+"charge dans po4a. Cela inclut des formats étant utilisés pour plus que de la "
+"documentation, tels que les descriptions de paquets (deb et rpm), aux "
+"questions posées par les scripts d’installation, en passant par les fichiers "
+"changelog, et de tous les formats spécifiques tels que les scénarios de jeux "
+"ou les fichiers de ressource pour wine."
 
 #. type: =head1
 #: doc/po4a.7.pod:43
@@ -3531,10 +3437,8 @@ msgstr ""
 
 #. type: =head2
 #: doc/po4a.7.pod:47
-#, fuzzy
-#| msgid "Graphical overview"
 msgid "Graphical overview of the po4a scripts"
-msgstr "Résumé graphique"
+msgstr "Résumé graphique des scripts po4a"
 
 #. type: textblock
 #: doc/po4a.7.pod:48
