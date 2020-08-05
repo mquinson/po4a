@@ -1055,8 +1055,13 @@ while (<CONFIG>) {
         # Step 1. collect the files in every candidate po_directory we find.
         my $po_directory = $main;
         my @po_files;
+        print STDERR wrap_msg( gettext("Searching for po_directory '%s'."), $po_directory )
+          if $po4a_opts{"debug"};
         if ( File::Spec->file_name_is_absolute($po_directory) ) {
-            die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory"), $po_directory )
+            print STDERR wrap_msg( gettext("Using '%s' as a %s."), $po_directory, "po_directory" )
+              if $po4a_opts{"verbose"};
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' is not a directory (current dir: %s)"),
+                $po_directory, cwd() )
               unless ( -d $po_directory );
 
             opendir PO_DIR, find_input_file($po_directory)
@@ -1069,6 +1074,8 @@ while (<CONFIG>) {
                 my $candidate = "$basedir/$po_directory";
                 if ( -e $candidate && -d $candidate ) {
                     $found = 1;
+                    print STDERR wrap_msg( gettext("Using '%s' as a %s."), $candidate, "po_directory" )
+                      if $po4a_opts{"verbose"};
 
                     opendir PO_DIR,
                       $candidate
@@ -1094,7 +1101,9 @@ while (<CONFIG>) {
         }
 
         # Step 2: separate the PO and POT files we found in all traversed directories
+        my %seen = ();    # the elements of po_files that we saw already (we need to ignore the dupplicates)
         foreach my $f (@po_files) {
+            next if $seen{$f}++;    # we saw it already
             if ( $f =~ m|^(.*?)/([^/]*)\.po$| ) {
                 push @langs, $2;
                 die wrap_ref_mod( "$config_file:$nb", gettext("Language '%s' found twice in '%s' and '%s'."),
@@ -1105,13 +1114,15 @@ while (<CONFIG>) {
                   if $po4a_opts{"verbose"};
             }
             if ( $f =~ m/\.pot$/ ) {
-                die wrap_ref_mod( "$config_file:$nb", gettext("too many POT files: '%s' and '%s'."), $pot_filename, $f )
+                die wrap_msg( gettext("%s:%d: too many POT files: '%s' and '%s'."), $config_file, $nb, $pot_filename,
+                    $f )
                   if ( length $pot_filename );
                 $pot_filename = $f;
                 print wrap_msg( gettext("Found POT file '%s' in the provided po_directory."), $pot_filename )
                   if $po4a_opts{"verbose"};
             }
         }
+        undef %seen;
 
         # Step 3: if no PO file found, make a sensible error message.
         # We could factorize the error message, but it would break gettext()
