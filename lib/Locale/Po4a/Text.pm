@@ -147,9 +147,9 @@ my $markdown = 0;
 
 =item B<yfm_keys> (markdown-only)
 
-Coma-separated list of keys to process for translation in the YAML Front Matter
+Comma-separated list of keys to process for translation in the YAML Front Matter
 section. All other keys are skipped. Keys are matched with a case-insensitive
-match. Arrays values are always translated, unless the B<yfm_skip_array> option
+match. Array values are always translated, unless the B<yfm_skip_array> option
 is provided.
 
 =cut
