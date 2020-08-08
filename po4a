@@ -311,8 +311,8 @@ It requires B<gettext> 0.16 or later, and is activated by default.
 
 =head1 CONFIGURATION FILE
 
-po4a expects a configuration file as argument. This file must contain the
-following elements:
+po4a expects a configuration file as argument. This file must contain
+the following elements:
 
 =over
 
@@ -335,10 +335,28 @@ All lines contain a command between square braces, followed by its parameters.
 Comments begin with the char '#' and run until the end of the line. You can
 escape the end of line to spread a command over several lines.
 
+Some full examples are presented on this page, while other examples
+can be found in the C<t/cfg> directory of the source distribution.
+
 =head2 Finding the PO and POT files
 
-The simplest solution is to give the path to the directory containing your
-translation project as follows.
+The simplest solution is to explicitly give the path to POT and PO files, as follows:
+
+ [po4a_paths] man/po/project.pot de:man/po/de.po fr:man/po/fr.po
+
+This specifies the path to the POT file first, and then the paths to the German
+and French PO files.
+
+The same information can be written as follows to reduce the risk of copy/paste errors:
+
+ [po4a_langs] fr de
+ [po4a_paths] man/po/project.pot $lang:man/po/$lang.po
+
+The C<$lang> component is automatically expanded using the provided languages
+list, reducing the risk of copy/paste error when a new language is added.
+
+You can further compact the same information by only providing the
+path to the directory containing your translation project, as follows.
 
  [po_directory] man/po/
 
@@ -346,20 +364,12 @@ The provided directory must contain a set of PO files, each named F<XX.po> with
 C<XX> the ISO 639-1 of the language used in this file. The directory must also
 contain a single POT file, with the C<.pot> file extension.
 
-If you prefer, you can give the same information explicitly as follows:
-
- [po4a_paths] man/po/project.pot de:man/po/de.po fr:man/po/fr.po
-
-This specifies the path to the POT file first, and then the paths to the German
-and French PO files.
-
-Finally, the same information can be written as follows:
-
- [po4a_langs] fr de
- [po4a_paths] man/po/project.pot $lang:man/po/$lang.po
-
-The C<$lang> component is automatically expanded using the provided languages
-list, reducing the risk of copy/paste error when a new language is added.
+Note that you must choose only one between C<po_directory> and
+C<po4a_paths>. The first one (C<po_directory>) is more compact,
+further reduces the risk of copy/paste error, but forces you to use
+the expected project structure and file names. The second one
+(C<po4a_paths>), is more explicit, probably more readable, and
+advised when you setup your first project with po4a.
 
 =head3 Centralized or split PO files?
 
