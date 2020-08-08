@@ -96,6 +96,18 @@ push @tests, {
         'PODIFF -I#: $path/po/fr.po $tmppath/po/fr.po',    #
         'PODIFF -I#: $path/po/single.pot $tmppath/po/single.pot'
     ]
+  },
+  {
+    'doc'            => 'Single language, using po_directory in the config file, empty POT file',
+    'po4a.conf'      => 'cfg/single-podirectory-emptypot/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'po single.man.fr.1',
+    'tests'          => [
+        'PODIFF -I#: $path/po/fr.po $tmppath/po/fr.po',    #
+        'PODIFF -I#: $path/_single.pot $tmppath/po/single.pot',
+        'rm $tmppath/po/single.pot && touch $tmppath/po/single.pot'
+        ,                                                  # The $path/po/single.pot exists, but it's empty (on purpose)
+    ]
 
   };
 
