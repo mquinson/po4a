@@ -1169,6 +1169,8 @@ while (<CONFIG>) {
                     gettext("No PO files found in '%s'/'%s' nor in '%s'/'%s' nor in '%s'/'%s'."),
                     $destdir, $main, $calldir, $main, $srcdir, $main );
             }
+            warn wrap_ref_mod( "$config_file:$nb", "",
+                gettext("Your project will not be translated to any language.") );
         }
 
         # Step 4: if no POT file found, make a sensible error message
@@ -1187,6 +1189,8 @@ while (<CONFIG>) {
                     gettext("No POT files found in '%s'/'%s' nor in '%s'/'%s' nor in '%s'/'%s'."),
                     $destdir, $main, $calldir, $main, $srcdir, $main );
             }
+            warn wrap_ref_mod( "$config_file:$nb", "",
+                gettext("Please create an empty file with the 'pot' extension (e.g. 'myproject.pot').") );
         }
 
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
