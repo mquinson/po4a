@@ -996,11 +996,27 @@ while (<CONFIG>) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_path" )
           if ( length $pot_filename );
         $pot_filename = $main;
-        foreach my $arg ( split( / /, $args ) ) {
+        warn wrap_ref_mod(
+            "$config_file:$nb",
+            "",
+            gettext(
+                "Your POT file '%s' file name does not end with the 'pot' extension. This is unusual and will trouble the translators."
+            ),
+            $pot_filename
+        ) unless $pot_filename =~ m/\.pot$/;
+        my @split_args = split( / /, $args );
+        warn wrap_ref_mod(
+            "$config_file:$nb",
+            "",
+            gettext("No PO file provided as subsequent parameters to '%s'. Your documentation will not be translated."),
+            "po4a_path"
+        ) unless scalar @split_args > 0;
+
+        foreach my $arg (@split_args) {
             die wrap_ref_mod( "$config_file:$nb", "", gettext("Unparsable argument '%s'."), $arg )
               unless ( $arg =~ /^([^:]*):(.*)/ );
             my ( $component, $path ) = ( $1, $2 );
-            if ( $component =~ m/^add_(.*)$/ ) {
+            if ( $component =~ m/^add_(.*)$/ ) {    # This is an addendum declaration
                 my $lang    = $1;
                 my @addlist = ($path);
                 while ( scalar @addlist ) {
