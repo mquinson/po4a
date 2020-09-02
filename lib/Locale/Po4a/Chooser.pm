@@ -49,7 +49,7 @@ sub new {
             my $error = $@;
             warn wrap_msg( gettext("Unknown format type: %s."), $module );
             warn wrap_mod( "po4a::chooser", gettext("Module loading error: %s"), $error )
-              if defined $options{'verbose'} && $options{'verbose'} > 0;
+              unless defined $options{'quiet'};
             list(1);
         }
     }
