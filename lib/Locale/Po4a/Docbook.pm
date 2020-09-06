@@ -2045,6 +2045,9 @@ sub initialize {
     $self->{options}{'_default_translated'} .= " <year>";
     $self->{options}{'_default_inline'}     .= " <year>";
 
+    # xreflabel is the label to use when referencing an element that has no title
+    $self->{options}{'_default_attributes'} .= " xreflabel";
+
     # ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 
     $self->{options}{'_default_attributes'} .= '
