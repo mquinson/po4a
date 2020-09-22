@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2020-09-02 23:24+0200\n"
+"POT-Creation-Date: 2020-09-22 23:12+0200\n"
 "PO-Revision-Date: 2020-05-17 20:41+0000\n"
 "Last-Translator: Golubev Alexander <fatzer2@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a-doc/ru/"
@@ -2068,7 +2068,7 @@ msgstr ""
 #. type: =head1
 #: po4a:191 po4a-gettextize:73 po4a-normalize:31 po4a-translate:56
 #: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:156
-#: lib/Locale/Po4a/AsciiDoc.pm:38 lib/Locale/Po4a/BibTeX.pm:11
+#: lib/Locale/Po4a/AsciiDoc.pm:46 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
 #: lib/Locale/Po4a/Guide.pm:12 lib/Locale/Po4a/Halibut.pm:16
@@ -2099,7 +2099,7 @@ msgstr ""
 
 #. type: =head1
 #: po4a:193 po4a-gettextize:75 po4a-normalize:33 po4a-translate:58
-#: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:40
+#: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:48
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
 #: lib/Locale/Po4a/Docbook.pm:19 lib/Locale/Po4a/Guide.pm:14
@@ -2121,7 +2121,7 @@ msgstr "Copyright 2002-2020 by SPI, inc."
 
 #. type: textblock
 #: po4a:195 po4a-gettextize:77 po4a-normalize:35 po4a-translate:60
-#: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:42
+#: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:50
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
 #: lib/Locale/Po4a/Docbook.pm:21 lib/Locale/Po4a/Guide.pm:16
@@ -4873,11 +4873,73 @@ msgstr "Список определений стилей (style definitions), р
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:17
+#, fuzzy
+#| msgid "B<no_wrap>"
+msgid "B<forcewrap>"
+msgstr "B<no_wrap>"
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:18
+msgid ""
+"Enable automatic line wrapping in non-verbatim blocks, even if the result "
+"could be misinterpreted by AsciiDoc formatters."
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:19
+msgid ""
+"By default, po4a will not wrap the produced AsciiDoc files because a manual "
+"inspection is mandated to ensure that the wrapping does not change the "
+"formatting. Consider for instance the following list item:"
+msgstr ""
+
+#. type: verbatim
+#: lib/Locale/Po4a/AsciiDoc.pm:20
+#, no-wrap
+msgid ""
+" * a long sentence that is ending with a number 1. A second sentence.\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:21
+msgid ""
+"If the wrapping leads to the following presentation, the item is split into "
+"a numbered sub-list. To make things worse, only the speakers of the language "
+"used in the translation can inspect the situation."
+msgstr ""
+
+#. type: verbatim
+#: lib/Locale/Po4a/AsciiDoc.pm:22
+#, no-wrap
+msgid ""
+" * a long sentence that is ending with a number\n"
+"   1. A second sentence.\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:23
+msgid ""
+"Note that not wrapping the files produced by po4a should not be a problem "
+"since those files are meant to be processed automatically.  They should not "
+"be regarded as source files anyway."
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:24
+msgid ""
+"With this option, po4a will produce better-looking source files, that may "
+"lead to possibly erroneous formatted outputs."
+msgstr ""
+
+#. type: =item
+#: lib/Locale/Po4a/AsciiDoc.pm:25
 msgid "B<noimagetargets>"
 msgstr "B<noimagetargets>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:18
+#: lib/Locale/Po4a/AsciiDoc.pm:26
 msgid ""
 "By default, the targets of block images are translatable to give opportunity "
 "to make the content point to translated images. This can be stopped by "
@@ -4888,12 +4950,12 @@ msgstr ""
 "строками. Это можно изменить, указав данный параметр."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:19
+#: lib/Locale/Po4a/AsciiDoc.pm:27
 msgid "B<tablecells>"
 msgstr "B<tablecells>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:20
+#: lib/Locale/Po4a/AsciiDoc.pm:28
 msgid ""
 "This option is a flag that enables sub-table segmentation into cell "
 "content.  The segmentation is limited to cell content, without any parsing "
@@ -4904,14 +4966,14 @@ msgstr ""
 "их содержимого."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:21
+#: lib/Locale/Po4a/AsciiDoc.pm:29
 #, fuzzy
 #| msgid "B<code>"
 msgid "B<compat>"
 msgstr "B<code>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:22
+#: lib/Locale/Po4a/AsciiDoc.pm:30
 msgid ""
 "Switch parsing rules to compatibility with different tools. Available "
 "options are \"asciidoc\" or \"asciidoctor\". Asciidoctor has stricter "
@@ -4920,12 +4982,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: lib/Locale/Po4a/AsciiDoc.pm:23 lib/Locale/Po4a/TeX.pm:27
+#: lib/Locale/Po4a/AsciiDoc.pm:31 lib/Locale/Po4a/TeX.pm:27
 msgid "INLINE CUSTOMIZATION"
 msgstr "ВСТРОЕННЫЕ НАСТРОЙКИ ПОВЕДЕНИЯ"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:24
+#: lib/Locale/Po4a/AsciiDoc.pm:32
 msgid ""
 "The AsciiDoc module can be customized with lines starting by B<//po4a:>.  "
 "These lines are interpreted as commands to the parser.  The following "
@@ -4936,12 +4998,12 @@ msgstr ""
 "парсеру. Возможно задать следующие команды:"
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:25
+#: lib/Locale/Po4a/AsciiDoc.pm:33
 msgid "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
 msgstr "B<//po4a: macro >I<имя>B<[>I<список атрибутов>B<]>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:26
+#: lib/Locale/Po4a/AsciiDoc.pm:34
 msgid ""
 "This permits to describe in detail the parameters of a B<macro>; I<name> "
 "must be a valid macro name, and it ends with an underscore if the target "
@@ -4953,7 +5015,7 @@ msgstr ""
 "добавлено подчёркивание."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:27
+#: lib/Locale/Po4a/AsciiDoc.pm:35
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "informations about translatable arguments.  This list contains either "
@@ -4965,7 +5027,7 @@ msgstr ""
 "имёна оных атрибутов."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:28
+#: lib/Locale/Po4a/AsciiDoc.pm:36
 msgid ""
 "If a plus sign (B<+>) is prepended to I<name>, then the macro and its "
 "arguments are translated as a whole.  There is no need to define attribute "
@@ -4976,12 +5038,12 @@ msgstr ""
 "задавать список аргументов, но скобки всё равно должны присутствовать."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:29
+#: lib/Locale/Po4a/AsciiDoc.pm:37
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
 msgstr "B<//po4a: style >B<[>I<список атрибутов>B<]>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:30
+#: lib/Locale/Po4a/AsciiDoc.pm:38
 msgid ""
 "This permits to describe in detail which attributes of a style must be "
 "translated."
@@ -4990,7 +5052,7 @@ msgstr ""
 "переводиться."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:31
+#: lib/Locale/Po4a/AsciiDoc.pm:39
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "informations about translatable arguments.  This list contains either "
@@ -5004,7 +5066,7 @@ msgstr ""
 "переведено."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:32
+#: lib/Locale/Po4a/AsciiDoc.pm:40
 msgid ""
 "If a plus sign (B<+>) is prepended to the style name, then the attribute "
 "list is translated as a whole.  There is no need to define translatable "
@@ -5015,7 +5077,7 @@ msgstr ""
 "задавать список атрибутов."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:33
+#: lib/Locale/Po4a/AsciiDoc.pm:41
 msgid ""
 "If a minus sign (B<->) is prepended to the style name, then this attribute "
 "is not translated."
@@ -5024,12 +5086,12 @@ msgstr ""
 "будут переводиться."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:34
+#: lib/Locale/Po4a/AsciiDoc.pm:42
 msgid "B<//po4a: entry >I<name>"
 msgstr "B<//po4a: entry >I<имя>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:35
+#: lib/Locale/Po4a/AsciiDoc.pm:43
 msgid ""
 "This declares an attribute entry as being translatable.  By default, they "
 "are not translated."
@@ -5038,7 +5100,7 @@ msgstr ""
 "не являются таковыми."
 
 #. type: =head1
-#: lib/Locale/Po4a/AsciiDoc.pm:36 lib/Locale/Po4a/BibTeX.pm:9
+#: lib/Locale/Po4a/AsciiDoc.pm:44 lib/Locale/Po4a/BibTeX.pm:9
 #: lib/Locale/Po4a/Dia.pm:10 lib/Locale/Po4a/Docbook.pm:6
 #: lib/Locale/Po4a/Guide.pm:7 lib/Locale/Po4a/Halibut.pm:7
 #: lib/Locale/Po4a/KernelHelp.pm:5 lib/Locale/Po4a/Man.pm:96
@@ -5050,12 +5112,12 @@ msgid "STATUS OF THIS MODULE"
 msgstr "СОСТОЯНИЕ ЭТОГО МОДУЛЯ"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:37
+#: lib/Locale/Po4a/AsciiDoc.pm:45
 msgid "Tested successfully on simple AsciiDoc files."
 msgstr "Успешно протестирован на простых файлах AsciiDoc."
 
 #. type: verbatim
-#: lib/Locale/Po4a/AsciiDoc.pm:39
+#: lib/Locale/Po4a/AsciiDoc.pm:47
 #, no-wrap
 msgid ""
 " Nicolas François <nicolas.francois@centraliens.net>\n"
@@ -5067,7 +5129,7 @@ msgstr ""
 "\n"
 
 #. type: verbatim
-#: lib/Locale/Po4a/AsciiDoc.pm:41
+#: lib/Locale/Po4a/AsciiDoc.pm:49
 #, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
