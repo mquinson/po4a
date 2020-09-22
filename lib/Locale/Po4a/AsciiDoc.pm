@@ -64,9 +64,24 @@ Space-separated list of style definitions.
 
 =item B<forcewrap>
 
-Force po4a to wrap any text lines. The lines may be wrapped in the source, but
-they are normally kept on a single line in the output. You can force wrapping
-with this option.
+Force po4a to wrap any paragraph lines (wrapping format is preserved
+in verbatim blocks). The lines of a paragraph may be wrapped in the
+source, but they are kept on a single line in the output, to prevent
+unattended wrapping from creating by mistake formatting forms at
+beginning of line.
+
+For instance, suppose a list entry of the form:
+
+ * a long sentence that is ending with a number 1. A second sentence.
+
+Which could be wrapped like:
+
+ * a long sentence that is ending with a number
+   1. A second sentence.
+
+Thus, transforming the two sentences into a new numbered sub-list.
+
+This option allows to force wrapping, but this is strongly not recommended.
 
 =item B<noimagetargets>
 
