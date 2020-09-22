@@ -64,24 +64,30 @@ Space-separated list of style definitions.
 
 =item B<forcewrap>
 
-Force po4a to wrap any paragraph lines (wrapping format is preserved
-in verbatim blocks). The lines of a paragraph may be wrapped in the
-source, but they are kept on a single line in the output, to prevent
-unattended wrapping from creating by mistake formatting forms at
-beginning of line.
+Enable automatic line wrapping in non-verbatim blocks, even if the
+result could be misinterpreted by AsciiDoc formatters.
 
-For instance, suppose a list entry of the form:
+By default, po4a will not wrap the produced AsciiDoc files because a
+manual inspection is mandated to ensure that the wrapping does not
+change the formatting. Consider for instance the following list
+item:
 
  * a long sentence that is ending with a number 1. A second sentence.
 
-Which could be wrapped like:
+If the wrapping leads to the following presentation, the item is
+split into a numbered sub-list. To make things worse, only the
+speakers of the language used in the translation can inspect the
+situation.
 
  * a long sentence that is ending with a number
    1. A second sentence.
 
-Thus, transforming the two sentences into a new numbered sub-list.
+Note that not wrapping the files produced by po4a should not be a
+problem since those files are meant to be processed automatically.
+They should not be regarded as source files anyway.
 
-This option allows to force wrapping, but this is strongly not recommended.
+With this option, po4a will produce better-looking source files, that
+may lead to possibly erroneous formatted outputs.
 
 =item B<noimagetargets>
 
@@ -1019,10 +1025,10 @@ sub do_paragraph {
         $type,
         "comment" => join( "\n", @comments ),
         "wrap"    => $wrap
-        );
+    );
 
-    my $unwrap_result = ! $self->{options}{'forcewrap'} && $wrap;
-    if ( $unwrap_result ) {
+    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap;
+    if ($unwrap_result) {
         $t =~ s/(\n| )+/ /g;
     }
 
