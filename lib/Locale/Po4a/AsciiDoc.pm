@@ -62,6 +62,27 @@ Space-separated list of macro definitions.
 
 Space-separated list of style definitions.
 
+=item B<forcewrap>
+
+Force po4a to wrap any paragraph lines (wrapping format is preserved
+in verbatim blocks). The lines of a paragraph may be wrapped in the
+source, but they are kept on a single line in the output, to prevent
+unattended wrapping from creating by mistake formatting forms at
+beginning of line.
+
+For instance, suppose a list entry of the form:
+
+ * a long sentence that is ending with a number 1. A second sentence.
+
+Which could be wrapped like:
+
+ * a long sentence that is ending with a number
+   1. A second sentence.
+
+Thus, transforming the two sentences into a new numbered sub-list.
+
+This option allows to force wrapping, but this is strongly not recommended.
+
 =item B<noimagetargets>
 
 By default, the targets of block images are translatable to give opportunity
@@ -142,6 +163,7 @@ sub initialize {
     my %options = @_;
 
     $self->{options}{'nobullets'}      = 1;
+    $self->{options}{'forcewrap'}      = 0;
     $self->{options}{'debug'}          = '';
     $self->{options}{'verbose'}        = 1;
     $self->{options}{'entry'}          = '';
@@ -990,13 +1012,20 @@ sub do_paragraph {
         $paragraph =~ s/^(.*?)(\n*)$/$1/s;
         $end = $2 || "";
     }
+
     my $t = $self->translate(
         $paragraph,
         $self->{ref},
         $type,
         "comment" => join( "\n", @comments ),
         "wrap"    => $wrap
-    );
+        );
+
+    my $unwrap_result = ! $self->{options}{'forcewrap'} && $wrap;
+    if ( $unwrap_result ) {
+        $t =~ s/(\n| )+/ /g;
+    }
+
     @comments = ();
     if ( defined $self->{bullet} ) {
         my $bullet  = $self->{bullet};
