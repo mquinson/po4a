@@ -76,7 +76,8 @@ sub ACTION_binpo {
         print "XX po/bin/po4a.pot uptodate.\n";
     }
 
-    # update languages
+    # DO NOT update languages. They are updated by the weblate robot directly
+  if (0) {
     foreach (@{$self->rscan_dir('po/bin',qr{\.po$})}) {
         my $lang = fileparse($_, qw{.po});
         unless ($self->up_to_date("po/bin/po4a.pot", $_)) {
@@ -102,6 +103,7 @@ sub ACTION_binpo {
             system("msgfmt -o blib/po/$lang/LC_MESSAGES/po4a.mo $_") && die;
         }
     }
+  }
 }
 
 sub ACTION_install {
