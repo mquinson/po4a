@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-09-22 23:12+0200\n"
-"PO-Revision-Date: 2020-10-04 18:53+0200\n"
+"PO-Revision-Date: 2020-10-06 08:41+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -1353,7 +1353,7 @@ msgid ""
 "C<XX> language.  In the following example, the B<nostrip> option is passed "
 "to the XML parser (for all languages), while the threshold will be reduced "
 "to 0% for the French translation (that is thus always kept)."
-msgstr ""
+msgstr "È possibile passare queste opzioni per un file master specifico, o persino per una specifica traduzione di quel file, usando C<opt:> e C<opt_XX:> per la lingua C<XX>.  Nell'esempio seguente, viene passata l'opzione B<nostrip> al parser XML (per tutte le lingue), mentre la soglia viene ridotta a 0% per la traduzione francese (che significa perciò che sarà sempre mantenuta)."
 
 #. type: verbatim
 #: po4a:126
@@ -1361,7 +1361,7 @@ msgstr ""
 msgid ""
 " [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
 "\n"
-msgstr ""
+msgstr " [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n\n"
 
 #. type: textblock
 #: po4a:127
@@ -1371,7 +1371,7 @@ msgid ""
 "(see below), and then only the options. The grouping of configuration chunks "
 "is not very important, since elements are internally concatenated as "
 "strings. The following examples are all equivalent:"
-msgstr ""
+msgstr "In ogni caso, questi blocchi di configurazione devono essere posizionati alla fine della riga.  La dichiarazione dei file viene prima, poi l'addendum se presente (vedere sotto), e solo poi le opzioni. Il raggruppamento dei blocchi di configurazione non è molto importante, dato che gli elementi sono internamente concatenati come stringhe. Gli esempi seguenti sono tutti equivalenti:"
 
 #. type: verbatim
 #: po4a:128
@@ -1382,6 +1382,10 @@ msgid ""
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:nostrip opt_fr:--keep opt_fr:0\n"
 "\n"
 msgstr ""
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20\" opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20 -o nostrip\" opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:nostrip opt_fr:--keep opt_fr:0\n"
+"\n"
 
 #. type: textblock
 #: po4a:129
@@ -1391,12 +1395,12 @@ msgid ""
 "building the French translation, because the same POT file is used to update "
 "every languages. So the only options that can be language-specific are the "
 "ones that are used when producing the translation, as the C<--keep> option."
-msgstr ""
+msgstr "Si noti che le opzioni specifiche della lingua non vengono usate durante la costruzione del file POT. È per esempio impossibile passare B<nostrip> al parser solo quando crea la traduzione francese, perché lo stesso file POT viene usato per aggiornare tutte le lingue. Perciò le sole opzioni che possono essere specifiche per una lingua sono quelle che vengono usate durante la produzione della traduzione, come l'opzione C<--keep>."
 
 #. type: =head3
 #: po4a:130
 msgid "Configuration aliases"
-msgstr ""
+msgstr "Alias di configurazione"
 
 #. type: textblock
 #: po4a:131
@@ -1405,7 +1409,7 @@ msgid ""
 "alias as follows. In the next example, C<--keep 0> is passed to every "
 "Italian translation using this C<test> type, that is an extension of the "
 "C<man> type."
-msgstr ""
+msgstr "Per passare le stesse opzioni a più file, è meglio definire un alias di tipo come di seguito. Nel prossimo esempio, C<--keep 0> viene passata ad ogni traduzione italiana usando il tipo C<test>, che è un'estensione del tipo C<man>."
 
 #. type: verbatim
 #: po4a:132
@@ -1415,13 +1419,16 @@ msgid ""
 "  [type: test] man/page.1 $lang:man/$lang/page.1\n"
 "\n"
 msgstr ""
+"  [po4a_alias:test] man opt_it:\"--keep 0\"\n"
+"  [type: test] man/page.1 $lang:man/$lang/page.1\n"
+"\n"
 
 #. type: textblock
 #: po4a:133
 msgid ""
 "You can also extend an existing type reusing the same name for the alias as "
 "follows. This is not interpreted as as an erroneous recursive definition."
-msgstr ""
+msgstr "Si può anche estendere un tipo esistente riutilizzando lo stesso nome per l'alias come di seguito. Ciò non viene interpretato come una definizione erroneamente ricorsiva."
 
 #. type: verbatim
 #: po4a:134
@@ -1431,18 +1438,21 @@ msgid ""
 "  [type: man] man/page.1 $lang:man/$lang/page.1\n"
 "\n"
 msgstr ""
+"  [po4a_alias:man] man opt_it:\"--keep 0\"\n"
+"  [type: man] man/page.1 $lang:man/$lang/page.1\n"
+"\n"
 
 #. type: =head3
 #: po4a:135
 msgid "Global default options"
-msgstr ""
+msgstr "Opzioni predefinite globali"
 
 #. type: textblock
 #: po4a:136
 msgid ""
 "You can also use C<[options]> lines to define options that must be used for "
 "all files, regardless of their type."
-msgstr ""
+msgstr "Si può anche usare righe di C<[options]> per definire opzioni che devono essere usate per tutti i file, indipendentemente dal loro tipo."
 
 #. type: verbatim
 #: po4a:137
@@ -1450,14 +1460,14 @@ msgstr ""
 msgid ""
 "  [options] --keep 20 --option nostrip\n"
 "\n"
-msgstr ""
+msgstr "  [options] --keep 20 --option nostrip\n\n"
 
 #. type: textblock
 #: po4a:138
 msgid ""
 "As with the command line options, you can abbreviate the parameters passed "
 "in the configuration file:"
-msgstr ""
+msgstr "Come con le opzioni a riga di comando, si possono abbreviare i parametri passati nel file di configurazione:"
 
 #. type: verbatim
 #: po4a:139
@@ -1465,12 +1475,12 @@ msgstr ""
 msgid ""
 "  [options] -k 20 -o nostrip\n"
 "\n"
-msgstr ""
+msgstr "  [options] -k 20 -o nostrip\n\n"
 
 #. type: =head3
 #: po4a:140
 msgid "Option priorities"
-msgstr ""
+msgstr "Priorità delle opzioni"
 
 #. type: textblock
 #: po4a:141
@@ -1478,21 +1488,21 @@ msgid ""
 "The options of every sources are concatenated, ensuring that the default "
 "values can easily be overridden by more specific options. The order is as "
 "follows:"
-msgstr ""
+msgstr "Le opzioni di ogni sorgente vengono concatenate, assicurando così che i valori predefiniti possano essere facilmente ridefiniti da opzioni più specifiche. L'ordine è il seguente:"
 
 #. type: textblock
 #: po4a:142
 msgid ""
 "C<[options]> lines provide default values that can be overridden by any "
 "other source."
-msgstr ""
+msgstr "Le righe C<[options]> forniscono i valori predefiniti che possono essere ridefiniti da qualsiasi altra sorgente."
 
 #. type: textblock
 #: po4a:143
 msgid ""
 "Type aliases are then used. Language specific settings override the ones "
 "applicable to all languages."
-msgstr ""
+msgstr "Vengono poi usati gli alias dei tipi. Le impostazioni specifiche per la lingua sovrascrivono quelle applicabili a tutte le lingue."
 
 #. type: textblock
 #: po4a:144
@@ -1500,24 +1510,24 @@ msgid ""
 "Settings that are specific to a given master file override both the default "
 "ones and the ones coming from the type alias. In this case also, language "
 "specific settings override the global ones."
-msgstr ""
+msgstr "Le impostazioni specifiche ad ogni dato file master sovrascrivono sia quelle predefinite che quelle che provengono dagli alias dei tipi. In questo caso inoltre, le impostazioni specifiche della lingua sovrascrivono quelle globali."
 
 #. type: textblock
 #: po4a:145
 msgid ""
 "Finally, parameters provided on the B<po4a> command line override any "
 "settings from the configuration file."
-msgstr ""
+msgstr "Infine, i parametri forniti sulla riga di comando di B<po4a> sovrascrivono qualsiasi impostazione proveniente dal file di configurazione."
 
 #. type: =head3
 #: po4a:146
 msgid "Example"
-msgstr ""
+msgstr "Esempio"
 
 #. type: textblock
 #: po4a:147
 msgid "Here is an example showing how to quote the spaces and quotes:"
-msgstr ""
+msgstr "Ecco un esempio che mostra come commentare gli spazi e il virgolettato:"
 
 #. type: verbatim
 #: po4a:148
@@ -1526,6 +1536,8 @@ msgid ""
 " [po_directory] man/po/\n"
 " \n"
 msgstr ""
+" [po_directory] man/po/\n"
+" \n"
 
 #. type: verbatim
 #: po4a:149
@@ -1534,6 +1546,8 @@ msgid ""
 " [options] --master-charset UTF-8\n"
 " \n"
 msgstr ""
+" [options] --master-charset UTF-8\n"
+" \n"
 
 #. type: verbatim
 #: po4a:150
@@ -1561,7 +1575,7 @@ msgid ""
 "credit to the translator, then you need to define an addendum to the line "
 "defining your master file. Please refer to the page L<po4a(7)> for more "
 "details on the syntax of addendum files."
-msgstr ""
+msgstr "Se si vuole aggiungere una sezione extra alla traduzione, per esempio per dare credito al lavoro del traduttore, allora è necessario definire un addendum alla riga che difinisce il file master. Fare riferimento alla pagina L<po4a(7)> per ulteriori dettagli sulla sintassi dei file addendum."
 
 #. type: verbatim
 #: po4a:153
@@ -1571,11 +1585,14 @@ msgid ""
 "             add_fr:doc/l10n/script.fr.add\n"
 "\n"
 msgstr ""
+" [type: pod] script fr:doc/fr/script.1 \\\n"
+"             add_fr:doc/l10n/script.fr.add\n"
+"\n"
 
 #. type: textblock
 #: po4a:154
 msgid "You can also use language templates as follow:"
-msgstr ""
+msgstr "Si può usare anche i modelli di lingua nel modo seguente:"
 
 #. type: verbatim
 #: po4a:155
@@ -1592,12 +1609,12 @@ msgstr ""
 #. type: textblock
 #: po4a:156
 msgid "If an addendum fails to apply, the translation is discarded."
-msgstr ""
+msgstr "Se un file addendum fallisce nell'applicazione, la traduzione viene scartata."
 
 #. type: =head3
 #: po4a:157
 msgid "Modifiers for the addendum declaration"
-msgstr ""
+msgstr "Modificatori per la dichiarazione dell'addendum"
 
 #. type: textblock
 #: po4a:158
