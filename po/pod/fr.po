@@ -8,21 +8,22 @@
 # brandelune <jean.christophe.helary@traduction-libre.org>, 2020.
 # Jean-Baptiste <jean-baptiste@holcroft.fr>, 2020.
 # Martin Quinson <martin.quinson@ens-rennes.fr>, 2020.
+# jmichault <jmt.2000@free.fr>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-09-22 23:12+0200\n"
-"PO-Revision-Date: 2020-07-17 19:41+0000\n"
-"Last-Translator: Jean-Baptiste <jean-baptiste@holcroft.fr>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/"
-">\n"
+"PO-Revision-Date: 2020-10-13 21:26+0000\n"
+"Last-Translator: jmichault <jmt.2000@free.fr>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -1092,6 +1093,8 @@ msgstr ""
 msgid ""
 "The list of each master file to translate, along with specific parameters."
 msgstr ""
+"La liste de chaque fichier maître à traduire, avec les paramètres "
+"spécifiques."
 
 #. type: textblock
 #: po4a:98
@@ -1100,6 +1103,10 @@ msgid ""
 "parameters.  Comments begin with the char '#' and run until the end of the "
 "line. You can escape the end of line to spread a command over several lines."
 msgstr ""
+"Toutes les lignes contiennent une commande entre crochets, suivie de ses "
+"paramètres. Les commentaires commencent par le caractère «#» et vont jusqu'à "
+"la fin de la ligne. Vous pouvez échapper la fin de la ligne (avec \\) pour "
+"étaler une commande sur plusieurs lignes."
 
 #. type: textblock
 #: po4a:99
@@ -1107,6 +1114,9 @@ msgid ""
 "Some full examples are presented on this page, while other examples can be "
 "found in the C<t/cfg> directory of the source distribution."
 msgstr ""
+"Quelques exemples complets sont présentés sur cette page, tandis que "
+"d'autres exemples peuvent être trouvés dans le répertoire C<t/cfg> de la "
+"distribution source."
 
 #. type: =head2
 #: po4a:100
@@ -1119,6 +1129,8 @@ msgid ""
 "The simplest solution is to explicitly give the path to POT and PO files, as "
 "follows:"
 msgstr ""
+"La solution la plus simple est de donner explicitement le chemin des "
+"fichiers POT et PO, comme ceci :"
 
 #. type: verbatim
 #: po4a:102
@@ -1136,6 +1148,8 @@ msgid ""
 "This specifies the path to the POT file first, and then the paths to the "
 "German and French PO files."
 msgstr ""
+"Cela spécifie d'abord le chemin d'accès au fichier POT, puis les chemins "
+"d'accès aux fichiers PO allemand et français."
 
 #. type: textblock
 #: po4a:104
@@ -1143,6 +1157,8 @@ msgid ""
 "The same information can be written as follows to reduce the risk of copy/"
 "paste errors:"
 msgstr ""
+"La même information peut être écrite comme suit pour réduire le risque "
+"d'erreurs de copier/coller :"
 
 #. type: verbatim
 #: po4a:105
@@ -1163,6 +1179,9 @@ msgid ""
 "languages list, reducing the risk of copy/paste error when a new language is "
 "added."
 msgstr ""
+"L'élément C<$lang> est automatiquement développé à l'aide de la liste de "
+"langues fournie, ce qui réduit le risque d'erreur de copier/coller "
+"lorsqu'une nouvelle langue est ajoutée."
 
 #. type: textblock
 #: po4a:107
@@ -1170,6 +1189,9 @@ msgid ""
 "You can further compact the same information by only providing the path to "
 "the directory containing your translation project, as follows."
 msgstr ""
+"Vous pouvez en outre compacter les mêmes informations en fournissant "
+"uniquement le chemin d'accès au répertoire contenant votre projet de "
+"traduction, comme suit."
 
 #. type: verbatim
 #: po4a:108
@@ -1190,6 +1212,12 @@ msgid ""
 "the first run, this file can be empty but it must exist (po4a cannot guess "
 "the name to use before the extension)."
 msgstr ""
+"Le répertoire fourni doit contenir un ensemble de fichiers PO, nommés "
+"F<XX.po>, C<XX> étant le code ISO 639-1 de la langue utilisée dans ce "
+"fichier. Le répertoire doit également contenir un seul fichier POT, avec "
+"l'extension de fichier C<.pot>. Pour la première exécution, ce fichier peut "
+"être vide mais il doit exister (po4a ne peut pas deviner le nom à utiliser "
+"avant l'extension)."
 
 #. type: textblock
 #: po4a:110
@@ -1201,11 +1229,17 @@ msgid ""
 "explicit, probably more readable, and advised when you setup your first "
 "project with po4a."
 msgstr ""
+"Notez bien que vous devez choisir entre C<po_directory> et C<po4a_paths>. Le "
+"premier (C<po_directory>) est plus compact, réduit le risque d'erreur de "
+"copier/coller, mais vous oblige à utiliser la structure de projet et les "
+"noms de fichiers attendus. Le second (C<po4a_paths>), est plus explicite, "
+"probablement plus lisible, et conseillé lorsque vous configurez votre "
+"premier projet avec po4a."
 
 #. type: =head3
 #: po4a:111
 msgid "Centralized or split PO files?"
-msgstr ""
+msgstr "Fichier PO unique ou fractionné ?"
 
 #. type: textblock
 #: po4a:112
@@ -1217,6 +1251,13 @@ msgid ""
 "that the important ones get translated first. Still, some translation teams "
 "prefer to split the content in several files."
 msgstr ""
+"Par défaut, po4a produit un seul fichier PO par langue cible, contenant tout "
+"le contenu de votre projet de traduction. À mesure que votre projet se "
+"développe, la taille de ces fichiers peut devenir problématique. Lors de "
+"l'utilisation de weblate, il est possible de spécifier des priorités pour "
+"chaque segment de traduction (c'est-à-dire, msgid) afin que les plus "
+"importants soient traduits en premier. Toutefois, certaines équipes de "
+"traduction préfèrent diviser le contenu en plusieurs fichiers."
 
 #. type: textblock
 #: po4a:113
@@ -1225,6 +1266,9 @@ msgid ""
 "$master> in the name of your PO files on the C<[po4a_paths]> line, as "
 "follows."
 msgstr ""
+"Pour avoir un fichier PO par fichier maître, il vous suffit d'utiliser la "
+"chaîne C<$master> dans le nom de vos fichiers PO sur la ligne C<[po4a_paths]"
+">, comme suit."
 
 #. type: verbatim
 #: po4a:114
@@ -1294,6 +1338,9 @@ msgid ""
 "translated document to produce, and optionally some configuration. Here is "
 "an example:"
 msgstr ""
+"Vous devez également lister les documents à traduire. Pour chaque fichier "
+"maître, vous devez spécifier l'analyseur de format à utiliser, l'emplacement "
+"du document traduit et éventuellement une configuration. Voici un exemple :"
 
 #. type: verbatim
 #: po4a:120
@@ -1320,6 +1367,9 @@ msgid ""
 "adding a new language. It is much simpler to reorganize things using the C<"
 "$lang> template as follows:"
 msgstr ""
+"Mais là aussi, ces lignes complexes sont difficiles à lire et à modifier, "
+"par ex. lors de l'ajout d'une nouvelle langue. Il est beaucoup plus simple "
+"de réorganiser les choses en utilisant le modèle C<$lang> comme ceci :"
 
 #. type: verbatim
 #: po4a:122
@@ -1330,6 +1380,10 @@ msgid ""
 " [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
 "\n"
 msgstr ""
+" [type: sgml]    doc/mon_truc.sgml $lang:doc/$lang/mon_truc.sgml\n"
+" [type: man]     script.1          $lang:po/$lang/script.1\n"
+" [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
+"\n"
 
 #. type: =head2
 #: po4a:123
@@ -1348,6 +1402,16 @@ msgid ""
 "Xml(3pm)>. You could for example pass B<nostrip> to the XML parser to not "
 "strip the spaces around the extracted strings."
 msgstr ""
+"Il y a deux types d'options : les I<options po4a> sont les valeurs par "
+"défaut des options de ligne de commande po4a tandis que les I<options de "
+"format> sont utilisées pour changer le comportement des analyseurs de "
+"format. En tant qu' I<options po4a>, vous pouvez par exemple spécifier dans "
+"votre fichier de configuration que la valeur par défaut du paramètre de "
+"ligne de commande B<--keep> est 50% au lieu de 80%. Les <Options de format> "
+"sont documentées sur la page spécifique de chaque module d'analyse, par ex. "
+"L<Locale::Po4a::Xml(3pm)>. Vous pouvez par exemple passer B<nostrip> à "
+"l'analyseur XML pour ne pas supprimer les espaces autour des chaînes "
+"extraites."
 
 #. type: textblock
 #: po4a:125
@@ -1358,14 +1422,23 @@ msgid ""
 "to the XML parser (for all languages), while the threshold will be reduced "
 "to 0% for the French translation (that is thus always kept)."
 msgstr ""
+"Vous pouvez transmettre ces options pour un fichier maître spécifique, ou "
+"même pour une traduction spécifique de ce fichier, en utilisant C<opt:> et "
+"C<opt_XX:> pour la langue C<XX>. Dans l'exemple suivant, l'option B<nostrip> "
+"est passée à l'analyseur XML (pour toutes les langues), tandis que le seuil "
+"sera réduit à 0% pour la traduction française (qui est donc toujours "
+"conservée)."
 
 #. type: verbatim
 #: po4a:126
-#, no-wrap
+#, fuzzy, no-wrap
 msgid ""
 " [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
 "\n"
 msgstr ""
+" [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep "
+"0\"\n"
+"\n"
 
 #. type: textblock
 #: po4a:127
@@ -1376,16 +1449,29 @@ msgid ""
 "is not very important, since elements are internally concatenated as "
 "strings. The following examples are all equivalent:"
 msgstr ""
+"Dans tous les cas, ces blocs de configuration doivent être situés à la fin "
+"de la ligne. La déclaration des fichiers doit venir en premier, puis "
+"l'addendum le cas échéant (voir plus loin), et ensuite seulement les "
+"options. Le regroupement des blocs de configuration n'est pas très "
+"important, car les éléments sont concaténés en interne sous forme de "
+"chaînes. Les exemples suivants sont tous équivalents :"
 
 #. type: verbatim
 #: po4a:128
-#, no-wrap
+#, fuzzy, no-wrap
 msgid ""
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20\" opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20 -o nostrip\" opt_fr:\"--keep 0\"\n"
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:nostrip opt_fr:--keep opt_fr:0\n"
 "\n"
 msgstr ""
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20\" opt:\"-o "
+"nostrip\" opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20 -o nostrip\" "
+"opt_fr:\"--keep 0\"\n"
+"  [type:xml] toto.xml $lang:toto.$lang.xml opt:--keep opt:20 opt:-o opt:"
+"nostrip opt_fr:--keep opt_fr:0\n"
+"\n"
 
 #. type: textblock
 #: po4a:129
@@ -1396,6 +1482,13 @@ msgid ""
 "every languages. So the only options that can be language-specific are the "
 "ones that are used when producing the translation, as the C<--keep> option."
 msgstr ""
+"Notez que les options spécifiques à la langue ne sont pas utilisées lors de "
+"la création du fichier POT. Il est par exemple impossible de passer "
+"B<nostrip> à l'analyseur uniquement lors de la construction de la traduction "
+"française, car le même fichier POT est utilisé pour mettre à jour toutes les "
+"langues. Ainsi, les seules options qui peuvent être spécifiques à la langue "
+"sont celles qui sont utilisées lors de la production de la traduction, comme "
+"l'option C<--keep>."
 
 #. type: =head3
 #: po4a:130
@@ -1410,6 +1503,10 @@ msgid ""
 "Italian translation using this C<test> type, that is an extension of the "
 "C<man> type."
 msgstr ""
+"Pour transmettre les mêmes options à plusieurs fichiers, le mieux est de "
+"définir un alias de type comme suit. Dans l'exemple suivant, C<--keep 0> est "
+"passé à chaque traduction italienne en utilisant ce type C<test>, qui est "
+"une extension du type C<man>."
 
 #. type: verbatim
 #: po4a:132
