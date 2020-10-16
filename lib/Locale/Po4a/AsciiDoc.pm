@@ -820,6 +820,13 @@ sub parse {
             {
                 # same indent level as before: append
                 $paragraph .= $text . "\n";
+            } elsif ( length($paragraph)
+                and ( length( $self->{bullet} ) == 0 ) )
+            {
+                # definition list continuation
+                $paragraph .= $text . "\n";
+                $self->{indent} = "";
+                print STDERR " definition list continuation\n" if ( $debug{parse} );
             } else {
 
                 # not the same indent level: start a new translated paragraph
