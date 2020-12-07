@@ -296,7 +296,7 @@ Here is the checklist of things to remember when releasing po4a:
 - Bump the version number in lib/Locale/Po4a/TransTractor.pm and
   regenerate the building script: `perl Build.PL`
 - Check that `./Build test` reports no error.
-- Generate tanslation statistics: `./Build postats`
+- Generate translation statistics: `./Build postats`
 - Check NEWS
   - It documents all recent changes found in git logs.
   - It contains a release name and a release date.
