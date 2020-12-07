@@ -83,6 +83,10 @@ ensure that bugs won't resurface in the future.
   `perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
   perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
   docbook-dtds`
+- On openSUSE Leap 15.2:
+  `perl-SGML-Parser-OpenSP perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
+  perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
+  docbook-dtds`
 
 When writing or improving a test, you probably want to select the test
 to run, and make it verbose. The tests are executed from the "_t_"
@@ -292,10 +296,11 @@ Here is the checklist of things to remember when releasing po4a:
 - Bump the version number in lib/Locale/Po4a/TransTractor.pm and
   regenerate the building script: `perl Build.PL`
 - Check that `./Build test` reports no error.
+- Generate translation statistics: `./Build postats`
 - Check NEWS
   - It documents all recent changes found in git logs.
   - It contains a release name and a release date.
-  - It contains the translation statistics.
+  - It contains the translation statistics. Paste here the output from the command above.
 - Build the archive: `./Build dist`
   - Interrupt it if the MANIFEST is out of sync, and then fix it by
     adding the missing files to MANIFEST (or MANIFEST.SKIP if they
