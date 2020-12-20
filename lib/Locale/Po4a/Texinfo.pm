@@ -380,7 +380,7 @@ sub translate_buffer_ignore {
 $translate_buffer_env{"ignore"} = \&translate_buffer_ignore;
 
 foreach (
-    qw(appendix section cindex findex kindex opindex pindex vindex subsection
+    qw(appendix section cindex findex kindex opindex pindex tindex vindex subsection
     dircategory subtitle include
     exdent center unnumberedsec
     heading unnumbered unnumberedsubsec

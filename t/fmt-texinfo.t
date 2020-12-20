@@ -10,7 +10,7 @@ use Testhelper;
 
 my @tests;
 
-for my $test (qw(longmenu comments)) {
+for my $test (qw(longmenu comments tindex)) {
     push @tests,
       {
         'format' => 'texinfo',
