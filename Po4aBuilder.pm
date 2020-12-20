@@ -151,7 +151,7 @@ sub ACTION_docpo {
     $self->depends_on('code');
     $self->make_files_writable("po/pod");
 
-    my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+    my $cmd = "perl -Ilib po4a "; # Use this version of po4a
     $cmd .= "--previous ";
     $cmd .= "--no-translations ";
     $cmd .= "--msgid-bugs-address devel\@lists.po4a.org ";
@@ -178,7 +178,7 @@ sub ACTION_man {
     my $manpath  = File::Spec->catdir( 'blib', 'man' );
     File::Path::rmtree( $manpath, 0, 1);
 
-    my $cmd = "PERL5LIB=lib perl po4a "; # Use this version of po4a
+    my $cmd = "perl -Ilib po4a "; # Use this version of po4a
     $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
     $cmd .= "--previous po/pod.cfg";
     system($cmd) and die;
