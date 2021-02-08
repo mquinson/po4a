@@ -70,21 +70,24 @@ sub parse_file {
 }
 
 sub walk_yaml {
-    my $self      = shift;
-    my $el        = shift;
-    my $reference = shift;
+    my $self = shift;
+    my $el   = shift;
+    my $ctx  = shift;
+
+    my ( $line, $reference ) = $self->shiftline();
+    $reference =~ s/:[0-9]+$/:0/;
 
     if ( ref $el eq 'HASH' ) {
         print STDERR "begin a hash\n" if $self->{'options'}{'debug'};
         foreach my $key ( sort keys %$el ) {
             if ( ref $el->{$key} ne ref "" ) {
-                &walk_yaml( $self, $el->{$key}, "$reference>$key" );
+                &walk_yaml( $self, $el->{$key}, "$ctx $key" );
             } else {
                 next if ( ( $self->{options}{keys} ne "" ) and ( !exists $self->{keys}{ lc($key) } ) );
                 my $trans = $self->translate(
                     Encode::encode_utf8( $el->{$key} ),
                     $reference,
-                    "Hash Value - Key: $key",
+                    "Hash Value:$ctx $key",
                     'wrap' => 0
                 );
                 $el->{$key} = Encode::decode_utf8($trans);    # Save the translation
@@ -94,16 +97,16 @@ sub walk_yaml {
         print STDERR "begin an array\n" if $self->{'options'}{'debug'};
         for my $i ( 0 .. $#{$el} ) {
             if ( ref $el->[$i] ne ref "" ) {
-                &walk_yaml( $self, $el->[$i], "$reference>" );
+                &walk_yaml( $self, $el->[$i], "$ctx" );
             } elsif ( !$self->{options}{skip_array} ) {       # translate that element only if not asked to skip arrays
                 my $trans =
-                  $self->translate( Encode::encode_utf8( $el->[$i] ), $reference, "Array Element", 'wrap' => 0 );
+                  $self->translate( Encode::encode_utf8( $el->[$i] ), $reference, "Array Element:$ctx", 'wrap' => 0 );
                 $el->[$i] = Encode::decode_utf8($trans);      # Save the translation
             }
         }
     } else {
         print STDERR "got a string - this is unexpected in yaml\n" if $self->{'options'}{'debug'};
-        my $trans = $self->translate( Encode::encode_utf8($$el), $reference, "String", 'wrap' => 0 );
+        my $trans = $self->translate( Encode::encode_utf8($$el), $reference, "String:$ctx", 'wrap' => 0 );
         $$el = Encode::decode_utf8($trans);                   # Save the translation
     }
 }
