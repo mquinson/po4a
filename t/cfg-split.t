@@ -91,6 +91,13 @@ push @tests, {
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'first.man.de first.man.de.po first.man.fr first.man.fr.po first.man.pot '
       . 'second.man.de second.man.de.po second.man.fr second.man.fr.po second.man.pot',
+  },
+  {
+    'doc'            => 'Split settings, with an YAML master doc, translation uptodate',
+    'po4a.conf'      => 'cfg/split-yaml/po4a.cfg',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'content.pot content.vi.po _index.vi.md '
+      . 'i18n.pot i18n.vi.po vi.yaml'
   };
 
 run_all_tests(@tests);
