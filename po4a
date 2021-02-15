@@ -704,6 +704,9 @@ sub show_version {
 # keep the command line arguments
 my @ORIGINAL_ARGV = @ARGV;
 
+# Use /NUL instead of /dev/null on Windows
+my $devnull = ( $^O =~ /Win/ ) ? '/NUL' : '/dev/null';
+
 # Parse the options provided on the command line, or in argument
 sub get_options {
     if ( defined $_[0] ) {
@@ -1649,7 +1652,7 @@ if ( not $po4a_opts{"no-update"} ) {
                         printf( gettext("Updating %s:"), $po_filename{$lang} );
                     }
 
-                    my $stat = qx(msgfmt$Config{_exe} --statistics -v -o /dev/null $outfile 2>&1);
+                    my $stat = qx(msgfmt$Config{_exe} --statistics -v -o $devnull $outfile 2>&1);
                     $stat =~ s/^[^:]*://;
                     print $stat;
                 }
@@ -1657,7 +1660,7 @@ if ( not $po4a_opts{"no-update"} ) {
             } else {
                 my $read_pot_filename = find_input_file($pot_filename);
                 my $cmd =
-                  "msginit$Config{_exe} -i $read_pot_filename --locale $lang -o $outfile --no-translator >/dev/null";
+                  "msginit$Config{_exe} -i $read_pot_filename --locale $lang -o $outfile --no-translator >$devnull";
                 run_cmd($cmd);
             }
         }
@@ -1682,11 +1685,17 @@ if ( not $po4a_opts{"no-update"} ) {
                 ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
 
                 my $cmd;
+                my $env =
+                  ( $^O =~ /Win/ )
+                  ? ""
+                  : "LC_ALL=C.UTF-8"
+                  ;   # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
 
                 # Create an empty PO or copy the original PO header (to keep the header)
                 if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
                     $cmd =
-                        "LC_ALL=C.UTF-8 msggrep$Config{_exe}"
+                        $env
+                      . " msggrep$Config{_exe}"
                       . " --force-po --invert-match --msgid --regexp '.'"
                       . " --output $tmp_file "
                       . find_input_file( $split_po{$lang}{$master} );
@@ -1695,7 +1704,7 @@ if ( not $po4a_opts{"no-update"} ) {
                         "msginit$Config{_exe} "
                       . "--no-translator -l $lang --input "
                       . find_output_file( $split_pot{$master} )
-                      . " --output $tmp_file  >/dev/null";
+                      . " --output $tmp_file  >$devnull";
                 }
                 run_cmd($cmd);
 
@@ -1761,7 +1770,7 @@ if ( not $po4a_opts{"no-translations"} ) {
         print "Reading PO file $pofile for language $lang: "
           if ( $po4a_opts{"debug"} );
         $po->read($pofile);
-        system( "msgfmt" . $Config{_exe} . " --statistics -v -o /dev/null $pofile" )
+        system( "msgfmt" . $Config{_exe} . " --statistics -v -o $devnull $pofile" )
           if ( $po4a_opts{"debug"} );
 
       DOC: foreach my $master (
