@@ -2,7 +2,7 @@
 # Copyright © 2004 Martin Quinson and Denis Barbier.
 # This file is distributed under the same license as the po4a package.
 # Danilo Piazzalunga <danilopiazza@libero.it>, 2004-2005.
-# Marco Ciampa <ciampix@posteo.net>, 2015-2020.
+# Marco Ciampa <ciampix@posteo.net>, 2015-2021.
 #
 # Piccolo prontuario dei termini usati in questa traduzione:
 # MC: parser (TT - invariato)
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2020-09-22 23:12+0200\n"
-"PO-Revision-Date: 2020-10-16 09:15+0200\n"
+"PO-Revision-Date: 2021-02-19 11:23+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -1737,7 +1737,7 @@ msgid ""
 "producing the translated documents.  This naturally decreases the level of "
 "translation, so you may need the C<--keep> option to ensure that the "
 "document is produced anyway."
-msgstr ""
+msgstr "Con questa impostazione, le stringhe da tradurre verranno estratte da F<book-filtered.xml> (che deve essere prodotto prima di chiamare B<po4a>) mentre i file tradotti verranno creati da F<book.xml>. Di conseguenza, qualsiasi stringa che fa parte di F<book.xml> ma non di F<book-filtered.xml> non verrà inclusa nei file PO, impedendo ai traduttori di fornire una traduzione per essi. Quindi queste stringhe non verranno modificate durante la produzione dei documenti tradotti. Questo naturalmente riduce il livello di traduzione, quindi si potrebbe aver bisogno dell'opzione C<--keep> per assicurarsi che il documento venga prodotto comunque."
 
 #. type: =head2
 #: po4a:173
@@ -2033,7 +2033,7 @@ msgid ""
 "will try to use the translations that it contains in the produced PO file. "
 "This process remains tedious and manual, as explained in Section 'Converting "
 "a manual translation to po4a' below."
-msgstr ""
+msgstr "Se parte da zero, B<po4a-gettextize> estrarrà le stringhe traducibili dalla documentazione e scriverà un file POT. Se si fornisce un file tradotto già esistente con il flag B<-l>, B<po4a-gettextize> proverà a usare le traduzioni che contiene nel file PO prodotto. Questo processo rimane noioso e manuale, come spiegato più avanti nella sezione \"Conversione di una traduzione manuale in po4a\". "
 
 #. type: textblock
 #: po4a-gettextize:10
@@ -2199,7 +2199,7 @@ msgid ""
 "You must add fake paragraphs or remove some content in one of the documents "
 "(or both) to fix the reported disparities, until the structure of both "
 "documents perfectly match. Some tricks are given in the next section."
-msgstr ""
+msgstr "B<po4a-gettextize> diagnostica in modo prolisso qualsiasi desincronizzazione della struttura rilevata. Quando ciò accade, è necessario modificare manualmente i file (ciò probabilmente richiede avere alcune nozioni sulla lingua di destinazione). È necessario aggiungere paragrafi falsi o rimuovere alcuni contenuti in uno dei documenti (o entrambi) per correggere le disparità segnalate, fino a quando la struttura di entrambi i documenti non corrisponde perfettamente. Alcuni trucchi sono forniti nella sezione successiva."
 
 #. type: textblock
 #: po4a-gettextize:50
@@ -2210,7 +2210,7 @@ msgid ""
 "inspection by humans. One has to check that each retrieved msgstr is "
 "actually the translation of the associated msgid, and not the string before "
 "or after."
-msgstr ""
+msgstr "Anche quando il documento viene elaborato correttamente, sono ancora possibili disparità non rilevate ed errori silenziosi. Questo è il motivo per cui qualsiasi traduzione associata automaticamente da po4a-gettextize viene contrassegnata come I<fuzzy> per richiedere un'ispezione manuale. È necessario verificare che ogni msgstr recuperato sia effettivamente la traduzione del msgid associato e non la stringa prima o dopo."
 
 #. type: textblock
 #: po4a-gettextize:51
@@ -2220,7 +2220,7 @@ msgid ""
 "gettextization on the exact version of F<master.doc> that was used for the "
 "translation, and only update the PO file against the latest master file once "
 "the gettextization was successful."
-msgstr ""
+msgstr "Come si può vedere, è fondamentale avere la stessa identica struttura nel documento tradotto e in quello originale. La cosa migliore è eseguire la \"gettext-izzazione\" sulla versione esatta di F<master.doc> utilizzata per la traduzione e aggiornare il file PO rispetto al file master più recente solo una volta che la \"gettext-izzazione\" abbia avuto successo."
 
 #. type: textblock
 #: po4a-gettextize:52
@@ -2272,7 +2272,7 @@ msgid ""
 "utility. But a manual intervention would still be mandatory to manually "
 "match the elements that couldn't be automatically matched, explaining why "
 "automatic resynchronization is not implemented (yet?)."
-msgstr ""
+msgstr "La gettextization si interrompe non appena viene rilevata una desincronizzazione. In teoria, dovrebbe probabilmente essere possibile risincronizzare la \"gettext-izzazione\" più avanti nei documenti usando ad es. lo stesso algoritmo di L<diff(1)>. Ma un intervento manuale sarebbe comunque obbligatorio per abbinare manualmente gli elementi che non possono essere abbinati automaticamente, spiegando perché la risincronizzazione automatica non è stata implementata (ancora?)."
 
 #. type: textblock
 #: po4a-gettextize:56
@@ -2316,7 +2316,7 @@ msgid ""
 "PO update, and the corresponding translation will be dumped anyway. But do "
 "not hesitate to also edit the original document if required: the important "
 "thing is to get a first PO file to start with."
-msgstr ""
+msgstr "Se è necessario modificare i file per allineare le loro strutture, è preferibile modificare la traduzione, se possibile. Infatti, se le modifiche all'originale sono troppo invadenti, la vecchia e la nuova versione non verranno abbinate durante l'aggiornamento del PO e la traduzione corrispondente verrà comunque scaricata. Ma non si esitati a modificare anche il documento originale, se necessario: l'importante è ottenere un primo file PO con cui iniziare."
 
 #. type: textblock
 #: po4a-gettextize:60
@@ -2324,7 +2324,7 @@ msgid ""
 "Do not hesitate to kill any original content that would not exist in the "
 "translated version. This content will be automatically reintroduced "
 "afterward, when synchronizing the PO file with the document."
-msgstr ""
+msgstr "Non fatevi problemi a eliminare qualsiasi contenuto originale che non esisterebbe nella versione tradotta. Questo contenuto verrà reintrodotto automaticamente in seguito, durante la sincronizzazione del file PO con il documento."
 
 #. type: textblock
 #: po4a-gettextize:61
@@ -2424,7 +2424,7 @@ msgid ""
 "paragraph of the translation. To fix the problem, it is sufficient to "
 "slightly alter one of the translations in the document. You can also prefer "
 "to kill the second paragraph in the original document."
-msgstr ""
+msgstr "Quindi, la situazione precedente si verifica quando due paragrafi simili ma diversi vengono tradotti nello stesso identico modo. Apparentemente questo rimuoverà un paragrafo della traduzione. Per risolvere il problema, è sufficiente modificare leggermente una delle traduzioni nel documento. Se lo si preferisce si può anche eliminare il secondo paragrafo nel documento originale."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2449,7 +2449,7 @@ msgid ""
 "file resulting from the gettextization don't match exactly any element of "
 "the POT file built from the recent master files. This forces gettext to "
 "search for the closest one using a costly string proximity algorithm."
-msgstr ""
+msgstr "Come nota finale, non siate troppo sorpresi se la prima sincronizzazione del file PO richiede molto tempo. Questo perché la maggior parte del msgid del file PO risultante dalla \"gettext-izzazione\" non corrisponde esattamente a nessun elemento del file POT creato dai file master recenti. Questo costringe gettext a cercare quello più vicino utilizzando un pesante algoritmo di prossimità di stringhe."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -2457,7 +2457,7 @@ msgid ""
 "For example, the first B<po4a-updatepo> of the Perl documentation's French "
 "translation (5.5 MB PO file) took about 48 hours (yes, two days) while the "
 "subsequent ones only take a dozen of seconds."
-msgstr ""
+msgstr "Ad esempio, il primo B<po4a-updatepo> della traduzione francese della documentazione Perl (file PO da 5,5 MB) ha impiegato circa 48 ore (sì, due giorni) mentre i successivi solo una dozzina di secondi."
 
 #. type: textblock
 #: po4a-gettextize:72
