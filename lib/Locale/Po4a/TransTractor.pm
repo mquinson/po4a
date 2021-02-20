@@ -15,7 +15,7 @@ $VERSION = "0.63-alpha";
 @ISA     = qw(DynaLoader);
 @EXPORT  = qw(new process translate
   read write readpo writepo
-  getpoout setpoout get_out_charset);
+  getpoout setpoout get_out_charset handle_yaml);
 
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::TransTractor $VERSION");
@@ -1184,6 +1184,168 @@ sub encode_from_to {
     }
 
     return $text;
+}
+
+# Push the translation of a Yaml Front-Matter header that was parsed by YAML::Tiny
+sub handle_yaml {
+    my ( $self, $blockref, $yamlarray, $yfm_keys, $yfm_skip_array ) = @_;
+
+    die "Empty YAML Front Matter" unless ( length($yamlarray) > 0 );
+
+    my ( $indent, $ctx ) = ( 0, "" );
+    foreach my $cursor (@$yamlarray) {
+
+        # An empty document
+        if ( !defined $cursor ) {
+            $self->pushline("---\n");
+
+            # Do nothing
+
+            # A scalar document
+        } elsif ( !ref $cursor ) {
+            $self->pushline("---\n");
+            $self->pushline(
+                format_scalar( $self->translate( $cursor, $blockref, "YAML Front Matter (scalar)", "wrap" => 0 ) ) );
+
+            # A list at the root
+        } elsif ( ref $cursor eq 'ARRAY' ) {
+            if (@$cursor) {
+                $self->pushline("---\n");
+                do_array( $self, $blockref, $cursor, $indent, $ctx, $yfm_keys, $yfm_skip_array );
+            } else {
+                $self->pushline("---[]\n");
+            }
+
+            # A hash at the root
+        } elsif ( ref $cursor eq 'HASH' ) {
+            if (%$cursor) {
+                $self->pushline("---\n");
+                do_hash( $self, $blockref, $cursor, $indent, $ctx, $yfm_keys, $yfm_skip_array );
+            } else {
+                $self->pushline("--- {}\n");
+            }
+
+        } else {
+            die( "Cannot serialize " . ref($cursor) );
+        }
+        $self->pushline("---\n");
+    }
+
+    # Escape the string to make it valid in YAML.
+    # This is very similar to YAML::Tiny::_dump_scalar but does not do the internal->UTF-8 decoding,
+    # as the translations that we feed into this function are already in UTF-8
+    sub format_scalar {
+        my $string = $_[0];
+        my $is_key = $_[1];
+
+        return '~'  unless defined $string;
+        return "''" unless length $string;
+        if ( Scalar::Util::looks_like_number($string) ) {
+
+            # keys and values that have been used as strings get quoted
+            if ($is_key) {
+                return qq['$string'];
+            } else {
+                return $string;
+            }
+        }
+        if ( $string =~ /[\\\'\n]/ ) {
+            $string =~ s/\\/\\\\/g;
+            $string =~ s/"/\\"/g;
+            $string =~ s/\n/\\n/g;
+            return qq|"$string"|;
+        }
+        if ( $string =~ /(?:^[~!@#%&*|>?:,'"`{}\[\]]|^-+$|\s|:\z)/ ) {
+            return "'$string'";
+        }
+        return $string;
+    }
+
+    sub do_array {
+        my ( $self, $blockref, $array, $indent, $ctx, $yfm_keys, $yfm_skip_array ) = @_;
+        foreach my $el (@$array) {
+            my $header = ( '  ' x $indent ) . '- ';
+            my $type   = ref $el;
+            if ( !$type ) {
+                if ($yfm_skip_array) {
+                    $self->pushline( $header . YAML::Tiny::_dump_scalar( "dummy", $el, 0 ) . "\n" );
+                } else {
+                    $self->pushline( $header
+                          . format_scalar( $self->translate( $el, $blockref, "YAML Front Matter:$ctx", "wrap" => 0 ) )
+                          . "\n" );
+                }
+
+            } elsif ( $type eq 'ARRAY' ) {
+                if (@$el) {
+                    $self->pushline( $header . "\n" );
+                    do_array( $self, $blockref, $el, $indent + 1, $ctx, $yfm_keys, $yfm_skip_array );
+                } else {
+                    $self->pushline( $header . " []\n" );
+                }
+
+            } elsif ( $type eq 'HASH' ) {
+                if ( keys %$el ) {
+                    $self->pushline( $header . "\n" );
+                    do_hash( $self, $blockref, $el, $indent + 1, $ctx, $yfm_keys, $yfm_skip_array );
+                } else {
+                    $self->pushline( $header . " {}\n" );
+                }
+
+            } else {
+                die "YAML $type references not supported";
+            }
+        }
+    }
+
+    sub do_hash {
+        my ( $self, $blockref, $hash, $indent, $ctx, $yfm_keys, $yfm_skip_array ) = @_;
+
+        foreach my $name ( sort keys %$hash ) {
+            my $el     = $hash->{$name};
+            my $header = ( '  ' x $indent ) . YAML::Tiny::_dump_scalar( "dummy", $name, 1 ) . ":";
+            my $type   = ref $el;
+            if ( !$type ) {
+                my %keys = %{$yfm_keys};
+                if ( ( not %keys ) || $keys{$name} ) {  # either no key is provided, or the key we need is also provided
+                    $self->pushline(
+                        $header . ' '
+                          . format_scalar(
+                            $self->translate( $el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0 )
+                          )
+                          . "\n"
+                    );
+                } else {
+
+                    # Work around a bug in YAML::Tiny that quotes numbers
+                    # See https://github.com/Perl-Toolchain-Gang/YAML-Tiny#additional-perl-specific-notes
+                    if ( Scalar::Util::looks_like_number($el) ) {
+                        $self->pushline("$header $el\n");
+                    } else {
+                        $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );
+                    }
+                }
+
+            } elsif ( $type eq 'ARRAY' ) {
+                if (@$el) {
+                    $self->pushline( $header . "\n" );
+                    do_array( $self, $blockref, $el, $indent + 1, "$ctx $name", $yfm_keys, $yfm_skip_array );
+                } else {
+                    $self->pushline( $header . " []\n" );
+                }
+
+            } elsif ( $type eq 'HASH' ) {
+                if ( keys %$el ) {
+                    $self->pushline( $header . "\n" );
+                    do_hash( $self, $blockref, $el, $indent + 1, "$ctx $name", $yfm_keys, $yfm_skip_array );
+                } else {
+                    $self->pushline( $header . " {}\n" );
+                }
+
+            } else {
+                die "YAML $type references not supported";
+            }
+        }
+    }
 }
 
 =back
