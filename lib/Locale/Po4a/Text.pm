@@ -575,9 +575,8 @@ sub parse_markdown_bibliographic_information {
 #
 sub parse_markdown_yaml_front_matter {
     my ( $self, $line, $blockref ) = @_;
-    my ( $nextline, $nextref );
     my $yfm;
-    ( $nextline, $nextref ) = $self->shiftline();
+    my ( $nextline, $nextref ) = $self->shiftline();
     while ( defined($nextline) ) {
         last if ( $nextline =~ /^(---|\.\.\.)$/ );
         $yfm .= $nextline;

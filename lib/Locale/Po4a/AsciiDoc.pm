@@ -32,6 +32,7 @@ use vars qw(@ISA @EXPORT);
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
+use YAML::Tiny;
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -106,6 +107,25 @@ Switch parsing rules to compatibility with different tools. Available options ar
 "asciidoc" or "asciidoctor". Asciidoctor has stricter parsing rules, such as
 equality of length of opening and closing block fences.
 
+=item B<yfm_keys>
+
+Comma-separated list of keys to process for translation in the YAML Front Matter
+section. All other keys are skipped. Keys are matched with a case-insensitive
+match. Array values are always translated, unless the B<yfm_skip_array> option
+is provided.
+
+=cut
+
+my %yfm_keys = ();
+
+=item B<yfm_skip_array>
+
+Do not translate array values in the YAML Front Matter section.
+
+=cut
+
+my $yfm_skip_array = 0;
+
 =back
 
 =head1 INLINE CUSTOMIZATION
@@ -179,6 +199,8 @@ sub initialize {
     $self->{options}{'noimagetargets'} = 0;
     $self->{options}{'tablecells'}     = 0;
     $self->{options}{'compat'}         = 'asciidoc';
+    $self->{options}{'yfm_keys'}       = '';
+    $self->{options}{'yfm_skip_array'} = 0;
 
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -197,6 +219,13 @@ sub initialize {
             $debug{$_} = 1;
         }
     }
+    map {
+        $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
+        $yfm_keys{$_} = 1
+    } ( split( ',', $self->{options}{'yfm_keys'} ) );
+
+    #        map { print STDERR "key $_\n"; } (keys %yfm_keys);
+    $yfm_skip_array = $self->{options}{'yfm_skip_array'};
 
     $self->{translate} = {
         macro => {},
@@ -339,12 +368,31 @@ BEGIN {
 
 sub parse {
     my $self = shift;
-    my ( $line, $ref );
+    my ( $line, $ref ) = $self->shiftline();
+
+    # Handle the YAML Front Matter, if any
+    if ( defined($line) && $line =~ /^---$/ ) {
+        my $yfm;
+        my ( $nextline, $nextref ) = $self->shiftline();
+        while ( defined($nextline) ) {
+            last if ( $nextline =~ /^(---|\.\.\.)$/ );
+            $yfm .= $nextline;
+            ( $nextline, $nextref ) = $self->shiftline();
+        }
+        die "Could not get the YAML Front Matter from the file." if ( length($yfm) == 0 );
+        my $yamlarray = YAML::Tiny->read_string($yfm)
+          || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
+
+        $self->handle_yaml( $ref, $yamlarray, \%yfm_keys, $yfm_skip_array );
+
+        ( $line, $ref ) = $self->shiftline();    # Pass the final '---'
+    }
+
     my $paragraph    = "";
     my $wrapped_mode = 1;
-    ( $line, $ref ) = $self->shiftline();
-    my $file = $ref;
+    my $file         = $ref;
     $file =~ s/:[0-9]+$// if defined($line);
+
     while ( defined($line) ) {
         $ref =~ m/^(.*):[0-9]+$/;
         if ( $1 ne $file ) {
