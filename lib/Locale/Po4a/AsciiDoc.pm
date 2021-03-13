@@ -771,6 +771,10 @@ sub parse {
                 and ( defined( $self->{type} ) and ( $self->{type} eq "Table" ) ) )
             {
                 $paragraph .= $line . "\n";
+            } elsif (    ( $macroname eq "include" || $macroname eq "ifeval" )
+                and ( $macrotype eq '::' ) )
+            {
+                $self->pushline( $line . "\n" );
             } else {
                 if ( $macrotype eq '::' ) {
                     do_paragraph( $self, $paragraph, $wrapped_mode );
