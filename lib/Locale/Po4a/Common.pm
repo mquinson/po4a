@@ -107,7 +107,7 @@ sub show_version {
         gettext(
                 "%s version %s.\n"
               . "Written by Martin Quinson and Denis Barbier.\n\n"
-              . "Copyright © 2002-2020 Software in the Public Interest, Inc.\n"
+              . "Copyright © 2002-2021 Software in the Public Interest, Inc.\n"
               . "This is free software; see source code for copying\n"
               . "conditions. There is NO warranty; not even for\n"
               . "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
