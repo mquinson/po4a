@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-02-21 01:26+0100\n"
-"PO-Revision-Date: 2021-03-29 18:01+0200\n"
+"PO-Revision-Date: 2021-04-02 13:43+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -3892,14 +3892,14 @@ msgstr "Il documento master viene utilizzato in ingresso, mentre il file POT è 
 #. type: =head2
 #: doc/po4a.7.pod:61
 msgid "Integrating changes to the original document"
-msgstr ""
+msgstr "Integrazione delle modifiche al documento originale"
 
 #. type: textblock
 #: doc/po4a.7.pod:62
 msgid ""
 "The script to use for that is L<po4a-updatepo(1)> (please refer to its "
 "documentation for details):"
-msgstr ""
+msgstr "Lo script da usare per questo è L<po4a-updatepo(1)> (fare riferimento alla sua documentazione per i dettagli):"
 
 #. type: verbatim
 #: doc/po4a.7.pod:63
@@ -3979,21 +3979,21 @@ msgid ""
 "defining the insertion point of the addendum (with an unfortunately cryptic "
 "syntax -- see below) while the rest of the file is added verbatim at the "
 "determined position."
-msgstr ""
+msgstr "Con po4a, bisogna specificare i file B<addendum>, che possono essere visti concettualmente come patch applicate al documento localizzato dopo l'elaborazione. Ogni addendum deve essere fornito come file separato, il cui formato è però molto diverso dalle patch classiche. La prima riga è una I<riga di intestazione>, che definisce il punto di inserimento dell'addendum (con una sintassi purtroppo criptica - vedere sotto) mentre il resto del file viene aggiunto, così com'è, alla posizione determinata."
 
 #. type: textblock
 #: doc/po4a.7.pod:72
 msgid ""
 "The header line must begin with the string B<PO4A-HEADER:>, followed by a "
 "semi-colon separated list of I<key>B<=>I<value> fields."
-msgstr ""
+msgstr "La riga di intestazione deve iniziare con la stringa B<PO4A-HEADER:>, seguita da un elenco separato da punti e virgola di campi I<chiave>B<=>I<valore>."
 
 #. type: textblock
 #: doc/po4a.7.pod:73
 msgid ""
 "For example, the following header declares an addendum that must be placed "
 "at the very end of the translation."
-msgstr ""
+msgstr "Ad esempio, la seguente intestazione dichiara un addendum che deve essere inserito alla fine della traduzione."
 
 #. type: verbatim
 #: doc/po4a.7.pod:74
@@ -4001,7 +4001,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER: mode=eof\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER: mode=eof\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:75
@@ -4010,7 +4010,7 @@ msgid ""
 "middle of the document. The following header declares an addendum that must "
 "be placed after the XML section containing the string C<About this document> "
 "in translation."
-msgstr ""
+msgstr "Le cose si fanno più complicate quando vuole aggiungere il contenuto extra in mezzo al documento. La seguente intestazione dichiara un addendum che deve essere inserito dopo la sezione XML contenente la stringa C<About this document> nella traduzione."
 
 #. type: verbatim
 #: doc/po4a.7.pod:76
@@ -4030,7 +4030,7 @@ msgid ""
 "that po4a considers the B<translated> document here. This documentation is "
 "in English, but your line should probably read as follows if you intend your "
 "addendum to apply to the French translation of the document."
-msgstr ""
+msgstr "In pratica, quando si cerca di applicare un addendum, po4a cerca la prima riga che corrisponde all'argomento C<position> (può essere un'espressione regolare). Non bisogna dimenticare che qui po4a considera il documento B<tradotto>. Questa documentazione è in inglese, ma la tua riga dovrebbe probabilmente essere la seguente si intende applicare l'addendum alla traduzione francese del documento."
 
 #. type: verbatim
 #: doc/po4a.7.pod:78
@@ -4038,7 +4038,7 @@ msgstr ""
 msgid ""
 " PO4A-HEADER: position=À propos de ce document; mode=after; endboundary=</section>\n"
 "\n"
-msgstr ""
+msgstr " PO4A-HEADER: position=À propos de ce document; mode=after; endboundary=</section>\n\n"
 
 #. type: textblock
 #: doc/po4a.7.pod:79
@@ -4047,14 +4047,14 @@ msgid ""
 "next line after the C<position> that matches the provided C<endboundary>. "
 "The addendum is added right B<after> that line (because we provided an "
 "I<endboundary>, i.e. a boundary ending the current section)."
-msgstr ""
+msgstr "Una volta trovata la C<position> (posizione) nel documento di destinazione, po4a cerca la riga successiva dopo la C<position> che corrisponde al C<endboundary> fornito. L'addendum viene aggiunto subito B<after> (dopo) quella riga (perché abbiamo fornito una I<endboundary>, cioè un confine che termina la sezione corrente)."
 
 #. type: textblock
 #: doc/po4a.7.pod:80
 msgid ""
 "The exact same effect could be obtained with the following header, that is "
 "equivalent:"
-msgstr ""
+msgstr "Lo stesso identico effetto potrebbe essere ottenuto con la seguente intestazione, che è equivalente:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:81
@@ -4077,7 +4077,7 @@ msgid ""
 "instruct po4a that a section starts with a line containing the C<<section>> "
 "tag. This is equivalent to the previous example because what you really want "
 "is to add this addendum either after C</section>> or before C<<section>>."
-msgstr ""
+msgstr "Qui, po4a cerca la prima riga che corrisponde a C<<section>> dopo la riga che corrisponde a C<About this document> nella traduzione e aggiunge l'addendum B<before> (prima) quella riga poiché abbiamo fornito un I<beginboundary>, cioè un confine che segna l'inizio della sezione successiva. Quindi questa riga di intestazione richiede di inserire l'addendum dopo la sezione contenente C<About this document> e istruire po4a che una sezione inizia con una riga contenente il tag C<<section>>. Questo è equivalente all'esempio precedente perché quello che si vuole veramente è aggiungere questo addendum dopo C</section>> o prima di C<<section>>."
 
 #. type: textblock
 #: doc/po4a.7.pod:83
@@ -4103,6 +4103,14 @@ msgid ""
 " 'eof'   |   (none)      |  n/a                   | End of file\n"
 "\n"
 msgstr ""
+"  Modo   | Tipo confine  |     Confine usato       | Punto di inserimento rispetto al confine\n"
+" ========|===============|=========================|=========================================\n"
+" 'before'| 'endboundary' | ultimo prima 'position' | Subito dopo del confine selezionato\n"
+" 'before'|'beginboundary'| ultimo prima 'position' | Subito prima del confine selezionato\n"
+" 'after' | 'endboundary' |  primo dopo 'position'  | Subito dopo del confine selezionato\n"
+" 'after' |'beginboundary'|  primo dopo 'position'  | Subito prima del confine selezionato\n"
+" 'eof'   |   (nessuno)   |           -             | Fine del file\n"
+"\n"
 
 #. type: =head3
 #: doc/po4a.7.pod:85
@@ -4129,7 +4137,7 @@ msgid ""
 "White spaces ARE important in the content of the C<position> and boundaries. "
 "So the two following lines B<are different>. The second one will only be "
 "found if there is enough trailing spaces in the translated document."
-msgstr ""
+msgstr "Gli spazi bianchi SONO importanti nel contenuto di C<position> e dei confini. Quindi le due righe seguenti B<sono diverse>. Il secondo verrà trovato solo se ci sono abbastanza spazi finali nel documento tradotto."
 
 #. type: verbatim
 #: doc/po4a.7.pod:88
@@ -4168,12 +4176,12 @@ msgid ""
 "Pass the B<-vv> argument to po4a to understand how the addenda are added to "
 "the translation. It may also help to run po4a in debug mode to see the "
 "actual internal data string when your addendum does not apply."
-msgstr ""
+msgstr "Passa l'argomento B<-vv> a po4a per capire come aggiungere gli addenda alla traduzione. Può anche essere utile eseguire po4a in modalità di debug per vedere la stringa di dati interna effettiva quando l'addendum non si applica."
 
 #. type: =head3
 #: doc/po4a.7.pod:91
 msgid "Addenda examples"
-msgstr ""
+msgstr "Esempi di addenda"
 
 #. type: textblock
 #: doc/po4a.7.pod:92
@@ -4197,7 +4205,7 @@ msgid ""
 "should narrow down search to the line after B<AUTHORS> with the B<position> "
 "argument regex. Then, you should match the beginning of the next section (i."
 "e., B<^\\.SH>) with the B<beginboundary> argument regex. That is to say:"
-msgstr ""
+msgstr "È necessario selezionare un approccio in due fasi impostando B<mode=after>. Quindi bisogna restringere la ricerca alla riga dopo B<AUTHORS> con l'argomento espressione regolare B<position>. Quindi, si dovrebbe abbinare l'inizio della sezione successiva (ad esempio, B<^\\.SH>) con l'espressione regolare dell'argomento B<beginboundary>. Vale a dire:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:95
@@ -4461,7 +4469,7 @@ msgstr ""
 #. type: =head1
 #: doc/po4a.7.pod:116
 msgid "Open-source projects using po4a"
-msgstr ""
+msgstr "Progetti open source che usano po4a"
 
 #. type: textblock
 #: doc/po4a.7.pod:117
@@ -4469,22 +4477,22 @@ msgid ""
 "Here is a very partial list of projects that use po4a in production for "
 "their documentation. If you want to add your project to the list, just drop "
 "us an email (or a Merge Request)."
-msgstr ""
+msgstr "Ecco un elenco molto incompleto di progetti che usano po4a in produzione per la loro documentazione. Se si vuole aggiungere il proprio progetto all'elenco, inviaci un'e-mail (o una richiesta di merge)."
 
 #. type: textblock
 #: doc/po4a.7.pod:118
 msgid "adduser (man): users and groups management tool."
-msgstr ""
+msgstr "adduser (man): strumento di gestione utenti e gruppi."
 
 #. type: textblock
 #: doc/po4a.7.pod:119
 msgid "apt (man, docbook): Debian package manager."
-msgstr ""
+msgstr "apt (man, docbook): gestore pacchetti Debian."
 
 #. type: textblock
 #: doc/po4a.7.pod:120
 msgid "aptitude (docbook, svg): terminal-based package manager for Debian"
-msgstr ""
+msgstr "aptitude (docbook, svg): gestore pacchetti basato sul terminale per Debian."
 
 #. type: textblock
 #: doc/po4a.7.pod:121
@@ -4492,21 +4500,21 @@ msgid ""
 "L<F-Droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): "
 "installable catalogue of FOSS (Free and Open Source Software) applications "
 "for the Android platform."
-msgstr ""
+msgstr "L<Sito web F-Droid|https://gitlab.com/fdroid/fdroid-website> (markdown): catalogo installabile di applicazioni FOSS (Free and Open Source Software) per la piattaforma Android."
 
 #. type: textblock
 #: doc/po4a.7.pod:122
 msgid ""
 "L<git|https://github.com/jnavila/git-manpages-l10n> (asciidoc): distributed "
 "version-control system for tracking changes in source code."
-msgstr ""
+msgstr "L<git|https://github.com/jnavila/git-manpages-l10n> (asciidoc): sistema di controllo versione distribuito per tenere traccia delle modifiche nel codice sorgente."
 
 #. type: textblock
 #: doc/po4a.7.pod:123
 msgid ""
 "L<Linux manpages|https://salsa.debian.org/manpages-l10n-team/manpages-l10n> "
 "(man)"
-msgstr ""
+msgstr "L<Pagine man di Linux|https://salsa.debian.org/manpages-l10n-team/manpages-l10n> (man)"
 
 #. type: textblock
 #: doc/po4a.7.pod:124
@@ -4514,7 +4522,7 @@ msgid ""
 "This project provides an infrastructure for translating many manpages to "
 "different languages, ready for integration into several major distributions "
 "(Arch Linux, Debian and derivatives, Fedora)."
-msgstr ""
+msgstr "Questo progetto fornisce un'infrastruttura per la traduzione delle pagine man in diverse lingue, pronta per l'integrazione nelle principali distribuzioni (Arch Linux, Debian e derivate, Fedora, ecc.)."
 
 #. type: textblock
 #: doc/po4a.7.pod:125
@@ -4522,7 +4530,7 @@ msgid ""
 "L<Stellarium|https://github.com/Stellarium/stellarium> (HTML): a free open "
 "source planetarium for your computer. po4a is used to translate the sky "
 "culture descriptions."
-msgstr ""
+msgstr "L<Stellarium|https://github.com/Stellarium/stellarium> (HTML): un planetario libero e open source per il tuo computer. po4a viene usato per tradurre le descrizioni nelle varie culture del cielo."
 
 #. type: =head1
 #: doc/po4a.7.pod:126
@@ -4540,7 +4548,7 @@ msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
 "strange sense of humor :)"
-msgstr ""
+msgstr "Personalmente lo pronuncio come L<pouah|https://en.wiktionary.org/wiki/pouah>, che è un termine onomatopoetico francese che si usa al posto di schifo :) Qualcuno potrebbe dire che ho uno strano senso dell'umorismo :)"
 
 #. type: =head2
 #: doc/po4a.7.pod:129
@@ -4592,26 +4600,26 @@ msgid ""
 "This program done by Denis Barbier is a sort of precursor of the po4a SGML "
 "module, which more or less deprecates it. As the name says, it handles only "
 "the DebianDoc DTD, which is more or less a deprecated DTD."
-msgstr ""
+msgstr "Questo programma realizzato da Denis Barbier è una sorta di precursore del modulo SGML po4a, che più o meno lo rende deprecato. Come dice il nome, gestisce solo la DTD DebianDoc, che è più o meno una DTD deprecata."
 
 #. type: textblock
 #: doc/po4a.7.pod:136
 msgid ""
 "The main advantages of po4a over them are the ease of extra content addition "
 "(which is even worse there) and the ability to achieve gettextization."
-msgstr ""
+msgstr "I principali vantaggi di po4a rispetto ad essi sono la facilità di aggiunta di contenuti extra (che lì è anche peggio) e la capacità di ottenere la gettextization."
 
 #. type: =head2
 #: doc/po4a.7.pod:137
 msgid "SUMMARY of the advantages of the gettext based approach"
-msgstr ""
+msgstr "SOMMARIO dei vantaggi dell'approccio basato su gettext"
 
 #. type: textblock
 #: doc/po4a.7.pod:138
 msgid ""
 "The translations are not stored along with the original, which makes it "
 "possible to detect if translations become out of date."
-msgstr ""
+msgstr "Le traduzioni non vengono memorizzate insieme all'originale, il che rende possibile rilevare se le traduzioni diventano obsolete."
 
 #. type: textblock
 #: doc/po4a.7.pod:139
@@ -4619,7 +4627,7 @@ msgid ""
 "The translations are stored in separate files from each other, which "
 "prevents translators of different languages from interfering, both when "
 "submitting their patch and at the file encoding level."
-msgstr ""
+msgstr "Le traduzioni vengono memorizzate in file separati l'uno dall'altro, il che impedisce ai traduttori di lingue diverse di interferire, sia quando inviano la loro patch che a livello di codifica del file."
 
 #. type: textblock
 #: doc/po4a.7.pod:140
@@ -4628,7 +4636,7 @@ msgid ""
 "interface so that you don't need to understand the internals to use it).  "
 "That way, we don't have to re-implement the wheel, and because of their wide "
 "use, we can think that these tools are more or less bug free."
-msgstr ""
+msgstr "È basato internamente su B<gettext> (ma B<po4a> offre un'interfaccia molto semplice in modo che non sia necessario comprendere le parti interne per usarlo). In questo modo, non bisogna reinventare la ruota e, a causa del loro ampio utilizzo, possiamo assumere che questi strumenti siano più o meno privi di bug."
 
 #. type: textblock
 #: doc/po4a.7.pod:141
@@ -4636,7 +4644,7 @@ msgid ""
 "Nothing changed for the end-user (beside the fact translations will "
 "hopefully be better maintained). The resulting documentation file "
 "distributed is exactly the same."
-msgstr ""
+msgstr "Non cambia nulla per l'utente finale (a parte il fatto che si spera che le traduzioni vengano mantenute meglio). Il file di documentazione risultante distribuito rimane esattamente lo stesso."
 
 #. type: textblock
 #: doc/po4a.7.pod:142
@@ -4644,7 +4652,7 @@ msgid ""
 "No need for translators to learn a new file syntax and their favorite PO "
 "file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just "
 "fine."
-msgstr ""
+msgstr "Non c'è bisogno che i traduttori imparino una nuova sintassi di file e il loro editor di file PO preferito (come la modalità PO di Emacs, Lokalize o Gtranslator) funzionerà perfettamente."
 
 #. type: textblock
 #: doc/po4a.7.pod:143
@@ -4652,7 +4660,7 @@ msgid ""
 "gettext offers a simple way to get statistics about what is done, what "
 "should be reviewed and updated, and what is still to do. Some example can be "
 "found at those addresses:"
-msgstr ""
+msgstr "gettext offre un modo semplice per ottenere statistiche su ciò che è stato fatto, cosa dovrebbe essere revisionato e aggiornato, e cosa c'è ancora da fare. Qualche esempio si può trovare su:"
 
 #. type: verbatim
 #: doc/po4a.7.pod:144
@@ -4671,12 +4679,12 @@ msgstr ""
 msgid ""
 "But everything isn't green, and this approach also has some disadvantages we "
 "have to deal with."
-msgstr ""
+msgstr "Ma non è tutto rose e fiori e questo approccio presenta anche alcuni svantaggi che dobbiamo affrontare."
 
 #. type: textblock
 #: doc/po4a.7.pod:146
 msgid "Addenda are… strange at the first glance."
-msgstr ""
+msgstr "Gli addenda sono… strani ad una prima occhiata."
 
 #. type: textblock
 #: doc/po4a.7.pod:147
@@ -4684,13 +4692,13 @@ msgid ""
 "You can't adapt the translated text to your preferences, like splitting a "
 "paragraph here, and joining two other ones there. But in some sense, if "
 "there is an issue with the original, it should be reported as a bug anyway."
-msgstr ""
+msgstr "Non si può adattare il testo tradotto alle proprie preferenze, come dividere un paragrafo qui e unirne altri due la. Ma in un certo senso è un bene, perché se c'è un problema con l'originale, dovrebbe comunque essere segnalato come un bug all'autore."
 
 #. type: textblock
 #: doc/po4a.7.pod:148
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
-msgstr ""
+msgstr "Anche con un'interfaccia semplice, rimane un nuovo strumento che le persone devono imparare."
 
 #. type: textblock
 #: doc/po4a.7.pod:149
