@@ -1467,7 +1467,7 @@ sub push_raw {
         $flags = " $flags ";
         $flags =~ s/,/ /g;
         foreach my $flag (@known_flags) {
-            if ( $flags =~ /\s$flag\s/ ) {    # if flag to be set
+			if (index($flags, " $flag ") != -1) {     # if flag to be set
                 unless ( defined( $self->{po}{$msgid}{'flags'} )
                     && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/ )
                 {
