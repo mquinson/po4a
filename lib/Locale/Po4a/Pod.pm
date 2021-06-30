@@ -110,6 +110,11 @@ sub textblock {
 
     #    print "text: '$paragraph' at $line_num\n";
 
+    if ( $paragraph eq "\n" ) {
+        $self->pushline("$paragraph\n");
+        return;
+    }
+
     # Fix a pretty damned bug.
     # Podlators don't wrap explicitelly the text, and groff won't seem to
     #  wrap any line begining with a space. So, we have to consider as
@@ -117,11 +122,6 @@ sub textblock {
     #  the paragraph containing an indented line.
     # That way, we'll declare more paragraphs as verbatim than needed, but
     #  that's harmless (only less confortable for translators).
-
-    if ( $paragraph eq "\n" ) {
-        $self->pushline("$paragraph\n");
-        return;
-    }
     if ( $paragraph =~ m/^[ \t]/m ) {
         $self->verbatim( $paragraph, $line_num );
         return;
