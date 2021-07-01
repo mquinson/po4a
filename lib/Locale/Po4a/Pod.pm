@@ -128,7 +128,7 @@ sub textblock {
     }
 
     $paragraph = $self->translate( $paragraph, $self->{DOCPOD}{refname} . ":$line_num", 'textblock', "wrap" => 1 );
-    $paragraph =~ s/ +\n/\n/gm;
+    $paragraph =~ s/ *\n/ /gm;    # Unwrap the content, to ensure that C<> markup is not split on several lines
     $self->pushline("$paragraph\n\n");
 }
 
