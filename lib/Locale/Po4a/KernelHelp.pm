@@ -3,9 +3,7 @@
 # This program is free software; you may redistribute it and/or modify it
 # under the terms of GPL (see COPYING).
 #
-# This module converts POD to PO file, so that it becomes possible to
-# translate POD formatted documentation. See gettext documentation for
-# more info about PO files.
+# See gettext documentation for more info about PO files.
 
 ############################################################################
 # Modules and declarations
