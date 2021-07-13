@@ -98,6 +98,8 @@ This format is a lightweight markup format intended to ease the authoring of
 documentation. It is for example used to document the git system. Those
 manpages are translated using po4a.
 
+See L<Locale::Po4a::AsciiDoc> for details.
+
 =item pod (mature parser)
 
 This is the Perl Online Documentation format. The language and extensions
@@ -105,6 +107,8 @@ themselves are documented using this format in addition to most existing Perl
 scripts. It makes easy to keep the documentation close to the actual code by
 embedding them both in the same file. It makes programmer's life easier, but
 unfortunately, not the translator's, until you use po4a.
+
+See L<Locale::Po4a::Pod> for details.
 
 =item sgml (mature parser)
 
@@ -130,7 +134,8 @@ documentation, a book and some presentations.
 =item text (mature parser)
 
 The Text format is the base format for many formats that include long blocks of
-text, including Markdown, debian/changelog, and debian/control.
+text, including Markdown, fortunes, YAML front matter section, debian/changelog, 
+and debian/control.
 
 This supports the common format used in Static Site Generators, READMEs, and
 other documentation systems. See L<Locale::Po4a::Text(3pm)|Text> for details.
@@ -142,6 +147,62 @@ The XML format is a base format for many documentation formats.
 Currently, the DocBook DTD (see L<Locale::Po4a::Docbook(3pm)> for details) and
 XHTML are supported by po4a.
 
+=item BibTex (probably mature parser)
+
+The BibTex format is used alongside LaTex for formatting lists of references (bibliographies).
+
+See L<Locale::Po4a::BibTex> for details.
+
+=item Docbook (probably mature parser)
+
+A XML-based markup language that uses semantic tags to describe documents.
+
+See L<Locale::Po4a:Docbook> for greater details.
+
+=item Guide XML (probably mature parser)
+
+A XML documentation format. This module was developed specifically to help with supporting 
+and maintaining translations of Gentoo Linux documentation up until at least March 2016 
+(Based on the Wayback Machine) Gentoo have since moved to the DevBook XML format.
+
+See L<Locale::Po4a:Guide> for greater details.
+
+=item Wml (probably mature parser)
+
+The Web Markup Language, do not mixup WML with the WAP stuff used on cell phones. 
+This module relies on the Xhtml module, which itself relies on the XmL module.
+
+See L<Locale::Po4A::Wml> for greater details.
+
+=item Yaml (probably mature parser)
+
+A strict superset of JSON, YAML is often used as systems or configuration projects. 
+YAML is at the core of Red Hat's Ansible.
+
+See L<Locale::Po4A::Yaml> for greater details.
+
+=item RubyDoc (probably mature parser)
+
+The Ruby Document (RD) format, originally the default documentation format for Ruby 
+and Ruby projects before converted to RDoc in 2002. Though apparently the Japanese 
+version of the Ruby Reference Manual still use RD.
+
+See L<Locale::Po4A::RubyDoc> for greater details.
+
+
+=item Halibut (probably experimental parser)
+
+A documentation production system, with elements similar to TeX, debiandoc-sgml, 
+TeXinfo, and others, developed by Simon Tatham, the developer of PuTTY.
+
+See L<Locale::Po4a:Halibut> for greater details.
+
+=item Ini (probably experimental parser)
+
+Configuration file format popularized by MS-DOS.
+
+See L<Locale::Po4a::Ini> for greater details.
+
 =item texinfo (very highly experimental parser)
 
 All of the GNU documentation is written in this format (it's even one of the
@@ -152,8 +213,8 @@ Please report bugs and feature requests.
 =item Others supported formats
 
 Po4a can also handle some more rare or specialized formats, such as the
-documentation of compilation options for the 2.4+ Linux kernels or the diagrams
-produced by the dia tool. Adding a new format is often very easy and the main
+documentation of compilation options for the 2.4+ Linux kernels (L<Locale::Po4A::KernelHelp>) or the diagrams
+produced by the dia tool (L<Locale::Po4a:Dia>). Adding a new format is often very easy and the main
 task is to come up with a parser for your target format. See
 L<Locale::Po4a::TransTractor(3pm)> for more information about this.
 
