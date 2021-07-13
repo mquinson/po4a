@@ -14,9 +14,11 @@ module for the following formats:
   - dia: uncompressed Dia diagrams.
   - docbook: DocBook XML.
   - guide: Gentoo Linux's XML documentation format.
+  - halibut: Simon Tatham's documentation production system.
   - ini: INI format.
   - kernelhelp: Help messages of each kernel compilation option.
   - latex: LaTeX format.
+  - bibtex: bibtex format.
   - man: Good old manual page format.
   - pod: Perl Online Documentation format.
   - sgml: either DebianDoc or DocBook DTD.
@@ -27,6 +29,7 @@ module for the following formats:
   - xhtml: XHTML documents.
   - xml: generic XML documents (see also docbook).
   - yaml: YAML documents.
+  - rubydoc: RubyDoc (RD) documents.
 
 # Installation
 
