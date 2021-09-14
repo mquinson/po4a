@@ -425,6 +425,10 @@ sub parse {
             } else {
                 push @comments, $line;
             }
+            do_paragraph( $self, $paragraph, $wrapped_mode );
+            $paragraph    = "";
+            $wrapped_mode = 1 unless defined( $self->{verbatim} );
+			$self->pushline($line . "\n");
         } elsif ( ( defined $self->{type} )
             and ( $self->{type} eq "Table" )
             and ( $line !~ m/^\|===/ )
@@ -611,7 +615,7 @@ sub parse {
                     $self->{type} = $type;
                 }
                 $paragraph = "";
-                $self->pushline( $line . "\n" ) unless defined( $self->{verbatim} ) && $self->{verbatim} == 2;
+                $self->pushline( $line . "\n" );
             }
         } elsif ( ( not defined( $self->{verbatim} ) ) and ( $line =~ m/^\/\/(.*)/ ) ) {
             my $comment = $1;
@@ -624,6 +628,11 @@ sub parse {
                 # Comment line
                 push @comments, $comment;
             }
+			do_paragraph( $self, $paragraph, $wrapped_mode ) if length($paragraph);
+			$paragraph    = "";
+			$wrapped_mode = 1;
+
+			$self->pushline($line . "\n");
         } elsif ( not defined $self->{verbatim}
             and ( $line =~ m/^\[\[([^\]]*)\]\]$/ ) )
         {
