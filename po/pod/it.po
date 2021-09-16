@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-09-14 20:15+0200\n"
-"PO-Revision-Date: 2021-09-15 09:59+0200\n"
+"PO-Revision-Date: 2021-09-16 12:16+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -6721,7 +6721,7 @@ msgid ""
 "translation.  You should only use this option if a translatable string is "
 "contained in one of these section. Otherwise, I<verbatim> should be "
 "preferred."
-msgstr ""
+msgstr "Indica che le sezioni .de, .ie o .if verranno proposte per la traduzione.  Si dovrebbe usare questa opzione solo se una stringa traducibile fosse presente in una di dette sezioni. Altrimenti, sarebbe preferibile I<verbatim>."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:48
@@ -6766,6 +6766,12 @@ msgid ""
 " -o mdoc=NAME,SYNOPSIS,DESCRIPTION\n"
 "\n"
 msgstr ""
+"Secondo la pagina groff_mdoc, le sezioni NAME, SYNOPSIS e DESCRIPTION\n"
+"sono obbligatorie.\n"
+"Non sembrano esserci problemi conosciuti nel tradurre le sezioni SYNOPSIS\n"
+"o DESCRIPTION, ma si può specificare queste sezioni anche in questo modo:\n"
+" -o mdoc=NAME,SYNOPSIS,DESCRIPTION\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:54
@@ -6776,6 +6782,10 @@ msgid ""
 " .TH DOCUMENT_TITLE 1 \"Month day, year\" OS \"Section Name\"\n"
 "\n"
 msgstr ""
+"Questo problema di mdoc può essere risolto anche con un addendum come questo:\n"
+" PO4A-HEADER:mode=before;position=^.Dd\n"
+" .TH DOCUMENT_TITLE 1 \"Month day, year\" OS \"Section Name\"\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:55
@@ -6783,7 +6793,7 @@ msgid ""
 "The following options permit to specify the behavior of a new macro (defined "
 "with a .de request), or of a macro not supported by po4a.  They take as "
 "argument a comma-separated list of macros.  For example:"
-msgstr ""
+msgstr "Le opzioni seguenti permettono di specificare il comportamento di una nuova macro (definita con una richiesta .de), o di una macro non supportata da po4a.  Prendono come argomento un elenco separato da virgole di macro.  Per esempio:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Man.pm:56
@@ -6791,14 +6801,14 @@ msgstr ""
 msgid ""
 " -o noarg=FO,OB,AR -o translate_joined=BA,ZQ,UX\n"
 "\n"
-msgstr ""
+msgstr " -o noarg=FO,OB,AR -o translate_joined=BA,ZQ,UX\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:57
 msgid ""
 "Note: if a macro is not supported by po4a and if you consider that it is a "
 "standard roff macro, you should submit it to the po4a development team."
-msgstr ""
+msgstr "Nota: se una macro macro non è supportata da po4a e si ritiene che sia una macro standard roff, sarebbe desiderabile comunicarlo al team di sviluppo di po4a (N.d.T. per un'eventuale inclusione in una prossima versione di po4a)."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:58 lib/Locale/Po4a/Xml.pm:91
@@ -6824,7 +6834,7 @@ msgstr "B<noarg>"
 msgid ""
 "B<noarg> is like B<untranslated>, except that po4a will verify that no "
 "argument is added to this macro."
-msgstr ""
+msgstr "B<noarg> è come B<untranslated>, eccetto per il fatto che po4a verificherà che non venga aggiunto nessun argomento a questa macro."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:62
@@ -6836,7 +6846,7 @@ msgstr "B<translate_joined>"
 msgid ""
 "B<translate_joined> indicates that po4a must propose to translate the "
 "arguments of the macro."
-msgstr ""
+msgstr "B<translate_joined> indica che po4a deve proporre di tradurre gli argomenti della macro."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:64
@@ -6848,7 +6858,7 @@ msgstr "B<translate_each>"
 msgid ""
 "With B<translate_each>, the arguments will also be proposed for the "
 "translation, except that each one will be translated separately."
-msgstr ""
+msgstr "Anche con B<translate_each>, gli argomenti verranno proposti per la traduzione, ma ognuno verrà tradotto separatamente."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:66 lib/Locale/Po4a/TeX.pm:15
@@ -6861,7 +6871,7 @@ msgid ""
 "This option takes as argument a list of comma-separated couples I<begin>:"
 "I<end>, where I<begin> and I<end> are commands that delimit the begin and "
 "end of a section that should not be rewrapped."
-msgstr ""
+msgstr "Questa opzione prende come argomento un elenco di coppie separate da virgole I<begin>:I<end>, dove I<begin> e I<end> sono comandi che delimitano rispettivamente l'inizio e la fine di una sezione che non dovrebbe essere riformattata (N.d.T. gli a-capo non devono cambiare)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:68
@@ -6871,7 +6881,7 @@ msgid ""
 "(respectively I<end>) macro that has no I<end> (respectively I<begin>), you "
 "can specify an existing I<end> (like fi) or I<begin> (like nf) as a "
 "counterpart.  These macros (and their arguments) wont be translated."
-msgstr ""
+msgstr "Nota: non viene effettuata nessuna prova per controllare che il comando I<end> corrisponda al suo comando I<begin>; qualunque comando di fine interrompe la modalità no_wrap.  Se si ha una macro I<begin> (o rispettivamente I<end>) che non ha un I<end> (o rispettivamente I<begin>), si può specificare un I<end> esistente (come fi) o I<begin> (come nf) come controparte.  Quesre macro (ed i loro argomenti) non verranno tradotte."
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:69 lib/Locale/Po4a/Xml.pm:59
