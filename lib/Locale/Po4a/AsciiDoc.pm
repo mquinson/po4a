@@ -114,6 +114,10 @@ section. All other keys are skipped. Keys are matched with a case-insensitive
 match. Array values are always translated, unless the B<yfm_skip_array> option
 is provided.
 
+=item B<nolinting>
+
+Disable linting messages. When the source code cannot be fixed for clearer document structure, these messages are useless.
+
 =cut
 
 my %yfm_keys = ();
@@ -201,6 +205,7 @@ sub initialize {
     $self->{options}{'compat'}         = 'asciidoc';
     $self->{options}{'yfm_keys'}       = '';
     $self->{options}{'yfm_skip_array'} = 0;
+    $self->{options}{'nolinting'}      = 0;
 
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -509,7 +514,7 @@ sub parse {
                 ),
                 $paragraph,
                 $level
-            ) if ( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) );
+            ) if (( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) ) && (!$self->{options}{'nolinting'}));
 
             my $t = $self->translate(
                 $paragraph,
@@ -971,7 +976,7 @@ sub parse {
                 $wrapped_mode = 0;
             }
 
-            if ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) {
+            if (( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) && (!$self->{options}{'nolinting'})) {
 
                 # Second line of an item block is not indented. It is unindented
                 # (and allowed) additional text or a new list item.
