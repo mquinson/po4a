@@ -1250,7 +1250,24 @@ while (<CONFIG>) {
 
         # 4. Save the name of the master doc, to handle "$master" substitution in strings
         if ( $args =~ s/ +master:file=(\S+)// ) {
-            $document{$main}{'master'} = $1;
+            my $newmaster = $1;
+            foreach my $k ( keys %document ) {
+                if ( defined( $document{$k}{'master'} ) && ( $document{$k}{'master'} eq $newmaster ) ) {
+                    warn(
+                        wrap_ref_mod(
+                            "Configuration error",
+                            "",
+                            gettext(
+                                "Both document '%s' and '%s' have the same master doc '%s'. Please fix your setup, as po4a currently does not support such grouping of files in split mode."
+                            ),
+                            $main, $k,
+                            $newmaster
+                        )
+                    );
+                    exit 1;
+                }
+            }
+            $document{$main}{'master'} = $newmaster;
         }
 
         # 5. Merge the document specific options

@@ -45,6 +45,13 @@ push @tests, {
 
   },
   {
+    'doc'            => 'Split settings, with several file having the same master file (configuration error)',
+    'po4a.conf'      => 'cfg/split-multimaster/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => '',
+    expected_retcode => 256,
+  },
+  {
     'doc'            => 'Split settings, translation uptodate',
     'po4a.conf'      => 'cfg/split-uptodate/po4a.conf',
     'closed_path'    => 'cfg/*/',
@@ -96,8 +103,7 @@ push @tests, {
     'doc'            => 'Split settings, with an YAML master doc, translation uptodate',
     'po4a.conf'      => 'cfg/split-yaml/po4a.cfg',
     'closed_path'    => 'cfg/*/',
-    'expected_files' => 'content.pot content.vi.po _index.vi.md '
-      . 'i18n.pot i18n.vi.po vi.yaml'
+    'expected_files' => 'content.pot content.vi.po _index.vi.md ' . 'i18n.pot i18n.vi.po vi.yaml'
   };
 
 run_all_tests(@tests);
