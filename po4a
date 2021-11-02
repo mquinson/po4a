@@ -950,8 +950,17 @@ my (%aliases);    # module aliases ([po4a_alias:...]
 my ($pot_filename) = "";
 my (%po_filename);     # po_files: '$lang'=>'$path'
 my (%add_filename);    # Global addendum_files: '$lang'=>array of '$path'
-my (%document)
-  ;    # '$master'=> {'format'=>'$format'; '$lang'=>'$path'; 'add_$lang'=>('$path','$path') ; 'pot_in'=> '$master'}
+
+# The document hash table contains all the information about the files to translate.
+# Each key of the hash map a master file, ie a file to translate. For each such master file, we have a sub-hashmap containing:
+#  'format' => '$format': string designating the po4a module to use
+#  '$lang'  => '$path': one string entry per language, the path of the translated file
+# Optional parts:
+#  'add_$lang'=>('$path','$path'): one vector per language, the list of all addendum for that language
+#  'pot_in' => '$master': The master file to use in input when building the POT (allows to filter out some things)
+#  'master' => the filename to use when building the POT file in split mode (when not provided, basename of master is used)
+my (%document);
+
 my $doc_count = 0;
 my %partial   = ( 'master' => {}, 'files' => {}, 'lang' => {} );
 open CONFIG, "<", "$config_file" or die wrap_msg( gettext("Cannot open %s: %s"), $config_file, $! );
@@ -1410,7 +1419,7 @@ if ( $pot_filename =~ m/\$master/ ) {
     }
     foreach my $master ( keys %document ) {
         next if ( $master eq '' );
-        my $m          = $document{$master}{"master"} || basename $master;
+        my $m          = $document{$master}{'master'} || basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
         $split_pot{$master} = $master_pot;
@@ -1613,7 +1622,7 @@ if ( $po4a_opts{"split"} ) {
         my $cmd_cat = "";
         foreach my $master ( sort keys %document ) {
             next if ( $master eq '' );
-            my $m         = $document{$master}{"master"} || basename $master;
+            my $m         = $document{$master}{'master'} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
             if ( -e find_input_file($master_po) ) {
