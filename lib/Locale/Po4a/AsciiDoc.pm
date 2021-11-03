@@ -433,7 +433,7 @@ sub parse {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
             $wrapped_mode = 1 unless defined( $self->{verbatim} );
-			$self->pushline($line . "\n");
+            $self->pushline( $line . "\n" );
         } elsif ( ( defined $self->{type} )
             and ( $self->{type} eq "Table" )
             and ( $line !~ m/^\|===/ )
@@ -514,7 +514,9 @@ sub parse {
                 ),
                 $paragraph,
                 $level
-            ) if (( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) ) && (!$self->{options}{'nolinting'}));
+              )
+              if ( ( chars( $paragraph, $self->{TT}{po_in}{encoder}, $ref ) != length($line) )
+                && ( !$self->{options}{'nolinting'} ) );
 
             my $t = $self->translate(
                 $paragraph,
@@ -633,11 +635,11 @@ sub parse {
                 # Comment line
                 push @comments, $comment;
             }
-			do_paragraph( $self, $paragraph, $wrapped_mode ) if length($paragraph);
-			$paragraph    = "";
-			$wrapped_mode = 1;
+            do_paragraph( $self, $paragraph, $wrapped_mode ) if length($paragraph);
+            $paragraph    = "";
+            $wrapped_mode = 1;
 
-			$self->pushline($line . "\n");
+            $self->pushline( $line . "\n" );
         } elsif ( not defined $self->{verbatim}
             and ( $line =~ m/^\[\[([^\]]*)\]\]$/ ) )
         {
@@ -785,7 +787,7 @@ sub parse {
                 and ( defined( $self->{type} ) and ( $self->{type} eq "Table" ) ) )
             {
                 $paragraph .= $line . "\n";
-            } elsif (    ( $macroname eq "include" || $macroname eq "ifeval" )
+            } elsif ( ( $macroname eq "include" || $macroname eq "ifeval" )
                 and ( $macrotype eq '::' ) )
             {
                 $self->pushline( $line . "\n" );
@@ -976,7 +978,9 @@ sub parse {
                 $wrapped_mode = 0;
             }
 
-            if (( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) && (!$self->{options}{'nolinting'})) {
+            if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 )
+                && ( !$self->{options}{'nolinting'} ) )
+            {
 
                 # Second line of an item block is not indented. It is unindented
                 # (and allowed) additional text or a new list item.

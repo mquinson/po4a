@@ -388,13 +388,13 @@ C<$master> in the name of your PO files on the C<[po4a_paths]> line, as follows.
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
 
 If there are name conflicts because several files have the same filename,
-the name of the master file can be specified by adding a C<master:file=>I<name>
+the name of the POT file name can be specified by adding a C<pot=>I<name>
 option:
 
  [po4a_langs] de fr ja
  [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
- [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui
- [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui
+ [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui
+ [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar-gui
 
 In split mode, B<po4a> builds a temporary compendium during the PO update, to
 share the translations between all the PO files. If two PO files have different
@@ -958,7 +958,7 @@ my (%add_filename);    # Global addendum_files: '$lang'=>array of '$path'
 # Optional parts:
 #  'add_$lang'=>('$path','$path'): one vector per language, the list of all addendum for that language
 #  'pot_in' => '$master': The master file to use in input when building the POT (allows to filter out some things)
-#  'master' => the filename to use when building the POT file in split mode (when not provided, basename of master is used)
+#  'pot'    => the filename to use when building the POT file in split mode (when not provided, basename of master is used)
 my (%document);
 
 my $doc_count = 0;
@@ -1258,16 +1258,23 @@ while (<CONFIG>) {
           if defined $document{$main}{'options'};
 
         # 4. Save the name of the master doc, to handle "$master" substitution in strings
-        if ( $args =~ s/ +master:file=(\S+)// ) {
+        warn(
+            wrap_ref_mod(
+                "$config_file:$nb", "",
+                gettext("Option 'master:file' is deprecated. Please use 'pot' instead for the same effect.")
+            )
+        ) if ( $args =~ m/ +master:file=\S/ );
+
+        if ( $args =~ s/ +master:file=(\S+)// || $args =~ s/ +pot=(\S+)// ) {
             my $newmaster = $1;
             foreach my $k ( keys %document ) {
-                if ( defined( $document{$k}{'master'} ) && ( $document{$k}{'master'} eq $newmaster ) ) {
+                if ( defined( $document{$k}{'pot'} ) && ( $document{$k}{'pot'} eq $newmaster ) ) {
                     warn(
                         wrap_ref_mod(
                             "Configuration error",
                             "",
                             gettext(
-                                "Both document '%s' and '%s' have the same master doc '%s'. Please fix your setup, as po4a currently does not support such grouping of files in split mode."
+                                "Both document '%s' and '%s' have the same POT file '%s'. Please fix your setup, as po4a currently does not support such grouping of files in split mode."
                             ),
                             $main, $k,
                             $newmaster
@@ -1276,7 +1283,7 @@ while (<CONFIG>) {
                     exit 1;
                 }
             }
-            $document{$main}{'master'} = $newmaster;
+            $document{$main}{'pot'} = $newmaster;
         }
 
         # 5. Merge the document specific options
@@ -1419,7 +1426,7 @@ if ( $pot_filename =~ m/\$master/ ) {
     }
     foreach my $master ( keys %document ) {
         next if ( $master eq '' );
-        my $m          = $document{$master}{'master'} || basename $master;
+        my $m          = $document{$master}{'pot'} || basename $master;
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
         $split_pot{$master} = $master_pot;
@@ -1572,7 +1579,7 @@ if ($update_pot_file) {
 
 if ( $po4a_opts{"split"} ) {
 
-    # Generate a .pot for each document
+    # Generate a .pot for each document. They are not used internaly afterward, but the humans need them to start new translations
     foreach my $master ( keys %document ) {
         next if ( $master eq '' );
         my $tmp_file;
@@ -1609,7 +1616,8 @@ if ( $po4a_opts{"split"} ) {
           unless ( $po4a_opts{"force"} );
     }
 
-    # Generate a complete .po
+    # Generate a complete .po for each language, with the translations of all master files
+    # That's done with msgcat on all existing PO files of a given language
     foreach my $lang ( sort keys %po_filename ) {
         my $tmp_bigpo;
         ( undef, $tmp_bigpo ) = File::Temp::tempfile(
@@ -1622,7 +1630,7 @@ if ( $po4a_opts{"split"} ) {
         my $cmd_cat = "";
         foreach my $master ( sort keys %document ) {
             next if ( $master eq '' );
-            my $m         = $document{$master}{'master'} || basename $master;
+            my $m         = $document{$master}{'pot'} || basename $master;
             my $master_po = $po_filename{$lang};
             $master_po =~ s/\$master/$m/g;
             if ( -e find_input_file($master_po) ) {
