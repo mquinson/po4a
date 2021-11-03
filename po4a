@@ -1579,7 +1579,7 @@ if ($update_pot_file) {
 
 if ( $po4a_opts{"split"} ) {
 
-    # Generate a .pot for each document. They are not used internaly afterward, but the humans need them to start new translations
+    # Generate a .pot for each document. They are used to update the PO files (and also by humans to start new translations)
     foreach my $master ( keys %document ) {
         next if ( $master eq '' );
         my $tmp_file;
@@ -1719,11 +1719,9 @@ if ( not $po4a_opts{"no-update"} ) {
                 ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
 
                 my $cmd;
-                my $env =
-                  ( $^O =~ /Win/ )
-                  ? ""
-                  : "LC_ALL=C.UTF-8"
-                  ;   # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
+
+                # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
+                my $env = ( $^O =~ /Win/ ) ? "" : "LC_ALL=C.UTF-8";
 
                 # Create an empty PO or copy the original PO header (to keep the header)
                 if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
