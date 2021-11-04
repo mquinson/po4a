@@ -387,14 +387,18 @@ C<$master> in the name of your PO files on the C<[po4a_paths]> line, as follows.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
 
-If there are name conflicts because several files have the same filename,
-the name of the POT file name can be specified by adding a C<pot=>I<name>
-option:
+With this line, po4a will produce separate POT and PO files for each document to translate. 
+For example, if you have 3 documents and 5 languages, this will result in 3 POT files and 
+15 PO files. These files are named as specified on the C<po4a_paths> template, with 
+C<$master> substituted to the basename of each document to translate. In case of name 
+conflict, you can specify the POT file to use as follows, with the C<pot=> parameter. 
+This feature can also be used to group several translated files into the same POT file.
 
  [po4a_langs] de fr ja
  [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
  [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui
- [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar-gui
+ [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar
+ [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar
 
 In split mode, B<po4a> builds a temporary compendium during the PO update, to
 share the translations between all the PO files. If two PO files have different
@@ -1266,24 +1270,7 @@ while (<CONFIG>) {
         ) if ( $args =~ m/ +master:file=\S/ );
 
         if ( $args =~ s/ +master:file=(\S+)// || $args =~ s/ +pot=(\S+)// ) {
-            my $newmaster = $1;
-            foreach my $k ( keys %document ) {
-                if ( defined( $document{$k}{'pot'} ) && ( $document{$k}{'pot'} eq $newmaster ) ) {
-                    warn(
-                        wrap_ref_mod(
-                            "Configuration error",
-                            "",
-                            gettext(
-                                "Both document '%s' and '%s' have the same POT file '%s'. Please fix your setup, as po4a currently does not support such grouping of files in split mode."
-                            ),
-                            $main, $k,
-                            $newmaster
-                        )
-                    );
-                    exit 1;
-                }
-            }
-            $document{$main}{'pot'} = $newmaster;
+            $document{$main}{'pot'} = $1;
         }
 
         # 5. Merge the document specific options
@@ -1414,6 +1401,8 @@ if (    defined $document{''}{"options"}
 
 my %split_po;     # po_files: '$lang','$master' => '$path'
 my %split_pot;    # pot_files: '$master' => '$path'
+my %split_pot_files
+  ;               # List of files in a given POT, as a parameter to msggrep: '$potfile' => "-N file1 -N file2 -N file3"
 
 # make a big pot
 my $update_pot_file = 0;
@@ -1430,6 +1419,9 @@ if ( $pot_filename =~ m/\$master/ ) {
         my $master_pot = $pot_filename;
         $master_pot =~ s/\$master/$m/g;
         $split_pot{$master} = $master_pot;
+        my $searched_file = $document{$master}{'pot_in'} // $master;
+        $split_pot_files{$master_pot} //= '';
+        $split_pot_files{$master_pot} .= " -N \"$searched_file\"";
     }
 
     # The POT needs to be generated anyway.
@@ -1579,9 +1571,9 @@ if ($update_pot_file) {
 
 if ( $po4a_opts{"split"} ) {
 
-    # Generate a .pot for each document. They are used to update the PO files (and also by humans to start new translations)
-    foreach my $master ( keys %document ) {
-        next if ( $master eq '' );
+    # Generate a .pot for each document by msggrep on the big POT file.
+    # These files are used to update the PO files later on (and also by humans to start new translations)
+    foreach my $master_pot ( keys %split_pot_files ) {
         my $tmp_file;
 
         # Create a temporary POT, and check if the old one needs to be
@@ -1596,13 +1588,12 @@ if ( $po4a_opts{"split"} ) {
             ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
         }
 
-        my $dir = dirname( find_output_file( $split_pot{$master} ) );
+        my $dir = dirname( find_output_file($master_pot) );
         if ( not -d $dir ) {
             mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
         }
-        my $outfile       = $po4a_opts{"force"} ? find_output_file( $split_pot{$master} ) : $tmp_file;
-        my $searched_file = $document{$master}{'pot_in'} // $master;
-        my $cmd           = "msggrep$Config{_exe} -N \"$searched_file\" -o $outfile $pot_filename";
+        my $outfile = $po4a_opts{"force"} ? find_output_file($master_pot) : $tmp_file;
+        my $cmd     = "msggrep$Config{_exe} $split_pot_files{$master_pot} -o $outfile $pot_filename";
         run_cmd($cmd);
 
         die wrap_msg(
@@ -1612,7 +1603,7 @@ if ( $po4a_opts{"split"} ) {
             $outfile, $cmd
         ) unless ( -e $outfile );
 
-        move_po_if_needed( $tmp_file, find_output_file( $split_pot{$master} ), 0 )
+        move_po_if_needed( $tmp_file, find_output_file($master_pot), 0 )
           unless ( $po4a_opts{"force"} );
     }
 

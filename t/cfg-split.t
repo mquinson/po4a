@@ -45,11 +45,12 @@ push @tests, {
 
   },
   {
-    'doc'            => 'Split settings, with several file having the same master file (configuration error)',
+    'doc'            => 'Split settings, grouping several files into a given POT file',
     'po4a.conf'      => 'cfg/split-multimaster/po4a.conf',
     'closed_path'    => 'cfg/*/',
-    'expected_files' => '',
-    expected_retcode => 256,
+    'expected_files' => 'first.man.de first.man.fr third.man.de  third.man.fr  '
+      . 'Documentation.pot Documentation.de.po Documentation.fr.po '
+      . 'second.man.de second.man.de.po second.man.fr second.man.fr.po second.man.pot',
   },
   {
     'doc'            => 'Split settings, translation uptodate',
