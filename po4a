@@ -951,9 +951,10 @@ my $config_file = shift(@ARGV) || pod2usage();
 # Parse the config file
 my (@langs);
 my (%aliases);    # module aliases ([po4a_alias:...]
-my ($pot_filename) = "";
-my (%po_filename);     # po_files: '$lang'=>'$path'
-my (%add_filename);    # Global addendum_files: '$lang'=>array of '$path'
+my $pot_filename     = "";    # In split mode, this is the temp file name for the big POT
+my $pot_filename_cfg = "";    # This is never modified, useful in split mode to find the cfg content
+my (%po_filename);            # po_files: '$lang'=>'$path'
+my (%add_filename);           # Global addendum_files: '$lang'=>array of '$path'
 
 # The document hash table contains all the information about the files to translate.
 # Each key of the hash map a master file, ie a file to translate. For each such master file, we have a sub-hashmap containing:
@@ -1023,7 +1024,8 @@ while (<CONFIG>) {
     if ( $cmd eq "po4a_paths" ) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_path" )
           if ( length $pot_filename );
-        $pot_filename = $main;
+        $pot_filename     = $main;
+        $pot_filename_cfg = $main;
         warn wrap_ref_mod(
             "$config_file:$nb",
             "",
@@ -1399,11 +1401,6 @@ if (    defined $document{''}{"options"}
     %po4a_opts = get_options( split_opts( $document{''}{"options"}{"global"} ), @ORIGINAL_ARGV );
 }
 
-my %split_po;     # po_files: '$lang','$master' => '$path'
-my %split_pot;    # pot_files: '$master' => '$path'
-my %split_pot_files
-  ;               # List of files in a given POT, as a parameter to msggrep: '$potfile' => "-N file1 -N file2 -N file3"
-
 # make a big pot
 my $update_pot_file = 0;
 if ( $pot_filename =~ m/\$master/ ) {
@@ -1412,16 +1409,6 @@ if ( $pot_filename =~ m/\$master/ ) {
     if ( scalar @{ $po4a_opts{"partial"} } ) {
         print wrap_msg( gettext("Disabling --translate-only option, it is not supported in split mode") . "\n" );
         $po4a_opts{"partial"} = [];
-    }
-    foreach my $master ( keys %document ) {
-        next if ( $master eq '' );
-        my $m          = $document{$master}{'pot'} || basename $master;
-        my $master_pot = $pot_filename;
-        $master_pot =~ s/\$master/$m/g;
-        $split_pot{$master} = $master_pot;
-        my $searched_file = $document{$master}{'pot_in'} // $master;
-        $split_pot_files{$master_pot} //= '';
-        $split_pot_files{$master_pot} .= " -N \"$searched_file\"";
     }
 
     # The POT needs to be generated anyway.
@@ -1569,7 +1556,21 @@ if ($update_pot_file) {
       if ( $po4a_opts{"verbose"} and not $po4a_opts{"no-update"} );
 }
 
+my %split_po;           # po_files: '$lang','$master' => '$path'
+my %split_pot;          # pot_files: '$master' => '$path'
+my %split_pot_files;    # List of files in a given POT, as a parameter to msggrep: '$potfile' => "-N file1 -N file2"
+
 if ( $po4a_opts{"split"} ) {
+    foreach my $master ( keys %document ) {
+        next if ( $master eq '' );
+        my $m          = $document{$master}{'pot'} || basename $master;
+        my $master_pot = $pot_filename_cfg;
+        $master_pot =~ s/\$master/$m/g;
+        $split_pot{$master} = $master_pot;
+        my $searched_file = $document{$master}{'pot_in'} // $master;
+        $split_pot_files{$master_pot} //= '';
+        $split_pot_files{$master_pot} .= " -N \"$searched_file\"";
+    }
 
     # Generate a .pot for each document by msggrep on the big POT file.
     # These files are used to update the PO files later on (and also by humans to start new translations)
