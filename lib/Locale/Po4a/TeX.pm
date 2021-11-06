@@ -931,11 +931,12 @@ Overloads Transtractor's read().
 sub read {
     my $self     = shift;
     my $filename = shift;
+    my $refname  = shift;
 
     # keep the directory name of the main file.
     $my_dirname = dirname($filename);
 
-    push @{ $self->{TT}{doc_in} }, read_file( $self, $filename );
+    push @{ $self->{TT}{doc_in} }, read_file( $self, $filename, $refname );
 }
 
 =item B<read_file>
@@ -954,6 +955,7 @@ sub read_file {
     my $self     = shift;
     my $filename = shift
       or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from file without having a filename" ) );
+    my $refname = shift // $filename;
     my $linenum = 0;
     my @entries = ();
 
@@ -961,7 +963,7 @@ sub read_file {
       or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <$in> ) ) {
         $linenum++;
-        my $ref = "$filename:$linenum";
+        my $ref = "$refname:$linenum";
 
         # TODO: add support for includeonly
         # The next regular expression matches \input or \includes that are
@@ -999,7 +1001,7 @@ sub read_file {
                     die wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot find %s with kpsewhich" ), $filename );
                 }
 
-                push @entries, read_file( $self, $newfilepath );
+                push @entries, read_file( $self, $newfilepath, $newfilename );
                 if ( $tag eq "include" ) {
                     $textline = "\\clearpage" . $end;
                 } else {
