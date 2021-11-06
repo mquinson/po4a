@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2021-09-14 20:15+0200\n"
+"POT-Creation-Date: 2021-11-06 11:27+0100\n"
 "PO-Revision-Date: 2021-09-17 06:35+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
@@ -1243,12 +1243,15 @@ msgstr ""
 #. type: textblock
 #: po4a:115
 msgid ""
-"If there are name conflicts because several files have the same filename, "
-"the name of the master file can be specified by adding a C<master:"
-"file=>I<name> option:"
+"With this line, po4a will produce separate POT and PO files for each "
+"document to translate.  For example, if you have 3 documents and 5 "
+"languages, this will result in 3 POT files and 15 PO files. These files are "
+"named as specified on the C<po4a_paths> template, with C<$master> "
+"substituted to the basename of each document to translate. In case of name "
+"conflict, you can specify the POT file to use as follows, with the C<pot=> "
+"parameter.  This feature can also be used to group several translated files "
+"into the same POT file."
 msgstr ""
-"Ако постоји конфликт са именима јер више фајлова има идентичан назив, име "
-"мастер фајла може да се наведе додавањем опције C<master:file=>I<име>:"
 
 #. type: verbatim
 #: po4a:116
@@ -1256,8 +1259,9 @@ msgstr ""
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
-" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
+" [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
 msgstr ""
 
@@ -2003,7 +2007,7 @@ msgstr ""
 #. type: =head1
 #: po4a:191 po4a-gettextize:73 po4a-normalize:31 po4a-translate:56
 #: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:183
-#: lib/Locale/Po4a/AsciiDoc.pm:50 lib/Locale/Po4a/BibTeX.pm:11
+#: lib/Locale/Po4a/AsciiDoc.pm:52 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
 #: lib/Locale/Po4a/Guide.pm:12 lib/Locale/Po4a/Halibut.pm:16
@@ -2014,7 +2018,6 @@ msgstr ""
 #: lib/Locale/Po4a/Texinfo.pm:12 lib/Locale/Po4a/Text.pm:40
 #: lib/Locale/Po4a/TransTractor.pm:156 lib/Locale/Po4a/Wml.pm:11
 #: lib/Locale/Po4a/Xhtml.pm:17 lib/Locale/Po4a/Xml.pm:186
-#: lib/Locale/Po4a/AsciiDoc.pm:52
 msgid "AUTHORS"
 msgstr "АУТОРИ"
 
@@ -2035,7 +2038,7 @@ msgstr ""
 
 #. type: =head1
 #: po4a:193 po4a-gettextize:75 po4a-normalize:33 po4a-translate:58
-#: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:52
+#: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:54
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
 #: lib/Locale/Po4a/Docbook.pm:19 lib/Locale/Po4a/Guide.pm:14
@@ -2045,7 +2048,7 @@ msgstr ""
 #: lib/Locale/Po4a/Sgml.pm:58 lib/Locale/Po4a/TeX.pm:122
 #: lib/Locale/Po4a/Texinfo.pm:14 lib/Locale/Po4a/Text.pm:42
 #: lib/Locale/Po4a/Wml.pm:13 lib/Locale/Po4a/Xhtml.pm:19
-#: lib/Locale/Po4a/Xml.pm:188 lib/Locale/Po4a/AsciiDoc.pm:54
+#: lib/Locale/Po4a/Xml.pm:188
 msgid "COPYRIGHT AND LICENSE"
 msgstr "ПРАВА УМНОЖАВАЊА И ЛИЦЕНЦА"
 
@@ -2057,7 +2060,7 @@ msgstr "Права умножавања 2002-2020 by SPI, inc."
 
 #. type: textblock
 #: po4a:195 po4a-gettextize:77 po4a-normalize:35 po4a-translate:60
-#: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:54
+#: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:56
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
 #: lib/Locale/Po4a/Docbook.pm:21 lib/Locale/Po4a/Guide.pm:16
@@ -2066,7 +2069,6 @@ msgstr "Права умножавања 2002-2020 by SPI, inc."
 #: lib/Locale/Po4a/Sgml.pm:60 lib/Locale/Po4a/TeX.pm:124
 #: lib/Locale/Po4a/Text.pm:45 lib/Locale/Po4a/Wml.pm:15
 #: lib/Locale/Po4a/Xhtml.pm:21 lib/Locale/Po4a/Xml.pm:190
-#: lib/Locale/Po4a/AsciiDoc.pm:56
 msgid ""
 "This program is free software; you may redistribute it and/or modify it "
 "under the terms of GPL (see the COPYING file)."
@@ -5372,24 +5374,36 @@ msgstr ""
 "преводе, осим у случају када је постављена опција B<yfm_skip_array>."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:33 lib/Locale/Po4a/AsciiDoc.pm:35
+#: lib/Locale/Po4a/AsciiDoc.pm:33
+msgid "B<nolinting>"
+msgstr "B<nolinting>"
+
+#. type: textblock
+#: lib/Locale/Po4a/AsciiDoc.pm:34
+msgid ""
+"Disable linting messages. When the source code cannot be fixed for clearer "
+"document structure, these messages are useless."
+msgstr ""
+"Искључује линтинг поруке. Када изворни кôд не може да се поправи тако да се "
+"добије чистија структура документа, ове поруке су бескорисне."
+
+#. type: =item
+#: lib/Locale/Po4a/AsciiDoc.pm:35
 msgid "B<yfm_skip_array>"
 msgstr "B<yfm_skip_array>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:34 lib/Locale/Po4a/Text.pm:33
-#: lib/Locale/Po4a/AsciiDoc.pm:36
+#: lib/Locale/Po4a/AsciiDoc.pm:36 lib/Locale/Po4a/Text.pm:33
 msgid "Do not translate array values in the YAML Front Matter section."
 msgstr "Вредности типа низ у YAML Front Matter одељку се не преводе."
 
 #. type: =head1
-#: lib/Locale/Po4a/AsciiDoc.pm:35 lib/Locale/Po4a/TeX.pm:27
-#: lib/Locale/Po4a/AsciiDoc.pm:37
+#: lib/Locale/Po4a/AsciiDoc.pm:37 lib/Locale/Po4a/TeX.pm:27
 msgid "INLINE CUSTOMIZATION"
 msgstr "ПРИЛАГОЂАВАЊЕ ИЗ САМОГ ФАЈЛА"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:36 lib/Locale/Po4a/AsciiDoc.pm:38
+#: lib/Locale/Po4a/AsciiDoc.pm:38
 msgid ""
 "The AsciiDoc module can be customized with lines starting by B<//po4a:>.  "
 "These lines are interpreted as commands to the parser.  The following "
@@ -5399,12 +5413,12 @@ msgstr ""
 "линије се интерпретирају као команде парсера. Препознају се следеће команде:"
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:37 lib/Locale/Po4a/AsciiDoc.pm:39
+#: lib/Locale/Po4a/AsciiDoc.pm:39
 msgid "B<//po4a: macro >I<name>B<[>I<attribute list>B<]>"
 msgstr "B<//po4a: macro >I<име>B<[>I<листа атрибута>B<]>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:38 lib/Locale/Po4a/AsciiDoc.pm:40
+#: lib/Locale/Po4a/AsciiDoc.pm:40
 msgid ""
 "This permits to describe in detail the parameters of a B<macro>; I<name> "
 "must be a valid macro name, and it ends with an underscore if the target "
@@ -5415,7 +5429,7 @@ msgstr ""
 "преведе."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:39 lib/Locale/Po4a/AsciiDoc.pm:41
+#: lib/Locale/Po4a/AsciiDoc.pm:41
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "informations about translatable arguments.  This list contains either "
@@ -5426,7 +5440,7 @@ msgstr ""
 "бројеве, који дефинишу позиционе параметре, или именоване атрибуте."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:40 lib/Locale/Po4a/AsciiDoc.pm:42
+#: lib/Locale/Po4a/AsciiDoc.pm:42
 msgid ""
 "If a plus sign (B<+>) is prepended to I<name>, then the macro and its "
 "arguments are translated as a whole.  There is no need to define attribute "
@@ -5437,12 +5451,12 @@ msgstr ""
 "дефинише листа аргумената, али је потребно да постоје угласте заграде."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:41 lib/Locale/Po4a/AsciiDoc.pm:43
+#: lib/Locale/Po4a/AsciiDoc.pm:43
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
 msgstr "B<//po4a: style >B<[>I<листа атрибута>B<]>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:42 lib/Locale/Po4a/AsciiDoc.pm:44
+#: lib/Locale/Po4a/AsciiDoc.pm:44
 msgid ""
 "This permits to describe in detail which attributes of a style must be "
 "translated."
@@ -5450,7 +5464,7 @@ msgstr ""
 "Ово омогућава да се детаљно опише који атрибути стила морају да се преведу."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:43 lib/Locale/Po4a/AsciiDoc.pm:45
+#: lib/Locale/Po4a/AsciiDoc.pm:45
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "informations about translatable arguments.  This list contains either "
@@ -5463,7 +5477,7 @@ msgstr ""
 "Први атрибут је име стила, и он неће да се преводи."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:44 lib/Locale/Po4a/AsciiDoc.pm:46
+#: lib/Locale/Po4a/AsciiDoc.pm:46
 msgid ""
 "If a plus sign (B<+>) is prepended to the style name, then the attribute "
 "list is translated as a whole.  There is no need to define translatable "
@@ -5474,7 +5488,7 @@ msgstr ""
 "преводе."
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:45 lib/Locale/Po4a/AsciiDoc.pm:47
+#: lib/Locale/Po4a/AsciiDoc.pm:47
 msgid ""
 "If a minus sign (B<->) is prepended to the style name, then this attribute "
 "is not translated."
@@ -5483,12 +5497,12 @@ msgstr ""
 "не преводи."
 
 #. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:46 lib/Locale/Po4a/AsciiDoc.pm:48
+#: lib/Locale/Po4a/AsciiDoc.pm:48
 msgid "B<//po4a: entry >I<name>"
 msgstr "B<//po4a: entry >I<име>"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:47 lib/Locale/Po4a/AsciiDoc.pm:49
+#: lib/Locale/Po4a/AsciiDoc.pm:49
 msgid ""
 "This declares an attribute entry as being translatable.  By default, they "
 "are not translated."
@@ -5497,7 +5511,7 @@ msgstr ""
 "могу да се преводе."
 
 #. type: =head1
-#: lib/Locale/Po4a/AsciiDoc.pm:48 lib/Locale/Po4a/BibTeX.pm:9
+#: lib/Locale/Po4a/AsciiDoc.pm:50 lib/Locale/Po4a/BibTeX.pm:9
 #: lib/Locale/Po4a/Dia.pm:10 lib/Locale/Po4a/Docbook.pm:6
 #: lib/Locale/Po4a/Guide.pm:7 lib/Locale/Po4a/Halibut.pm:7
 #: lib/Locale/Po4a/KernelHelp.pm:5 lib/Locale/Po4a/Man.pm:96
@@ -5505,17 +5519,16 @@ msgstr ""
 #: lib/Locale/Po4a/TeX.pm:104 lib/Locale/Po4a/Texinfo.pm:8
 #: lib/Locale/Po4a/Text.pm:38 lib/Locale/Po4a/Wml.pm:9
 #: lib/Locale/Po4a/Xhtml.pm:12 lib/Locale/Po4a/Xml.pm:178
-#: lib/Locale/Po4a/AsciiDoc.pm:50
 msgid "STATUS OF THIS MODULE"
 msgstr "СТАТУС ОВОГ МОДУЛА"
 
 #. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:49 lib/Locale/Po4a/AsciiDoc.pm:51
+#: lib/Locale/Po4a/AsciiDoc.pm:51
 msgid "Tested successfully on simple AsciiDoc files."
 msgstr "Успешно је тестиран на једноставним AsciiDoc фајловима."
 
 #. type: verbatim
-#: lib/Locale/Po4a/AsciiDoc.pm:51 lib/Locale/Po4a/AsciiDoc.pm:53
+#: lib/Locale/Po4a/AsciiDoc.pm:53
 #, no-wrap
 msgid ""
 " Nicolas François <nicolas.francois@centraliens.net>\n"
@@ -5527,7 +5540,7 @@ msgstr ""
 "\n"
 
 #. type: verbatim
-#: lib/Locale/Po4a/AsciiDoc.pm:53 lib/Locale/Po4a/AsciiDoc.pm:55
+#: lib/Locale/Po4a/AsciiDoc.pm:55
 #, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
@@ -12130,19 +12143,13 @@ msgstr ""
 " Права умножавања © 2008-2009 Никола Франсоа <nicolas.francois@centraliens.net>\n"
 "\n"
 
-#. type: =item
-#: lib/Locale/Po4a/AsciiDoc.pm:33
-msgid "B<nolinting>"
-msgstr "B<nolinting>"
-
-#. type: textblock
-#: lib/Locale/Po4a/AsciiDoc.pm:34
-msgid ""
-"Disable linting messages. When the source code cannot be fixed for clearer "
-"document structure, these messages are useless."
-msgstr ""
-"Искључује линтинг поруке. Када изворни кôд не може да се поправи тако да се "
-"добије чистија структура документа, ове поруке су бескорисне."
+#~ msgid ""
+#~ "If there are name conflicts because several files have the same filename, "
+#~ "the name of the master file can be specified by adding a C<master:"
+#~ "file=>I<name> option:"
+#~ msgstr ""
+#~ "Ако постоји конфликт са именима јер више фајлова има идентичан назив, име "
+#~ "мастер фајла може да се наведе додавањем опције C<master:file=>I<име>:"
 
 #~ msgid ""
 #~ "If you prefer, you can give the same information explicitly as follows:"
