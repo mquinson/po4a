@@ -26,8 +26,6 @@ push @tests, {
 
   },
   {
-    'todo' => 'POT files created anyway',
-
     'doc'              => 'Split settings, no po, --no-update',
     'po4a.conf'        => 'cfg/split-nopo/po4a.conf',
     'options'          => ' --no-update',
@@ -77,8 +75,6 @@ push @tests, {
 
   },
   {
-    'todo' => 'POT files touched anyway',
-
     'doc'            => 'Split settings, translation would be fuzzied if --no-update were not given',
     'po4a.conf'      => 'cfg/split-fuzzied-noup/po4a.conf',
     'options'        => '--no-update',

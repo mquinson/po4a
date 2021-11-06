@@ -1574,38 +1574,40 @@ if ( $po4a_opts{"split"} ) {
 
     # Generate a .pot for each document by msggrep on the big POT file.
     # These files are used to update the PO files later on (and also by humans to start new translations)
-    foreach my $master_pot ( keys %split_pot_files ) {
-        my $tmp_file;
+    if ( not $po4a_opts{"no-update"} ) {
+        foreach my $master_pot ( keys %split_pot_files ) {
+            my $tmp_file;
 
-        # Create a temporary POT, and check if the old one needs to be
-        # updated (unless --force was specified).
-        unless ( $po4a_opts{"force"} ) {
-            ( undef, $tmp_file ) = File::Temp::tempfile(
-                "po4aXXXX",
-                DIR    => $ENV{TMPDIR} || "/tmp",
-                SUFFIX => ".pot",
-                OPEN   => 0,
-                UNLINK => 0
-            ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
+            # Create a temporary POT, and check if the old one needs to be
+            # updated (unless --force was specified).
+            unless ( $po4a_opts{"force"} ) {
+                ( undef, $tmp_file ) = File::Temp::tempfile(
+                    "po4aXXXX",
+                    DIR    => $ENV{TMPDIR} || "/tmp",
+                    SUFFIX => ".pot",
+                    OPEN   => 0,
+                    UNLINK => 0
+                ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
+            }
+
+            my $dir = dirname( find_output_file($master_pot) );
+            if ( not -d $dir ) {
+                mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
+            }
+            my $outfile = $po4a_opts{"force"} ? find_output_file($master_pot) : $tmp_file;
+            my $cmd     = "msggrep$Config{_exe} $split_pot_files{$master_pot} -o $outfile $pot_filename";
+            run_cmd($cmd);
+
+            die wrap_msg(
+                gettext(
+                    "msggrep did not create '%s'. Used command:\n  %s\nPlease report that bug, along the information allowing to reproduce it.\n"
+                ),
+                $outfile, $cmd
+            ) unless ( -e $outfile );
+
+            move_po_if_needed( $tmp_file, find_output_file($master_pot), 0 )
+              unless ( $po4a_opts{"force"} );
         }
-
-        my $dir = dirname( find_output_file($master_pot) );
-        if ( not -d $dir ) {
-            mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
-        }
-        my $outfile = $po4a_opts{"force"} ? find_output_file($master_pot) : $tmp_file;
-        my $cmd     = "msggrep$Config{_exe} $split_pot_files{$master_pot} -o $outfile $pot_filename";
-        run_cmd($cmd);
-
-        die wrap_msg(
-            gettext(
-                "msggrep did not create '%s'. Used command:\n  %s\nPlease report that bug, along the information allowing to reproduce it.\n"
-            ),
-            $outfile, $cmd
-        ) unless ( -e $outfile );
-
-        move_po_if_needed( $tmp_file, find_output_file($master_pot), 0 )
-          unless ( $po4a_opts{"force"} );
     }
 
     # Generate a complete .po for each language, with the translations of all master files
@@ -1690,78 +1692,78 @@ if ( not $po4a_opts{"no-update"} ) {
                 run_cmd($cmd);
             }
         }
-    }
 
-    if ( $po4a_opts{"split"} ) {
+        if ( $po4a_opts{"split"} ) {
 
-        # Split the complete PO in multiple POs
-        foreach $lang ( sort keys %po_filename ) {
-            foreach my $master ( keys %document ) {
-                next if ( $master eq '' );
-                my $tmp_file;
+            # Split the complete PO in multiple POs
+            foreach $lang ( sort keys %po_filename ) {
+                foreach my $master ( keys %document ) {
+                    next if ( $master eq '' );
+                    my $tmp_file;
 
-                # Create a temporary PO, and check if the old one needs to be
-                # updated (unless --force was specified).
-                ( undef, $tmp_file ) = File::Temp::tempfile(
-                    "po4aXXXX",
-                    DIR    => $ENV{TMPDIR} || "/tmp",
-                    SUFFIX => ".po",
-                    OPEN   => 0,
-                    UNLINK => 0
-                ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
+                    # Create a temporary PO, and check if the old one needs to be
+                    # updated (unless --force was specified).
+                    ( undef, $tmp_file ) = File::Temp::tempfile(
+                        "po4aXXXX",
+                        DIR    => $ENV{TMPDIR} || "/tmp",
+                        SUFFIX => ".po",
+                        OPEN   => 0,
+                        UNLINK => 0
+                    ) or die wrap_msg( gettext("Cannot create a temporary POT file: %s"), $! );
 
-                my $cmd;
+                    my $cmd;
 
-                # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
-                my $env = ( $^O =~ /Win/ ) ? "" : "LC_ALL=C.UTF-8";
+                    # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
+                    my $env = ( $^O =~ /Win/ ) ? "" : "LC_ALL=C.UTF-8";
 
-                # Create an empty PO or copy the original PO header (to keep the header)
-                if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
+                    # Create an empty PO or copy the original PO header (to keep the header)
+                    if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
+                        $cmd =
+                            $env
+                          . " msggrep$Config{_exe}"
+                          . " --force-po --invert-match --msgid --regexp '.'"
+                          . " --output $tmp_file "
+                          . find_input_file( $split_po{$lang}{$master} );
+                    } else {
+                        $cmd =
+                            "msginit$Config{_exe} "
+                          . "--no-translator -l $lang --input "
+                          . find_output_file( $split_pot{$master} )
+                          . " --output $tmp_file  >$devnull";
+                    }
+                    run_cmd($cmd);
+
+                    # Update the PO according to the new POT and to the big PO (compendium).
                     $cmd =
-                        $env
-                      . " msggrep$Config{_exe}"
-                      . " --force-po --invert-match --msgid --regexp '.'"
-                      . " --output $tmp_file "
-                      . find_input_file( $split_po{$lang}{$master} );
-                } else {
-                    $cmd =
-                        "msginit$Config{_exe} "
-                      . "--no-translator -l $lang --input "
-                      . find_output_file( $split_pot{$master} )
-                      . " --output $tmp_file  >$devnull";
-                }
-                run_cmd($cmd);
+                        "msgmerge$Config{_exe} "
+                      . " --compendium "
+                      . $po_filename{$lang}
+                      . " --update --backup=none "
+                      . $po4a_opts{"msgmerge-opt"}
+                      . " $tmp_file "
+                      . find_output_file( $split_pot{$master} );
+                    run_cmd($cmd);
 
-                # Update the PO according to the new POT and to the big PO (compendium).
-                $cmd =
-                    "msgmerge$Config{_exe} "
-                  . " --compendium "
-                  . $po_filename{$lang}
-                  . " --update --backup=none "
-                  . $po4a_opts{"msgmerge-opt"}
-                  . " $tmp_file "
-                  . find_output_file( $split_pot{$master} );
-                run_cmd($cmd);
-
-                my $dir = dirname( $split_po{$lang}{$master} );
-                if ( not -d $dir ) {
-                    mkdir $dir
-                      or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
-                }
-                unless ( $po4a_opts{"force"} ) {
-                    move_po_if_needed( $tmp_file, $split_po{$lang}{$master}, 0 );
-                } else {
-                    move $tmp_file,
-                      find_output_file( $split_po{$lang}{$master} )
-                      or die wrap_msg(
-                        dgettext( "po4a", "Cannot move %s to %s: %s." ), $tmp_file,
-                        find_output_file( $split_po{$lang}{$master} ), $!
-                      );
+                    my $dir = dirname( $split_po{$lang}{$master} );
+                    if ( not -d $dir ) {
+                        mkdir $dir
+                          or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
+                    }
+                    unless ( $po4a_opts{"force"} ) {
+                        move_po_if_needed( $tmp_file, $split_po{$lang}{$master}, 0 );
+                    } else {
+                        move $tmp_file,
+                          find_output_file( $split_po{$lang}{$master} )
+                          or die wrap_msg(
+                            dgettext( "po4a", "Cannot move %s to %s: %s." ), $tmp_file,
+                            find_output_file( $split_po{$lang}{$master} ), $!
+                          );
+                    }
                 }
             }
-        }
-    }    # if split
-}    # update po/pot files
+        }    # if ( $po4a_opts{"split"} )
+    }    # if ( not scalar @{ $po4a_opts{"partial"} } )
+}    # not $po4a_opts{"no-update"}
 
 if ( $po4a_opts{"split"} ) {
 
