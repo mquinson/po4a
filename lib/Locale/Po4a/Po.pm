@@ -1467,7 +1467,7 @@ sub push_raw {
         $flags = " $flags ";
         $flags =~ s/,/ /g;
         foreach my $flag (@known_flags) {
-			if (index($flags, " $flag ") != -1) {     # if flag to be set
+            if ( index( $flags, " $flag " ) != -1 ) {    # if flag to be set
                 unless ( defined( $self->{po}{$msgid}{'flags'} )
                     && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/ )
                 {
@@ -1517,8 +1517,8 @@ sub count_entries_doc($) {
 
 =item equals_msgid(po)
 
-Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are also present in the one passed as parameter
-(all other fields are ignored in the file comparison).
+Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are 
+also present in the one passed as parameter (all other fields are ignored in the file comparison).
 Informally, if $uptodate returns false, then the po files would be changed when going through B<po4a-updatepo>.
 
 If $uptodate is false, then $diagnostic contains a diagnostic of why this is so.
@@ -1532,7 +1532,7 @@ sub equals_msgid($$) {
         return (
             0,
             wrap_msg(
-                dgettext( "po4a", "The amount of entries differ between files: %d" . " is not %d" ),
+                dgettext( "po4a", "The amount of entries differ between files: %d is not %d" ),
                 $self->count_entries(),
                 $other->count_entries()
             )
