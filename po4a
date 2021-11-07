@@ -1875,10 +1875,6 @@ if ( not $po4a_opts{"no-translations"} ) {
                 'calldir'          => $po4a_opts{"calldir"}
             );
 
-            #            my ( $is_uptodate, $uptodate_diag ) = $doc->is_po_uptodate();
-            #            die wrap_msg(gettext("PO file %s needs another update after translating the documents:\n  %s\nPlease report this bug."), $po_filename{$lang}, $uptodate_diag)
-            #                unless ($is_uptodate or $po4a_opts{'no-update'});
-
             my ( $percent, $hit, $queries ) = $doc->stats();
             if ( $percent < $file_opts{"threshold"} ) {
                 print wrap_msg(
