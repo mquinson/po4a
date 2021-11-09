@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-11-06 11:27+0100\n"
-"PO-Revision-Date: 2021-10-05 00:20+0200\n"
+"PO-Revision-Date: 2021-11-09 13:30+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -1271,17 +1271,11 @@ msgid ""
 "conflict, you can specify the POT file to use as follows, with the C<pot=> "
 "parameter.  This feature can also be used to group several translated files "
 "into the same POT file."
-msgstr ""
+msgstr "Con questa riga, po4a produrrà file POT e PO separati per ogni documento da tradurre. Ad esempio, se si ha 3 documenti e 5 lingue, questo produrrà 3 file POT e 15 file PO. Questi file saranno denominati come specificato nel modello C<po4a_paths>, con C<$master> sostituito con il nome di base di ciascun documento da tradurre. In caso di conflitto di nomi, è possibile specificare il file POT da utilizzare come segue, con il parametro C<pot=>. Questa funzione può essere utilizzata anche per raggruppare diversi file tradotti nello stesso file POT."
 
 #. type: verbatim
 #: po4a:116
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1292,8 +1286,9 @@ msgid ""
 msgstr ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
-" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
+" [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
 
 #. type: textblock
@@ -7261,7 +7256,7 @@ msgid ""
 "and because their nroff counterpart defines a lot of new macros I didn't "
 "want to write support for. On my box, 1432 of the 4323 pages are generated "
 "from POD and will be ignored by po4a::man."
-msgstr ""
+msgstr "Naturalmente, un'altra possibilità è usare un altro formato, più facile da tradurre (come il formato POD usando po4a::pod, o uno della famiglia XML come SGML), ma grazie a po4a::man, ciò non è comunque più necessario. Detto questo, se il formato sorgente della documentazione è POD o XML, potrebbe essere conveniente tradurre il formato sorgente e non quello generato. Nella maggior parte dei casi, po4a::man rileverà le pagine generate ed emetterà un avviso. Si rifiuterà persino di elaborare le pagine generate dal POD, perché quelle pagine sono perfettamente gestite da po4a::pod e perché la loro controparte nroff definisce molte nuove macro per le quali non si è voluto darne supporto. Per esempio, sulla macchina di uno degli autori, 1432 delle 4323 pagine presenti vengono generate da file POD e sono ignorate da po4a::man."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:95
@@ -7271,17 +7266,17 @@ msgid ""
 "complete without warning, but the output will be wrong. Such cases are "
 "called \"bugs\" ;) If you encounter such case, be sure to report this, along "
 "with a fix when possible…"
-msgstr ""
+msgstr "Nella maggior parte dei casi, po4a::man rileverà il problema e si rifiuterà di elaborare la pagina, inviando un messaggio conforme. In alcuni rari casi, il programma verrà completato senza preavviso, ma l'output sarà comunque errato. Tali casi sono chiamati \"bug\" ;) Se incontra un caso del genere, sarebbe gradita la segnalazione, insieme a una correzione se possibile..."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:97
 msgid "This module can be used for most of the existing man pages."
-msgstr ""
+msgstr "Questo modulo può essere usato per la maggior parte delle pagine man esistenti."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:98
 msgid "Some tests are regularly run on Linux boxes:"
-msgstr ""
+msgstr "Alcuni test vengono effettuati con regolarità su macchine Linux:"
 
 #. type: =item
 #: lib/Locale/Po4a/Man.pm:99 lib/Locale/Po4a/Man.pm:101
@@ -7296,21 +7291,21 @@ msgstr "*"
 msgid ""
 "one third of the pages are refused because they were generated from another "
 "format supported by po4a (e.g. POD or SGML)."
-msgstr ""
+msgstr "un terzo delle pagine vengono rifiutate perché sono state generate da un altro formato supportato da po4a (per es. POD o SGML)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:102
 msgid ""
 "10% of the remaining pages are rejected with an error (e.g. a groff macro is "
 "not supported)."
-msgstr ""
+msgstr "il 10% delle pagine rimanenti vengono rifiutate con un errore (perché per es. una macro groff non è supportata)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:104
 msgid ""
 "Then, less than 1% of the pages are accepted silently by po4a, but with "
 "significant issues (i.e. missing words, or new words inserted)"
-msgstr ""
+msgstr "Poi, meno dell'1% delle pagine vengono accettate da po4a silenziosamente (N.d.T. ovvero senza segnalazioni), ma con problemi significativi (cioè parole mancanti, o nuove parole inserite)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:106
@@ -11633,12 +11628,3 @@ msgstr ""
 " Copyright © 2004 by Jordi Vilalta  <jvprat@gmail.com>\n"
 " Copyright © 2008-2009 by Nicolas François <nicolas.francois@centraliens.net>\n"
 "\n"
-
-#~ msgid ""
-#~ "If there are name conflicts because several files have the same filename, "
-#~ "the name of the master file can be specified by adding a C<master:"
-#~ "file=>I<name> option:"
-#~ msgstr ""
-#~ "Se ci sono conflitti di nomi a causa del fatto che i diversi file hanno "
-#~ "lo stesso nomefile, il nome del file master può essere specificato "
-#~ "aggiungendo l'opzione C<master:file=>I<nome>:"
