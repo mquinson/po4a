@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-11-06 11:27+0100\n"
-"PO-Revision-Date: 2021-09-17 06:35+0000\n"
+"PO-Revision-Date: 2021-11-11 12:52+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/sr_Cyrl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -1252,6 +1252,14 @@ msgid ""
 "parameter.  This feature can also be used to group several translated files "
 "into the same POT file."
 msgstr ""
+"Овом линијом ће po4a да произведе одвојене POT и PO фајлове за сваки "
+"документ који се преводи. На пример, ако имате 3 документа и 5 језика, "
+"добићете 3 POT фајлова и 15 PO фајлова. Они добијају име наведено "
+"C<po4a_paths> шаблоном, у којем се C<$master> замењује са базним именом "
+"сваког документа који се преводи. У случају да дође до конфликта, на следећи "
+"начин можете навести POT фајл који треба да се користи, параметром C<pot=>. "
+"Ова могућност такође може да се користи за груписање неколико преведених "
+"фајлова у исти POT фајл."
 
 #. type: verbatim
 #: po4a:116
@@ -1264,6 +1272,12 @@ msgid ""
 " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
 msgstr ""
+" [po4a_langs] de fr ja\n"
+" [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
+" [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
+"\n"
 
 #. type: textblock
 #: po4a:117
