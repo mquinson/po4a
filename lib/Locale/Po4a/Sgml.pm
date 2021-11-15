@@ -405,7 +405,7 @@ sub parse_file {
         print $tmpfh $origfile;
         close $tmpfh
           or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot close tempfile: %s" ), $! );
-        if ( system("onsgmls -p < $tmpfile") ) {
+        if ( system("onsgmls -p $tmpfile") ) {
             unlink($tmpfile);
             die wrap_mod(
                 "po4a::sgml",
@@ -858,7 +858,7 @@ sub parse_file {
     print $tmpfh $origfile;
     close $tmpfh or die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot close tempfile: %s" ), $! );
 
-    my $cmd = "onsgmls -l -E 0 -wno-valid < $tmpfile" . ( $debug{'onsgmls'} ? "" : " 2>/dev/null" ) . " |";
+    my $cmd = "onsgmls -l -E 0 -wno-valid $tmpfile" . ( $debug{'onsgmls'} ? "" : " 2>/dev/null" ) . " |";
     print STDERR "CMD=$cmd\n" if ( $debug{'generic'} or $debug{'onsgmls'} );
 
     open( IN, $cmd ) || die wrap_mod( "po4a::sgml", dgettext( "po4a", "Cannot run onsgmls: %s" ), $! );
