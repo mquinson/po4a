@@ -358,13 +358,14 @@ BEGIN {
             } else {
                 $text =~ s/\n$//s;
                 return length($text) if !( defined($encoder) && $encoder->name ne "ascii" );
+                eval { require Unicode::GCString };
                 die wrap_mod(
                     "po4a::asciidoc",
                     dgettext(
                         "po4a",
-                        "Detection of two line titles failed at %s\nPlease install the Unicode::GCString module."
+                        "Detection of two line titles failed at %s\nPlease install the Unicode::GCString module (error: %s)."
                     ),
-                    shift
+                    shift, $@
                 );
             }
         }
