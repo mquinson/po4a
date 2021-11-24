@@ -91,7 +91,7 @@ sub walk_yaml {
             } else {
                 print STDERR "working on path '$ctx $key'\n" if $self->{'options'}{'debug'};
                 my $path = "$ctx $key" =~ s/^\s+|\s+$//gr;
-                next if (  !(( $self->{options}{keys}  eq "" ) or ( exists $self->{keys}{ lc($key) }   )) and
+                next if (  !(( $self->{options}{keys}  eq "" ) or ( exists $self->{keys}{ lc($key) }   )) or
                            !(( $self->{options}{paths} eq "" ) or ( exists $self->{paths}{ lc($path) } )) );
                 my $trans = $self->translate(
                     Encode::encode_utf8( $el->{$key} ),
