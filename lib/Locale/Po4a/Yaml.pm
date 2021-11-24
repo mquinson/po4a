@@ -89,10 +89,14 @@ sub walk_yaml {
             if ( ref $el->{$key} ne ref "" ) {
                 &walk_yaml( $self, $el->{$key}, "$ctx $key" );
             } else {
-                print STDERR "working on path '$ctx $key'\n" if $self->{'options'}{'debug'};
                 my $path = "$ctx $key" =~ s/^\s+|\s+$//gr;
-                next if (  !(( $self->{options}{keys}  eq "" ) or ( exists $self->{keys}{ lc($key) }   )) or
-                           !(( $self->{options}{paths} eq "" ) or ( exists $self->{paths}{ lc($path) } )) );
+                print STDERR "working on path '$path'\n" if $self->{'options'}{'debug'};
+                my $keysdefined = $self->{options}{keys}  ne "";
+                my $keymatches = exists $self->{keys}{ lc($key) };
+                my $pathsdefined = $self->{options}{paths} ne "";
+                my $pathmatches = exists $self->{paths}{ lc($path) };
+                next if ( !(($keysdefined and $keymatches) or ($pathsdefined and $pathmatches) or (not $keysdefined and not $pathsdefined)));
+                print STDERR " * path survived check\n" if $self->{'options'}{'debug'};
                 my $trans = $self->translate(
                     Encode::encode_utf8( $el->{$key} ),
                     $reference,

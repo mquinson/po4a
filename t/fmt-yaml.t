@@ -43,6 +43,24 @@ push @tests,
     'format'  => 'yaml',
     'options' => "-M UTF-8",
     'input'   => "fmt/yaml/utf8.yaml",
+  },
+  {
+    'doc'     => "basic -o keys='name' -o paths='name,level1 dir,invoice,bill-to address city' -o skip_array",
+    'format'  => 'yaml',
+    'input'   => "fmt/yaml/basic.yaml",
+    'options' => "-o keys='name' -o paths='name,level1 dir,invoice,bill-to address city' -o skip_array",
+    'potfile' => 'fmt/yaml/keysandpaths1.pot',
+    'pofile'  => 'fmt/yaml/keysandpaths1.po',
+    'trans'   => 'fmt/yaml/keysandpaths1.trans',
+  },
+  {
+    'doc'     => "basic -o paths='name,level1 dir ' -o skip_array",
+    'format'  => 'yaml',
+    'input'   => "fmt/yaml/basic.yaml",
+    'options' => "-o paths='name,level1 dir' -o skip_array",
+    'potfile' => 'fmt/yaml/pathsoption1.pot',
+    'pofile'  => 'fmt/yaml/pathsoption1.po',
+    'trans'   => 'fmt/yaml/pathsoption1.trans',
   };
 
 run_all_tests(@tests);
