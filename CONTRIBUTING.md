@@ -110,6 +110,16 @@ the local ones, simply set the AUTOPKGTEST_TMP variable:
   AUTOPKGTEST_TMP=1 ./Build test
 ```
 
+The test harness changes the permissions of many files and directories
+to ensure that each test remain limited to their own directory. If you
+interrupt the tests, they may fail to restore the previous situation.
+In this case, just run the first "test" that is in charge of restoring
+any possible mess that the other tests could introduce.
+
+```
+  ./Build test --test_files t/00-perms.t
+```
+
 ## Writing a test
 
 In order to define a new test, you can use some convenience
