@@ -31,6 +31,7 @@ sub initialize {
     my %options = @_;
 
     $self->{options}{'keys'}       = '';
+    $self->{options}{'paths'}       = '';
     $self->{options}{'debug'}      = 0;
     $self->{options}{'verbose'}    = 1;
     $self->{options}{'skip_array'} = 0;
@@ -44,6 +45,11 @@ sub initialize {
     $self->{options}{keys} =~ s/^\s*//;
     foreach my $attr ( split( /\s+/, $self->{options}{keys} ) ) {
         $self->{keys}{ lc($attr) } = '';
+    }
+
+    $self->{options}{paths} =~ s/^\s*//;
+    foreach my $attr ( split( /,/, $self->{options}{paths} ) ) {
+        $self->{paths}{ lc($attr =~ s/^\s+|\s+$//gr) } = '';
     }
 }
 
@@ -83,7 +89,10 @@ sub walk_yaml {
             if ( ref $el->{$key} ne ref "" ) {
                 &walk_yaml( $self, $el->{$key}, "$ctx $key" );
             } else {
-                next if ( ( $self->{options}{keys} ne "" ) and ( !exists $self->{keys}{ lc($key) } ) );
+                print STDERR "working on path '$ctx $key'\n" if $self->{'options'}{'debug'};
+                my $path = "$ctx $key" =~ s/^\s+|\s+$//gr;
+                next if (  !(( $self->{options}{keys}  eq "" ) or ( exists $self->{keys}{ lc($key) }   )) and
+                           !(( $self->{options}{paths} eq "" ) or ( exists $self->{paths}{ lc($path) } )) );
                 my $trans = $self->translate(
                     Encode::encode_utf8( $el->{$key} ),
                     $reference,
@@ -144,6 +153,17 @@ These are this module's particular options:
 
 Space-separated list of hash keys to process for extraction, all
 other keys are skipped.  Keys are matched with a case-insentive match.
+If B<paths> and B<keys> are used together, values are included if they are
+matched by one of the options.
+Arrays values are always returned unless if the B<skip_array> option is
+provided.
+
+=item B<paths>
+
+Comma-separated list of hash paths to process for extraction, all
+other paths are skipped. Paths are matched with a case-insensitive match.
+If B<paths> and B<keys> are used together, values are included if they are
+matched by one of the options.
 Arrays values are always returned unless if the B<skip_array> option is
 provided.
 
