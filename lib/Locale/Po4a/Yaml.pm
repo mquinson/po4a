@@ -194,7 +194,7 @@ L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2017 Brian Exelbierd.
+Copyright Â© 2017 Brian Exelbierd.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
