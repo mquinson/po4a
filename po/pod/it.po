@@ -1,20 +1,25 @@
+#
 # Italian translations for po4a package.
 # Copyright © 2004 Martin Quinson and Denis Barbier.
 # This file is distributed under the same license as the po4a package.
 # Danilo Piazzalunga <danilopiazza@libero.it>, 2004-2005.
 # Marco Ciampa <ciampix@posteo.net>, 2015-2021.
 #
-# Piccolo prontuario dei termini usati in questa traduzione:
+# Piccolo prontuario dei termini usati in questa traduzione.
+# TT = Termine Tecnico
+#
 # MC: parser (TT - invariato)
+# MC: tag (TT - invariato)
+# MC: buffer (TT - invariato)
+# MC: hash (TT - invariato)
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-01 17:17+0100\n"
-"PO-Revision-Date: 2021-12-01 09:06+0100\n"
+"PO-Revision-Date: 2021-12-02 18:30+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
-"Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
-">\n"
+"Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7649,7 +7654,7 @@ msgid ""
 "boolean indicating whether we can consider that whitespaces in string are "
 "not important. If yes, the function canonizes the string before looking for "
 "a translation, and wraps the result."
-msgstr ""
+msgstr "booleano indicante se si può considerare gli spazi bianchi nella stringha come non importanti. Se si, la funzione canonizza la stringa prima di cercare una traduzione, e formatta il risultato."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:51 lib/Locale/Po4a/Po.pm:82
@@ -7676,7 +7681,7 @@ msgid ""
 "the one printed by msgfmt --statistic. Here, it's statistics about recent "
 "usage of the PO file, while msgfmt reports the status of the file.  Example "
 "of use:"
-msgstr ""
+msgstr "Restituisce le statistiche sulla percentuale di successo di gettext dall'ultima volta che è stato chiamato stats_clear(). Si noti che non sono le stesse statistiche di quelle stampate da msgfmt --statistic. Qui, sono le statistiche sull'utilizzo recente del file PO, mentre msgfmt riporta lo stato del file. Esempio d'uso:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Po.pm:55
@@ -7696,6 +7701,9 @@ msgid ""
 "    print \"So far, we found translations for $percent\\%  ($hit of $queries) of strings.\\n\";\n"
 "\n"
 msgstr ""
+"    ($percent,$hit,$queries) = $pofile->stats_get();\n"
+"    print \"Si qui, sono state trovate traduzioni per il $percent\\% ($hit di $queries) delle stringhe.\\n\";\n"
+"\n"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:57
@@ -7722,7 +7730,7 @@ msgstr "push(%)"
 msgid ""
 "Push a new entry at the end of the current catalog. The arguments should "
 "form a hash table. The valid keys are:"
-msgstr ""
+msgstr "Aggiunge una nuova voce alla fine del catalogo corrente. Gli argomenti dovrebbero formare una tabella hash. Le chiavi valide sono:"
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:62
@@ -7880,7 +7888,7 @@ msgstr "count_entries()"
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:87
 msgid "Returns the number of entries in the catalog (without the header)."
-msgstr ""
+msgstr "Restituisce il numero delle voci nel catalogo (senza l'intestazione)."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:88
@@ -7892,7 +7900,7 @@ msgstr "count_entries_doc()"
 msgid ""
 "Returns the number of entries in document. If a string appears multiple "
 "times in the document, it will be counted multiple times."
-msgstr ""
+msgstr "Restituisce il numero delle voci nel documento. Se una stringa compare più volte nel documento, verrà contata più volte."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:90
@@ -7914,7 +7922,7 @@ msgstr ""
 msgid ""
 "If $uptodate is false, then $diagnostic contains a diagnostic of why this is "
 "so."
-msgstr ""
+msgstr "SE $uptodate è falso, allora $diagnostic conterrà una descrizione del motivo di ciò."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:93
@@ -7924,7 +7932,7 @@ msgstr "msgid($)"
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:94
 msgid "Returns the msgid of the given number."
-msgstr ""
+msgstr "Restituisce il msgid del numero dato."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:95
@@ -7934,7 +7942,7 @@ msgstr "msgid_doc($)"
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:96
 msgid "Returns the msgid with the given position in the document."
-msgstr ""
+msgstr "Restituisce il msgid con la data posizione nel documento."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:97
@@ -7946,7 +7954,7 @@ msgstr "get_charset()"
 msgid ""
 "Returns the character set specified in the PO header. If it hasn't been set, "
 "it will return \"UTF-8\"."
-msgstr ""
+msgstr "Rstituisce il set di carattere specificato nell'intestazione del file PO. Se non è stato impostato, restituirà \"UTF-8\"."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:99
@@ -8266,33 +8274,23 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:2
-#, fuzzy
-#| msgid "Locale::Po4a::Pod - convert POD data from/to PO files"
 msgid "Locale::Po4a::RubyDoc -- Convert Ruby Document data from/to PO files"
-msgstr "Locale::Po4a::Pod - converte documenti POD da/a file PO"
+msgstr "Locale::Po4a::RubyDoc -- Converte dati Ruby Document da/a file PO"
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:5
-#, fuzzy
-#| msgid ""
-#| "Locale::Po4a::Pod is a module to help the translation of documentation in "
-#| "the POD format (the preferred language for documenting Perl) into other "
-#| "[human] languages."
 msgid ""
 "Locale::Po4a::RubyDoc is a module to help the translation of documentation "
 "in the Ruby Document (RD) format (a language used to document Ruby) into "
 "other [human] languages."
-msgstr ""
-"Locale::Po4a::Pod è un modulo che aiuta la traduzione in altre lingue della "
-"documentazione in formato POD (il linguaggio preferito per la documentazione "
-"di Perl)."
+msgstr "Locale::Po4a::RubyDoc è un modulo che serve per aiutare la traduzione della documentazione in formato Ruby Document (RD) (formato usato nella documentazione dei programmi Ruby) in altre lingue."
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:7
 msgid ""
 "This module has been successfully tested on simple Ruby Document files "
 "covering a good part of the format syntax."
-msgstr ""
+msgstr "Questo modulo è stato controllato con successo su semplici file Ruby Document, i quali coprivano buona parte della sintassi del formato."
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:8
@@ -8307,14 +8305,12 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:10
 msgid "This module supports the following option:"
-msgstr ""
+msgstr "Questo modulo supporta le seguenti opzioni:"
 
 #. type: =item
 #: lib/Locale/Po4a/RubyDoc.pm:11
-#, fuzzy
-#| msgid "B<mdoc>"
 msgid "B<puredoc>"
-msgstr "B<mdoc>"
+msgstr "B<puredoc>"
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:12
@@ -8333,15 +8329,13 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:15
-#, fuzzy
-#| msgid "L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>"
 msgid "L<Locale::Po4a::TransTractor(3pm)>"
-msgstr "L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>"
+msgstr "L<Locale::Po4a::TransTractor(3pm)>"
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:17
 msgid "Francesco Poli <invernomuto@paranoici.org>"
-msgstr ""
+msgstr "Francesco Poli <invernomuto@paranoici.org>"
 
 #. type: verbatim
 #: lib/Locale/Po4a/RubyDoc.pm:19
@@ -8349,7 +8343,7 @@ msgstr ""
 msgid ""
 " Copyright © 2016-2017 Francesco Poli <invernomuto@paranoici.org>\n"
 "\n"
-msgstr ""
+msgstr " Copyright © 2016-2017 Francesco Poli <invernomuto@paranoici.org>\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:20
@@ -8393,6 +8387,9 @@ msgid ""
 " Copyright © 2011-2012 Youhei SASAKI <uwabami@gfd-dennou.org>\n"
 "\n"
 msgstr ""
+" Copyright © 2004      MoonWolf <moonwolf@moonwolf.com>\n"
+" Copyright © 2011-2012 Youhei SASAKI <uwabami@gfd-dennou.org>\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:25
@@ -8404,16 +8401,11 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/RubyDoc.pm:26
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>\n"
 "\n"
-msgstr ""
-" Copyright © 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-"\n"
+msgstr " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:2
@@ -8451,7 +8443,6 @@ msgstr ""
 msgid "Give more information about what's going on."
 msgstr "Mostra più informazioni su quello che sta accadendo."
 
-# NdT: FIXME
 #. type: =item
 #: lib/Locale/Po4a/Sgml.pm:12 lib/Locale/Po4a/TeX.pm:60
 msgid "B<translate>"
@@ -8479,7 +8470,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:17
 msgid "Space separated list of tags which increase the indentation level."
-msgstr ""
+msgstr "Elenco separato da spazi di tag che aumentano il livello di indentazione."
 
 #. type: =item
 #: lib/Locale/Po4a/Sgml.pm:18 lib/Locale/Po4a/TeX.pm:23
@@ -8660,7 +8651,7 @@ msgstr ""
 msgid ""
 "  -o debug=onsgmls\n"
 "\n"
-msgstr ""
+msgstr "  -o debug=onsgmls\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Sgml.pm:43
@@ -9177,7 +9168,7 @@ msgstr "B<% po4a: verbatim environment> I<env>"
 msgid ""
 "Indicate that I<env> is a verbatim environment.  Comments and commands will "
 "be ignored in this environment."
-msgstr ""
+msgstr "Indica che I<env> è un ambiente verbatim.  Commenti e comandi verranno ignorati in questo ambiente."
 
 #. type: =head1
 #: lib/Locale/Po4a/TeX.pm:55
@@ -9282,7 +9273,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:71
 msgid "The remaining buffer"
-msgstr ""
+msgstr "Il buffer rimanente"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:72
@@ -9301,7 +9292,7 @@ msgstr "B<get_trailing_command>($buffer)"
 #: lib/Locale/Po4a/TeX.pm:74
 msgid ""
 "The same as B<get_leading_command>, but for commands at the end of a buffer."
-msgstr ""
+msgstr "Come B<get_leading_command>, ma per comandi alla fine di un buffer."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:75
@@ -10522,7 +10513,7 @@ msgid ""
 "boolean indicating whether we can consider that whitespaces in string are "
 "not important. If yes, the function canonizes the string before looking for "
 "a translation or extracting it, and wraps the translation."
-msgstr ""
+msgstr "booleano indicande se si può considerare gli spazi bianchi nella stringa come non importanti. Se si, la funzione canonizza la stringa prima di cercare una traduzione o estrarla, e formatta la traduzione."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:125
@@ -10889,7 +10880,7 @@ msgid ""
 "Canonicalizes the string to translate, considering that whitespaces are not "
 "important, and wraps the translated document. This option can be overridden "
 "by custom tag options. See the B<translated> option below."
-msgstr ""
+msgstr "Canonizza la stringa da tradurre, considerando che gli spazi bianchi non siano importanti, e formatta il documento tradotto. Questa opzione può essere superata da opzioni etichetta personalizzate. Vedere l'opzione B<translated> sotto."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:16
@@ -10899,7 +10890,7 @@ msgstr "B<unwrap_attributes>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:17
 msgid "Attributes are wrapped by default. This option disables wrapping."
-msgstr ""
+msgstr "Gli attributi vengono formattati per impostazione predefinita. Questa opzione disabilita la formattazione."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:18
@@ -10962,7 +10953,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:28
 msgid "This is the default value.  The module will exit with an error."
-msgstr ""
+msgstr "Questo è il valore predefinito. Il modulo uscirà con un errore."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:29
@@ -10972,7 +10963,7 @@ msgstr "I<warn>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:30
 msgid "The module will continue, and will issue a warning."
-msgstr ""
+msgstr "Il modulo continuerà, e genererà un avvertimento."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:31
@@ -10982,14 +10973,14 @@ msgstr "I<silent>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:32
 msgid "The module will continue without any warnings."
-msgstr ""
+msgstr "Il modulo continuerà senza alcun avvertimento."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:33
 msgid ""
 "Be careful when using this option.  It is generally recommended to fix the "
 "input file."
-msgstr ""
+msgstr "Attenzione a usare questa opzione.  Generalmente si raccomanda di aggiustare il file in ingresso."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:34
@@ -10999,7 +10990,7 @@ msgstr "B<tagsonly>"
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:35
 msgid "Note: This option is deprecated."
-msgstr ""
+msgstr "Nota: questa opzione è sconsigliata."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:36
@@ -11037,7 +11028,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:41
 msgid "B<optionalclosingtag>"
-msgstr ""
+msgstr "B<optionalclosingtag>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:42
@@ -11057,7 +11048,7 @@ msgstr "B<tags>"
 msgid ""
 "Note: This option is deprecated.  You should use the B<translated> and "
 "B<untranslated> options instead."
-msgstr ""
+msgstr "Nota: questa opzione è sconsigliata. In alternativa si consiglia di usare le opzioni B<translated> e B<untranslated>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:45
@@ -11081,7 +11072,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:47 lib/Locale/Po4a/Xml.pm:89
 msgid "Example: WE<lt>chapterE<gt>E<lt>titleE<gt>"
-msgstr ""
+msgstr "Esempio: WE<lt>chapterE<gt>E<lt>titleE<gt>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:49
@@ -11187,7 +11178,7 @@ msgstr ""
 msgid ""
 "  <placeholder type=\\\"footnote\\\" id=\\\"0\\\"/>\n"
 "\n"
-msgstr ""
+msgstr "  <placeholder type=\\\"footnote\\\" id=\\\"0\\\"/>\n\n"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:67
@@ -11917,105 +11908,67 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:2
-#, fuzzy
-#| msgid "Locale::Po4a::Ini - convert INI files from/to PO files"
 msgid "Locale::Po4a::Yaml - convert YAML files from/to PO files"
-msgstr "Locale::Po4a::Ini - converte file INI da/a file PO"
+msgstr "Locale::Po4a::Yaml - converte file YAML da/a file PO"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:4
-#, fuzzy
-#| msgid ""
-#| "Locale::Po4a::Ini is a module to help the translation of INI files into "
-#| "other [human] languages."
 msgid ""
 "Locale::Po4a::Yaml is a module to help the translation of Yaml files into "
 "other [human] languages."
-msgstr ""
-"Locale::Po4a::Ini è un modulo che aiuta la traduzione in altre lingue dei "
-"file in formato INI."
+msgstr "Locale::Po4a::Yaml è un modulo che serve per aiutare la traduzione di file Yaml in altre lingue."
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:5
 msgid ""
 "The module extracts the value of YAML hashes and arrays. Hash keys are not "
 "extracted."
-msgstr ""
+msgstr "Il modulo estrae il valore di hash e array YAML. Le chiavi hash non vengono estratte."
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:6
 msgid "NOTE: This module parses the YAML file with YAML::Tiny."
-msgstr ""
+msgstr "NOTA: questo modulo analizza il file YAML con YAML::Tiny."
 
 #. type: =item
 #: lib/Locale/Po4a/Yaml.pm:9
-#, fuzzy
-#| msgid "B<yfm_keys>"
 msgid "B<keys>"
-msgstr "B<yfm_keys>"
+msgstr "B<keys>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:10
-#, fuzzy
-#| msgid ""
-#| "Comma-separated list of keys to process for translation in the YAML Front "
-#| "Matter section. All other keys are skipped. Keys are matched with a case-"
-#| "insensitive match. Array values are always translated, unless the "
-#| "B<yfm_skip_array> option is provided."
 msgid ""
 "Space-separated list of hash keys to process for extraction, all other keys "
 "are skipped.  Keys are matched with a case-insentive match.  If B<paths> and "
 "B<keys> are used together, values are included if they are matched by at "
 "least one of the options.  Arrays values are always returned unless if the "
 "B<skip_array> option is provided."
-msgstr ""
-"Elenco separato da virgole di chiavi da elaborare per la traduzione nella "
-"sezione Front Matter di YAML. Tutte le altre chiavi vengono ignorate. Le "
-"chiavi vengono confrontate senza differenziare tra maiuscolo e minuscolo. I "
-"valori degli array vengono sempre tradotti, a meno che non si usi l'opzione "
-"B<yfm_skip_array>."
+msgstr "Elenco separato da virgole di chiavi hash da elaborare per l'estrazione; tutte le altre chiavi vengono ignorate. Le chiavi vengono confrontate senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono usate assieme, i valori vengono inclusi se questi corrispondono ad almeno una delle opzioni. I valori degli array vengono sempre restituiti, a meno che non si fornisca l'opzione B<skip_array>."
 
 #. type: =item
 #: lib/Locale/Po4a/Yaml.pm:11
-#, fuzzy
-#| msgid "B<parse>"
 msgid "B<paths>"
-msgstr "B<parse>"
+msgstr "B<paths>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:12
-#, fuzzy
-#| msgid ""
-#| "Comma-separated list of keys to process for translation in the YAML Front "
-#| "Matter section. All other keys are skipped. Keys are matched with a case-"
-#| "insensitive match. Array values are always translated, unless the "
-#| "B<yfm_skip_array> option is provided."
 msgid ""
 "Comma-separated list of hash paths to process for extraction, all other "
 "paths are skipped. Paths are matched with a case-insensitive match.  If "
 "B<paths> and B<keys> are used together, values are included if they are "
 "matched by at least one of the options.  Arrays values are always returned "
 "unless if the B<skip_array> option is provided."
-msgstr ""
-"Elenco separato da virgole di chiavi da elaborare per la traduzione nella "
-"sezione Front Matter di YAML. Tutte le altre chiavi vengono ignorate. Le "
-"chiavi vengono confrontate senza differenziare tra maiuscolo e minuscolo. I "
-"valori degli array vengono sempre tradotti, a meno che non si usi l'opzione "
-"B<yfm_skip_array>."
+msgstr "Elenco separato da virgole di percorsi hash da elaborare per l'estrazione; tutti gli altri percorsi vengono ignorati. I percorsi vengono confrontati senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono usate assieme, i valori vengono inclusi se questo corrispondono ad almeno una delle opzioni. I valori degli array vengono sempre restituiti, a meno che non si fornisca l'opzione B<skip_array>."
 
 #. type: =item
 #: lib/Locale/Po4a/Yaml.pm:13
-#, fuzzy
-#| msgid "B<yfm_skip_array>"
 msgid "B<skip_array>"
-msgstr "B<yfm_skip_array>"
+msgstr "B<skip_array>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:14
-#, fuzzy
-#| msgid "Do not translate array values in the YAML Front Matter section."
 msgid "Do not translate array values."
-msgstr "Non tradurre il valori array nella sezione Front Matter di YAML."
+msgstr "Non tradurre il valori array."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Yaml.pm:18
@@ -12023,11 +11976,9 @@ msgstr "Non tradurre il valori array nella sezione Front Matter di YAML."
 msgid ""
 " Brian Exelbierd <bex@pobox.com>\n"
 "\n"
-msgstr ""
+msgstr " Brian Exelbierd <bex@pobox.com>\n\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:20
-#, fuzzy
-#| msgid "Copyright © 2006 BitDefender"
 msgid "Copyright © 2017 Brian Exelbierd."
-msgstr "Copyright © 2006 BitDefender"
+msgstr "Copyright © 2017 Brian Exelbierd."
