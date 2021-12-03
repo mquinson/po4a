@@ -25,7 +25,7 @@
 
 =head1 NAME
 
-Locale::Po4a::TeX - convert TeX documents and derivates from/to PO files
+Locale::Po4a::TeX - convert TeX documents and derivatives from/to PO files
 
 =head1 DESCRIPTION
 
@@ -48,12 +48,11 @@ blocks, or even smaller like titles or indexes).
 
 There are some options (described in the next section) that can customize
 this behavior.  If this doesn't fit to your document format you're encouraged
-to write your own module derived from this, to describe your format's details.
-See the section B<WRITING DERIVATE MODULES> below, for the process description.
+to write your own derivative module from this, to describe your format's details.
+See the section B<WRITING DERIVATIVE MODULES> below, for the process description.
 
 This module can also be customized by lines starting with "% po4a:" in the
-TeX file.
-These customizations are described in the B<INLINE CUSTOMIZATION> section.
+TeX file. This process is described in the B<INLINE CUSTOMIZATION> section.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -273,7 +272,7 @@ For example, the LaTeX module uses the "(?:&|\\\\)" regular expression to
 translate separately each cell of a table (lines are separated by '\\' and
 cells by '&').
 
-The notion of environment is expended to the type displayed in the PO file.
+The notion of environment is expanded to the type displayed in the PO file.
 This can be used to split on "\\\\" in the first mandatory argument of the
 title command.  In this case, the environment is title{#1}.
 
@@ -711,9 +710,9 @@ sub translate_buffer {
     # early detection of verbatim environment
     if ( $buffer =~ /^($RE_VERBATIM\n?)(.*)$/s and length $2 ) {
         my ( $begin, $end ) = ( $1, $2 );
-        my ( $t1, $t2 ) = ( "", "" );
+        my ( $t1, $t2 )     = ( "", "" );
         ( $t1, @env ) = translate_buffer( $self, $begin, $no_wrap, @env );
-        ( $t2, @env ) = translate_buffer( $self, $end,   $no_wrap, @env );
+        ( $t2, @env ) = translate_buffer( $self, $end, $no_wrap, @env );
 
         print STDERR "($t1$t2,@env)\n"
           if ( $debug{'translate_buffer'} );
@@ -1253,7 +1252,7 @@ sub docheader {
 #### DEFINITION OF THE COMMANDS ####
 ####################################
 
-=head1 INTERNAL FUNCTIONS used to write derivated parsers
+=head1 INTERNAL FUNCTIONS used to write derivative parsers
 
 Command and environment functions take the following arguments (in
 addition to the $self object):
