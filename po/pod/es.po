@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a pod 0.43\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2021-12-02 00:32+0100\n"
+"POT-Creation-Date: 2021-12-03 21:39+0100\n"
 "PO-Revision-Date: 2021-03-23 14:29+0000\n"
 "Last-Translator: Vladimir Támara Patiño <vtamara@pasosdejesus.org>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/po4a/po4a-doc/es/"
@@ -8791,8 +8791,11 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:2
+#, fuzzy
+#| msgid ""
+#| "Locale::Po4a::TeX - convert TeX documents and derivates from/to PO files"
 msgid ""
-"Locale::Po4a::TeX - convert TeX documents and derivates from/to PO files"
+"Locale::Po4a::TeX - convert TeX documents and derivatives from/to PO files"
 msgstr ""
 "Locale::Po4a::TeX - Convierte de documentos TeX y derivados desde/a ficheros "
 "PO"
@@ -8834,12 +8837,19 @@ msgstr ""
 "literales, o incluso más pequeños, como títulos o índices)."
 
 #. type: textblock
-#: lib/Locale/Po4a/TeX.pm:9 lib/Locale/Po4a/Xml.pm:8
+#: lib/Locale/Po4a/TeX.pm:9
+#, fuzzy
+#| msgid ""
+#| "There are some options (described in the next section) that can customize "
+#| "this behavior.  If this doesn't fit to your document format you're "
+#| "encouraged to write your own module derived from this, to describe your "
+#| "format's details.  See the section B<WRITING DERIVATE MODULES> below, for "
+#| "the process description."
 msgid ""
 "There are some options (described in the next section) that can customize "
 "this behavior.  If this doesn't fit to your document format you're "
-"encouraged to write your own module derived from this, to describe your "
-"format's details.  See the section B<WRITING DERIVATE MODULES> below, for "
+"encouraged to write your own derivative module from this, to describe your "
+"format's details.  See the section B<WRITING DERIVATIVE MODULES> below, for "
 "the process description."
 msgstr ""
 "Hay algunas opciones (descritas en la siguiente sección) que pueden "
@@ -8850,10 +8860,14 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:10
+#, fuzzy
+#| msgid ""
+#| "This module can also be customized by lines starting with \"% po4a:\" in "
+#| "the TeX file.  These customizations are described in the B<INLINE "
+#| "CUSTOMIZATION> section."
 msgid ""
 "This module can also be customized by lines starting with \"% po4a:\" in the "
-"TeX file.  These customizations are described in the B<INLINE CUSTOMIZATION> "
-"section."
+"TeX file. This process is described in the B<INLINE CUSTOMIZATION> section."
 msgstr ""
 "Este módulo se puede personalizar con lineas que empiecen con «% po4a:» en "
 "el fichero TeX. Esta personalización se describe en la sección "
@@ -9156,8 +9170,14 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:51
+#, fuzzy
+#| msgid ""
+#| "The notion of environment is expended to the type displayed in the PO "
+#| "file.  This can be used to split on \"\\\\\\\\\" in the first mandatory "
+#| "argument of the title command.  In this case, the environment is "
+#| "title{#1}."
 msgid ""
-"The notion of environment is expended to the type displayed in the PO file.  "
+"The notion of environment is expanded to the type displayed in the PO file.  "
 "This can be used to split on \"\\\\\\\\\" in the first mandatory argument of "
 "the title command.  In this case, the environment is title{#1}."
 msgstr ""
@@ -9423,8 +9443,9 @@ msgid "B<docheader>"
 msgstr "B<docheader>"
 
 #. type: =head1
-#: lib/Locale/Po4a/TeX.pm:91
-msgid "INTERNAL FUNCTIONS used to write derivated parsers"
+#: lib/Locale/Po4a/TeX.pm:91 lib/Locale/Po4a/TransTractor.pm:95
+#: lib/Locale/Po4a/Xml.pm:131
+msgid "INTERNAL FUNCTIONS used to write derivative parsers"
 msgstr "FUNCIONES INTERNAS utilizadas para escribir analizadores derivados"
 
 #. type: textblock
@@ -10599,11 +10620,6 @@ msgstr ""
 msgid "This function returns a non-null integer on error."
 msgstr "Esta función devuelve un entero no nulo en caso de error."
 
-#. type: =head1
-#: lib/Locale/Po4a/TransTractor.pm:95 lib/Locale/Po4a/Xml.pm:131
-msgid "INTERNAL FUNCTIONS used to write derivative parsers"
-msgstr "FUNCIONES INTERNAS utilizadas para escribir analizadores derivados"
-
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:96
 msgid "Getting input, providing output"
@@ -11172,6 +11188,21 @@ msgstr ""
 "Este módulo se puede usar directamente para tratar documentos XML genéricos. "
 "Extraerá el contenido de todas las etiquetas, y ningún atributo, ya que ahí "
 "es donde se escribe el texto en la mayoría de documentos basados en XML."
+
+#. type: textblock
+#: lib/Locale/Po4a/Xml.pm:8
+msgid ""
+"There are some options (described in the next section) that can customize "
+"this behavior.  If this doesn't fit to your document format you're "
+"encouraged to write your own module derived from this, to describe your "
+"format's details.  See the section B<WRITING DERIVATE MODULES> below, for "
+"the process description."
+msgstr ""
+"Hay algunas opciones (descritas en la siguiente sección) que pueden "
+"personalizar este comportamiento. Si eso no es suficiente para el formato de "
+"su documento, le animo a que escriba su propio módulo derivado de éste para "
+"describir los detalles de su formato. Consulte la sección B<Escribir módulos "
+"derivados> que encontrará más abajo para una descripción del proceso."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:10
@@ -12512,7 +12543,7 @@ msgid ""
 "Space-separated list of hash keys to process for extraction, all other keys "
 "are skipped.  Keys are matched with a case-insensitive match.  If B<paths> "
 "and B<keys> are used together, values are included if they are matched by at "
-"least one of the options.  Arrays values are always returned unless if the "
+"least one of the options.  Arrays values are always returned unless the "
 "B<skip_array> option is provided."
 msgstr ""
 
@@ -12530,7 +12561,7 @@ msgid ""
 "paths are skipped. Paths are matched with a case-insensitive match.  If "
 "B<paths> and B<keys> are used together, values are included if they are "
 "matched by at least one of the options.  Arrays values are always returned "
-"unless if the B<skip_array> option is provided."
+"unless the B<skip_array> option is provided."
 msgstr ""
 
 #. type: =item
@@ -12557,6 +12588,9 @@ msgstr ""
 #| msgid "Copyright 2006 by BitDefender"
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Copyright 2006 por BitDefender"
+
+#~ msgid "INTERNAL FUNCTIONS used to write derivated parsers"
+#~ msgstr "FUNCIONES INTERNAS utilizadas para escribir analizadores derivados"
 
 #~ msgid ""
 #~ "If there are name conflicts because several files have the same filename, "
