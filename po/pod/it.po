@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-01 17:17+0100\n"
-"PO-Revision-Date: 2021-12-02 21:33+0100\n"
+"PO-Revision-Date: 2021-12-03 08:25+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/>\n"
 "Language: it\n"
@@ -9198,7 +9198,7 @@ msgid ""
 "Add a string as a comment to be added around the next translated element.  "
 "This is mostly useful to the texinfo module, as comments are automatically "
 "handled in TeX."
-msgstr ""
+msgstr "Aggiungi una stringa come commento da aggiungere accanto al prossimo elemento tradotto. Utile principalmente per il modulo texinfo, visto che in questo modo i commenti possono essere gestiti automaticamente in TeX."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:61
@@ -9256,7 +9256,7 @@ msgid ""
 "added at the end of sections command to specify that they should not be "
 "numbered.  In this case, this field will contain \"*\".  If there is no "
 "variant, the field is an empty string."
-msgstr ""
+msgstr "Indica se viene utilizzata una variante. Ad esempio, è possibile aggiungere un asterisco (*) alla fine del comando delle sezioni per specificare che non devono essere numerate. In questo caso, questo campo conterrà \"*\". Se non ci sono varianti, il campo è una stringa vuota."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:69
@@ -9268,7 +9268,7 @@ msgstr "Un'array di tuple (tipo di argomento, argomento)"
 msgid ""
 "The type of argument can be either '{' (for mandatory arguments) or '[' (for "
 "optional arguments)."
-msgstr ""
+msgstr "Il tipo di argomento può essere '{' (per argomenti obbligatori) o '[' (per argomenti facoltativi)."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:71
@@ -9281,7 +9281,7 @@ msgid ""
 "The rest of the buffer after the removal of this leading command and its "
 "arguments.  If no command is found, the original buffer is not touched and "
 "returned in this field."
-msgstr ""
+msgstr "Il resto del buffer dopo la rimozione di questo comando principale e dei suoi argomenti. Se non viene trovato alcun comando, il buffer originale non viene toccato e restituito in questo campo."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:73
@@ -9304,7 +9304,7 @@ msgstr "B<translate_buffer>"
 msgid ""
 "Recursively translate a buffer by separating leading and trailing commands "
 "(those which should be translated separately) from the buffer."
-msgstr ""
+msgstr "Tradurre ricorsivamente un buffer separando i comandi iniziali e finali (quelli che dovrebbero essere tradotti separatamente) dal buffer."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:77
@@ -9312,7 +9312,7 @@ msgid ""
 "If a function is defined in %translate_buffer_env for the current "
 "environment, this function will be used to translate the buffer instead of "
 "translate_buffer()."
-msgstr ""
+msgstr "Se viene definita una funzione in %translate_buffer_env per l'ambiente corrente, questa funzione verrà utilizzata per tradurre il buffer invece di translate_buffer()."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:78
@@ -9322,7 +9322,7 @@ msgstr "B<read>"
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:79
 msgid "Overloads Transtractor's read()."
-msgstr ""
+msgstr "Fa l'overload della funzione read() di Transtractor."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:80
@@ -9335,14 +9335,14 @@ msgid ""
 "Recursively read a file, appending included files which are not listed in "
 "the @exclude_include array.  Included files are searched using the "
 "B<kpsewhich> command from the Kpathsea library."
-msgstr ""
+msgstr "Legge ricorsivamente un file, aggiungendo i file inclusi che non siano elencati nell'array @exclude_include. I file inclusi vengono cercati usando il comando B<kpsewhich> dalla libreria Kpathsea."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:82
 msgid ""
 "Except from the file inclusion part, it is a cut and paste from "
 "Transtractor's read."
-msgstr ""
+msgstr "Fatta eccezione per la parte di inclusione del file, è un taglia e incolla della funzione read di Transtractor."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:83
@@ -9354,7 +9354,7 @@ msgstr "B<parse_definition_file>"
 msgid ""
 "Subroutine for parsing a file with po4a directives (definitions for new "
 "commands)."
-msgstr ""
+msgstr "Subroutine per l'analisi di un file con direttive po4a (definizioni per nuovi comandi)."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:85
@@ -9456,6 +9456,10 @@ msgid ""
 " % po4a: command I<command1> I<parameters>\n"
 "\n"
 msgstr ""
+"generic_command usa le informazioni specificate by\n"
+"register_generic_command o aggiungendo una definizione al file TeX:\n"
+" % po4a: command I<comando1> I<parametri>\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TeX.pm:102
@@ -9466,6 +9470,10 @@ msgid ""
 " % po4a: environment I<env> I<parameters>\n"
 "\n"
 msgstr ""
+"generic_environment usa le informazioni specificate da\n"
+"register_generic_environment o aggiungendo una definizione al file TeX:\n"
+" % po4a: environment I<ambiente> I<parametri>\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:103
@@ -9475,61 +9483,58 @@ msgid ""
 "environment to the environment stack and generic_command will append the "
 "name of the command followed by an identifier of the parameter (like {#7} or "
 "[#2])."
-msgstr ""
+msgstr "Entrambe le funzioni tradurranno solo i parametri che sono stati specificati come traducibili (con un '_'). generic_environment aggiungerà il nome dell'ambiente allo stack dell'ambiente e generic_command aggiungerà il nome del comando seguito da un identificatore del parametro (come {#7} o [#2])."
 
-# NdT: FIXME
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:105
 msgid "This module needs more tests."
-msgstr ""
+msgstr "Questo modulo necessita di più controlli."
 
-# NdT: FIXME
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:106
 msgid "It was tested on a book and with the Python documentation."
-msgstr ""
+msgstr "È stato testato su un libro e con la documentazione Python."
 
-# NdT: FIXME
 #. type: =head1
 #: lib/Locale/Po4a/TeX.pm:107 lib/Locale/Po4a/Xml.pm:180
 msgid "TODO LIST"
-msgstr ""
+msgstr "ELENCO DEI DAFARE"
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:108
 msgid "Automatic detection of new commands"
-msgstr ""
+msgstr "Rilevamento automatico di nuovi comandi"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:109
 msgid ""
 "The TeX module could parse the newcommand arguments and try to guess the "
 "number of arguments, their type and whether or not they should be translated."
-msgstr ""
+msgstr "Il modulo TeX potrebbe analizzare gli argomenti del nuovo comando e provare a indovinare il numero di argomenti, il loro tipo e se devono essere tradotti o meno."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:110
 msgid "Translation of the environment separator"
-msgstr ""
+msgstr "Traduzione del separatore d'ambiente"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:111
 msgid ""
 "When \\item is used as an environment separator, the item argument is "
 "attached to the following string."
-msgstr ""
+msgstr "Quando \\item è usato come separatore d'ambiente, l'argomento item è allegato alla stringa seguente."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:112
 msgid "Some commands should be added to the environment stack"
-msgstr ""
+msgstr "Alcuni comandi dovrebbero essere aggiunti alla pila dell'ambiente"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:113
 msgid ""
 "These commands should be specified by couples.  This could allow to specify "
 "commands beginning or ending a verbatim environment."
-msgstr ""
+msgstr "Questi comandi dovrebbero essere specificati da coppie. Ciò potrebbe consentire di specificare i comandi che iniziano o terminano un ambiente letterale."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:114
@@ -9539,17 +9544,17 @@ msgstr "Altri"
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:115
 msgid "Various other points are tagged TODO in the source."
-msgstr ""
+msgstr "Vari altri punti sono marcato come TODO (DAFARE) nel sorgente."
 
 #. type: =head1
 #: lib/Locale/Po4a/TeX.pm:116
 msgid "KNOWN BUGS"
-msgstr "PROBLEMI CONOSCIUTI"
+msgstr "BUG CONOSCIUTI"
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:117
 msgid "Various points are tagged FIXME in the source."
-msgstr ""
+msgstr "Vari punti sono marcati come FIXME (AGGIUSTAMI) nel sorgente."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:119
@@ -9582,14 +9587,14 @@ msgstr ""
 msgid ""
 "This module contains the definitions of common Texinfo commands and "
 "environments."
-msgstr ""
+msgstr "Questo modulo contiene le definizioni dei comandi e degli ambienti comuni di Texinfo."
 
 #. type: textblock
 #: lib/Locale/Po4a/Texinfo.pm:7
 msgid ""
 "Only the comments starting with 'TRANSLATORS' are added to the PO files to "
 "guide the translators."
-msgstr ""
+msgstr "Solo i commenti che iniziano con \"TRANSLATORS\" vengono aggiunti ai file PO per guidare i traduttori."
 
 #. type: textblock
 #: lib/Locale/Po4a/Texinfo.pm:15
@@ -9617,19 +9622,19 @@ msgstr ""
 msgid ""
 "Paragraphs are split on empty lines (or lines containing only spaces or "
 "tabulations)."
-msgstr ""
+msgstr "I paragrafi sono divisi su righe vuote (o righe contenenti solo spazi o tabulazioni)."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:7
 msgid ""
 "If a paragraph contains a line starting by a space (or tabulation), this "
 "paragraph won't be rewrapped."
-msgstr ""
+msgstr "Se un paragrafo contiene una riga che inizia con uno spazio (o tabulazione), questo paragrafo non verrà riformattato."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:10
 msgid "B<keyvalue>"
-msgstr ""
+msgstr "B<keyvalue>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:11
@@ -9638,7 +9643,7 @@ msgid ""
 "wrap flag in the PO file).  Key value pairs are defined as a line containing "
 "one or more non-colon and non-space characters followed by a colon followed "
 "by at least one non-space character before the end of the line."
-msgstr ""
+msgstr "Tratta i paragrafi che sembrano una coppia chiave-valore come letterali (con il flag no-wrap nel file PO). Le coppie chiave-valore sono definite come una riga contenente uno o più caratteri non due punti e non spazio seguiti da due punti seguiti da almeno un carattere non spazio prima del fine riga."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:12
@@ -9648,7 +9653,7 @@ msgstr "B<nobullets>"
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:13
 msgid "Deactivate the detection of bullets."
-msgstr ""
+msgstr "Disattiva il rilevamento elenco puntato."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:14
@@ -9656,17 +9661,17 @@ msgid ""
 "By default, when a bullet is detected, the bullet paragraph is not "
 "considered as a verbatim paragraph (with the no-wrap flag in the PO file). "
 "Instead, the corresponding paragraph is rewrapped in the translation."
-msgstr ""
+msgstr "Per impostazione predefinita, quando viene rilevato un elenco puntato, il paragrafo non viene considerato come un paragrafo letterale (con il flag no-wrap nel file PO). Invece, il paragrafo corrispondente viene riformattato nella traduzione."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:15
 msgid "B<tabs=>I<mode>"
-msgstr ""
+msgstr "B<tabs=>I<modalità>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:16
 msgid "Specify how tabulations shall be handled. The I<mode> can be any of:"
-msgstr ""
+msgstr "Specifica come devono essere gestite le tabulazioni. La I<modalità> può essere una qualsiasi di:"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:17
@@ -9676,29 +9681,29 @@ msgstr "B<split>"
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:18
 msgid "Lines with tabulations introduce breaks in the current paragraph."
-msgstr ""
+msgstr "Le righe con tabulazioni introducono interruzioni nel paragrafo corrente."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:20
 msgid "Paragraph containing tabulations will not be re-wrapped."
-msgstr ""
+msgstr "I paragrafi contenenti tabulazioni non verranno riformattati."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:21
 msgid "By default, tabulations are considered as spaces."
-msgstr ""
+msgstr "Per impostazione predefinita, le tabulazioni sono considerate come spazi."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:22
 msgid "B<breaks=>I<regex>"
-msgstr ""
+msgstr "B<breaks=>I<regex>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:23
 msgid ""
 "A regular expression matching lines which introduce breaks.  The regular "
 "expression will be anchored so that the whole line must match."
-msgstr ""
+msgstr "Un'espressione regolare che corrisponde a righe che introducono interruzioni. L'espressione regolare verrà ancorata in modo che l'intera riga corrisponda."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:24
@@ -9710,7 +9715,7 @@ msgstr "B<debianchangelog>"
 msgid ""
 "Handle the header and footer of released versions, which only contain non "
 "translatable informations."
-msgstr ""
+msgstr "Gestisce l'intestazione e il piè di pagina delle versioni rilasciate, che contengono solo informazioni non traducibili."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:26
@@ -11493,7 +11498,7 @@ msgstr ""
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:117
 msgid "MODIFYING TAG TYPES (TODO)"
-msgstr "MODIFICA DEI TIPI DI TAG (DA FARE)"
+msgstr "MODIFICA DEI TIPI DI TAG (TODO)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:118
