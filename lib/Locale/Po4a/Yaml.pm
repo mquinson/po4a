@@ -166,7 +166,7 @@ Space-separated list of hash keys to process for extraction, all
 other keys are skipped.  Keys are matched with a case-insensitive match.
 If B<paths> and B<keys> are used together, values are included if they are
 matched by at least one of the options.
-Arrays values are always returned unless if the B<skip_array> option is
+Arrays values are always returned unless the B<skip_array> option is
 provided.
 
 =item B<paths>
@@ -175,7 +175,7 @@ Comma-separated list of hash paths to process for extraction, all
 other paths are skipped. Paths are matched with a case-insensitive match.
 If B<paths> and B<keys> are used together, values are included if they are
 matched by at least one of the options.
-Arrays values are always returned unless if the B<skip_array> option is
+Arrays values are always returned unless the B<skip_array> option is
 provided.
 
 =item B<skip_array>
