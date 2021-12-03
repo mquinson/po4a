@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-03 21:39+0100\n"
-"PO-Revision-Date: 2021-12-03 08:25+0100\n"
+"PO-Revision-Date: 2021-12-03 23:54+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -9913,6 +9913,8 @@ msgid ""
 "Handle the fortunes format, which separate fortunes with a line which "
 "consists in '%' or '%%', and use '%%' as the beginning of a comment."
 msgstr ""
+"Gestisci il formato fortune, che separa le frasi fortune con una linea che "
+"consiste in '%' o '%%', e usa '%%' come inizio di un commento."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:28
@@ -9922,22 +9924,22 @@ msgstr "B<markdown>"
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:29
 msgid "Handle some special markup in Markdown-formatted texts."
-msgstr ""
+msgstr "Gestisci alcuni markup speciali nei testi formattati per Markdown."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:30
 msgid "B<yfm_keys> (markdown-only)"
-msgstr ""
+msgstr "B<yfm_keys> (solo-markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
 msgid "B<yfm_skip_array> (markdown-only)"
-msgstr ""
+msgstr "B<yfm_skip_array> (solo-markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
 msgid "B<control>[B<=>I<taglist>]"
-msgstr ""
+msgstr "B<control>[B<=>I<elencotag>]"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:35
@@ -9945,6 +9947,8 @@ msgid ""
 "Handle control files.  A comma-separated list of tags to be translated can "
 "be provided."
 msgstr ""
+"Gestisci i file di controllo. È possibile fornire un elenco separato da "
+"virgole di tag da tradurre."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:36
@@ -9957,11 +9961,13 @@ msgid ""
 "Prevent po4a from wrapping any lines. This means that every content is "
 "handled verbatim, even simple paragraphs."
 msgstr ""
+"Impedisci a po4a di formattare le righe. Ciò significa che ogni contenuto "
+"viene gestito alla lettera, anche i paragrafi semplici."
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:39
 msgid "Tested successfully on simple text files and NEWS.Debian files."
-msgstr ""
+msgstr "Testato con successo su semplici file di testo e file NEWS.Debian."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:43
@@ -9999,6 +10005,9 @@ msgid ""
 "search translatable strings, to extract them to a PO file and to replace "
 "them by their translation in the output document."
 msgstr ""
+"Questa classe è l'antenato di ogni parser po4a usato per analizzare un "
+"documento, per cercare stringhe traducibili, per estrarle in un file PO e "
+"per sostituirle con la loro traduzione nel documento in uscita."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:6
@@ -10047,15 +10056,18 @@ msgid ""
 "with all translatable strings replaced with the translations found in the PO "
 "file provided in input."
 msgstr ""
+"un documento tradotto, con la stessa struttura di quello in ingresso, ma con "
+"tutte le stringhe traducibili sostituite con le traduzioni trovate nel file "
+"PO fornito in ingresso."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:16
 msgid "Here is a graphical representation of this:"
-msgstr ""
+msgstr "Ecco una rappresentazione grafica di ciò:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:17
-#, no-wrap
+#, fuzzy, no-wrap
 msgid ""
 "   Input document --\\                             /---> Output document\n"
 "                     \\                           /       (translated)\n"
@@ -10065,6 +10077,13 @@ msgid ""
 "                                                         (extracted)\n"
 "\n"
 msgstr ""
+"   Input document --\\                             /---> Output document\n"
+"                     \\                           /       (translated)\n"
+"                      +-> parse() function -----+\n"
+"                     /                           \\\n"
+"   Input PO --------/                             \\---> Output PO\n"
+"                                                         (extracted)\n"
+"\n"
 
 #. type: =head1
 #: lib/Locale/Po4a/TransTractor.pm:18
@@ -12158,6 +12177,12 @@ msgstr "B<keys>"
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:10
 #, fuzzy
+#| msgid ""
+#| "Space-separated list of hash keys to process for extraction, all other "
+#| "keys are skipped.  Keys are matched with a case-insensitive match.  If "
+#| "B<paths> and B<keys> are used together, values are included if they are "
+#| "matched by at least one of the options.  Arrays values are always "
+#| "returned unless if the B<skip_array> option is provided."
 msgid ""
 "Space-separated list of hash keys to process for extraction, all other keys "
 "are skipped.  Keys are matched with a case-insensitive match.  If B<paths> "
