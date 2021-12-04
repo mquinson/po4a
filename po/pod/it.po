@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-03 21:39+0100\n"
-"PO-Revision-Date: 2021-12-03 23:54+0100\n"
+"PO-Revision-Date: 2021-12-04 21:39+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -6855,11 +6855,11 @@ msgid ""
 " -o mdoc=NAME,SYNOPSIS,DESCRIPTION\n"
 "\n"
 msgstr ""
-"Secondo la pagina groff_mdoc, le sezioni NAME, SYNOPSIS e DESCRIPTION\n"
+"Secondo la pagina groff_mdoc, le sezioni NOME, SINTASSI e DESCRIZIONE\n"
 "sono obbligatorie.\n"
-"Non sembrano esserci problemi conosciuti nel tradurre le sezioni SYNOPSIS\n"
-"o DESCRIPTION, ma si può specificare queste sezioni anche in questo modo:\n"
-" -o mdoc=NAME,SYNOPSIS,DESCRIPTION\n"
+"Non sembrano esserci problemi conosciuti nel tradurre le sezioni SINTASSI\n"
+"o DESCRIZIONE, ma si può specificare queste sezioni anche in questo modo:\n"
+" -o mdoc=NOME,SINTASSI,DESCRIZIONE\n"
 "\n"
 
 #. type: verbatim
@@ -8884,9 +8884,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:2
-#, fuzzy
-#| msgid ""
-#| "Locale::Po4a::TeX - convert TeX documents and derivates from/to PO files"
 msgid ""
 "Locale::Po4a::TeX - convert TeX documents and derivatives from/to PO files"
 msgstr "Locale::Po4a::TeX - converte documenti TeX e derivati da/a file PO"
@@ -8929,13 +8926,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:9
-#, fuzzy
-#| msgid ""
-#| "There are some options (described in the next section) that can customize "
-#| "this behavior.  If this doesn't fit to your document format you're "
-#| "encouraged to write your own module derived from this, to describe your "
-#| "format's details.  See the section B<WRITING DERIVATE MODULES> below, for "
-#| "the process description."
 msgid ""
 "There are some options (described in the next section) that can customize "
 "this behavior.  If this doesn't fit to your document format you're "
@@ -8952,11 +8942,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:10
-#, fuzzy
-#| msgid ""
-#| "This module can also be customized by lines starting with \"% po4a:\" in "
-#| "the TeX file.  These customizations are described in the B<INLINE "
-#| "CUSTOMIZATION> section."
 msgid ""
 "This module can also be customized by lines starting with \"% po4a:\" in the "
 "TeX file. This process is described in the B<INLINE CUSTOMIZATION> section."
@@ -9264,12 +9249,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:51
-#, fuzzy
-#| msgid ""
-#| "The notion of environment is expended to the type displayed in the PO "
-#| "file.  This can be used to split on \"\\\\\\\\\" in the first mandatory "
-#| "argument of the title command.  In this case, the environment is "
-#| "title{#1}."
 msgid ""
 "The notion of environment is expanded to the type displayed in the PO file.  "
 "This can be used to split on \"\\\\\\\\\" in the first mandatory argument of "
@@ -10067,7 +10046,7 @@ msgstr "Ecco una rappresentazione grafica di ciò:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:17
-#, fuzzy, no-wrap
+#, no-wrap
 msgid ""
 "   Input document --\\                             /---> Output document\n"
 "                     \\                           /       (translated)\n"
@@ -10077,12 +10056,12 @@ msgid ""
 "                                                         (extracted)\n"
 "\n"
 msgstr ""
-"   Input document --\\                             /---> Output document\n"
-"                     \\                           /       (translated)\n"
-"                      +-> parse() function -----+\n"
-"                     /                           \\\n"
-"   Input PO --------/                             \\---> Output PO\n"
-"                                                         (extracted)\n"
+" Documento in ingresso -\\                          /--> Documento in uscita\n"
+"                         \\                        /         (tradotto)\n"
+"                          +-> funzione parse() --+\n"
+"                         /                        \\\n"
+"  PO in ingresso -------/                          \\--> PO in uscita\n"
+"                                                          (estratto)\n"
 "\n"
 
 #. type: =head1
@@ -10103,7 +10082,7 @@ msgid ""
 "is pretty simple using the provided functions presented in the section "
 "B<INTERNAL FUNCTIONS> below. See also the B<SYNOPSIS>, which presents an "
 "example."
-msgstr ""
+msgstr "È qui che si svolge tutto il lavoro: l'analisi dei documenti di ingresso, la generazione del risultato in uscita e l'estrazione delle stringhe traducibili. Tutto ciò è abbastanza semplice facendo uso delle funzioni presentate nella sezione B<FUNZIONI INTERNE> di seguito. Vedere anche B<SINTASSI>, che presenta un esempio."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:21
@@ -10111,12 +10090,12 @@ msgid ""
 "This function is called by the process() function below, but if you choose "
 "to use the new() function, and to add content manually to your document, you "
 "will have to call this function yourself."
-msgstr ""
+msgstr "Questa funzione viene chiamata dalla funzione process() di seguito, ma se si sceglie di usare la funzione new() e di aggiungere contenuto manualmente al documento, si dovrà chiamare questa funzione."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:22
 msgid "docheader()"
-msgstr ""
+msgstr "docheader()"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:23
@@ -10125,7 +10104,7 @@ msgid ""
 "quoted properly to be a comment in the target language.  See the section "
 "B<Educating developers about translations>, from L<po4a(7)|po4a.7>, for what "
 "it is good for."
-msgstr ""
+msgstr "Questa funzione restituisce l'intestazione che dovremmo aggiungere al documento prodotto, quotata opportunamente tanto da essere considerata un commento nella lingua di destinazione. Vedere la sezione B<Educare gli sviluppatori sulle traduzioni>, da L<po4a(7)|po4a.7>, per sapere a cosa serve."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:25
@@ -10134,7 +10113,7 @@ msgid ""
 "For the sake of simplicity, we assume that the document is well formatted, i."
 "e. that '<p>' tags are the only tags present, and that this tag is at the "
 "very beginning of each paragraph."
-msgstr ""
+msgstr "L'esempio seguente analizza un elenco di paragrafi che iniziano con \"<p>\". Per semplicità, assumiamo che il documento sia ben formattato, ovvero che i tag '<p>' siano gli unici tag presenti e che questo tag sia all'inizio di ogni paragrafo."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:26
@@ -10144,6 +10123,9 @@ msgid ""
 "   my $self = shift;\n"
 "\n"
 msgstr ""
+" sub parse {\n"
+"   my $self = shift;\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:27
@@ -10161,6 +10143,17 @@ msgid ""
 "               $self->unshiftline($line,$lref);\n"
 "\n"
 msgstr ""
+"   PARAGRAPH: while (1) {\n"
+"       my ($paragraph,$pararef)=(\"\",\"\");\n"
+"       my $first=1;\n"
+"       my ($line,$lref)=$self->shiftline();\n"
+"       while (defined($line)) {\n"
+"           if ($line =~ m/<p>/ && !$first--; ) {\n"
+"               # Non la prima volta che si vede <p>.\n"
+"               # Rimette la riga corrente in ingresso,\n"
+"               #  e mette il paragrafo costruito in uscita\n"
+"               $self->unshiftline($line,$lref);\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:28
@@ -10171,6 +10164,10 @@ msgid ""
 "               $paragraph =~ s/^<p>//s;\n"
 "\n"
 msgstr ""
+"               # Ora che il documento è formato, lo traduce:\n"
+"               #   - Rimuove il tag d'inzio\n"
+"               $paragraph =~ s/^<p>//s;\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:29
@@ -10183,6 +10180,12 @@ msgid ""
 "                               );\n"
 "\n"
 msgstr ""
+"               #   - inserisce in uscita il tag iniziale (non tradotto) e\n"
+"               #     il resto del paragrafo (tradotto)\n"
+"               $self->pushline(  \"<p>\"\n"
+"                               . $self->translate($paragraph,$pararef)\n"
+"                               );\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:30
@@ -12176,26 +12179,13 @@ msgstr "B<keys>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:10
-#, fuzzy
-#| msgid ""
-#| "Space-separated list of hash keys to process for extraction, all other "
-#| "keys are skipped.  Keys are matched with a case-insensitive match.  If "
-#| "B<paths> and B<keys> are used together, values are included if they are "
-#| "matched by at least one of the options.  Arrays values are always "
-#| "returned unless if the B<skip_array> option is provided."
 msgid ""
 "Space-separated list of hash keys to process for extraction, all other keys "
 "are skipped.  Keys are matched with a case-insensitive match.  If B<paths> "
 "and B<keys> are used together, values are included if they are matched by at "
 "least one of the options.  Arrays values are always returned unless the "
 "B<skip_array> option is provided."
-msgstr ""
-"Elenco separato da virgole di chiavi hash da elaborare per l'estrazione; "
-"tutte le altre chiavi vengono ignorate. Le chiavi vengono confrontate senza "
-"differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono usate "
-"assieme, i valori vengono inclusi se questi corrispondono ad almeno una "
-"delle opzioni. I valori degli array vengono sempre restituiti, a meno che "
-"non si fornisca l'opzione B<skip_array>."
+msgstr "Elenco separato da virgole di chiavi hash da elaborare per l'estrazione; tutte le altre chiavi vengono ignorate. Le chiavi vengono confrontate senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono usate assieme, i valori vengono inclusi se questi corrispondono ad almeno una delle opzioni. I valori degli array vengono sempre restituiti, a meno che non si fornisca l'opzione B<skip_array>."
 
 #. type: =item
 #: lib/Locale/Po4a/Yaml.pm:11
@@ -12204,26 +12194,13 @@ msgstr "B<paths>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:12
-#, fuzzy
-#| msgid ""
-#| "Comma-separated list of hash paths to process for extraction, all other "
-#| "paths are skipped. Paths are matched with a case-insensitive match.  If "
-#| "B<paths> and B<keys> are used together, values are included if they are "
-#| "matched by at least one of the options.  Arrays values are always "
-#| "returned unless if the B<skip_array> option is provided."
 msgid ""
 "Comma-separated list of hash paths to process for extraction, all other "
 "paths are skipped. Paths are matched with a case-insensitive match.  If "
 "B<paths> and B<keys> are used together, values are included if they are "
 "matched by at least one of the options.  Arrays values are always returned "
 "unless the B<skip_array> option is provided."
-msgstr ""
-"Elenco separato da virgole di percorsi hash da elaborare per l'estrazione; "
-"tutti gli altri percorsi vengono ignorati. I percorsi vengono confrontati "
-"senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono "
-"usate assieme, i valori vengono inclusi se questo corrispondono ad almeno "
-"una delle opzioni. I valori degli array vengono sempre restituiti, a meno "
-"che non si fornisca l'opzione B<skip_array>."
+msgstr "Elenco separato da virgole di percorsi hash da elaborare per l'estrazione; tutti gli altri percorsi vengono ignorati. I percorsi vengono confrontati senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> vengono usate assieme, i valori vengono inclusi se questi corrispondono ad almeno una delle opzioni. I valori degli array vengono sempre restituiti, a meno che non si fornisca l'opzione B<skip_array>."
 
 #. type: =item
 #: lib/Locale/Po4a/Yaml.pm:13
@@ -12249,20 +12226,3 @@ msgstr ""
 #: lib/Locale/Po4a/Yaml.pm:20
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Copyright © 2017 Brian Exelbierd."
-
-#~ msgid "INTERNAL FUNCTIONS used to write derivated parsers"
-#~ msgstr "FUNZIONI INTERNE usate per scrivere parser derivati"
-
-#~ msgid ""
-#~ "Space-separated list of hash keys to process for extraction, all other "
-#~ "keys are skipped.  Keys are matched with a case-insentive match.  If "
-#~ "B<paths> and B<keys> are used together, values are included if they are "
-#~ "matched by at least one of the options.  Arrays values are always "
-#~ "returned unless if the B<skip_array> option is provided."
-#~ msgstr ""
-#~ "Elenco separato da virgole di chiavi hash da elaborare per l'estrazione; "
-#~ "tutte le altre chiavi vengono ignorate. Le chiavi vengono confrontate "
-#~ "senza differenziare tra maiuscolo e minuscolo. Se B<paths> e B<keys> "
-#~ "vengono usate assieme, i valori vengono inclusi se questi corrispondono "
-#~ "ad almeno una delle opzioni. I valori degli array vengono sempre "
-#~ "restituiti, a meno che non si fornisca l'opzione B<skip_array>."
