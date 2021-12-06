@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-03 21:39+0100\n"
-"PO-Revision-Date: 2021-12-05 20:35+0100\n"
+"PO-Revision-Date: 2021-12-06 09:03+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -10420,7 +10420,7 @@ msgstr "new(%)"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:67
 msgid "Create a new po4a document. Accepted options (but be in a hash):"
-msgstr ""
+msgstr "Crea un nuovo documento po4a. Opzioni accettate (ma devono essere in un hash):"
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:68
@@ -10430,7 +10430,7 @@ msgstr "verbose ($)"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:69
 msgid "Sets the verbosity."
-msgstr ""
+msgstr "Imposta il livello di messaggi diagnostici."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:70
@@ -10440,12 +10440,12 @@ msgstr "debug ($)"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:71
 msgid "Sets the debugging."
-msgstr ""
+msgstr "Imposta il debug."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:72
 msgid "Manipulating document files"
-msgstr ""
+msgstr "Gestione file dei documenti"
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:73
@@ -10458,7 +10458,7 @@ msgid ""
 "Add another input document data at the end of the existing array C<< @{$self-"
 ">{TT}{doc_in}} >>. The argument is the filename to read. If a second "
 "argument is provided, it is the filename to use in the references."
-msgstr ""
+msgstr "Aggiunge un altro dato del documento di input alla fine dell'array esistente C<< @{$self->{TT}{doc_in}} >>. L'argomento è il nome del file da leggere. Se viene fornito un secondo argomento, è il nome del file da utilizzare nei riferimenti."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:75
@@ -10471,18 +10471,24 @@ msgid ""
 "   \"reference\" (C<linenum> starts with 1).\n"
 "\n"
 msgstr ""
+"Questo array C<< @{$self->{TT}{doc_in}} >> contiene i dati di questo documento\n"
+"di ingresso come array di stringhe con significati alternati.\n"
+"  * La stringa C<$textline> contenente ogni riga dei dati di testo di ingresso.\n"
+"  * La stringa C<< $filename:$linenum >> contenente la sua posizione viene\n"
+"    chiamata come \"riferimento\" (C<linenum> inizia con 1).\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:76
 msgid ""
 "Please note that it does not parse anything. You should use the parse()  "
 "function when you're done with packing input files into the document."
-msgstr ""
+msgstr "Si noti che non analizza nulla. Si dovrebbe usare la funzione parse() quando si ha finito di impacchettare i file in ingresso nel documento."
 
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:78
 msgid "Write the translated document to the given filename."
-msgstr ""
+msgstr "Scrive il documento tradotto con il nome file specificato."
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:79
@@ -10493,11 +10499,15 @@ msgid ""
 " * C<< @{$self->{TT}{doc_out}} >> holding each line of the main translated text in the array.\n"
 "\n"
 msgstr ""
+"I dati di questo documento tradotto sono forniti da:\n"
+"  * C<< $self->docheader() >> che contiene il testo dell'intestazione per il plugin, e\n"
+"  * C<< @{$self->{TT}{doc_out}} >> che contiene ogni riga del testo tradotto principale nell'array.\n"
+"\n"
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:80
 msgid "Manipulating PO files"
-msgstr ""
+msgstr "Gestione file PO"
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:81
@@ -10509,7 +10519,7 @@ msgstr "readpo($)"
 msgid ""
 "Add the content of a file (which name is passed as argument) to the existing "
 "input PO. The old content is not discarded."
-msgstr ""
+msgstr "Aggiunge il contenuto di un file (il cui nome viene passato come argomento) al PO di ingresso esistente. Il vecchio contenuto non viene scartato."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:83
@@ -10519,7 +10529,7 @@ msgstr "writepo($)"
 #. type: textblock
 #: lib/Locale/Po4a/TransTractor.pm:84
 msgid "Write the extracted PO file to the given filename."
-msgstr ""
+msgstr "Scrive il file PO estratto nel nome file dato."
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:85
@@ -10534,7 +10544,7 @@ msgid ""
 "Here, it's stats about recent usage of the PO file, while msgfmt reports the "
 "status of the file. It is a wrapper to the Locale::Po4a::Po::stats_get "
 "function applied to the input PO file. Example of use:"
-msgstr ""
+msgstr "Restituisce alcune statistiche sulla traduzione eseguita fino a quel momento. Si noti che non sono le stesse statistiche di quelle prodotte dal comando da msgfmt --statistic. Qui, sono le statistiche sull'utilizzo recente del file PO, mentre msgfmt riporta lo stato del file. È un wrapper per la funzione Locale::Po4a::Po::stats_get applicata al file PO di ingresso. Esempio d'uso:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/TransTractor.pm:87
@@ -10552,6 +10562,9 @@ msgid ""
 "    print \"We found translations for $percent\\%  ($hit from $queries) of strings.\\n\";\n"
 "\n"
 msgstr ""
+"    ($percent,$hit,$queries) = $document->stats();\n"
+"    print \"Trovate traduzioni for $percent\\%  ($hit da $queries) di stringhe.\\n\";\n"
+"\n"
 
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:89
@@ -10565,7 +10578,7 @@ msgid ""
 "the output po match (if not, it means that the input po should be updated)  "
 "and $diagnostic is a string explaining why the po file is not uptodate, when "
 "this happens."
-msgstr ""
+msgstr "Restituisce ($uptodate, $diagnostic) dove $uptodate indica se il po d'ingresso e il po d'uscita corrispondono (in caso contrario, significa che il po d'ingresso deve essere aggiornato) e $diagnostic è una stringa che spiega perché il file po non è aggiornato, quando ciò accade."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:91
