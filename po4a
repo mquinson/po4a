@@ -665,7 +665,7 @@ L<po4a(7)>.
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Nicolas François <nicolas.francois@centraliens.net>
+ Nicolas Francois <nicolas.francois@centraliens.net>
  Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
@@ -1713,11 +1713,12 @@ if ( not $po4a_opts{"no-update"} ) {
 
                     my $cmd;
 
-                    # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
-                    my $env = ( $^O =~ /Win/ ) ? "" : "LC_ALL=C.UTF-8";
-
                     # Create an empty PO or copy the original PO header (to keep the header)
                     if ( -f find_input_file( $split_po{$lang}{$master} ) ) {
+
+                        # Pass msggrep to C (english), but not under windows as this syntax is not understood by the shell
+                        my $env = ( $^O =~ /Win/ ) ? "" : "LC_ALL=C.UTF-8";
+
                         $cmd =
                             $env
                           . " msggrep$Config{_exe}"
