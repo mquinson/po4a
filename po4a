@@ -950,7 +950,7 @@ my $config_file = shift(@ARGV) || pod2usage();
 
 # Parse the config file
 my (@langs);
-my (%aliases);    # module aliases ([po4a_alias:...]
+my (%aliases);                # module aliases ([po4a_alias:...]
 my $pot_filename     = "";    # In split mode, this is the temp file name for the big POT
 my $pot_filename_cfg = "";    # This is never modified, useful in split mode to find the cfg content
 my (%po_filename);            # po_files: '$lang'=>'$path'
@@ -1359,7 +1359,7 @@ while (<CONFIG>) {
 
     $line = "";
 }
-close CONFIG;                                                                              # don't care about error here
+close CONFIG;    # don't care about error here
 die wrap_msg( gettext("'po4a_paths' is not defined in the configuration file. Where are the POT and PO files?") )
   unless ( length $pot_filename );
 
@@ -1419,7 +1419,7 @@ if ( $pot_filename =~ m/\$master/ ) {
 
         # Skip documents not specified, strings are read directly from POT file
         foreach my $master ( keys %document ) {
-            next unless length $master;
+            next                      unless length $master;
             delete $document{$master} unless exists $partial{'master'}{$master};
         }
 
@@ -1497,11 +1497,11 @@ if ($update_pot_file) {
 
         my %file_opts = %po4a_opts;
         my $options =
-          ( $document{''}{"options"}{"global"} // '' ) . ' ' .        # global options (if any) as default values
-          ( $document{$master}{"options"}{"global"} // '' ) . ' ';    # file's global options (if any) to override them
+          ( $document{''}{"options"}{"global"} // '' ) . ' ' .         # global options (if any) as default values
+          ( $document{$master}{"options"}{"global"} // '' ) . ' ';     # file's global options (if any) to override them
         $options =~ s/ *$//;
         print STDERR "Options for $master while generating pot: $options\n" if $po4a_opts{'debug'};
-        %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV ) if ( length $options );
+        %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV )    if ( length $options );
 
         my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
 
@@ -1756,7 +1756,7 @@ if ( not $po4a_opts{"no-update"} ) {
                           find_output_file( $split_po{$lang}{$master} )
                           or die wrap_msg(
                             dgettext( "po4a", "Cannot move %s to %s: %s." ), $tmp_file,
-                            find_output_file( $split_po{$lang}{$master} ), $!
+                            find_output_file( $split_po{$lang}{$master} ),   $!
                           );
                     }
                 }
@@ -1834,12 +1834,12 @@ if ( not $po4a_opts{"no-translations"} ) {
 
             my %file_opts = %po4a_opts;
             my $options =
-              ( $document{''}{"options"}{"global"} // '' ) . ' ' .      # global options (if any) as default values
+              ( $document{''}{"options"}{"global"} // '' ) . ' ' .         # global options (if any) as default values
               ( $document{$master}{"options"}{"global"} // '' ) . ' '
               .                                                 # file's global options (if any) to override them
               ( $document{$master}{"options"}{$lang} // '' );   # file's language options (if any) overriding everything
             $options =~ s/ *$//;
-            print STDERR "Options for $master in $lang: $options\n" if $po4a_opts{'debug'};
+            print STDERR "Options for $master in $lang: $options\n"          if $po4a_opts{'debug'};
             %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV ) if ( length $options );
 
             my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
