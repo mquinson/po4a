@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2021-12-03 21:39+0100\n"
-"PO-Revision-Date: 2021-12-10 12:15+0100\n"
+"PO-Revision-Date: 2021-12-10 14:16+0100\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -11318,7 +11318,7 @@ msgid ""
 "E<lt>aaaE<gt>, but you can join some (E<lt>bbbE<gt>E<lt>aaaE<gt>) to say "
 "that the content of the tag E<lt>aaaE<gt> will only be translated when it's "
 "into a E<lt>bbbE<gt> tag."
-msgstr "Elenco separato da spazi di tag che si vuole tradurre o saltare. Per impostazione predefinita, i tag specificati verranno esclusi, ma se si usa l'opzione \"tagsonly\", i tag specificati saranno gli unici inclusi. I tag devono essere nella forma E<lt>aaaE<gt>, ma si può unirne alcuni (E<lt>bbbE<gt>E<lt>aaaE<gt>) per dire che il contenuto del tag E<lt >aaaE<gt> verrà tradotto solo quando è in un tag E<lt>bbbE<gt>."
+msgstr "Elenco separato da spazi di tag che si vuole tradurre o saltare. Per impostazione predefinita, i tag specificati verranno esclusi, ma se si usa l'opzione \"tagsonly\", i tag specificati saranno gli unici inclusi. I tag devono essere nella forma E<lt>aaaE<gt>, ma si può unirne alcuni (E<lt>bbbE<gt>E<lt>aaaE<gt>) per dire che il contenuto del tag E<lt>aaaE<gt> verrà tradotto solo quando è in un tag E<lt>bbbE<gt>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:46
@@ -11734,14 +11734,14 @@ msgstr "type=\"attributo\""
 msgid ""
 "Means that the found string is the value of a translatable attribute. The "
 "entry \"attribute\" has the name of the attribute."
-msgstr ""
+msgstr "Significa che la stringa trovata è il valore di un attributo traducibile. La voce \"attributo\" ha il nome dell'attributo."
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:114
 msgid ""
 "It must return the text that will replace the original in the translated "
 "document. Here's a basic example of this function:"
-msgstr ""
+msgstr "Deve restituire il testo che sostituirà l'originale nel documento tradotto. Ecco un esempio di base di questa funzione:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xml.pm:115
@@ -11755,13 +11755,20 @@ msgid ""
 "  }\n"
 "\n"
 msgstr ""
+"  sub found_string {\n"
+"    my ($self,$text,$ref,$options)=@_;\n"
+"    $text = $self->translate($text,$ref,\"type \".$options->{'type'},\n"
+"      'wrap'=>$self->{options}{'wrap'});\n"
+"    return $text;\n"
+"  }\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Xml.pm:116
 msgid ""
 "There's another simple example in the new Dia module, which only filters "
 "some strings."
-msgstr ""
+msgstr "C'è un altro semplice esempio nel nuovo modulo Dia, che filtra solo alcune stringhe."
 
 #. type: =head2
 #: lib/Locale/Po4a/Xml.pm:117
@@ -11776,7 +11783,7 @@ msgid ""
 "list should be sorted so that the most general tags are after the most "
 "concrete ones (sorted first by the beginning and then by the end keys). To "
 "define a tag type you'll have to make a hash with the following keys:"
-msgstr ""
+msgstr "Questo è più complesso, ma consente una personalizzazione (quasi) totale. Si basa su un elenco di hash, ognuno dei quali definisce il comportamento di un tipo di tag. L'elenco dovrebbe essere ordinato in modo che i tag più generali vengano dopo quelli più specifici (ordinati prima per l'inizio e poi per le chiavi di fine). Per definire un tipo di tag si dovrà creare un hash con le seguenti chiavi:"
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:119
