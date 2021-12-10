@@ -94,8 +94,10 @@ $ENV{'COLUMNS'} = "80";
 # Path to the tested executables. AUTOPKGTEST_TMP is set on salsa CI for Debian packages.
 my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 
+# msginit annoyances, see https://github.com/mquinson/po4a/issues/338
 my $PODIFF =
-  "-I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# Automatically generated, 20...' -I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:'";
+    "-I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' "
+  . "-I'^# Language (.*?) translations for (.*?) package' -I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# This file is distributed under the same license as the' -I'^# Automatically generated, 20...' ";
 
 sub show_files {
     my $basename = shift;
@@ -121,7 +123,7 @@ sub system_failed {
     $expected_exit_status //= 0;
     my $exit_status = system($cmd);
     $cmd =~
-      s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."Project-Id-Version:' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+      s/diff -u $PODIFF /PODIFF/g;
     $cmd =~ s{$root_dir/}{BUILDPATH/}g;
     $cmd =~ s{t/../po4a}{po4a};
 
