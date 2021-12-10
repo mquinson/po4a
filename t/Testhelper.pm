@@ -122,8 +122,7 @@ sub system_failed {
     my ( $cmd, $doc, $expected_exit_status ) = @_;
     $expected_exit_status //= 0;
     my $exit_status = system($cmd);
-    $cmd =~
-      s/diff -u $PODIFF /PODIFF/g;
+    $cmd =~ s/diff -u $PODIFF /PODIFF/g;
     $cmd =~ s{$root_dir/}{BUILDPATH/}g;
     $cmd =~ s{t/../po4a}{po4a};
 
@@ -186,7 +185,7 @@ sub run_one_po4aconf {
     my $options          = "--verbose " . ( $t->{'options'} // "" );
     my $closed_path      = $t->{'closed_path'};
     my $doc              = $t->{'doc'};
-    my $expected_files   = $t->{'expected_files'} // "";
+    my $expected_files   = $t->{'expected_files'}   // "";
     my $expected_retcode = $t->{'expected_retcode'} // 0;
 
     fail("Broken test: 'tests' is not an array as expected") if exists $t->{tests} && ref $t->{tests} ne 'ARRAY';
@@ -346,7 +345,7 @@ sub run_one_po4aconf {
 sub run_one_format {
     my ( $test, $input ) = @_;
 
-    my $doc = $test->{'doc'} // "Format testing '$input'";
+    my $doc   = $test->{'doc'}   // "Format testing '$input'";
     my $error = $test->{'error'} // 0;    # Whether a normalization error is expected to interrupt the test
 
     my %valid_options;
@@ -426,7 +425,7 @@ sub run_one_format {
     }
 
     push @tests, "diff -uN $norm_stderr $real_stderr";
-    push @tests, "PODIFF  $potfile  $tmpbase.pot" unless $error;
+    push @tests, "PODIFF  $potfile  $tmpbase.pot"  unless $error;
     push @tests, "diff -u $output   $tmpbase.norm" unless $error;
 
     unless ($error) {
