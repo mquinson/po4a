@@ -380,7 +380,7 @@ L<po4a(7)|po4a.7>
 =head1 AUTHORS
 
  Denis Barbier <barbier@linuxfr.org>
- Nicolas François <nicolas.francois@centraliens.net>
+ Nicolas Francois <nicolas.francois@centraliens.net>
  Martin Quinson (mquinson#debian.org)
 
 =head1 COPYRIGHT AND LICENSE
