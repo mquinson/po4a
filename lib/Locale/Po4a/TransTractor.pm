@@ -250,7 +250,7 @@ Charset for the addenda.
 
 =item new(%)
 
-Create a new po4a document. Accepted options (but be in a hash):
+Create a new po4a document. Accepted options (in the hash passed as a parameter):
 
 =over 4
 
