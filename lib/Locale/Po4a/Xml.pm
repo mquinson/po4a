@@ -354,7 +354,7 @@ It is generally recommended to fix the input file.
 
 Note: This option is deprecated.
 
-Extracts only the specified tags in the "tags" option.  Otherwise, it
+Extracts only the specified tags in the B<tags> option.  Otherwise, it
 will extract all the tags except the ones specified.
 
 =item B<doctype>
@@ -372,7 +372,7 @@ as the basename of the PO file without any .po extension.
 =item B<optionalclosingtag>
 
 Boolean indicating whether closing tags are optional (as in HTML). By default,
-missing closing tags raise an error handled according to C<ontagerror>.
+missing closing tags raise an error handled according to B<ontagerror>.
 
 =item B<tags>
 
@@ -386,8 +386,8 @@ form E<lt>aaaE<gt>, but you can join some (E<lt>bbbE<gt>E<lt>aaaE<gt>) to say th
 the tag E<lt>aaaE<gt> will only be translated when it's into a E<lt>bbbE<gt> tag.
 
 You can also specify some tag options by putting some characters in front of
-the tag hierarchy. For example, you can put 'w' (wrap) or 'W' (don't wrap)
-to override the default behavior specified by the global "wrap" option.
+the tag hierarchy. For example, you can put I<w> (wrap) or I<W> (don't wrap)
+to override the default behavior specified by the global B<wrap> option.
 
 Example: WE<lt>chapterE<gt>E<lt>titleE<gt>
 
@@ -510,10 +510,13 @@ Tags should be translated as placeholders.
 
 Internally, the XML parser only cares about these four options: I<w> I<W> I<i> I<p>.
 
-  * Tags listed in B<break> are set to I<w> or I<W> depending on the <wrap> option.
-  * Tags listed in B<inline> are set to I<i>.
-  * Tags listed in B<placeholder> are set to I<p>.
-  * Tags listed in B<untranslated> are without any of these options set.
+* Tags listed in B<break> are set to I<w> or I<W> depending on the B<wrap> option.
+
+* Tags listed in B<inline> are set to I<i>.
+
+* Tags listed in B<placeholder> are set to I<p>.
+
+* Tags listed in B<untranslated> are without any of these options set.
 
 You can verify actual internal parameter behavior by invoking B<po4a> with
 B<--debug> option.
@@ -533,7 +536,7 @@ when it's within another tag (<bbb>).
 
 Please note a translatable inline tag in an untranslated tag is treated as a
 translatable breaking tag, I<i> setting is dropped and I<w> or I<W> is set
-depending on the <wrap> option.
+depending on the B<wrap> option.
 
 =item B<defaulttranslateoption>
 
@@ -1356,7 +1359,7 @@ sub tag_in_list ($$$) {
 
 This function handles the translation of the tags' attributes. It receives the tag
 without the beginning / end marks, and then it finds the attributes, and it
-translates the translatable ones (specified by the module option "attributes").
+translates the translatable ones (specified by the module option B<attributes>).
 This returns a plain string with the translated tag.
 
 =back
