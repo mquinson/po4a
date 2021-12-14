@@ -451,7 +451,7 @@ when it's within another tag (<bbb>).
 
 =item B<break-pi>
 
-By default, Processing Instructions (i.e., C<<? ... ?>> tags) are handled as inline tags.
+By default, Processing Instructions (i.e., C<E<lt>? ... ?E<gt>> tags) are handled as inline tags.
 Pass this option if you want the PI to be handled as breaking tag.
 Note that unprocessed PHP tags are handled as Processing Instructions by the parser.
 
