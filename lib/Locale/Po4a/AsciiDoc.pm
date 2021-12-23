@@ -461,7 +461,9 @@ sub parse {
             shift @texts;
             my @parts = map { ( $_, shift @texts ) } @seps;
             foreach my $part (@parts) {
-                if ( !$part ) { next }
+                if ( not defined $part ) {
+					# allows concatenation and will be stripped anyway
+					$part = " "; }
                 if ( $part =~ /\|$/ ) {
 
                     # this is a cell separator. End the previous cell
