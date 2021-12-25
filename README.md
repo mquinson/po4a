@@ -1,7 +1,7 @@
 # Introduction to Po4a
 
-[![Build Status](https://travis-ci.org/mquinson/po4a.svg?branch=master)](https://travis-ci.org/mquinson/po4a)
-[![First Timers Friendly](https://img.shields.io/badge/Beginners-Welcome-brightgreen.svg?style=flat-square)](http://www.firsttimersonly.com)
+[![Build Status](https://img.shields.io/github/workflow/status/mquinson/po4a/Build%20on%20Linux%20CI?style=flat-square)](https://github.com/mquinson/po4a/actions/workflows/linux.yml)
+[![First Timers Friendly](https://img.shields.io/badge/Beginners-Welcome-brightgreen?style=flat-square)](https://www.firsttimersonly.com)
 
 The goal of po4a (PO for anything) project is to ease translations (and
 more interestingly, the maintenance of translations) using gettext
@@ -35,7 +35,7 @@ module for the following formats:
 
 To install this module type the following:
 
-```
+```bash
    perl Build.PL
    ./Build
    ./Build install
@@ -54,7 +54,7 @@ file to see how you could help.
 If you want to use a version without installing it (e.g. directly from
 the git tree), use the PERLLIB environment variable as such:
 
-```
+```bash
    PERLLIB=~/git-checkouts/po4a/lib ~/git-checkouts/po4a/po4a-gettextize [usual args]
 ```
 
@@ -130,7 +130,7 @@ the git tree), use the PERLLIB environment variable as such:
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
 
-Copyright © 2002-2O18 by SPI, inc.
+Copyright © 2002-2021 by SPI, inc.
 
 Authors:
 - Denis Barbier <barbier@linuxfr.org>
