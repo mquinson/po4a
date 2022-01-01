@@ -1616,8 +1616,10 @@ sub set_charset() {
     $newchar = shift;
     $oldchar = $self->get_charset();
 
-    $self->{header} =~ s/$oldchar/$newchar/;
-    $self->{encoder} = find_encoding($newchar);
+    if ( $newchar ne $oldchar ) {
+        $self->{header} =~ s/$oldchar/$newchar/;
+        $self->{encoder} = find_encoding($newchar);
+    }
 }
 
 #----[ helper functions ]---------------------------------------------------

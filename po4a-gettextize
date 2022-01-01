@@ -372,6 +372,7 @@ GetOptions(
 $help     && pod2usage( -verbose => 1, -exitval => 0 );
 $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage() if ( scalar @ARGV > 1 ) || ( scalar @masterfile < 1 );
+$locchar //= "UTF-8";
 
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
