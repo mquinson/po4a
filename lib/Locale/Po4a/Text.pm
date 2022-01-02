@@ -122,7 +122,7 @@ my $breaks;
 =item B<debianchangelog>
 
 Handle the header and footer of
-released versions, which only contain non translatable informations.
+released versions, which only contain non translatable information.
 
 =cut
 
@@ -896,3 +896,7 @@ This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
 
 =cut
+
+__END__
+
+#  LocalWords: Charset charset po UTF gettext msgid nostrip GPL

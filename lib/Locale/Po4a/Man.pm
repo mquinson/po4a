@@ -119,7 +119,7 @@ Increase verbosity.
 
 =item B<groff_code>
 
-This option permits to change the behavior of the module when it encounter
+This option controls the behavior of the module when it encounter
 a .de, .ie or .if section. It can take the following values:
 
 =over
@@ -148,8 +148,8 @@ should be preferred.
 
 This option specifies that the file was generated, and that po4a should not
 try to detect if the man pages was generated from another format.
-This permits to use po4a on generated man pages.
-This option does not take any argument.
+This option is mandatory to use po4a on generated man pages.
+Note that translating generated pages instead of sources ones is often more fragile, and thus a bad idea.
 
 =item B<mdoc>
 
@@ -216,7 +216,7 @@ I<begin> command; any ending command stop the no_wrap mode.
 If you have a I<begin> (respectively I<end>) macro that has no I<end>
 (respectively I<begin>), you can specify an existing I<end> (like fi) or
 I<begin> (like nf) as a counterpart.
-These macros (and their arguments) wont be translated.
+These macros (and their arguments) won't be translated.
 
 =item B<inline>
 
@@ -1043,8 +1043,7 @@ sub pre_trans {
         $str = "$1E<$2>";
         if ($mdoc_mode) {
 
-            # When a punctuation sign must be joined to an argument, mdoc
-            # permits to use such a construct:
+            # When a punctuation sign must be joined to an argument, mdoc allows such a construct:
             # .Ar file1 , file2 , file3 ) .
             # Here, we move the punctuation out of the E<...> tag.
             # This is reverted in post_trans.
@@ -2801,3 +2800,7 @@ sub define_mdoc_macros {
     $macro{'br'} = \&noarg;
 
 }    # end of define_mdoc_macros
+
+__END__
+
+#  LocalWords: Charset charset po UTF gettext msgid nostrip

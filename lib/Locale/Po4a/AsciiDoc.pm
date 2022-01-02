@@ -142,12 +142,12 @@ The following commands are recognized:
 
 =item B<//po4a: macro >I<name>B<[>I<attribute list>B<]>
 
-This permits to describe in detail the parameters of a B<macro>;
+This describes in detail the parameters of a B<macro>;
 I<name> must be a valid macro name, and it ends with an underscore
 if the target must be translated.
 
 The I<attribute list> argument is a comma separated list which
-contains informations about translatable arguments.  This list contains
+contains information about translatable arguments.  This list contains
 either numbers, to define positional parameters, or named attributes.
 
 If a plus sign (B<+>) is prepended to I<name>, then the macro and its
@@ -156,11 +156,11 @@ attribute list in this case, but brackets must be present.
 
 =item B<//po4a: style >B<[>I<attribute list>B<]>
 
-This permits to describe in detail which attributes of a style must
+This describes in detail which attributes of a style must
 be translated.
 
 The I<attribute list> argument is a comma separated list which
-contains informations about translatable arguments.  This list contains
+contains information about translatable arguments.  This list contains
 either numbers, to define positional parameters, or named attributes.
 The first attribute is the style name, it will not be translated.
 
@@ -349,6 +349,7 @@ BEGIN {
     my $UnicodeGCString_available = 0;
     $UnicodeGCString_available = 1 if ( eval { require Unicode::GCString } );
     eval {
+
         sub chars($$$) {
             my $text    = shift;
             my $encoder = shift;
@@ -439,7 +440,7 @@ sub parse {
             and ( $self->{type} eq "Table" )
             and ( $line !~ m/^\|===/ )
             and ( $self->{options}{"tablecells"} )
-			and (not defined $self->{disabletablecells}))
+            and ( not defined $self->{disabletablecells} ) )
         {
             # inside a table, and we should split per cell
             my $new_line = "";
@@ -463,8 +464,10 @@ sub parse {
             my @parts = map { ( $_, shift @texts ) } @seps;
             foreach my $part (@parts) {
                 if ( not defined $part ) {
-					# allows concatenation and will be stripped anyway
-					$part = " "; }
+
+                    # allows concatenation and will be stripped anyway
+                    $part = " ";
+                }
                 if ( $part =~ /\|$/ ) {
 
                     # this is a cell separator. End the previous cell
@@ -695,9 +698,9 @@ sub parse {
                 }
                 print STDERR "Starting verse\n" if $debug{parse};
             }
-            if ((( $line =~ m/^\[format=(['"]?)(csv|tsv|dsv)\1,/ ) ||
-				( $line =~ m/^\[separator=[^\|]/ )) &&
-				$self->{options}{'tablecells'}) {
+            if ( ( ( $line =~ m/^\[format=(['"]?)(csv|tsv|dsv)\1,/ ) || ( $line =~ m/^\[separator=[^\|]/ ) )
+                && $self->{options}{'tablecells'} )
+            {
                 warn wrap_mod(
                     "$ref",
                     dgettext(
@@ -705,7 +708,7 @@ sub parse {
                         "Po4a's tablecells mode only supports PSV formatted tables with '|' separators. Disabling tablecells and falling back to block mode for this table."
                     )
                 );
-				$self->{disabletablecells} = 1;
+                $self->{disabletablecells} = 1;
             }
             undef $self->{bullet};
             undef $self->{indent};
@@ -966,8 +969,9 @@ sub parse {
             } else {
 
                 # End the Table
-                if ( $self->{options}{'tablecells'} and
-					 not defined  $self->{disabletablecells} ) {
+                if ( $self->{options}{'tablecells'}
+                    and not defined $self->{disabletablecells} )
+                {
                     do_stripped_unwrapped_paragraph( $self, $paragraph, $wrapped_mode );
                     $self->pushline("\n");
                 } else {
@@ -975,7 +979,7 @@ sub parse {
                 }
                 undef $self->{verbatim};
                 undef $self->{type};
-				undef $self->{disabletablecells};
+                undef $self->{disabletablecells};
                 $paragraph = "";
             }
             $self->pushline( $line . "\n" );
@@ -1318,3 +1322,7 @@ Tested successfully on simple AsciiDoc files.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
+
+__END__
+
+#  LocalWords: Charset charset AsciiDoc tablecells po UTF gettext msgid nostrip
