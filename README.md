@@ -130,7 +130,7 @@ the git tree), use the PERLLIB environment variable as such:
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see COPYING file).
 
-Copyright © 2002-2021 by SPI, inc.
+Copyright © 2002-2022 by SPI, inc.
 
 Authors:
 - Denis Barbier <barbier@linuxfr.org>
