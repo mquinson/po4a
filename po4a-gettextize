@@ -91,6 +91,11 @@ Show a short help message.
 
 List the documentation formats understood by po4a.
 
+= item B<-k> B<--keep-temps>
+
+Keep the temporary master and localized POT files built before merging. 
+This can be useful to understand why these files get desynchronized, leading to gettextization problems
+
 =item B<-V>, B<--version>
 
 Display the version of the script and exit.
@@ -341,12 +346,13 @@ my %opts = (
 );
 
 my ($pofile) = ('-');
-my ( @masterfile, @locfile, $help_fmt, $help, $type, @options );
+my ( @masterfile, @locfile, $help_fmt, $help, $keep_temps, $type, @options );
 my ( $mastchar, $locchar );
 Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
 GetOptions(
-    'help|h'      => \$help,
-    'help-format' => \$help_fmt,
+    'help|h'       => \$help,
+    'help-format'  => \$help_fmt,
+    'keep-temps|k' => \$keep_temps,
 
     'master|m=s'    => \@masterfile,
     'localized|l=s' => \@locfile,
@@ -426,9 +432,20 @@ unless ( scalar @locfile >= 1 ) {
     $transtt->{TT}{po_in}->set_charset($locchar);
     $transtt->parse;
 
+    if ($keep_temps) {
+        $mastertt->getpoout()->write("po4atemp.master.po");
+        $transtt->getpoout()->write("po4atemp.localized.po");
+        print wrap_msg(
+            dgettext(
+                "po4a",
+                "Temporary master and localized POT files dumped to po4atemp.master.po and po4atemp.localized.po"
+            )
+        );
+    }
     my $mergedpo = Locale::Po4a::Po->gettextize( $mastertt->getpoout(), $transtt->getpoout() );
 
     $mergedpo->write($pofile);
+
 }
 
 __END__
