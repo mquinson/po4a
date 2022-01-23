@@ -55,6 +55,11 @@ push @tests,
     'format'  => 'asciidoc',
     'options' => "-o yfm_skip_array -o yfm_keys='title , subtitle,paragraph'",
     'input'   => "fmt/asciidoc/YamlFrontMatter_Option.adoc",
+  },
+  {
+    'format'  => 'asciidoc',
+    'input'   => 'fmt/asciidoc/MacroIncludesHugo.adoc',
+    'doc'     => 'asciidoctor includes with hugo shortcode',
   };
 
 run_all_tests(@tests);
