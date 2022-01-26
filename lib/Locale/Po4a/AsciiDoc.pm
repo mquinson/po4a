@@ -790,7 +790,7 @@ sub parse {
             }
             @comments = ();
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^([\w\d][\w\d-]*)(::)(\S*)\[(.*)\]$/ ) )
+            and ( $line =~ m/^([\w\d][\w\d-]*)(::)(\S*|\S*\{.*\}\S*)\[(.*)\]$/ ) )
         {
             my $macroname   = $1;
             my $macrotype   = $2;
