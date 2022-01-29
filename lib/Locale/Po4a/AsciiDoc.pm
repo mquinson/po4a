@@ -855,7 +855,7 @@ sub parse {
             $self->{indent} = $indent;
             $self->{bullet} = $bullet;
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^((?:<?[0-9]+)?> +)(.*)$/ ) )
+            and ( $line =~ m/^((?:<?(?:[0-9]|\.)+)?> +)(.*)$/ ) )
         {
             my $bullet = $1;
             my $text   = $2;
