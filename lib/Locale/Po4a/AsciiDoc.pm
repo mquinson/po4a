@@ -373,6 +373,22 @@ BEGIN {
     };
 }
 
+sub translate {
+    my ( $self, $str, $ref, $type ) = @_;
+    my (%options) = @_;
+    if ( ($options{'wrap'}==1) && ($str =~ /\+\n/) ) {
+        $options{'wrap'} = 0;
+        $str =~ s/([^+])\n/$1 /g;
+	$str =~ s/\+\n/\n/g;
+        $str = $self->SUPER::translate( $str, $ref, $type, %options);
+	$str =~ s/\n/+\n/g;
+	$options{'wrap'} = 1;
+    } else {
+        $str = $self->SUPER::translate( $str, $ref, $type, %options );
+    }
+    return $str;
+}
+
 sub parse {
     my $self = shift;
     my ( $line, $ref ) = $self->shiftline();
@@ -1000,21 +1016,21 @@ sub parse {
                 $wrapped_mode = 0;
             }
 
-            if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 )
-                && ( !$self->{options}{'nolinting'} ) )
+            if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) )
             {
-
-                # Second line of an item block is not indented. It is unindented
-                # (and allowed) additional text or a new list item.
-                warn wrap_mod(
-                    "$ref",
-                    dgettext(
-                        "po4a",
-                        "It seems that you are adding unindented content to an item. "
-                          . "The standard allows this, but you may still want to change your document "
-                          . "to use indented text to provide better visual clues to writers."
-                    )
-                );
+		if ( !$self->{options}{'nolinting'} ) {
+		    # Second line of an item block is not indented. It is unindented
+		    # (and allowed) additional text or a new list item.
+		    warn wrap_mod(
+			"$ref",
+			dgettext(
+			    "po4a",
+			    "It seems that you are adding unindented content to an item. "
+			    . "The standard allows this, but you may still want to change your document "
+			    . "to use indented text to provide better visual clues to writers."
+			)
+			);
+		}
             } else {
                 undef $self->{bullet};
                 undef $self->{indent};
@@ -1060,7 +1076,7 @@ sub do_paragraph {
     #    }
     #    $type .= " verbatim: '".($self->{verbatim}||"NONE")."' bullet: '$b' indent: '".($self->{indent}||"NONE")."' type: '".($self->{type}||"NONE")."'";
 
-    if ( not $wrap and not defined $self->{verbatim} ) {
+    if ( not defined $self->{verbatim} ) {
 
         # Detect bullets
         # |        * blah blah
@@ -1125,8 +1141,10 @@ sub do_paragraph {
         "comment" => join( "\n", @comments ),
         "wrap"    => $wrap
     );
+    my $bullet = $self->{bullet} || "";
+    # print STDERR "translated: '$t', $bullet\n";
 
-    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap;
+    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && (! ($t =~ /\+\n/) ) ;
     if ($unwrap_result) {
         $t =~ s/(\n| )+/ /g;
     }
