@@ -43,6 +43,11 @@ push @tests,
     'input'   => "fmt/asciidoc/CharsetUtf.adoc",
   },
   {
+    'format'  => 'asciidoc',
+    'options' => '-o nolinting=1',
+    'input'   => "fmt/asciidoc/LineBreak.adoc",
+  },
+  {
     'format' => 'asciidoc',
     'input'  => "fmt/asciidoc/CharsetLatin1.adoc",
   },
