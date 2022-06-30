@@ -376,12 +376,12 @@ BEGIN {
 sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;
-    if ( ($options{'wrap'}==1) && ($str =~ /\+\n/) ) {
+    if ( ($options{'wrap'}==1) && ($str =~ / \+\n/) ) {
         $options{'wrap'} = 0;
         $str =~ s/([^+])\n/$1 /g;
-	$str =~ s/\+\n/\n/g;
+	$str =~ s/ \+\n/\n/g;
         $str = $self->SUPER::translate( $str, $ref, $type, %options);
-	$str =~ s/\n/+\n/g;
+	$str =~ s/\n/ +\n/g;
 	$options{'wrap'} = 1;
     } else {
         $str = $self->SUPER::translate( $str, $ref, $type, %options );
