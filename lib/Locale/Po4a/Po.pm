@@ -95,7 +95,7 @@ Set the package version for the POT header. The default is "VERSION".
 =item B<dedup>
 
 Boolean indicating whether we should deduplicate msgids.
-If true, when the same string is added again, a '_' is appended to deduplicate it.
+If true, when the same string is added again, a space is appended to deduplicate it.
 This is probably only useful in the gettextization context, where dupplicate msgids break the string pairing algorithm.
 See https://github.com/mquinson/po4a/issues/334 for more info.
 
@@ -1394,7 +1394,7 @@ sub push_raw {
 
     # If asked to dedup the msgid, append a '_' as long as the string is still a dupplicate
     while ( defined( $self->{po}{$msgid} ) && $self->{options}{'dedup'} ) {
-        $msgid .= '_';
+        $msgid .= ' ';
     }
 
     if ( defined( $self->{po}{$msgid} ) ) {

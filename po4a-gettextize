@@ -256,29 +256,26 @@ inspecting F<gettextization.failed.po>, and fix the problem where it really is.
 
 =item
 
-In some unfortunate settings, you will get the feeling that po4a ate some parts
-of the text, either the original or the translation. F<gettextization.failed.po>
-indicates that both files matched as expected up to the paragraph N. But then,
-an (unsuccessful) attempt is made to match the N+1 paragraph in the original
-file not with the N+1 paragraph in the translation as it should, but with the
-N+2 paragraph. Just as if the N+1 paragraph that you see in the document simply
-disappeared from the file during the process.
+In some case, po4a adds a space at the end of either the original or the
+translated strings. This is because every string must be deduplicated during the
+gettextize process. Imagine that a string appearing several times unmodified in
+the original, but is translated in differing way, or that different paragraphs
+are translated in the exact same way.
 
-This unfortunate situation happens when the same paragraph is repeated over
-the document. In that case, no new entry is created in the PO file, but a
-new reference is added to the existing one instead.
+Without deduplication, such case would break the gettexization algorithm, as it
+is a simple one to one pairing between the msgids of both the master and the
+localized files. Since one of the PO files would miss an entry (that would be
+reported as duplicate, with two references), the pairing would fail.
 
-So, the previous situation occurs when two similar but different paragraphs are
-translated in the exact same way. This will apparently remove a paragraph of the
-translation. To fix the problem, it is sufficient to slightly alter one of the
-translations in the document. You can also prefer to kill the second paragraph
-in the original document.
+Since po4a uses the entry type ("title" or "plain paragraph", etc) to detect
+whether the parsing streams got desynchronized, similar issues could occur if
+two identical entries (same content but differing type) of the master file are
+translated in the exact same way in the localized file. po4a would detect a fake
+desyncronization in such case.
 
-To the opposite, if the same paragraph appearing twice in the original document
-is not translated in the exact same way at both locations, you will get the
-feeling that one paragraph of the original document just vanished. Just copy the
-best translation over the other one in the translated document to fix the
-problem.
+In most cases, the extra space added by po4a to deduplicate the strings has no
+impact on the formatting. Strings are fuzzied anyway, and msgmerge will probably
+match the strings accordingly afterward.
 
 =item
 
