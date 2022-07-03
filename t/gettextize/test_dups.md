@@ -2,4 +2,4 @@
 
 ## hello
 
-sample paragraph.
+hello
