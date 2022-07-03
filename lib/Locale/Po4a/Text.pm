@@ -301,12 +301,12 @@ sub parse_fallback {
         if (
             $markdown
             and (
-                $line =~ /\S  $/     # explicit newline
+                $line =~ /\S  $/       # explicit newline
                 or $line =~ /"""$/
             )
           )
-        {                            # """ textblock inside macro begin
-                                     # Markdown markup needing separation _after_ this line
+        {                              # """ textblock inside macro begin
+                                       # Markdown markup needing separation _after_ this line
             $end_of_paragraph = 1;
         } else {
             undef $self->{bullet};
@@ -582,9 +582,26 @@ sub parse_markdown_yaml_front_matter {
         $yfm .= $nextline;
         ( $nextline, $nextref ) = $self->shiftline();
     }
-    die "Could not get the YAML Front Matter from the file." if ( length($yfm) == 0 );
+    if ( length($yfm) == 0 ) {
+        die wrap_mod(
+            "po4a::text",
+            dgettext(
+                "po4a",
+                "Could not get the YAML Front Matter from the file (%s). If you did not intend to add a YAML front matter "
+                  . "but an horizontal ruler, please use '----' instead to help po4a."
+            ),
+            "empty front matter"
+        );
+    }
     my $yamlarray = YAML::Tiny->read_string($yfm)
-      || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
+      || wrap_mod(
+        "po4a::text",
+        dgettext( "po4a",
+            "Could not get the YAML Front Matter from the file (%s). If you did not intend to add a YAML front matter "
+              . "but an horizontal ruler, please use '----' instead to help po4a." )
+          . "\n$yfm\n",
+        $!
+      );
 
     $self->handle_yaml( $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array );
     return;
@@ -698,8 +715,8 @@ sub parse_markdown {
         $paragraph        = "$line\n";
         $wrapped_mode     = 0;
         $end_of_paragraph = 1;
-    } elsif ( $line =~ /^"""/ ) {                          # """ textblock inside macro end
-                                                           # Markdown markup needing separation _before_ this line
+    } elsif ( $line =~ /^"""/ ) {    # """ textblock inside macro end
+                                     # Markdown markup needing separation _before_ this line
         do_paragraph( $self, $paragraph, $wrapped_mode );
         $paragraph    = "$line\n";
         $wrapped_mode = $defaultwrap;
@@ -883,14 +900,14 @@ Tested successfully on simple text files and NEWS.Debian files.
 
 =head1 AUTHORS
 
- Nicolas François <nicolas.francois@centraliens.net>
+ Nicolas Francois <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
+ Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.
 
- Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.
- Copyright © 2020 Martin Quinson <mquinson#debian.org>.
+ Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.
+ Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
