@@ -1528,37 +1528,6 @@ sub count_entries_doc($) {
     return $self->{count_doc};
 }
 
-=item equals_msgid(po)
-
-Returns ($uptodate, $diagnostic) with $uptodate indicating whether all msgid of the current po file are 
-also present in the one passed as parameter (all other fields are ignored in the file comparison).
-Informally, if $uptodate returns false, then the po files would be changed when going through B<po4a-updatepo>.
-
-If $uptodate is false, then $diagnostic contains a diagnostic of why this is so.
-
-=cut
-
-sub equals_msgid($$) {
-    my ( $self, $other ) = ( shift, shift );
-
-    unless ( $self->count_entries() == $other->count_entries() ) {
-        return (
-            0,
-            wrap_msg(
-                dgettext( "po4a", "The amount of entries differ between files: %d is not %d" ),
-                $self->count_entries(),
-                $other->count_entries()
-            )
-        );
-    }
-    foreach my $msgid ( keys %{ $self->{po} } ) {
-        unless ( defined( $self->{po}{$msgid} ) && defined( $other->{po}{$msgid} ) ) {
-            return ( 0, wrap_msg( dgettext( "po4a", "msgid declared in one file only: %s\n" ), $msgid ) );
-        }
-    }
-    return ( 1, "" );
-}
-
 =item msgid($)
 
 Returns the msgid of the given number.

@@ -550,11 +550,6 @@ of use:
     ($percent,$hit,$queries) = $document->stats();
     print "We found translations for $percent\%  ($hit from $queries) of strings.\n";
 
-=item is_po_uptodate()
-
-Returns ($uptodate, $diagnostic) where $uptodate is whether the input po and the output po match (if not, it means that the input po should be updated)
-and $diagnostic is a string explaining why the po file is not uptodate, when this happens.
-
 =back
 
 =cut
@@ -577,10 +572,6 @@ sub writepo {
 
 sub stats {
     return $_[0]->{TT}{po_in}->stats_get();
-}
-
-sub is_po_uptodate($) {
-    return $_[0]->{TT}{po_in}->equals_msgid( $_[0]->{TT}{po_out} );
 }
 
 =head2 Manipulating addenda
