@@ -20,6 +20,9 @@ jobs:
       with:
         #perl-version: '5.32'
         distribution: strawberry
+        install-modules-with: cpanm
+        install-module: Term::ReadKey Unicode::GCString http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz cpanm YAML::Tiny
+        # Locale::gettext and Text::WrapI18N seem broken on windows.
     - run: perl -V
 #    - name: Install Debian dependencies
 #      run: |
@@ -28,11 +31,6 @@ jobs:
 #        sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc 
 #        sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
 #    - name: Install CPAN dependencies
-# Locale::gettext and Text::WrapI18N seem broken on windows.
-    - run: cpanm Term::ReadKey
-    - run: cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
-    - run: cpanm Unicode::GCString
-    - run: cpanm YAML::Tiny
 
     - run: cpanm -v --installdeps --notest .
 
