@@ -2191,14 +2191,36 @@ $macro{'bp'} = \&untranslated;
 # .ad c     Start line adjustment in mode c (c=l,r,b,n).
 $macro{'ad'} = \&untranslated;
 
-# .de macro Define or redefine macro until .. is encountered.
-$macro{'de'} = $macro{'de1'} = sub {
+my %ds_variables;
+
+# .ds stringvar anything
+#                 Set stringvar to anything.
+$macro{'ds'} = sub {
+    my ( $self, $m ) = ( shift, shift );
+    my $name   = shift;
+    my $string = "@_";
+    $ds_variables{$name} = $string;
+
+    # indicate to which variable this corresponds. The translator can
+    # find references to this string in the translation "\*(name" or
+    # "\*[name]"
+    $self->{type} = "ds $name";
+    $self->pushline( $m . " " . $self->r($name) . " " . $self->translate($string) . "\n" );
+};
+
+# .de macro [end]   Define or redefine macro until end is encountered (end=.. by default).
+# .de1 macro [end]  Define or redefine macro until end is encountered (end=.. by default), turns off compatibility mode while executing the macro.
+# .dei macro [end]  Define or redefine macro until end is encountered (end=.. by default) substituting parameters with '.ds' content
+# .dei1 macro [end] Define or redefine macro until end is encountered (end=.. by default) substituting parameters and turning compatibility off
+
+$macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
     my $self = shift;
     if ( $groff_code ne "fail" ) {
         my $paragraph = "@_";
         my $end       = ".";
-        if ( $paragraph =~ /^[.'][\t ]*de[\t ]+([^\t ]+)[\t ]+([^\t ]+)[\t ]$/ ) {
+        if ( $paragraph =~ /^[.'][\t ]*d[ei1]*[\t ]+([^\t ]+)[\t ]+([^\t ]+)[\t ]$/ ) {
             $end = $2;
+            $end = $ds_variables{$end} if ( $_[0] eq "dei" || $_[0] eq "dei1" );
         }
         my ( $line, $ref ) = $self->SUPER::shiftline();
         chomp $line;
@@ -2231,20 +2253,6 @@ $macro{'de'} = $macro{'de1'} = sub {
             "groff_code=translate"
         );
     }
-};
-
-# .ds stringvar anything
-#                 Set stringvar to anything.
-$macro{'ds'} = sub {
-    my ( $self, $m ) = ( shift, shift );
-    my $name   = shift;
-    my $string = "@_";
-
-    # indicate to which variable this corresponds. The translator can
-    # find references to this string in the translation "\*(name" or
-    # "\*[name]"
-    $self->{type} = "ds $name";
-    $self->pushline( $m . " " . $self->r($name) . " " . $self->translate($string) . "\n" );
 };
 
 #       .fam      Return to previous font family.
