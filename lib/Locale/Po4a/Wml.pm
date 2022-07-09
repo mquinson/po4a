@@ -86,7 +86,7 @@ sub read {
     my $tmp_filename;
     ( undef, $tmp_filename ) = File::Temp::tempfile(
         "po4aXXXX",
-        DIR    => $ENV{TMPDIR} || "/tmp",
+        DIR    => File::Spec->tmpdir(),
         SUFFIX => ".xml",
         OPEN   => 0,
         UNLINK => 0
@@ -204,7 +204,7 @@ sub parse {
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright Â© 2005 SPI, Inc.
+ Copyright © 2005 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).

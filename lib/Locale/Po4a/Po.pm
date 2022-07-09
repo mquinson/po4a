@@ -654,7 +654,7 @@ sub write_if_needed {
         my $basename = basename($filename);
         ( undef, $tmp_filename ) = File::Temp::tempfile(
             $basename . "XXXX",
-            DIR    => $ENV{TMPDIR} || "/tmp",
+            DIR    => File::Spec->tmpdir(),
             OPEN   => 0,
             UNLINK => 0
         );

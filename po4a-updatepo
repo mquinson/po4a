@@ -276,7 +276,7 @@ map { die wrap_msg( gettext("po4a-updatepo can't take the input PO from stdin.")
 my ($pot_filename);
 ( undef, $pot_filename ) = File::Temp::tempfile(
     "po4a-updatepoXXXX",
-    DIR    => $ENV{TMPDIR} || "/tmp",
+    DIR    => File::Spec->tmpdir(),
     SUFFIX => ".pot",
     OPEN   => 0,
     UNLINK => 0

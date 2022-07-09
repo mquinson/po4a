@@ -1535,7 +1535,7 @@ if ($update_pot_file) {
     if ( $po4a_opts{"split"} ) {
         ( undef, $pot_filename ) = File::Temp::tempfile(
             "po4a-temp-pot-XXXX",
-            DIR    => $ENV{TMPDIR} || "/tmp",
+            DIR    => File::Spec->tmpdir(),
             SUFFIX => ".pot",
             OPEN   => 0,
             UNLINK => 0
@@ -1583,7 +1583,7 @@ if ( $po4a_opts{"split"} ) {
             unless ( $po4a_opts{"force"} ) {
                 ( undef, $tmp_file ) = File::Temp::tempfile(
                     "po4aXXXX",
-                    DIR    => $ENV{TMPDIR} || "/tmp",
+                    DIR    => File::Spec->tmpdir(),
                     SUFFIX => ".pot",
                     OPEN   => 0,
                     UNLINK => 0
@@ -1616,7 +1616,7 @@ if ( $po4a_opts{"split"} ) {
         my $tmp_bigpo;
         ( undef, $tmp_bigpo ) = File::Temp::tempfile(
             "po4aXXXX",
-            DIR    => $ENV{TMPDIR} || "/tmp",
+            DIR    => File::Spec->tmpdir(),
             SUFFIX => "-$lang.po",
             OPEN   => 0,
             UNLINK => 0
@@ -1705,7 +1705,7 @@ if ( not $po4a_opts{"no-update"} ) {
                     # updated (unless --force was specified).
                     ( undef, $tmp_file ) = File::Temp::tempfile(
                         "po4aXXXX",
-                        DIR    => $ENV{TMPDIR} || "/tmp",
+                        DIR    => File::Spec->tmpdir(),
                         SUFFIX => ".po",
                         OPEN   => 0,
                         UNLINK => 0
