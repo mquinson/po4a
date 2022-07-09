@@ -21,7 +21,7 @@ jobs:
         #perl-version: '5.32'
         distribution: strawberry
         install-modules-with: cpanm
-        install-module: Term::ReadKey Unicode::GCString http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz YAML::Tiny
+        install-modules: Term::ReadKey Unicode::GCString http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz YAML::Tiny
         # Locale::gettext and Text::WrapI18N seem broken on windows.
     - run: perl -V
 #    - name: Install Debian dependencies
@@ -31,7 +31,7 @@ jobs:
 #        sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc 
 #        sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
 
-#    - run: cpanm -v --installdeps --notest .
+    - run: cpanm -v --installdeps --notest .
 
     - name: Create the Build script
       run: perl Build.PL
