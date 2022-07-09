@@ -1,0 +1,44 @@
+# This workflow will build po4a on linux using Module::Build
+name: Build on Windows CI
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: shogo82148/actions-setup-perl@v1
+      with:
+        #perl-version: '5.32'
+        distribution: strawberry
+    - run: perl -V
+#    - name: Install Debian dependencies
+#      run: |
+#        sudo apt update 
+#        sudo apt install -y liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl
+#        sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc 
+#        sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
+#    - name: Install CPAN dependencies
+    - run: cpanm Locale::gettext
+    - run: cpanm Term::ReadKey
+    - run: cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+    - run: cpanm Text::WrapI18N
+    - run: cpanm Unicode::GCString
+    - run: cpanm -v --installdeps --notest .
+
+    - name: Create the Build script
+      run: perl Build.PL
+    - name: Actual build
+      run: COLUMNS=120 ./Build verbose=1
+
+    - name: Test
+      run: ./Build test verbose=1
