@@ -2371,6 +2371,9 @@ $macro{'ig'} = sub {
     }
 };
 
+# .it n macro Set an input line trap.
+$macro{'it'} = \&untranslated;
+
 # .lf N file  Set input line number to N and filename to file.
 $macro{'lf'} = \&untranslated;
 
