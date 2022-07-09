@@ -2246,7 +2246,7 @@ $macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
                 "po4a",
                 "This page defines a new macro with '%s'. Since po4a is not a real groff parser, this is not supported. "
                   . "The option '%s' gets these macros copied verbatim in the translated file, but it's not very robust. "
-                  . "'%s' shows these macros to the translators, but they are rather ugly."
+                  . "'%s' shows these macros to the translators, but groff macros are not user-friendly for translators."
             ),
             $_[0],
             "groff_code=verbatim",
@@ -2342,7 +2342,7 @@ $macro{'ie'} = $macro{'if'} = sub {
                 "po4a",
                 "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported by default. "
                   . "The option '%s' gets these macros copied verbatim in the translated file, but it's not very robust. "
-                  . "'%s' shows these macros to the translators, but they are rather ugly."
+                  . "'%s' shows these macros to the translators, but groff macros are not user-friendly for translators."
             ),
             $_[0],
             "groff_code=verbatim",
