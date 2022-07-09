@@ -1671,7 +1671,7 @@ sub escape_text {
 #   on the 80th char, but without changing the meaning of the string)
 sub quote_text {
     my $string  = shift;
-    my $do_wrap = shift;    # either 'no' or 'newlines', or column at which we should wrap
+    my $do_wrap = shift // 'no';    # either 'no' or 'newlines', or column at which we should wrap
 
     return '""' unless length($string);
 
