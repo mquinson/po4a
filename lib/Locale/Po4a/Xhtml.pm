@@ -66,8 +66,7 @@ This module is fully functional, as it relies in the L<Locale::Po4a::Xml>
 module. This only defines the translatable tags and attributes.
 
 "It works for me", which means I use it successfully on my personal Web site.
-However, YMMV: please let me know if something doesn't work for you. In
-particular, tables are getting no testing whatsoever, as we don't use them.
+However, YMMV: please let me know if something doesn't work for you.
 
 =head1 SEE ALSO
 
