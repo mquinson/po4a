@@ -1,0 +1,11 @@
+---
+
+This file begins with three dash, but not because there is a Yaml Front Matter.
+
+Intead, this file is a footer that should start with an horizontal ruler.
+
+third paragraph.
+
+---
+
+Why shouldn't pages be allowed to include horizontal rulers on top and then somewhere else?

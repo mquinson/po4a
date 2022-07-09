@@ -52,6 +52,12 @@ push @tests,
     'format'  => 'text',
     'options' => "-o markdown -o yfm_skip_array -o yfm_keys='title , subtitle,paragraph'",
     'input'   => "fmt/txt-markdown/YamlFrontMatter_Options.md",
+  },
+  {
+    'doc'     => "Allow markdown files to contain two horizontal rulers that do not denote a YFM.",
+    'format'  => 'text',
+    'options' => "-o markdown -o yfm_lenient ",
+    'input'   => "fmt/txt-markdown/YamlFrontMatter_fake.md",
   };
 
 run_all_tests(@tests);

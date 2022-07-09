@@ -58,6 +58,7 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 use YAML::Tiny;
+use Syntax::Keyword::Try;
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -156,6 +157,17 @@ is provided.
 
 my %yfm_keys = ();
 
+=item B<yfm_lenient> (markdown only)
+
+Allow the YAML Front Matter parser to fail on malformated headers. This is
+particularly helpful when your file starts with a horizontal ruler instead
+of a YAML Front Matter, but you insist on using three dashes only for your
+ruler.
+
+=cut
+
+my $yfm_lenient = 0;
+
 =item B<yfm_skip_array> (markdown-only)
 
 Do not translate array values in the YAML Front Matter section.
@@ -200,6 +212,7 @@ sub initialize {
     $self->{options}{'fortunes'}        = 1;
     $self->{options}{'markdown'}        = 1;
     $self->{options}{'yfm_keys'}        = '';
+    $self->{options}{'yfm_lenient'}     = 0;
     $self->{options}{'yfm_skip_array'}  = 0;
     $self->{options}{'nobullets'}       = 0;
     $self->{options}{'keyvalue'}        = 1;
@@ -232,8 +245,9 @@ sub initialize {
 
         #        map { print STDERR "key $_\n"; } (keys %yfm_keys);
         $yfm_skip_array = $self->{options}{'yfm_skip_array'};
+        $yfm_lenient    = $self->{options}{'yfm_lenient'};
     } else {
-        foreach my $opt (qw(yfm_keys yfm_skip_array)) {
+        foreach my $opt (qw(yfm_keys yfm_lenient yfm_skip_array)) {
             die wrap_mod( "po4a::text", dgettext( "po4a", "Option %s is only valid when parsing markdown files." ),
                 $opt )
               if exists $options{$opt};
@@ -576,35 +590,58 @@ sub parse_markdown_bibliographic_information {
 sub parse_markdown_yaml_front_matter {
     my ( $self, $line, $blockref ) = @_;
     my $yfm;
+    my @saved_ctn;
     my ( $nextline, $nextref ) = $self->shiftline();
+    push @saved_ctn, ( $nextline, $nextref );
     while ( defined($nextline) ) {
         last if ( $nextline =~ /^(---|\.\.\.)$/ );
         $yfm .= $nextline;
         ( $nextline, $nextref ) = $self->shiftline();
+        push @saved_ctn, ( $nextline, $nextref );
     }
-    if ( length($yfm) == 0 ) {
-        die wrap_mod(
-            "po4a::text",
-            dgettext(
-                "po4a",
-                "Could not get the YAML Front Matter from the file (%s). If you did not intend to add a YAML front matter "
-                  . "but an horizontal ruler, please use '----' instead to help po4a."
-            ),
-            "empty front matter"
-        );
+
+    my $yamlarray;    # the parsed YFM content
+    my $yamlres;      # containing the parse error, if any
+    try {
+        $yamlarray = YAML::Tiny->read_string($yfm);
+    } catch {
+        $yamlres = $@;
     }
-    my $yamlarray = YAML::Tiny->read_string($yfm)
-      || wrap_mod(
-        "po4a::text",
-        dgettext( "po4a",
-            "Could not get the YAML Front Matter from the file (%s). If you did not intend to add a YAML front matter "
-              . "but an horizontal ruler, please use '----' instead to help po4a." )
-          . "\n$yfm\n",
-        $!
-      );
+
+    if ( defined($yamlres) ) {
+        if ($yfm_lenient) {
+            $yamlres =~ s/ at .*$//;    # Remove the error localisation in YAML::Tiny die message, if any (for our test)
+            warn wrap_mod(
+                "po4a::text",
+                dgettext(
+                    "po4a",
+                    "Processing even if the YAML Front Matter could not be parsed. Remove the 'yfm_lenient' option for a stricter behavior.\nIgnored error: %s"
+                ),
+                $yamlres
+            );
+            my $len = ( scalar @saved_ctn ) - 1;
+            while ( $len >= 0 ) {
+                $self->unshiftline( $saved_ctn[ $len - 1 ], $saved_ctn[$len] );
+
+                # print STDERR "Unshift ".$saved_ctn[ $len - 1] ." | ". $saved_ctn[$len] ."\n";
+                $len -= 2;
+            }
+            return 0;    # Not a valid YAML
+        } else {
+            die wrap_mod(
+                "po4a::text",
+                dgettext(
+                    "po4a",
+                    "Could not get the YAML Front Matter from the file. If you did not intend to add a YAML front matter "
+                      . "but an horizontal ruler, please use '----' instead, or pass the 'yfm_lenient' option.\nError: %s\nContent of the YFM: %s"
+                ),
+                $yamlres, $yfm
+            );
+        }
+    }
 
     $self->handle_yaml( $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array );
-    return;
+    return 1;    # Valid YAML
 }
 
 sub parse_markdown {
@@ -619,8 +656,11 @@ sub parse_markdown {
             parse_markdown_bibliographic_information( $self, $line, $ref );
             return ( $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
         } elsif ( $line =~ /^---$/ ) {
-            parse_markdown_yaml_front_matter( $self, $line, $ref );
-            return ( $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
+            if ( parse_markdown_yaml_front_matter( $self, $line, $ref ) ) {    # successfully parsed
+                return ( $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
+            }
+
+            # If it wasn't a YFM paragraph after all, stop expecting a header and keep going
         }
     }
     if (    ( $line =~ m/^(={4,}|-{4,})$/ )
