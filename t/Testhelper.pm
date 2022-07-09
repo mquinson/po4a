@@ -44,7 +44,7 @@
 #   setup          (opt): array of shell commands to run before running the test
 #   teardown       (opt): array of shell commands to run after running the test
 #   closed_path    (opt): a shell pattern to pass to chmod to close the other directories.
-#                         If provided, setup/teardown commands are generated to:
+#                         If provided, setup/teardown commands are generated to (unless on windows):
 #                           - 'chmod 0' the directories marked 'closed_path'
 #                           - 'chmod +r-w+x' the test directory
 #                           - 'chmod +r-w' all files in the test directory
@@ -196,7 +196,7 @@ sub run_one_po4aconf {
 
     fail("Broken test: path $path does not exist") unless -e $path;
 
-    if ($closed_path) {
+    if ( $closed_path && $^O ne 'MSWin32' ) {
         push @setup,    "chmod -r-w-x " . $closed_path;    # Don't even look at the closed path
         push @teardown, "chmod +r+w+x " . $closed_path;    # Restore permissions
         push @setup,    "chmod +r+x    $path";             # Look into the path of this test
