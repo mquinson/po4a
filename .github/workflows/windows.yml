@@ -28,11 +28,12 @@ jobs:
 #        sudo apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc 
 #        sudo apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
 #    - name: Install CPAN dependencies
-    - run: cpanm Locale::gettext
+# Locale::gettext and Text::WrapI18N seem broken on windows.
     - run: cpanm Term::ReadKey
     - run: cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
-    - run: cpanm Text::WrapI18N
     - run: cpanm Unicode::GCString
+    - run: cpanm YAML::Tiny
+
     - run: cpanm -v --installdeps --notest .
 
     - name: Create the Build script
