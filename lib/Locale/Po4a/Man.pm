@@ -1036,7 +1036,7 @@ sub pre_trans {
 
     $str =~ s/>/E<gt>/sg;
     $str =~ s/</E<lt>/sg;
-    $str =~ s/EE<lt>gt>/E<gt>/g;               # could be done in a smarter way?
+    $str =~ s/EE<lt>gt>/E<gt>/g;    # could be done in a smarter way?
 
     while ( $str =~ m/^(.*)PO4A-INLINE:(.*?):PO4A-INLINE(.*)$/s ) {
         my ( $t1, $t2, $t3 ) = ( $1, $2, $3 );
@@ -2192,7 +2192,7 @@ $macro{'bp'} = \&untranslated;
 $macro{'ad'} = \&untranslated;
 
 # .de macro Define or redefine macro until .. is encountered.
-$macro{'de'} = sub {
+$macro{'de'} = $macro{'de1'} = sub {
     my $self = shift;
     if ( $groff_code ne "fail" ) {
         my $paragraph = "@_";
@@ -2222,8 +2222,13 @@ $macro{'de'} = sub {
             "po4a::man",
             dgettext(
                 "po4a",
-                "This page defines a new macro with '.de'. Since po4a is not a real groff parser, this is not supported."
-            )
+                "This page defines a new macro with '%s'. Since po4a is not a real groff parser, this is not supported."
+                  . "The option '%s' gets these macros copied verbatim in the translated file, but it's not very robust. "
+                  . "'%s' shows these macros to the translators, but they are rather ugly."
+            ),
+            $_[0],
+            "groff_code=verbatim",
+            "groff_code=translate"
         );
     }
 };
@@ -2327,12 +2332,19 @@ $macro{'ie'} = $macro{'if'} = sub {
             "po4a::man",
             dgettext(
                 "po4a",
-                "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported."
+                "This page uses conditionals with '%s'. Since po4a is not a real groff parser, this is not supported by default. "
+                  . "The option '%s' gets these macros copied verbatim in the translated file, but it's not very robust. "
+                  . "'%s' shows these macros to the translators, but they are rather ugly."
             ),
-            $_[0]
+            $_[0],
+            "groff_code=verbatim",
+            "groff_code=translate"
         );
     }
 };
+
+# .el anything  Display the parameter (part of a if-then-else with .ie)
+$macro{'el'} = \&translate_joined;
 
 # .in  N    Change indent according to N (default scaling indicator m).
 $macro{'in'} = \&untranslated;
@@ -2416,9 +2428,9 @@ $macro{'ti'} = \&untranslated;
 ###
 $macro{'TS'} = sub {
     my $self = shift;
-    my ( $in_headers,   $tab,     $buffer )   = ( 1, "\t", "" );
-    my ( $in_textblock, $preline, $postline ) = ( 0, "",   "" );
-    my ( $line, $ref ) = $self->shiftline();
+    my ( $in_headers, $tab, $buffer )         = ( 1, "\t", "" );
+    my ( $in_textblock, $preline, $postline ) = ( 0, "", "" );
+    my ( $line, $ref )                        = $self->shiftline();
     my @options;
 
     # Push table start
