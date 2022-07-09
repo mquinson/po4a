@@ -12,6 +12,7 @@ include_newlines: |
  exactly as you see
  will appear these three
  lines of poetry
+list: ["freebsd", "netbsd", "general"]
 people:
   - 
     name: John D'vloper

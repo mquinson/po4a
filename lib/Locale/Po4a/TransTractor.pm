@@ -1304,18 +1304,20 @@ sub handle_yaml {
             if ( !$type ) {
                 my %keys = %{$yfm_keys};
                 if ( ( not %keys ) || $keys{$name} ) {  # either no key is provided, or the key we need is also provided
-                    $self->pushline(
-                        $header . ' '
-                          . format_scalar(
-                            $self->translate( $el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0 )
-                          )
-                          . "\n"
-                    );
+                    my $translation = $self->translate( $el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0 );
+                    if ( $el =~ /^\[.*\]$/  ) { # Do not quote the lists
+                        $self->pushline( $header . " $translation\n" );
+                    } else {
+                        # add extra quotes to the parameter, as a protection to the extra chars that the translator could add
+                        $self->pushline( $header . ' ' . format_scalar($translation) . "\n" );
+                    }
                 } else {
 
                     # Work around a bug in YAML::Tiny that quotes numbers
                     # See https://github.com/Perl-Toolchain-Gang/YAML-Tiny#additional-perl-specific-notes
                     if ( Scalar::Util::looks_like_number($el) ) {
+                        $self->pushline("$header $el\n");
+                    } elsif ( $el =~ /^\[.*\]$/ ) { # Do not quote the lists either
                         $self->pushline("$header $el\n");
                     } else {
                         $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );
