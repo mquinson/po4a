@@ -424,7 +424,7 @@ sub run_one_format {
 
     }
 
-    push @tests, "diff -uN $norm_stderr $real_stderr";
+    push @tests, "diff -uNwB $norm_stderr $real_stderr";
     push @tests, "PODIFF  $potfile  $tmpbase.pot"  unless $error;
     push @tests, "diff -u $output   $tmpbase.norm" unless $error;
 
@@ -444,7 +444,7 @@ sub run_one_format {
             }
             note("(end of command output)\n");
         }
-        push @tests, "diff -uN $trans_stderr $tmpbase.trans.stderr";
+        push @tests, "diff -uNwB $trans_stderr $tmpbase.trans.stderr";
         push @tests, "diff -uN $transfile $tmpbase.trans";
 
         # Update PO
