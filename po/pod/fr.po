@@ -9,21 +9,22 @@
 # Jean-Baptiste <jean-baptiste@holcroft.fr>, 2020.
 # Martin Quinson <martin.quinson@ens-rennes.fr>, 2020.
 # jmichault <jmt.2000@free.fr>, 2020.
+# Jérémie Tarot <silopolis@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-07-09 19:23+0200\n"
-"PO-Revision-Date: 2021-12-24 21:51+0000\n"
-"Last-Translator: brandelune <jean.christophe.helary@traduction-libre.org>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/"
-">\n"
+"PO-Revision-Date: 2022-07-09 20:57+0000\n"
+"Last-Translator: Jérémie Tarot <silopolis@gmail.com>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -937,16 +938,12 @@ msgstr ""
 
 #. type: textblock
 #: po4a:74
-#, fuzzy
-#| msgid ""
-#| "Note that this option has no impact on how the msgid and msgstr are "
-#| "wrapped, ie on how newlines are added to the content of these strings."
 msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "i.e.  on how newlines are added to the content of these strings."
 msgstr ""
 "Veuillez noter que cette option n’a pas d’impact sur la façon dont les msgid "
-"et msgstr sont restreints, par exemple sur la façon dont les nouvelles "
+"et msgstr sont renvoyées, c'est-à-dire sur la façon dont les nouvelles "
 "lignes sont ajoutées au contenu de ces chaînes."
 
 #. type: =item
@@ -1042,17 +1039,13 @@ msgstr "B<--no-previous>"
 
 #. type: textblock
 #: po4a:90
-#, fuzzy
-#| msgid ""
-#| "This option removes B<--previous> from the options passed to "
-#| "B<msgmerge>.  This permits to support versions of B<gettext> earlier than "
-#| "0.16."
 msgid ""
 "This option removes B<--previous> from the options passed to B<msgmerge>.  "
 "This is necessary to support versions of B<gettext> earlier than 0.16."
 msgstr ""
 "Cette option supprime B<--previous> des options passées à B<msgmerge>. Elle "
-"permet de prendre en charge les versions de B<gettext> antérieures à 0.16."
+"est nécessaire pour la prise en charge des versions de B<gettext> "
+"antérieures à 0.16."
 
 #. type: =item
 #: po4a:91 po4a-updatepo:24
@@ -1305,16 +1298,18 @@ msgid ""
 "parameter.  This feature can also be used to group several translated files "
 "into the same POT file."
 msgstr ""
+"Avec cette ligne, po4a produira des fichiers POT et PO séparés pour chaque "
+"document à traduire.  Par exemple, si vous avez 3 documents et 5 langues, "
+"vous obtiendrez 3 fichiers POT et 15 fichiers PO. Ces fichiers sont nommés "
+"comme indiqué dans le modèle C<po4a_paths>, avec C<$master> substitué au nom "
+"de base de chaque document à traduire. En cas de conflit de noms, vous "
+"pouvez spécifier le fichier POT à utiliser comme suit, avec le paramètre "
+"C<pot=>.  Cette fonction peut également être utilisée pour regrouper "
+"plusieurs fichiers traduits dans un même fichier POT."
 
 #. type: verbatim
 #: po4a:116
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml master:file=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml master:file=bar-gui\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1324,10 +1319,10 @@ msgid ""
 "\n"
 msgstr ""
 " [po4a_langs] de fr ja\n"
-" [po4a_paths] l10n/po/$master.pot $lang :l10n/po/$master.$lang.po\n"
-" [type : xml] truc/gui.xml $lang :truc/gui.$lang.xml pot=truc-gui\n"
-" [type : xml] bidule/gui.xml $lang :bidule/gui.$lang.xml pot=bidule\n"
-" [type : xml] bidule/cli.xml $lang :bidule/cli.$lang.xml pot=bidule\n"
+" [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
+" [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
 
 #. type: textblock
@@ -2303,10 +2298,8 @@ msgstr "Énumère les formats de documentations connus de po4a."
 
 #. type: textblock
 #: po4a-gettextize:30
-#, fuzzy
-#| msgid "B<-k>, B<--keep>"
 msgid "= item B<-k> B<--keep-temps>"
-msgstr "B<-k>, B<--keep>"
+msgstr "= élément B<-k> B<--keep-temps>"
 
 #. type: textblock
 #: po4a-gettextize:31
@@ -2315,6 +2308,9 @@ msgid ""
 "This can be useful to understand why these files get desynchronized, leading "
 "to gettextization problems"
 msgstr ""
+"Conservez les fichiers POT maîtres et localisés temporaires générés avant la "
+"fusion. Cela peut être utile pour comprendre pourquoi ces fichiers sont "
+"désynchronisés, conduisant à des problèmes de gettextization"
 
 #. type: =head2
 #: po4a-gettextize:46
@@ -2626,6 +2622,12 @@ msgid ""
 "unmodified in the original, but is translated in differing way, or that "
 "different paragraphs are translated in the exact same way."
 msgstr ""
+"Dans certains cas, po4a ajoute un espace à la fin des chaînes de caractères "
+"originales ou traduites. Ceci est dû au fait que chaque chaîne doit être "
+"dédupliquée pendant le processus gettextize. Imaginez qu'une chaîne "
+"apparaisse plusieurs fois à l'identique dans l'original, mais qu'elle soit "
+"traduite de manières différentes, ou que différents paragraphes soient "
+"traduits exactement de la même manière."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2635,6 +2637,11 @@ msgid ""
 "the localized files. Since one of the PO files would miss an entry (that "
 "would be reported as duplicate, with two references), the pairing would fail."
 msgstr ""
+"Sans déduplication, un tel cas mettrait en défaut l'algorithme de "
+"gettexisation, car il s'agit d'un simple appariement un à un entre les "
+"msgids des fichiers maître et localisés. Comme il manquerait une entrée dans "
+"l'un des fichiers PO (qui serait signalée comme un doublon, avec deux "
+"références), l'appariement échouerait."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2645,6 +2652,12 @@ msgid ""
 "master file are translated in the exact same way in the localized file. po4a "
 "would detect a fake desyncronization in such case."
 msgstr ""
+"Puisque po4a utilise le type d'entrée (\"title\" ou \"plain paragraph\", etc)"
+" pour détecter si les flux d'analyse ont été désynchronisés, des problèmes "
+"similaires pourraient se produire si deux entrées identiques (même contenu "
+"mais type différent) du fichier maître sont traduites exactement de la même "
+"manière dans le fichier localisé. po4a détecterait une fausse "
+"désynchronisation dans ce cas."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -2653,6 +2666,10 @@ msgid ""
 "no impact on the formatting. Strings are fuzzied anyway, and msgmerge will "
 "probably match the strings accordingly afterward."
 msgstr ""
+"Dans la plupart des cas, l'espace supplémentaire ajouté par po4a pour "
+"dédupliquer les chaînes de caractères n'a aucun impact sur le formatage. Les "
+"chaînes de caractères sont de toute façon marquées comme floues, et msgmerge "
+"les fera probablement correspondre en conséquence par la suite."
 
 #. type: textblock
 #: po4a-gettextize:71
@@ -3038,19 +3055,14 @@ msgstr ""
 
 #. type: textblock
 #: po4a-updatepo:10
-#, fuzzy
-#| msgid ""
-#| "If the master document has non-ASCII characters, it will convert the PO "
-#| "files to UTF-8 (if they weren't already), in order to allow non-standard "
-#| "characters in a culture independent way."
 msgid ""
 "If the master document has non-ASCII characters, this script will convert "
 "the PO files to UTF-8 (if they weren't already), for a transparent handling "
 "of non-standard characters."
 msgstr ""
-"Si le document maître contient des caractères non ASCII, il convertit les "
-"fichiers PO en UTF-8 (si ce n’est pas déjà le cas), de façon à autoriser les "
-"caractères non standard en fonction des paramètres régionaux."
+"Si le document maître contient des caractères non ASCII, ce script "
+"convertira les fichiers PO en UTF-8 (s’ils ne l’étaient pas déjà), pour une "
+"gestion transparente des caractères non standard."
 
 #. type: textblock
 #: po4a-updatepo:15
@@ -3568,7 +3580,7 @@ msgstr ""
 #. type: textblock
 #: doc/po4a.7.pod:23
 msgid "See L<Locale::Po4a::AsciiDoc> for details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a::AsciiDoc> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:24
@@ -3593,10 +3605,8 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:26
-#, fuzzy
-#| msgid "Locale::Po4a::Pod - convert POD data from/to PO files"
 msgid "See L<Locale::Po4a::Pod> for details."
-msgstr "Voir L<Locale::Po4a::Pod> pour en savoir plus."
+msgstr "Voir L<Locale::Po4a::Pod> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:27
@@ -3663,10 +3673,6 @@ msgstr "text (analyseur stable)"
 
 #. type: textblock
 #: doc/po4a.7.pod:34
-#, fuzzy
-#| msgid ""
-#| "The Text format is the base format for many formats that include long "
-#| "blocks of text, including Markdown, debian/changelog, and debian/control."
 msgid ""
 "The Text format is the base format for many formats that include long blocks "
 "of text, including Markdown, fortunes, YAML front matter section, debian/"
@@ -3717,11 +3723,13 @@ msgid ""
 "The BibTex format is used alongside LaTex for formatting lists of references "
 "(bibliographies)."
 msgstr ""
+"Le format BibTex est utilisé conjointement avec LaTex pour la mise en forme "
+"des listes de références (bibliographies)."
 
 #. type: textblock
 #: doc/po4a.7.pod:41
 msgid "See L<Locale::Po4a::BibTex> for details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a::BibTex> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:42
@@ -3733,11 +3741,13 @@ msgstr "DocBook (analyseur probablement stable)"
 msgid ""
 "A XML-based markup language that uses semantic tags to describe documents."
 msgstr ""
+"Un langage de balisage basé sur XML qui utilise des balises sémantiques pour "
+"décrire des documents."
 
 #. type: textblock
 #: doc/po4a.7.pod:44
 msgid "See L<Locale::Po4a:Docbook> for greater details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a:Docbook> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:45
@@ -3752,11 +3762,15 @@ msgid ""
 "up until at least March 2016 (Based on the Wayback Machine). Gentoo have "
 "since moved to the DevBook XML format."
 msgstr ""
+"Un format de documentation XML. Ce module a été développé spécifiquement "
+"pour aider à prendre en charge et à maintenir les traductions de la "
+"documentation de Gentoo Linux jusqu'à au moins mars 2016 (basé sur la "
+"Wayback Machine). Gentoo est depuis passé au format DevBook XML."
 
 #. type: textblock
 #: doc/po4a.7.pod:47
 msgid "See L<Locale::Po4a:Guide> for greater details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a:Guide> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:48
@@ -3770,13 +3784,14 @@ msgid ""
 "phones.  This module relies on the Xhtml module, which itself relies on the "
 "XmL module."
 msgstr ""
+"Le Web Markup Language, ne pas confondre le WML avec le WAP utilisé sur les "
+"téléphones portables.  Ce module s'appuie sur le module Xhtml, qui lui-même "
+"s'appuie sur le module XmL."
 
 #. type: textblock
 #: doc/po4a.7.pod:50
-#, fuzzy
-#| msgid "Locale::Po4a::Pod - convert POD data from/to PO files"
 msgid "See L<Locale::Po4a::Wml> for greater details."
-msgstr "Voir L<Locale::Po4a::Wml> pour en savoir plus."
+msgstr "Voir L<Locale::Po4a::Wml> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:51
@@ -3789,13 +3804,13 @@ msgid ""
 "A strict superset of JSON. YAML is often used as systems or configuration "
 "projects.  YAML is at the core of Red Hat's Ansible."
 msgstr ""
+"Un sur-ensemble strict de JSON. YAML est souvent utilisé comme systèmes ou "
+"projets de configuration.  YAML est au cœur d’Ansible de Red Hat."
 
 #. type: textblock
 #: doc/po4a.7.pod:53
-#, fuzzy
-#| msgid "Locale::Po4a::Pod - convert POD data from/to PO files"
 msgid "See L<Locale::Po4a::Yaml> for greater details."
-msgstr "Voir L<Locale::Po4a::Yaml> pour en savoir plus."
+msgstr "Voir L<Locale::Po4a::Yaml> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:54
@@ -3809,13 +3824,15 @@ msgid ""
 "for Ruby and Ruby projects before converted to RDoc in 2002. Though "
 "apparently the Japanese version of the Ruby Reference Manual still use RD."
 msgstr ""
+"Le format Ruby Document (RD), à l'origine le format de documentation par "
+"défaut pour Ruby et les projets Ruby avant d'être la conversion à RDoc en "
+"2002. Bien qu'apparemment la version japonaise du Manuel de Référence Ruby "
+"utilise toujours le RD."
 
 #. type: textblock
 #: doc/po4a.7.pod:56
-#, fuzzy
-#| msgid "Locale::Po4a::Pod - convert POD data from/to PO files"
 msgid "See L<Locale::Po4a::RubyDoc> for greater details."
-msgstr "Voir L<Locale::Po4a::RubyDoc> pour en savoir plus."
+msgstr "Voir L<Locale::Po4a::RubyDoc> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:57
@@ -3828,11 +3845,14 @@ msgid ""
 "A documentation production system, with elements similar to TeX, debiandoc-"
 "sgml, TeXinfo, and others, developed by Simon Tatham, the developer of PuTTY."
 msgstr ""
+"Un système de production de documentation, avec des éléments similaires à "
+"TeX, debiandoc-sgml, TeXinfo, et autres, développé par Simon Tatham, le "
+"développeur de PuTTY."
 
 #. type: textblock
 #: doc/po4a.7.pod:59
 msgid "See L<Locale::Po4a:Halibut> for greater details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a:Halibut> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:60
@@ -3842,12 +3862,12 @@ msgstr "Ini (analyseur très expérimental)"
 #. type: textblock
 #: doc/po4a.7.pod:61
 msgid "Configuration file format popularized by MS-DOS."
-msgstr ""
+msgstr "Format de fichier de configuration popularisé par MS-DOS."
 
 #. type: textblock
 #: doc/po4a.7.pod:62
 msgid "See L<Locale::Po4a::Ini> for greater details."
-msgstr ""
+msgstr "Voir L<Locale::Po4a::Ini> pour plus de détails."
 
 #. type: =item
 #: doc/po4a.7.pod:63
@@ -4996,6 +5016,8 @@ msgid ""
 "Other item to sort out: L<https://gitlab.com/fdroid/fdroid-website/> "
 "L<https://github.com/fsfe/reuse-docs/pull/61>"
 msgstr ""
+"Autres éléments à trier : L<https://gitlab.com/fdroid/fdroid-website/> "
+"L<https://github.com/fsfe/reuse-docs/pull/61>"
 
 #. type: =head1
 #: doc/po4a.7.pod:153
@@ -5534,16 +5556,14 @@ msgid ""
 "insensitive match. Array values are always translated, unless the "
 "B<yfm_skip_array> option is provided."
 msgstr ""
-"Liste des clés à traiter, séparées par des virgules, pour la traduction dans "
-"la section Front Matter de YAML. Toutes les autres clés sont ignorées. Les "
-"clés sont associées avec une correspondance insensible à la casse. Les "
-"valeurs des tableaux sont toujours traduites, sauf si l'option "
-"B<yfm_skip_array> est fournie."
+"Liste des clés à traiter, séparées par des virgules, pour la traduction de "
+"la section préliminaire YAML. Toutes les autres clés sont ignorées. Les clés "
+"sont associées avec une correspondance insensible à la casse. Les valeurs "
+"des tableaux sont toujours traduites, sauf si l'option B<yfm_skip_array> est "
+"fournie."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:33
-#, fuzzy
-#| msgid "B<beginning>"
 msgid "B<nolinting>"
 msgstr "B<nolinting>"
 
@@ -5553,6 +5573,9 @@ msgid ""
 "Disable linting messages. When the source code cannot be fixed for clearer "
 "document structure, these messages are useless."
 msgstr ""
+"Désactiver les messages de vérification. Lorsque le code source ne peut pas "
+"être corrigé pour une structure de document plus claire, ces messages sont "
+"inutiles."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:35
@@ -5563,7 +5586,7 @@ msgstr "B<yfm_skip_array>"
 #: lib/Locale/Po4a/AsciiDoc.pm:36 lib/Locale/Po4a/Text.pm:35
 msgid "Do not translate array values in the YAML Front Matter section."
 msgstr ""
-"Ne pas traduire les valeurs des tableaux dans la section \"Front Matter\" de "
+"Ne pas traduire les valeurs des tableaux dans la section préliminaire de "
 "YAML."
 
 #. type: =head1
@@ -5589,36 +5612,26 @@ msgstr "B<//po4a: macro> I<nom>B<[>I<liste d’attributs>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:40
-#, fuzzy
-#| msgid ""
-#| "This permits to describe in detail the parameters of a B<macro>; I<name> "
-#| "must be a valid macro name, and it ends with an underscore if the target "
-#| "must be translated."
 msgid ""
 "This describes in detail the parameters of a B<macro>; I<name> must be a "
 "valid macro name, and it ends with an underscore if the target must be "
 "translated."
 msgstr ""
-"Cela permet de décrire précisément les paramètres d’une B<macro>. Le I<nom> "
-"doit être un nom de macro existant, et se termine par un tiret bas si la "
-"cible doit être traduite."
+"Ceci décrit en détail les paramètres d’une B<macro>. Le I<nom> doit être un "
+"nom de macro existant, et se termine par un tiret bas si la cible doit être "
+"traduite."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:41
-#, fuzzy
-#| msgid ""
-#| "The I<attribute list> argument is a comma separated list which contains "
-#| "informations about translatable arguments.  This list contains either "
-#| "numbers, to define positional parameters, or named attributes."
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "information about translatable arguments.  This list contains either "
 "numbers, to define positional parameters, or named attributes."
 msgstr ""
 "L’argument I<liste d’attributs> est une liste, séparées par des virgules, "
-"qui contient des renseignements sur les argument à traduire. Cette liste "
-"contient soit des nombres, pour définir des paramètres de position, soit des "
-"attributs nommés."
+"qui contient des renseignements sur les argument traduisibles. Cette liste "
+"contient soit des nombres, pour définir des paramètres positionnels, soit "
+"des attributs nommés."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:42
@@ -5638,24 +5651,12 @@ msgstr "B<//po4a: style >B<[>I<liste d’attributs>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:44
-#, fuzzy
-#| msgid ""
-#| "This permits to describe in detail which attributes of a style must be "
-#| "translated."
 msgid ""
 "This describes in detail which attributes of a style must be translated."
-msgstr ""
-"Cela permet de décrire précisément les attributs de style qui doivent être "
-"traduits."
+msgstr "Ceci décrit en détail quels attributs d'un style doivent être traduits."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:45
-#, fuzzy
-#| msgid ""
-#| "The I<attribute list> argument is a comma separated list which contains "
-#| "informations about translatable arguments.  This list contains either "
-#| "numbers, to define positional parameters, or named attributes.  The first "
-#| "attribute is the style name, it will not be translated."
 msgid ""
 "The I<attribute list> argument is a comma separated list which contains "
 "information about translatable arguments.  This list contains either "
@@ -5663,10 +5664,10 @@ msgid ""
 "attribute is the style name, it will not be translated."
 msgstr ""
 "L’argument I<liste d’attributs> est une liste, séparées par des virgules, "
-"qui contient des renseignements sur les argument à traduire. Cette liste "
-"contient soit des nombres, pour définir des paramètres de position, soit des "
-"attributs nommés. Le premier attribut est le nom du style, il ne sera pas "
-"traduit."
+"qui contient des informations sur les argument traduisibles. Cette liste "
+"contient soit des nombres, pour définir des paramètres positionnels, soit "
+"des attributs nommés. Le premier attribut est le nom du style, il ne sera "
+"pas traduit."
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:46
@@ -5749,7 +5750,7 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:57
 msgid "__END__"
-msgstr ""
+msgstr "__FIN__"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:58
