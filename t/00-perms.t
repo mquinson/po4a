@@ -11,7 +11,9 @@ use lib q(t);
 use Test::More 'no_plan';
 use File::Path qw(make_path remove_tree);
 
-BAIL_OUT("Tests cannot be run as root. Please use a regular user ID instead.\n") if $> == 0;
+if ( $^O ne 'MSWin32' && $> == 0 ) {
+    BAIL_OUT("Tests cannot be run as root. Please use a regular user ID instead.\n");
+}
 
 my @cmds = (
     "chmod 755 t/cfg",
