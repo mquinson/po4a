@@ -2244,7 +2244,7 @@ $macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
             "po4a::man",
             dgettext(
                 "po4a",
-                "This page defines a new macro with '%s'. Since po4a is not a real groff parser, this is not supported."
+                "This page defines a new macro with '%s'. Since po4a is not a real groff parser, this is not supported. "
                   . "The option '%s' gets these macros copied verbatim in the translated file, but it's not very robust. "
                   . "'%s' shows these macros to the translators, but they are rather ugly."
             ),
