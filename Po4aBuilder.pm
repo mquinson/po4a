@@ -14,8 +14,8 @@ sub ACTION_build {
     $self->depends_on('code');
     $self->depends_on('docs');
     $self->depends_on('distmeta'); # regenerate META.yml
-    $self->depends_on('man');
-    $self->depends_on('postats');
+    $self->depends_on('man') unless ($^O eq 'MSWin32');
+    $self->depends_on('postats') unless ($^O eq 'MSWin32');
 }
 
 sub make_files_writable {
