@@ -12,24 +12,25 @@ use Test::More 'no_plan';
 use File::Path qw(make_path remove_tree);
 
 # No need to test uid nor to play with chmod on windows
-return 0 if ( $^O eq 'MSWin32' );
+unless ( $^O eq 'MSWin32' ) {
 
-BAIL_OUT("Tests cannot be run as root. Please use a regular user ID instead.\n") if $> == 0;
+    BAIL_OUT("Tests cannot be run as root. Please use a regular user ID instead.\n") if $> == 0;
 
-my @cmds = (
-    "chmod 755 t/cfg",
-    "chmod 755 `find t/add t/cfg -maxdepth 1 -type d`",
-    "chmod 755 `find t/add t/cfg -maxdepth 2 -type d`",
-    "chmod 755 `find t/add t/cfg -type d`",
-    "chmod 644 `find t -type f`"
-);
+    my @cmds = (
+        "chmod 755 t/cfg",
+        "chmod 755 `find t/add t/cfg -maxdepth 1 -type d`",
+        "chmod 755 `find t/add t/cfg -maxdepth 2 -type d`",
+        "chmod 755 `find t/add t/cfg -type d`",
+        "chmod 644 `find t -type f`"
+    );
 
-foreach my $cmd (@cmds) {
-    my $exit_status = system($cmd);
-    if ( $exit_status == 0 ) {
-        pass($cmd);
-    } else {
-        BAIL_OUT( $cmd . " (retcode: $exit_status)" );
+    foreach my $cmd (@cmds) {
+        my $exit_status = system($cmd);
+        if ( $exit_status == 0 ) {
+            pass($cmd);
+        } else {
+            BAIL_OUT( $cmd . " (retcode: $exit_status)" );
+        }
     }
 }
 
