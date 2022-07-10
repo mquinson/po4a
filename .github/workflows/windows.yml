@@ -3,6 +3,10 @@ name: Build on Windows CI
 
 on:
   push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
   pull_request:
 
 jobs:
@@ -17,7 +21,7 @@ jobs:
         #perl-version: '5.32'
         distribution: strawberry
         install-modules-with: cpanm
-        install-modules: Term::ReadKey Unicode::GCString http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz YAML::Tiny
+        install-modules: Term::ReadKey Unicode::GCString Syntax::Keyword::Try http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz YAML::Tiny
         # Locale::gettext and Text::WrapI18N seem broken on windows.
     - run: perl -V
 #    - name: Install Debian dependencies
