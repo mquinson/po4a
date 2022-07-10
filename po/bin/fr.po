@@ -363,13 +363,8 @@ msgstr "Impossible d’analyser les paramètres de la commande : %s"
 msgid "Unsupported font in: '%s'."
 msgstr "Police non reconnue : « %s »."
 
-#: ../../lib/Locale/Po4a/Man.pm:2247
-#, fuzzy, perl-format
-#| msgid ""
-#| "This page defines a new macro with '%s'. Since po4a is not a real groff "
-#| "parser, this is not supported. The option '%s' gets these macros copied "
-#| "verbatim in the translated file, but it's not very robust. '%s' shows "
-#| "these macros to the translators, but they are rather ugly."
+#: ../../lib/Locale/Po4a/Man.pm:2267
+#, perl-format
 msgid ""
 "This page defines a new macro with '%s'. Since po4a is not a real groff "
 "parser, this is not supported. The option '%s' gets these macros copied "
@@ -380,20 +375,15 @@ msgstr ""
 "Cette page définit une nouvelle macro avec '%s'. Étant donné que po4a n'est "
 "pas un véritable analyseur groff, cela n'est pas pris en charge. L'option "
 "'%s' permet de copier ces macros textuellement dans le fichier traduit, mais "
-"ce n'est pas très robuste. '%s' montre ces macros aux traducteurs, mais "
-"elles sont plutôt moches."
+"ce n'est pas très robuste. '%s' montre ces macros aux traducteurs, mais les "
+"macros groff ne sont pas conviviales pour les traducteurs."
 
-#: ../../lib/Locale/Po4a/Man.pm:2315
+#: ../../lib/Locale/Po4a/Man.pm:2315 ../../lib/Locale/Po4a/Man.pm:2335
 msgid "The .ie macro must be followed by a .el macro."
 msgstr "La macro « .ie » doit être suivie par une macro « .el »."
 
-#: ../../lib/Locale/Po4a/Man.pm:2343
-#, fuzzy, perl-format
-#| msgid ""
-#| "This page uses conditionals with '%s'. Since po4a is not a real groff "
-#| "parser, this is not supported by default. The option '%s' gets these "
-#| "macros copied verbatim in the translated file, but it's not very robust. "
-#| "'%s' shows these macros to the translators, but they are rather ugly."
+#: ../../lib/Locale/Po4a/Man.pm:2363
+#, perl-format
 msgid ""
 "This page uses conditionals with '%s'. Since po4a is not a real groff "
 "parser, this is not supported by default. The option '%s' gets these macros "
@@ -405,9 +395,10 @@ msgstr ""
 "pas un véritable analyseur groff, cela n'est pas pris en charge par défaut. "
 "L'option '%s' permet de copier ces macros textuellement dans le fichier "
 "traduit, mais ce n'est pas très robuste. '%s' montre ces macros aux "
-"traducteurs, mais elles sont plutôt moches."
+"traducteurs, mais les macros groff ne sont pas conviviales pour les "
+"traducteurs."
 
-#: ../../lib/Locale/Po4a/Man.pm:2403
+#: ../../lib/Locale/Po4a/Man.pm:2403 ../../lib/Locale/Po4a/Man.pm:2423
 #, perl-format
 msgid ""
 "This page includes another file with '%s'. Do not forget to translate this "
@@ -416,7 +407,7 @@ msgstr ""
 "Cette page inclut un autre fichier avec « %s ». N’oubliez pas de traduire ce "
 "fichier (« %s »)."
 
-#: ../../lib/Locale/Po4a/Man.pm:2571
+#: ../../lib/Locale/Po4a/Man.pm:2571 ../../lib/Locale/Po4a/Man.pm:2591
 #, perl-format
 msgid ""
 "This page uses the '%s' request with the number of lines in argument. This "
@@ -425,7 +416,7 @@ msgstr ""
 "Cette page utilise la requête « %s » avec le nombre de lignes en paramètre. "
 "Cela n’est pas encore géré."
 
-#: ../../lib/Locale/Po4a/Man.pm:2591
+#: ../../lib/Locale/Po4a/Man.pm:2591 ../../lib/Locale/Po4a/Man.pm:2611
 #, perl-format
 msgid ""
 "This page uses the '%s' request. This request is only supported when no "
@@ -1530,6 +1521,8 @@ msgid ""
 "Temporary master and localized POT files dumped to po4atemp.master.po and "
 "po4atemp.localized.po"
 msgstr ""
+"Fichiers POT maîtres et localisés temporaires générés dans po4atemp.master."
+"po et po4atemp.localized.po"
 
 #: ../../po4a-normalize:177
 #, perl-format
@@ -1574,6 +1567,30 @@ msgstr "fait."
 #, perl-format
 msgid "Could not copy the PO file (%s -> %s): %s"
 msgstr "Impossible de copier le fichier PO (%s → %s) : %s"
+
+#: ../../lib/Locale/Po4a/Man.pm:2229
+#, perl-format
+msgid ""
+"This page defines a new macro '%s' with '%s', but you did not specify the "
+"expected po4a behavior when '%s' is used. You will get an error if this "
+"macro is actually used in your page.\n"
+"Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters "
+"to avoid issues.\n"
+"For example, passing '%s' to po4a will ensure that the defined macro remains "
+"hidden from translators.\n"
+"Please refer to the manpage of Locale::Po4a::Man for more info on these "
+"parameters.\n"
+msgstr ""
+"Cette page définit une nouvelle macro '%s' avec '%s', mais vous n’avez pas "
+"spécifié le comportement po4a attendu lorsque '%s' est utilisé. Vous "
+"obtiendrez une erreur si cette macro est effectivement utilisée dans votre "
+"page.\n"
+"Ajoutez votre macro à l’un des paramètres '%s', '%s', '%s', '%s', '%s' ou "
+"'%s' pour éviter les problèmes.\n"
+"Par exemple, passer '%s' à po4a garantira que la macro définie restera "
+"cachée aux traducteurs.\n"
+"Reportez-vous à la page de manuel de Locale::Po4a::Man pour plus "
+"d’informations sur ces paramètres.\n"
 
 #~ msgid ""
 #~ "This page defines a new macro with '.de'. Since po4a is not a real groff "
