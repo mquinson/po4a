@@ -82,6 +82,7 @@ use strict;
 use warnings;
 use Test::More 'no_plan';
 use File::Path qw(make_path remove_tree);
+use File::Copy;
 use Cwd qw(cwd);
 
 use Exporter qw(import);
@@ -141,6 +142,16 @@ sub system_failed {
         note("FAILED command: $cmd");
         return 1;
     }
+}
+
+# Remove that directory if it exists, and rebuild it fresh
+sub remake_path {
+    my $path = shift;
+    if ( -e $path ) {
+        remove_tree("$path") || die "Cannot cleanup $path/ on startup: $!";
+    }
+
+    make_path($path) || die "Cannot create $path/: $!";
 }
 
 sub teardown {
@@ -222,14 +233,13 @@ sub run_one_po4aconf {
     } elsif ( $mode eq 'curdir' ) {
         $tmppath .= '-cur';
         push @setup, "cp -r $path/* $tmppath";
-        push @setup, "chmod +w -R $tmppath";
+        push @setup, "chmod +w -R $tmppath" unless $^O eq 'MSWin32';
         $run_from = $tmppath;
     } else {
         die "Malformed test: mode $mode unknown\n";
     }
 
-    system("rm -rf $tmppath/")   && die "Cannot cleanup $tmppath/ on startup: $!";
-    system("mkdir -p $tmppath/") && die "Cannot create $tmppath/: $!";
+    remake_path($tmppath);
     unless ( setup( \@setup ) ) {    # Failed
         teardown( \@teardown );
         return;
@@ -388,7 +398,7 @@ sub run_one_format {
         }
     }
 
-    system("mkdir -p tmp/$path/") && die "Cannot create tmp/$path/: $!";
+    remake_path("tmp/$path");
     my $tmpbase = "tmp/$path/$basename";
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
@@ -448,7 +458,7 @@ sub run_one_format {
         push @tests, "diff -uN $transfile $tmpbase.trans";
 
         # Update PO
-        system("cp $cwd/$pofile $cwd/${tmpbase}.po_updated") && fail "Cannot copy $pofile before updating it";
+        copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
         $cmd =
             "${execpath}/po4a-updatepo -f $format $options "
           . "--master $basename.$ext --po $cwd/${tmpbase}.po_updated"
@@ -493,7 +503,7 @@ sub run_all_tests {
     # Change into test directory and create a temporary directory
     chdir "t" or die "Can't chdir to test directory t\n";
 
-    make_path("tmp");
+    remake_path("tmp");
 
   TEST: foreach my $test (@cases) {
         if ( exists $test->{'format'} ) {
