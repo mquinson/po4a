@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-07-09 19:23+0200\n"
-"PO-Revision-Date: 2022-01-02 19:55+0000\n"
+"PO-Revision-Date: 2022-07-14 11:24+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/sr_Cyrl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -2239,10 +2239,8 @@ msgstr "Списак формата документације које прог
 
 #. type: textblock
 #: po4a-gettextize:30
-#, fuzzy
-#| msgid "B<-k>, B<--keep>"
 msgid "= item B<-k> B<--keep-temps>"
-msgstr "B<-k>, B<--keep>"
+msgstr "= ставка B<-k> B<--keep-temps>"
 
 #. type: textblock
 #: po4a-gettextize:31
@@ -2251,6 +2249,9 @@ msgid ""
 "This can be useful to understand why these files get desynchronized, leading "
 "to gettextization problems"
 msgstr ""
+"Задржава привремене мастер и локализоване POT фајлове изграђене пре спајања. "
+"Ово може бити корисно да се разуме зашто ови фајлови постану "
+"десинхронизовани, што доводи до проблема у gettextизацији"
 
 #. type: =head2
 #: po4a-gettextize:46
@@ -2555,6 +2556,11 @@ msgid ""
 "unmodified in the original, but is translated in differing way, or that "
 "different paragraphs are translated in the exact same way."
 msgstr ""
+"Програм po4a у неким случајевима додаје размак на крај оригиналних или "
+"преведених стрингова. Разлог за то је што сваки стринг мора да се дедуплира "
+"током процеса gettextизације. Замислите да се стринг у оригиналу појављује "
+"неколико пута у неизмењеном облику, али се преводи на другачији начин, или "
+"да се различити пасуси преводе на потпуно исти начин."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2564,6 +2570,10 @@ msgid ""
 "the localized files. Since one of the PO files would miss an entry (that "
 "would be reported as duplicate, with two references), the pairing would fail."
 msgstr ""
+"Такви стригови би без дедупликације покварили алгоритам gettextизације, јер "
+"је то просто један на један пресликавање између msgid стрингова мастер и "
+"локализованих фајлова. Пошто би један од PO фајлова промашио ставку (која би "
+"била пријављена као дупликат, са две референце), упаривање не би успело."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2574,6 +2584,11 @@ msgid ""
 "master file are translated in the exact same way in the localized file. po4a "
 "would detect a fake desyncronization in such case."
 msgstr ""
+"Пошто програм po4a за детекцију десинхронизације токова које парсира "
+"употребљава тип ставке („title” или „plain paragraph”, итд.), слични "
+"проблеми би се јавили ако би се две идентичне ставке (исти садржај али "
+"различити тип) мастер фајл проводиле на потпуно исти начин у локализованом "
+"фајлу. У таквом случају би po4a детектовао лажну десинхронизацију."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -2582,6 +2597,9 @@ msgid ""
 "no impact on the formatting. Strings are fuzzied anyway, and msgmerge will "
 "probably match the strings accordingly afterward."
 msgstr ""
+"У највећем броју случајева додатни размак који додаје po4a за дедупликацију "
+"стрингова нема утицај на формирање. Ипак се стрингови довољно промене тако "
+"да ће их msgmerge касније највероватније упарити како треба."
 
 #. type: textblock
 #: po4a-gettextize:71
@@ -7388,10 +7406,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:28 lib/Locale/Po4a/TransTractor.pm:72
-#, fuzzy
-#| msgid "B<debug>"
 msgid "B<dedup>"
-msgstr "B<debug>"
+msgstr "B<dedup>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:29
@@ -7402,6 +7418,12 @@ msgid ""
 "break the string pairing algorithm.  See https://github.com/mquinson/po4a/"
 "issues/334 for more info."
 msgstr ""
+"Логичка вредност која наводи да ли би требало да се дедуплицирају msgid "
+"стрингови. Ако је истинито, када са касније поново дода исти стринг, на "
+"његов крај се додаје размак да би се дедупликовао. Ово је углавном корисно "
+"само у контексту gettextизације, где дуплирани msgid стрингови могу да "
+"покваре алгоритам упаривања стрингова. За више информација погледајте "
+"https://github.com/mquinson/po4a/issues/334."
 
 #. type: =head1
 #: lib/Locale/Po4a/Po.pm:30
@@ -9766,10 +9788,8 @@ msgstr "B<yfm_keys> (само markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
-#, fuzzy
-#| msgid "B<yfm_keys> (markdown-only)"
 msgid "B<yfm_lenient> (markdown only)"
-msgstr "B<yfm_keys> (само markdown)"
+msgstr "B<yfm_lenient> (само markdown)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:33
@@ -9779,6 +9799,10 @@ msgid ""
 "of a YAML Front Matter, but you insist on using three dashes only for your "
 "ruler."
 msgstr ""
+"Дозвољава да YAML Front Matter парсер прекине рад када наиђе на лоше "
+"форматирано заглавље. Ово је посебно корисно када ваш фајл почиње "
+"хоризонталном линијом а не са YAML Front Matter, али ви инсистирате да се за "
+"линију користе само три цртице."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
@@ -9822,10 +9846,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:43
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Nicolas Francois <nicolas.francois@centraliens.net>\n"
 "\n"
@@ -9835,31 +9856,25 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:45
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
 msgstr ""
-" Права умножавања © 2005-2008 Никола ФРАНСОА <nicolas.francois@centraliens.net>.\n"
+" Права умножавања (c) 2005-2008 Никола ФРАНСОА <nicolas.francois@centraliens."
+"net>.\n"
 "\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:46
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-#| " Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
-" Права умножавања © 2008-2009, 2018 Јонас Смедегард <dr@jones.dk>.\n"
-" Права умножавања © 2020 Мартин Квинсон <mquinson#debian.org>.\n"
+" Права умножавања (c) 2008-2009, 2018 Јонас Смедегард <dr@jones.dk>.\n"
+" Права умножавања (c) 2020 Мартин Квинсон <mquinson#debian.org>.\n"
 "\n"
 
 #. type: textblock
@@ -10367,6 +10382,9 @@ msgid ""
 "Boolean indicating whether we should deduplicate msgids. Passed to Po.pm as "
 "is. See Po.pm documentation for more info."
 msgstr ""
+"Логичка вредност која назначава да ли треба да се дедуплицирају msgid "
+"стрингови. Прослеђује се модулу Po.pm таква каква је. За више информација "
+"погледајте документацију за Po.pm."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:74
@@ -11025,20 +11043,13 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xhtml.pm:14
-#, fuzzy
-#| msgid ""
-#| "\"It works for me\", which means I use it successfully on my personal Web "
-#| "site.  However, YMMV: please let me know if something doesn't work for "
-#| "you. In particular, tables are getting no testing whatsoever, as we don't "
-#| "use them."
 msgid ""
 "\"It works for me\", which means I use it successfully on my personal Web "
 "site.  However, YMMV: please let me know if something doesn't work for you."
 msgstr ""
 "„Мени функционише”, што значи да га успешно користим на свом личном "
 "вебсајту. Ипак, YMMV (у вашем случају може бити другачије): молим вас да ми "
-"пријавите ако нешто не функционише код вас. На пример, табеле се уопште не "
-"тестирају, јер их не користимо."
+"пријавите ако нешто не функционише код вас."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xhtml.pm:18
