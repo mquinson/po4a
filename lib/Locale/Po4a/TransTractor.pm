@@ -11,7 +11,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION = "0.67";
+$VERSION = "0.68-alpha";
 @ISA     = qw(DynaLoader);
 @EXPORT  = qw(new process translate
   read write readpo writepo
@@ -1305,9 +1305,10 @@ sub handle_yaml {
                 my %keys = %{$yfm_keys};
                 if ( ( not %keys ) || $keys{$name} ) {  # either no key is provided, or the key we need is also provided
                     my $translation = $self->translate( $el, $blockref, "YAML Front Matter:$ctx $name", "wrap" => 0 );
-                    if ( $el =~ /^\[.*\]$/  ) { # Do not quote the lists
+                    if ( $el =~ /^\[.*\]$/ ) {          # Do not quote the lists
                         $self->pushline( $header . " $translation\n" );
                     } else {
+
                         # add extra quotes to the parameter, as a protection to the extra chars that the translator could add
                         $self->pushline( $header . ' ' . format_scalar($translation) . "\n" );
                     }
@@ -1317,7 +1318,7 @@ sub handle_yaml {
                     # See https://github.com/Perl-Toolchain-Gang/YAML-Tiny#additional-perl-specific-notes
                     if ( Scalar::Util::looks_like_number($el) ) {
                         $self->pushline("$header $el\n");
-                    } elsif ( $el =~ /^\[.*\]$/ ) { # Do not quote the lists either
+                    } elsif ( $el =~ /^\[.*\]$/ ) {    # Do not quote the lists either
                         $self->pushline("$header $el\n");
                     } else {
                         $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );
