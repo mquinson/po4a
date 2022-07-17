@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.66\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2022-07-09 19:23+0200\n"
-"PO-Revision-Date: 2022-02-13 09:35+0100\n"
+"POT-Creation-Date: 2022-07-17 19:21+0200\n"
+"PO-Revision-Date: 2022-07-17 19:31+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -2311,10 +2311,8 @@ msgstr "die von Po4a verstandenen Dokumentationsformate auflisten"
 
 #. type: textblock
 #: po4a-gettextize:30
-#, fuzzy
-#| msgid "B<-k>, B<--keep>"
 msgid "= item B<-k> B<--keep-temps>"
-msgstr "B<-k>, B<--keep>"
+msgstr "= item B<-k> B<--keep-temps>"
 
 #. type: textblock
 #: po4a-gettextize:31
@@ -2323,6 +2321,9 @@ msgid ""
 "This can be useful to understand why these files get desynchronized, leading "
 "to gettextization problems"
 msgstr ""
+"die temporären Master- und vor dem Zusammenführen gebauten lokalisierten POT-"
+"Dateien behalten. Dies kann hilfreich sein, um zu verstehen, warum Dateien "
+"nicht mehr synchron sind und damit zu Gettextisierungs-Problemen führen."
 
 #. type: =head2
 #: po4a-gettextize:46
@@ -2641,6 +2642,12 @@ msgid ""
 "unmodified in the original, but is translated in differing way, or that "
 "different paragraphs are translated in the exact same way."
 msgstr ""
+"Manchmal fügt Po4a ein Leerzeichen am Ende entweder der ursprünglichen oder "
+"der übersetzten Zeichenketten ein. Dies erfolgt, da während des "
+"Gettextisierungsprozesses jede Zeichenkette dedupliziert werden muss. "
+"Stellen Sie sich vor, dass eine Zeichenkette mehrfach unverändert im "
+"Original auftaucht, aber verschieden übersetzt wird oder dass verschiedene "
+"Absätze komplett identisch übersetzt werden."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2650,6 +2657,11 @@ msgid ""
 "the localized files. Since one of the PO files would miss an entry (that "
 "would be reported as duplicate, with two references), the pairing would fail."
 msgstr ""
+"Ohne Deduplizierung würde der Gettextisierungs-Algorithmus nicht mehr "
+"funktionieren, da er einfach Paare zwischen Msgids von sowohl dem Master als "
+"auch den übersetzten Dateien herstellt. Da eine der PO-Dateien ein Eintrag "
+"fehlen würde (der dann als Duplikat mit zwei Referenzen berichtet würde), "
+"würde die Paarbildung fehlschlagen."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2660,6 +2672,12 @@ msgid ""
 "master file are translated in the exact same way in the localized file. po4a "
 "would detect a fake desyncronization in such case."
 msgstr ""
+"Da Po4a den Eintragstyp (»title« oder »plain paragraph« usw.) verwendet, um "
+"zu erkennen, ob die Auswertung der Datenströme nicht mehr synchron ist, "
+"könnten ähnliche Probleme entstehen, falls zwei identische Einträge (gleiche "
+"Inhalte aber anderer Typ) der Master-Datei exakt auf die gleiche Weise in "
+"der lokalisierten Datei übersetzt würden. Po4a würde in diesem Fall eine "
+"fingierte Desynchronisierung erkennen."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -2668,6 +2686,10 @@ msgid ""
 "no impact on the formatting. Strings are fuzzied anyway, and msgmerge will "
 "probably match the strings accordingly afterward."
 msgstr ""
+"In den meisten Fällen hat das von Po4a zur Deduplizierung der Zeichenketten "
+"hinzugefügte Leerzeichen keine Auswirkung auf die Formatierung. "
+"Zeichenketten werden sowieso als unscharf (»fuzzy«) markiert und msgmerge "
+"wird wahrscheinlich die Zeichenketten danach entsprechend paaren."
 
 #. type: textblock
 #: po4a-gettextize:71
@@ -7622,10 +7644,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:28 lib/Locale/Po4a/TransTractor.pm:72
-#, fuzzy
-#| msgid "B<debug>"
 msgid "B<dedup>"
-msgstr "B<debug>"
+msgstr "B<dedup>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:29
@@ -7636,6 +7656,12 @@ msgid ""
 "break the string pairing algorithm.  See https://github.com/mquinson/po4a/"
 "issues/334 for more info."
 msgstr ""
+"Logischer Wert, der angibt, ob msgids dedupliziert werden sollen. Falls "
+"wahr, wird ein Leerzeichen angehängt, um sie zu deduplizieren, falls die "
+"gleiche Zeichenkette erneut hinzugefügt wurde. Dies ist wahrscheinlich nur "
+"im Kontext der Gettextisierung nützlich, bei der doppelte Zeichenketten den "
+"Zeichenketten-Zuordnungs-Algorithmus durcheinanderbringen. Siehe https://"
+"github.com/mquinson/po4a/issues/334 für weitere Informationen."
 
 #. type: =head1
 #: lib/Locale/Po4a/Po.pm:30
@@ -8990,9 +9016,12 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Sgml.pm:55
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>\n"
+#| "\n"
 msgid ""
-" Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>\n"
+" Copyright � 1995 David Megginson <dmeggins@aix1.uottawa.ca>\n"
 "\n"
 msgstr ""
 " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>\n"
@@ -9005,10 +9034,14 @@ msgstr "Die Anpassung für Po4a wurde erledigt durch:"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Sgml.pm:59
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>.\n"
+#| " Copyright © 2002-2005 SPI, Inc.\n"
+#| "\n"
 msgid ""
-" Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>.\n"
-" Copyright © 2002-2005 SPI, Inc.\n"
+" Copyright � 1995 David Megginson <dmeggins@aix1.uottawa.ca>.\n"
+" Copyright � 2002-2005 SPI, Inc.\n"
 "\n"
 msgstr ""
 " Copyright © 1995 David Megginson <dmeggins@aix1.uottawa.ca>.\n"
@@ -10054,10 +10087,8 @@ msgstr "B<yfm_keys> (nur Markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
-#, fuzzy
-#| msgid "B<yfm_keys> (markdown-only)"
 msgid "B<yfm_lenient> (markdown only)"
-msgstr "B<yfm_keys> (nur Markdown)"
+msgstr "B<yfm_lenient> (nur Markdown)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:33
@@ -10067,6 +10098,10 @@ msgid ""
 "of a YAML Front Matter, but you insist on using three dashes only for your "
 "ruler."
 msgstr ""
+"Erlaubt dem YAML-Titelei-Auswerter, bei ungültigen Kopfzeilen "
+"fehlzuschlagen. Dies ist besonders hilfreich, wenn Ihre Datei mit einem "
+"horizontalen Linie statt einer YAML-Titelei beginnt, aber Sie darauf "
+"bestehen, nur drei Gedankenstriche für ihre Linie zu verwenden."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
@@ -10663,6 +10698,9 @@ msgid ""
 "Boolean indicating whether we should deduplicate msgids. Passed to Po.pm as "
 "is. See Po.pm documentation for more info."
 msgstr ""
+"Logischer Wert, der anzeigt, ob Msgids dedupliziert werden sollen. Wird "
+"unverändert an Po.pm weitergegeben. Siehe die Dokumentation von Po.pm für "
+"weitere Informationen."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:74
@@ -11280,9 +11318,12 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Wml.pm:14
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Copyright © 2005 SPI, Inc.\n"
+#| "\n"
 msgid ""
-" Copyright © 2005 SPI, Inc.\n"
+" Copyright � 2005 SPI, Inc.\n"
 "\n"
 msgstr ""
 " Copyright © 2005 SPI, Inc.\n"
@@ -11333,12 +11374,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xhtml.pm:14
-#, fuzzy
-#| msgid ""
-#| "\"It works for me\", which means I use it successfully on my personal Web "
-#| "site.  However, YMMV: please let me know if something doesn't work for "
-#| "you. In particular, tables are getting no testing whatsoever, as we don't "
-#| "use them."
 msgid ""
 "\"It works for me\", which means I use it successfully on my personal Web "
 "site.  However, YMMV: please let me know if something doesn't work for you."
@@ -11346,8 +11381,6 @@ msgstr ""
 "»Funktioniert für mich«, das bedeutet, ich habe es erfolgreich auf meinen "
 "persönlichen Webseiten angewandt. Allerdings kann Ihr Erfolg anders "
 "aussehen: Bitte informieren Sie mich, ob etwas für Sie nicht funktioniert. "
-"Inbesondere werden Tabellen überhaupt nicht getestet, da wir sie nicht "
-"verwenden."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xhtml.pm:18
