@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-07-09 19:23+0200\n"
-"PO-Revision-Date: 2022-03-30 11:11+0200\n"
+"PO-Revision-Date: 2022-07-15 16:52+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -2603,7 +2603,7 @@ msgid ""
 "the gettextize process. Imagine that a string appearing several times "
 "unmodified in the original, but is translated in differing way, or that "
 "different paragraphs are translated in the exact same way."
-msgstr ""
+msgstr "In alcuni casi, po4a aggiunge uno spazio alla fine della stringa originale o di quella tradotta. Questo perché ogni stringa deve essere deduplicata durante il processo di gettext-izzazione. Si immagini che una stringa appaia diverse volte uguale nell'originale, ma venga tradotta in modo diverso, o che paragrafi diversi siano stati tradotti allo stesso modo."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2612,7 +2612,7 @@ msgid ""
 "it is a simple one to one pairing between the msgids of both the master and "
 "the localized files. Since one of the PO files would miss an entry (that "
 "would be reported as duplicate, with two references), the pairing would fail."
-msgstr ""
+msgstr "Senza deduplicazione, tali situazioni bloccherebbero l'algoritmo di gettext-izzazione, dato che questo consiste nel semplice accoppiamento uno-a-uno tra i msgid dei file master e dei file localizzati. Dato che a uno dei file PO mancherebbe una voce (che sarebbe riportata come duplicata, con due riferimenti), l'accoppiamento fallirebbe."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2622,7 +2622,7 @@ msgid ""
 "occur if two identical entries (same content but differing type) of the "
 "master file are translated in the exact same way in the localized file. po4a "
 "would detect a fake desyncronization in such case."
-msgstr ""
+msgstr "Dato che po4a usa il tipo di voce (\"title\" o \"plain paragraph\", ecc.) per rilevare se i flussi in analisi si sono desincronizzati, problemi simili possono occorrere se due voci identiche (stesso contenuto ma tipo diverso) del file master vengono tradotte nello stesso modo nel file localizzato. In tal caso po4a rileverebbe una falsa desincronizzazione."
 
 #. type: textblock
 #: po4a-gettextize:70
@@ -2630,7 +2630,7 @@ msgid ""
 "In most cases, the extra space added by po4a to deduplicate the strings has "
 "no impact on the formatting. Strings are fuzzied anyway, and msgmerge will "
 "probably match the strings accordingly afterward."
-msgstr ""
+msgstr "In molti casi, lo spazio extra aggiunto da po4a per deduplicare le stringhe non ha impatto nella formattazione. Le stringhe vengono comunque rese fuzzy, e in seguito msgmerge confronterà le stringhe di conseguenza."
 
 #. type: textblock
 #: po4a-gettextize:71
@@ -7515,10 +7515,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:28 lib/Locale/Po4a/TransTractor.pm:72
-#, fuzzy
-#| msgid "B<debug>"
 msgid "B<dedup>"
-msgstr "B<debug>"
+msgstr "B<dedup>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:29
@@ -7528,7 +7526,7 @@ msgid ""
 "probably only useful in the gettextization context, where dupplicate msgids "
 "break the string pairing algorithm.  See https://github.com/mquinson/po4a/"
 "issues/334 for more info."
-msgstr ""
+msgstr "Booleano che indica se bisogna deduplicare i msgid.  Se vero, la stessa stringa viene ulteriormente aggiunta, con accodato uno spazio per deduplicarla.  È probabilmente utile solo nel contesto di gettext-izzazione, dove msgid duplicati interferiscono con l'algoritmo di accoppiamento delle stringhe.  Vedere https://github.com/mquinson/po4a/issues/334 per ulteriori informazioni."
 
 #. type: =head1
 #: lib/Locale/Po4a/Po.pm:30
@@ -9921,10 +9919,8 @@ msgstr "B<yfm_keys> (solo-markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:32
-#, fuzzy
-#| msgid "B<yfm_keys> (markdown-only)"
 msgid "B<yfm_lenient> (markdown only)"
-msgstr "B<yfm_keys> (solo-markdown)"
+msgstr "B<yfm_lenient> (solo-markdown)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Text.pm:33
@@ -9933,7 +9929,7 @@ msgid ""
 "particularly helpful when your file starts with a horizontal ruler instead "
 "of a YAML Front Matter, but you insist on using three dashes only for your "
 "ruler."
-msgstr ""
+msgstr "Permette l'analizzatore YAML Front Matter di fallire con intestazioni malformate. Ciò è particolarmente utile quando il file comincia con un separatore orizzontale invece di un YAML Front Matter, ma si insiste ad usare tre lineette solo per il proprio separatore."
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
@@ -9975,44 +9971,30 @@ msgstr "Testato con successo su semplici file di testo e file NEWS.Debian."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:43
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Nicolas François <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Nicolas Francois <nicolas.francois@centraliens.net>\n"
 "\n"
-msgstr ""
-" Nicolas François <nicolas.francois@centraliens.net>\n"
-"\n"
+msgstr " Nicolas Francois <nicolas.francois@centraliens.net>\n\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:45
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
-msgstr ""
-" Copyright © 2005-2008 by Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
-"\n"
+msgstr " Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.\n\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:46
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-#| " Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
-" Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-" Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
+" Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
+" Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 
 #. type: textblock
@@ -10527,7 +10509,7 @@ msgstr "Imposta il debug."
 msgid ""
 "Boolean indicating whether we should deduplicate msgids. Passed to Po.pm as "
 "is. See Po.pm documentation for more info."
-msgstr ""
+msgstr "Booleano che indica se bisogna deduplicare i msgid. Passato a Po.pm com'è. Vedere la documentazione di Po.pm per ulteriori informazioni."
 
 #. type: =head2
 #: lib/Locale/Po4a/TransTractor.pm:74
@@ -11189,20 +11171,10 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Xhtml.pm:14
-#, fuzzy
-#| msgid ""
-#| "\"It works for me\", which means I use it successfully on my personal Web "
-#| "site.  However, YMMV: please let me know if something doesn't work for "
-#| "you. In particular, tables are getting no testing whatsoever, as we don't "
-#| "use them."
 msgid ""
 "\"It works for me\", which means I use it successfully on my personal Web "
 "site.  However, YMMV: please let me know if something doesn't work for you."
-msgstr ""
-"\"A me funziona\", significa che viene usato con successo sul sito Web "
-"personale di uno degli sviluppatori. Tuttavia, YMMV: per favore fateci "
-"sapere se qualcosa non funziona. In particolare, le tabelle non vengono "
-"testate in alcun modo, poiché non le usiamo."
+msgstr "\"A me funziona\", significa che viene usato con successo sul sito Web personale di uno degli sviluppatori. Tuttavia, YMMV: per favore fateci sapere se qualcosa non funziona."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Xhtml.pm:18
@@ -12668,96 +12640,3 @@ msgstr ""
 #: lib/Locale/Po4a/Yaml.pm:20
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Copyright © 2017 Brian Exelbierd."
-
-#~ msgid ""
-#~ "In some unfortunate settings, you will get the feeling that po4a ate some "
-#~ "parts of the text, either the original or the translation. "
-#~ "F<gettextization.failed.po> indicates that both files matched as expected "
-#~ "up to the paragraph N. But then, an (unsuccessful) attempt is made to "
-#~ "match the N+1 paragraph in the original file not with the N+1 paragraph "
-#~ "in the translation as it should, but with the N+2 paragraph. Just as if "
-#~ "the N+1 paragraph that you see in the document simply disappeared from "
-#~ "the file during the process."
-#~ msgstr ""
-#~ "Con alcune impostazioni sfortunate, si ha forte sospetto che po4a abbia "
-#~ "mangiato alcune parti del testo, nell'originale o nella traduzione. "
-#~ "F<gettextization.failed.po> indica che entrambi i file corrispondevano, "
-#~ "come previsto, fino al paragrafo N. Ma poi, è stato effettuato un "
-#~ "tentativo (fallito) di abbinare il paragrafo N+1 nel file originale non "
-#~ "con il paragrafo N+1 nella traduzione come avrebbe dovuto, ma con il "
-#~ "paragrafo N+2. Come se il paragrafo N+1 che vedi nel documento fosse "
-#~ "semplicemente scomparso nel processo."
-
-#~ msgid ""
-#~ "This unfortunate situation happens when the same paragraph is repeated "
-#~ "over the document. In that case, no new entry is created in the PO file, "
-#~ "but a new reference is added to the existing one instead."
-#~ msgstr ""
-#~ "Questa sfortunata situazione si verifica quando uno stesso paragrafo si "
-#~ "ripete più volte nel documento. In questo caso nel file PO non viene "
-#~ "creata nessuna voce aggiuntiva, ma viene invece aggiunto un nuovo "
-#~ "riferimento all'esistente."
-
-#~ msgid ""
-#~ "So, the previous situation occurs when two similar but different "
-#~ "paragraphs are translated in the exact same way. This will apparently "
-#~ "remove a paragraph of the translation. To fix the problem, it is "
-#~ "sufficient to slightly alter one of the translations in the document. You "
-#~ "can also prefer to kill the second paragraph in the original document."
-#~ msgstr ""
-#~ "Quindi, la situazione precedente si verifica quando due paragrafi simili "
-#~ "ma diversi vengono tradotti nello stesso identico modo. Apparentemente "
-#~ "questo rimuoverà un paragrafo della traduzione. Per risolvere il "
-#~ "problema, è sufficiente modificare leggermente una delle traduzioni nel "
-#~ "documento. Se lo si preferisce si può anche eliminare il secondo "
-#~ "paragrafo nel documento originale."
-
-#~ msgid ""
-#~ "To the opposite, if the same paragraph appearing twice in the original "
-#~ "document is not translated in the exact same way at both locations, you "
-#~ "will get the feeling that one paragraph of the original document just "
-#~ "vanished. Just copy the best translation over the other one in the "
-#~ "translated document to fix the problem."
-#~ msgstr ""
-#~ "All'opposto, se lo stesso paragrafo che appare due volte nel documento "
-#~ "originale non viene tradotto allo stesso modo in entrambe le posizioni, "
-#~ "si avrà la sensazione che un paragrafo dell'originale sia scomparso. Per "
-#~ "risolvere il problema basta copiare la migliore traduzione sopra l'altra "
-#~ "nel documento tradotto."
-
-#~ msgid "equals_msgid(po)"
-#~ msgstr "equals_msgid(po)"
-
-#~ msgid ""
-#~ "Returns ($uptodate, $diagnostic) with $uptodate indicating whether all "
-#~ "msgid of the current po file are also present in the one passed as "
-#~ "parameter (all other fields are ignored in the file comparison).  "
-#~ "Informally, if $uptodate returns false, then the po files would be "
-#~ "changed when going through B<po4a-updatepo>."
-#~ msgstr ""
-#~ "Restituisce ($uptodate, $diagnostic) con $uptodate che indica se tutti i "
-#~ "msgid del file po corrente sono presenti anche in quello passato come "
-#~ "parametro (tutti gli altri campi vengono ignorati nella comparazione "
-#~ "file). Informalmente, se $uptodate restituisce falso, i file po verranno "
-#~ "modificati quando si passa attraverso B<po4a-updatepo>."
-
-#~ msgid ""
-#~ "If $uptodate is false, then $diagnostic contains a diagnostic of why this "
-#~ "is so."
-#~ msgstr ""
-#~ "SE $uptodate è falso, allora $diagnostic conterrà una descrizione del "
-#~ "motivo di ciò."
-
-#~ msgid "is_po_uptodate()"
-#~ msgstr "is_po_uptodate()"
-
-#~ msgid ""
-#~ "Returns ($uptodate, $diagnostic) where $uptodate is whether the input po "
-#~ "and the output po match (if not, it means that the input po should be "
-#~ "updated)  and $diagnostic is a string explaining why the po file is not "
-#~ "uptodate, when this happens."
-#~ msgstr ""
-#~ "Restituisce ($uptodate, $diagnostic) dove $uptodate indica se il po "
-#~ "d'ingresso e il po d'uscita corrispondono (in caso contrario, significa "
-#~ "che il po d'ingresso deve essere aggiornato) e $diagnostic è una stringa "
-#~ "che spiega perché il file po non è aggiornato, quando ciò accade."
