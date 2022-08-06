@@ -203,7 +203,7 @@ sub show_version {
 
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
 my ( $outfile,         $width,    $threshold ) = ( '-', 80, 80 );
-my ( $help,            $help_fmt, @verbose, $debug, $wrappo, @addfiles, $format, @options );
+my ( $help,            $help_fmt, @verbose, $debug, $wrappo, @addfiles, $format, @options, $no_deprecation );
 my ( $master_filename, $po_filename );
 my ( $mastchar,        $locchar, $addchar );
 GetOptions(
@@ -222,6 +222,9 @@ GetOptions(
     'wrap-po=s'             => \$wrappo,
 
     'option|o=s' => \@options,
+
+    # undocumented option to silence the warning about po4a-translate being deprecated
+    'no-deprecation' => \$no_deprecation,
 
     'width|w=s' => \$width,
     'verbose|v' => \@verbose,
@@ -254,6 +257,11 @@ foreach (@options) {
     } else {
         $options{$_} = 1;
     }
+}
+
+unless ($no_deprecation) {
+    print wrap_msg(
+        gettext("po4a-translate is deprecated. The unified po4a(1) program is more convenient and less error prone.") );
 }
 
 # parser

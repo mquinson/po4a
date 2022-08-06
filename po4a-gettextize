@@ -391,6 +391,13 @@ foreach my $file ( @masterfile, @locfile ) {
     $file eq '-' || -e $file || die wrap_msg( gettext("File %s does not exist."), $file );
 }
 
+print wrap_msg(
+    gettext(
+            "po4a-gettextize is only useful to convert previously existing translations to a PO based workflow. "
+          . "Once you successfully converted your project to po4a, you should use the po4a(1) program to maintain it and update your translations."
+    )
+);
+
 # Declare the TransTractor parsers
 my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Locale::Po4a::Chooser::new( $type, %opts ) );
 

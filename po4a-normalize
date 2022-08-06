@@ -124,7 +124,7 @@ sub show_version {
     exit 0;
 }
 
-my ( $blank, $help_fmt, $help, $type, $debug, $verbose, $quiet, $wrappo, @options );
+my ( $blank, $help_fmt, $help, $type, $debug, $verbose, $quiet, $wrappo, @options, $no_deprecation );
 my ($mastchar);
 my ( $localized, $potfile ) = ( 'po4a-normalize.output', 'po4a-normalize.po' );
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
@@ -138,6 +138,9 @@ GetOptions(
     'blank|b' => \$blank,
 
     'master-charset|M=s' => \$mastchar,
+
+    # undocumented option to silence the warning about po4a-normalize not being intended for users
+    'no-deprecation' => \$no_deprecation,
 
     'option|o=s' => \@options,
     'wrap-po=s'  => \$wrappo,
@@ -154,7 +157,7 @@ pod2usage() unless scalar @ARGV == 1;
 
 my %options = (
     "verbose" => $verbose,
-    "debug"   => $debug
+    "debug"   => $debug,
 );
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
@@ -162,6 +165,15 @@ foreach (@options) {
     } else {
         $options{$_} = 1;
     }
+}
+
+unless ($no_deprecation) {
+    print wrap_msg(
+        gettext(
+                "po4a-normalize is mostly useful to debug po4a itself. "
+              . "Users are advised to use the po4a(1) program instead."
+        )
+    );
 }
 
 my $parser = Locale::Po4a::Chooser::new( $type, %options );

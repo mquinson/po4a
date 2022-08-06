@@ -406,7 +406,7 @@ sub run_one_format {
     # Normalize the document
     my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
     my $cmd =
-        "${execpath}/po4a-normalize -f $format --quiet "
+        "${execpath}/po4a-normalize --no-deprecation -f $format --quiet "
       . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
       . " > $real_stderr 2>&1";
 
@@ -442,7 +442,7 @@ sub run_one_format {
 
         # Translate the document
         $cmd =
-            "${execpath}/po4a-translate -f $format $options --master $basename.$ext"
+            "${execpath}/po4a-translate --no-deprecation -f $format $options --master $basename.$ext"
           . " --po $cwd/$pofile --localized $cwd/${tmpbase}.trans"
           . " > $cwd/$tmpbase.trans.stderr 2>&1";
 
@@ -460,7 +460,7 @@ sub run_one_format {
         # Update PO
         copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
         $cmd =
-            "${execpath}/po4a-updatepo -f $format $options "
+            "${execpath}/po4a-updatepo --no-deprecation -f $format $options "
           . "--master $basename.$ext --po $cwd/${tmpbase}.po_updated"
           . " > $cwd/tmp/$path/update.stderr 2>&1";
 
