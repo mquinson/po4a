@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.23\n"
 "Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
 "POT-Creation-Date: 2022-07-09 22:59+0200\n"
-"PO-Revision-Date: 2021-12-23 21:26+0100\n"
+"PO-Revision-Date: 2022-08-07 11:54+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a/it/>\n"
 "Language: it\n"
@@ -372,6 +372,10 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Questa pagina definisce una nuova macro '%s' con '%s', ma non è stato specificato il comportamento atteso di po4a se viene usata '%s'. Si otterrà un errore se questa macro viene effettivamente usata nella pagina.\n"
+"Aggiungere la macro ad uno dei seguenti parametri '%s', '%s', '%s', '%s', '%s' o '%s' per evitare problemi.\n"
+"Per esempio, passando '%s' a po4a si assicurerà che la macro definita rimanga nascosta ai traduttori.\n"
+"Fare riferimento alla magina man di Locale::Po4a::Man per ulteriori informazioni su questi parametri.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2267
 #, perl-format
@@ -381,7 +385,7 @@ msgid ""
 "verbatim in the translated file, but it's not very robust. '%s' shows these "
 "macros to the translators, but groff macros are not user-friendly for "
 "translators."
-msgstr ""
+msgstr "Questa pagina definisce una nuova macro con '%s'. Dato che po4a non è un vero analizzatore groff, ciò non è supportato. L'opzione '%s' fa in modo che queste macro siano copiate identiche nel file tradotto, ma ciò non è molto robusto. '%s' mostra queste macro ai traduttori, ma le macro groff non sono amichevoli per i traduttori."
 
 #: ../../lib/Locale/Po4a/Man.pm:2335
 msgid "The .ie macro must be followed by a .el macro."
@@ -395,7 +399,7 @@ msgid ""
 "copied verbatim in the translated file, but it's not very robust. '%s' shows "
 "these macros to the translators, but groff macros are not user-friendly for "
 "translators."
-msgstr ""
+msgstr "Questa pagina usa condizionali con '%s'. Dato che po4a non è un vero analizzatore groff, ciò non è supportato un modo predefinito. L'opzione '%s' fa in modo che queste macro vengano copiate identiche nel file tradotto, ma ciò non è molto robusto. '%s' mostra queste macro ai traduttori, ma le macro groff non sono amichevoli per i traduttori."
 
 #: ../../lib/Locale/Po4a/Man.pm:2423
 #, perl-format
@@ -846,6 +850,8 @@ msgid ""
 "'yfm_lenient' option for a stricter behavior.\n"
 "Ignored error: %s"
 msgstr ""
+"In elaborazione anche se la Front Matter YAML non può essere analizzata. Rimuovere l'opzione 'yfm_lenient' per un comportamento più rigido.\n"
+"Errore ignorato: %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:635
 #, perl-format
@@ -856,6 +862,9 @@ msgid ""
 "Error: %s\n"
 "Content of the YFM: %s"
 msgstr ""
+"Impossibile ottenere la Front Matter YAML da file. Se non si intendeva aggiungere una Front Matter YAML ma un separatore orizzontale, usare invece '----', o passare l'opzione 'yfm_lenient'.\n"
+"Errore: %s\n"
+"Contenuto della YFM: %s"
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:519
 #, perl-format
@@ -1505,7 +1514,7 @@ msgstr "%s è tradotto al %s%% (%s stringhe su %s)."
 msgid ""
 "Temporary master and localized POT files dumped to po4atemp.master.po and "
 "po4atemp.localized.po"
-msgstr ""
+msgstr "Master temporaneo e file POT localizzati scaricati su po4atemp.master.po e po4atemp.localized.po"
 
 #: ../../po4a-normalize:177
 #, perl-format
@@ -1549,34 +1558,3 @@ msgstr "fatto."
 #, perl-format
 msgid "Could not copy the PO file (%s -> %s): %s"
 msgstr "Impossibile copiare il file PO (%s -> %s): %s"
-
-#~ msgid ""
-#~ "This page defines a new macro with '.de'. Since po4a is not a real groff "
-#~ "parser, this is not supported."
-#~ msgstr ""
-#~ "La pagina definisce una nuova macro con «.de». Dato che po4a non è un "
-#~ "vero parser groff, questo non è supportato."
-
-#, perl-format
-#~ msgid ""
-#~ "This page uses conditionals with '%s'. Since po4a is not a real groff "
-#~ "parser, this is not supported."
-#~ msgstr ""
-#~ "La pagina usa un costrutto condizionale con «%s». Dato che po4a non è un "
-#~ "vero parser groff, questo non è supportato."
-
-#, perl-format
-#~ msgid "The amount of entries differ between files: %d is not %d"
-#~ msgstr "Il numero di voci è diverso tra i file: %d non è %d"
-
-#, perl-format
-#~ msgid "msgid declared in one file only: %s\n"
-#~ msgstr "msgid dichiarato solo in un file: %s\n"
-
-#, perl-format
-#~ msgid ""
-#~ "Your input po file %s seems outdated (%s). Please consider running po4a-"
-#~ "updatepo to refresh it."
-#~ msgstr ""
-#~ "Il file po in ingresso %s sembra obsoleto (%s). Eseguire po4a-updatepo "
-#~ "per aggiornarlo."
