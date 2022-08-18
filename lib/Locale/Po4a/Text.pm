@@ -940,14 +940,14 @@ Tested successfully on simple text files and NEWS.Debian files.
 
 =head1 AUTHORS
 
- Nicolas Francois <nicolas.francois@centraliens.net>
+ Nicolas François <nicolas.francois@centraliens.net>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.
+ Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.
 
- Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.
- Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.
+ Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.
+ Copyright © 2020 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
