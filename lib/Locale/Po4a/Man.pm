@@ -1201,7 +1201,12 @@ sub post_trans {
             } elsif ( $first eq '>' ) {
                 $lvl--;
             }
-            $done .= $first if ( $lvl > 0 );
+            if ($first eq "\n") {
+                # Don't accept \n within B<> parameters as troff seems to reset font on new line (Debian's #1016753)
+                $done .= ' ' if ( $lvl > 0);
+            } else {
+                $done .= $first if ( $lvl > 0);
+            }
             $rest = substr( $rest, 1 );
         }
         die wrap_ref_mod( $ref || $self->{ref},
