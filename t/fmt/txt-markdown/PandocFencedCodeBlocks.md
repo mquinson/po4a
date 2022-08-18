@@ -7,6 +7,7 @@ if (a > 3) {
 ~~~~~~~~~~~~~~~~
 ~~~~~~~~~~
 code including tildes
+line2
 ~~~~~~~~~~
 ~~~~~~~~~~~~~~~~
 
@@ -17,7 +18,9 @@ qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ~~~haskell
-qsort [] = []
+qsort []     = []
+qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
+               qsort (filter (>= x) xs)
 ~~~
 
 ```````
@@ -29,6 +32,7 @@ if (a > 3) {
 ````````````````
 ``````````
 code including backticks
+line2
 ``````````
 ````````````````
 
@@ -39,5 +43,7 @@ qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
 `````````````````````````````````````````````````
 
 ```haskell
-qsort [] = []
+qsort []     = []
+qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
+               qsort (filter (>= x) xs)
 ```
