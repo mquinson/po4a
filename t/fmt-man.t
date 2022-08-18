@@ -10,38 +10,8 @@ use lib q(t);
 use Testhelper;
 
 my @tests;
+
 push @tests,
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/quotes.man'
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/quoted-comment.man',
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/dots1.man',
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/dots-errors1.man',
-    'error'  => 1,
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/dots-errors2.man',
-    'error'  => 1,
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/dots-errors3.man',
-    'error'  => 1,
-  },
-  {
-    'format' => 'man',
-    'input'  => 'fmt/man/dots2.man',
-  },
   {
     'doc'    => 'null arguments and null paragraphs',
     'format' => 'man',
@@ -65,17 +35,16 @@ push @tests,
     'options' => '-o groff_code=translate',
   };
 
-foreach my $t (
-    qw(fonts mdoc tbl-textblock tbl-option-tab
-    tbl-mdoc-mixed1 tbl-mdoc-mixed2 tbl-mdoc-mixed3 tbl-mdoc-mixed4
-    spaces macros)
-  )
-{
-    push @tests,
-      {
-        'format' => 'man',
-        'input'  => "fmt/man/$t.man",
-      };
+foreach my $t ( qw(fonts dots2 macros mdoc
+                   quotes quoted-comment spaces
+                   tbl-textblock tbl-option-tab tbl-mdoc-mixed1 tbl-mdoc-mixed2 tbl-mdoc-mixed3 tbl-mdoc-mixed4 ) ) {
+    push @tests,  { 'format' => 'man', 'input'  => "fmt/man/$t.man" };
 }
+
+foreach my $t (qw(dots-errors1 dots-errors2 dots-errors3)) {
+    push @tests, { 'format' => 'man', 'input'  => "fmt/man/$t.man", 'error'  => 1 };
+
+}
+
 run_all_tests(@tests);
 0;
