@@ -847,7 +847,7 @@ sub do_paragraph {
     # $type .= " verbatim: '".($self->{verbatim}//"NONE")."' bullet: '$bullets' wrap: '$wrap' indent: '".($self->{indent}//"NONE")."' type: '".($self->{type}//"NONE")."'";
     # print STDERR "$type\n";
 
-    if ( $bullets and not $wrap and not defined $self->{verbatim} ) {
+    if ( $bullets and not defined $self->{verbatim} ) {
 
         # Detect bullets
         # |        * blah blah
@@ -855,7 +855,7 @@ sub do_paragraph {
         # |          ^-- aligned
         # <empty line>
         #
-        # Other bullets supported:
+        # The leading spaces are optional, and other bullets are supported:
         # - blah         o blah         + blah
         # 1. blah       1) blah       (1) blah
       TEST_BULLET:
