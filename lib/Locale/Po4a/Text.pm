@@ -844,13 +844,8 @@ sub do_paragraph {
     $wrap = 0 unless $defaultwrap;
 
     # DEBUG
-    #    my $b;
-    #    if (defined $self->{bullet}) {
-    #            $b = $self->{bullet};
-    #    } else {
-    #            $b = "UNDEF";
-    #    }
-    #    $type .= " verbatim: '".($self->{verbatim}||"NONE")."' bullet: '$b' indent: '".($self->{indent}||"NONE")."' type: '".($self->{type}||"NONE")."'";
+    # $type .= " verbatim: '".($self->{verbatim}//"NONE")."' bullet: '$bullets' wrap: '$wrap' indent: '".($self->{indent}//"NONE")."' type: '".($self->{type}//"NONE")."'";
+    # print STDERR "$type\n";
 
     if ( $bullets and not $wrap and not defined $self->{verbatim} ) {
 
