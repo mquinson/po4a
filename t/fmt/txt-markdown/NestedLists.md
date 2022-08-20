@@ -13,4 +13,16 @@ This serves as testcase for nested lists.
      * Sub-sub item
    * Nested item 2
 
+Leading spaces are optional, and hyphen or plus can be used as list markers.
+
+- This item paragraph runs over
+  several lines.
++ This item paragraph runs over
+  several lines.
+* This item paragraph runs over
+  several lines.
+  - Nested item 1
+    + Sub-sub item
+  + Nested item 2
+
 Normal paragraph.
