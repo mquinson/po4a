@@ -302,6 +302,7 @@ sub run_one_po4aconf {
     $expected{'output'}      = 1;
     $expected{'diff_output'} = 1;
   FILE: foreach my $file ( glob("$tmppath/*") ) {
+        note("Seen file $file");
         $file =~ s|$tmppath/||;
         if ( not $expected{$file} ) {
             if ( ( $mode eq 'srcdir' || $mode eq 'dstdir' || $mode eq 'srcdstdir' ) ) {

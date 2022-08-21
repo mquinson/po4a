@@ -659,12 +659,7 @@ Once setup, executing S<po4a> will parse your documentation, update the POT
 template file, use it to update the PO translation files, and use them to update
 the documentation translation files. All in one command:
 
-        po4a po4a.cfg
-
-In case of problem, run in verbose mode with the S<-v> flag. On the first run,
-it may report that "your POT file is already up-to-date" although it's still an
-empty file. Simply touch a file of your documentation: S<po4a> only updates the
-POT file if it's not the most recently modified file.
+        po4a --verbose po4a.cfg
 
 This it. S<po4a> is now fully configured. Once you've fixed your error in
 F<foo.1>, the offending paragraph in the German translation will be replaced by
@@ -1147,15 +1142,16 @@ while (<CONFIG>) {
                 next unless defined $basedir;
                 my $candidate = "$basedir/$po_directory";
                 if ( -e $candidate && -d $candidate ) {
-                    $found = 1;
-                    print STDERR wrap_msg( gettext("Using '%s' as a %s."), $candidate, "po_directory" )
-                      if $po4a_opts{"verbose"};
-
                     opendir PO_DIR,
                       $candidate
                       or die wrap_ref_mod( "$config_file:$nb", "", gettext("Cannot list directory '%s' in '%s' "),
                         $po_directory, $basedir );
                     map { push @po_files, "$po_directory/$_" if -e "$candidate/$_"; } ( sort readdir PO_DIR );
+
+                    # Only display the message the first time we find the right directory
+                    print STDERR wrap_msg( gettext("Using '%s' as a %s."), $candidate, "po_directory" )
+                        if $po4a_opts{"verbose"} && $found == 0 && scalar @po_files;
+                    $found = 1;
                 }
             }
             unless ($found) {
@@ -1459,7 +1455,12 @@ if ( $pot_filename =~ m/\$master/ ) {
 
     if ( not scalar @{ $po4a_opts{"partial"} } ) {
         if ( -e find_input_file($pot_filename) ) {
-            my $modtime = ( stat find_input_file($pot_filename) )[9];
+            my @statfile =  stat find_input_file($pot_filename);
+            my $filesize = $statfile[7];
+            my $modtime = $statfile[9];
+
+            # The POT files needs to be generated if it's currently empty (first run?)
+            $update_pot_file = 1 if $filesize == 0;
 
             # The POT needs to be re-generated if a master document is more recent
             # than the POT.

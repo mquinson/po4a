@@ -17,11 +17,23 @@ push @tests, {
     'expected_files' => 'single.fr.po  single.pot',
   },
   {
+    'doc'            => 'Single language, empty pot no po',
+    'po4a.conf'      => 'cfg/single-emptypot/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'fr.po  single.pot',
+        'tests'          => [
+            'PODIFF -I#: $path/_fr.po.expected $tmppath/fr.po', #
+            'PODIFF -I#: $path/_single.pot.expected $tmppath/single.pot',
+            'rm $tmppath/single.pot && touch $tmppath/single.pot',    # This file is empty on purpose
+            'rm $tmppath/fr.po && touch $tmppath/fr.po', # This file is empty on purpose
+        ]
+
+  },
+  {
     'doc'            => 'Single language, no po',
     'po4a.conf'      => 'cfg/single-nopo/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single.fr.po  single.pot',
-
   },
   {
     'doc'              => 'Single language, no po, --no-update',
