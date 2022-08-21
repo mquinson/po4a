@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2022-07-09 19:23+0200\n"
+"POT-Creation-Date: 2022-08-18 21:51+0200\n"
 "PO-Revision-Date: 2022-07-14 11:24+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
@@ -180,7 +180,7 @@ msgstr ""
 
 #. type: =head1
 #: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:189
-#: po4a-gettextize:73 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
+#: po4a-gettextize:78 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
 #: msguntypot:29 doc/po4a.7.pod:177 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Guide.pm:10 lib/Locale/Po4a/Halibut.pm:14
@@ -2023,7 +2023,7 @@ msgstr ""
 "updatepo(1)>, L<po4a(7)>."
 
 #. type: =head1
-#: po4a:191 po4a-gettextize:75 po4a-normalize:31 po4a-translate:56
+#: po4a:191 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
 #: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:183
 #: lib/Locale/Po4a/AsciiDoc.pm:52 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
@@ -2041,12 +2041,17 @@ msgid "AUTHORS"
 msgstr "АУТОРИ"
 
 #. type: verbatim
-#: po4a:192 po4a-gettextize:76 po4a-normalize:32 po4a-translate:57
+#: po4a:192 po4a-gettextize:81 po4a-normalize:32 po4a-translate:57
 #: po4a-updatepo:56 lib/Locale/Po4a/Man.pm:110
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Denis Barbier <barbier@linuxfr.org>\n"
+#| " Nicolas Francois <nicolas.francois@centraliens.net>\n"
+#| " Martin Quinson (mquinson#debian.org)\n"
+#| "\n"
 msgid ""
 " Denis Barbier <barbier@linuxfr.org>\n"
-" Nicolas Francois <nicolas.francois@centraliens.net>\n"
+" Nicolas François <nicolas.francois@centraliens.net>\n"
 " Martin Quinson (mquinson#debian.org)\n"
 "\n"
 msgstr ""
@@ -2056,7 +2061,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: po4a:193 po4a-gettextize:77 po4a-normalize:33 po4a-translate:58
+#: po4a:193 po4a-gettextize:82 po4a-normalize:33 po4a-translate:58
 #: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:54
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
@@ -2073,13 +2078,12 @@ msgid "COPYRIGHT AND LICENSE"
 msgstr "ПРАВА УМНОЖАВАЊА И ЛИЦЕНЦА"
 
 #. type: textblock
-#: po4a:194 po4a-gettextize:78 po4a-normalize:34 po4a-translate:59
-#: po4a-updatepo:58
+#: po4a:194 po4a-normalize:34 po4a-translate:59 po4a-updatepo:58
 msgid "Copyright 2002-2020 by SPI, inc."
 msgstr "Права умножавања 2002-2020 by SPI, inc."
 
 #. type: textblock
-#: po4a:195 po4a-gettextize:79 po4a-normalize:35 po4a-translate:60
+#: po4a:195 po4a-gettextize:84 po4a-normalize:35 po4a-translate:60
 #: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:56
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
@@ -2121,30 +2125,24 @@ msgstr "(I<XX.po> је излаз, све остало су улази)"
 #. type: textblock
 #: po4a-gettextize:8
 msgid ""
-"The B<po4a-gettextize> script is in charge of converting documentation files "
-"into PO files. You only need it to setup your translation project with po4a, "
-"never afterward."
+"The B<po4a-gettextize> script helps you converting your previously existing "
+"translations into a po4a-based workflow. This is only to be done once to "
+"salvage an existing translation while converting to po4a, not on a regular "
+"basis after the conversion of your project. This tedious process is "
+"explained in details in Section 'Converting a manual translation to po4a' "
+"below."
 msgstr ""
-"Скрипта B<po4a-gettextize> је задужена за конверзију фајлова документације у "
-"PO фајлове. Потребна вам је само да поставите ваш пројекат превођења са "
-"програмом po4a, никад касније."
 
 #. type: textblock
 #: po4a-gettextize:9
 msgid ""
-"If you start from scratch, B<po4a-gettextize> will extract the translatable "
-"strings from the documentation and write a POT file. If you provide a "
-"previously existing translated file with the B<-l> flag, B<po4a-gettextize> "
-"will try to use the translations that it contains in the produced PO file. "
-"This process remains tedious and manual, as explained in Section 'Converting "
-"a manual translation to po4a' below."
+"You must provide both a master file (e.g., the source in English) and an "
+"existing translated file (e.g. a previous translation attempt without po4a). "
+"If you provide more than one master or translation files, they will be used "
+"in sequence, but it may be easier to gettextize each page or chapter "
+"separately and then use B<msgmerge> to merge all produced PO files. As you "
+"wish."
 msgstr ""
-"Ако почињете из почетка, B<po4a-gettextize> ће да издвоји преводиве "
-"стрингове из документације и записаће POT фајл. У случају да заставицом B<-"
-"l> наведете претходно постојећи преведени фајл, B<po4a-gettextize> ће "
-"покушати да искористи преводе које он садржи и креираће PO фајл. Овај процес "
-"остаје захтеван и мора ручно да се уради, као што је објашњено у одељку "
-"'Конвертовање ручног превода у po4a пројекат' ниже."
 
 #. type: textblock
 #: po4a-gettextize:10
@@ -2237,9 +2235,11 @@ msgstr "B<--help-format>"
 msgid "List the documentation formats understood by po4a."
 msgstr "Списак формата документације које програм po4a разуме."
 
-#. type: textblock
+#. type: =item
 #: po4a-gettextize:30
-msgid "= item B<-k> B<--keep-temps>"
+#, fuzzy
+#| msgid "= item B<-k> B<--keep-temps>"
+msgid "B<-k> B<--keep-temps>"
 msgstr "= ставка B<-k> B<--keep-temps>"
 
 #. type: textblock
@@ -2260,13 +2260,20 @@ msgstr "Конвертовање ручног превода у po4a проје�
 
 #. type: textblock
 #: po4a-gettextize:47
+#, fuzzy
+#| msgid ""
+#| "B<po4a-gettextize> will try to extract the content of any provided "
+#| "translation file, and use this content as msgstr in the produced PO file. "
+#| "Be warned that this process is very fragile: the Nth string of the "
+#| "translated file is supposed to be the translation of the Nth string in "
+#| "the original. This will naturally not work unless both files share "
+#| "exactly the same structure."
 msgid ""
-"B<po4a-gettextize> will try to extract the content of any provided "
-"translation file, and use this content as msgstr in the produced PO file. Be "
-"warned that this process is very fragile: the Nth string of the translated "
-"file is supposed to be the translation of the Nth string in the original. "
-"This will naturally not work unless both files share exactly the same "
-"structure."
+"B<po4a-gettextize> synchronizes the master and localized files to extract "
+"their content into a PO file. The content of the master file gives the "
+"B<msgid> while the content of the localized file gives the B<msgstr>. This "
+"process is somewhat fragile: the Nth string of the translated file is "
+"supposed to be the translation of the Nth string in the original."
 msgstr ""
 "B<po4a-gettextize> ће покушати да издвоји садржај било ког датог фајла "
 "превода, и искористиће тај садржај као msgstr у креираном PO фајлу. Имајте "
@@ -2277,13 +2284,33 @@ msgstr ""
 #. type: textblock
 #: po4a-gettextize:48
 msgid ""
+"Gettextization works best if you manage to retrieve the exact version of the "
+"original document that was used for translation. Even so, you may need to "
+"fiddle with both master and localized files to align their structure if it "
+"was changed by the original translator, so working on files' copies is "
+"advised."
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:49
+#, fuzzy
+#| msgid ""
+#| "Internally, each po4a parser reports the syntactical type of each "
+#| "extracted strings. This is how desynchronization are detected during the "
+#| "gettextization.  For example, if the files have the following structure, "
+#| "it is very unlikely that the 4th string in translation (of type "
+#| "'chapter') is the translation of the 4th string in original (of type "
+#| "'paragraph'). It is more likely that a new paragraph was added to the "
+#| "original, or that two original paragraphs were merged together in the "
+#| "translation."
+msgid ""
 "Internally, each po4a parser reports the syntactical type of each extracted "
 "strings. This is how desynchronization are detected during the "
-"gettextization.  For example, if the files have the following structure, it "
-"is very unlikely that the 4th string in translation (of type 'chapter') is "
-"the translation of the 4th string in original (of type 'paragraph'). It is "
-"more likely that a new paragraph was added to the original, or that two "
-"original paragraphs were merged together in the translation."
+"gettextization.  In the example depicted below, it is very unlikely that the "
+"4th string in translation (of type 'chapter') is the translation of the 4th "
+"string in original (of type 'paragraph'). It is more likely that a new "
+"paragraph was added to the original, or that two original paragraphs were "
+"merged together in the translation."
 msgstr ""
 "Интерно, сваки po4a парсер пријављује синтактични тип сваког издвојеног "
 "стринга. На тај начин се откривају десинхронизације током gettextизације. На "
@@ -2293,7 +2320,7 @@ msgstr ""
 "у преводу два пасуса из оригинала спојена."
 
 #. type: verbatim
-#: po4a-gettextize:49
+#: po4a-gettextize:50
 #, no-wrap
 msgid ""
 "    Original         Translation\n"
@@ -2303,7 +2330,7 @@ msgstr ""
 "\n"
 
 #. type: verbatim
-#: po4a-gettextize:50
+#: po4a-gettextize:51
 #, no-wrap
 msgid ""
 "  chapter            chapter\n"
@@ -2323,14 +2350,22 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a-gettextize:51
+#: po4a-gettextize:52
+#, fuzzy
+#| msgid ""
+#| "B<po4a-gettextize> will verbosely diagnose any detected structure "
+#| "desynchronization. When this happens, you should manually edit the files "
+#| "(this probably requires that you have some notions of the target "
+#| "language). You must add fake paragraphs or remove some content in one of "
+#| "the documents (or both) to fix the reported disparities, until the "
+#| "structure of both documents perfectly match. Some tricks are given in the "
+#| "next section."
 msgid ""
-"B<po4a-gettextize> will verbosely diagnose any detected structure "
-"desynchronization. When this happens, you should manually edit the files "
-"(this probably requires that you have some notions of the target language). "
-"You must add fake paragraphs or remove some content in one of the documents "
-"(or both) to fix the reported disparities, until the structure of both "
-"documents perfectly match. Some tricks are given in the next section."
+"B<po4a-gettextize> will verbosely diagnose any structure desynchronization. "
+"When this happens, you should manually edit the files to add fake paragraphs "
+"or remove some content here and there until the structure of both files "
+"actually match. Some tricks are given below to salvage the most of the "
+"existing translation while doing so."
 msgstr ""
 "B<po4a-gettextize> ће детаљно да дијагностицира било какву откривену "
 "десинхронизацију структуре. Када се то догоди, требало би ручно да уредите "
@@ -2341,45 +2376,27 @@ msgstr ""
 "наредном одељку."
 
 #. type: textblock
-#: po4a-gettextize:52
-msgid ""
-"Even when the document is successfully processed, undetected disparities and "
-"silent errors are still possible. That is why any translation associated "
-"automatically by po4a-gettextize is marked as I<fuzzy> to require an manual "
-"inspection by humans. One has to check that each retrieved msgstr is "
-"actually the translation of the associated msgid, and not the string before "
-"or after."
-msgstr ""
-"Ча ки када је документ успешно обрађен, и даље су могуће тихе грешке и "
-"неоткривени диспаритети. Због тога је сваки превод који је аутоматски "
-"доделио po4a-gettextize обележен као I<fuzzy> чиме се захтева ручна људска "
-"инспекција. Мора да се провери да ли је сваки прибављен msgstr заиста и "
-"превод придруженог msgid, а не стринга пре или после."
-
-#. type: textblock
 #: po4a-gettextize:53
+#, fuzzy
+#| msgid ""
+#| "If you are lucky enough to have a a perfect match in the file structures, "
+#| "building a correct PO file is a matter of seconds. Otherwise, you will "
+#| "soon understand why this process has such an ugly name :) But remember "
+#| "that this grunt work is the price to pay to get the comfort of po4a "
+#| "afterward. Once converted, the synchronization between master documents "
+#| "and translations will always be fully automatic."
 msgid ""
-"As you can see, the key here is to have the exact same structure in the "
-"translated document and in the original one. The best is to do the "
-"gettextization on the exact version of F<master.doc> that was used for the "
-"translation, and only update the PO file against the latest master file once "
-"the gettextization was successful."
-msgstr ""
-"Као што можете да видите, кључна ствар овде је да преведени и оригинални "
-"документ имају потпуно исту структуру. Најбоље је када се ради "
-"gettextизација тачно оне верзије документа F<master.doc> који је употребљен "
-"за превод, и да се PO фајл ажурира у односу на најновији мастер фајл једном "
-"када gettextизација успе."
-
-#. type: textblock
-#: po4a-gettextize:54
-msgid ""
-"If you are lucky enough to have a a perfect match in the file structures, "
-"building a correct PO file is a matter of seconds. Otherwise, you will soon "
-"understand why this process has such an ugly name :) But remember that this "
-"grunt work is the price to pay to get the comfort of po4a afterward. Once "
-"converted, the synchronization between master documents and translations "
-"will always be fully automatic."
+"If you are lucky enough to have a perfect match in the file structures out "
+"of the box, building a correct PO file is a matter of seconds. Otherwise, "
+"you will soon understand why this process has such an ugly name :) Even so, "
+"gettextization often remains faster than translating everything again. I "
+"gettextized the French translation of the whole Perl documentation in one "
+"day despite the I<many> synchronization issues. Given the amount of text "
+"(2Mb of original text), restarting the translation without first salvaging "
+"the old translations would have required several months of work. In "
+"addition, this grunt work is the price to pay to get the comfort of po4a. "
+"Once converted, the synchronization between master documents and "
+"translations will always be fully automatic."
 msgstr ""
 "Ако имате довољно среће да вам се структуре фајлова савршено поклапају, "
 "изградња исправног PO фајла траје неколико секунди. У супротном, врло брзо "
@@ -2390,53 +2407,34 @@ msgstr ""
 "аутоматска."
 
 #. type: textblock
-#: po4a-gettextize:55
+#: po4a-gettextize:54
 msgid ""
-"Even when things go wrong, gettextization often remains faster than "
-"translating everything again. I was able to gettextize the existing French "
-"translation of the whole Perl documentation in one day, even though the "
-"structure of many documents were desynchronized. That was more than two "
-"megabytes of original text (2 millions of characters): restarting the "
-"translation from scratch would have required several months of work."
+"After a successful gettextization, the produced documents should be manually "
+"checked for undetected disparities and silent errors, as explained below."
 msgstr ""
-"Чак и када ствари крену по злу, gettextизација остаје бржа од поновног "
-"превођења свега. Успео сам да одрадим gettextiзацију постојећег француског "
-"превода комплетне Perl документације за један дан упркос томе што је "
-"структура многих докумената била десинхронизована. То је било више од 2 "
-"мегабајта оригиналног текста (2 милиона карактера): поновно започињање "
-"превода из почетка би захтевало неколико месеци рада."
 
-#. type: =head2
-#: po4a-gettextize:56
+#. type: =head3
+#: po4a-gettextize:55
 msgid "Hints and tricks for the gettextization process"
 msgstr "Савети и трикови за процес gettextизације"
 
 #. type: textblock
-#: po4a-gettextize:57
+#: po4a-gettextize:56
+#, fuzzy
+#| msgid ""
+#| "When this happens, the whole game comes down to the alignment of these "
+#| "damn files' structures again through manual edits. B<po4a-gettextize> is "
+#| "rather verbose about what went wrong when it happens. It reports the "
+#| "strings that don't match, their positions in the text, and the type of "
+#| "each of them. Moreover, the PO file generated so far is dumped as "
+#| "F<gettextization.failed.po> for further inspection."
 msgid ""
-"The gettextization stops as soon as a desynchronization is detected. In "
-"theory, it should probably be possible resynchronize the gettextization "
-"later in the documents using e.g. the same algorithm than the L<diff(1)> "
-"utility. But a manual intervention would still be mandatory to manually "
-"match the elements that couldn't be automatically matched, explaining why "
-"automatic resynchronization is not implemented (yet?)."
-msgstr ""
-"Чим се открије десинхронизација, gettextизација се прекида. Теоретски, "
-"вероватно би било могуће да се gettextизација ресинхронизује касније у "
-"документу употребом нпр. истог алгоритма који користи и L<diff(1)> алат. Али "
-"ручна интервенција би и даље била обавезна да би се ручно подударили "
-"елементи који нису могли аутоматски да се подударе, чиме се објашњава зашто "
-"аутоматска ресинхронизација (још?) није имплементирана."
-
-#. type: textblock
-#: po4a-gettextize:58
-msgid ""
-"When this happens, the whole game comes down to the alignment of these damn "
-"files' structures again through manual edits. B<po4a-gettextize> is rather "
-"verbose about what went wrong when it happens. It reports the strings that "
-"don't match, their positions in the text, and the type of each of them. "
-"Moreover, the PO file generated so far is dumped as F<gettextization.failed."
-"po> for further inspection."
+"The gettextization stops as soon as a desynchronization is detected. When "
+"this happens, you need to edit the files as much as needed to re-align the "
+"files' structures. B<po4a-gettextize> is rather verbose when things go "
+"wrong. It reports the strings that don't match, their positions in the text, "
+"and the type of each of them. Moreover, the PO file generated so far is "
+"dumped as F<gettextization.failed.po> for further inspection."
 msgstr ""
 "Када се то догоди, све се своди на поновно поравнавање ових проклетих "
 "структура фајлова кроз ручно уређивање. B<po4a-gettextize> је прилично "
@@ -2446,31 +2444,50 @@ msgstr ""
 "бисте могли даље да истражујете."
 
 #. type: textblock
-#: po4a-gettextize:59
-msgid "Here are some other tricks to help you in this tedious process:"
+#: po4a-gettextize:57
+#, fuzzy
+#| msgid "Here are some other tricks to help you in this tedious process:"
+msgid ""
+"Here are some tricks to help you in this tedious process and ensure that you "
+"salvage the most of the previous translation:"
 msgstr ""
 "Ево неких осталих трикова који могу да вам помогну у овом заморном процесу:"
 
 #. type: textblock
-#: po4a-gettextize:60
+#: po4a-gettextize:58
+#, fuzzy
+#| msgid ""
+#| "Remove all extra content of the translations, such as the section giving "
+#| "credits to the translators. You can add them back in po4a afterward, "
+#| "using an addenda (see L<po4a(7)>)."
 msgid ""
 "Remove all extra content of the translations, such as the section giving "
-"credits to the translators. You can add them back in po4a afterward, using "
-"an addenda (see L<po4a(7)>)."
+"credits to the translators. They should be added separately to B<po4a> as "
+"addendas (see L<po4a(7)>)."
 msgstr ""
 "Уклоните сав додатни садржај превода, као што је одељак у коме се одаје "
 "признање преводиоцима. Можете касније да их додате са po4a, употребом "
 "додатака (погледајте L<po4a(7)>)."
 
 #. type: textblock
-#: po4a-gettextize:61
+#: po4a-gettextize:59
+#, fuzzy
+#| msgid ""
+#| "If you need to edit the files to align their structures, you should "
+#| "prefer editing the translation if possible. Indeed, if the changes to the "
+#| "original are too intrusive, the old and new versions will not be matched "
+#| "during the PO update, and the corresponding translation will be dumped "
+#| "anyway. But do not hesitate to also edit the original document if "
+#| "required: the important thing is to get a first PO file to start with."
 msgid ""
-"If you need to edit the files to align their structures, you should prefer "
-"editing the translation if possible. Indeed, if the changes to the original "
-"are too intrusive, the old and new versions will not be matched during the "
-"PO update, and the corresponding translation will be dumped anyway. But do "
-"not hesitate to also edit the original document if required: the important "
-"thing is to get a first PO file to start with."
+"When editing the files to align their structures, prefer editing the "
+"translation if possible. Indeed, if the changes to the original are too "
+"intrusive, the old and new versions will not be matched during the first "
+"po4a run after gettextization (see below). Any unmatched translation will be "
+"dumped anyway.  That being said, you still want to edit the original "
+"document if it's too hard to get the gettextization to proceed otherwise, "
+"even if it means that one paragraph of the translation is dumped. The "
+"important thing is to get a first PO file to start with."
 msgstr ""
 "Ако је потребно да уређујете фајлове како бисте им поравнали структуре, "
 "радије уређујте превод ако је могуће. Заиста, ако измене оригинала нису "
@@ -2480,7 +2497,7 @@ msgstr ""
 "учините: важна ствар је да за почетак добијете први PO фајл."
 
 #. type: textblock
-#: po4a-gettextize:62
+#: po4a-gettextize:60
 msgid ""
 "Do not hesitate to kill any original content that would not exist in the "
 "translated version. This content will be automatically reintroduced "
@@ -2491,12 +2508,21 @@ msgstr ""
 "PO фајл буде синхронизовао са документом."
 
 #. type: textblock
-#: po4a-gettextize:63
+#: po4a-gettextize:61
+#, fuzzy
+#| msgid ""
+#| "You should probably inform the original author of any structural change "
+#| "in the translation that seems justified. Issues in the original document "
+#| "should reported to the author. Fixing them in your translation only fixes "
+#| "them for a part of the community. Plus, it is impossible to do so when "
+#| "using po4a ;)"
 msgid ""
 "You should probably inform the original author of any structural change in "
 "the translation that seems justified. Issues in the original document should "
 "reported to the author. Fixing them in your translation only fixes them for "
-"a part of the community. Plus, it is impossible to do so when using po4a ;)"
+"a part of the community. Plus, it is impossible to do so when using po4a ;) "
+"But you probably want to wait until the end of the conversion to B<po4a> "
+"before changing the original files."
 msgstr ""
 "Вероватно ћете морати да обавестите оригиналног аутора о било каквим "
 "променама структуре у превпду које се чине оправданим. Проблеми у "
@@ -2505,7 +2531,7 @@ msgstr ""
 "се тако нешто уради када се користи po4a ;)"
 
 #. type: textblock
-#: po4a-gettextize:64
+#: po4a-gettextize:62
 msgid ""
 "Sometimes, the paragraph content does match, but not their types. Fixing it "
 "is rather format-dependent. In POD and man, it often comes from the fact "
@@ -2522,7 +2548,7 @@ msgstr ""
 "такође може да буде и грешка у куцању имена ознаке у XML."
 
 #. type: textblock
-#: po4a-gettextize:65
+#: po4a-gettextize:63
 msgid ""
 "Likewise, two paragraphs may get merged together in POD when the separating "
 "line contains some spaces, or when there is no empty line between the "
@@ -2533,13 +2559,20 @@ msgstr ""
 "линије и садржаја ставке."
 
 #. type: textblock
-#: po4a-gettextize:66
+#: po4a-gettextize:64
+#, fuzzy
+#| msgid ""
+#| "Sometimes, the desynchronization message seems odd because the "
+#| "translation is attached to the wrong original paragraph. It is the sign "
+#| "of an undetected issue earlier in the process. Search for the actual "
+#| "desynchronization point by inspecting F<gettextization.failed.po>, and "
+#| "fix the problem where it really is."
 msgid ""
 "Sometimes, the desynchronization message seems odd because the translation "
 "is attached to the wrong original paragraph. It is the sign of an undetected "
 "issue earlier in the process. Search for the actual desynchronization point "
-"by inspecting F<gettextization.failed.po>, and fix the problem where it "
-"really is."
+"by inspecting the file F<gettextization.failed.po> that was produced, and "
+"fix the problem where it really is."
 msgstr ""
 "Понекад се чини да је порука о десинхронизацији необична јер је превод "
 "придружен погрешном оригиналном пасусу. То је знак неоткривеног проблема "
@@ -2548,94 +2581,154 @@ msgstr ""
 "налази."
 
 #. type: textblock
+#: po4a-gettextize:65
+msgid ""
+"Other issues may come from duplicated strings in either the original or "
+"translation. Duplicated strings are merged in PO files, with two "
+"references.  This constitutes a difficulty for the gettexization algorithm, "
+"that is a simple one to one pairing between the B<msgid>s of both the master "
+"and the localized files."
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:66
+msgid ""
+"If the exact same string is used several times in the master file, but with "
+"differing translations in the localized file, the translation will contain "
+"more B<msgid>s than the master. One of the master's B<msgid>s would have "
+"several references to compensate. Conversely, if different original "
+"paragraphs are translated in the exact same way, the original will have more "
+"B<msgid>s than the translation."
+msgstr ""
+
+#. type: textblock
 #: po4a-gettextize:67
+#, fuzzy
+#| msgid ""
+#| "In most cases, the extra space added by po4a to deduplicate the strings "
+#| "has no impact on the formatting. Strings are fuzzied anyway, and msgmerge "
+#| "will probably match the strings accordingly afterward."
 msgid ""
-"In some case, po4a adds a space at the end of either the original or the "
-"translated strings. This is because every string must be deduplicated during "
-"the gettextize process. Imagine that a string appearing several times "
-"unmodified in the original, but is translated in differing way, or that "
-"different paragraphs are translated in the exact same way."
-msgstr ""
-"Програм po4a у неким случајевима додаје размак на крај оригиналних или "
-"преведених стрингова. Разлог за то је што сваки стринг мора да се дедуплира "
-"током процеса gettextизације. Замислите да се стринг у оригиналу појављује "
-"неколико пута у неизмењеном облику, али се преводи на другачији начин, или "
-"да се различити пасуси преводе на потпуно исти начин."
-
-#. type: textblock
-#: po4a-gettextize:68
-msgid ""
-"Without deduplication, such case would break the gettexization algorithm, as "
-"it is a simple one to one pairing between the msgids of both the master and "
-"the localized files. Since one of the PO files would miss an entry (that "
-"would be reported as duplicate, with two references), the pairing would fail."
-msgstr ""
-"Такви стригови би без дедупликације покварили алгоритам gettextизације, јер "
-"је то просто један на један пресликавање између msgid стрингова мастер и "
-"локализованих фајлова. Пошто би један од PO фајлова промашио ставку (која би "
-"била пријављена као дупликат, са две референце), упаривање не би успело."
-
-#. type: textblock
-#: po4a-gettextize:69
-msgid ""
-"Since po4a uses the entry type (\"title\" or \"plain paragraph\", etc) to "
-"detect whether the parsing streams got desynchronized, similar issues could "
-"occur if two identical entries (same content but differing type) of the "
-"master file are translated in the exact same way in the localized file. po4a "
-"would detect a fake desyncronization in such case."
-msgstr ""
-"Пошто програм po4a за детекцију десинхронизације токова које парсира "
-"употребљава тип ставке („title” или „plain paragraph”, итд.), слични "
-"проблеми би се јавили ако би се две идентичне ставке (исти садржај али "
-"различити тип) мастер фајл проводиле на потпуно исти начин у локализованом "
-"фајлу. У таквом случају би po4a детектовао лажну десинхронизацију."
-
-#. type: textblock
-#: po4a-gettextize:70
-msgid ""
-"In most cases, the extra space added by po4a to deduplicate the strings has "
-"no impact on the formatting. Strings are fuzzied anyway, and msgmerge will "
+"To avoid such spurious desynchronization, po4a deduplicates all strings in "
+"both the master and localized by appending spaces to them. This way, PO "
+"files will not merge any entry and the gettextization can proceed. In most "
+"cases, the extra space added by po4a to deduplicate the strings has no "
+"impact on the formatting.  Strings are fuzzied anyway, and msgmerge will "
 "probably match the strings accordingly afterward."
 msgstr ""
 "У највећем броју случајева додатни размак који додаје po4a за дедупликацију "
 "стрингова нема утицај на формирање. Ипак се стрингови довољно промене тако "
 "да ће их msgmerge касније највероватније упарити како треба."
 
+#. type: =head2
+#: po4a-gettextize:68
+msgid "Reviewing files produced by B<po4a-gettextize>"
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:69
+msgid ""
+"Any file produced by B<po4a-gettextize> should be manually reviewed, even "
+"when the script terminates successfully. You should skim over the PO file, "
+"ensuring that the B<msgid> and B<msgstr> actually match. It is not necessary "
+"to ensure that the translation is perfectly correct yet, as all entries are "
+"marked as fuzzy translations anyway. You only need to check for obvious "
+"matching issues because badly matched translations will be dumped in "
+"subsequent steps while you want to salvage them."
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:70
+msgid ""
+"Fortunately, this step does not require to master the target languages as "
+"you only want to recognize similar elements in each B<msgid> and its "
+"corresponding B<msgstr>. As a speaker of French, English, and some German "
+"myself, I can do this for all European languages at least, even if I cannot "
+"say one word of most of these languages. I sometimes manage to detect "
+"matching issues in non-Latin languages by looking at string length, phrase "
+"structures (does the amount of interrogation marks match?) and other clues, "
+"but I prefer when someone else can review those languages."
+msgstr ""
+
 #. type: textblock
 #: po4a-gettextize:71
 msgid ""
-"As a final note, do not be too surprised if the first synchronization of "
-"your PO file takes a long time. This is because most of the msgid of the PO "
-"file resulting from the gettextization don't match exactly any element of "
-"the POT file built from the recent master files. This forces gettext to "
-"search for the closest one using a costly string proximity algorithm."
+"If you detect a mismatch, edit the original and translation files as if "
+"B<po4a-gettextize> reported an error, and try again. Once you have a decent "
+"PO file for your previous translation, backup it until you get po4a working "
+"correctly."
 msgstr ""
-"Као последња напомена, немојте сувише да се изненадите ако прва "
-"синхронизација вашег PO фајла траје прилично дуго. То је стога што се већина "
-"msgid стрингова PO фајла који је генерисала gettextизација не подудара "
-"потпуно са било којим елементом POT фајла који је креиран из скорашњих "
-"мастер фајлова. Услед тога gettext тражи најближе подударање употребом "
-"захтевног алгоритма близине стрингова."
+
+#. type: =head2
+#: po4a-gettextize:72
+msgid "Running B<po4a> for the first time"
+msgstr ""
 
 #. type: textblock
-#: po4a-gettextize:72
+#: po4a-gettextize:73
 msgid ""
-"For example, the first B<po4a-updatepo> of the Perl documentation's French "
-"translation (5.5 MB PO file) took about 48 hours (yes, two days) while the "
-"subsequent ones only take a dozen of seconds."
+"The easiest way to setup po4a is to write a B<po4a.conf> configuration file, "
+"and use the integrated po4a program (B<po4a-updatepo> and B<po4a-translate> "
+"are deprecated). Please check the \"CONFIGURATION FILE\" Section in "
+"L<po4a(1)> documentation for more details."
 msgstr ""
-"На пример, првом позиву B<po4a-updatepo> француског превода Perl "
-"документације (PO фајл величине 5.5 MБ) је требало око 48 сати (да, два "
-"дана) док су наредни трајали само десетак секунди."
 
 #. type: textblock
 #: po4a-gettextize:74
 msgid ""
+"When B<po4a> runs for the first time, the current version of the master "
+"documents will be used to update the PO files containing the old "
+"translations that you salvaged through gettextization. This can take quite a "
+"long time, because many of the B<msgid>s of from the gettextization do not "
+"exactly match the elements of the POT file built from the recent master "
+"files. This forces gettext to search for the closest one using a costly "
+"string proximity algorithm.  For example, the first run over the Perl "
+"documentation's French translation (5.5 MB PO file) took about 48 hours "
+"(yes, two days) while the subsequent ones only take seconds."
+msgstr ""
+
+#. type: =head2
+#: po4a-gettextize:75
+#, fuzzy
+#| msgid "Converting a manual translation to po4a"
+msgid "Moving your translations to production"
+msgstr "Конвертовање ручног превода у po4a пројекат"
+
+#. type: textblock
+#: po4a-gettextize:76
+msgid ""
+"After this first run, the PO files are ready to be reviewed by translators. "
+"All entries were marked as fuzzy in the PO file by B<po4a-gettextization>, "
+"forcing their careful review before use. Translators should take each entry "
+"to verify that the salvaged translation actually match the current original "
+"text, update the translation on need, and remove the fuzzy markers."
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:77
+msgid ""
+"Once enough fuzzy markers are removed, B<po4a> will start generating the "
+"translation files on disk, and you're ready to move your translation "
+"workflow to production. Some projects find it useful to rely on weblate to "
+"coordinate between translators and maintainers, but that's beyond B<po4a>' "
+"scope."
+msgstr ""
+
+#. type: textblock
+#: po4a-gettextize:79
+msgid ""
 "L<po4a(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
 "L<po4a(7)>."
 msgstr ""
 "L<po4a(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
 "L<po4a(7)>."
+
+#. type: textblock
+#: po4a-gettextize:83
+#, fuzzy
+#| msgid "Copyright 2002-2020 by SPI, inc."
+msgid "Copyright 2002-2022 by SPI, inc."
+msgstr "Права умножавања 2002-2020 by SPI, inc."
 
 #. type: textblock
 #: po4a-normalize:2
@@ -5652,7 +5745,7 @@ msgstr "Ово је врло једноставан модул, али још у
 #. type: verbatim
 #: lib/Locale/Po4a/BibTeX.pm:12 lib/Locale/Po4a/Halibut.pm:17
 #: lib/Locale/Po4a/LaTeX.pm:11 lib/Locale/Po4a/TeX.pm:121
-#: lib/Locale/Po4a/Texinfo.pm:13
+#: lib/Locale/Po4a/Texinfo.pm:13 lib/Locale/Po4a/Text.pm:43
 #, no-wrap
 msgid ""
 " Nicolas François <nicolas.francois@centraliens.net>\n"
@@ -9845,32 +9938,28 @@ msgstr ""
 "фајловима."
 
 #. type: verbatim
-#: lib/Locale/Po4a/Text.pm:43
-#, no-wrap
-msgid ""
-" Nicolas Francois <nicolas.francois@centraliens.net>\n"
-"\n"
-msgstr ""
-" Никола Франсоа <nicolas.francois@centraliens.net>\n"
-"\n"
-
-#. type: verbatim
 #: lib/Locale/Po4a/Text.pm:45
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>\n"
+#| "\n"
 msgid ""
-" Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.\n"
+" Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
 msgstr ""
-" Права умножавања (c) 2005-2008 Никола ФРАНСОА <nicolas.francois@centraliens."
-"net>.\n"
+" Ауторска права © 2005-2008 Никола ФРАНСОА <nicolas.francois@centraliens.net>\n"
 "\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:46
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
+#| " Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
+#| "\n"
 msgid ""
-" Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-" Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
+" Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
+" Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
 " Права умножавања (c) 2008-2009, 2018 Јонас Смедегард <dr@jones.dk>.\n"
@@ -12505,6 +12594,167 @@ msgstr ""
 #: lib/Locale/Po4a/Yaml.pm:20
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Ауторска права © 2017 Брајан Екселбирд."
+
+#~ msgid ""
+#~ "The B<po4a-gettextize> script is in charge of converting documentation "
+#~ "files into PO files. You only need it to setup your translation project "
+#~ "with po4a, never afterward."
+#~ msgstr ""
+#~ "Скрипта B<po4a-gettextize> је задужена за конверзију фајлова "
+#~ "документације у PO фајлове. Потребна вам је само да поставите ваш "
+#~ "пројекат превођења са програмом po4a, никад касније."
+
+#~ msgid ""
+#~ "If you start from scratch, B<po4a-gettextize> will extract the "
+#~ "translatable strings from the documentation and write a POT file. If you "
+#~ "provide a previously existing translated file with the B<-l> flag, B<po4a-"
+#~ "gettextize> will try to use the translations that it contains in the "
+#~ "produced PO file. This process remains tedious and manual, as explained "
+#~ "in Section 'Converting a manual translation to po4a' below."
+#~ msgstr ""
+#~ "Ако почињете из почетка, B<po4a-gettextize> ће да издвоји преводиве "
+#~ "стрингове из документације и записаће POT фајл. У случају да заставицом "
+#~ "B<-l> наведете претходно постојећи преведени фајл, B<po4a-gettextize> ће "
+#~ "покушати да искористи преводе које он садржи и креираће PO фајл. Овај "
+#~ "процес остаје захтеван и мора ручно да се уради, као што је објашњено у "
+#~ "одељку 'Конвертовање ручног превода у po4a пројекат' ниже."
+
+#~ msgid ""
+#~ "Even when the document is successfully processed, undetected disparities "
+#~ "and silent errors are still possible. That is why any translation "
+#~ "associated automatically by po4a-gettextize is marked as I<fuzzy> to "
+#~ "require an manual inspection by humans. One has to check that each "
+#~ "retrieved msgstr is actually the translation of the associated msgid, and "
+#~ "not the string before or after."
+#~ msgstr ""
+#~ "Ча ки када је документ успешно обрађен, и даље су могуће тихе грешке и "
+#~ "неоткривени диспаритети. Због тога је сваки превод који је аутоматски "
+#~ "доделио po4a-gettextize обележен као I<fuzzy> чиме се захтева ручна "
+#~ "људска инспекција. Мора да се провери да ли је сваки прибављен msgstr "
+#~ "заиста и превод придруженог msgid, а не стринга пре или после."
+
+#~ msgid ""
+#~ "As you can see, the key here is to have the exact same structure in the "
+#~ "translated document and in the original one. The best is to do the "
+#~ "gettextization on the exact version of F<master.doc> that was used for "
+#~ "the translation, and only update the PO file against the latest master "
+#~ "file once the gettextization was successful."
+#~ msgstr ""
+#~ "Као што можете да видите, кључна ствар овде је да преведени и оригинални "
+#~ "документ имају потпуно исту структуру. Најбоље је када се ради "
+#~ "gettextизација тачно оне верзије документа F<master.doc> који је "
+#~ "употребљен за превод, и да се PO фајл ажурира у односу на најновији "
+#~ "мастер фајл једном када gettextизација успе."
+
+#~ msgid ""
+#~ "Even when things go wrong, gettextization often remains faster than "
+#~ "translating everything again. I was able to gettextize the existing "
+#~ "French translation of the whole Perl documentation in one day, even "
+#~ "though the structure of many documents were desynchronized. That was more "
+#~ "than two megabytes of original text (2 millions of characters): "
+#~ "restarting the translation from scratch would have required several "
+#~ "months of work."
+#~ msgstr ""
+#~ "Чак и када ствари крену по злу, gettextизација остаје бржа од поновног "
+#~ "превођења свега. Успео сам да одрадим gettextiзацију постојећег "
+#~ "француског превода комплетне Perl документације за један дан упркос томе "
+#~ "што је структура многих докумената била десинхронизована. То је било више "
+#~ "од 2 мегабајта оригиналног текста (2 милиона карактера): поновно "
+#~ "започињање превода из почетка би захтевало неколико месеци рада."
+
+#~ msgid ""
+#~ "The gettextization stops as soon as a desynchronization is detected. In "
+#~ "theory, it should probably be possible resynchronize the gettextization "
+#~ "later in the documents using e.g. the same algorithm than the L<diff(1)> "
+#~ "utility. But a manual intervention would still be mandatory to manually "
+#~ "match the elements that couldn't be automatically matched, explaining why "
+#~ "automatic resynchronization is not implemented (yet?)."
+#~ msgstr ""
+#~ "Чим се открије десинхронизација, gettextизација се прекида. Теоретски, "
+#~ "вероватно би било могуће да се gettextизација ресинхронизује касније у "
+#~ "документу употребом нпр. истог алгоритма који користи и L<diff(1)> алат. "
+#~ "Али ручна интервенција би и даље била обавезна да би се ручно подударили "
+#~ "елементи који нису могли аутоматски да се подударе, чиме се објашњава "
+#~ "зашто аутоматска ресинхронизација (још?) није имплементирана."
+
+#~ msgid ""
+#~ "In some case, po4a adds a space at the end of either the original or the "
+#~ "translated strings. This is because every string must be deduplicated "
+#~ "during the gettextize process. Imagine that a string appearing several "
+#~ "times unmodified in the original, but is translated in differing way, or "
+#~ "that different paragraphs are translated in the exact same way."
+#~ msgstr ""
+#~ "Програм po4a у неким случајевима додаје размак на крај оригиналних или "
+#~ "преведених стрингова. Разлог за то је што сваки стринг мора да се "
+#~ "дедуплира током процеса gettextизације. Замислите да се стринг у "
+#~ "оригиналу појављује неколико пута у неизмењеном облику, али се преводи на "
+#~ "другачији начин, или да се различити пасуси преводе на потпуно исти начин."
+
+#~ msgid ""
+#~ "Without deduplication, such case would break the gettexization algorithm, "
+#~ "as it is a simple one to one pairing between the msgids of both the "
+#~ "master and the localized files. Since one of the PO files would miss an "
+#~ "entry (that would be reported as duplicate, with two references), the "
+#~ "pairing would fail."
+#~ msgstr ""
+#~ "Такви стригови би без дедупликације покварили алгоритам gettextизације, "
+#~ "јер је то просто један на један пресликавање између msgid стрингова "
+#~ "мастер и локализованих фајлова. Пошто би један од PO фајлова промашио "
+#~ "ставку (која би била пријављена као дупликат, са две референце), "
+#~ "упаривање не би успело."
+
+#~ msgid ""
+#~ "Since po4a uses the entry type (\"title\" or \"plain paragraph\", etc) to "
+#~ "detect whether the parsing streams got desynchronized, similar issues "
+#~ "could occur if two identical entries (same content but differing type) of "
+#~ "the master file are translated in the exact same way in the localized "
+#~ "file. po4a would detect a fake desyncronization in such case."
+#~ msgstr ""
+#~ "Пошто програм po4a за детекцију десинхронизације токова које парсира "
+#~ "употребљава тип ставке („title” или „plain paragraph”, итд.), слични "
+#~ "проблеми би се јавили ако би се две идентичне ставке (исти садржај али "
+#~ "различити тип) мастер фајл проводиле на потпуно исти начин у "
+#~ "локализованом фајлу. У таквом случају би po4a детектовао лажну "
+#~ "десинхронизацију."
+
+#~ msgid ""
+#~ "As a final note, do not be too surprised if the first synchronization of "
+#~ "your PO file takes a long time. This is because most of the msgid of the "
+#~ "PO file resulting from the gettextization don't match exactly any element "
+#~ "of the POT file built from the recent master files. This forces gettext "
+#~ "to search for the closest one using a costly string proximity algorithm."
+#~ msgstr ""
+#~ "Као последња напомена, немојте сувише да се изненадите ако прва "
+#~ "синхронизација вашег PO фајла траје прилично дуго. То је стога што се "
+#~ "већина msgid стрингова PO фајла који је генерисала gettextизација не "
+#~ "подудара потпуно са било којим елементом POT фајла који је креиран из "
+#~ "скорашњих мастер фајлова. Услед тога gettext тражи најближе подударање "
+#~ "употребом захтевног алгоритма близине стрингова."
+
+#~ msgid ""
+#~ "For example, the first B<po4a-updatepo> of the Perl documentation's "
+#~ "French translation (5.5 MB PO file) took about 48 hours (yes, two days) "
+#~ "while the subsequent ones only take a dozen of seconds."
+#~ msgstr ""
+#~ "На пример, првом позиву B<po4a-updatepo> француског превода Perl "
+#~ "документације (PO фајл величине 5.5 MБ) је требало око 48 сати (да, два "
+#~ "дана) док су наредни трајали само десетак секунди."
+
+#, no-wrap
+#~ msgid ""
+#~ " Nicolas Francois <nicolas.francois@centraliens.net>\n"
+#~ "\n"
+#~ msgstr ""
+#~ " Никола Франсоа <nicolas.francois@centraliens.net>\n"
+#~ "\n"
+
+#, no-wrap
+#~ msgid ""
+#~ " Copyright (c) 2005-2008 Nicolas FRANCOIS <nicolas.francois@centraliens.net>.\n"
+#~ "\n"
+#~ msgstr ""
+#~ " Права умножавања (c) 2005-2008 Никола ФРАНСОА <nicolas.francois@centraliens.net>.\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "In some unfortunate settings, you will get the feeling that po4a ate some "

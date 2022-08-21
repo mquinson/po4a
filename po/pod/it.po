@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2022-08-21 01:16+0200\n"
+"POT-Creation-Date: 2022-08-18 21:51+0200\n"
 "PO-Revision-Date: 2022-08-21 01:55+0200\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
@@ -189,7 +189,7 @@ msgstr ""
 "refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 
 #. type: =head1
-#: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:191
+#: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:189
 #: po4a-gettextize:78 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
 #: msguntypot:29 doc/po4a.7.pod:177 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
@@ -351,14 +351,27 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
+#, fuzzy
+#| msgid ""
+#| "When you run the B<po4a> program for the first time, with only a "
+#| "configuration file and the documents to translate (called master "
+#| "documents), it produces a POT file (also called translation template) "
+#| "that contains all of the translatable strings in the document in a form "
+#| "that eases the work of translators. See the L<QUICK START CONFIGURATION> "
+#| "section below for a practical example."
 msgid ""
 "When you run the B<po4a> program for the first time, with only a "
 "configuration file and the documents to translate (called master documents), "
-"it produces a POT file (also called translation template) that contains all "
+"it produces a POT file (also called translation template)  that contains all "
 "of the translatable strings in the document in a form that eases the work of "
-"translators. See the L<QUICK START CONFIGURATION> section below for a "
-"practical example."
-msgstr "Quando si esegue il programma B<po4a> per la prima volta, con solo un file di configurazione e i documenti da tradurre (i documenti master), esso produce un file POT (o modello di traduzione) che contiene tutte le stringhe traducibili nel documento in un formato che semplifica il lavoro ai traduttori. Consultare la sezione L<INTRODUZIONE ALLA CONFIGURAZIONE> sotto per un esempio pratico."
+"translators."
+msgstr ""
+"Quando si esegue il programma B<po4a> per la prima volta, con solo un file "
+"di configurazione e i documenti da tradurre (i documenti master), esso "
+"produce un file POT (o modello di traduzione) che contiene tutte le stringhe "
+"traducibili nel documento in un formato che semplifica il lavoro ai "
+"traduttori. Consultare la sezione L<INTRODUZIONE ALLA CONFIGURAZIONE> sotto "
+"per un esempio pratico."
 
 #. type: textblock
 #: po4a:8
@@ -388,14 +401,30 @@ msgstr ""
 
 #. type: textblock
 #: po4a:10
+#, fuzzy
+#| msgid ""
+#| "If the master documents changed in the meanwhile, po4a will update the PO "
+#| "and POT files accordingly, so that the translators can easily detect the "
+#| "modifications and update their work. Depending on your settings, po4a "
+#| "will discard the partially translated documents, or produce a document "
+#| "mixing the source language (for the new or modified paragraphs) and the "
+#| "target language (for paragraphs where translation is already in the PO "
+#| "file)."
 msgid ""
 "If the master documents changed in the meanwhile, po4a will update the PO "
 "and POT files accordingly, so that the translators can easily detect the "
 "modifications and update their work. Depending on your settings, po4a will "
-"discard the partially translated documents, or produce a document mixing the "
-"source language (for the new or modified paragraphs) and the target language "
-"(for paragraphs where translation is already in the PO file)."
-msgstr "Se i documenti master nel frattempo sono cambiati, po4a aggiornerà i file PO e POT di conseguenza, in modo da permettere ai traduttori di rilevare facilmente le modifiche ed aggiornare il loro lavoro. A seconda delle proprie impostazioni, po4a scarterà i documenti parzialmente tradotti, o produrrà un documento mescolando la lingua sorgente (per i paragrafi nuovi o modificati) e la lingua obiettivo (per i paragrafi dove la traduzione è già presente nei file PO)."
+"discard the partially translated documents, or produce a document mixing "
+"English (for the new or modified paragraphs) and the target language (for "
+"paragraphs where translation is already in the PO file)."
+msgstr ""
+"Se i documenti master nel frattempo sono cambiati, po4a aggiornerà i file PO "
+"e POT di conseguenza, in modo da permettere ai traduttori di rilevare "
+"facilmente le modifiche ed aggiornare il loro lavoro. A seconda delle "
+"proprie impostazioni, po4a scarterà i documenti parzialmente tradotti, o "
+"produrrà un documento mescolando la lingua sorgente (per i paragrafi nuovi o "
+"modificati) e la lingua obiettivo (per i paragrafi dove la traduzione è già "
+"presente nei file PO)."
 
 #. type: textblock
 #: po4a:11
@@ -1870,190 +1899,167 @@ msgstr ""
 "quindi si potrebbe aver bisogno dell'opzione C<--keep> per assicurarsi che "
 "il documento venga prodotto comunque."
 
-#. type: =head1
+#. type: =head2
 #: po4a:173
-msgid "QUICK START CONFIGURATION"
-msgstr "INTRODUZIONE ALLA CONFIGURAZIONE"
+#, fuzzy
+#| msgid "CONFIGURATION FILE"
+msgid "CONFIGURATION EXAMPLE"
+msgstr "FILE DI CONFIGURAZIONE"
 
 #. type: textblock
 #: po4a:174
-msgid ""
-"Let's assume you maintain a program named B<foo> which has a man page F<man/"
-"foo.1> written in English (the bridge language in most open-source projects, "
-"but S<po4a> can be used from or to any language). Some times ago, someone "
-"provided a manual translation to German named F<man/foo.de.1> and "
-"disappeared. This is a problem because you just got a bug report saying that "
-"your documentation contains a gravely misleading information that must be "
-"fixed in all languages, but you don't speak German so you can only modify "
-"the original, not the translation. Now, another contributor wants to "
-"contribute a translation to Japanese, a language that you don't master "
-"either."
-msgstr "Supponiamo di mantenere un programma chiamato B<foo> che ha una pagina man F<man/foo.1> scritta in inglese (il linguaggio ponte nella maggior parte dei progetti open-source, ma S<po4a> può essere usato da o verso qualsiasi linguaggio). Qualche tempo fa, qualcuno ha fornito una traduzione manuale in tedesco chiamata F<man/foo.de.1> ed è scomparso. Questo è un problema perché hai appena ricevuto una segnalazione di bug che dice che la tua documentazione contiene informazioni gravemente fuorvianti che devono essere corrette in tutte le lingue, ma non parli tedesco quindi puoi solo modificare l'originale, non la traduzione. Ora, un altro collaboratore vuole contribuire con una traduzione in giapponese, un'altra lingua che non si mastica."
+msgid "TODO: Is this section really useful?"
+msgstr ""
 
 #. type: textblock
 #: po4a:175
 msgid ""
-"It is time to convert your documentation to B<po4a> to solve your "
-"documentation maintenance nightmares. You want to update the doc when "
-"needed, ease the work of your fellow translators, and ensure that your users "
-"never see outdated documentations."
-msgstr "È ora di convertire la documentazione a B<po4a> per risolvere la manutenzione da incubo della documentazione. Si vuole aggiornare il documento quando serve, facilitare il lavoro dei colleghi traduttori e assicurarsi che gli utenti non vedano mai documentazioni obsolete."
+"Let's assume you maintain a program named B<foo> which has a man page F<man/"
+"foo.1> which naturally is maintained in English only. Now you as the "
+"upstream or downstream maintainer want to create and maintain the "
+"translation.  First you need to create the POT file necessary to send to "
+"translators using L<po4a-gettextize(1)>."
+msgstr ""
 
 #. type: textblock
 #: po4a:176
-msgid ""
-"The conversion includes two steps: setup the po4a infrastructure, and "
-"convert the previous German translation to salvage the previous work. This "
-"latter part is done using S<po4a-gettextize>, as follows. As detailed in the "
-"documentation of L<po4a-gettextize(1)>, this process rarely even fully "
-"automatic, but once it's done, the B<de.po> file containing the German "
-"translation can be integrated in your po4a workflow."
-msgstr "La conversione comprende due passaggi: configurare l'infrastruttura po4a e convertire la precedente traduzione tedesca per salvare il lavoro precedente. Quest'ultima parte viene eseguita utilizzando S<po4a-gettextize>, come segue. Come dettagliato nella documentazione di L<po4a-gettextize(1)>, questo processo raramente è anche completamente automatico, ma una volta terminato, il file B<de.po> contenente la traduzione tedesca può essere integrato nel flusso di lavoro di po4a."
+msgid "So for our case we would call"
+msgstr ""
 
 #. type: verbatim
 #: po4a:177
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
+#| "\n"
 msgid ""
+" cd man && po4a-gettextize -f man -m foo.1 -p foo.pot\n"
+"\n"
+msgstr ""
 "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
-msgstr "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n\n"
 
 #. type: textblock
 #: po4a:178
 msgid ""
-"Let's now configure po4a. With the appropriate file layout, your "
-"configuration file could be as simple as this:"
-msgstr "Configuriamo ora po4a. Con la disposizione file appropriata, la configurazione potrebbe assomigliare ad un semplice file come questo:"
+"You would then send this file to the appropriate language lists or offer it "
+"for download somewhere on your website."
+msgstr ""
 
-#. type: verbatim
+#. type: textblock
 #: po4a:179
-#, no-wrap
 msgid ""
-" [po_directory] man/po4a/\n"
-"\n"
-msgstr " [po_directory] man/po4a/\n\n"
+"Now let's assume you received three translations before your next release: "
+"F<de.po> (including an addendum F<de.add>), F<sv.po> and F<pt.po>.  Since "
+"you don't want to change your F<Makefile>(s) whenever a new translation "
+"arrives you can use B<po4a> with an appropriate configuration file in your "
+"F<Makefile>.  Let's call it F<po4a.cfg>. In our example it would look like "
+"the following:"
+msgstr ""
 
 #. type: verbatim
 #: po4a:180
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " [po_directory] man/po4a/\n"
+#| "\n"
 msgid ""
+" [po_directory] man/po4a/po/\n"
+"\n"
+msgstr ""
+" [po_directory] man/po4a/\n"
+"\n"
+
+#. type: verbatim
+#: po4a:181
+#, fuzzy, no-wrap
+#| msgid ""
+#| " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
+#| "\n"
+msgid ""
+" [type: man] man/foo.1 $lang:man/translated/$lang/foo.1 \\\n"
+"            add_$lang:?man/po4a/add_$lang/$lang.add opt:\"-k 80\"\n"
+"\n"
+msgstr ""
 " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
-msgstr " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n\n"
-
-#. type: textblock
-#: po4a:181
-msgid ""
-"It specifies that all PO files (containing the work of the translators) are "
-"the F<man/po4a/> directory, and that you have only one master file, F<man/"
-"foo.1>. If you had several master files, you would have several lines "
-"similar to the second one. Each such line also specify where to write the "
-"corresponding translation files. Here, the German translation of F<man/"
-"foo.1> is in F<man/translated/foo.de.1>."
-msgstr "Specifica che tutti i file PO (contenenti il lavoro dei traduttori) sono la cartella F<man/po4a/> e che si ha un solo file master, F<man/foo.1>. Se si avesse più file master, si avrebbero più righe simili alla seconda. Ciascuna di queste righe specifica anche dove scrivere i file di traduzione corrispondenti. Qui, la traduzione tedesca di F<man/foo.1> è in F<man/translated/foo.de.1>."
 
 #. type: textblock
 #: po4a:182
 msgid ""
-"The last thing we need to complete the configuration of S<po4a> is a POT "
-"file containing the template material that should be used to start a new "
-"translation.  Simply create an empty file with the S<.pot> extension in the "
-"specified S<po_directory> (e.g. F<man/po4a/foo.pot>), and S<po4a> will fill "
-"it with the expected content."
-msgstr "L'ultima cosa di cui abbiamo bisogno per completare la configurazione di S<po4a> è un file POT contenente il materiale del modello che dovrebbe essere usato per iniziare una nuova traduzione. Basta creare un file vuoto con l'estensione S<.pot> nella S<po_directory> specificata (ad es. F<man/po4a/foo.pot>) e S<po4a> lo riempirà con il contenuto previsto."
+"In this example we assume that your generated man pages (and all PO and "
+"addenda files) should be stored in F<man/translated/$lang/> (respectively in "
+"F<man/po4a/po/> and F<man/po4a/add_$lang/>) below the current directory. In "
+"our example the F<man/po4a/po/> directory would include F<de.po>, F<pt.po> "
+"and F<sv.po>, and the F<man/po4a/add_de/> directory would include F<de.add>."
+msgstr ""
 
 #. type: textblock
 #: po4a:183
-msgid "Here is a recap of the files in this setup:"
-msgstr "Ecco un riassunto dei file in questa impostazione:"
+msgid ""
+"Note the use of the modifier B<?> as only the German translation (F<de.po>) "
+"is accompanied by an addendum."
+msgstr ""
+
+#. type: textblock
+#: po4a:184
+msgid ""
+"To actually build the translated man pages you would then (once!) add the "
+"following line in the B<build> target of the appropriate F<Makefile>:"
+msgstr ""
 
 #. type: verbatim
-#: po4a:184
+#: po4a:185
 #, no-wrap
 msgid ""
-"  ├── man/\n"
-"  │   ├── foo.1        <- The original man page, in English.\n"
-"  │   ├── po4a/\n"
-"  │   │   ├── de.po    <- The German PO translation, from gettexization.\n"
-"  │   │   └── foo.pot  <- The POT template of future translations (empty at first)\n"
-"  │   └── translated/  <- Directory where the translations will be created\n"
-"  └── po4a.cfg         <- The configuration file.\n"
+"        po4a po4a.cfg\n"
 "\n"
 msgstr ""
-"  ├── man/\n"
-"  │   ├── foo.1        <- La pagina man originale, in inglese\n"
-"  │   ├── po4a/\n"
-"  │   │   ├── de.po    <- La traduzione PO in tedesco, dalla gettext-izzazione\n"
-"  │   │   └── foo.pot  <- Il modello POT per future traduzioni (all'inizio vuoto)\n"
-"  │   └── translated/  <- La cartella dove verranno create le traduzioni\n"
-"  └── po4a.cfg         <- Il file di configurazione\n"
+"        po4a po4a.cfg\n"
 "\n"
 
 #. type: textblock
-#: po4a:185
-msgid ""
-"Once setup, executing S<po4a> will parse your documentation, update the POT "
-"template file, use it to update the PO translation files, and use them to "
-"update the documentation translation files. All in one command:"
-msgstr "Una volta impostato, l'esecuzione di S<po4a> analizzerà la documentazione, aggiornerà il file modello POT, lo utilizzerà per aggiornare i file di traduzione PO e li utilizzerà per aggiornare i file di traduzione della documentazione. Tutto in un comando:"
-
-#. type: verbatim
 #: po4a:186
-#, no-wrap
 msgid ""
-"        po4a po4a.cfg\n"
-"\n"
+"Once this is set up you don't need to touch the F<Makefile> when a new "
+"translation arrives, i.e. if the French team sends you F<fr.po> and F<fr."
+"add> then you simply drop them respectively in F<man/po4a/po/> and F<man/"
+"po4a/add_fr/> and the next time the program is built the French translation "
+"is automatically build as well in F<man/translated/fr/>."
 msgstr ""
-"        po4a po4a.cfg\n"
-"\n"
 
 #. type: textblock
 #: po4a:187
 msgid ""
-"In case of problem, run in verbose mode with the S<-v> flag. On the first "
-"run, it may report that \"your POT file is already up-to-date\" although "
-"it's still an empty file. Simply touch a file of your documentation: S<po4a> "
-"only updates the POT file if it's not the most recently modified file."
-msgstr "In caso di problemi, eseguire in modalità dettagliata con il flag S<-v>. Alla prima esecuzione, potrebbe segnalare che \"il file POT è già aggiornato\" sebbene sia ancora un file vuoto. Basta eseguire touch su un file della documentazione (N.d.T o risalvarlo senza modificarlo): S<po4a> aggiornerà il file POT solo se non è il file modificato più di recente."
+"Note that you still need an appropriate target to install localized manual "
+"pages with English ones."
+msgstr ""
 
-#. type: textblock
+#. type: verbatim
 #: po4a:188
+#, no-wrap
 msgid ""
-"This it. S<po4a> is now fully configured. Once you've fixed your error in "
-"F<foo.1>, the offending paragraph in the German translation will be replaced "
-"by the fixed text in English. Mixing languages is not optimal, but it's the "
-"only way to remove errors in translations that you don't even understand and "
-"ensure that the content presented to the users is never outdated. Updating "
-"the German translation is also much easier in the corresponding PO file, so "
-"the language mix-up may not last long. Finally, when the Japanese translator "
-"gives you a S<jp.po> translated file, just drop it in F<man/po4a/po/>. A "
-"translated page will appear as F<man/translated/foo.jp.1> when you run "
-"S<po4a> again."
-msgstr "Fatto. S<po4a> è ora completamente configurato. Dopo aver corretto l'errore in F<foo.1>, il paragrafo colpevole nella traduzione tedesca sarà sostituito dal testo corretto in inglese. Mescolare le lingue non è ottimale, ma è l'unico modo per rimuovere errori nelle traduzioni che non si comprendono (N.d.T. perché in altra lingua) e garantire che il contenuto presentato agli utenti non sia mai obsoleto. Anche l'aggiornamento della traduzione tedesca è molto più semplice nel file PO corrispondente, quindi il disguido linguistico potrebbe non durare a lungo. Infine, quando il traduttore giapponese fornirà un file tradotto in S<jp.po>, basta metterlo in F<man/po4a/po/>. Una pagina tradotta apparirà come F<man/translated/foo.jp.1> quando si eseguirà nuovamente S<po4a>."
-
-#. type: textblock
-#: po4a:189
-msgid ""
-"Storing the translated documentation files in your version control system is "
-"probably a bad idea, since they are automatically generated. The precious "
-"files are the PO files, that contain the hard work of your fellow "
-"translators. Along the same line, some people find it easier to interact "
-"with the translators through an online platform such as S<weblate>, but this "
-"is beyond the scope of S<po4a>."
-msgstr "La memorizzazione dei file di documentazione tradotti nel sistema di controllo versionamento è probabilmente una cattiva idea, poiché vengono generati automaticamente. I file importanti sono i file PO, che contengono il duro lavoro dei colleghi traduttori. Analogamente, alcune persone trovano più facile interagire con i traduttori attraverso una piattaforma online come S<weblate>, ma questo va oltre lo scopo di S<po4a>."
+"Finally if you do not store generated files into your version control system,\n"
+"you will need a line in your B<clean> target as well:\n"
+"        -rm -rf man/translated\n"
+"\n"
+msgstr ""
 
 #. type: textblock
 #: po4a:190
-msgid "Happy documentation, and happy translating."
-msgstr "Buona documentazione e buona traduzione."
-
-#. type: textblock
-#: po4a:192
-msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
-msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
+#, fuzzy
+#| msgid ""
+#| "L<po4a(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-"
+#| "updatepo(1)>, L<po4a(7)>."
+msgid ""
+"L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-"
+"updatepo(1)>, L<po4a(7)>."
+msgstr ""
+"L<po4a(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
+"L<po4a(7)>."
 
 #. type: =head1
-#: po4a:193 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
+#: po4a:191 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
 #: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:183
 #: lib/Locale/Po4a/AsciiDoc.pm:52 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
@@ -2071,7 +2077,7 @@ msgid "AUTHORS"
 msgstr "AUTORI"
 
 #. type: verbatim
-#: po4a:194 po4a-gettextize:81 po4a-normalize:32 po4a-translate:57
+#: po4a:192 po4a-gettextize:81 po4a-normalize:32 po4a-translate:57
 #: po4a-updatepo:56 lib/Locale/Po4a/Man.pm:110
 #, no-wrap
 msgid ""
@@ -2086,7 +2092,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: po4a:195 po4a-gettextize:82 po4a-normalize:33 po4a-translate:58
+#: po4a:193 po4a-gettextize:82 po4a-normalize:33 po4a-translate:58
 #: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:54
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
@@ -2103,12 +2109,12 @@ msgid "COPYRIGHT AND LICENSE"
 msgstr "COPYRIGHT E LICENZA"
 
 #. type: textblock
-#: po4a:196 po4a-normalize:34 po4a-translate:59 po4a-updatepo:58
+#: po4a:194 po4a-normalize:34 po4a-translate:59 po4a-updatepo:58
 msgid "Copyright 2002-2020 by SPI, inc."
 msgstr "Copyright 2002-2020 by SPI, inc."
 
 #. type: textblock
-#: po4a:197 po4a-gettextize:84 po4a-normalize:35 po4a-translate:60
+#: po4a:195 po4a-gettextize:84 po4a-normalize:35 po4a-translate:60
 #: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:56
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
@@ -5084,7 +5090,10 @@ msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
 "strange sense of humor :)"
-msgstr "Personalmente lo pronuncio come L<pouah|https://en.wiktionary.org/wiki/pouah>, che è un termine onomatopeico francese che si usa al posto di puah :) forse ho uno strano senso dell'umorismo :)"
+msgstr ""
+"Personalmente lo pronuncio come L<pouah|https://en.wiktionary.org/wiki/"
+"pouah>, che è un termine onomatopeico francese che si usa al posto di "
+"puah :) forse ho uno strano senso dell'umorismo :)"
 
 #. type: =head2
 #: doc/po4a.7.pod:156
@@ -12753,3 +12762,185 @@ msgstr ""
 #: lib/Locale/Po4a/Yaml.pm:20
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Copyright © 2017 Brian Exelbierd."
+
+#~ msgid "QUICK START CONFIGURATION"
+#~ msgstr "INTRODUZIONE ALLA CONFIGURAZIONE"
+
+#~ msgid ""
+#~ "Let's assume you maintain a program named B<foo> which has a man page "
+#~ "F<man/foo.1> written in English (the bridge language in most open-source "
+#~ "projects, but S<po4a> can be used from or to any language). Some times "
+#~ "ago, someone provided a manual translation to German named F<man/foo."
+#~ "de.1> and disappeared. This is a problem because you just got a bug "
+#~ "report saying that your documentation contains a gravely misleading "
+#~ "information that must be fixed in all languages, but you don't speak "
+#~ "German so you can only modify the original, not the translation. Now, "
+#~ "another contributor wants to contribute a translation to Japanese, a "
+#~ "language that you don't master either."
+#~ msgstr ""
+#~ "Supponiamo di mantenere un programma chiamato B<foo> che ha una pagina "
+#~ "man F<man/foo.1> scritta in inglese (il linguaggio ponte nella maggior "
+#~ "parte dei progetti open-source, ma S<po4a> può essere usato da o verso "
+#~ "qualsiasi linguaggio). Qualche tempo fa, qualcuno ha fornito una "
+#~ "traduzione manuale in tedesco chiamata F<man/foo.de.1> ed è scomparso. "
+#~ "Questo è un problema perché hai appena ricevuto una segnalazione di bug "
+#~ "che dice che la tua documentazione contiene informazioni gravemente "
+#~ "fuorvianti che devono essere corrette in tutte le lingue, ma non parli "
+#~ "tedesco quindi puoi solo modificare l'originale, non la traduzione. Ora, "
+#~ "un altro collaboratore vuole contribuire con una traduzione in "
+#~ "giapponese, un'altra lingua che non si mastica."
+
+#~ msgid ""
+#~ "It is time to convert your documentation to B<po4a> to solve your "
+#~ "documentation maintenance nightmares. You want to update the doc when "
+#~ "needed, ease the work of your fellow translators, and ensure that your "
+#~ "users never see outdated documentations."
+#~ msgstr ""
+#~ "È ora di convertire la documentazione a B<po4a> per risolvere la "
+#~ "manutenzione da incubo della documentazione. Si vuole aggiornare il "
+#~ "documento quando serve, facilitare il lavoro dei colleghi traduttori e "
+#~ "assicurarsi che gli utenti non vedano mai documentazioni obsolete."
+
+#~ msgid ""
+#~ "The conversion includes two steps: setup the po4a infrastructure, and "
+#~ "convert the previous German translation to salvage the previous work. "
+#~ "This latter part is done using S<po4a-gettextize>, as follows. As "
+#~ "detailed in the documentation of L<po4a-gettextize(1)>, this process "
+#~ "rarely even fully automatic, but once it's done, the B<de.po> file "
+#~ "containing the German translation can be integrated in your po4a workflow."
+#~ msgstr ""
+#~ "La conversione comprende due passaggi: configurare l'infrastruttura po4a "
+#~ "e convertire la precedente traduzione tedesca per salvare il lavoro "
+#~ "precedente. Quest'ultima parte viene eseguita utilizzando S<po4a-"
+#~ "gettextize>, come segue. Come dettagliato nella documentazione di L<po4a-"
+#~ "gettextize(1)>, questo processo raramente è anche completamente "
+#~ "automatico, ma una volta terminato, il file B<de.po> contenente la "
+#~ "traduzione tedesca può essere integrato nel flusso di lavoro di po4a."
+
+#~ msgid ""
+#~ "Let's now configure po4a. With the appropriate file layout, your "
+#~ "configuration file could be as simple as this:"
+#~ msgstr ""
+#~ "Configuriamo ora po4a. Con la disposizione file appropriata, la "
+#~ "configurazione potrebbe assomigliare ad un semplice file come questo:"
+
+#~ msgid ""
+#~ "It specifies that all PO files (containing the work of the translators) "
+#~ "are the F<man/po4a/> directory, and that you have only one master file, "
+#~ "F<man/foo.1>. If you had several master files, you would have several "
+#~ "lines similar to the second one. Each such line also specify where to "
+#~ "write the corresponding translation files. Here, the German translation "
+#~ "of F<man/foo.1> is in F<man/translated/foo.de.1>."
+#~ msgstr ""
+#~ "Specifica che tutti i file PO (contenenti il lavoro dei traduttori) sono "
+#~ "la cartella F<man/po4a/> e che si ha un solo file master, F<man/foo.1>. "
+#~ "Se si avesse più file master, si avrebbero più righe simili alla seconda. "
+#~ "Ciascuna di queste righe specifica anche dove scrivere i file di "
+#~ "traduzione corrispondenti. Qui, la traduzione tedesca di F<man/foo.1> è "
+#~ "in F<man/translated/foo.de.1>."
+
+#~ msgid ""
+#~ "The last thing we need to complete the configuration of S<po4a> is a POT "
+#~ "file containing the template material that should be used to start a new "
+#~ "translation.  Simply create an empty file with the S<.pot> extension in "
+#~ "the specified S<po_directory> (e.g. F<man/po4a/foo.pot>), and S<po4a> "
+#~ "will fill it with the expected content."
+#~ msgstr ""
+#~ "L'ultima cosa di cui abbiamo bisogno per completare la configurazione di "
+#~ "S<po4a> è un file POT contenente il materiale del modello che dovrebbe "
+#~ "essere usato per iniziare una nuova traduzione. Basta creare un file "
+#~ "vuoto con l'estensione S<.pot> nella S<po_directory> specificata (ad es. "
+#~ "F<man/po4a/foo.pot>) e S<po4a> lo riempirà con il contenuto previsto."
+
+#~ msgid "Here is a recap of the files in this setup:"
+#~ msgstr "Ecco un riassunto dei file in questa impostazione:"
+
+#, no-wrap
+#~ msgid ""
+#~ "  ├── man/\n"
+#~ "  │   ├── foo.1        <- The original man page, in English.\n"
+#~ "  │   ├── po4a/\n"
+#~ "  │   │   ├── de.po    <- The German PO translation, from gettexization.\n"
+#~ "  │   │   └── foo.pot  <- The POT template of future translations (empty at first)\n"
+#~ "  │   └── translated/  <- Directory where the translations will be created\n"
+#~ "  └── po4a.cfg         <- The configuration file.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "  ├── man/\n"
+#~ "  │   ├── foo.1        <- La pagina man originale, in inglese\n"
+#~ "  │   ├── po4a/\n"
+#~ "  │   │   ├── de.po    <- La traduzione PO in tedesco, dalla gettext-izzazione\n"
+#~ "  │   │   └── foo.pot  <- Il modello POT per future traduzioni (all'inizio vuoto)\n"
+#~ "  │   └── translated/  <- La cartella dove verranno create le traduzioni\n"
+#~ "  └── po4a.cfg         <- Il file di configurazione\n"
+#~ "\n"
+
+#~ msgid ""
+#~ "Once setup, executing S<po4a> will parse your documentation, update the "
+#~ "POT template file, use it to update the PO translation files, and use "
+#~ "them to update the documentation translation files. All in one command:"
+#~ msgstr ""
+#~ "Una volta impostato, l'esecuzione di S<po4a> analizzerà la "
+#~ "documentazione, aggiornerà il file modello POT, lo utilizzerà per "
+#~ "aggiornare i file di traduzione PO e li utilizzerà per aggiornare i file "
+#~ "di traduzione della documentazione. Tutto in un comando:"
+
+#~ msgid ""
+#~ "In case of problem, run in verbose mode with the S<-v> flag. On the first "
+#~ "run, it may report that \"your POT file is already up-to-date\" although "
+#~ "it's still an empty file. Simply touch a file of your documentation: "
+#~ "S<po4a> only updates the POT file if it's not the most recently modified "
+#~ "file."
+#~ msgstr ""
+#~ "In caso di problemi, eseguire in modalità dettagliata con il flag S<-v>. "
+#~ "Alla prima esecuzione, potrebbe segnalare che \"il file POT è già "
+#~ "aggiornato\" sebbene sia ancora un file vuoto. Basta eseguire touch su un "
+#~ "file della documentazione (N.d.T o risalvarlo senza modificarlo): S<po4a> "
+#~ "aggiornerà il file POT solo se non è il file modificato più di recente."
+
+#~ msgid ""
+#~ "This it. S<po4a> is now fully configured. Once you've fixed your error in "
+#~ "F<foo.1>, the offending paragraph in the German translation will be "
+#~ "replaced by the fixed text in English. Mixing languages is not optimal, "
+#~ "but it's the only way to remove errors in translations that you don't "
+#~ "even understand and ensure that the content presented to the users is "
+#~ "never outdated. Updating the German translation is also much easier in "
+#~ "the corresponding PO file, so the language mix-up may not last long. "
+#~ "Finally, when the Japanese translator gives you a S<jp.po> translated "
+#~ "file, just drop it in F<man/po4a/po/>. A translated page will appear as "
+#~ "F<man/translated/foo.jp.1> when you run S<po4a> again."
+#~ msgstr ""
+#~ "Fatto. S<po4a> è ora completamente configurato. Dopo aver corretto "
+#~ "l'errore in F<foo.1>, il paragrafo colpevole nella traduzione tedesca "
+#~ "sarà sostituito dal testo corretto in inglese. Mescolare le lingue non è "
+#~ "ottimale, ma è l'unico modo per rimuovere errori nelle traduzioni che non "
+#~ "si comprendono (N.d.T. perché in altra lingua) e garantire che il "
+#~ "contenuto presentato agli utenti non sia mai obsoleto. Anche "
+#~ "l'aggiornamento della traduzione tedesca è molto più semplice nel file PO "
+#~ "corrispondente, quindi il disguido linguistico potrebbe non durare a "
+#~ "lungo. Infine, quando il traduttore giapponese fornirà un file tradotto "
+#~ "in S<jp.po>, basta metterlo in F<man/po4a/po/>. Una pagina tradotta "
+#~ "apparirà come F<man/translated/foo.jp.1> quando si eseguirà nuovamente "
+#~ "S<po4a>."
+
+#~ msgid ""
+#~ "Storing the translated documentation files in your version control system "
+#~ "is probably a bad idea, since they are automatically generated. The "
+#~ "precious files are the PO files, that contain the hard work of your "
+#~ "fellow translators. Along the same line, some people find it easier to "
+#~ "interact with the translators through an online platform such as "
+#~ "S<weblate>, but this is beyond the scope of S<po4a>."
+#~ msgstr ""
+#~ "La memorizzazione dei file di documentazione tradotti nel sistema di "
+#~ "controllo versionamento è probabilmente una cattiva idea, poiché vengono "
+#~ "generati automaticamente. I file importanti sono i file PO, che "
+#~ "contengono il duro lavoro dei colleghi traduttori. Analogamente, alcune "
+#~ "persone trovano più facile interagire con i traduttori attraverso una "
+#~ "piattaforma online come S<weblate>, ma questo va oltre lo scopo di "
+#~ "S<po4a>."
+
+#~ msgid "Happy documentation, and happy translating."
+#~ msgstr "Buona documentazione e buona traduzione."
+
+#~ msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
+#~ msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
