@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-07-09 19:23+0200\n"
-"PO-Revision-Date: 2022-05-15 10:14+0000\n"
+"PO-Revision-Date: 2022-07-16 03:20+0000\n"
 "Last-Translator: gemmaro <gemmaro.dev@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "ja/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -1252,6 +1252,14 @@ msgid ""
 "parameter.  This feature can also be used to group several translated files "
 "into the same POT file."
 msgstr ""
+"この行によってpo4aは翻訳する文書ごとにそれぞれPOTファイルとPOファイルを作成し"
+"ます。例えば3つの文書と5つの言語がある場合、3つのPOTファイルと15のPOファイル"
+"になります。これらのファイルは C<po4a_paths> "
+"テンプレートで指定された名前になり、 C<$master> "
+"は翻訳するそれぞれのドキュメントの基幹名に置き換えられます。"
+"名前が衝突した場合はPOTファイルで以下のように C<pot=> パラメータを使って指定"
+"できます。この機能は複数の翻訳されたファイルを同じPOTファイルにまとめるのにも"
+"使えます。"
 
 #. type: verbatim
 #: po4a:116
@@ -1300,6 +1308,9 @@ msgid ""
 "translated document to produce, and optionally some configuration. Here is "
 "an example:"
 msgstr ""
+"また、翻訳すべき文書を一覧にする必要があります。それぞれのマスター文書につい"
+"て、使用する形式のパーサ、翻訳された文書を生成する場所、そして任意で追加の設"
+"定を指定しなければいけません。以下に一例を示します。"
 
 #. type: verbatim
 #: po4a:120
@@ -1326,6 +1337,9 @@ msgid ""
 "adding a new language. It is much simpler to reorganize things using the C<"
 "$lang> template as follows:"
 msgstr ""
+"しかし繰り返しになりますが、これらの複雑な行は読んだり変更したりするのが難し"
+"いです。例えば新しい言語を追加するときなどです。そこで C<$lang> "
+"テンプレートを使って以下のようにまとめ直すとより簡素になります。"
 
 #. type: verbatim
 #: po4a:122
@@ -1336,6 +1350,10 @@ msgid ""
 " [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
 "\n"
 msgstr ""
+" [type: sgml]    doc/my_stuff.sgml $lang:doc/$lang/my_stuff.sgml\n"
+" [type: man]     script.1          $lang:po/$lang/script.1\n"
+" [type: docbook] doc/script.xml    $lang:doc/$lang/script.xml\n"
+"\n"
 
 #. type: =head2
 #: po4a:123
