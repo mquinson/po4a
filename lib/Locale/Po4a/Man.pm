@@ -2223,25 +2223,47 @@ $macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
     if ( $groff_code ne "fail" ) {
         my $paragraph = "@_";
         my $end       = ".";
+        my $comment;
         my $macroname = $_[1];
         $macroname = $ds_variables{$macroname} if ( $_[0] eq "dei" || $_[0] eq "dei1" );
+        if ($macroname =~ m/(.*?)\\"(.*)$/) {
+            # Remove comments after the macro name (Debian's #1017837)
+            ($macroname, $comment) = ($1, $2);
+        }
         $macroname =~ s/^ *//;
+        $macroname =~ s/ *$//;
         unless (exists $macro{$macroname} || exists $inline{$macroname}) {
-            warn wrap_mod(
-            "po4a::man",
-            dgettext(
-                "po4a",
-                "This page defines a new macro '%s' with '%s', but you did not specify the expected po4a behavior "
-                  . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
-                  . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
-                  . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
-                  . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
-            ),
-            $macroname,
-            $_[0],$macroname,
-            'untranslated', 'noarg', 'translate_joined', 'translate_each', 'no_wrap', 'inline', "-o untranslated=$macroname"
-        );
-
+            if (defined $comment) {
+                $comment =~ s/^ *//;
+                $comment =~ s/ *$//;
+                warn wrap_mod(
+                    "po4a::man",
+                    dgettext(
+                        "po4a",
+                        "This page defines a new macro '%s' with '%s' (inline comment: %s), but you did not specify the expected po4a behavior "
+                        . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
+                        . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
+                        . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
+                        . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
+                    ),
+                    $macroname, $_[0], $comment, $macroname,
+                    'untranslated', 'noarg', 'translate_joined', 'translate_each', 'no_wrap', 'inline', "-o untranslated=$macroname");
+            } else {
+                warn wrap_mod(
+                    "po4a::man",
+                    dgettext(
+                        "po4a",
+                        "This page defines a new macro '%s' with '%s', but you did not specify the expected po4a behavior "
+                        . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
+                        . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
+                        . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
+                        . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
+                    ),
+                    $macroname,
+                    $_[0],$macroname,
+                    'untranslated', 'noarg', 'translate_joined', 'translate_each', 'no_wrap', 'inline', "-o untranslated=$macroname"
+                );
+            }
         }
         if ( $paragraph =~ /^[.'][\t ]*d[ei1]*[\t ]+([^\t ]+)[\t ]+([^\t ]+)[\t ]$/ ) {
             $end = $2;
