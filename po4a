@@ -27,43 +27,24 @@ it decouples the translation of content from its document structure.
 Please refer to the page L<po4a(7)> for a gentle introduction to this
 project.
 
-When you run the B<po4a> program for the first time, with only a configuration
-file and the documents to translate (called master documents), it produces a POT
-file (also called translation template) that contains all of the translatable
-strings in the document in a form that eases the work of translators. See the
-L<QUICK START CONFIGURATION> section below for a practical example.
+Upon execution, B<po4a> parses all documentation files specified in its
+configuration file. It updates the PO files (containing the translation) to
+reflect any change to the documentation, and produce a translated documentation
+by injecting the content's translation (found in the PO files) into the
+structure of the original master document.
 
-Those POT files can either be translated with a specific editor such
-as the B<GNOME Translation Editor>, KDE's B<Lokalize> or B<poedit>,
-or they can be integrated in an online localization platform such as
-B<weblate> or B<pootle>.  The translation result is a set of PO files,
-one per language.
-
-When you run the B<po4a> program with both the master documents and
-the PO files, it produces the translated documents by injecting the
-content's translation (found in the PO files) into the structure of
-the original master document.
-
-If the master documents changed in the meanwhile, po4a will update the PO
-and POT files accordingly, so that the translators can easily detect the
-modifications and update their work. Depending on your settings, po4a will
-discard the partially translated documents, or produce a document mixing
-the source language (for the new or modified paragraphs) and the target
-language (for paragraphs where translation is already in the PO file).
-
-By default, the translated documents are produced when at least 80%
-of their content is translated (see the I<--keep> option below).
-Discarding translations as soon as they are not 100% may be
-discouraging for the translators, while showing "translations" that
-are too incomplete may be troubling for the end users.
-
-=head2 Graphical overview
-
+At first, the PO files only contain the strings to translate from the original
+documentation. This file format allows the translators to manually provide a
+translation for each paragraph extracted by B<po4a>. If the documentation is
+modified after translation, B<po4a> marks the corresponding translations as
+"fuzzy" in the PO file to request a manual review by the translators. The
+translators can also provide so-called "addendum", that are extra content
+stating for example who did the translation and how to report bugs.
 
  master documents ---+---->-------->---------+
   (doc authoring)    |                       |
-                     V   (po4a executions)   >-----+--> translations
-                     |                       |     |
+                     V   (po4a executions)   >-----+--> translated
+                     |                       |     |     documents
  existing PO files -->--> updated PO files >-+     |
       ^                            |               |
       |                            V               |
@@ -72,13 +53,100 @@ are too incomplete may be troubling for the end users.
                                                    |
  addendum -->--------------------------------------+
 
-The master documents are authored by the documentation writers. Any changes are
-automatically reflected by po4a in the PO files, that are then updated by the
-translators. All changes to the PO files (either manual or by po4a) are
-automatically reflected in translated documents. You can mimic this behavior
-using the L<po4a-updatepo(1)> and L<po4a-translate(1)> scripts in makefiles, but
-this quickly becomes bothersome and repetitive (see L<po4a(7)>). It is highly
-recommended to use the B<po4a> program in your build process.
+The workflow of B<po4a> is asynchronous, as suited to open-source projects. The
+documentation writers authors the master documents at their own pace. The
+translators review and update the translations in the PO files. The maintainers
+rerun B<po4a> on need, to reflect any change to the original documentation to
+the PO files, and to produce updated documentation translations, by injecting
+the latest translation into the latest document structure.
+
+By default, a given translated document is produced when at least 80% of its
+content is translated. The untranslated text is kept in the original language.
+The produced documentation thus mixes languages if the translation is not
+complete. You can change the 80% threshold with the I<--keep> option described
+below. Note however that discarding translations as soon as they are not 100%
+may be discouraging for the translators whose work will almost never be shown to
+the users, while showing "translations" that are too incomplete may be troubling
+for the end users.
+
+Storing the translated documentation files in the version control system is
+probably a bad idea, since they are automatically generated. The precious files
+are the PO files, that contain the hard work of your fellow translators. Also,
+some people find it easier to interact with the translators through an online
+platform such as S<weblate>, but this is naturally fully optional.
+
+=head2 Quick start tutorial
+
+Let's assume you maintain a program named B<foo> which has a man page
+F<man/foo.1> written in English (the bridge language in most open-source
+projects, but B<po4a> can be used from or to any language). Some times ago,
+someone provided a German translation named F<man/foo.de.1> and disappeared.
+This is a problem because you just got a bug report saying that your
+documentation contains a gravely misleading information that must be fixed in
+all languages, but you don't speak German so you can only modify the original,
+not the translation. Now, another contributor wants to contribute a translation
+to Japanese, a language that you don't master either.
+
+It is time to convert your documentation to B<po4a> to solve your documentation
+maintenance nightmares. You want to update the doc when needed, you want to ease
+the work of your fellow translators, and you want to ensure that your users
+never see any outdated and thus misleading documentation.
+
+The conversion includes two steps: setup the po4a infrastructure, and convert
+the previous German translation to salvage the previous work. This latter part
+is done using S<po4a-gettextize>, as follows. As detailed in the documentation
+of L<po4a-gettextize(1)>, this process rarely fully automatic, but once it's
+done, the B<de.po> file containing the German translation can be integrated in
+your po4a workflow.
+
+  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po
+
+Let's now configure po4a. With the appropriate file layout, your configuration
+file could be as simple as this:
+
+ [po_directory] man/po4a/
+
+ [type: man] man/foo.1 $lang:man/translated/foo.$lang.1
+
+It specifies that all PO files (containing the work of the translators) are the
+F<man/po4a/> directory, and that you have only one master file, F<man/foo.1>. If
+you had several master files, you would have several lines similar to the second
+one. Each such line also specify where to write the corresponding translation
+files. Here, the German translation of F<man/foo.1> is in
+F<man/translated/foo.de.1>.
+
+The last thing we need to complete the configuration of B<po4a> is a POT file
+containing the template material that should be used to start a new translation.
+Simply create an empty file with the S<.pot> extension in the specified
+S<po_directory> (e.g. F<man/po4a/foo.pot>), and B<po4a> will fill it with the
+expected content.
+
+Here is a recap of the files in this setup:
+
+  ├── man/
+  │   ├── foo.1        <- The original man page, in English.
+  │   ├── po4a/
+  │   │   ├── de.po    <- The German PO translation, from gettexization.
+  │   │   └── foo.pot  <- The POT template of future translations (empty at first)
+  │   └── translated/  <- Directory where the translations will be created
+  └── po4a.cfg         <- The configuration file.
+
+Once setup, executing B<po4a> will parse your documentation, update the POT
+template file, use it to update the PO translation files, and use them to update
+the documentation translation files. All in one command:
+
+        po4a --verbose po4a.cfg
+
+This it. B<po4a> is now fully configured. Once you've fixed your error in
+F<man/foo.1>, the offending paragraph in the German translation will be replaced by
+the fixed text in English. Mixing languages is not optimal, but it's the only
+way to remove errors in translations that you don't even understand, and ensure
+that the content presented to the users is never misleading. Updating the German
+translation is also much easier in the corresponding PO file, so the language
+mix-up may not last long. Finally, when the Japanese translator gives you a
+S<jp.po> translated file, just drop it in F<man/po4a/po/>. A translated page
+will appear as F<man/translated/foo.jp.1> (provided that enough content is
+translated) when you run B<po4a> again.
 
 =head1 OPTIONS
 
@@ -387,16 +455,20 @@ C<$master> in the name of your PO files on the C<[po4a_paths]> line, as follows.
 
  [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po
 
-With this line, po4a will produce separate POT and PO files for each document to translate. 
-For example, if you have 3 documents and 5 languages, this will result in 3 POT files and 
-15 PO files. These files are named as specified on the C<po4a_paths> template, with 
-C<$master> substituted to the basename of each document to translate. In case of name 
-conflict, you can specify the POT file to use as follows, with the C<pot=> parameter. 
-This feature can also be used to group several translated files into the same POT file.
+With this line, po4a will produce separate POT and PO files for each document to translate.
+For example, if you have 3 documents and 5 languages, this will result in 3 POT files and
+15 PO files. These files are named as specified on the C<po4a_paths> template, with
+C<$master> substituted to the basename of each document to translate. In case of name
+conflict, you can specify the POT file to use as follows, with the C<pot=> parameter.
+
+This feature can also be used to group several translated files into the same
+POT file. The following example only produces 2 POT files: F<l10n/po/foo.pot>
+(containing the material from F<foo/gui.xml>) and F<l10n/po/bar.pot> (containing
+the material from both F<bar/gui.xml> and F<bar/cli.xml>).
 
  [po4a_langs] de fr ja
  [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po
- [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui
+ [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo
  [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar
  [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar
 
@@ -404,7 +476,7 @@ In split mode, B<po4a> builds a temporary compendium during the PO update, to
 share the translations between all the PO files. If two PO files have different
 translations for the same string, B<po4a> will mark this string as fuzzy and
 will submit both translations in all the PO files containing this string. When
-unfuzzied by the translator, the translation is automatically used in every PO 
+unfuzzied by the translator, the translation is automatically used in every PO
 files.
 
 =head2 Specifying the documents to translate
@@ -599,87 +671,6 @@ these strings will be left unmodified when producing the translated documents.
 This naturally decreases the level of translation, so you may need the C<--keep>
 option to ensure that the document is produced anyway.
 
-=head1 QUICK START CONFIGURATION
-
-Let's assume you maintain a program named B<foo> which has a man page
-F<man/foo.1> written in English (the bridge language in most open-source
-projects, but S<po4a> can be used from or to any language). Some times ago,
-someone provided a manual translation to German named F<man/foo.de.1> and
-disappeared. This is a problem because you just got a bug report saying that
-your documentation contains a gravely misleading information that must be fixed
-in all languages, but you don't speak German so you can only modify the
-original, not the translation. Now, another contributor wants to contribute a
-translation to Japanese, a language that you don't master either.
-
-It is time to convert your documentation to B<po4a> to solve your documentation
-maintenance nightmares. You want to update the doc when needed, ease the work of
-your fellow translators, and ensure that your users never see outdated
-documentations.
-
-The conversion includes two steps: setup the po4a infrastructure, and convert
-the previous German translation to salvage the previous work. This latter part
-is done using S<po4a-gettextize>, as follows. As detailed in the documentation
-of L<po4a-gettextize(1)>, this process rarely even fully automatic, but once
-it's done, the B<de.po> file containing the German translation can be integrated
-in your po4a workflow.
-
-  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po
-
-Let's now configure po4a. With the appropriate file layout, your configuration
-file could be as simple as this:
-
- [po_directory] man/po4a/
-
- [type: man] man/foo.1 $lang:man/translated/foo.$lang.1
-
-It specifies that all PO files (containing the work of the translators) are the
-F<man/po4a/> directory, and that you have only one master file, F<man/foo.1>. If
-you had several master files, you would have several lines similar to the second
-one. Each such line also specify where to write the corresponding translation
-files. Here, the German translation of F<man/foo.1> is in
-F<man/translated/foo.de.1>.
-
-The last thing we need to complete the configuration of S<po4a> is a POT file
-containing the template material that should be used to start a new translation.
-Simply create an empty file with the S<.pot> extension in the specified
-S<po_directory> (e.g. F<man/po4a/foo.pot>), and S<po4a> will fill it with the
-expected content.
-
-Here is a recap of the files in this setup:
-
-  ├── man/
-  │   ├── foo.1        <- The original man page, in English.
-  │   ├── po4a/
-  │   │   ├── de.po    <- The German PO translation, from gettexization.
-  │   │   └── foo.pot  <- The POT template of future translations (empty at first)
-  │   └── translated/  <- Directory where the translations will be created
-  └── po4a.cfg         <- The configuration file.
-
-Once setup, executing S<po4a> will parse your documentation, update the POT
-template file, use it to update the PO translation files, and use them to update
-the documentation translation files. All in one command:
-
-        po4a --verbose po4a.cfg
-
-This it. S<po4a> is now fully configured. Once you've fixed your error in
-F<foo.1>, the offending paragraph in the German translation will be replaced by
-the fixed text in English. Mixing languages is not optimal, but it's the only
-way to remove errors in translations that you don't even understand and ensure
-that the content presented to the users is never outdated. Updating the German
-translation is also much easier in the corresponding PO file, so the language
-mix-up may not last long. Finally, when the Japanese translator gives you a
-S<jp.po> translated file, just drop it in F<man/po4a/po/>. A translated page
-will appear as F<man/translated/foo.jp.1> when you run S<po4a> again.
-
-Storing the translated documentation files in your version control system is
-probably a bad idea, since they are automatically generated. The precious files
-are the PO files, that contain the hard work of your fellow translators. Along
-the same line, some people find it easier to interact with the translators
-through an online platform such as S<weblate>, but this is beyond the scope of
-S<po4a>.
-
-Happy documentation, and happy translating.
-
 =head1 SEE ALSO
 
 L<po4a-gettextize(1)>,
@@ -693,7 +684,7 @@ L<po4a(7)>.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2002-2020 by SPI, inc.
+Copyright 2002-2022 by SPI, inc.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL (see the COPYING file).
