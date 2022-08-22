@@ -22,6 +22,52 @@ push @tests,
     'format' => 'man',
     'input'  => 'fmt/man/escapes.man',
   },
+
+  {
+    'doc'     => 'User macros definition (missing behavior)',
+    'input'   => 'fmt/man/macro-def.man',
+    'format'  => 'man',
+    'norm_stderr' => 'fmt/man/macro-def.stderr-missing-behavior',
+    'trans_stderr' => 'fmt/man/macro-def.stderr-missing-behavior',
+    'options' => '--option groff_code=verbatim',
+  },
+  {
+    'doc'     => 'User macros definition (untranslated)',
+    'input'   => 'fmt/man/macro-def.man',
+    'format'  => 'man',
+    'options' => '--option groff_code=verbatim -o untranslated=Blob',
+  },
+  {
+    'doc'     => 'User macros definition (noarg)',
+    'input'   => 'fmt/man/macro-def.man',
+    'format'  => 'man',
+    'options' => ' --option groff_code=verbatim -o noarg=Blob',
+  },
+
+  {
+    'doc'     => 'User macros definition and usage (missing behavior)',
+    'input'   => 'fmt/man/macro-defuse.man',
+    'norm_stderr' => 'fmt/man/macro-defuse.stderr-missing-behavior',
+    'trans_stderr' => 'fmt/man/macro-defuse.stderr-missing-behavior',
+    'format'  => 'man',
+    'options' => '--option groff_code=verbatim',
+    'error'   => 1,
+  },
+  {
+    'doc'     => 'User macros definition and usage (inline)',
+    'input'   => 'fmt/man/macro-defuse.man',
+    'format'  => 'man',
+    'options' => '--option groff_code=verbatim -o inline=Blob',
+  },
+  {
+    'doc'     => 'User macros definition and usage (noarg)',
+    'input'   => 'fmt/man/macro-defuse.man',
+    'format'  => 'man',
+    'options' => ' --option groff_code=verbatim -o noarg=Blob',
+    'potfile' => 'fmt/man/macro-defuse.pot-noarg',
+    'pofile'  => 'fmt/man/macro-defuse.po-noarg',
+},
+
   {
     'doc'     => 'hyphens (verbatim)',
     'input'   => 'fmt/man/hyphens-verbatim.man',
