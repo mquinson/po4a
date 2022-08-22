@@ -6,19 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a\n"
-"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
 "POT-Creation-Date: 2022-08-18 21:51+0200\n"
-"PO-Revision-Date: 2022-07-09 18:32+0000\n"
+"PO-Revision-Date: 2022-08-22 15:32+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a/uk/"
-">\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a/uk/>"
+"\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 "X-Rosetta-Version: 0.1\n"
 
 #: ../../lib/Locale/Po4a/AsciiDoc.pm:211 ../../lib/Locale/Po4a/Man.pm:496
@@ -376,14 +376,18 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"На цій сторінці визначено новий макрос «%s» за допомогою «%s», але не "
+"вказано очікувану поведінку po4a при використанні «%s». Якщо цей макрос "
+"використано на сторінці, ви отримаєте помилку.\n"
+"Додайте ваш макрос до одного з параметрів, «%s», «%s», «%s», «%s», «%s» або "
+"%s», щоб уникнути проблем.\n"
+"Наприклад, передавання po4a «%s» призведе до того, що визначений макрос буде "
+"приховано від перекладачів.\n"
+"Будь ласка, зверніться до сторінки підручника щодо Locale::Po4a::Man, щоб "
+"дізнатися більше про ці параметри.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2272
-#, fuzzy, perl-format
-#| msgid ""
-#| "This page defines a new macro with '%s'. Since po4a is not a real groff "
-#| "parser, this is not supported. The option '%s' gets these macros copied "
-#| "verbatim in the translated file, but it's not very robust. '%s' shows "
-#| "these macros to the translators, but they are rather ugly."
+#, perl-format
 msgid ""
 "This page defines a new macro with '%s'. Since po4a is not a real groff "
 "parser, this is not supported. The option '%s' gets these macros copied "
@@ -395,19 +399,14 @@ msgstr ""
 "обробником groff, підтримку такого визначення не передбачено. Параметр «%s» "
 "скопіює ці макроси буквально до файла перекладу, але наслідки такого "
 "копіювання не завжди є належними. «%s» покаже ці макроси перекладачам, але "
-"результати доволі неоковирні."
+"макроси groff не дуже зручні для перекладачів."
 
 #: ../../lib/Locale/Po4a/Man.pm:2340
 msgid "The .ie macro must be followed by a .el macro."
 msgstr "Після макроса .ie слід вказати макрос .el."
 
 #: ../../lib/Locale/Po4a/Man.pm:2368
-#, fuzzy, perl-format
-#| msgid ""
-#| "This page uses conditionals with '%s'. Since po4a is not a real groff "
-#| "parser, this is not supported by default. The option '%s' gets these "
-#| "macros copied verbatim in the translated file, but it's not very robust. "
-#| "'%s' shows these macros to the translators, but they are rather ugly."
+#, perl-format
 msgid ""
 "This page uses conditionals with '%s'. Since po4a is not a real groff "
 "parser, this is not supported by default. The option '%s' gets these macros "
@@ -419,7 +418,7 @@ msgstr ""
 "обробником groff, підтримку такого визначення не передбачено. Параметр «%s» "
 "скопіює ці макроси буквально до файла перекладу, але наслідки такого "
 "копіювання не завжди є належними. «%s» покаже ці макроси перекладачам, але "
-"результати доволі неоковирні."
+"макроси groff не дуже зручні для перекладачів."
 
 #: ../../lib/Locale/Po4a/Man.pm:2428
 #, perl-format
@@ -1539,6 +1538,13 @@ msgid ""
 "convenient way of using po4a is to write a po4a.conf file and use the "
 "integrated po4a(1) program."
 msgstr ""
+"Вам слід надати однакову кількість основних і локалізованих файлів для "
+"синхронізації, оскільки po4a-gettextize призначено для синхронізації "
+"основних файлів та попередніх наявних перекладів. Якщо ви просто хочете "
+"видобути дані файлів POT з ваших основних файлів, будь ласка, скористайтеся "
+"po4a-updatepo. Будь ласка, зауважте, що найзручнішим способом використання "
+"po4a є створення файла po4a.conf із наступним використанням інтегрованої "
+"програми po4a(1)."
 
 #: ../../po4a-gettextize:437
 msgid ""
@@ -1547,6 +1553,10 @@ msgid ""
 "po4a, you should use the po4a(1) program to maintain it and update your "
 "translations."
 msgstr ""
+"po4a-gettextize корисна лише для перетворення раніше створених перекладів до "
+"зручного формату у заснованому на PO робочому процесі. Щойно ви успішно "
+"перетворите дані вашого проєкту до формату po4a, вам слід користуватися "
+"програмою po4a(1) для його супроводу та оновлення ваших перекладів."
 
 #: ../../po4a-gettextize:487
 msgid ""
@@ -1561,6 +1571,8 @@ msgid ""
 "po4a-normalize is mostly useful to debug po4a itself. Users are advised to "
 "use the po4a(1) program instead."
 msgstr ""
+"po4a-normalize здебільшого корисна для діагностики роботи самої po4a. "
+"Користувачам ми радимо скористатися програмою po4a(1)."
 
 #: ../../po4a-normalize:189
 #, perl-format
@@ -1582,6 +1594,8 @@ msgid ""
 "po4a-translate is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-translate вважається застарілою. Уніфікована програма po4a(1) є "
+"зручнішою і стійкішою до помилок."
 
 #: ../../po4a-translate:288
 #, perl-format
@@ -1598,6 +1612,8 @@ msgid ""
 "po4a-updatepo is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-updatepo вважається застарілою. Уніфікована програма po4a(1) є "
+"зручнішою і стійкішою до помилок."
 
 #: ../../po4a-updatepo:282
 msgid "po4a-updatepo can't take the input PO from stdin."
