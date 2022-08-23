@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-08-22 12:30+0200\n"
-"PO-Revision-Date: 2022-08-22 15:32+0000\n"
+"PO-Revision-Date: 2022-08-23 10:36+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/sr_Cyrl/>\n"
@@ -341,12 +341,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
-#, fuzzy
-#| msgid ""
-#| "When you run the B<po4a> program with both the master documents and the "
-#| "PO files, it produces the translated documents by injecting the content's "
-#| "translation (found in the PO files) into the structure of the original "
-#| "master document."
 msgid ""
 "Upon execution, B<po4a> parses all documentation files specified in its "
 "configuration file. It updates the PO files (containing the translation) to "
@@ -354,9 +348,11 @@ msgid ""
 "documentation by injecting the content's translation (found in the PO files) "
 "into the structure of the original master document."
 msgstr ""
-"Када програм B<po4a> покренете заједно са мастер документима и са PO "
-"фајловима, он креира преведене документе уметањем превода садржаја (који се "
-"проналази у PO фајловима) у структуру оригиналног мастер документа."
+"Када сe програм покрене, B<po4a> парсира све фајлове документације наведене "
+"у свом конфигурационим фајлу. Он ажурира PO фајлове (у којима се налази "
+"превод) тако да се у њима прикажу све измене у документацији, па креира "
+"преведени документ уметањем превода садржаја (који се проналази у PO "
+"фајловима) у структуру оригиналног мастер документа."
 
 #. type: textblock
 #: po4a:8
@@ -370,23 +366,17 @@ msgid ""
 "are extra content stating for example who did the translation and how to "
 "report bugs."
 msgstr ""
+"У почетку, PO фајлови садрже само стрингове који треба да се преведу из "
+"оригиналне документације. Овај фајл формат омогућава да преводиоци ручно "
+"доставе превод сваког пасуса који издвоји B<po4a>. Ако се након превођења "
+"документација измени, B<po4a> означава одговарајуће преводе у PO фајлу као "
+"несигурне („fuzzy”) и тако од преводилаца захтева да их ручно провере. "
+"Преводиоци такође могу да наведу такозвани „додатак”, допунски садржај који "
+"наводи, на пример, ко је урадио превод и како да се пријаве багови."
 
 #. type: verbatim
 #: po4a:9
-#, fuzzy, no-wrap
-#| msgid ""
-#| " master documents ---+---->-------->---------+\n"
-#| "  (doc authoring)    |                       |\n"
-#| "                     V   (po4a executions)   >-----+--> translations\n"
-#| "                     |                       |     |\n"
-#| " existing PO files -->--> updated PO files >-+     |\n"
-#| "      ^                            |               |\n"
-#| "      |                            V               |\n"
-#| "      +----------<---------<-------+               ^\n"
-#| "       (manual translation process)                |\n"
-#| "                                                   |\n"
-#| " addendum -->--------------------------------------+\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " master documents ---+---->-------->---------+\n"
 "  (doc authoring)    |                       |\n"
@@ -403,8 +393,8 @@ msgid ""
 msgstr ""
 " мастер документи ------+-------->-------->---------+\n"
 "  (писање док)          |                           |\n"
-"                        V       (po4a извршавања)   >-----+--> преводи\n"
-"                        |                           |     |\n"
+"                        V       (po4a извршавања)   >-----+--> преведени\n"
+"                        |                           |     |     документи\n"
 " постојећи PO фајлови -->--> ажурирани PO фајлови >-+     |\n"
 "      ^                                 |                 |\n"
 "      |                                 V                 |\n"
@@ -425,16 +415,15 @@ msgid ""
 "translations, by injecting the latest translation into the latest document "
 "structure."
 msgstr ""
+"B<po4a> процес рада је асинхрон, прилагођен пројектима отвореног кода. Писци "
+"документације креирају мастер документе сопственим темпом. Преводиоци "
+"прегледају и ажурирају преводе у PO фајловима. Одржаваоци по потреби поново "
+"покрећу B<po4a>, чиме се измене у оригиналној документацији приказују у PO "
+"фајловима, као и да произведу ажуриране преводе документације, уметањем "
+"најсвежијих превода у најновију структуру документа."
 
 #. type: textblock
 #: po4a:11
-#, fuzzy
-#| msgid ""
-#| "By default, the translated documents are produced when at least 80% of "
-#| "their content is translated (see the I<--keep> option below).  Discarding "
-#| "translations as soon as they are not 100% may be discouraging for the "
-#| "translators, while showing \"translations\" that are too incomplete may "
-#| "be troubling for the end users."
 msgid ""
 "By default, a given translated document is produced when at least 80% of its "
 "content is translated. The untranslated text is kept in the original "
@@ -445,11 +434,14 @@ msgid ""
 "will almost never be shown to the users, while showing \"translations\" that "
 "are too incomplete may be troubling for the end users."
 msgstr ""
-"Подразумевано се преведени документи израђују онда када је барем 80% њиховог "
-"садржаја преведено (погледајте опцију I<--keep> испод). Одбацивање превода "
-"чим проценат преведених стрингова није 100% може да буде обесхрабрујуће за "
-"преводиоце, док приказивање „превода” који је далеко од завршеног може да "
-"представља проблем за крајње кориснике."
+"Подразумевано се неки преведени документ израђује онда када је барем 80% "
+"његовог садржаја преведено. Непреведени текст се задржава на оригиналном "
+"језику. Произведена документација дакле меша језике ако превод није "
+"комплетан. Границу од 80% можете да промените опцијом I<--keep> која је "
+"описана испод. Међутим, имајте на уму да одбацивање превода чим проценат "
+"преведених стрингова није 100% може да буде обесхрабрујуће за преводиоце "
+"чији рад корисници скоро никада неће видети, док приказивање „превода” који "
+"је далеко од завршеног може представљати проблем за крајње кориснике."
 
 #. type: textblock
 #: po4a:12
@@ -461,11 +453,16 @@ msgid ""
 "translators through an online platform such as S<weblate>, but this is "
 "naturally fully optional."
 msgstr ""
+"Чување фајлова превода документације у систему за контролу верзија је "
+"вероватно лоша идеја, јер се они генеришу аутоматски. Драгоцени су PO "
+"фајлови који садрже сав тежак рад ваших колега преводилаца. Такође, неким "
+"људима је једноставније да комуницирају са преводиоцима посредством онлајн "
+"платформе као што је S<веблејт>, али то је наравно потпуно опционално."
 
 #. type: =head2
 #: po4a:13
 msgid "Quick start tutorial"
-msgstr ""
+msgstr "Туторијал за брзи почетак"
 
 #. type: textblock
 #: po4a:14
@@ -480,6 +477,16 @@ msgid ""
 "original, not the translation. Now, another contributor wants to contribute "
 "a translation to Japanese, a language that you don't master either."
 msgstr ""
+"Претпоставимо да одржавате програм под именом B<foo> који има man страницу F<"
+"man/foo.1> написану на енглеском језику (посредним језиком већине пројеката "
+"отвореног кода, мада B<po4a> може да се користи за било коју комбинацију "
+"изворног и циљног језика). Пре неког времена, неко је доставио немачки "
+"превод под именом F<man/foo.de.1> и нестао. Ово представља проблем јер сте "
+"управо добили извештај о багу који каже да ваша документација садржи озбиљно "
+"погрешну информацију која мора да се исправи у свим језицима, али ви не "
+"познајете немачки језик тако да можете изменити само оригинал, а не и "
+"превод. Затим, још један сарадник жели да допринесе превод на јапански, још "
+"један језик којим не владате."
 
 #. type: textblock
 #: po4a:15
@@ -490,6 +497,10 @@ msgid ""
 "to ensure that your users never see any outdated and thus misleading "
 "documentation."
 msgstr ""
+"Време је двоју документацију конвертујете у B<po4a> и тако решите хаос у "
+"одржавању документације. Желите да ажурирате документ када је то потребно, "
+"желите да колегама преводиоцима олакжате посао и желите обезбедити да ваши "
+"кориснии никада не виде застарелу и услед тога нетачну документацију."
 
 #. type: textblock
 #: po4a:16
@@ -501,18 +512,23 @@ msgid ""
 "but once it's done, the B<de.po> file containing the German translation can "
 "be integrated in your po4a workflow."
 msgstr ""
+"Конверзија се састоји из два корака: постављање po4a инфраструктуре и "
+"конверзија претходно постојећег немачког превода како би се сачувао ранији "
+"рад. Овај други део се ради помоћу скрипте S<po4a-gettextize>, као што "
+"следи. Из детаља у документацији скрипте L<po4a-gettextize(1)> се види да је "
+"овај процес ретко кад у потпуности аутоматски, али једном када се обави, "
+"фајл B<de.po> који садржи немачки превод може да се интегрише у ваш po4a "
+"процес рада."
 
 #. type: verbatim
 #: po4a:17
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-gettextize --format <format> --master <master.doc> --po <translation.pot>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize --format <формат> --master <мастер.doc> --po <превод.pot>\n"
+"  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de."
+"po\n"
 "\n"
 
 #. type: textblock
@@ -521,18 +537,17 @@ msgid ""
 "Let's now configure po4a. With the appropriate file layout, your "
 "configuration file could be as simple as this:"
 msgstr ""
+"Хајде сада конфигуришемо po4a. Уз погодан распоред фајлова, ваша "
+"конфигурација може да буде овако једноставна:"
 
 #. type: verbatim
 #: po4a:19
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] man/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/po4a/\n"
 "\n"
 msgstr ""
-" [po_directory] man/po/\n"
+" [po_directory] man/po4a/\n"
 "\n"
 
 #. type: verbatim
@@ -542,6 +557,8 @@ msgid ""
 " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 msgstr ""
+" [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
+"\n"
 
 #. type: textblock
 #: po4a:21
@@ -553,6 +570,12 @@ msgid ""
 "corresponding translation files. Here, the German translation of F<man/"
 "foo.1> is in F<man/translated/foo.de.1>."
 msgstr ""
+"Она наводи да се сви PO фајлови (који садрже рад преводилаца) налазе у "
+"директоријуму F<man/po4a/> и да имате само један мастер фајл, F<man/foo.1>. "
+"Ако имате неколико мастер фајлова, морали бисте да наведете неколико линија "
+"сличних другој линији. Свака та линија такође наводи и где да се упишу "
+"одговарајући фајлови превода. У овом случају, немачки превод фајла F<man/"
+"foo.1> је F<man/translated/foo.de.1>."
 
 #. type: textblock
 #: po4a:22
@@ -563,13 +586,16 @@ msgid ""
 "specified S<po_directory> (e.g. F<man/po4a/foo.pot>), and B<po4a> will fill "
 "it with the expected content."
 msgstr ""
+"Последња ствар која треба да се уради како би се комплетирала конфигурација "
+"B<po4a> је POT фајл који садржи материјал шаблона који треба да се користи "
+"када се започиње нови превод. Једноставно креирајте празан фајл са S<.pot> "
+"екстензијом у наведеном S<po_directory> (нпр. F<man/po4a/foo.pot>), а "
+"B<po4a> ће га испунити са очекиваним садржајем."
 
 #. type: textblock
 #: po4a:23
-#, fuzzy
-#| msgid "Here is a graphical representation of this:"
 msgid "Here is a recap of the files in this setup:"
-msgstr "Ево графичке представе овога:"
+msgstr "Ево подсетника фајлова који се користе у овом подешавању:"
 
 #. type: verbatim
 #: po4a:24
@@ -584,6 +610,14 @@ msgid ""
 "  └── po4a.cfg         <- The configuration file.\n"
 "\n"
 msgstr ""
+"  ├── man/\n"
+"  │   ├── foo.1        <- Оригинална man страница, на енглеском језику.\n"
+"  │   ├── po4a/\n"
+"  │   │   ├── de.po    <- немачки PO превод, добијен gettextизацијом.\n"
+"  │   │   └── foo.pot  <- POT шаблон будућих превода (у почетку празан)\n"
+"  │   └── translated/  <- Директоријум у који ће се смештати преводи\n"
+"  └── po4a.cfg         <- Конфигурациони фајл.\n"
+"\n"
 
 #. type: textblock
 #: po4a:25
@@ -592,6 +626,10 @@ msgid ""
 "template file, use it to update the PO translation files, and use them to "
 "update the documentation translation files. All in one command:"
 msgstr ""
+"Једном када је подешен, извршавањем програма B<po4a> се парсира ваша "
+"документација, ажурира POT фајл шаблона, он се употреби за ажурирање PO "
+"фајлова превода, а ти фајлови се употребе за ажурирање фајлова превода "
+"документације. Све у једној команди:"
 
 #. type: verbatim
 #: po4a:26
@@ -600,6 +638,8 @@ msgid ""
 "        po4a --verbose po4a.cfg\n"
 "\n"
 msgstr ""
+"        po4a --verbose po4a.cfg\n"
+"\n"
 
 #. type: textblock
 #: po4a:27
@@ -616,6 +656,17 @@ msgid ""
 "jp.1> (provided that enough content is translated) when you run B<po4a> "
 "again."
 msgstr ""
+"И то је то. B<po4a> је сада у потпуности конфигурисан. Када исправите грешку "
+"у F<man/foo.1>, неисправан пасус у немачком преводу ће се заменити "
+"исправљеним текстом на енглеском. Мешање језика није баш оптимално, али то "
+"је једини начин да се у преводима које чак и не разумете исправе грешке и да "
+"се обезбеди да је садржај који се представи корисницима увек тачан. "
+"Ажурирање немачког превода је такође много једноставније у одговарајућем PO "
+"фајлу, тако да мешавина језика вероватно неће дуго потрајати. Коначно, када "
+"вам преводилац на јапански достави S<jp.po> преведени фајл, једноставно га "
+"убаците у директоријум F<man/po4a/po/>. Када поново покренете B<po4a>, "
+"преведена страница ће се појавити као F<man/translated/foo.jp.1> (у случају "
+"да је преведена потребна количина текста)."
 
 #. type: =item
 #: po4a:29 po4a-translate:28
@@ -1397,16 +1448,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:128
-#, fuzzy
-#| msgid ""
-#| "With this line, po4a will produce separate POT and PO files for each "
-#| "document to translate.  For example, if you have 3 documents and 5 "
-#| "languages, this will result in 3 POT files and 15 PO files. These files "
-#| "are named as specified on the C<po4a_paths> template, with C<$master> "
-#| "substituted to the basename of each document to translate. In case of "
-#| "name conflict, you can specify the POT file to use as follows, with the "
-#| "C<pot=> parameter.  This feature can also be used to group several "
-#| "translated files into the same POT file."
 msgid ""
 "With this line, po4a will produce separate POT and PO files for each "
 "document to translate.  For example, if you have 3 documents and 5 "
@@ -1421,9 +1462,7 @@ msgstr ""
 "добићете 3 POT фајлова и 15 PO фајлова. Они добијају име наведено "
 "C<po4a_paths> шаблоном, у којем се C<$master> замењује са базним именом "
 "сваког документа који се преводи. У случају да дође до конфликта, на следећи "
-"начин можете навести POT фајл који треба да се користи, параметром C<pot=>. "
-"Ова могућност такође може да се користи за груписање неколико преведених "
-"фајлова у исти POT фајл."
+"начин можете навести POT фајл који треба да се користи, параметром C<pot=>."
 
 #. type: textblock
 #: po4a:129
@@ -1433,17 +1472,14 @@ msgid ""
 "foo.pot> (containing the material from F<foo/gui.xml>) and F<l10n/po/bar."
 "pot> (containing the material from both F<bar/gui.xml> and F<bar/cli.xml>)."
 msgstr ""
+"Ова могућност такође може да се употреби у циљу груписања неколико "
+"преведених фајлова у исти POT фајл. Следећи пример генерише само 2 POT фајла:"
+" F<l10n/po/foo.pot> (који садржи материјал из F<foo/gui.xml>) и F<l10n/po/"
+"bar.pot> (који садржи материјал и из F<bar/gui.xml> и из F<bar/cli.xml>)."
 
 #. type: verbatim
 #: po4a:130
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
-#| " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1454,7 +1490,7 @@ msgid ""
 msgstr ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo\n"
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
 " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
@@ -2026,13 +2062,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a:188
-#, fuzzy
-#| msgid ""
-#| "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
-#| "L<po4a(7)>"
 msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
-msgstr ""
-"L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
+msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
@@ -5026,6 +5057,8 @@ msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
+"Има их неколико. Ево вероватно непотпуне листе, са још алата који су близу "
+"хоризонта."
 
 #. type: =item
 #: doc/po4a.7.pod:158
@@ -5073,7 +5106,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:163
 msgid "B<xml2po.py>"
-msgstr ""
+msgstr "B<xml2po.py>"
 
 #. type: textblock
 #: doc/po4a.7.pod:164
@@ -5082,11 +5115,14 @@ msgid ""
 "the name suggests, only with XML files and needs specially configured "
 "makefiles."
 msgstr ""
+"Употребљава GIMP Тим за документацију од 2004. године, функционише прилично "
+"добро упркос томе што, као што име наговештава, ради само са XML фајловима и "
+"захтева специјално конфигурисане makefile фајлове."
 
 #. type: =item
 #: doc/po4a.7.pod:165
 msgid "B<Sphinx>"
-msgstr ""
+msgstr "B<Sphinx>"
 
 #. type: textblock
 #: doc/po4a.7.pod:166
@@ -5096,6 +5132,10 @@ msgid ""
 "markdown, although it is perhaps the only tool that does this managing the "
 "whole translation process."
 msgstr ""
+"За управљање својим преводима, Sphinx Documentation Project такође доста "
+"користи gettext. Нажалост, функционише само за неколико текст формата, rest "
+"и markdown, мада је вероватно једини алат који то ради управљајући "
+"комплетним процесом превођења."
 
 #. type: textblock
 #: doc/po4a.7.pod:167
