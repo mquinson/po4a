@@ -360,7 +360,173 @@ use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 
+our %debug = (
+    'encoding' => 0,
+);
+
 Locale::Po4a::Common::textdomain('po4a');
+
+=item gettextize($$)
+
+This function produces one translated message catalog from two catalogs, an
+original and a translation. This process is described in L<po4a(7)|po4a.7>,
+section I<Gettextization: how does it work?>.
+
+=cut
+
+sub gettextize {
+    my ( $poorig, $potrans ) = ( shift, shift );
+
+    my $pores = Locale::Po4a::Po->new();
+
+    my $please_fail = 0;
+    my $toobad      = dgettext( "po4a",
+            "\nThe gettextization failed (once again). Don't give up, "
+          . "gettextizing is a subtle art, but this is only needed once "
+          . "to convert a project to the gorgeous luxus offered by po4a "
+          . "to translators."
+          . "\nPlease refer to the po4a(7) documentation, the section "
+          . "\"HOWTO convert a pre-existing translation to po4a?\" "
+          . "contains several hints to help you in your task" );
+
+    # Don't fail right now when the entry count does not match. Instead, give
+    # it a try so that the user can see where we fail (which is probably where
+    # the problem is).
+    if ( $poorig->count_entries_doc() > $potrans->count_entries_doc() ) {
+        warn wrap_mod(
+            "po4a gettextize",
+            dgettext(
+                "po4a",
+                "Original has more strings than the translation (%d>%d). "
+                  . "Please fix it by editing the translated version to add "
+                  . "some dummy entry."
+            ),
+            $poorig->count_entries_doc(),
+            $potrans->count_entries_doc()
+        );
+        $please_fail = 1;
+    } elsif ( $poorig->count_entries_doc() < $potrans->count_entries_doc() ) {
+        warn wrap_mod(
+            "po4a gettextize",
+            dgettext(
+                "po4a",
+                "Original has less strings than the translation (%d<%d). "
+                  . "Please fix it by removing the extra entry from the "
+                  . "translated file. You may need an addendum (cf po4a(7)) "
+                  . "to reput the chunk in place after gettextization. A "
+                  . "possible cause is that a text duplicated in the original "
+                  . "is not translated the same way each time. Remove one of "
+                  . "the translations, and you're fine."
+            ),
+            $poorig->count_entries_doc(),
+            $potrans->count_entries_doc()
+        );
+        $please_fail = 1;
+    }
+
+    if ( $poorig->get_charset =~ /^utf-8$/i ) {
+        $potrans->to_utf8;
+        $pores->set_charset("UTF-8");
+    } else {
+        my $charset = $potrans->get_charset();
+        $charset = "UTF-8" if $charset eq "CHARSET";
+        $pores->set_charset($charset);
+    }
+    print "Po character sets:\n"
+      . "  original="
+      . $poorig->get_charset . "\n"
+      . "  translated="
+      . $potrans->get_charset . "\n"
+      . "  result="
+      . $pores->get_charset . "\n"
+      if $debug{'encoding'};
+
+    for (
+        my ( $o, $t ) = ( 0, 0 ) ;
+        $o < $poorig->count_entries_doc() && $t < $potrans->count_entries_doc() ;
+        $o++, $t++
+      )
+    {
+        #
+        # Extract some informations
+
+        my ( $orig, $trans ) = ( $poorig->msgid_doc($o), $potrans->msgid_doc($t) );
+
+        #       print STDERR "Matches [[$orig]]<<$trans>>\n";
+
+        my ( $reforig,  $reftrans )  = ( $poorig->{po}{$orig}{'reference'}, $potrans->{po}{$trans}{'reference'} );
+        my ( $typeorig, $typetrans ) = ( $poorig->{po}{$orig}{'type'},      $potrans->{po}{$trans}{'type'} );
+
+        #
+        # Make sure the type of both string exist
+        #
+        die wrap_mod( "po4a gettextize", "Internal error: type of original string number %s " . "isn't provided", $o )
+          if ( $typeorig eq '' );
+
+        die wrap_mod( "po4a gettextize", "Internal error: type of translated string number %s " . "isn't provided", $o )
+          if ( $typetrans eq '' );
+
+        #
+        # Make sure both type are the same
+        #
+        if ( $typeorig ne $typetrans ) {
+            $pores->write("gettextization.failed.po");
+            eval {
+                # Recode $trans into current charset, if possible
+                require I18N::Langinfo;
+                I18N::Langinfo->import(qw(langinfo CODESET));
+                my $codeset = langinfo( CODESET() );
+                Encode::from_to( $trans, $potrans->get_charset, $codeset );
+            };
+            die wrap_msg(
+                dgettext( "po4a",
+                        "po4a gettextization: Structure disparity between "
+                      . "original and translated files:\n"
+                      . "msgid (at %s) is of type '%s' while\n"
+                      . "msgstr (at %s) is of type '%s'.\n"
+                      . "Original text: %s\n"
+                      . "Translated text: %s\n"
+                      . "(result so far dumped to gettextization.failed.po)" )
+                  . "%s",
+                $reforig,
+                $typeorig,
+                $reftrans,
+                $typetrans,
+                $orig, $trans, $toobad
+            );
+        }
+
+        #
+        # Push the entry
+        #
+        my $flags;
+        if ( defined $poorig->{po}{$orig}{'flags'} ) {
+            $flags = $poorig->{po}{$orig}{'flags'} . " fuzzy";
+        } else {
+            $flags = "fuzzy";
+        }
+        $pores->push_raw(
+            'msgid'     => $orig,
+            'msgstr'    => $trans,
+            'flags'     => $flags,
+            'type'      => $typeorig,
+            'reference' => $reforig,
+            'conflict'  => 1,
+            'transref'  => $potrans->{po}{$trans}{'reference'}
+          )
+          unless ( defined( $pores->{po}{$orig} )
+            and ( $pores->{po}{$orig}{'msgstr'} eq $trans ) )
+
+          # FIXME: maybe we should be smarter about what reference should be
+          #        sent to push_raw.
+    }
+
+    # make sure we return a useful error message when entry count differ
+    die "$toobad\n" if $please_fail;
+
+    return $pores;
+}
+
 
 sub show_version {
     Locale::Po4a::Common::show_version("po4a-gettextize");
@@ -482,7 +648,7 @@ if ($keep_temps) {
         )
     );
 }
-my $mergedpo = Locale::Po4a::Po->gettextize( $mastertt->getpoout(), $transtt->getpoout() );
+my $mergedpo = gettextize( $mastertt->getpoout(), $transtt->getpoout() );
 
 $mergedpo->write($pofile);
 
