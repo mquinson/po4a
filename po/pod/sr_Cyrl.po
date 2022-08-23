@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2022-08-22 12:30+0200\n"
-"PO-Revision-Date: 2022-08-22 15:32+0000\n"
+"POT-Creation-Date: 2022-08-23 12:32+0200\n"
+"PO-Revision-Date: 2022-08-23 10:36+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/sr_Cyrl/>\n"
@@ -180,7 +180,7 @@ msgstr ""
 
 #. type: =head1
 #: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:187
-#: po4a-gettextize:78 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
+#: po4a-gettextize:76 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
 #: msguntypot:29 doc/po4a.7.pod:181 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Guide.pm:10 lib/Locale/Po4a/Halibut.pm:14
@@ -341,12 +341,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
-#, fuzzy
-#| msgid ""
-#| "When you run the B<po4a> program with both the master documents and the "
-#| "PO files, it produces the translated documents by injecting the content's "
-#| "translation (found in the PO files) into the structure of the original "
-#| "master document."
 msgid ""
 "Upon execution, B<po4a> parses all documentation files specified in its "
 "configuration file. It updates the PO files (containing the translation) to "
@@ -354,9 +348,11 @@ msgid ""
 "documentation by injecting the content's translation (found in the PO files) "
 "into the structure of the original master document."
 msgstr ""
-"Када програм B<po4a> покренете заједно са мастер документима и са PO "
-"фајловима, он креира преведене документе уметањем превода садржаја (који се "
-"проналази у PO фајловима) у структуру оригиналног мастер документа."
+"Када сe програм покрене, B<po4a> парсира све фајлове документације наведене "
+"у свом конфигурационим фајлу. Он ажурира PO фајлове (у којима се налази "
+"превод) тако да се у њима прикажу све измене у документацији, па креира "
+"преведени документ уметањем превода садржаја (који се проналази у PO "
+"фајловима) у структуру оригиналног мастер документа."
 
 #. type: textblock
 #: po4a:8
@@ -370,23 +366,17 @@ msgid ""
 "are extra content stating for example who did the translation and how to "
 "report bugs."
 msgstr ""
+"У почетку, PO фајлови садрже само стрингове који треба да се преведу из "
+"оригиналне документације. Овај фајл формат омогућава да преводиоци ручно "
+"доставе превод сваког пасуса који издвоји B<po4a>. Ако се након превођења "
+"документација измени, B<po4a> означава одговарајуће преводе у PO фајлу као "
+"несигурне („fuzzy”) и тако од преводилаца захтева да их ручно провере. "
+"Преводиоци такође могу да наведу такозвани „додатак”, допунски садржај који "
+"наводи, на пример, ко је урадио превод и како да се пријаве багови."
 
 #. type: verbatim
 #: po4a:9
-#, fuzzy, no-wrap
-#| msgid ""
-#| " master documents ---+---->-------->---------+\n"
-#| "  (doc authoring)    |                       |\n"
-#| "                     V   (po4a executions)   >-----+--> translations\n"
-#| "                     |                       |     |\n"
-#| " existing PO files -->--> updated PO files >-+     |\n"
-#| "      ^                            |               |\n"
-#| "      |                            V               |\n"
-#| "      +----------<---------<-------+               ^\n"
-#| "       (manual translation process)                |\n"
-#| "                                                   |\n"
-#| " addendum -->--------------------------------------+\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " master documents ---+---->-------->---------+\n"
 "  (doc authoring)    |                       |\n"
@@ -403,8 +393,8 @@ msgid ""
 msgstr ""
 " мастер документи ------+-------->-------->---------+\n"
 "  (писање док)          |                           |\n"
-"                        V       (po4a извршавања)   >-----+--> преводи\n"
-"                        |                           |     |\n"
+"                        V       (po4a извршавања)   >-----+--> преведени\n"
+"                        |                           |     |     документи\n"
 " постојећи PO фајлови -->--> ажурирани PO фајлови >-+     |\n"
 "      ^                                 |                 |\n"
 "      |                                 V                 |\n"
@@ -425,16 +415,15 @@ msgid ""
 "translations, by injecting the latest translation into the latest document "
 "structure."
 msgstr ""
+"B<po4a> процес рада је асинхрон, прилагођен пројектима отвореног кода. Писци "
+"документације креирају мастер документе сопственим темпом. Преводиоци "
+"прегледају и ажурирају преводе у PO фајловима. Одржаваоци по потреби поново "
+"покрећу B<po4a>, чиме се измене у оригиналној документацији приказују у PO "
+"фајловима, као и да произведу ажуриране преводе документације, уметањем "
+"најсвежијих превода у најновију структуру документа."
 
 #. type: textblock
 #: po4a:11
-#, fuzzy
-#| msgid ""
-#| "By default, the translated documents are produced when at least 80% of "
-#| "their content is translated (see the I<--keep> option below).  Discarding "
-#| "translations as soon as they are not 100% may be discouraging for the "
-#| "translators, while showing \"translations\" that are too incomplete may "
-#| "be troubling for the end users."
 msgid ""
 "By default, a given translated document is produced when at least 80% of its "
 "content is translated. The untranslated text is kept in the original "
@@ -445,11 +434,14 @@ msgid ""
 "will almost never be shown to the users, while showing \"translations\" that "
 "are too incomplete may be troubling for the end users."
 msgstr ""
-"Подразумевано се преведени документи израђују онда када је барем 80% њиховог "
-"садржаја преведено (погледајте опцију I<--keep> испод). Одбацивање превода "
-"чим проценат преведених стрингова није 100% може да буде обесхрабрујуће за "
-"преводиоце, док приказивање „превода” који је далеко од завршеног може да "
-"представља проблем за крајње кориснике."
+"Подразумевано се неки преведени документ израђује онда када је барем 80% "
+"његовог садржаја преведено. Непреведени текст се задржава на оригиналном "
+"језику. Произведена документација дакле меша језике ако превод није "
+"комплетан. Границу од 80% можете да промените опцијом I<--keep> која је "
+"описана испод. Међутим, имајте на уму да одбацивање превода чим проценат "
+"преведених стрингова није 100% може да буде обесхрабрујуће за преводиоце "
+"чији рад корисници скоро никада неће видети, док приказивање „превода” који "
+"је далеко од завршеног може представљати проблем за крајње кориснике."
 
 #. type: textblock
 #: po4a:12
@@ -461,11 +453,16 @@ msgid ""
 "translators through an online platform such as S<weblate>, but this is "
 "naturally fully optional."
 msgstr ""
+"Чување фајлова превода документације у систему за контролу верзија је "
+"вероватно лоша идеја, јер се они генеришу аутоматски. Драгоцени су PO "
+"фајлови који садрже сав тежак рад ваших колега преводилаца. Такође, неким "
+"људима је једноставније да комуницирају са преводиоцима посредством онлајн "
+"платформе као што је S<веблејт>, али то је наравно потпуно опционално."
 
 #. type: =head2
 #: po4a:13
 msgid "Quick start tutorial"
-msgstr ""
+msgstr "Туторијал за брзи почетак"
 
 #. type: textblock
 #: po4a:14
@@ -480,6 +477,16 @@ msgid ""
 "original, not the translation. Now, another contributor wants to contribute "
 "a translation to Japanese, a language that you don't master either."
 msgstr ""
+"Претпоставимо да одржавате програм под именом B<foo> који има man страницу "
+"F<man/foo.1> написану на енглеском језику (посредним језиком већине "
+"пројеката отвореног кода, мада B<po4a> може да се користи за било коју "
+"комбинацију изворног и циљног језика). Пре неког времена, неко је доставио "
+"немачки превод под именом F<man/foo.de.1> и нестао. Ово представља проблем "
+"јер сте управо добили извештај о багу који каже да ваша документација садржи "
+"озбиљно погрешну информацију која мора да се исправи у свим језицима, али ви "
+"не познајете немачки језик тако да можете изменити само оригинал, а не и "
+"превод. Затим, још један сарадник жели да допринесе превод на јапански, још "
+"један језик којим не владате."
 
 #. type: textblock
 #: po4a:15
@@ -490,6 +497,10 @@ msgid ""
 "to ensure that your users never see any outdated and thus misleading "
 "documentation."
 msgstr ""
+"Време је двоју документацију конвертујете у B<po4a> и тако решите хаос у "
+"одржавању документације. Желите да ажурирате документ када је то потребно, "
+"желите да колегама преводиоцима олакжате посао и желите обезбедити да ваши "
+"кориснии никада не виде застарелу и услед тога нетачну документацију."
 
 #. type: textblock
 #: po4a:16
@@ -501,18 +512,22 @@ msgid ""
 "but once it's done, the B<de.po> file containing the German translation can "
 "be integrated in your po4a workflow."
 msgstr ""
+"Конверзија се састоји из два корака: постављање po4a инфраструктуре и "
+"конверзија претходно постојећег немачког превода како би се сачувао ранији "
+"рад. Овај други део се ради помоћу скрипте S<po4a-gettextize>, као што "
+"следи. Из детаља у документацији скрипте L<po4a-gettextize(1)> се види да је "
+"овај процес ретко кад у потпуности аутоматски, али једном када се обави, "
+"фајл B<de.po> који садржи немачки превод може да се интегрише у ваш po4a "
+"процес рада."
 
 #. type: verbatim
 #: po4a:17
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-gettextize --format <format> --master <master.doc> --po <translation.pot>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize --format <формат> --master <мастер.doc> --po <превод.pot>\n"
+"  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
 
 #. type: textblock
@@ -521,18 +536,17 @@ msgid ""
 "Let's now configure po4a. With the appropriate file layout, your "
 "configuration file could be as simple as this:"
 msgstr ""
+"Хајде сада конфигуришемо po4a. Уз погодан распоред фајлова, ваша "
+"конфигурација може да буде овако једноставна:"
 
 #. type: verbatim
 #: po4a:19
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] man/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/po4a/\n"
 "\n"
 msgstr ""
-" [po_directory] man/po/\n"
+" [po_directory] man/po4a/\n"
 "\n"
 
 #. type: verbatim
@@ -542,6 +556,8 @@ msgid ""
 " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 msgstr ""
+" [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
+"\n"
 
 #. type: textblock
 #: po4a:21
@@ -553,6 +569,12 @@ msgid ""
 "corresponding translation files. Here, the German translation of F<man/"
 "foo.1> is in F<man/translated/foo.de.1>."
 msgstr ""
+"Она наводи да се сви PO фајлови (који садрже рад преводилаца) налазе у "
+"директоријуму F<man/po4a/> и да имате само један мастер фајл, F<man/foo.1>. "
+"Ако имате неколико мастер фајлова, морали бисте да наведете неколико линија "
+"сличних другој линији. Свака та линија такође наводи и где да се упишу "
+"одговарајући фајлови превода. У овом случају, немачки превод фајла F<man/"
+"foo.1> је F<man/translated/foo.de.1>."
 
 #. type: textblock
 #: po4a:22
@@ -563,13 +585,16 @@ msgid ""
 "specified S<po_directory> (e.g. F<man/po4a/foo.pot>), and B<po4a> will fill "
 "it with the expected content."
 msgstr ""
+"Последња ствар која треба да се уради како би се комплетирала конфигурација "
+"B<po4a> је POT фајл који садржи материјал шаблона који треба да се користи "
+"када се започиње нови превод. Једноставно креирајте празан фајл са S<.pot> "
+"екстензијом у наведеном S<po_directory> (нпр. F<man/po4a/foo.pot>), а "
+"B<po4a> ће га испунити са очекиваним садржајем."
 
 #. type: textblock
 #: po4a:23
-#, fuzzy
-#| msgid "Here is a graphical representation of this:"
 msgid "Here is a recap of the files in this setup:"
-msgstr "Ево графичке представе овога:"
+msgstr "Ево подсетника фајлова који се користе у овом подешавању:"
 
 #. type: verbatim
 #: po4a:24
@@ -584,6 +609,14 @@ msgid ""
 "  └── po4a.cfg         <- The configuration file.\n"
 "\n"
 msgstr ""
+"  ├── man/\n"
+"  │   ├── foo.1        <- Оригинална man страница, на енглеском језику.\n"
+"  │   ├── po4a/\n"
+"  │   │   ├── de.po    <- немачки PO превод, добијен gettextизацијом.\n"
+"  │   │   └── foo.pot  <- POT шаблон будућих превода (у почетку празан)\n"
+"  │   └── translated/  <- Директоријум у који ће се смештати преводи\n"
+"  └── po4a.cfg         <- Конфигурациони фајл.\n"
+"\n"
 
 #. type: textblock
 #: po4a:25
@@ -592,6 +625,10 @@ msgid ""
 "template file, use it to update the PO translation files, and use them to "
 "update the documentation translation files. All in one command:"
 msgstr ""
+"Једном када је подешен, извршавањем програма B<po4a> се парсира ваша "
+"документација, ажурира POT фајл шаблона, он се употреби за ажурирање PO "
+"фајлова превода, а ти фајлови се употребе за ажурирање фајлова превода "
+"документације. Све у једној команди:"
 
 #. type: verbatim
 #: po4a:26
@@ -600,6 +637,8 @@ msgid ""
 "        po4a --verbose po4a.cfg\n"
 "\n"
 msgstr ""
+"        po4a --verbose po4a.cfg\n"
+"\n"
 
 #. type: textblock
 #: po4a:27
@@ -616,6 +655,17 @@ msgid ""
 "jp.1> (provided that enough content is translated) when you run B<po4a> "
 "again."
 msgstr ""
+"И то је то. B<po4a> је сада у потпуности конфигурисан. Када исправите грешку "
+"у F<man/foo.1>, неисправан пасус у немачком преводу ће се заменити "
+"исправљеним текстом на енглеском. Мешање језика није баш оптимално, али то "
+"је једини начин да се у преводима које чак и не разумете исправе грешке и да "
+"се обезбеди да је садржај који се представи корисницима увек тачан. "
+"Ажурирање немачког превода је такође много једноставније у одговарајућем PO "
+"фајлу, тако да мешавина језика вероватно неће дуго потрајати. Коначно, када "
+"вам преводилац на јапански достави S<jp.po> преведени фајл, једноставно га "
+"убаците у директоријум F<man/po4a/po/>. Када поново покренете B<po4a>, "
+"преведена страница ће се појавити као F<man/translated/foo.jp.1> (у случају "
+"да је преведена потребна количина текста)."
 
 #. type: =item
 #: po4a:29 po4a-translate:28
@@ -1397,16 +1447,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:128
-#, fuzzy
-#| msgid ""
-#| "With this line, po4a will produce separate POT and PO files for each "
-#| "document to translate.  For example, if you have 3 documents and 5 "
-#| "languages, this will result in 3 POT files and 15 PO files. These files "
-#| "are named as specified on the C<po4a_paths> template, with C<$master> "
-#| "substituted to the basename of each document to translate. In case of "
-#| "name conflict, you can specify the POT file to use as follows, with the "
-#| "C<pot=> parameter.  This feature can also be used to group several "
-#| "translated files into the same POT file."
 msgid ""
 "With this line, po4a will produce separate POT and PO files for each "
 "document to translate.  For example, if you have 3 documents and 5 "
@@ -1421,9 +1461,7 @@ msgstr ""
 "добићете 3 POT фајлова и 15 PO фајлова. Они добијају име наведено "
 "C<po4a_paths> шаблоном, у којем се C<$master> замењује са базним именом "
 "сваког документа који се преводи. У случају да дође до конфликта, на следећи "
-"начин можете навести POT фајл који треба да се користи, параметром C<pot=>. "
-"Ова могућност такође може да се користи за груписање неколико преведених "
-"фајлова у исти POT фајл."
+"начин можете навести POT фајл који треба да се користи, параметром C<pot=>."
 
 #. type: textblock
 #: po4a:129
@@ -1433,17 +1471,14 @@ msgid ""
 "foo.pot> (containing the material from F<foo/gui.xml>) and F<l10n/po/bar."
 "pot> (containing the material from both F<bar/gui.xml> and F<bar/cli.xml>)."
 msgstr ""
+"Ова могућност такође може да се употреби у циљу груписања неколико "
+"преведених фајлова у исти POT фајл. Следећи пример генерише само 2 POT "
+"фајла: F<l10n/po/foo.pot> (који садржи материјал из F<foo/gui.xml>) и F<l10n/"
+"po/bar.pot> (који садржи материјал и из F<bar/gui.xml> и из F<bar/cli.xml>)."
 
 #. type: verbatim
 #: po4a:130
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
-#| " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1454,7 +1489,7 @@ msgid ""
 msgstr ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo\n"
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
 " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
@@ -2026,16 +2061,11 @@ msgstr ""
 
 #. type: textblock
 #: po4a:188
-#, fuzzy
-#| msgid ""
-#| "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
-#| "L<po4a(7)>"
 msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
-msgstr ""
-"L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
+msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
 
 #. type: =head1
-#: po4a:189 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
+#: po4a:189 po4a-gettextize:78 po4a-normalize:31 po4a-translate:56
 #: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:187
 #: lib/Locale/Po4a/AsciiDoc.pm:52 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
@@ -2043,17 +2073,17 @@ msgstr ""
 #: lib/Locale/Po4a/Guide.pm:12 lib/Locale/Po4a/Halibut.pm:16
 #: lib/Locale/Po4a/Ini.pm:10 lib/Locale/Po4a/KernelHelp.pm:9
 #: lib/Locale/Po4a/LaTeX.pm:10 lib/Locale/Po4a/Man.pm:109
-#: lib/Locale/Po4a/Po.pm:100 lib/Locale/Po4a/Pod.pm:38
+#: lib/Locale/Po4a/Po.pm:98 lib/Locale/Po4a/Pod.pm:38
 #: lib/Locale/Po4a/RubyDoc.pm:16 lib/Locale/Po4a/Sgml.pm:53
 #: lib/Locale/Po4a/TeX.pm:120 lib/Locale/Po4a/Texinfo.pm:12
-#: lib/Locale/Po4a/Text.pm:42 lib/Locale/Po4a/TransTractor.pm:156
+#: lib/Locale/Po4a/Text.pm:42 lib/Locale/Po4a/TransTractor.pm:154
 #: lib/Locale/Po4a/Wml.pm:11 lib/Locale/Po4a/Xhtml.pm:17
 #: lib/Locale/Po4a/Xml.pm:189 lib/Locale/Po4a/Yaml.pm:17
 msgid "AUTHORS"
 msgstr "АУТОРИ"
 
 #. type: verbatim
-#: po4a:190 po4a-gettextize:81 po4a-normalize:32 po4a-translate:57
+#: po4a:190 po4a-gettextize:79 po4a-normalize:32 po4a-translate:57
 #: po4a-updatepo:56 lib/Locale/Po4a/Man.pm:110
 #, no-wrap
 msgid ""
@@ -2068,7 +2098,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: po4a:191 po4a-gettextize:82 po4a-normalize:33 po4a-translate:58
+#: po4a:191 po4a-gettextize:80 po4a-normalize:33 po4a-translate:58
 #: po4a-updatepo:57 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:54
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
@@ -2085,12 +2115,12 @@ msgid "COPYRIGHT AND LICENSE"
 msgstr "ПРАВА УМНОЖАВАЊА И ЛИЦЕНЦА"
 
 #. type: textblock
-#: po4a:192 po4a-gettextize:83
+#: po4a:192 po4a-gettextize:81
 msgid "Copyright 2002-2022 by SPI, inc."
 msgstr "Ауторска права 2002-2022 SPI, inc."
 
 #. type: textblock
-#: po4a:193 po4a-gettextize:84 po4a-normalize:35 po4a-translate:60
+#: po4a:193 po4a-gettextize:82 po4a-normalize:35 po4a-translate:60
 #: po4a-updatepo:59 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:56
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
@@ -2147,11 +2177,19 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:9
+#, fuzzy
+#| msgid ""
+#| "You must provide both a master file (e.g., the source in English) and an "
+#| "existing translated file (e.g. a previous translation attempt without "
+#| "po4a). If you provide more than one master or translation files, they "
+#| "will be used in sequence, but it may be easier to gettextize each page or "
+#| "chapter separately and then use B<msgmerge> to merge all produced PO "
+#| "files. As you wish."
 msgid ""
 "You must provide both a master file (e.g., the source in English) and an "
-"existing translated file (e.g. a previous translation attempt without po4a). "
-"If you provide more than one master or translation files, they will be used "
-"in sequence, but it may be easier to gettextize each page or chapter "
+"existing translated file (e.g., a previous translation attempt without "
+"po4a). If you provide more than one master or translation files, they will "
+"be used in sequence, but it may be easier to gettextize each page or chapter "
 "separately and then use B<msgmerge> to merge all produced PO files. As you "
 "wish."
 msgstr ""
@@ -2164,11 +2202,16 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:10
+#, fuzzy
+#| msgid ""
+#| "If the master document has non-ASCII characters, the new generated PO "
+#| "file will be in UTF-8. Else (if the master document is completely in "
+#| "ASCII), the generated PO will use the encoding of the translated input "
+#| "document, or UTF-8 if no translated document is provided."
 msgid ""
 "If the master document has non-ASCII characters, the new generated PO file "
-"will be in UTF-8. Else (if the master document is completely in ASCII), the "
-"generated PO will use the encoding of the translated input document, or "
-"UTF-8 if no translated document is provided."
+"will be in UTF-8. If the master document is completely in ASCII, the "
+"generated PO will use the encoding of the translated input document."
 msgstr ""
 "Ако мастер документ садржи не-ASCII карактере, ново генерисани PO фајл ће "
 "бити кодиран у UTF-8. Иначе (у случају када је мастер документ потпуно "
@@ -2540,60 +2583,34 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:65
+#, fuzzy
+#| msgid ""
+#| "Other issues may come from duplicated strings in either the original or "
+#| "translation. Duplicated strings are merged in PO files, with two "
+#| "references.  This constitutes a difficulty for the gettexization "
+#| "algorithm, that is a simple one to one pairing between the B<msgid>s of "
+#| "both the master and the localized files."
 msgid ""
 "Other issues may come from duplicated strings in either the original or "
 "translation. Duplicated strings are merged in PO files, with two "
 "references.  This constitutes a difficulty for the gettexization algorithm, "
 "that is a simple one to one pairing between the B<msgid>s of both the master "
-"and the localized files."
+"and the localized files. It is however believed that recent versions of po4a "
+"deal properly with duplicated strings, so you should report any remaining "
+"issue that you may encounter."
 msgstr ""
 "Дуплирани стрингови било у оригиналу или преводу могу да проузрокују и друге "
 "проблеме. Дуплирани стрингови се спајају у PO фајлове са две референце. То "
 "представља тешкоћу за алгоритам gettextизације, који користи просто један на "
 "један упаривање B<msgid> стрингова у мастер и локализованим фајловима."
 
-#. type: textblock
-#: po4a-gettextize:66
-msgid ""
-"If the exact same string is used several times in the master file, but with "
-"differing translations in the localized file, the translation will contain "
-"more B<msgid>s than the master. One of the master's B<msgid>s would have "
-"several references to compensate. Conversely, if different original "
-"paragraphs are translated in the exact same way, the original will have more "
-"B<msgid>s than the translation."
-msgstr ""
-"Ако се у мастер фајлу потпуно исти стринг користи неколико пута, али са "
-"различитим преводима у локализованом фајлу, превод ће садржати више B<msgid> "
-"стрингова од мастера. Да би се то компензовало, један од мастерових B<msgid> "
-"стрингова би имао неколико референци. Супротно, ако се различити оригинални "
-"пасуси преводе на потпуно исти начин, оригинал ће имати више B<msgid> "
-"стрингова него превод."
-
-#. type: textblock
-#: po4a-gettextize:67
-msgid ""
-"To avoid such spurious desynchronization, po4a deduplicates all strings in "
-"both the master and localized by appending spaces to them. This way, PO "
-"files will not merge any entry and the gettextization can proceed. In most "
-"cases, the extra space added by po4a to deduplicate the strings has no "
-"impact on the formatting.  Strings are fuzzied anyway, and msgmerge will "
-"probably match the strings accordingly afterward."
-msgstr ""
-"Да би спречио такву лажну десинхронизацију, програм po4a дедуплицира све "
-"стрингове и у мастер и у локализованом фајлу тако што им на крај додаје "
-"размаке. На тај начин PO фајлови неће спојити ниједну ставку и "
-"gettextизација може да се настави. У највећем броју случајева додатни размак "
-"који po4a додаје за дедупликацију стрингова нема утицај на форматирање. Ипак "
-"се стрингови довољно промене тако да ће их msgmerge касније највероватније "
-"упарити како треба."
-
 #. type: =head2
-#: po4a-gettextize:68
+#: po4a-gettextize:66
 msgid "Reviewing files produced by B<po4a-gettextize>"
 msgstr "Преглед фајлова које је генерисала скрипта B<po4a-gettextize>"
 
 #. type: textblock
-#: po4a-gettextize:69
+#: po4a-gettextize:67
 msgid ""
 "Any file produced by B<po4a-gettextize> should be manually reviewed, even "
 "when the script terminates successfully. You should skim over the PO file, "
@@ -2612,7 +2629,7 @@ msgstr ""
 "преводи одбацити, а ви желите да их сачувате."
 
 #. type: textblock
-#: po4a-gettextize:70
+#: po4a-gettextize:68
 msgid ""
 "Fortunately, this step does not require to master the target languages as "
 "you only want to recognize similar elements in each B<msgid> and its "
@@ -2633,7 +2650,7 @@ msgstr ""
 "други провери те језике."
 
 #. type: textblock
-#: po4a-gettextize:71
+#: po4a-gettextize:69
 msgid ""
 "If you detect a mismatch, edit the original and translation files as if "
 "B<po4a-gettextize> reported an error, and try again. Once you have a decent "
@@ -2646,12 +2663,12 @@ msgstr ""
 "резервну копију све док po4a не почне исправно да функционише."
 
 #. type: =head2
-#: po4a-gettextize:72
+#: po4a-gettextize:70
 msgid "Running B<po4a> for the first time"
 msgstr "Прво покретање програма B<po4a>"
 
 #. type: textblock
-#: po4a-gettextize:73
+#: po4a-gettextize:71
 msgid ""
 "The easiest way to setup po4a is to write a B<po4a.conf> configuration file, "
 "and use the integrated po4a program (B<po4a-updatepo> and B<po4a-translate> "
@@ -2664,7 +2681,7 @@ msgstr ""
 "погледате одељак „КОНФИГУРАЦИОНИ ФАЈЛ” у L<po4a(1)> документацији."
 
 #. type: textblock
-#: po4a-gettextize:74
+#: po4a-gettextize:72
 msgid ""
 "When B<po4a> runs for the first time, the current version of the master "
 "documents will be used to update the PO files containing the old "
@@ -2687,12 +2704,12 @@ msgstr ""
 "накнадна трају само неколико секунди."
 
 #. type: =head2
-#: po4a-gettextize:75
+#: po4a-gettextize:73
 msgid "Moving your translations to production"
 msgstr "Пренос ваших превода у продукцију"
 
 #. type: textblock
-#: po4a-gettextize:76
+#: po4a-gettextize:74
 msgid ""
 "After this first run, the PO files are ready to be reviewed by translators. "
 "All entries were marked as fuzzy in the PO file by B<po4a-gettextization>, "
@@ -2708,7 +2725,7 @@ msgstr ""
 "несигурног превода."
 
 #. type: textblock
-#: po4a-gettextize:77
+#: po4a-gettextize:75
 msgid ""
 "Once enough fuzzy markers are removed, B<po4a> will start generating the "
 "translation files on disk, and you're ready to move your translation "
@@ -2723,7 +2740,7 @@ msgstr ""
 "система B<po4a>'."
 
 #. type: textblock
-#: po4a-gettextize:79
+#: po4a-gettextize:77
 msgid ""
 "L<po4a(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
 "L<po4a(7)>."
@@ -5026,6 +5043,8 @@ msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
+"Има их неколико. Ево вероватно непотпуне листе, са још алата који су близу "
+"хоризонта."
 
 #. type: =item
 #: doc/po4a.7.pod:158
@@ -5073,7 +5092,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:163
 msgid "B<xml2po.py>"
-msgstr ""
+msgstr "B<xml2po.py>"
 
 #. type: textblock
 #: doc/po4a.7.pod:164
@@ -5082,11 +5101,14 @@ msgid ""
 "the name suggests, only with XML files and needs specially configured "
 "makefiles."
 msgstr ""
+"Употребљава GIMP Тим за документацију од 2004. године, функционише прилично "
+"добро упркос томе што, као што име наговештава, ради само са XML фајловима и "
+"захтева специјално конфигурисане makefile фајлове."
 
 #. type: =item
 #: doc/po4a.7.pod:165
 msgid "B<Sphinx>"
-msgstr ""
+msgstr "B<Sphinx>"
 
 #. type: textblock
 #: doc/po4a.7.pod:166
@@ -5096,6 +5118,10 @@ msgid ""
 "markdown, although it is perhaps the only tool that does this managing the "
 "whole translation process."
 msgstr ""
+"За управљање својим преводима, Sphinx Documentation Project такође доста "
+"користи gettext. Нажалост, функционише само за неколико текст формата, rest "
+"и markdown, мада је вероватно једини алат који то ради управљајући "
+"комплетним процесом превођења."
 
 #. type: textblock
 #: doc/po4a.7.pod:167
@@ -5883,7 +5909,7 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Chooser.pm:13 lib/Locale/Po4a/KernelHelp.pm:10
-#: lib/Locale/Po4a/Po.pm:101 lib/Locale/Po4a/Pod.pm:39
+#: lib/Locale/Po4a/Po.pm:99 lib/Locale/Po4a/Pod.pm:39
 #: lib/Locale/Po4a/Sgml.pm:57
 #, no-wrap
 msgid ""
@@ -7532,39 +7558,18 @@ msgstr ""
 "описе пакета, debconf шаблоне, као и све оно што може да има користи од "
 "овога."
 
-#. type: =item
-#: lib/Locale/Po4a/Po.pm:28 lib/Locale/Po4a/TransTractor.pm:72
-msgid "B<dedup>"
-msgstr "B<dedup>"
-
-#. type: textblock
-#: lib/Locale/Po4a/Po.pm:29
-msgid ""
-"Boolean indicating whether we should deduplicate msgids.  If true, when the "
-"same string is added again, a space is appended to deduplicate it.  This is "
-"probably only useful in the gettextization context, where dupplicate msgids "
-"break the string pairing algorithm.  See https://github.com/mquinson/po4a/"
-"issues/334 for more info."
-msgstr ""
-"Логичка вредност која наводи да ли би требало да се дедуплицирају msgid "
-"стрингови. Ако је истинито, када са касније поново дода исти стринг, на "
-"његов крај се додаје размак да би се дедупликовао. Ово је углавном корисно "
-"само у контексту gettextизације, где дуплирани msgid стрингови могу да "
-"покваре алгоритам упаривања стрингова. За више информација погледајте "
-"https://github.com/mquinson/po4a/issues/334."
-
 #. type: =head1
-#: lib/Locale/Po4a/Po.pm:30
+#: lib/Locale/Po4a/Po.pm:28
 msgid "Functions concerning entire message catalogs"
 msgstr "Функције које се тичу каталога порука у целини"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:31
+#: lib/Locale/Po4a/Po.pm:29
 msgid "new()"
 msgstr "new()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:32
+#: lib/Locale/Po4a/Po.pm:30
 msgid ""
 "Creates a new message catalog. If an argument is provided, it's the name of "
 "a PO file we should load."
@@ -7573,12 +7578,12 @@ msgstr ""
 "који би требало да се учита."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:33
+#: lib/Locale/Po4a/Po.pm:31
 msgid "read($)"
 msgstr "read($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:34
+#: lib/Locale/Po4a/Po.pm:32
 msgid ""
 "Reads a PO file (which name is given as argument).  Previously existing "
 "entries in self are not removed, the new ones are added to the end of the "
@@ -7588,22 +7593,22 @@ msgstr ""
 "објекту се не уклањају, нове се додају на крај каталога."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:35 lib/Locale/Po4a/TransTractor.pm:79
+#: lib/Locale/Po4a/Po.pm:33 lib/Locale/Po4a/TransTractor.pm:77
 msgid "write($)"
 msgstr "write($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:36
+#: lib/Locale/Po4a/Po.pm:34
 msgid "Writes the current catalog to the given file."
 msgstr "Уписује текући каталог у дати фајл."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:37
+#: lib/Locale/Po4a/Po.pm:35
 msgid "write_if_needed($$)"
 msgstr "write_if_needed($$)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:38
+#: lib/Locale/Po4a/Po.pm:36
 msgid ""
 "Like write, but if the PO or POT file already exists, the object will be "
 "written in a temporary file which will be compared with the existing file to "
@@ -7616,28 +7621,12 @@ msgstr ""
 "фајла само да би се ажурирала линија референце, или поље POT-Creation-Date)."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:39
-msgid "gettextize($$)"
-msgstr "gettextize($$)"
-
-#. type: textblock
-#: lib/Locale/Po4a/Po.pm:40
-msgid ""
-"This function produces one translated message catalog from two catalogs, an "
-"original and a translation. This process is described in L<po4a(7)|po4a.7>, "
-"section I<Gettextization: how does it work?>."
-msgstr ""
-"Ова функција из два каталога, оригинала и превода, креира један каталог са "
-"преведеним порукама. Процес је описан у L<po4a(7)|po4a.7>, одељак I<На који "
-"начин програм функционише?>."
-
-#. type: =item
-#: lib/Locale/Po4a/Po.pm:41
+#: lib/Locale/Po4a/Po.pm:37
 msgid "filter($)"
 msgstr "filter($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:42
+#: lib/Locale/Po4a/Po.pm:38
 msgid ""
 "This function extracts a catalog from an existing one. Only the entries "
 "having a reference in the given file will be placed in the resulting catalog."
@@ -7646,7 +7635,7 @@ msgstr ""
 "само оне ставке које имају референцу у датом фајлу."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:43
+#: lib/Locale/Po4a/Po.pm:39
 msgid ""
 "This function parses its argument, converts it to a Perl function "
 "definition, evals this definition and filters the fields for which this "
@@ -7657,17 +7646,17 @@ msgstr ""
 "враћа истиниту вредност."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:44
+#: lib/Locale/Po4a/Po.pm:40
 msgid "I love Perl sometimes ;)"
 msgstr "Понекад волим Perl ;)"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:45
+#: lib/Locale/Po4a/Po.pm:41
 msgid "to_utf8()"
 msgstr "to_utf8()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:46
+#: lib/Locale/Po4a/Po.pm:42
 msgid ""
 "Recodes to UTF-8 the PO's msgstrs. Does nothing if the charset is not "
 "specified in the PO file (\"CHARSET\" value), or if it's already UTF-8 or "
@@ -7678,17 +7667,17 @@ msgstr ""
 "UTF-8 или ASCII."
 
 #. type: =head1
-#: lib/Locale/Po4a/Po.pm:47
+#: lib/Locale/Po4a/Po.pm:43
 msgid "Functions to use a message catalog for translations"
 msgstr "Функције за коришћење каталога порука у преводима"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:48
+#: lib/Locale/Po4a/Po.pm:44
 msgid "gettext($%)"
 msgstr "gettext($%)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:49
+#: lib/Locale/Po4a/Po.pm:45
 msgid ""
 "Request the translation of the string given as argument in the current "
 "catalog.  The function returns the original (untranslated) string if the "
@@ -7699,7 +7688,7 @@ msgstr ""
 "стринг."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:50
+#: lib/Locale/Po4a/Po.pm:46
 msgid ""
 "After the string to translate, you can pass a hash of extra arguments. Here "
 "are the valid entries:"
@@ -7708,13 +7697,13 @@ msgstr ""
 "аргумената. Ево важећих ставки:"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:51 lib/Locale/Po4a/Po.pm:81
-#: lib/Locale/Po4a/TransTractor.pm:120 lib/Locale/Po4a/Xml.pm:14
+#: lib/Locale/Po4a/Po.pm:47 lib/Locale/Po4a/Po.pm:77
+#: lib/Locale/Po4a/TransTractor.pm:118 lib/Locale/Po4a/Xml.pm:14
 msgid "B<wrap>"
 msgstr "B<wrap>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:52
+#: lib/Locale/Po4a/Po.pm:48
 msgid ""
 "boolean indicating whether we can consider that whitespaces in string are "
 "not important. If yes, the function canonizes the string before looking for "
@@ -7725,24 +7714,24 @@ msgstr ""
 "тражења превода, и обавија резултат."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:53 lib/Locale/Po4a/Po.pm:84
-#: lib/Locale/Po4a/TransTractor.pm:122
+#: lib/Locale/Po4a/Po.pm:49 lib/Locale/Po4a/Po.pm:80
+#: lib/Locale/Po4a/TransTractor.pm:120
 msgid "B<wrapcol>"
 msgstr "B<wrapcol>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:54 lib/Locale/Po4a/Po.pm:85
-#: lib/Locale/Po4a/TransTractor.pm:123
+#: lib/Locale/Po4a/Po.pm:50 lib/Locale/Po4a/Po.pm:81
+#: lib/Locale/Po4a/TransTractor.pm:121
 msgid "the column at which we should wrap (default: 76)."
 msgstr "колона око које се врши обавијање (подразумевано: 76)."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:55
+#: lib/Locale/Po4a/Po.pm:51
 msgid "stats_get()"
 msgstr "stats_get()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:56
+#: lib/Locale/Po4a/Po.pm:52
 msgid ""
 "Returns statistics about the hit ratio of gettext since the last time that "
 "stats_clear() was called. Please note that it's not the same statistics than "
@@ -7757,7 +7746,7 @@ msgstr ""
 "фајла. Пример употребе:"
 
 #. type: verbatim
-#: lib/Locale/Po4a/Po.pm:57
+#: lib/Locale/Po4a/Po.pm:53
 #, no-wrap
 msgid ""
 "    [some use of the PO file to translate stuff]\n"
@@ -7767,7 +7756,7 @@ msgstr ""
 "\n"
 
 #. type: verbatim
-#: lib/Locale/Po4a/Po.pm:58
+#: lib/Locale/Po4a/Po.pm:54
 #, no-wrap
 msgid ""
 "    ($percent,$hit,$queries) = $pofile->stats_get();\n"
@@ -7779,27 +7768,27 @@ msgstr ""
 "\n"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:59
+#: lib/Locale/Po4a/Po.pm:55
 msgid "stats_clear()"
 msgstr "stats_clear()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:60
+#: lib/Locale/Po4a/Po.pm:56
 msgid "Clears the statistics about gettext hits."
 msgstr "Брише статистику и вези успешности програма gettext."
 
 #. type: =head1
-#: lib/Locale/Po4a/Po.pm:61
+#: lib/Locale/Po4a/Po.pm:57
 msgid "Functions to build a message catalog"
 msgstr "Функције за изградњу каталога порука"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:62
+#: lib/Locale/Po4a/Po.pm:58
 msgid "push(%)"
 msgstr "push(%)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:63
+#: lib/Locale/Po4a/Po.pm:59
 msgid ""
 "Push a new entry at the end of the current catalog. The arguments should "
 "form a hash table. The valid keys are:"
@@ -7808,32 +7797,32 @@ msgstr ""
 "форми хеш табеле. Важећи кључеви су:"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:64
+#: lib/Locale/Po4a/Po.pm:60
 msgid "B<msgid>"
 msgstr "B<msgid>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:65
+#: lib/Locale/Po4a/Po.pm:61
 msgid "the string in original language."
 msgstr "стринг на оригиналном језику."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:66
+#: lib/Locale/Po4a/Po.pm:62
 msgid "B<msgstr>"
 msgstr "B<msgstr>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:67
+#: lib/Locale/Po4a/Po.pm:63
 msgid "the translation."
 msgstr "превод."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:68
+#: lib/Locale/Po4a/Po.pm:64
 msgid "B<reference>"
 msgstr "B<reference>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:69
+#: lib/Locale/Po4a/Po.pm:65
 msgid ""
 "an indication of where this string was found. Example: file.c:46 (meaning in "
 "'file.c' at line 46). It can be a space-separated list in case of multiple "
@@ -7844,24 +7833,24 @@ msgstr ""
 "размацима."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:70 lib/Locale/Po4a/TransTractor.pm:124
+#: lib/Locale/Po4a/Po.pm:66 lib/Locale/Po4a/TransTractor.pm:122
 msgid "B<comment>"
 msgstr "B<comment>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:71
+#: lib/Locale/Po4a/Po.pm:67
 msgid ""
 "a comment added here manually (by the translators). The format here is free."
 msgstr ""
 "коментар који (преводиоци) овде ручно додају. Формат је потпуно слободан."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:72
+#: lib/Locale/Po4a/Po.pm:68
 msgid "B<automatic>"
 msgstr "B<automatic>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:73
+#: lib/Locale/Po4a/Po.pm:69
 msgid ""
 "a comment which was automatically added by the string extraction program. "
 "See the B<--add-comments> option of the B<xgettext> program for more "
@@ -7871,17 +7860,17 @@ msgstr ""
 "информација, погледајте опцију B<--add-comments> програма B<xgettext>."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:74
+#: lib/Locale/Po4a/Po.pm:70
 msgid "B<flags>"
 msgstr "B<flags>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:75
+#: lib/Locale/Po4a/Po.pm:71
 msgid "space-separated list of all defined flags for this entry."
 msgstr "листа свих заставица дефинисаних за ову ставку, раздвојених размацима."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:76
+#: lib/Locale/Po4a/Po.pm:72
 msgid ""
 "Valid flags are: B<c-text>, B<python-text>, B<lisp-text>, B<elisp-text>, "
 "B<librep-text>, B<smalltalk-text>, B<java-text>, B<awk-text>, B<object-"
@@ -7892,17 +7881,17 @@ msgstr ""
 "pascal-text>, B<ycp-text>, B<tcl-text>, B<wrap>, B<no-wrap> и B<fuzzy>."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:77
+#: lib/Locale/Po4a/Po.pm:73
 msgid "See the gettext documentation for their meaning."
 msgstr "За њихово значење, погледајте gettext документацију."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:78
+#: lib/Locale/Po4a/Po.pm:74
 msgid "B<type>"
 msgstr "B<type>"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:79
+#: lib/Locale/Po4a/Po.pm:75
 msgid ""
 "this is mostly an internal argument: it is used while gettextizing "
 "documents. The idea here is to parse both the original and the translation "
@@ -7922,7 +7911,7 @@ msgstr ""
 "значи да два фајла немају исту структуру, па процес пријављује грешку."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:80
+#: lib/Locale/Po4a/Po.pm:76
 msgid ""
 "This information is written as automatic comment in the PO file since this "
 "gives to translators some context about the strings to translate."
@@ -7932,7 +7921,7 @@ msgstr ""
 "да преведу."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:82
+#: lib/Locale/Po4a/Po.pm:78
 msgid ""
 "boolean indicating whether whitespaces can be mangled in cosmetic "
 "reformattings. If true, the string is canonized before use."
@@ -7942,7 +7931,7 @@ msgstr ""
 "канонизује пре употребе."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:83
+#: lib/Locale/Po4a/Po.pm:79
 msgid ""
 "This information is written to the PO file using the B<wrap> or B<no-wrap> "
 "flag."
@@ -7950,32 +7939,32 @@ msgstr ""
 "Ова информација се у PO уписује помоћу заставица B<wrap> или B<no-wrap>."
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:86
+#: lib/Locale/Po4a/Po.pm:82
 msgid "This information is not written to the PO file."
 msgstr "Ова информација се не уписује у PO фајл."
 
 #. type: =head1
-#: lib/Locale/Po4a/Po.pm:87
+#: lib/Locale/Po4a/Po.pm:83
 msgid "Miscellaneous functions"
 msgstr "Разне функције"
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:88
+#: lib/Locale/Po4a/Po.pm:84
 msgid "count_entries()"
 msgstr "count_entries()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:89
+#: lib/Locale/Po4a/Po.pm:85
 msgid "Returns the number of entries in the catalog (without the header)."
 msgstr "Враћа број ставки у каталогу (не узимајући у обзир заглавље)."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:90
+#: lib/Locale/Po4a/Po.pm:86
 msgid "count_entries_doc()"
 msgstr "count_entries_doc()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:91
+#: lib/Locale/Po4a/Po.pm:87
 msgid ""
 "Returns the number of entries in document. If a string appears multiple "
 "times in the document, it will be counted multiple times."
@@ -7984,32 +7973,48 @@ msgstr ""
 "пута, бројаће се више пута."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:92
+#: lib/Locale/Po4a/Po.pm:88
 msgid "msgid($)"
 msgstr "msgid($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:93
+#: lib/Locale/Po4a/Po.pm:89
 msgid "Returns the msgid of the given number."
 msgstr "Враћа msgid датог броја."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:94
+#: lib/Locale/Po4a/Po.pm:90
 msgid "msgid_doc($)"
 msgstr "msgid_doc($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:95
+#: lib/Locale/Po4a/Po.pm:91
 msgid "Returns the msgid with the given position in the document."
 msgstr "Враћа msgid са датом позицијом у документу."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:96
+#: lib/Locale/Po4a/Po.pm:92
+#, fuzzy
+#| msgid "msgid_doc($)"
+msgid "type_doc($)"
+msgstr "msgid_doc($)"
+
+#. type: textblock
+#: lib/Locale/Po4a/Po.pm:93
+msgid ""
+"Returns the type of the msgid with the given position in the document. This "
+"is probably only useful to gettextization, and it's stored separately from "
+"{$msgid}{'type'} because the later location may be overwritten by another "
+"type when the $msgid is duplicated in the master document."
+msgstr ""
+
+#. type: =item
+#: lib/Locale/Po4a/Po.pm:94
 msgid "get_charset()"
 msgstr "get_charset()"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:97
+#: lib/Locale/Po4a/Po.pm:95
 msgid ""
 "Returns the character set specified in the PO header. If it hasn't been set, "
 "it will return \"UTF-8\"."
@@ -8018,12 +8023,12 @@ msgstr ""
 "постављено, вратиће „UTF-8”."
 
 #. type: =item
-#: lib/Locale/Po4a/Po.pm:98
+#: lib/Locale/Po4a/Po.pm:96
 msgid "set_charset($)"
 msgstr "set_charset($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/Po.pm:99
+#: lib/Locale/Po4a/Po.pm:97
 msgid ""
 "This sets the character set of the PO header to the value specified in its "
 "first argument. If you never call this function (and no file with a "
@@ -9524,7 +9529,7 @@ msgid "B<docheader>"
 msgstr "B<docheader>"
 
 #. type: =head1
-#: lib/Locale/Po4a/TeX.pm:91 lib/Locale/Po4a/TransTractor.pm:95
+#: lib/Locale/Po4a/TeX.pm:91 lib/Locale/Po4a/TransTractor.pm:93
 #: lib/Locale/Po4a/Xml.pm:134
 msgid "INTERNAL FUNCTIONS used to write derivative parsers"
 msgstr "ИНТЕРНЕ ФУНКЦИЈЕ које се користе за писање изведених парсера"
@@ -10018,11 +10023,11 @@ msgstr "Формалније речено, она узима као улаз с�
 #. type: =item
 #: lib/Locale/Po4a/TransTractor.pm:7 lib/Locale/Po4a/TransTractor.pm:9
 #: lib/Locale/Po4a/TransTractor.pm:12 lib/Locale/Po4a/TransTractor.pm:14
-#: lib/Locale/Po4a/TransTractor.pm:112 lib/Locale/Po4a/TransTractor.pm:114
-#: lib/Locale/Po4a/TransTractor.pm:116 lib/Locale/Po4a/TransTractor.pm:127
-#: lib/Locale/Po4a/TransTractor.pm:129 lib/Locale/Po4a/TransTractor.pm:131
-#: lib/Locale/Po4a/TransTractor.pm:148 lib/Locale/Po4a/TransTractor.pm:150
-#: lib/Locale/Po4a/TransTractor.pm:152
+#: lib/Locale/Po4a/TransTractor.pm:110 lib/Locale/Po4a/TransTractor.pm:112
+#: lib/Locale/Po4a/TransTractor.pm:114 lib/Locale/Po4a/TransTractor.pm:125
+#: lib/Locale/Po4a/TransTractor.pm:127 lib/Locale/Po4a/TransTractor.pm:129
+#: lib/Locale/Po4a/TransTractor.pm:146 lib/Locale/Po4a/TransTractor.pm:148
+#: lib/Locale/Po4a/TransTractor.pm:150
 msgid "-"
 msgstr "-"
 
@@ -10493,28 +10498,18 @@ msgstr "debug ($)"
 msgid "Sets the debugging."
 msgstr "Поставља режим исправљања грешака."
 
-#. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:73
-msgid ""
-"Boolean indicating whether we should deduplicate msgids. Passed to Po.pm as "
-"is. See Po.pm documentation for more info."
-msgstr ""
-"Логичка вредност која назначава да ли треба да се дедуплицирају msgid "
-"стрингови. Прослеђује се модулу Po.pm таква каква је. За више информација "
-"погледајте документацију за Po.pm."
-
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:74
+#: lib/Locale/Po4a/TransTractor.pm:72
 msgid "Manipulating document files"
 msgstr "Манипулација фајловима докумената"
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:75
+#: lib/Locale/Po4a/TransTractor.pm:73
 msgid "read($$)"
 msgstr "read($$)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:76
+#: lib/Locale/Po4a/TransTractor.pm:74
 msgid ""
 "Add another input document data at the end of the existing array C<< @{$self-"
 ">{TT}{doc_in}} >>. The argument is the filename to read. If a second "
@@ -10526,7 +10521,7 @@ msgstr ""
 "референцама."
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:77
+#: lib/Locale/Po4a/TransTractor.pm:75
 #, no-wrap
 msgid ""
 "This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an\n"
@@ -10544,7 +10539,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:78
+#: lib/Locale/Po4a/TransTractor.pm:76
 msgid ""
 "Please note that it does not parse anything. You should use the parse()  "
 "function when you're done with packing input files into the document."
@@ -10554,12 +10549,12 @@ msgstr ""
 "parse()."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:80
+#: lib/Locale/Po4a/TransTractor.pm:78
 msgid "Write the translated document to the given filename."
 msgstr "Уписује преведени документ у фајл са датим именом."
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:81
+#: lib/Locale/Po4a/TransTractor.pm:79
 #, no-wrap
 msgid ""
 "This translated document data are provided by:\n"
@@ -10573,17 +10568,17 @@ msgstr ""
 "\n"
 
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:82
+#: lib/Locale/Po4a/TransTractor.pm:80
 msgid "Manipulating PO files"
 msgstr "Манипулација PO фајловима"
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:83
+#: lib/Locale/Po4a/TransTractor.pm:81
 msgid "readpo($)"
 msgstr "readpo($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:84
+#: lib/Locale/Po4a/TransTractor.pm:82
 msgid ""
 "Add the content of a file (which name is passed as argument) to the existing "
 "input PO. The old content is not discarded."
@@ -10592,22 +10587,22 @@ msgstr ""
 "улазном PO. Стари садржај се не одбацује."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:85
+#: lib/Locale/Po4a/TransTractor.pm:83
 msgid "writepo($)"
 msgstr "writepo($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:86
+#: lib/Locale/Po4a/TransTractor.pm:84
 msgid "Write the extracted PO file to the given filename."
 msgstr "Уписује издвојени PO фајл у дато име фајла."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:87
+#: lib/Locale/Po4a/TransTractor.pm:85
 msgid "stats()"
 msgstr "stats()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:88
+#: lib/Locale/Po4a/TransTractor.pm:86
 msgid ""
 "Returns some statistics about the translation done so far. Please note that "
 "it's not the same statistics than the one printed by msgfmt --statistic. "
@@ -10622,7 +10617,7 @@ msgstr ""
 "Po4a::Po::stats_get function примењену на улазни PO фајл. Пример употребе:"
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:89
+#: lib/Locale/Po4a/TransTractor.pm:87
 #, no-wrap
 msgid ""
 "    [normal use of the po4a document...]\n"
@@ -10632,7 +10627,7 @@ msgstr ""
 "\n"
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:90
+#: lib/Locale/Po4a/TransTractor.pm:88
 #, no-wrap
 msgid ""
 "    ($percent,$hit,$queries) = $document->stats();\n"
@@ -10644,17 +10639,17 @@ msgstr ""
 "\n"
 
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:91
+#: lib/Locale/Po4a/TransTractor.pm:89
 msgid "Manipulating addenda"
 msgstr "Манипулација додацима"
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:92
+#: lib/Locale/Po4a/TransTractor.pm:90
 msgid "addendum($)"
 msgstr "addendum($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:93
+#: lib/Locale/Po4a/TransTractor.pm:91
 msgid ""
 "Please refer to L<po4a(7)|po4a.7> for more information on what addenda are, "
 "and how translators should write them. To apply an addendum to the "
@@ -10667,17 +10662,17 @@ msgstr ""
 "функцији и то је то ;)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:94
+#: lib/Locale/Po4a/TransTractor.pm:92
 msgid "This function returns a non-null integer on error."
 msgstr "У случају грешке, ова функција враћа цео број различит од нуле."
 
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:96
+#: lib/Locale/Po4a/TransTractor.pm:94
 msgid "Getting input, providing output"
 msgstr "Добављање улаза, обезбеђивање излаза"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:97
+#: lib/Locale/Po4a/TransTractor.pm:95
 msgid ""
 "Four functions are provided to get input and return output. They are very "
 "similar to shift/unshift and push/pop of Perl."
@@ -10686,7 +10681,7 @@ msgstr ""
 "сличне са shift/unshift и push/pop у језику Perl."
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:98
+#: lib/Locale/Po4a/TransTractor.pm:96
 #, no-wrap
 msgid ""
 " * Perl shift returns the first array item and drop it from the array.\n"
@@ -10702,7 +10697,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:99
+#: lib/Locale/Po4a/TransTractor.pm:97
 msgid ""
 "The first pair is about input, while the second is about output. Mnemonic: "
 "in input, you are interested in the first line, what shift gives, and in "
@@ -10713,12 +10708,12 @@ msgstr ""
 "за излаз желите да свој резултат додате на крај, као што то ради push."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:100
+#: lib/Locale/Po4a/TransTractor.pm:98
 msgid "shiftline()"
 msgstr "shiftline()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:101
+#: lib/Locale/Po4a/TransTractor.pm:99
 msgid ""
 "This function returns the first line to be parsed and its corresponding "
 "reference (packed as an array) from the array C<< @{$self->{TT}{doc_in}} >> "
@@ -10731,12 +10726,12 @@ msgstr ""
 "$linenum >>."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:102
+#: lib/Locale/Po4a/TransTractor.pm:100
 msgid "unshiftline($$)"
 msgstr "unshiftline($$)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:103
+#: lib/Locale/Po4a/TransTractor.pm:101
 msgid ""
 "Unshifts the last shifted line of the input document and its corresponding "
 "reference back to the head of C<< {$self->{TT}{doc_in}} >>."
@@ -10745,59 +10740,59 @@ msgstr ""
 "одговарајућу референцу назад на почетак C<< {$self->{TT}{doc_in}} >>."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:104
+#: lib/Locale/Po4a/TransTractor.pm:102
 msgid "pushline($)"
 msgstr "pushline($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:105
+#: lib/Locale/Po4a/TransTractor.pm:103
 msgid "Push a new line to the end of C<< {$self->{TT}{doc_out}} >>."
 msgstr "Ради push нове линије на крај C<< {$self->{TT}{doc_out}} >>."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:106
+#: lib/Locale/Po4a/TransTractor.pm:104
 msgid "popline()"
 msgstr "popline()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:107
+#: lib/Locale/Po4a/TransTractor.pm:105
 msgid "Pop the last pushed line from the end of C<< {$self->{TT}{doc_out}} >>."
 msgstr ""
 "Ради pop последње push-оване линије са краја C<< {$self->{TT}{doc_out}} >>."
 
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:108
+#: lib/Locale/Po4a/TransTractor.pm:106
 msgid "Marking strings as translatable"
 msgstr "Обележавање стрингова као преводивих"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:109
+#: lib/Locale/Po4a/TransTractor.pm:107
 msgid "One function is provided to handle the text which should be translated."
 msgstr ""
 "Достављена је једна функција која обрађује текст предвиђен за превођење."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:110
+#: lib/Locale/Po4a/TransTractor.pm:108
 msgid "translate($$$)"
 msgstr "translate($$$)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:111
+#: lib/Locale/Po4a/TransTractor.pm:109
 msgid "Mandatory arguments:"
 msgstr "Обавезни аргументи:"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:113
+#: lib/Locale/Po4a/TransTractor.pm:111
 msgid "A string to translate"
 msgstr "Стринг за превођење"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:115
+#: lib/Locale/Po4a/TransTractor.pm:113
 msgid "The reference of this string (i.e. position in inputfile)"
 msgstr "Референца овог стринга (тј. позиција у улазном фајлу)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:117
+#: lib/Locale/Po4a/TransTractor.pm:115
 msgid ""
 "The type of this string (i.e. the textual description of its structural "
 "role; used in Locale::Po4a::Po::gettextization(); see also L<po4a(7)|"
@@ -10808,7 +10803,7 @@ msgstr ""
 "одељак B<На који начин програм функционише?>)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:118
+#: lib/Locale/Po4a/TransTractor.pm:116
 msgid ""
 "This function can also take some extra arguments. They must be organized as "
 "a hash. For example:"
@@ -10817,7 +10812,7 @@ msgstr ""
 "организују у хеш. На пример:"
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:119
+#: lib/Locale/Po4a/TransTractor.pm:117
 #, no-wrap
 msgid ""
 "  $self->translate(\"string\",\"ref\",\"type\",\n"
@@ -10829,7 +10824,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:121
+#: lib/Locale/Po4a/TransTractor.pm:119
 msgid ""
 "boolean indicating whether we can consider that whitespaces in string are "
 "not important. If yes, the function canonizes the string before looking for "
@@ -10840,22 +10835,22 @@ msgstr ""
 "тражења превода или његовог издвајања, и обавија превод."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:125
+#: lib/Locale/Po4a/TransTractor.pm:123
 msgid "an extra comment to add to the entry."
 msgstr "допунски коментар који се додаје ставци."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:126
+#: lib/Locale/Po4a/TransTractor.pm:124
 msgid "Actions:"
 msgstr "Акције:"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:128
+#: lib/Locale/Po4a/TransTractor.pm:126
 msgid "Pushes the string, reference and type to po_out."
 msgstr "Ради push стринга, референце и типа у po_out."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:130
+#: lib/Locale/Po4a/TransTractor.pm:128
 msgid ""
 "Returns the translation of the string (as found in po_in) so that the parser "
 "can build the doc_out."
@@ -10864,7 +10859,7 @@ msgstr ""
 "изгради doc_out."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:132
+#: lib/Locale/Po4a/TransTractor.pm:130
 msgid ""
 "Handles the charsets to recode the strings before sending them to po_out and "
 "before returning the translations."
@@ -10873,17 +10868,17 @@ msgstr ""
 "пошаљу у po_out и пре враћања превода."
 
 #. type: =head2
-#: lib/Locale/Po4a/TransTractor.pm:133
+#: lib/Locale/Po4a/TransTractor.pm:131
 msgid "Misc functions"
 msgstr "Разне функције"
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:134
+#: lib/Locale/Po4a/TransTractor.pm:132
 msgid "verbose()"
 msgstr "verbose()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:135
+#: lib/Locale/Po4a/TransTractor.pm:133
 msgid ""
 "Returns if the verbose option was passed during the creation of the "
 "TransTractor."
@@ -10892,12 +10887,12 @@ msgstr ""
 "опција детаљног извештавања."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:136
+#: lib/Locale/Po4a/TransTractor.pm:134
 msgid "debug()"
 msgstr "debug()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:137
+#: lib/Locale/Po4a/TransTractor.pm:135
 msgid ""
 "Returns if the debug option was passed during the creation of the "
 "TransTractor."
@@ -10906,12 +10901,12 @@ msgstr ""
 "прослеђена опција детаљнијег извештавања."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:138
+#: lib/Locale/Po4a/TransTractor.pm:136
 msgid "detected_charset($)"
 msgstr "detected_charset($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:139
+#: lib/Locale/Po4a/TransTractor.pm:137
 msgid ""
 "This tells TransTractor that a new charset (the first argument) has been "
 "detected from the input document. It can usually be read from the document "
@@ -10924,12 +10919,12 @@ msgstr ""
 "функције process(), или се детектује из документа."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:140
+#: lib/Locale/Po4a/TransTractor.pm:138
 msgid "get_out_charset()"
 msgstr "get_out_charset()"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:141
+#: lib/Locale/Po4a/TransTractor.pm:139
 msgid ""
 "This function will return the charset that should be used in the output "
 "document (usually useful to substitute the input document's detected charset "
@@ -10940,7 +10935,7 @@ msgstr ""
 "у улазном документу у коме је пронађен)."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:142
+#: lib/Locale/Po4a/TransTractor.pm:140
 msgid ""
 "It will use the output charset specified in the command line. If it wasn't "
 "specified, it will use the input PO's charset, and if the input PO has the "
@@ -10953,12 +10948,12 @@ msgstr ""
 "тако да се не обавља кодирање.."
 
 #. type: =item
-#: lib/Locale/Po4a/TransTractor.pm:143
+#: lib/Locale/Po4a/TransTractor.pm:141
 msgid "recode_skipped_text($)"
 msgstr "recode_skipped_text($)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:144
+#: lib/Locale/Po4a/TransTractor.pm:142
 msgid ""
 "This function returns the recoded text passed as argument, from the input "
 "document's charset to the output document's one. This isn't needed when "
@@ -10973,12 +10968,12 @@ msgstr ""
 "желите да излазни документ буде у сагласности са глобалним кодирањем."
 
 #. type: =head1
-#: lib/Locale/Po4a/TransTractor.pm:145
+#: lib/Locale/Po4a/TransTractor.pm:143
 msgid "FUTURE DIRECTIONS"
 msgstr "СМЕРНИЦЕ ЗА БУДУЋНОСТ"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:146
+#: lib/Locale/Po4a/TransTractor.pm:144
 msgid ""
 "One shortcoming of the current TransTractor is that it can't handle "
 "translated document containing all languages, like debconf templates, or ."
@@ -10989,22 +10984,22 @@ msgstr ""
 "desktop фајлови."
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:147
+#: lib/Locale/Po4a/TransTractor.pm:145
 msgid "To address this problem, the only interface changes needed are:"
 msgstr "Како би се решио проблем, неопходне су само следеће измене интерфејса:"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:149
+#: lib/Locale/Po4a/TransTractor.pm:147
 msgid "take a hash as po_in_name (a list per language)"
 msgstr "po_in_name треба да узима хеш (листу за сваки појединачни језик)"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:151
+#: lib/Locale/Po4a/TransTractor.pm:149
 msgid "add an argument to translate to indicate the target language"
 msgstr "додати аргумент функцији translate који наводи циљни језик"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:153
+#: lib/Locale/Po4a/TransTractor.pm:151
 msgid ""
 "make a pushline_all function, which would make pushline of its content for "
 "all languages, using a map-like syntax:"
@@ -11013,7 +11008,7 @@ msgstr ""
 "све језике, користећи синтаксу сличну са map:"
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:154
+#: lib/Locale/Po4a/TransTractor.pm:152
 #, no-wrap
 msgid ""
 "    $self->pushline_all({ \"Description[\".$langcode.\"]=\".\n"
@@ -11027,12 +11022,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: lib/Locale/Po4a/TransTractor.pm:155
+#: lib/Locale/Po4a/TransTractor.pm:153
 msgid "Will see if it's enough ;)"
 msgstr "Видећемо да ли је ово довољно ;)"
 
 #. type: verbatim
-#: lib/Locale/Po4a/TransTractor.pm:157
+#: lib/Locale/Po4a/TransTractor.pm:155
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier@linuxfr.org>\n"
@@ -12622,6 +12617,74 @@ msgstr ""
 #: lib/Locale/Po4a/Yaml.pm:20
 msgid "Copyright © 2017 Brian Exelbierd."
 msgstr "Ауторска права © 2017 Брајан Екселбирд."
+
+#~ msgid ""
+#~ "If the exact same string is used several times in the master file, but "
+#~ "with differing translations in the localized file, the translation will "
+#~ "contain more B<msgid>s than the master. One of the master's B<msgid>s "
+#~ "would have several references to compensate. Conversely, if different "
+#~ "original paragraphs are translated in the exact same way, the original "
+#~ "will have more B<msgid>s than the translation."
+#~ msgstr ""
+#~ "Ако се у мастер фајлу потпуно исти стринг користи неколико пута, али са "
+#~ "различитим преводима у локализованом фајлу, превод ће садржати више "
+#~ "B<msgid> стрингова од мастера. Да би се то компензовало, један од "
+#~ "мастерових B<msgid> стрингова би имао неколико референци. Супротно, ако "
+#~ "се различити оригинални пасуси преводе на потпуно исти начин, оригинал ће "
+#~ "имати више B<msgid> стрингова него превод."
+
+#~ msgid ""
+#~ "To avoid such spurious desynchronization, po4a deduplicates all strings "
+#~ "in both the master and localized by appending spaces to them. This way, "
+#~ "PO files will not merge any entry and the gettextization can proceed. In "
+#~ "most cases, the extra space added by po4a to deduplicate the strings has "
+#~ "no impact on the formatting.  Strings are fuzzied anyway, and msgmerge "
+#~ "will probably match the strings accordingly afterward."
+#~ msgstr ""
+#~ "Да би спречио такву лажну десинхронизацију, програм po4a дедуплицира све "
+#~ "стрингове и у мастер и у локализованом фајлу тако што им на крај додаје "
+#~ "размаке. На тај начин PO фајлови неће спојити ниједну ставку и "
+#~ "gettextизација може да се настави. У највећем броју случајева додатни "
+#~ "размак који po4a додаје за дедупликацију стрингова нема утицај на "
+#~ "форматирање. Ипак се стрингови довољно промене тако да ће их msgmerge "
+#~ "касније највероватније упарити како треба."
+
+#~ msgid "B<dedup>"
+#~ msgstr "B<dedup>"
+
+#~ msgid ""
+#~ "Boolean indicating whether we should deduplicate msgids.  If true, when "
+#~ "the same string is added again, a space is appended to deduplicate it.  "
+#~ "This is probably only useful in the gettextization context, where "
+#~ "dupplicate msgids break the string pairing algorithm.  See https://github."
+#~ "com/mquinson/po4a/issues/334 for more info."
+#~ msgstr ""
+#~ "Логичка вредност која наводи да ли би требало да се дедуплицирају msgid "
+#~ "стрингови. Ако је истинито, када са касније поново дода исти стринг, на "
+#~ "његов крај се додаје размак да би се дедупликовао. Ово је углавном "
+#~ "корисно само у контексту gettextизације, где дуплирани msgid стрингови "
+#~ "могу да покваре алгоритам упаривања стрингова. За више информација "
+#~ "погледајте https://github.com/mquinson/po4a/issues/334."
+
+#~ msgid "gettextize($$)"
+#~ msgstr "gettextize($$)"
+
+#~ msgid ""
+#~ "This function produces one translated message catalog from two catalogs, "
+#~ "an original and a translation. This process is described in L<po4a(7)|"
+#~ "po4a.7>, section I<Gettextization: how does it work?>."
+#~ msgstr ""
+#~ "Ова функција из два каталога, оригинала и превода, креира један каталог "
+#~ "са преведеним порукама. Процес је описан у L<po4a(7)|po4a.7>, одељак I<На "
+#~ "који начин програм функционише?>."
+
+#~ msgid ""
+#~ "Boolean indicating whether we should deduplicate msgids. Passed to Po.pm "
+#~ "as is. See Po.pm documentation for more info."
+#~ msgstr ""
+#~ "Логичка вредност која назначава да ли треба да се дедуплицирају msgid "
+#~ "стрингови. Прослеђује се модулу Po.pm таква каква је. За више информација "
+#~ "погледајте документацију за Po.pm."
 
 #~ msgid ""
 #~ "When you run the B<po4a> program for the first time, with only a "
