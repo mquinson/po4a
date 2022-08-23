@@ -92,13 +92,6 @@ Set the package name for the POT header. The default is "PACKAGE".
 
 Set the package version for the POT header. The default is "VERSION".
 
-=item B<dedup>
-
-Boolean indicating whether we should deduplicate msgids.
-If true, when the same string is added again, a space is appended to deduplicate it.
-This is probably only useful in the gettextization context, where dupplicate msgids break the string pairing algorithm.
-See https://github.com/mquinson/po4a/issues/334 for more info.
-
 =back
 
 =cut
@@ -234,7 +227,6 @@ sub initialize {
     $self->{options}{'wrap-po'}            = 76;
     $self->{options}{'pot-charset'}        = "UTF-8";
     $self->{options}{'pot-language'}       = "";
-    $self->{options}{'dedup'}              = 0;
 
     foreach my $opt ( keys %$options ) {
 
@@ -273,6 +265,9 @@ sub initialize {
                                                      # count_doc: number of strings in the document
                                                      # (duplicate strings counted multiple times)
     $self->{count_doc} = 0;
+    $self->{gettextize_types} = (); # Type of each msgid found in the doc, in order
+    # We cannot use {$msgid}{'type'} as a type because for duplicate entries, the type is overwritten.
+    # So we have to copy the same info to this separate array, which is accessed through type_doc()
     $self->{header_comment} =
         " SOME DESCRIPTIVE TITLE\n"
       . " Copyright (C) YEAR "
@@ -1229,11 +1224,6 @@ sub push_raw {
         $reference =~ s/:\d+//g;
     }
 
-    # If asked to dedup the msgid, append a '_' as long as the string is still a dupplicate
-    while ( defined( $self->{po}{$msgid} ) && $self->{options}{'dedup'} ) {
-        $msgid .= ' ';
-    }
-
     if ( defined( $self->{po}{$msgid} ) ) {
         warn wrap_mod( "po4a::po", dgettext( "po4a", "msgid defined twice: %s" ), $msgid )
           if (0);    # FIXME: put a verbose stuff
@@ -1251,14 +1241,15 @@ sub push_raw {
 
             if ($keep_conflict) {
                 if ( $self->{po}{$msgid}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s ) {
-                    $msgstr = $self->{po}{$msgid}{'msgstr'} . "\\n#-#-#-#-#  $transref  #-#-#-#-#\\n" . $msgstr;
+                    $msgstr = $self->{po}{$msgid}{'msgstr'} . "\\n#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n" . $msgstr;
                 } else {
                     $msgstr =
                         "#-#-#-#-#  "
                       . $self->{po}{$msgid}{'transref'}
-                      . "  #-#-#-#-#\\n"
+                      . " (type " . $self->{po}{$msgid}{'type'}
+                      . ")  #-#-#-#-#\\n"
                       . $self->{po}{$msgid}{'msgstr'} . "\\n"
-                      . "#-#-#-#-#  $transref  #-#-#-#-#\\n"
+                      . "#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n"
                       . $msgstr;
                 }
 
@@ -1301,11 +1292,11 @@ sub push_raw {
     $self->{po}{$msgid}{'comment'}   = $comment;
     $self->{po}{$msgid}{'automatic'} = $automatic;
     $self->{po}{$msgid}{'previous'}  = $previous;
-    if ( defined( $self->{po}{$msgid}{'pos_doc'} ) ) {
-        $self->{po}{$msgid}{'pos_doc'} .= " " . $self->{count_doc}++;
-    } else {
-        $self->{po}{$msgid}{'pos_doc'} = $self->{count_doc}++;
-    }
+
+    $self->{po}{$msgid}{pos_doc} = () unless (defined( $self->{po}{$msgid}{pos_doc}));
+    CORE::push( @{ $self->{po}{$msgid}{pos_doc} }, $self->{count_doc}++);
+    CORE::push( @{ $self->{gettextize_types} }, $type);
+
     unless ( defined( $self->{po}{$msgid}{'pos'} ) ) {
         $self->{po}{$msgid}{'pos'} = $self->{count}++;
     }
@@ -1392,11 +1383,27 @@ sub msgid_doc($$) {
     my $num  = shift;
 
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        foreach my $pos ( split / /, $self->{po}{$msgid}{'pos_doc'} ) {
+        foreach my $pos ( @{ $self->{po}{$msgid}{'pos_doc'} } ) {
             return $msgid if ( $pos eq $num );
         }
     }
     return undef;
+}
+
+=item type_doc($)
+
+Returns the type of the msgid with the given position in the document. This is
+probably only useful to gettextization, and it's stored separately from
+{$msgid}{'type'} because the later location may be overwritten by another type
+when the $msgid is duplicated in the master document.
+
+=cut
+
+sub type_doc($$) {
+    my $self = shift;
+    my $num  = shift;
+
+    return ${ $self->{gettextize_types} }[$num];
 }
 
 =item get_charset()

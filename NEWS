@@ -15,6 +15,23 @@ Project organization:
  * Rewrite the po4a-gettextize documentation (Debian's #1016695) [Mt].
  * Rewrite the intro of po4a doc, and add a Quick start tutorial [Mt].
 
+gettextization:
+ * Rework completely the deduplication of msgids introduced in v0.67.
+   - Instead of adding spaces and require the users to merge them
+     manually after an extremely painful analysis of the produced file,
+     automatically merge the msgstr together.
+   - The result will look something like:
+
+     #, fuzzy
+     msgid "hello"
+     msgstr ""
+     "#-#-#-#-#  file reference 1 (type: Title #)  #-#-#-#-#\n"
+     "HELLO\n"
+     "#-#-#-#-#  file reference 2 (type: Title ##)  #-#-#-#-#\n"
+     "SUBTITLE\n"
+
+   - Closes Debian's #1017742, that was asking for help in the review [Mt].
+
 Markdown:
  * Allow lists to start the line with no leading spaces before the '-'
    sign (Github's #378). This uncovers a bug in our test suite that

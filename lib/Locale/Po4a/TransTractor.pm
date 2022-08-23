@@ -262,10 +262,6 @@ Sets the verbosity.
 
 Sets the debugging.
 
-=item B<dedup>
-
-Boolean indicating whether we should deduplicate msgids. Passed to Po.pm as is. See Po.pm documentation for more info.
-
 =back
 
 =cut
@@ -377,7 +373,6 @@ sub new {
     $self->{options}{'package-name'}       = '';
     $self->{options}{'package-version'}    = '';
     $self->{options}{'wrap-po'}            = '';
-    $self->{options}{'dedup'}              = 0;    # Deduplicate msgids, to help gettextization
 
     # let the plugin parse the options and such
     $self->initialize(%options);
@@ -390,7 +385,6 @@ sub new {
     $po_options{'package-name'}       = $options{'package-name'};
     $po_options{'package-version'}    = $options{'package-version'};
     $po_options{'wrap-po'}            = $options{'wrap-po'};
-    $po_options{'dedup'}              = $options{'dedup'};
 
     # private data
     $self->{TT}         = ();

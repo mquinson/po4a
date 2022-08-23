@@ -35,15 +35,14 @@ the conversion of your project. This tedious process is explained in details in
 Section 'Converting a manual translation to po4a' below.
 
 You must provide both a master file (e.g., the source in English) and an
-existing translated file (e.g. a previous translation attempt without po4a). If
+existing translated file (e.g., a previous translation attempt without po4a). If
 you provide more than one master or translation files, they will be used in
 sequence, but it may be easier to gettextize each page or chapter separately and
 then use B<msgmerge> to merge all produced PO files. As you wish.
 
 If the master document has non-ASCII characters, the new generated PO file will
-be in UTF-8. Else (if the master document is completely in ASCII), the generated
-PO will use the encoding of the translated input document, or UTF-8 if no
-translated document is provided.
+be in UTF-8. If the master document is completely in ASCII, the generated
+PO will use the encoding of the translated input document.
 
 =head1 OPTIONS
 
@@ -254,20 +253,8 @@ Other issues may come from duplicated strings in either the original or
 translation. Duplicated strings are merged in PO files, with two references.
 This constitutes a difficulty for the gettexization algorithm, that is a simple
 one to one pairing between the B<msgid>s of both the master and the localized
-files.
-
-If the exact same string is used several times in the master file, but with
-differing translations in the localized file, the translation will contain more
-B<msgid>s than the master. One of the master's B<msgid>s would have several references
-to compensate. Conversely, if different original paragraphs are translated in
-the exact same way, the original will have more B<msgid>s than the translation.
-
-To avoid such spurious desynchronization, po4a deduplicates all strings in both
-the master and localized by appending spaces to them. This way, PO files will
-not merge any entry and the gettextization can proceed. In most cases, the extra
-space added by po4a to deduplicate the strings has no impact on the formatting.
-Strings are fuzzied anyway, and msgmerge will probably match the strings
-accordingly afterward.
+files. It is however believed that recent versions of po4a deal properly with
+duplicated strings, so you should report any remaining issue that you may encounter.
 
 =back
 
@@ -455,15 +442,15 @@ sub gettextize {
         #       print STDERR "Matches [[$orig]]<<$trans>>\n";
 
         my ( $reforig,  $reftrans )  = ( $poorig->{po}{$orig}{'reference'}, $potrans->{po}{$trans}{'reference'} );
-        my ( $typeorig, $typetrans ) = ( $poorig->{po}{$orig}{'type'},      $potrans->{po}{$trans}{'type'} );
+        my ( $typeorig, $typetrans ) = ( $poorig->type_doc($o),             $potrans->type_doc($t) );
 
         #
         # Make sure the type of both string exist
         #
-        die wrap_mod( "po4a gettextize", "Internal error: type of original string number %s " . "isn't provided", $o )
+        die wrap_mod( "po4a gettextize", "Internal error: type of original string number %s isn't provided", $o )
           if ( $typeorig eq '' );
 
-        die wrap_mod( "po4a gettextize", "Internal error: type of translated string number %s " . "isn't provided", $o )
+        die wrap_mod( "po4a gettextize", "Internal error: type of translated string number %s isn't provided", $o )
           if ( $typetrans eq '' );
 
         #
@@ -534,7 +521,6 @@ sub show_version {
 }
 
 my %opts = (
-    "dedup"              => 1,       # Deduplicate the msgids in the PO objects
     "verbose"            => 0,
     "debug"              => 0,
     "copyright-holder"   => undef,
