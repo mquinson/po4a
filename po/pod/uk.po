@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-08-22 12:30+0200\n"
-"PO-Revision-Date: 2022-08-22 15:31+0000\n"
+"PO-Revision-Date: 2022-08-23 10:36+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -344,12 +344,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
-#, fuzzy
-#| msgid ""
-#| "When you run the B<po4a> program with both the master documents and the "
-#| "PO files, it produces the translated documents by injecting the content's "
-#| "translation (found in the PO files) into the structure of the original "
-#| "master document."
 msgid ""
 "Upon execution, B<po4a> parses all documentation files specified in its "
 "configuration file. It updates the PO files (containing the translation) to "
@@ -357,9 +351,11 @@ msgid ""
 "documentation by injecting the content's translation (found in the PO files) "
 "into the structure of the original master document."
 msgstr ""
-"Якщо ви запустите B<po4a>, маючи вже основні документи та файли PO, програма "
-"створить перекладені документи, вставивши вміст перекладу (який зберігається "
-"у файлах PO) до структури початкових основних документів."
+"Під час виконання B<po4a> обробляє усі файли документації, вказані у файлі "
+"налаштувань програми. Програма оновлює файли PO (файли, які містять переклад)"
+" відповідно до усіх змін у документації і створює перекладені документи, "
+"вставивши вміст перекладу (який зберігається у файлах PO) до структури "
+"початкових основних документів."
 
 #. type: textblock
 #: po4a:8
@@ -376,20 +372,7 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:9
-#, fuzzy, no-wrap
-#| msgid ""
-#| " master documents ---+---->-------->---------+\n"
-#| "  (doc authoring)    |                       |\n"
-#| "                     V   (po4a executions)   >-----+--> translations\n"
-#| "                     |                       |     |\n"
-#| " existing PO files -->--> updated PO files >-+     |\n"
-#| "      ^                            |               |\n"
-#| "      |                            V               |\n"
-#| "      +----------<---------<-------+               ^\n"
-#| "       (manual translation process)                |\n"
-#| "                                                   |\n"
-#| " addendum -->--------------------------------------+\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " master documents ---+---->-------->---------+\n"
 "  (doc authoring)    |                       |\n"
@@ -515,7 +498,8 @@ msgid ""
 "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize --format <формат> --master <основний.документ> --po <переклад.pot>\n"
+"  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de."
+"po\n"
 "\n"
 
 #. type: textblock
@@ -527,30 +511,22 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:19
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] man/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/po4a/\n"
 "\n"
 msgstr ""
-" [po_directory] man/po/\n"
+" [po_directory] man/po4a/\n"
 "\n"
 
 #. type: verbatim
 #: po4a:20
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: man] man/foo.1 $lang:man/translated/$lang/foo.1 \\\n"
-#| "            add_$lang:?man/po4a/add_$lang/$lang.add opt:\"-k 80\"\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 msgstr ""
-" [type: man] man/foo.1 $lang:man/translated/$lang/foo.1 \\\n"
-"            add_$lang:?man/po4a/add_$lang/$lang.add opt:\"-k 80\"\n"
+" [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 
 #. type: textblock
@@ -576,10 +552,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a:23
-#, fuzzy
-#| msgid "Here is a graphical representation of this:"
 msgid "Here is a recap of the files in this setup:"
-msgstr "Ось графічна схема роботи:"
+msgstr "Ось короткий перелік файлів для цієї схеми роботи:"
 
 #. type: verbatim
 #: po4a:24
@@ -605,15 +579,12 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:26
-#, fuzzy, no-wrap
-#| msgid ""
-#| "        po4a po4a.cfg\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "        po4a --verbose po4a.cfg\n"
 "\n"
 msgstr ""
-"        po4a po4a.cfg\n"
+"        po4a --verbose po4a.cfg\n"
 "\n"
 
 #. type: textblock
@@ -1432,16 +1403,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:128
-#, fuzzy
-#| msgid ""
-#| "With this line, po4a will produce separate POT and PO files for each "
-#| "document to translate.  For example, if you have 3 documents and 5 "
-#| "languages, this will result in 3 POT files and 15 PO files. These files "
-#| "are named as specified on the C<po4a_paths> template, with C<$master> "
-#| "substituted to the basename of each document to translate. In case of "
-#| "name conflict, you can specify the POT file to use as follows, with the "
-#| "C<pot=> parameter.  This feature can also be used to group several "
-#| "translated files into the same POT file."
 msgid ""
 "With this line, po4a will produce separate POT and PO files for each "
 "document to translate.  For example, if you have 3 documents and 5 "
@@ -1457,8 +1418,7 @@ msgstr ""
 "буде вибрано за шаблоном C<po4a_paths>, а C<$master> буде замінено на базову "
 "назву кожного документа, який слід перекласти. Якщо виникне конфлікт назв, "
 "ви можете вказати файл POT, який слід використати, так, як це показано "
-"нижче, за допомогою параметра C<pot = >. Цією можливістю також можна "
-"скористатися для групування декількох файлів перекладу в один файл POT."
+"нижче, за допомогою параметра C<pot = >."
 
 #. type: textblock
 #: po4a:129
@@ -1471,14 +1431,7 @@ msgstr ""
 
 #. type: verbatim
 #: po4a:130
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
-#| " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1489,7 +1442,7 @@ msgid ""
 msgstr ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo\n"
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
 " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
@@ -2065,13 +2018,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a:188
-#, fuzzy
-#| msgid ""
-#| "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
-#| "L<po4a(7)>"
 msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
-msgstr ""
-"L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
+msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:80 po4a-normalize:31 po4a-translate:56
@@ -2308,14 +2256,6 @@ msgstr "Перетворення виконаного вручну перекл�
 
 #. type: textblock
 #: po4a-gettextize:47
-#, fuzzy
-#| msgid ""
-#| "B<po4a-gettextize> will try to extract the content of any provided "
-#| "translation file, and use this content as msgstr in the produced PO file. "
-#| "Be warned that this process is very fragile: the Nth string of the "
-#| "translated file is supposed to be the translation of the Nth string in "
-#| "the original. This will naturally not work unless both files share "
-#| "exactly the same structure."
 msgid ""
 "B<po4a-gettextize> synchronizes the master and localized files to extract "
 "their content into a PO file. The content of the master file gives the "
@@ -2390,15 +2330,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:52
-#, fuzzy
-#| msgid ""
-#| "B<po4a-gettextize> will verbosely diagnose any detected structure "
-#| "desynchronization. When this happens, you should manually edit the files "
-#| "(this probably requires that you have some notions of the target "
-#| "language). You must add fake paragraphs or remove some content in one of "
-#| "the documents (or both) to fix the reported disparities, until the "
-#| "structure of both documents perfectly match. Some tricks are given in the "
-#| "next section."
 msgid ""
 "B<po4a-gettextize> will verbosely diagnose any structure desynchronization. "
 "When this happens, you should manually edit the files to add fake paragraphs "
@@ -2408,23 +2339,13 @@ msgid ""
 msgstr ""
 "B<po4a-gettextize> докладно повідомлятиме про усі виявлені розсинхронізації "
 "структури. Коли трапляється така розсинхронізація, вам слід виконати "
-"редагування файлів вручну (це може потребувати певних знань мови перекладу). "
-"У вам може виникнути потреба у додаванні фіктивних абзаців або вилучення "
-"частини вмісту у одному з документів (або обох документах) для виправлення "
-"повідомлених невідповідностей, аж доки структура обох документів не стане "
-"однаковою. Деякі підказки щодо полегшення цієї роботи наведено у наступному "
-"розділі."
+"редагування файлів вручну для додавання фіктивних абзаців або вилучення "
+"частини вмісту у різних місцях, аж доки структура обох документів не стане "
+"однаковою. Нижче наведено деякі підказки, якщо допоможуть зберегти більшу "
+"частину наявного перекладу під час перетворення."
 
 #. type: textblock
 #: po4a-gettextize:53
-#, fuzzy
-#| msgid ""
-#| "If you are lucky enough to have a a perfect match in the file structures, "
-#| "building a correct PO file is a matter of seconds. Otherwise, you will "
-#| "soon understand why this process has such an ugly name :) But remember "
-#| "that this grunt work is the price to pay to get the comfort of po4a "
-#| "afterward. Once converted, the synchronization between master documents "
-#| "and translations will always be fully automatic."
 msgid ""
 "If you are lucky enough to have a perfect match in the file structures out "
 "of the box, building a correct PO file is a matter of seconds. Otherwise, "
@@ -2459,14 +2380,6 @@ msgstr "Підказки і настанови щодо процедури пе�
 
 #. type: textblock
 #: po4a-gettextize:56
-#, fuzzy
-#| msgid ""
-#| "When this happens, the whole game comes down to the alignment of these "
-#| "damn files' structures again through manual edits. B<po4a-gettextize> is "
-#| "rather verbose about what went wrong when it happens. It reports the "
-#| "strings that don't match, their positions in the text, and the type of "
-#| "each of them. Moreover, the PO file generated so far is dumped as "
-#| "F<gettextization.failed.po> for further inspection."
 msgid ""
 "The gettextization stops as soon as a desynchronization is detected. When "
 "this happens, you need to edit the files as much as needed to re-align the "
@@ -2504,14 +2417,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:59
-#, fuzzy
-#| msgid ""
-#| "If you need to edit the files to align their structures, you should "
-#| "prefer editing the translation if possible. Indeed, if the changes to the "
-#| "original are too intrusive, the old and new versions will not be matched "
-#| "during the PO update, and the corresponding translation will be dumped "
-#| "anyway. But do not hesitate to also edit the original document if "
-#| "required: the important thing is to get a first PO file to start with."
 msgid ""
 "When editing the files to align their structures, prefer editing the "
 "translation if possible. Indeed, if the changes to the original are too "
@@ -2624,11 +2529,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:67
-#, fuzzy
-#| msgid ""
-#| "In most cases, the extra space added by po4a to deduplicate the strings "
-#| "has no impact on the formatting. Strings are fuzzied anyway, and msgmerge "
-#| "will probably match the strings accordingly afterward."
 msgid ""
 "To avoid such spurious desynchronization, po4a deduplicates all strings in "
 "both the master and localized by appending spaces to them. This way, PO "
