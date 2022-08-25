@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.58\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-08-23 12:32+0200\n"
-"PO-Revision-Date: 2022-08-23 10:36+0000\n"
+"PO-Revision-Date: 2022-08-25 07:20+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian (cyrillic) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/sr_Cyrl/>\n"
@@ -2177,14 +2177,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:9
-#, fuzzy
-#| msgid ""
-#| "You must provide both a master file (e.g., the source in English) and an "
-#| "existing translated file (e.g. a previous translation attempt without "
-#| "po4a). If you provide more than one master or translation files, they "
-#| "will be used in sequence, but it may be easier to gettextize each page or "
-#| "chapter separately and then use B<msgmerge> to merge all produced PO "
-#| "files. As you wish."
 msgid ""
 "You must provide both a master file (e.g., the source in English) and an "
 "existing translated file (e.g., a previous translation attempt without "
@@ -2202,21 +2194,15 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:10
-#, fuzzy
-#| msgid ""
-#| "If the master document has non-ASCII characters, the new generated PO "
-#| "file will be in UTF-8. Else (if the master document is completely in "
-#| "ASCII), the generated PO will use the encoding of the translated input "
-#| "document, or UTF-8 if no translated document is provided."
 msgid ""
 "If the master document has non-ASCII characters, the new generated PO file "
 "will be in UTF-8. If the master document is completely in ASCII, the "
 "generated PO will use the encoding of the translated input document."
 msgstr ""
 "Ако мастер документ садржи не-ASCII карактере, ново генерисани PO фајл ће "
-"бити кодиран у UTF-8. Иначе (у случају када је мастер документ потпуно "
-"написан ASCII карактерима), генерисани PO ће да употреби кодирање преведеног "
-"улазног документа, или UTF-8 ако се преведени документ не наведе."
+"бити кодиран у UTF-8. У случају када је мастер документ потпуно написан "
+"ASCII карактерима, генерисани PO ће да употреби кодирање преведеног улазног "
+"документа."
 
 #. type: =item
 #: po4a-gettextize:12 po4a-normalize:19 po4a-translate:10 po4a-updatepo:12
@@ -2583,13 +2569,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:65
-#, fuzzy
-#| msgid ""
-#| "Other issues may come from duplicated strings in either the original or "
-#| "translation. Duplicated strings are merged in PO files, with two "
-#| "references.  This constitutes a difficulty for the gettexization "
-#| "algorithm, that is a simple one to one pairing between the B<msgid>s of "
-#| "both the master and the localized files."
 msgid ""
 "Other issues may come from duplicated strings in either the original or "
 "translation. Duplicated strings are merged in PO files, with two "
@@ -2602,7 +2581,10 @@ msgstr ""
 "Дуплирани стрингови било у оригиналу или преводу могу да проузрокују и друге "
 "проблеме. Дуплирани стрингови се спајају у PO фајлове са две референце. То "
 "представља тешкоћу за алгоритам gettextизације, који користи просто један на "
-"један упаривање B<msgid> стрингова у мастер и локализованим фајловима."
+"један упаривање B<msgid> стрингова у мастер и локализованим фајловима. "
+"Међутим, сматра се да се скорашње верзије po4a исправно носе са дуплираним "
+"стринговима, тако да би требало да пријавите евентуални преостали проблем на "
+"који наиђете."
 
 #. type: =head2
 #: po4a-gettextize:66
@@ -7994,10 +7976,8 @@ msgstr "Враћа msgid са датом позицијом у документ�
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:92
-#, fuzzy
-#| msgid "msgid_doc($)"
 msgid "type_doc($)"
-msgstr "msgid_doc($)"
+msgstr "type_doc($)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:93
@@ -8007,6 +7987,10 @@ msgid ""
 "{$msgid}{'type'} because the later location may be overwritten by another "
 "type when the $msgid is duplicated in the master document."
 msgstr ""
+"Враћа тип msgid стринга на задатој позицији у документу. Ово је вероватно "
+"корисно само код gettextизације и чува се одвојено од {$msgid}{'type'} јер "
+"ову локацују може да препише неки други тип када се у мастер документу $"
+"msgid дуплира."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:94
