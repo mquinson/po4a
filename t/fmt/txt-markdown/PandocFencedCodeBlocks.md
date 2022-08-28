@@ -47,3 +47,20 @@ qsort []     = []
 qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
                qsort (filter (>= x) xs)
 ```
+
+This first pandoc fenced_div is non-nested.
+
+::::: {#special .sidebar}
+Here is a paragraph.
+
+And another.
+:::::
+The second pandoc fenced div is nested.
+
+::: Warning ::::::
+This is a warning.
+
+::: Danger
+This is a warning within a warning.
+:::
+::::::::::::::::::

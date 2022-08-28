@@ -739,6 +739,50 @@ sub parse_markdown {
         $self->pushline($nextline);
         $paragraph        = "";
         $end_of_paragraph = 1;
+    } elsif ( $line =~ /^([ ]{0,3})(([:])\3{2,})(\s*)([^`]*)\s*$/ ) {
+        my $fence_space_before  = $1;
+        my $fence               = $2;
+        my $fencechar           = $3;
+        my $fence_space_between = $4;
+        my $info_string         = $5;
+#        print STDERR "----------------\n";
+#        print STDERR "line: $line\n";
+#        print STDERR "fence: '$fence'; fencechar: '$fencechar'; info: '$info_string'\n";
+
+        # fenced div block (fenced with ::: where code blocks are fenced with ` or ~)
+        # https://pandoc.org/MANUAL.html#divs-and-spans
+        my $type = "Fenced div block" . ( $info_string ? " ($info_string)" : "" );
+        do_paragraph( $self, $paragraph, $wrapped_mode );
+        $wrapped_mode = 0;
+        $paragraph    = "";
+        $self->pushline("$line\n");
+        do_paragraph( $self, $paragraph, $wrapped_mode );
+        $paragraph = "";
+
+        my $lvl = 1;
+        while ( $lvl > 0) {
+            my ( $nextline, $nextref ) = $self->shiftline();
+            # TODO: Uncomment this once the string freeze is over
+            # die wrap_mod("po4a::text",
+            #             dgettext("po4a",
+            #                      "Malformed fenced div block: Block starting at %s not closed before the end of the file."), $ref)
+            #    unless (defined($nextline));
+#            print STDERR "within $lvl: $nextline";
+            if ($nextline =~ /^\s*:::+\s*$/ ) {
+                $lvl--;
+            } elsif ($nextline =~ /^([ ]{0,3})(([:])\3{2,})(\s*)([^`]*)\s*$/ ) {
+                $lvl++;
+            }
+            if ($lvl > 0) {
+                $paragraph .= $nextline;
+            } else {
+                do_paragraph( $self, $paragraph, $wrapped_mode, $type );
+                $self->pushline($nextline);
+            }
+        }
+        $paragraph        = "";
+        $end_of_paragraph = 1;
+#        print STDERR "Out now ------------\n";
     } elsif (
         $line =~ /^\s*\[\[\!\S+\s*$/       # macro begin
         or $line =~ /^\s*"""\s*\]\]\s*$/
