@@ -11,7 +11,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION = "0.68";
+$VERSION = "0.69-alpha";
 @ISA     = qw(DynaLoader);
 @EXPORT  = qw(new process translate
   read write readpo writepo
