@@ -1720,7 +1720,7 @@ attached to the following string.
 =item Some commands should be added to the environment stack
 
 These commands should be specified by couples.
-This could allow to specify commands beginning or ending a verbatim
+This can be used to specify commands beginning or ending a verbatim
 environment.
 
 =item Others

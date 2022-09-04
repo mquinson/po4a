@@ -173,8 +173,8 @@ This mdoc issue can also be solved with an addendum like this one:
 
 =back
 
-The following options permit to specify the behavior of a new macro
-(defined with a .de request), or of a macro not supported by po4a.
+The following options specify the behavior of a user-defined macro
+(with a .de request), or of a classical macro that is not supported by po4a.
 They take as argument a comma-separated list of macros.
 For example:
 

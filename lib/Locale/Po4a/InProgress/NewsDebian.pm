@@ -139,7 +139,7 @@ sub parse {
 This module is loosely inspired from /usr/lib/dpkg/parsechangelog/debian, which is:
 
  Copyright © 1996 Ian Jackson.  This is free software; see the GNU
- General Public Licence version 2 or later for copying conditions.  There
+ General Public License version 2 or later for copying conditions.  There
  is NO warranty.
 
 The adaptation for po4a was done by:
