@@ -234,7 +234,7 @@ sub ACTION_man {
         }
         $parser->parse_from_file ($file, $out);
 
-        system("gzip -9 -f $out") and die;
+        system("gzip -9 -n -f $out") and die;
         unlink "$file" || die;
     }
 
@@ -253,7 +253,7 @@ sub ACTION_man {
             print "Convert $outdir/$outfile.$section (online docbook.xsl file). ";
             system("xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file") and die;
             }
-                system ("gzip -9 -f $outdir/$outfile.$section") and die;
+                system ("gzip -9 -n -f $outdir/$outfile.$section") and die;
             }
             unlink "$file" || die;
         }
