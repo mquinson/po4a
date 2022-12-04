@@ -6,13 +6,13 @@
 # itronic
 # Pieter Maes <rest.in.pieces.pm@gmail.com>, 2007.
 # Frans Spiesschaert <Frans.Spiesschaert@yucom.be>, 2015, 2017.
-# Frans Spiesschaert <frans.spiesschaert@gmail.com>, 2020, 2021.
+# Frans Spiesschaert <frans.spiesschaert@gmail.com>, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a_0.52-1\n"
-"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
 "POT-Creation-Date: 2022-08-23 12:32+0200\n"
-"PO-Revision-Date: 2021-12-24 21:51+0000\n"
+"PO-Revision-Date: 2022-09-30 19:22+0000\n"
 "Last-Translator: Frans Spiesschaert <frans.spiesschaert@gmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/po4a/po4a/nl/>\n"
 "Language: nl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.10.1\n"
+"X-Generator: Weblate 4.14.1\n"
 "X-Rosetta-Version: 0.1\n"
 "X-Rosetta-Export-Date: 2007-08-12 16:08:40+0000\n"
 
@@ -378,6 +378,16 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Op deze pagina wordt een nieuwe macro '%s' met '%s' (inline commentaar: %s) "
+"gedefinieerd, maar u hebt niet opgegeven wat het verwachte po4a-gedrag is "
+"wanneer '%s' wordt gebruikt. U zult een foutmelding krijgen als deze macro "
+"daadwerkelijk in uw pagina wordt gebruikt. \n"
+"Voeg uw macro toe aan een van de parameters '%s', '%s', '%s', '%s', '%s' of "
+"'%s' om problemen te voorkomen. \n"
+"Door bijvoorbeeld '%s' door te geven aan po4a wordt ervoor gezorgd dat de "
+"gedefinieerde macro verborgen blijft voor vertalers. \n"
+"Raadpleeg de manpagina van Locale::Po4a::Man voor meer informatie over deze "
+"parameters.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2256
 #, perl-format
@@ -392,6 +402,16 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Op deze pagina wordt een nieuwe macro '%s' met '%s' gedefinieerd, maar u "
+"hebt niet opgegeven wat het verwachte po4a-gedrag is wanneer '%s' wordt "
+"gebruikt. U zult een foutmelding krijgen als deze macro daadwerkelijk in uw "
+"pagina wordt gebruikt. \n"
+"Voeg uw macro toe aan een van de parameters '%s', '%s', '%s', '%s', '%s' of "
+"'%s' om problemen te voorkomen. \n"
+"Door bijvoorbeeld '%s' door te geven aan po4a wordt ervoor gezorgd dat de "
+"gedefinieerde macro verborgen blijft voor vertalers. \n"
+"Raadpleeg de manpagina van Locale::Po4a::Man voor meer informatie over deze "
+"parameters.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2294
 #, perl-format
@@ -402,6 +422,11 @@ msgid ""
 "macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Op deze pagina wordt een nieuwe macro gedefinieerd met '%s'. Aangezien po4a "
+"geen echte groff-parser is, wordt dit niet ondersteund. De optie '%s' zorgt "
+"ervoor dat deze macro's woordelijk worden gekopieerd in het vertaalde "
+"bestand, maar dit is niet erg robuust. '%s' toont deze macro's aan de "
+"vertalers, maar groff-macro's zijn niet gebruiksvriendelijk voor vertalers."
 
 #: ../../lib/Locale/Po4a/Man.pm:2362
 msgid "The .ie macro must be followed by a .el macro."
@@ -416,6 +441,12 @@ msgid ""
 "these macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Op deze pagina wordt een voorwaardelijke constructie gebruikt met '%s'. "
+"Aangezien po4a geen echte groff-parser is, wordt dit standaard niet "
+"ondersteund. De optie '%s' zorgt ervoor dat deze macro's woordelijk worden "
+"gekopieerd in het vertaalde bestand, maar dit is niet erg robuust. '%s' "
+"toont deze macro's aan de vertalers, maar groff-macro's zijn niet "
+"gebruiksvriendelijk voor vertalers."
 
 #: ../../lib/Locale/Po4a/Man.pm:2450
 #, perl-format
@@ -811,6 +842,9 @@ msgid ""
 "'yfm_lenient' option for a stricter behavior.\n"
 "Ignored error: %s"
 msgstr ""
+"Verwerking, zelfs als de YAML front matter niet kon worden verwerkt. "
+"Verwijder de optie 'yfm_lenient' voor een strenger gedrag. \n"
+"Genegeerde foutmelding: %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:635
 #, perl-format
@@ -821,6 +855,11 @@ msgid ""
 "Error: %s\n"
 "Content of the YFM: %s"
 msgstr ""
+"Kon de YAML front matter niet uit het bestand halen. Als u geen YAML front "
+"mater wilde toevoegen, maar een horizontale lijn, gebruik dan eerder '----', "
+"of geef de optie 'yfm_lenient' door. \n"
+"Foutmelding: %s\n"
+"Inhoud van de YFM: %s"
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:513
 #, perl-format
@@ -1541,6 +1580,13 @@ msgid ""
 "convenient way of using po4a is to write a po4a.conf file and use the "
 "integrated po4a(1) program."
 msgstr ""
+"U moet hetzelfde aantal hoofdbestanden en gelokaliseerde bestanden leveren "
+"om ze te synchroniseren, aangezien po4a-gettextize bedoeld is om "
+"hoofdbestanden en bestaande vroegere vertalingen te synchroniseren. Als u "
+"alleen POT-bestanden uit uw hoofdbestanden wilt uitpakken, gebruik dan po4a-"
+"updatepo. Merk op dat de handigste manier om po4a te gebruiken is om een po4a"
+".conf-bestand te schrijven en het geïntegreerde programma po4a(1) te "
+"gebruiken."
 
 #: ../../po4a-gettextize:585
 msgid ""
@@ -1549,18 +1595,26 @@ msgid ""
 "po4a, you should use the po4a(1) program to maintain it and update your "
 "translations."
 msgstr ""
+"po4a-gettextize is alleen nuttig om eerder bestaande vertalingen om te "
+"zetten naar een op PO gebaseerde werkwijze. Zodra u uw project met succes "
+"naar po4a hebt omgezet, moet u het programma po4a(1) gebruiken om het te "
+"onderhouden en uw vertalingen bij te werken."
 
 #: ../../po4a-gettextize:629
 msgid ""
 "Temporary master and localized POT files dumped to po4atemp.master.po and "
 "po4atemp.localized.po"
 msgstr ""
+"Tijdelijke hoofd- en gelokaliseerde POT-bestanden gedumpt naar "
+"po4atemp.master.po en po4atemp.localized.po"
 
 #: ../../po4a-normalize:173
 msgid ""
 "po4a-normalize is mostly useful to debug po4a itself. Users are advised to "
 "use the po4a(1) program instead."
 msgstr ""
+"po4a-normalize is vooral nuttig om po4a zelf te debuggen. Gebruikers wordt "
+"aangeraden om in plaats daarvan het programma po4a(1) te gebruiken."
 
 #: ../../po4a-normalize:189
 #, perl-format
@@ -1582,6 +1636,8 @@ msgid ""
 "po4a-translate is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-translate is verouderd. Het samengevoegde programma po4a(1) is handiger "
+"en minder foutgevoelig."
 
 #: ../../po4a-translate:288
 #, perl-format
@@ -1601,6 +1657,8 @@ msgid ""
 "po4a-updatepo is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-updatepo is verouderd. Het samengevoegde programma po4a(1) is handiger "
+"en minder foutgevoelig."
 
 #: ../../po4a-updatepo:282
 msgid "po4a-updatepo can't take the input PO from stdin."
