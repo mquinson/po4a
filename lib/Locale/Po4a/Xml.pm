@@ -1071,7 +1071,7 @@ sub CDATA_trans {
 sub tag_break_alone {
     my ( $self, @tag ) = @_;
     my $struct = $self->get_path( $self->get_tag_name(@tag) );
-    if ( $self->get_translate_options($struct) =~ m/i/ ) {
+    if ( $self->get_translate_options($struct) =~ m/[ip]/ ) {
         return 0;
     } else {
         return 1;
@@ -1701,140 +1701,16 @@ sub treat_content {
             # Append or remove the opening/closing tag from the tag path
             if ( $tag_types[$type]->{'end'} eq "" ) {
                 if ( $tag_types[$type]->{'beginning'} eq "" ) {
-
-                    # tag is <tag >
-                    my $cur_tag_name = $self->get_tag_name(@tag);
-                    my $t_opts       = $self->get_translate_options( $self->get_path($cur_tag_name) );
-                    if ( $t_opts =~ m/p/ ) {
-
-                        # tag has a placeholder option, append a "<placeholder
-                        # type=cur_tag_name id =id_index>" tag to @paragraph.
-                        # using $self->get_tag_name(@tag) as cur_tag_name and
-                        # using $#{$save_holders[$#save_holders]->{'sub_translations'}} + 1
-                        # as id_index
-                        my $last_holder = $save_holders[$#save_holders];
-                        my $placeholder_str =
-                            "<placeholder type=\""
-                          . $cur_tag_name
-                          . "\" id=\""
-                          . ( $#{ $last_holder->{'sub_translations'} } + 1 ) . "\"/>";
-                        push @paragraph, ( $placeholder_str, $text[1] );
-                        my @saved_paragraph = @paragraph;
-
-                        $last_holder->{'paragraph'} = \@saved_paragraph;
-
-                        # Then we must push a new holder into @save_holders
-                        my @new_paragraph    = ();
-                        my @sub_translations = ();
-                        my %folded_attributes;
-                        my %new_holder = (
-                            'paragraph'         => \@new_paragraph,
-                            'open'              => $self->join_lines(@text),
-                            'translation'       => "",
-                            'close'             => undef,
-                            'sub_translations'  => \@sub_translations,
-                            'folded_attributes' => \%folded_attributes
-                        );
-                        push @save_holders, \%new_holder;
-
-                        # reset @text holding the whole tag with attributes
-                        # to empty
-                        @text = ();
-
-                        # reset the current @paragraph (for the current holder)
-                        # to empty.
-                        @paragraph = ();
-
-                    } elsif ( $t_opts =~ m/f/ ) {
-
-                        # tag has a "f" option for folded attributes
-                        my $tag_full = $self->join_lines(@text);
-                        my $tag_ref  = $text[1];
-                        if ( $tag_full =~ m/^<\s*\S+\s+\S.*>$/s ) {
-                            my $holder = $save_holders[$#save_holders];
-                            my $id     = 0;
-                            foreach ( keys %{ $holder->{folded_attributes} } ) {
-                                $id = $_ + 1 if ( $_ >= $id );
-                            }
-                            $holder->{folded_attributes}->{$id} = $tag_full;
-
-                            @text = ( "<$cur_tag_name po4a-id=$id>", $tag_ref );
-                        }
-                    }
-                    unless ( $t_opts =~ m/n/ ) {
-
-                        # unless "n" for custom (such as non-XML HTML) tag, update @path
-                        push @path, $cur_tag_name;
-                    }
+                    $self->treat_content_open_tag(\@tag, \@paragraph, \@text);
                 } elsif ( $tag_types[$type]->{'beginning'} eq "/" ) {
-
-                    # tag is </tag>
-
-                    # Verify this closing tag matches with the last opening tag
-                    # while removing the last opening tag in @path
-                    my $test = pop @path;
-                    my $name = $self->get_tag_name(@tag);
-                    if ( !defined($test)
-                        || $test ne $name )
-                    {
-                        my $ontagerror = $self->{options}{'ontagerror'};
-                        if ( $ontagerror eq "warn" ) {
-                            warn wrap_ref_mod(
-                                $tag[1],
-                                "po4a::xml",
-                                dgettext(
-                                    "po4a",
-                                    "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"
-                                ),
-                                $name
-                            );
-                        } elsif ( $ontagerror ne "silent" ) {
-                            die wrap_ref_mod(
-                                $tag[1],
-                                "po4a::xml",
-                                dgettext(
-                                    "po4a", "Unexpected closing tag </%s> found. The main document may be wrong."
-                                ),
-                                $name
-                            );
-                        }
-                    }
-
-                    if ( $self->get_translate_options( $self->get_path( $self->get_tag_name(@tag) ) ) =~ m/p/ ) {
-
-                        # this closing tag has a placeholder option
-
-                        # revert @path to include this tag for translate_paragraph
-                        push @path, $self->get_tag_name(@tag);
-
-                        # Now translate this paragraph if needed.
-                        # This will call pushline and append the
-                        # translation to the current holder's translation.
-                        $self->translate_paragraph(@paragraph);
-
-                        # remove this tag from @path
-                        pop @path;
-
-                        # Now that this holder is closed, we can remove
-                        # the holder from the stack.
-                        my $holder = pop @save_holders;
-
-                        # We need to keep the translation of this holder
-                        my $translation = $holder->{'open'} . $holder->{'translation'};
-                        $translation .= $self->join_lines(@text);
-
-                        @text = ();
-
-                        # Then we store the translation in the previous
-                        # holder's sub_translations array
-                        my $previous_holder = $save_holders[$#save_holders];
-                        push @{ $previous_holder->{'sub_translations'} }, $translation;
-
-                        # We also need to restore the @paragraph array, as
-                        # it was before we encountered the holder.
-                        @paragraph = @{ $previous_holder->{'paragraph'} };
-                    }
+                    $self->treat_content_close_tag(\@tag, \@paragraph, \@text);
                 }
+            } elsif ( $tag_types[$type]->{'beginning'} eq ""
+                && $tag_types[$type]->{'end'} eq "/" ) {
+                # As for empty-element tag,
+                # treat as if both open and close tags exist
+                $self->treat_content_open_tag(\@tag, \@paragraph, \@text);
+                $self->treat_content_close_tag(\@tag, \@paragraph, \@text);
             }
             push @paragraph, @text;
         }
@@ -1907,6 +1783,174 @@ sub treat_content {
     }
     return $eof;
 }
+
+# Processes open tags during getting texts.
+# Performs special process for placeholder and attribute folding.
+sub treat_content_open_tag {
+    my $self = shift;
+    my ($tag, $paragraph, $text) = @_;
+
+    # tag is <tag >
+    my $cur_tag_name = $self->get_tag_name(@$tag);
+    my $t_opts       = $self->get_translate_options( $self->get_path($cur_tag_name) );
+    if ( $t_opts =~ m/p/ ) {
+
+        # tag has a placeholder option, append a "<placeholder
+        # type=cur_tag_name id =id_index>" tag to @$paragraph.
+        # using $self->get_tag_name(@$tag) as cur_tag_name and
+        # using $#{$save_holders[$#save_holders]->{'sub_translations'}} + 1
+        # as id_index
+        my $last_holder = $save_holders[$#save_holders];
+        my $placeholder_str =
+            "<placeholder type=\""
+            . $cur_tag_name
+            . "\" id=\""
+            . ( $#{ $last_holder->{'sub_translations'} } + 1 ) . "\"/>";
+        push @$paragraph, ( $placeholder_str, $text->[1] );
+        my @saved_paragraph = @$paragraph;
+
+        $last_holder->{'paragraph'} = \@saved_paragraph;
+
+        # make attributes be able to be translated
+        my $open_tag = $self->join_lines(@$text);
+        if ($open_tag =~ m/^<(\s*)(\S+\s+\S.*)>$/s) {
+            my ($ws, $tag_inner) = ($1, $2);
+            $tag_inner =~ s|(\s*/)$||;
+            my $postfix = $1;
+            push @path, $cur_tag_name;
+            $open_tag = "<" . $ws . $self->treat_attributes($tag_inner)
+                . $postfix . ">";
+            pop @path;
+        }
+
+        # Then we must push a new holder into @save_holders
+        my @new_paragraph    = ();
+        my @sub_translations = ();
+        my %folded_attributes;
+        my %new_holder = (
+            'paragraph'         => \@new_paragraph,
+            'open'              => $open_tag,
+            'translation'       => "",
+            'close'             => undef,
+            'sub_translations'  => \@sub_translations,
+            'folded_attributes' => \%folded_attributes
+        );
+        push @save_holders, \%new_holder;
+
+        # reset @$text holding the whole tag with attributes
+        # to empty
+        @$text = ();
+
+        # reset the current @$paragraph (for the current holder)
+        # to empty.
+        @$paragraph = ();
+
+    } elsif ( $t_opts =~ m/f/ ) {
+
+        # tag has a "f" option for folded attributes
+        my $tag_full = $self->join_lines(@$text);
+        my $tag_ref  = $text->[1];
+        if ( $tag_full =~ m/^<(\s*)(\S+\s+\S.*)>$/s ) {
+            my ($ws, $tag_inner) = ($1, $2);
+            my $holder = $save_holders[$#save_holders];
+            my $id     = 0;
+            foreach ( keys %{ $holder->{folded_attributes} } ) {
+                $id = $_ + 1 if ( $_ >= $id );
+            }
+
+            # make attributes be able to be translated
+            $tag_inner =~ s|(\s*/)$||;
+            my $postfix = $1;
+            push @path, $cur_tag_name;
+            $holder->{folded_attributes}->{$id} =
+                "<" . $ws . $self->treat_attributes($tag_inner)
+                . $postfix . ">";
+            pop @path;
+
+            @$text = ( "<$cur_tag_name po4a-id=$id>", $tag_ref );
+        }
+    }
+    unless ( $t_opts =~ m/n/ ) {
+
+        # unless "n" for custom (such as non-XML HTML) tag, update @path
+        push @path, $cur_tag_name;
+    }
+}
+
+# Processes close tags during getting texts.
+# Performs special process for placeholder.
+sub treat_content_close_tag {
+    my $self = shift;
+    my ($tag, $paragraph, $text) = @_;
+
+    # tag is </tag>
+
+    # Verify this closing tag matches with the last opening tag
+    # while removing the last opening tag in @path
+    my $test = pop @path;
+    my $name = $self->get_tag_name(@$tag);
+    if ( !defined($test)
+        || $test ne $name )
+    {
+        my $ontagerror = $self->{options}{'ontagerror'};
+        if ( $ontagerror eq "warn" ) {
+            warn wrap_ref_mod(
+                $tag->[1],
+                "po4a::xml",
+                dgettext(
+                    "po4a",
+                    "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"
+                ),
+                $name
+            );
+        } elsif ( $ontagerror ne "silent" ) {
+            die wrap_ref_mod(
+                $tag->[1],
+                "po4a::xml",
+                dgettext(
+                    "po4a", "Unexpected closing tag </%s> found. The main document may be wrong."
+                ),
+                $name
+            );
+        }
+    }
+
+    if ( $self->get_translate_options( $self->get_path( $self->get_tag_name(@$tag) ) ) =~ m/p/ ) {
+
+        # this closing tag has a placeholder option
+
+        # revert @path to include this tag for translate_paragraph
+        push @path, $self->get_tag_name(@$tag);
+
+        # Now translate this paragraph if needed.
+        # This will call pushline and append the
+        # translation to the current holder's translation.
+        $self->translate_paragraph(@$paragraph);
+
+        # remove this tag from @path
+        pop @path;
+
+        # Now that this holder is closed, we can remove
+        # the holder from the stack.
+        my $holder = pop @save_holders;
+
+        # We need to keep the translation of this holder
+        my $translation = $holder->{'open'} . $holder->{'translation'};
+        $translation .= $self->join_lines(@$text);
+
+        @$text = ();
+
+        # Then we store the translation in the previous
+        # holder's sub_translations array
+        my $previous_holder = $save_holders[$#save_holders];
+        push @{ $previous_holder->{'sub_translations'} }, $translation;
+
+        # We also need to restore the @$paragraph array, as
+        # it was before we encountered the holder.
+        @$paragraph = @{ $previous_holder->{'paragraph'} };
+    }
+}
+
 
 # Translate a @paragraph array of (string, reference).
 # The $translate argument indicates if the strings must be translated or
