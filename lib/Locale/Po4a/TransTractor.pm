@@ -1314,6 +1314,8 @@ sub handle_yaml {
                         $self->pushline("$header $el\n");
                     } elsif ( $el =~ /^\[.*\]$/ ) {    # Do not quote the lists either
                         $self->pushline("$header $el\n");
+                    } elsif ( $el =~ "false" or $el =~ "true" ) {   # Do not quote booleans either
+                        $self->pushline("$header $el\n");
                     } else {
                         $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );
                     }
