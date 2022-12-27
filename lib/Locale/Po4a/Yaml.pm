@@ -29,7 +29,7 @@ These are this module's particular options:
 =item B<keys>
 
 Space-separated list of hash keys to process for extraction, all
-other keys are skipped.  Keys are matched with a case-insensitive match.
+other keys are skipped.  Keys are matched with a case-sensitive match.
 If B<paths> and B<keys> are used together, values are included if they are
 matched by at least one of the options.
 Arrays values are always returned unless the B<skip_array> option is
@@ -38,7 +38,7 @@ provided.
 =item B<paths>
 
 Comma-separated list of hash paths to process for extraction, all
-other paths are skipped. Paths are matched with a case-insensitive match.
+other paths are skipped. Paths are matched with a case-sensitive match.
 If B<paths> and B<keys> are used together, values are included if they are
 matched by at least one of the options.
 Arrays values are always returned unless the B<skip_array> option is

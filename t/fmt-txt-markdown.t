@@ -54,6 +54,12 @@ push @tests,
     'input'   => "fmt/txt-markdown/YamlFrontMatter_Options.md",
   },
   {
+    'doc'     => "That the yfm_keys and yfm_paths options actually work",
+    'format'  => 'text',
+    'options' => "-o markdown -o yfm_skip_array -o yfm_keys='   subtitle     ,paragraph' -o yfm_paths='people title' ",
+    'input'   => "fmt/txt-markdown/YamlFrontMatter_KeysPaths.md",
+  },
+  {
     'doc'     => "Allow markdown files to contain two horizontal rulers that do not denote a YFM.",
     'format'  => 'text',
     'options' => "-o markdown -o yfm_lenient ",

@@ -149,9 +149,10 @@ my $markdown = 0;
 =item B<yfm_keys> (markdown-only)
 
 Comma-separated list of keys to process for translation in the YAML Front Matter
-section. All other keys are skipped. Keys are matched with a case-insensitive
-match. Array values are always translated, unless the B<yfm_skip_array> option
-is provided.
+section. All other keys are skipped. Keys are matched with a case-sensitive
+match. If B<yfm_paths> and B<yfm_keys> are used together, values are included if
+they are matched by at least one of the options. Array values are always translated,
+unless the B<yfm_skip_array> option is provided.
 
 =cut
 
@@ -167,6 +168,21 @@ ruler.
 =cut
 
 my $yfm_lenient = 0;
+
+=item B<yfm_paths> (markdown only)
+
+=item B<yfm_paths>
+
+Comma-separated list of hash paths to process for extraction in the YAML
+Front Matter section, all other paths are skipped. Paths are matched with a
+case-sensitive match. If B<yfm_paths> and B<yfm_keys> are used together,
+values are included if they are matched by at least one of the options.
+Arrays values are always returned unless the B<yfm_skip_array> option is
+provided.
+
+=cut
+
+my %yfm_paths = ();
 
 =item B<yfm_skip_array> (markdown-only)
 
@@ -213,6 +229,7 @@ sub initialize {
     $self->{options}{'markdown'}        = 1;
     $self->{options}{'yfm_keys'}        = '';
     $self->{options}{'yfm_lenient'}     = 0;
+    $self->{options}{'yfm_paths'}       = '';
     $self->{options}{'yfm_skip_array'}  = 0;
     $self->{options}{'nobullets'}       = 0;
     $self->{options}{'keyvalue'}        = 1;
@@ -242,6 +259,10 @@ sub initialize {
             $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
             $yfm_keys{$_} = 1
         } ( split( ',', $self->{options}{'yfm_keys'} ) );
+        map {
+            $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
+            $yfm_paths{$_} = 1
+        } ( split( ',', $self->{options}{'yfm_paths'} ) );
 
         #        map { print STDERR "key $_\n"; } (keys %yfm_keys);
         $yfm_skip_array = $self->{options}{'yfm_skip_array'};
@@ -640,7 +661,6 @@ sub parse_markdown_yaml_front_matter {
         }
     }
 
-    my %yfm_paths = ();
     $self->handle_yaml( 1, $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
     $self->pushline("---\n");
     return 1;    # Valid YAML
