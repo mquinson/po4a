@@ -1,6 +1,6 @@
 # Introduction to Po4a
 
-[![Build Status](https://img.shields.io/github/workflow/status/mquinson/po4a/Build%20on%20Linux%20CI?style=flat-square)](https://github.com/mquinson/po4a/actions/workflows/linux.yml)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/mquinson/po4a/linux.yml?style=flat-square&branch=main)](https://github.com/mquinson/po4a/actions/workflows/linux.yml)
 [![First Timers Friendly](https://img.shields.io/badge/Beginners-Welcome-brightgreen?style=flat-square)](https://www.firsttimersonly.com)
 
 The goal of po4a (PO for anything) project is to ease translations (and
