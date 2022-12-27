@@ -615,7 +615,7 @@ sub parse_markdown_yaml_front_matter {
                 "po4a::text",
                 dgettext(
                     "po4a",
-                    "Processing even if the YAML Front Matter could not be parsed. Remove the 'yfm_lenient' option for a stricter behavior.\nIgnored error: %s"
+                    "Proceeding even if the YAML Front Matter could not be parsed. Remove the 'yfm_lenient' option for a stricter behavior.\nIgnored error: %s"
                 ),
                 $yamlres
             );
@@ -640,7 +640,9 @@ sub parse_markdown_yaml_front_matter {
         }
     }
 
-    $self->handle_yaml( $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array );
+    my %yfm_paths = ();
+    $self->handle_yaml( 1, $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
+    $self->pushline("---\n");
     return 1;    # Valid YAML
 }
 

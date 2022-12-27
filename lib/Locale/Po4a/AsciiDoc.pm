@@ -406,7 +406,9 @@ sub parse {
         my $yamlarray = YAML::Tiny->read_string($yfm)
           || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
 
-        $self->handle_yaml( $ref, $yamlarray, \%yfm_keys, $yfm_skip_array );
+        my %yfm_paths = ();
+        $self->handle_yaml( 1, $ref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
+        $self->pushline("---\n");
 
         ( $line, $ref ) = $self->shiftline();    # Pass the final '---'
     }

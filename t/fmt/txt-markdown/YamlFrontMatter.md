@@ -13,10 +13,12 @@ include_newlines: |
  will appear these three
  lines of poetry
 list: ["freebsd", "netbsd", "general"]
+bool: false
 people:
   - 
     name: John D'vloper
     job: Developer
+    alive: true
     hobbies:
       - Amateur radio
       - Pet adoption & fostering
