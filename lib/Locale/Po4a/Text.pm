@@ -766,7 +766,7 @@ sub parse_markdown {
         my $fence               = $2;
         my $fencechar           = $3;
         my $fence_space_between = $4;
-        my $info_string         = $5;
+        my @info_string         = ($5);
 
         #        print STDERR "----------------\n";
         #        print STDERR "line: $line\n";
@@ -774,7 +774,8 @@ sub parse_markdown {
 
         # fenced div block (fenced with ::: where code blocks are fenced with ` or ~)
         # https://pandoc.org/MANUAL.html#divs-and-spans
-        my $type = "Fenced div block" . ( $info_string ? " ($info_string)" : "" );
+        my $info = join( "|" , map {chomp $_;$_} @info_string );
+        my $type = "Fenced div block" . ( $info ? " ($info)" : "" );
         do_paragraph( $self, $paragraph, $wrapped_mode );
         $wrapped_mode = 0;
         $paragraph    = "";
@@ -795,15 +796,27 @@ sub parse_markdown {
 
             #            print STDERR "within $lvl: $nextline";
             if ( $nextline =~ /^\s*:::+\s*$/ ) {
-                $lvl--;
-            } elsif ( $nextline =~ /^([ ]{0,3})(([:])\3{2,})(\s*)([^`]*)\s*$/ ) {
-                $lvl++;
-            }
-            if ( $lvl > 0 ) {
-                $paragraph .= $nextline;
-            } else {
-                do_paragraph( $self, $paragraph, $wrapped_mode, $type );
+                my $info = join( "|" , map {chomp $_;$_} @info_string );
+                $type = "Fenced div block" . ( $info ? " ($info)" : "" );
+                if ($paragraph ne "") {
+                    do_paragraph( $self, $paragraph, $wrapped_mode, $type );
+                    $paragraph        = "";
+                }
                 $self->pushline($nextline);
+                $lvl--;
+                while (scalar @info_string > $lvl) {
+                    pop @info_string;
+                }
+            } elsif ( $nextline =~ /^([ ]{0,3})(([:])\3{2,})(\s*)([^`]*)\s*$/ ) {
+                if ($paragraph ne "") {
+                    do_paragraph( $self, $paragraph, $wrapped_mode, $type );
+                    $paragraph        = "";
+                }
+                $self->pushline($nextline);
+                push @info_string, $5;
+                $lvl++;
+            } else {
+                $paragraph .= $nextline;
             }
         }
         $paragraph        = "";
