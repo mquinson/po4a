@@ -60,6 +60,12 @@ push @tests,
     'format'  => 'asciidoc',
     'options' => "-o yfm_skip_array -o yfm_keys='title , subtitle,paragraph'",
     'input'   => "fmt/asciidoc/YamlFrontMatter_Option.adoc",
+  },
+  {
+    'doc'     => "That the yfm_keys and yfm_paths options actually work",
+    'format'  => 'asciidoc',
+    'options' => "-o yfm_skip_array -o yfm_keys='subtitle  , paragraph' -o yfm_paths='people title'",
+    'input'   => "fmt/asciidoc/YamlFrontMatter_KeysPaths.adoc",
   };
 
 run_all_tests(@tests);

@@ -107,16 +107,17 @@ Switch parsing rules to compatibility with different tools. Available options ar
 "asciidoc" or "asciidoctor". Asciidoctor has stricter parsing rules, such as
 equality of length of opening and closing block fences.
 
-=item B<yfm_keys>
-
-Comma-separated list of keys to process for translation in the YAML Front Matter
-section. All other keys are skipped. Keys are matched with a case-insensitive
-match. Array values are always translated, unless the B<yfm_skip_array> option
-is provided.
-
 =item B<nolinting>
 
 Disable linting messages. When the source code cannot be fixed for clearer document structure, these messages are useless.
+
+=item B<yfm_keys>
+
+Comma-separated list of keys to process for translation in the YAML Front Matter
+section. All other keys are skipped. Keys are matched with a case-sensitive
+match. If B<yfm_paths> and B<yfm_keys> are used together, values are included if
+they are matched by at least one of the options. Array values are always translated,
+unless the B<yfm_skip_array> option is provided.
 
 =cut
 
@@ -129,6 +130,19 @@ Do not translate array values in the YAML Front Matter section.
 =cut
 
 my $yfm_skip_array = 0;
+
+=item B<yfm_paths>
+
+Comma-separated list of hash paths to process for extraction in the YAML
+Front Matter section, all other paths are skipped. Paths are matched with a
+case-sensitive match. If B<yfm_paths> and B<yfm_keys> are used together,
+values are included if they are matched by at least one of the options.
+Arrays values are always returned unless the B<yfm_skip_array> option is
+provided.
+
+=cut
+
+my %yfm_paths = ();
 
 =back
 
@@ -205,6 +219,7 @@ sub initialize {
     $self->{options}{'compat'}         = 'asciidoc';
     $self->{options}{'yfm_keys'}       = '';
     $self->{options}{'yfm_skip_array'} = 0;
+    $self->{options}{'yfm_paths'}      = '';
     $self->{options}{'nolinting'}      = 0;
 
     foreach my $opt ( keys %options ) {
@@ -228,8 +243,11 @@ sub initialize {
         $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
         $yfm_keys{$_} = 1
     } ( split( ',', $self->{options}{'yfm_keys'} ) );
+    map {
+        $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
+        $yfm_paths{$_} = 1
+    } ( split( ',', $self->{options}{'yfm_paths'} ) );
 
-    #        map { print STDERR "key $_\n"; } (keys %yfm_keys);
     $yfm_skip_array = $self->{options}{'yfm_skip_array'};
 
     $self->{translate} = {
@@ -406,7 +424,6 @@ sub parse {
         my $yamlarray = YAML::Tiny->read_string($yfm)
           || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
 
-        my %yfm_paths = ();
         $self->handle_yaml( 1, $ref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
         $self->pushline("---\n");
 
