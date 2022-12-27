@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: po4a 0.40-1\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-09-04 16:19+0200\n"
-"PO-Revision-Date: 2022-07-10 12:04+0000\n"
+"PO-Revision-Date: 2022-12-24 18:50+0000\n"
 "Last-Translator: Jérémie Tarot <silopolis@gmail.com>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/"
-">\n"
+"Language-Team: French <https://hosted.weblate.org/projects/po4a/po4a-doc/fr/>"
+"\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.13.1-dev\n"
+"X-Generator: Weblate 4.15.1-dev\n"
 
 # TRANSLATORS: put here the language code of your language
 #. type: Attribute 'xml:lang' of: <refentry>
@@ -352,12 +352,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
-#, fuzzy
-#| msgid ""
-#| "When you run the B<po4a> program with both the master documents and the "
-#| "PO files, it produces the translated documents by injecting the content's "
-#| "translation (found in the PO files) into the structure of the original "
-#| "master document."
 msgid ""
 "Upon execution, B<po4a> parses all documentation files specified in its "
 "configuration file. It updates the PO files (containing the translation) to "
@@ -365,10 +359,12 @@ msgid ""
 "documentation by injecting the content's translation (found in the PO files) "
 "into the structure of the original master document."
 msgstr ""
-"Quand vous lancez le programme B<po4a> avec et document maître et les "
-"fichiers de traduction, il produit les documents traduits en injectant la "
-"traduction du contenu (trouvé dans les fichiers PO) dans la structure du "
-"document maître original."
+"Lors de son exécution, B<po4a> analyse tous les fichiers de documentation "
+"spécifiés dans son fichier de configuration. Il met à jour les fichiers PO ("
+"contenant les traductions) pour refléter toute modification de la "
+"documentation, et génère une documentation traduite en injectant la "
+"traduction du contenu (trouvée dans les fichiers PO) dans la structure du "
+"document maître d'origine."
 
 #. type: textblock
 #: po4a:8
@@ -382,23 +378,19 @@ msgid ""
 "are extra content stating for example who did the translation and how to "
 "report bugs."
 msgstr ""
+"Dans un premier temps, les fichiers PO ne contiennent que les chaînes à "
+"traduire de la documentation originale. Ce format de fichier permet aux "
+"traducteurs de fournir manuellement une traduction pour chaque paragraphe "
+"extrait par B<po4a>. Si la documentation est modifiée après la traduction, "
+"B<po4a> marque les traductions correspondantes comme « floues » (« fuzzy ») "
+"dans le fichier PO pour demander une révision manuelle par les traducteurs. "
+"Les traducteurs peuvent également fournir ce que l'on appelle des « addenda »"
+", qui sont des contenus supplémentaires indiquant, par exemple, qui a "
+"effectué la traduction et comment signaler les bogues."
 
 #. type: verbatim
 #: po4a:9
-#, fuzzy, no-wrap
-#| msgid ""
-#| " master documents ---+---->-------->---------+\n"
-#| "  (doc authoring)    |                       |\n"
-#| "                     V   (po4a executions)   >-----+--> translations\n"
-#| "                     |                       |     |\n"
-#| " existing PO files -->--> updated PO files >-+     |\n"
-#| "      ^                            |               |\n"
-#| "      |                            V               |\n"
-#| "      +----------<---------<-------+               ^\n"
-#| "       (manual translation process)                |\n"
-#| "                                                   |\n"
-#| " addendum -->--------------------------------------+\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " master documents ---+---->-------->---------+\n"
 "  (doc authoring)    |                       |\n"
@@ -413,17 +405,17 @@ msgid ""
 " addendum -->--------------------------------------+\n"
 "\n"
 msgstr ""
-" document maître --+--------------+\n"
-"                   :              |\n"
-" prog de           :     doc      v\n"
-" filtrage =========X--> maître    |\n"
-" externe                filtré    +----> traductions\n"
-"                          |       ^\n"
-"                          V       |\n"
-" anciens fichiers PO ->---+--> fichiers PO à jour\n"
-"      ^                           |\n"
-"      |                           V\n"
-"      +<..........................+\n"
+" documents maîtres ---+---->-------->----------+\n"
+"  (rédac. de doc)     |                        |\n"
+"                      V  (exécutions de po4a)  >-----+--> documents \n"
+"                      |                        |     |    traduits\n"
+" fich. PO existants -->--> fich. PO mis à J. >-+     |\n"
+"      ^                            |                 |\n"
+"      |                            V                 |\n"
+"      +----------<---------<-------+                 ^\n"
+"    (processus de traduction manuelle)               |\n"
+"                                                     |\n"
+" addendum -->----------------------------------------+\n"
 "\n"
 
 #. type: textblock
@@ -437,16 +429,17 @@ msgid ""
 "translations, by injecting the latest translation into the latest document "
 "structure."
 msgstr ""
+"Le flux de travail de B<po4a> est asynchrone, comme il convient aux projets "
+"de logiciels libres. Les rédacteurs de la documentation rédigent les "
+"documents maîtres à leur propre rythme. Les traducteurs révisent et "
+"actualisent les traductions dans les fichiers PO. Les mainteneurs "
+"réexécutent B<po4a> au besoin, pour refléter toute modification de la "
+"documentation originale dans les fichiers PO, et pour produire des "
+"traductions de documentation mises à jour, en injectant la dernière "
+"traduction dans la dernière structure de document."
 
 #. type: textblock
 #: po4a:11
-#, fuzzy
-#| msgid ""
-#| "By default, the translated documents are produced when at least 80% of "
-#| "their content is translated (see the I<--keep> option below).  Discarding "
-#| "translations as soon as they are not 100% may be discouraging for the "
-#| "translators, while showing \"translations\" that are too incomplete may "
-#| "be troubling for the end users."
 msgid ""
 "By default, a given translated document is produced when at least 80% of its "
 "content is translated. The untranslated text is kept in the original "
@@ -457,11 +450,15 @@ msgid ""
 "will almost never be shown to the users, while showing \"translations\" that "
 "are too incomplete may be troubling for the end users."
 msgstr ""
-"Par défaut, les documents traduits sont produits quand au moins 80% de leur "
-"contenu est traduit (voir l'option I<--keep> ci-dessous). Il n'est pas "
-"recommandé de rejeter les traductions qui ne sont pas parfaitement traduites "
-"à 100% pour ne pas décourager les traducteurs, mais conserver des "
-"\"traductions\" trop partielles peut être troublant pour les utilisateurs."
+"Par défaut, un document traduit est produit lorsque au moins 80 % de son "
+"contenu est traduit. Le texte non traduit est conservé dans la langue "
+"d'origine.  La documentation produite mélange donc les langues si la "
+"traduction n'est pas complète. Vous pouvez modifier le seuil de 80 % avec "
+"l'option I<--keep> décrite ci-dessous. Notez cependant qu'écarter les "
+"traductions dès qu'elles ne sont pas à 100 % peut être décourageant pour les "
+"traducteurs dont le travail ne sera presque jamais montré aux utilisateurs, "
+"tandis que montrer des « traductions » trop incomplètes peut être troublant "
+"pour les utilisateurs finaux."
 
 #. type: textblock
 #: po4a:12
@@ -473,11 +470,18 @@ msgid ""
 "translators through an online platform such as S<weblate>, but this is "
 "naturally fully optional."
 msgstr ""
+"Stocker les fichiers de documentation traduits dans le système de contrôle "
+"de version est probablement une mauvaise idée, puisqu'ils sont générés "
+"automatiquement. Les fichiers précieux sont les fichiers PO, qui contiennent "
+"le dur labeur de vos collègues traducteurs. Par ailleurs, certaines "
+"personnes trouvent qu'il est plus facile d'interagir avec les traducteurs "
+"par le biais d'une plateforme en ligne telle que S<weblate>, mais cela est "
+"bien entendu totalement facultatif."
 
 #. type: =head2
 #: po4a:13
 msgid "Quick start tutorial"
-msgstr ""
+msgstr "Tutoriel de démarrage rapide"
 
 #. type: textblock
 #: po4a:14
@@ -492,6 +496,16 @@ msgid ""
 "original, not the translation. Now, another contributor wants to contribute "
 "a translation to Japanese, a language that you don't master either."
 msgstr ""
+"Supposons que vous mainteniez un programme nommé B<foo> ayant une page de "
+"manuel F<man/foo.1> écrite en anglais (la langue passerelle dans la plupart "
+"des projets open-source, mais B<po4a> peut être utilisé depuis ou vers "
+"n'importe quelle langue). Il y a quelque temps, quelqu'un a fourni une "
+"traduction allemande nommée F<man/foo.de.1> et a disparu.  C'est un problème "
+"car vous venez de recevoir un rapport de bogue signalant une information "
+"gravement trompeuse devant être corrigée dans toutes les langues. Mais, vous "
+"ne parlez pas allemand, et vous ne pouvez donc modifier que l'original, pas "
+"la traduction. Maintenant, un autre contributeur veut contribuer à une "
+"traduction en japonais, une langue que vous ne maîtrisez pas non plus."
 
 #. type: textblock
 #: po4a:15
@@ -502,6 +516,11 @@ msgid ""
 "to ensure that your users never see any outdated and thus misleading "
 "documentation."
 msgstr ""
+"Il est temps de convertir votre documentation à B<po4a> pour résoudre vos "
+"cauchemars de maintenance de la documentation. Vous voulez actualiser la "
+"documentation lorsque cela est nécessaire, faciliter le travail de vos "
+"collègues traducteurs, et vous assurer que vos utilisateurs ne voient jamais "
+"de documentation périmée, et donc trompeuse."
 
 #. type: textblock
 #: po4a:16
@@ -513,18 +532,23 @@ msgid ""
 "but once it's done, the B<de.po> file containing the German translation can "
 "be integrated in your po4a workflow."
 msgstr ""
+"La conversion comprend deux étapes : la mise en place de l'infrastructure "
+"po4a, et la conversion de la traduction allemande existante pour sauver le "
+"travail précédent. Cette dernière partie est effectuée en utilisant S<po4a-"
+"gettextize>, comme suit. Tel que détaillé dans la documentation de L<po4a-"
+"gettextize(1)>, ce processus est rarement entièrement automatique. En "
+"revanche, une fois réalisé, le fichier B<de.po> contenant la traduction "
+"allemande peut être intégré dans votre flux de travail po4a."
 
 #. type: verbatim
 #: po4a:17
-#, fuzzy, no-wrap
-#| msgid ""
-#| "  $ po4a-gettextize --format <format> --master <master.doc> --po <translation.pot>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de.po\n"
 "\n"
 msgstr ""
-"  $ po4a-gettextize --format <format> --master <maître.doc> --po <traduction.pot>\n"
+"  po4a-gettextize --format man --master foo.1 --localized foo.de.1 --po de."
+"po\n"
 "\n"
 
 #. type: textblock
@@ -533,33 +557,27 @@ msgid ""
 "Let's now configure po4a. With the appropriate file layout, your "
 "configuration file could be as simple as this:"
 msgstr ""
+"Configurons maintenant po4a. Avec la disposition appropriée des fichiers, "
+"votre fichier de configuration pourrait être aussi simple que ceci :"
 
 #. type: verbatim
 #: po4a:19
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po_directory] man/po/\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po_directory] man/po4a/\n"
 "\n"
 msgstr ""
-" [po_directory] man/po/\n"
+" [po_directory] man/po4a/\n"
 "\n"
 
 #. type: verbatim
 #: po4a:20
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [type: man] man/foo.1 $lang:man/translated/$lang/foo.1 \\\n"
-#| "            add_$lang:?man/po4a/add_$lang/$lang.add opt:\"-k 80\"\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 msgstr ""
-" [type: man] man/foo.1 $lang:man/translated/$lang/foo.1 \\\n"
-"            add_$lang:?man/po4a/add_$lang/$lang.add opt:\"-k 80\"\n"
+" [type: man] man/foo.1 $lang:man/translated/foo.$lang.1\n"
 "\n"
 
 #. type: textblock
@@ -572,6 +590,13 @@ msgid ""
 "corresponding translation files. Here, the German translation of F<man/"
 "foo.1> is in F<man/translated/foo.de.1>."
 msgstr ""
+"Elle spécifie que tous les fichiers PO (contenant le travail des traducteurs)"
+" se trouvent dans le répertoire F<man/po4a/>, et que vous n'avez qu'un seul "
+"fichier maître, F<man/foo.1>. Si vous aviez plusieurs fichiers maîtres, vous "
+"auriez plusieurs lignes semblables à la seconde. Chacune de ces lignes "
+"spécifie également où écrire les fichiers de traduction correspondants. Ici, "
+"la traduction allemande de F<man/foo.1> se trouve dans F<man/translated/foo."
+"de.1>."
 
 #. type: textblock
 #: po4a:22
@@ -582,13 +607,16 @@ msgid ""
 "specified S<po_directory> (e.g. F<man/po4a/foo.pot>), and B<po4a> will fill "
 "it with the expected content."
 msgstr ""
+"La dernière chose dont nous avons besoin pour terminer la configuration de "
+"B<po4a> est un fichier POT contenant le contenu modèle qui doit être utilisé "
+"pour commencer une nouvelle traduction.  Il suffit de créer un fichier vide "
+"avec l'extension S<.pot> dans le répertoire S<po_directory> spécifié (par "
+"exemple F<man/po4a/foo.pot>), et B<po4a> le remplira avec le contenu attendu."
 
 #. type: textblock
 #: po4a:23
-#, fuzzy
-#| msgid "Here is a graphical representation of this:"
 msgid "Here is a recap of the files in this setup:"
-msgstr "Voici une représentation graphique de tout cela :"
+msgstr "Voici un récapitulatif des fichiers de cette configuration :"
 
 #. type: verbatim
 #: po4a:24
@@ -603,6 +631,17 @@ msgid ""
 "  └── po4a.cfg         <- The configuration file.\n"
 "\n"
 msgstr ""
+"  ├── man/\n"
+"  │   ├── foo.1        <- La page de manuel originale, en anglais.\n"
+"  │   ├── po4a/\n"
+"  │   │   ├── de.po    <- Le fichier PO de la traduction allemande, issu de "
+"la gettextization.\n"
+"  │   │   └── foo.pot  <- Le modèle POT pour les traductions futures (vide "
+"au départ).\n"
+"  │   └── translated/  <- Répertoire où les fichiers de traduction seront "
+"créés.\n"
+"  └── po4a.cfg         <- Le fichier de configuration.\n"
+"\n"
 
 #. type: textblock
 #: po4a:25
@@ -611,13 +650,15 @@ msgid ""
 "template file, use it to update the PO translation files, and use them to "
 "update the documentation translation files. All in one command:"
 msgstr ""
+"Une fois configuré, l'exécution de B<po4a> analysera votre documentation, "
+"mettra à jour le fichier modèle POT, l'utilisera pour actualiser les "
+"fichiers de traduction PO, qui permettront à leur tour de générer les "
+"fichiers de traduction de la documentation mis à jour. Tout cela en une "
+"seule commande :"
 
 #. type: verbatim
 #: po4a:26
-#, fuzzy, no-wrap
-#| msgid ""
-#| "        po4a po4a.cfg\n"
-#| "\n"
+#, no-wrap
 msgid ""
 "        po4a --verbose po4a.cfg\n"
 "\n"
@@ -640,6 +681,19 @@ msgid ""
 "jp.1> (provided that enough content is translated) when you run B<po4a> "
 "again."
 msgstr ""
+"C’est tout. B<po4a> est maintenant entièrement configuré. Une fois que vous "
+"aurez corrigé votre erreur dans F<man/foo.1>, le paragraphe incriminé dans "
+"la traduction allemande sera remplacé par le texte corrigé en anglais. "
+"Mélanger les langues n’est pas optimal, mais c’est le seul moyen de "
+"supprimer les erreurs dans les traductions que vous ne comprenez même pas et "
+"de vous assurer que le contenu présenté aux utilisateurs n’est jamais "
+"trompeur. La mise à jour de la traduction allemande est également beaucoup "
+"plus facile dans le fichier PO correspondant, de sorte que le méli-mélo "
+"linguistique peut ne pas durer longtemps. Enfin, lorsque le traducteur "
+"japonais vous donnera un fichier traduit S<jp.po>, déposez-le simplement "
+"dans F<man/po4a/po/>. La page traduite apparaîtra sous la forme F<man/"
+"translated/foo.jp.1> (à condition que suffisamment de contenu soit traduit) "
+"lorsque vous exécuterez B<po4a> à nouveau."
 
 #. type: =item
 #: po4a:29 po4a-translate:28
@@ -1447,16 +1501,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:128
-#, fuzzy
-#| msgid ""
-#| "With this line, po4a will produce separate POT and PO files for each "
-#| "document to translate.  For example, if you have 3 documents and 5 "
-#| "languages, this will result in 3 POT files and 15 PO files. These files "
-#| "are named as specified on the C<po4a_paths> template, with C<$master> "
-#| "substituted to the basename of each document to translate. In case of "
-#| "name conflict, you can specify the POT file to use as follows, with the "
-#| "C<pot=> parameter.  This feature can also be used to group several "
-#| "translated files into the same POT file."
 msgid ""
 "With this line, po4a will produce separate POT and PO files for each "
 "document to translate.  For example, if you have 3 documents and 5 "
@@ -1472,8 +1516,7 @@ msgstr ""
 "comme indiqué dans le modèle C<po4a_paths>, avec C<$master> substitué au nom "
 "de base de chaque document à traduire. En cas de conflit de noms, vous "
 "pouvez spécifier le fichier POT à utiliser comme suit, avec le paramètre "
-"C<pot=>.  Cette fonction peut également être utilisée pour regrouper "
-"plusieurs fichiers traduits dans un même fichier POT."
+"C<pot=>."
 
 #. type: textblock
 #: po4a:129
@@ -1483,17 +1526,15 @@ msgid ""
 "foo.pot> (containing the material from F<foo/gui.xml>) and F<l10n/po/bar."
 "pot> (containing the material from both F<bar/gui.xml> and F<bar/cli.xml>)."
 msgstr ""
+"Cette fonction peut également être utilisée pour regrouper plusieurs "
+"fichiers traduits dans un même fichier POT. L'exemple suivant ne produit que "
+"deux fichiers POT : F<l10n/po/foo.pot> (contenant le matériel de F<foo/gui."
+"xml>) et F<l10n/po/bar.pot> (contenant le matériel de F<bar/gui.xml> et F<"
+"bar/cli.xml>)."
 
 #. type: verbatim
 #: po4a:130
-#, fuzzy, no-wrap
-#| msgid ""
-#| " [po4a_langs] de fr ja\n"
-#| " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-#| " [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
-#| " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
-#| " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
@@ -1504,7 +1545,7 @@ msgid ""
 msgstr ""
 " [po4a_langs] de fr ja\n"
 " [po4a_paths] l10n/po/$master.pot $lang:l10n/po/$master.$lang.po\n"
-" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo-gui\n"
+" [type: xml] foo/gui.xml $lang:foo/gui.$lang.xml pot=foo\n"
 " [type: xml] bar/gui.xml $lang:bar/gui.$lang.xml pot=bar\n"
 " [type: xml] bar/cli.xml $lang:bar/cli.$lang.xml pot=bar\n"
 "\n"
@@ -2083,13 +2124,8 @@ msgstr ""
 
 #. type: textblock
 #: po4a:188
-#, fuzzy
-#| msgid ""
-#| "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
-#| "L<po4a(7)>"
 msgid "L<po4a-gettextize(1)>, L<po4a(7)>."
-msgstr ""
-"L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
+msgstr "L<po4a-gettextize(1)>, L<po4a(7)>."
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:78 po4a-normalize:31 po4a-translate:56
@@ -2112,12 +2148,7 @@ msgstr "AUTEURS"
 #. type: verbatim
 #: po4a:190 po4a-gettextize:79 po4a-normalize:32 po4a-translate:57
 #: po4a-updatepo:56 lib/Locale/Po4a/Man.pm:110
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Denis Barbier <barbier@linuxfr.org>\n"
-#| " Nicolas Francois <nicolas.francois@centraliens.net>\n"
-#| " Martin Quinson (mquinson#debian.org)\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Denis Barbier <barbier@linuxfr.org>\n"
 " Nicolas François <nicolas.francois@centraliens.net>\n"
@@ -2148,10 +2179,8 @@ msgstr "COPYRIGHT ET LICENCE"
 
 #. type: textblock
 #: po4a:192 po4a-gettextize:81
-#, fuzzy
-#| msgid "Copyright 2002-2020 by SPI, inc."
 msgid "Copyright 2002-2022 by SPI, inc."
-msgstr "Copyright 2002-2020 by SPI, inc."
+msgstr "Copyright 2002-2022 by SPI, inc."
 
 #. type: textblock
 #: po4a:193 po4a-gettextize:82 po4a-normalize:35 po4a-translate:60
@@ -2204,6 +2233,12 @@ msgid ""
 "explained in details in Section 'Converting a manual translation to po4a' "
 "below."
 msgstr ""
+"Le script B<po4a-gettextize> vous aide à porter vos traductions existantes "
+"vers un flux de travail basé sur po4a. Cette opération ne doit être "
+"effectuée qu'une seule fois pour sauver une traduction existante lors de la "
+"conversion à po4a, et non de manière régulière après la conversion de votre "
+"projet. Ce processus fastidieux est expliqué en détail dans la section « "
+"Conversion d'une traduction manuelle à po4a » ci-dessous."
 
 #. type: textblock
 #: po4a-gettextize:9
@@ -2215,25 +2250,25 @@ msgid ""
 "separately and then use B<msgmerge> to merge all produced PO files. As you "
 "wish."
 msgstr ""
+"Vous devez fournir à la fois un fichier maître (par exemple, la source en "
+"anglais) et un fichier traduit existant (par exemple, une tentative de "
+"traduction précédente sans po4a). Si vous fournissez plus d'un fichier "
+"maître ou de traduction, ils seront utilisés en séquence, mais il peut être "
+"plus facile de gettextiser chaque page ou chapitre séparément, puis "
+"d'utiliser B<msgmerge> pour fusionner tous les fichiers PO produits. Comme "
+"vous le souhaitez."
 
 #. type: textblock
 #: po4a-gettextize:10
-#, fuzzy
-#| msgid ""
-#| "If the master document has non-ASCII characters, the new generated PO "
-#| "file will be in UTF-8. Else (if the master document is completely in "
-#| "ASCII), the generated PO will use the encoding of the translated input "
-#| "document, or UTF-8 if no translated document is provided."
 msgid ""
 "If the master document has non-ASCII characters, the new generated PO file "
 "will be in UTF-8. If the master document is completely in ASCII, the "
 "generated PO will use the encoding of the translated input document."
 msgstr ""
-"Si le document maître contient des caractères non ASCII, il convertit les "
-"fichiers PO en UTF-8 (si ce n’est pas déjà le cas). Sinon (si le document "
-"maître ne contient que des caractères ASCII), le fichier PO généré utilisera "
-"l’encodage du document traduit donné en entrée, ou en UTF- si aucun document "
-"traduit n’est fourni."
+"Si le document maître contient des caractères non ASCII, le nouveau fichier "
+"PO généré sera en UTF-8 (si ce n’est pas déjà le cas). Si le document maître "
+"ne contient que des caractères ASCII, le fichier PO généré utilisera l’"
+"encodage du document traduit donné en entrée."
 
 #. type: =item
 #: po4a-gettextize:12 po4a-normalize:19 po4a-translate:10 po4a-updatepo:12
@@ -2315,10 +2350,8 @@ msgstr "Énumère les formats de documentations connus de po4a."
 
 #. type: =item
 #: po4a-gettextize:30
-#, fuzzy
-#| msgid "= item B<-k> B<--keep-temps>"
 msgid "B<-k> B<--keep-temps>"
-msgstr "= élément B<-k> B<--keep-temps>"
+msgstr "B<-k> B<--keep-temps>"
 
 #. type: textblock
 #: po4a-gettextize:31
@@ -2338,14 +2371,6 @@ msgstr "Convertir une traduction manuelle vers po4a"
 
 #. type: textblock
 #: po4a-gettextize:47
-#, fuzzy
-#| msgid ""
-#| "B<po4a-gettextize> will try to extract the content of any provided "
-#| "translation file, and use this content as msgstr in the produced PO file. "
-#| "Be warned that this process is very fragile: the Nth string of the "
-#| "translated file is supposed to be the translation of the Nth string in "
-#| "the original. This will naturally not work unless both files share "
-#| "exactly the same structure."
 msgid ""
 "B<po4a-gettextize> synchronizes the master and localized files to extract "
 "their content into a PO file. The content of the master file gives the "
@@ -2353,12 +2378,11 @@ msgid ""
 "process is somewhat fragile: the Nth string of the translated file is "
 "supposed to be the translation of the Nth string in the original."
 msgstr ""
-"B<po4a-gettextize> va essayer d’extraire le contenu de n’importe quel "
-"fichier de traduction fourni, et utiliser son contenu en tant que msgstr du "
-"fichier PO produit. Soyez attentif au fait que ce processus est très "
-"fragile, la n-ième chaîne du fichier traduit est supposée être la traduction "
-"de la n-ième chaîne de l’original. Cela ne va naturellement pas fonctionner "
-"à moins que les deux fichiers partagent exactement la même structure."
+"B<po4a-gettextize> synchronise les fichiers maître et localisé pour extraire "
+"leur contenu dans un fichier PO. Le contenu du fichier maître donne le "
+"B<msgid> tandis que le contenu du fichier localisé donne le B<msgstr>. Ce "
+"processus est quelque peu fragile : la Nième chaîne du fichier traduit est "
+"censée être la traduction de la Nième chaîne de l'original."
 
 #. type: textblock
 #: po4a-gettextize:48
@@ -2369,19 +2393,14 @@ msgid ""
 "was changed by the original translator, so working on files' copies is "
 "advised."
 msgstr ""
+"La gettextisation fonctionne mieux si vous parvenez à récupérer la version "
+"exacte du document original utilisée pour la traduction. Même dans ce cas, "
+"il se peut que vous deviez manipuler les fichiers maître et localisé pour "
+"aligner leurs structures si elles ont été désynchronisées par le traducteur "
+"d'origine. Il est donc conseillé de travailler sur des copies des fichiers."
 
 #. type: textblock
 #: po4a-gettextize:49
-#, fuzzy
-#| msgid ""
-#| "Internally, each po4a parser reports the syntactical type of each "
-#| "extracted strings. This is how desynchronization are detected during the "
-#| "gettextization.  For example, if the files have the following structure, "
-#| "it is very unlikely that the 4th string in translation (of type "
-#| "'chapter') is the translation of the 4th string in original (of type "
-#| "'paragraph'). It is more likely that a new paragraph was added to the "
-#| "original, or that two original paragraphs were merged together in the "
-#| "translation."
 msgid ""
 "Internally, each po4a parser reports the syntactical type of each extracted "
 "strings. This is how desynchronization are detected during the "
@@ -2391,14 +2410,14 @@ msgid ""
 "paragraph was added to the original, or that two original paragraphs were "
 "merged together in the translation."
 msgstr ""
-"À l'intérieur, chaque parseur po4a rapporte le type syntaxique de chaque "
-"chaîne extraite. C’est de cette façon que les désynchronisation sont "
-"détectée durant la transformation en gettext.  Par exemple, si les fichiers "
-"ont la structure suivante, il y a très peu de chance pour que la quatrième "
-"chaîne de la traduction (de type « chapître ») soit la traduction de la "
-"quatrième chaîne du document original (de type « paragraphe »). Il est plus "
-"probable qu’un nouveau paragraphe ait été ajouté à l’original, ou que deux "
-"paragraphes originaux aient été fusionnés en un seul dans la traduction."
+"En interne, chaque parseur po4a rapporte le type syntaxique de chaque chaîne "
+"extraite. C’est ainsi que les désynchronisations sont détectées durant la "
+"transformation en gettext.  Dans l'exemple illustré ci-dessous, il y a très "
+"peu de chance pour que la quatrième chaîne de la traduction (de type « "
+"chapitre ») soit la traduction de la quatrième chaîne du document original ("
+"de type « paragraphe »). Il est plus probable qu’un nouveau paragraphe ait "
+"été ajouté à l’original, ou que deux paragraphes originaux aient été "
+"fusionnés en un seul dans la traduction."
 
 #. type: verbatim
 #: po4a-gettextize:50
@@ -2432,15 +2451,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:52
-#, fuzzy
-#| msgid ""
-#| "B<po4a-gettextize> will verbosely diagnose any detected structure "
-#| "desynchronization. When this happens, you should manually edit the files "
-#| "(this probably requires that you have some notions of the target "
-#| "language). You must add fake paragraphs or remove some content in one of "
-#| "the documents (or both) to fix the reported disparities, until the "
-#| "structure of both documents perfectly match. Some tricks are given in the "
-#| "next section."
 msgid ""
 "B<po4a-gettextize> will verbosely diagnose any structure desynchronization. "
 "When this happens, you should manually edit the files to add fake paragraphs "
@@ -2448,24 +2458,15 @@ msgid ""
 "actually match. Some tricks are given below to salvage the most of the "
 "existing translation while doing so."
 msgstr ""
-"B<po4a-gettextize> diagnostiquera toute désynchronisation de structure "
-"détectée. Lorsque cela se produit, vous devez éditer manuellement les "
-"fichiers (cela nécessite probablement que vous ayez quelques notions de la "
-"langue cible). Vous devez ajouter des paragraphes bidons ou supprimer du "
-"contenu dans l'un des documents (ou les deux) pour corriger les disparités "
-"signalées, jusqu'à ce que la structure des deux documents corresponde "
-"parfaitement. Quelques astuces sont données dans la section suivante."
+"B<po4a-gettextize> diagnostiquera de manière verbeuse toute "
+"désynchronisation de structure. Lorsque cela se produit, vous devez "
+"manuellement modifier les fichiers pour ajouter de faux paragraphes ou "
+"supprimer du contenu ici et là jusqu'à ce que la structure des deux fichiers "
+"corresponde réellement. Quelques astuces sont données ci-dessous pour sauver "
+"le maximum de la traduction existantepar ces moyens."
 
 #. type: textblock
 #: po4a-gettextize:53
-#, fuzzy
-#| msgid ""
-#| "If you are lucky enough to have a a perfect match in the file structures, "
-#| "building a correct PO file is a matter of seconds. Otherwise, you will "
-#| "soon understand why this process has such an ugly name :) But remember "
-#| "that this grunt work is the price to pay to get the comfort of po4a "
-#| "afterward. Once converted, the synchronization between master documents "
-#| "and translations will always be fully automatic."
 msgid ""
 "If you are lucky enough to have a perfect match in the file structures out "
 "of the box, building a correct PO file is a matter of seconds. Otherwise, "
@@ -2479,13 +2480,19 @@ msgid ""
 "Once converted, the synchronization between master documents and "
 "translations will always be fully automatic."
 msgstr ""
-"Si vous avez de la chance pour avoir une correspondance parfaite dans la "
-"structure des fichiers, construire un fichier PO correct se fait en quelques "
-"secondes. Sinon, vous allez vite comprendre pourquoi ce processus a un nom "
-"si barbare :) Mais n’oubliez pas que ce travail fastidieux est le prix à "
-"payer pour l’utilisation confortable de po4a par la suite. Une fois "
-"converti, la synchronisation entre les documents maîtres et leurs "
-"traductions sera toujours automatique."
+"Si vous avez assez de chance pour avoir une correspondance parfaite dans les "
+"structures de fichiers prête à l’emploi, générer un fichier PO correct est "
+"une affaire de secondes. Dans le cas contraire, vous comprendrez vite "
+"pourquoi ce processus porte un nom si affreux :) Malgré cela, la "
+"gettextisation reste souvent plus rapide que de tout retraduire. J'ai "
+"gettextisé la traduction française de toute la documentation Perl en une "
+"journée malgré les I<nombreux> problèmes de synchronisation. Vu la quantité "
+"de texte (2Mo de texte original), recommencer la traduction sans avoir au "
+"préalable récupéré les anciennes traductions aurait nécessité plusieurs mois "
+"de travail. De plus, ce travail fastidieux est le prix à payer pour "
+"bénéficier du confort de po4a. Une fois converti, la synchronisation entre "
+"les documents maîtres et les traductions sera toujours entièrement "
+"automatique."
 
 #. type: textblock
 #: po4a-gettextize:54
@@ -2493,6 +2500,9 @@ msgid ""
 "After a successful gettextization, the produced documents should be manually "
 "checked for undetected disparities and silent errors, as explained below."
 msgstr ""
+"Après une gettextization réussie, les documents produits doivent être "
+"vérifiés manuellement pour détecter les disparités non détectées et les "
+"erreurs silencieuses, comme expliqué ci-dessous."
 
 #. type: =head3
 #: po4a-gettextize:55
@@ -2501,14 +2511,6 @@ msgstr "Trucs et astuces pour le processus de «gettextisation»"
 
 #. type: textblock
 #: po4a-gettextize:56
-#, fuzzy
-#| msgid ""
-#| "When this happens, the whole game comes down to the alignment of these "
-#| "damn files' structures again through manual edits. B<po4a-gettextize> is "
-#| "rather verbose about what went wrong when it happens. It reports the "
-#| "strings that don't match, their positions in the text, and the type of "
-#| "each of them. Moreover, the PO file generated so far is dumped as "
-#| "F<gettextization.failed.po> for further inspection."
 msgid ""
 "The gettextization stops as soon as a desynchronization is detected. When "
 "this happens, you need to edit the files as much as needed to re-align the "
@@ -2517,49 +2519,37 @@ msgid ""
 "and the type of each of them. Moreover, the PO file generated so far is "
 "dumped as F<gettextization.failed.po> for further inspection."
 msgstr ""
-"Que cela arrive, tout le jeu consiste à aligner de nouveaux de ces fichues "
-"structures de fichier par des modifications manuelles. B<po4a-gettextize> "
-"est plutôt verbeux sur ce qui a mal tourné quand cela se produit. Il signale "
-"les chaînes qui ne correspondent pas, leur position dans le texte, et le "
-"type de chacune d’entre elles. De plus, le fichier PO généré ainsi sera "
-"écrit dans F<gettextization.failed.po> pour permettre leur inspection."
+"La gettextisation s'arrête dès qu'une désynchronisation est détectée. "
+"Lorsque cela se produit, vous devez modifier les fichiers autant que "
+"nécessaire pour réaligner les structures des fichiers. B<po4a-gettextize> "
+"est plutôt verbeux lorsque les choses se passent mal. Il signale les chaînes "
+"de caractères qui ne correspondent pas, leur position dans le texte et le "
+"type de chacune d'entre elles. De plus, le fichier PO généré jusqu'à présent "
+"est sauvegardé sous F<gettextization.failed.po> pour une inspection plus "
+"approfondie."
 
 #. type: textblock
 #: po4a-gettextize:57
-#, fuzzy
-#| msgid "Here are some other tricks to help you in this tedious process:"
 msgid ""
 "Here are some tricks to help you in this tedious process and ensure that you "
 "salvage the most of the previous translation:"
 msgstr ""
-"Voici encore quelques astuces pour vous aider dans ce processus fastidieux :"
+"Voici quelques astuces pour vous aider dans ce processus fastidieux et vous "
+"assurer de récupérer le maximum de la traduction précédente :"
 
 #. type: textblock
 #: po4a-gettextize:58
-#, fuzzy
-#| msgid ""
-#| "Remove all extra content of the translations, such as the section giving "
-#| "credits to the translators. You can add them back in po4a afterward, "
-#| "using an addenda (see L<po4a(7)>)."
 msgid ""
 "Remove all extra content of the translations, such as the section giving "
 "credits to the translators. They should be added separately to B<po4a> as "
 "addendas (see L<po4a(7)>)."
 msgstr ""
-"Supprimez tout le contenu superflu des traductions, comme la section donnant "
-"des crédits aux traducteurs. Vous pouvez les rajouter dans po4a par la "
-"suite, en utilisant un addendum (voir L<po4a(7)>)."
+"Supprimez tout le contenu superflu des traductions, comme la section "
+"créditant les traducteurs. Ils doivent être ajoutés séparément en tant "
+"qu'addenda (voir L<po4a(7)>)."
 
 #. type: textblock
 #: po4a-gettextize:59
-#, fuzzy
-#| msgid ""
-#| "If you need to edit the files to align their structures, you should "
-#| "prefer editing the translation if possible. Indeed, if the changes to the "
-#| "original are too intrusive, the old and new versions will not be matched "
-#| "during the PO update, and the corresponding translation will be dumped "
-#| "anyway. But do not hesitate to also edit the original document if "
-#| "required: the important thing is to get a first PO file to start with."
 msgid ""
 "When editing the files to align their structures, prefer editing the "
 "translation if possible. Indeed, if the changes to the original are too "
@@ -2570,13 +2560,15 @@ msgid ""
 "even if it means that one paragraph of the translation is dumped. The "
 "important thing is to get a first PO file to start with."
 msgstr ""
-"Si vous avez besoin de modifier les fichiers pour aligner leurs structures, "
-"vous devriez préférer modifier la traduction si possible. En effet, si les "
-"modifications apportées à l'original sont trop intrusives, l'ancienne et la "
-"nouvelle version ne seront pas mises en correspondance lors de la mise à "
-"jour du PO, et la traduction correspondante sera de toute façon sauvegardée. "
-"Mais n'hésitez pas à éditer également le document d'origine si nécessaire : "
-"l'important est de commencer par obtenir un premier fichier PO."
+"Lorsque vous éditez les fichiers pour aligner leurs structures, préférez si "
+"possible éditer la traduction. En effet, si les modifications de l'original "
+"sont trop intrusives, l'ancienne et la nouvelle version ne seront pas "
+"appariées lors de la première exécution de po4a après la gettextisation ("
+"voir ci-dessous). Toute traduction non appariée sera de toute façon "
+"abandonnée.  Ceci étant dit, vous pouvez toujours éditer le document "
+"original s'il est trop difficile d'obtenir la gettextisation autrement, même "
+"si cela signifie qu'un paragraphe de la traduction est abandonné. "
+"L'important est d'obtenir un premier fichier PO pour commencer."
 
 #. type: textblock
 #: po4a-gettextize:60
@@ -2591,13 +2583,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:61
-#, fuzzy
-#| msgid ""
-#| "You should probably inform the original author of any structural change "
-#| "in the translation that seems justified. Issues in the original document "
-#| "should reported to the author. Fixing them in your translation only fixes "
-#| "them for a part of the community. Plus, it is impossible to do so when "
-#| "using po4a ;)"
 msgid ""
 "You should probably inform the original author of any structural change in "
 "the translation that seems justified. Issues in the original document should "
@@ -2608,9 +2593,11 @@ msgid ""
 msgstr ""
 "Vous devriez probablement informer l’auteur original de toute modification "
 "structurelle dans la traduction qui semble nécessaire. Les problèmes du "
-"document originel doit être signalée à l’auteur. Faire la correction dans "
+"document originel doivent être signalés à l’auteur. Faire la correction dans "
 "votre traduction n’en fait bénéficier qu’une partie de la communauté. Et de "
-"plus, c’est impossible avec po4a ;)"
+"plus, c’est impossible avec po4a ;) Mais vous voudrez probablement attendre "
+"la fin de la conversion vers B<po4a> avant de modifier les fichiers "
+"originaux."
 
 #. type: textblock
 #: po4a-gettextize:62
@@ -2643,13 +2630,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:64
-#, fuzzy
-#| msgid ""
-#| "Sometimes, the desynchronization message seems odd because the "
-#| "translation is attached to the wrong original paragraph. It is the sign "
-#| "of an undetected issue earlier in the process. Search for the actual "
-#| "desynchronization point by inspecting F<gettextization.failed.po>, and "
-#| "fix the problem where it really is."
 msgid ""
 "Sometimes, the desynchronization message seems odd because the translation "
 "is attached to the wrong original paragraph. It is the sign of an undetected "
@@ -2658,10 +2638,10 @@ msgid ""
 "fix the problem where it really is."
 msgstr ""
 "Parfois, le message de désynchronisation semble étrange car la traduction "
-"est attachée au mauvais paragraphe source. C’est le signe d’une problème non "
+"est attachée au mauvais paragraphe source. C’est le signe d’un problème non "
 "détecté en amont dans le processus. Cherchez le point de synchronisation "
-"réel en inspectant F<gettextization.failed.po>, et corrigez le problème là "
-"où est vraiment."
+"réel en inspectant le fichier F<gettextization.failed.po> généré, et "
+"corrigez le problème là où est vraiment."
 
 #. type: textblock
 #: po4a-gettextize:65
@@ -2674,11 +2654,19 @@ msgid ""
 "deal properly with duplicated strings, so you should report any remaining "
 "issue that you may encounter."
 msgstr ""
+"D'autres problèmes peuvent provenir de chaînes de caractères dupliquées, que "
+"ce soit dans l'original ou dans la traduction. Les chaînes dupliquées sont "
+"fusionnées dans les fichiers PO, avec deux références.  Cela constitue une "
+"difficulté pour l'algorithme de gettextisation, qui est un simple "
+"appariement un à un entre les B<msgid>s du fichier maître et du fichier "
+"localisé. Cependant, les versions récentes de po4a devraient correctement "
+"traiter les chaînes de caractères dupliquées, et vous devriez donc signaler "
+"tout problème restant que vous pourriez rencontrer."
 
 #. type: =head2
 #: po4a-gettextize:66
 msgid "Reviewing files produced by B<po4a-gettextize>"
-msgstr ""
+msgstr "Examen des fichiers produits par B<po4a-gettextize>"
 
 #. type: textblock
 #: po4a-gettextize:67
@@ -2691,6 +2679,15 @@ msgid ""
 "matching issues because badly matched translations will be dumped in "
 "subsequent steps while you want to salvage them."
 msgstr ""
+"Tout fichier produit par B<po4a-gettextize> doit être examiné manuellement, "
+"même lorsque le script se termine avec succès. Vous devez parcourir le "
+"fichier PO en vous assurant que les B<msgid> et B<msgstr> correspondent "
+"réellement. Il n'est pas encore nécessaire de s'assurer que la traduction "
+"est parfaitement correcte, car toutes les entrées sont de toute façon "
+"marquées comme des traductions floues (\"fuzzy\"). Vous devez seulement "
+"vérifier les problèmes de correspondance évidents, car les traductions mal "
+"assorties seront abandonnées lors des étapes suivantes si vous voulez les "
+"sauver."
 
 #. type: textblock
 #: po4a-gettextize:68
@@ -2704,6 +2701,16 @@ msgid ""
 "structures (does the amount of interrogation marks match?) and other clues, "
 "but I prefer when someone else can review those languages."
 msgstr ""
+"Heureusement, cette étape ne nécessite pas de maîtriser les langues cibles "
+"puisque vous voulez seulement reconnaître des éléments similaires dans "
+"chaque B<msgid> et son B<msgstr> correspondant. Parlant moi-même le "
+"français, l'anglais et un peu l'allemand, je peux faire cela pour toutes les "
+"langues européennes au moins, même si je ne peux pas dire un mot de la "
+"plupart de ces langues. Je parviens parfois à détecter des problèmes de "
+"correspondance dans les langues non latines en examinant la longueur des "
+"chaînes de caractères, les structures des phrases (la quantité de points "
+"d'interrogation correspond-elle ?) et d'autres indices, mais je préfère que "
+"quelqu'un d'autre examine ces langues."
 
 #. type: textblock
 #: po4a-gettextize:69
@@ -2713,11 +2720,16 @@ msgid ""
 "PO file for your previous translation, backup it until you get po4a working "
 "correctly."
 msgstr ""
+"Si vous détectez une discordance, éditez les fichiers d'origine et de "
+"traduction comme si B<po4a-gettextize> avait signalé une erreur, et "
+"réessayez. Une fois que vous avez un fichier PO décent pour votre traduction "
+"existante, sauvegardez-le jusqu'à ce que vous obteniez un fonctionnement "
+"correct de po4a."
 
 #. type: =head2
 #: po4a-gettextize:70
 msgid "Running B<po4a> for the first time"
-msgstr ""
+msgstr "Exécuter B<po4a> pour la première fois"
 
 #. type: textblock
 #: po4a-gettextize:71
@@ -2727,6 +2739,11 @@ msgid ""
 "are deprecated). Please check the \"CONFIGURATION FILE\" Section in "
 "L<po4a(1)> documentation for more details."
 msgstr ""
+"La manière la plus simple de configurer po4a est d'écrire un fichier de "
+"configuration B<po4a.conf>, et d'utiliser le programme po4a unifié (B<po4a-"
+"updatepo> et B<po4a-translate> sont obsolètes). Veuillez consulter la "
+"section « FICHIER DE CONFIGURATION » dans la documentation de L<po4a(1)> "
+"pour plus de détails."
 
 #. type: textblock
 #: po4a-gettextize:72
@@ -2741,13 +2758,22 @@ msgid ""
 "documentation's French translation (5.5 MB PO file) took about 48 hours "
 "(yes, two days) while the subsequent ones only take seconds."
 msgstr ""
+"Lorsque B<po4a> est exécuté pour la première fois, la version actuelle des "
+"documents maîtres sera utilisée pour mettre à jour les fichiers PO contenant "
+"les anciennes traductions que vous avez récupérées par gettextisation. Cela "
+"peut prendre beaucoup de temps, car beaucoup des B<msgid>s de la "
+"gettextisation ne correspondent pas exactement aux éléments du fichier POT "
+"construit à partir des fichiers maîtres récents. Cela oblige gettext à "
+"rechercher le plus proche en utilisant un algorithme coûteux de proximité "
+"des chaînes de caractères.  Par exemple, le premier passage sur la "
+"traduction française de la documentation Perl (fichier PO de 5,5 Mo) a pris "
+"environ 48 heures (oui, deux jours) alors que les suivants ne prennent que "
+"quelques secondes."
 
 #. type: =head2
 #: po4a-gettextize:73
-#, fuzzy
-#| msgid "Converting a manual translation to po4a"
 msgid "Moving your translations to production"
-msgstr "Convertir une traduction manuelle vers po4a"
+msgstr "Mise en production de vos traductions"
 
 #. type: textblock
 #: po4a-gettextize:74
@@ -2758,6 +2784,13 @@ msgid ""
 "to verify that the salvaged translation actually match the current original "
 "text, update the translation on need, and remove the fuzzy markers."
 msgstr ""
+"Après ce premier passage, les fichiers PO sont prêts à être revus par les "
+"traducteurs. Toutes les entrées ont été marquées comme floues (\"fuzzy\") "
+"dans le fichier PO par B<po4a-gettextization>, ce qui oblige à les relire "
+"attentivement avant de les utiliser. Les traducteurs doivent examiner chaque "
+"entrée pour vérifier que la traduction récupérée correspond bien au texte "
+"original actuel, actualiser la traduction si nécessaire, et supprimer les "
+"marqueurs flous."
 
 #. type: textblock
 #: po4a-gettextize:75
@@ -2768,6 +2801,11 @@ msgid ""
 "coordinate between translators and maintainers, but that's beyond B<po4a>' "
 "scope."
 msgstr ""
+"Une fois que suffisamment de marqueurs flous sont supprimés, B<po4a> "
+"commencera à générer les fichiers de traduction sur le disque, et vous serez "
+"prêt à passer votre flux de traduction à la production. Certains projets "
+"trouvent utile de s'appuyer sur Weblate pour assurer la coordination entre "
+"les traducteurs et les mainteneurs, mais cela dépasse le cadre de B<po4a>."
 
 #. type: textblock
 #: po4a-gettextize:77
@@ -5129,6 +5167,8 @@ msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
+"Il y en a quelques-uns. Voici une liste potentiellement incomplète, et d’"
+"autres outils arrivent à l’horizon."
 
 #. type: =item
 #: doc/po4a.7.pod:158
@@ -5178,7 +5218,7 @@ msgstr ""
 #. type: =item
 #: doc/po4a.7.pod:163
 msgid "B<xml2po.py>"
-msgstr ""
+msgstr "B<xml2po.py>"
 
 #. type: textblock
 #: doc/po4a.7.pod:164
@@ -5187,11 +5227,14 @@ msgid ""
 "the name suggests, only with XML files and needs specially configured "
 "makefiles."
 msgstr ""
+"Utilisé par l'équipe de documentation de GIMP depuis 2004, il fonctionne "
+"assez bien même si, comme son nom l'indique, il ne fonctionne qu'avec des "
+"fichiers XML et nécessite des makefiles spécialement configurés."
 
 #. type: =item
 #: doc/po4a.7.pod:165
 msgid "B<Sphinx>"
-msgstr ""
+msgstr "B<Sphinx>"
 
 #. type: textblock
 #: doc/po4a.7.pod:166
@@ -5201,6 +5244,10 @@ msgid ""
 "markdown, although it is perhaps the only tool that does this managing the "
 "whole translation process."
 msgstr ""
+"Le projet de documentation Sphinx utilise également gettext de manière "
+"intensive pour gérer ses traductions. Malheureusement, il ne fonctionne que "
+"pour quelques formats de texte, rest et markdown, bien qu'il soit peut-être "
+"le seul outil à faire cela en gérant l'ensemble du processus de traduction."
 
 #. type: textblock
 #: doc/po4a.7.pod:167
@@ -8158,10 +8205,8 @@ msgstr "Renvoie le msgid qui a la position donnée dans le document."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:92
-#, fuzzy
-#| msgid "msgid_doc($)"
 msgid "type_doc($)"
-msgstr "msgid_doc($)"
+msgstr "type_doc($)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:93
@@ -8171,6 +8216,10 @@ msgid ""
 "{$msgid}{'type'} because the later location may be overwritten by another "
 "type when the $msgid is duplicated in the master document."
 msgstr ""
+"Retourne le type du msgid à la position donnée dans le document. Ceci n'est "
+"probablement utile que pour la gettextisation, et il est stocké séparément "
+"de {$msgid}{'type'} parce que ce dernier peut être écrasé par un autre type "
+"lorsque le $msgid est dupliqué dans le document maître."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:94
@@ -10203,31 +10252,24 @@ msgstr ""
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:45
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
 msgstr ""
-" Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>\n"
+" Copyright © 2005-2008 Nicolas FRANÇOIS <nicolas.francois@centraliens.net>.\n"
 "\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Text.pm:46
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-#| " Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 msgstr ""
-" Copyright (c) 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-" Copyright (c) 2020 Martin Quinson <mquinson#debian.org>.\n"
+" Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
+" Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
 
 #. type: textblock
