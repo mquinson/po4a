@@ -687,9 +687,19 @@ sub parse {
         {
             # Found BlockId
             do_paragraph( $self, $paragraph, $wrapped_mode );
-            $paragraph    = "";
+	    my $block_id = $1;
+	    $paragraph    = "";
             $wrapped_mode = 1;
-            $self->pushline( $line . "\n" );
+	    if ($block_id =~ m/^([^,]+),(.+)$/) {
+		# Found BlockId with a xlabel
+		my $xlabel = $2;
+		$block_id = $1;
+		$self->pushline( "[[$block_id," );
+		do_paragraph( $self, $xlabel, 0);
+		$self->pushline( "]]\n" );
+	    } else {
+		$self->pushline( $line . "\n" );
+	    }
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ( not defined $self->{verbatim}
