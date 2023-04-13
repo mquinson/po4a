@@ -9,22 +9,23 @@
 # Andrei Stepanov <adem4ik@gmail.com>, 2020.
 # Edward Smirnov <ed@microolap.com>, 2021.
 # Azamat H. Hackimov <azamat.hackimov@gmail.com>, 2021.
+# vrbtm <citrargeous@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2022-12-27 15:09+0100\n"
-"PO-Revision-Date: 2021-12-01 20:53+0000\n"
-"Last-Translator: Azamat H. Hackimov <azamat.hackimov@gmail.com>\n"
+"POT-Creation-Date: 2023-01-01 01:07+0100\n"
+"PO-Revision-Date: 2023-03-29 07:23+0000\n"
+"Last-Translator: vrbtm <citrargeous@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a-doc/ru/"
 ">\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.10-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 4.17-dev\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -247,8 +248,8 @@ msgstr "po4a-display-pod"
 #: share/doc/po4a-display-pod.xml:9
 msgid "display of a translated POD file according to a PO"
 msgstr ""
-"отобразить страницу, переводимого в данный момент POD-файла, в соответствии "
-"с PO-файлом"
+"отобразить страницу переводимого в данный момент POD-файла, в соответствии с "
+"PO-файлом"
 
 #. type: Content of: <refentry><refsynopsisdiv><cmdsynopsis>
 #: share/doc/po4a-display-pod.xml:10
@@ -331,7 +332,7 @@ msgstr "po4a - обновление PO-файлов и переведённой 
 #: msguntypot:3 lib/Locale/Po4a/Po.pm:3 lib/Locale/Po4a/Pod.pm:3
 #: lib/Locale/Po4a/TransTractor.pm:24
 msgid "SYNOPSIS"
-msgstr "СИНТАКСИС"
+msgstr "КРАТКОЕ СОДЕРЖАНИЕ"
 
 #. type: textblock
 #: po4a:4
@@ -354,12 +355,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:7
-#, fuzzy
-#| msgid ""
-#| "When you run the B<po4a> program with both the master documents and the "
-#| "PO files, it produces the translated documents by injecting the content's "
-#| "translation (found in the PO files) into the structure of the original "
-#| "master document."
 msgid ""
 "Upon execution, B<po4a> parses all documentation files specified in its "
 "configuration file. It updates the PO files (containing the translation) to "
@@ -367,9 +362,11 @@ msgid ""
 "documentation by injecting the content's translation (found in the PO files) "
 "into the structure of the original master document."
 msgstr ""
-"Если вы запускаете программу B<po4a>, когда у вас есть и мастер-документ, и "
-"PO-файлы, то она создаёт переведённые документы, вставляя содержимое "
-"переводов (из PO-файлов) в структуру оригинального мастер-документа."
+"После запуска программа B<po4a> парсит все файлы документации, перечисленные "
+"в её файле настроек. Она обновляет содержащие перевод PO-файлы, таким "
+"образом отражает изменения в документации и создает переведенный документ, "
+"включая в структуру исходного мастер-документа перевод содержимого ("
+"находящийся в PO-файлах)."
 
 #. type: textblock
 #: po4a:8
@@ -383,6 +380,14 @@ msgid ""
 "are extra content stating for example who did the translation and how to "
 "report bugs."
 msgstr ""
+"Вначале PO-файлы содержат только подлежащие переводу строки исходного "
+"документа. Этот формат файла позволяет переводчикам добавлять перевод "
+"каждого абзаца, извлечённого B<po4a>. Если после добавления перевода "
+"документация изменяется, B<po4a> отмечает соответствующий перевод в PO-файле "
+"как содержащий \"частичное совпадение\", и переводчику необходимо "
+"пересмотреть имеющийся перевод. Также переводчик может добавить так "
+"называемое \"дополнение\" - например, информацию об авторе перевода и о "
+"порядке сообщения о багах."
 
 #. type: verbatim
 #: po4a:9
@@ -441,13 +446,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a:11
-#, fuzzy
-#| msgid ""
-#| "By default, the translated documents are produced when at least 80% of "
-#| "their content is translated (see the I<--keep> option below).  Discarding "
-#| "translations as soon as they are not 100% may be discouraging for the "
-#| "translators, while showing \"translations\" that are too incomplete may "
-#| "be troubling for the end users."
 msgid ""
 "By default, a given translated document is produced when at least 80% of its "
 "content is translated. The untranslated text is kept in the original "
@@ -458,12 +456,16 @@ msgid ""
 "will almost never be shown to the users, while showing \"translations\" that "
 "are too incomplete may be troubling for the end users."
 msgstr ""
-"По умолчанию переведённые документы создаются, когда переведено, как "
-"минимум, 80% содержимого (см. описание параметра I<--keep> ниже). Если вы "
-"будете отбрасывать весь перевод в случае, когда он завершён не на все 100%, "
-"то это будет обескураживающим фактором для переводчиков; с другой стороны, "
-"вы можете вызвать у конечных пользователей затруднения, предоставляя им "
-"«переводы», которые слишком далеки от завершения."
+"По умолчанию переведённые документы создаются, когда переведено хотя бы 80% "
+"содержимого. Непереведённый текст на исходном языке сохраняется. Таким "
+"образом, если перевод не завершён, в созданной документации языки "
+"комбинируются. Вы можете изменить пороговое значение 80% при помощи "
+"описанного ниже параметра I<--keep>. Следует учесть, что если отбрасывать "
+"перевод целиком до его завершения на 100%, это может демотивировать "
+"переводчиков, так как пользователи практически никогда не будут видеть их "
+"работу. С другой стороны, вы можете вызвать у конечных пользователей "
+"затруднения, предоставляя им «переводы», которые слишком далеки от "
+"завершения."
 
 #. type: textblock
 #: po4a:12
