@@ -1122,7 +1122,7 @@ sub parse_definition_line {
         my $env = $1;    # This is not necessarily an environment.
                          # It can also be something like 'title[#1]'.
         $env_separators{$env} = $2;
-    } elsif ( $line =~ /^verbatim\s+environment\s+(\w+)\s+$/ ) {
+    } elsif ( $line =~ /^verbatim\s+environment\s+(\w+)\s*$/ ) {
         register_verbatim_environment($1);
     }
 }
