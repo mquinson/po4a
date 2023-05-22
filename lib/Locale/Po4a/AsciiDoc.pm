@@ -728,7 +728,7 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^\[.*\]$/ ) )
+            and ( $line =~ m/^\[[^\]]+\]$/ ) )
         {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph = "";
