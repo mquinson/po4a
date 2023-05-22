@@ -808,13 +808,18 @@ sub parse {
             my $attrname  = $1;
             my $attrsep   = $2;
             my $attrvalue = $3;
-            while ( $attrvalue =~ s/ \+$//s ) {
+	    my $linebreak = "";
+            while ( $attrvalue =~ s/ ([\\+])$//s ) {
+		$linebreak = $1;
+		# add a carriage return at the end of attrvalue if there is none
+		$attrvalue .= "\n" if $attrvalue !~ m/\n$/;
                 ( $line, $ref ) = $self->shiftline();
                 $ref  =~ m/^(.*):[0-9]+$/;
-                $line =~ s/^\s+//;
+                $line =~ s/^\s+|\s+$//;
+		print STDERR "appending attribute with $line" if $debug{parse};
                 $attrvalue .= $line;
             }
-
+	    print STDERR "attr definition: $attrvalue\n" if $debug{parse};
             # Found an Attribute entry
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
@@ -827,10 +832,12 @@ sub parse {
                     $self->{ref},
                     "Attribute :$attrname:",
                     "comment" => join( "\n", @comments ),
-                    "wrap"    => 0
+                    "wrap"    => 1
                 );
+		$t =~ s/\n/ \\\n/g;
                 $self->pushline(":$attrname$attrsep$t\n");
             } else {
+		$attrvalue =~ s/\n/ $linebreak\n/g;
                 $self->pushline(":$attrname$attrsep$attrvalue\n");
             }
             @comments = ();
