@@ -1,14 +1,14 @@
 # Translation of po4a manpage templates to German
 # This file is distributed under the same license as the po4a package.
-# Copyright © Helge Kreutzmann <debian@helgefjell.de>, 2011, 2012, 2017-2022.
+# Copyright © Helge Kreutzmann <debian@helgefjell.de>, 2011, 2012, 2017-2023.
 # Chris Leick <c.leick@vollbio.de>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.66\n"
+"Project-Id-Version: po4a 0.69\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2022-12-27 15:09+0100\n"
-"PO-Revision-Date: 2022-08-27 17:39+0200\n"
+"PO-Revision-Date: 2023-01-04 16:24+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -2215,7 +2215,6 @@ msgstr ""
 
 #. type: textblock
 #: po4a-gettextize:4
-#, fuzzy
 msgid ""
 "B<po4a-gettextize> B<-f> I<fmt> B<-m> I<master.doc> B<-l> I<XX.doc> B<-p> "
 "I<XX.po>"
@@ -3214,14 +3213,14 @@ msgstr ""
 "Zu aktualisierende PO-Datei(en). Falls diese Dateien noch nicht existieren "
 "werden sie mit B<po4a-updatepo> erstellt."
 
+# FIXME B<msgmerge> → B<msgmerge>(1)
 #. type: textblock
 #: po4a-updatepo:23
-#, fuzzy
 msgid ""
 "This option removes B<--previous> from the options passed to B<msgmerge>.  "
 "This helps supporting old versions of B<gettext> (before v0.16)."
 msgstr ""
-"Diese Option entfernt B<--previous> aus den an B<msgmerge> übergebenen "
+"Diese Option entfernt B<--previous> aus den an B<msgmerge>(1) übergebenen "
 "Optionen. Dies erlaubt die Unterstützung von B<gettext>-Versionen vor 0.16."
 
 #. type: textblock
@@ -4092,7 +4091,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:71
-#, fuzzy
 msgid ""
 "Most projects only require the features of L<po4a-updatepo(1)> and L<po4a-"
 "translate(1)>, but these scripts proved to be cumbersome and error prone to "
@@ -5741,7 +5739,6 @@ msgstr "B<yfm_keys>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:34 lib/Locale/Po4a/Text.pm:31
-#, fuzzy
 msgid ""
 "Comma-separated list of keys to process for translation in the YAML Front "
 "Matter section. All other keys are skipped. Keys are matched with a case-"
@@ -5750,12 +5747,12 @@ msgid ""
 "values are always translated, unless the B<yfm_skip_array> option is "
 "provided."
 msgstr ""
-"Leerzeichen-getrennte Liste der Hash-Schlüssel, die für das Herausziehen "
+"Kommata-getrennte Liste der Schlüssel, die für das Übersetzen in dem Abschnitt »YAML FrontMatter« "
 "verarbeitet werden. Alle anderen Schlüssel werden übersprungen. Schlüssel "
-"werden unabhängig von der Groß-/Kleinschreibung verglichen. Falls B<paths> "
-"und B<keys> zusammen verwandt werden, werden Werte aufgenommen, falls sie "
+"werden abhängig von der Groß-/Kleinschreibung verglichen. Falls B<yfm_paths> "
+"und B<yfm_keys> zusammen verwandt werden, werden Werte aufgenommen, falls sie "
 "auf mindestens eine der Optionen passen. Feldwerte werden immer "
-"zurückgeliefert, außer die Option B<skip_array> wird bereitgestellt."
+"übersetzt, außer die Option B<yfm_skip_array> wird bereitgestellt."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:35
@@ -5769,13 +5766,11 @@ msgstr "Keine Feldwerte in dem Abschnitt »YAML Front Matter« übersetzen."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:37 lib/Locale/Po4a/Text.pm:35
-#, fuzzy
 msgid "B<yfm_paths>"
-msgstr "B<paths>"
+msgstr "B<yfm_paths>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:38 lib/Locale/Po4a/Text.pm:36
-#, fuzzy
 msgid ""
 "Comma-separated list of hash paths to process for extraction in the YAML "
 "Front Matter section, all other paths are skipped. Paths are matched with a "
@@ -5784,12 +5779,12 @@ msgid ""
 "Arrays values are always returned unless the B<yfm_skip_array> option is "
 "provided."
 msgstr ""
-"Kommata-getrennte Liste von Hash-Pfaden zu Prozessen für das Herausziehen, "
-"alle anderen Pfade werden übersprungen. Pfade werden unabhängig von der "
-"Groß-/Kleinschreibung verglichen. Falls B<paths> und B<keys> zusammen "
+"Kommata-getrennte Liste von Hash-Pfaden, die für das Herausziehen in dem Abschnitt »YAML Front Matter« verarbeitet werden. "
+"Alle anderen Pfade werden übersprungen. Pfade werden abhängig von der "
+"Groß-/Kleinschreibung verglichen. Falls B<yfm_paths> und B<yfm_keys> zusammen "
 "verwandt werden, werden Werte aufgenommen, falls sie auf mindestens eine der "
 "Optionen passen. Feldwerte werden immer zurückgeliefert, außer die Option "
-"B<skip_array> wird bereitgestellt."
+"B<yfm_skip_array> wird bereitgestellt."
 
 #. type: =head1
 #: lib/Locale/Po4a/AsciiDoc.pm:39 lib/Locale/Po4a/TeX.pm:27
@@ -7192,15 +7187,14 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Man.pm:55
-#, fuzzy
 msgid ""
 "The following options specify the behavior of a user-defined macro (with a ."
 "de request), or of a classical macro that is not supported by po4a.  They "
 "take as argument a comma-separated list of macros.  For example:"
 msgstr ""
-"Die folgenden Optionen erlauben es, das Verhalten eines neuen Makros (das "
-"mit einem .de-Konstrukt definiert wurde) oder eines von Po4a nicht "
-"unterstützten Makros festzulegen. Sie erwarten als Argument eine durch "
+"Die folgenden Optionen legen das Verhalten eines benutzerdefinierten Makros "
+"(mit einem .de-Konstrukt) oder einem klassischen, von Po4a nicht "
+"unterstützten Makro fest. Sie erwarten als Argument eine durch "
 "Kommata getrennte Liste von Makros, beispielsweise:"
 
 #. type: verbatim
@@ -8712,6 +8706,10 @@ msgid ""
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 msgstr ""
+"Diese Arbeit ist freie Software; Sie können sie unter den Bedingungen der "
+"GNU General Public License, wie sie von der Free Software Foundation "
+"veröffentlicht wurde (entweder Version 2 der Lizenz oder (nach Ihrer Wahl) "
+"jeder neueren Version) vertreiben und/oder verändern."
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:21
@@ -8729,6 +8727,9 @@ msgid ""
 "this work; if not, write to the Free Software Foundation, Inc., 51 Franklin "
 "Street, Fifth Floor, Boston, MA 02110-1301 USA."
 msgstr ""
+"Sie sollten eine Kopie der GNU General Public License zusammen mit dieser "
+"Arbeit erhalten haben. Falls nicht, schreiben Sie an die Free Software "
+"Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA."
 
 #. type: textblock
 #: lib/Locale/Po4a/RubyDoc.pm:23
@@ -9980,13 +9981,12 @@ msgstr "Einige Befehle sollten dem Umgebungsstapel hinzugefügt werden."
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:113
-#, fuzzy
 msgid ""
 "These commands should be specified by couples.  This can be used to specify "
 "commands beginning or ending a verbatim environment."
 msgstr ""
-"Diese Befehle sollten paarweise angegeben werden. Dies könnte die Angabe von "
-"Befehlen ermöglichen, die eine wortgetreue Umgebung beginnen oder beenden."
+"Diese Befehle sollten paarweise angegeben werden. Dies kann zur Angabe von "
+"Befehlen verwandt werden, die eine wortgetreue Umgebung beginnen oder beenden."
 
 #. type: =item
 #: lib/Locale/Po4a/TeX.pm:114
@@ -10246,9 +10246,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:34
-#, fuzzy
 msgid "B<yfm_paths> (markdown only)"
-msgstr "B<yfm_keys> (nur Markdown)"
+msgstr "B<yfm_paths> (nur Markdown)"
 
 #. type: =item
 #: lib/Locale/Po4a/Text.pm:37
@@ -12936,7 +12935,6 @@ msgstr "B<keys>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:10
-#, fuzzy
 msgid ""
 "Space-separated list of hash keys to process for extraction, all other keys "
 "are skipped.  Keys are matched with a case-sensitive match.  If B<paths> and "
@@ -12946,7 +12944,7 @@ msgid ""
 msgstr ""
 "Leerzeichen-getrennte Liste der Hash-Schlüssel, die für das Herausziehen "
 "verarbeitet werden. Alle anderen Schlüssel werden übersprungen. Schlüssel "
-"werden unabhängig von der Groß-/Kleinschreibung verglichen. Falls B<paths> "
+"werden abhängig von der Groß-/Kleinschreibung verglichen. Falls B<paths> "
 "und B<keys> zusammen verwandt werden, werden Werte aufgenommen, falls sie "
 "auf mindestens eine der Optionen passen. Feldwerte werden immer "
 "zurückgeliefert, außer die Option B<skip_array> wird bereitgestellt."
@@ -12958,7 +12956,6 @@ msgstr "B<paths>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:12
-#, fuzzy
 msgid ""
 "Comma-separated list of hash paths to process for extraction, all other "
 "paths are skipped. Paths are matched with a case-sensitive match.  If "
@@ -12966,8 +12963,8 @@ msgid ""
 "matched by at least one of the options.  Arrays values are always returned "
 "unless the B<skip_array> option is provided."
 msgstr ""
-"Kommata-getrennte Liste von Hash-Pfaden zu Prozessen für das Herausziehen, "
-"alle anderen Pfade werden übersprungen. Pfade werden unabhängig von der "
+"Kommata-getrennte Liste von Hash-Pfaden, die für das Herausziehen verarbeitet werden. "
+"Alle anderen Pfade werden übersprungen. Pfade werden abhängig von der "
 "Groß-/Kleinschreibung verglichen. Falls B<paths> und B<keys> zusammen "
 "verwandt werden, werden Werte aufgenommen, falls sie auf mindestens eine der "
 "Optionen passen. Feldwerte werden immer zurückgeliefert, außer die Option "
@@ -12995,14 +12992,12 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Yaml.pm:20
-#, fuzzy
 msgid ""
 "Copyright © 2017 Brian Exelbierd.  Copyright © 2022 Martin Quinson "
 "<mquinson#debian.org>."
 msgstr ""
-" Copyright © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
-" Copyright © 2020 Martin Quinson <mquinson#debian.org>.\n"
-"\n"
+"Copyright © 2017 Brian Exelbierd.  Copyright © 2022 Martin Quinson "
+"<mquinson#debian.org>."
 
 #~ msgid ""
 #~ "Comma-separated list of keys to process for translation in the YAML Front "

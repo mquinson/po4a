@@ -4,13 +4,13 @@
 # Tim Fuchs, 2005.
 # Thomas Mueller <thomas.mueller@tmit.eu>, 2009, 2010.
 # Thomas Müller <thomas.mueller@tmit.eu>, 2010.
-# Helge Kreutzmann <debian@helgefjell.de>, 2012, 2017-2020, 2022.
+# Helge Kreutzmann <debian@helgefjell.de>, 2012, 2017-2020, 2022,2023.
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.66\n"
+"Project-Id-Version: po4a 0.69\n"
 "Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
 "POT-Creation-Date: 2022-12-27 17:27+0100\n"
-"PO-Revision-Date: 2022-01-08 13:32+0100\n"
+"PO-Revision-Date: 2023-01-04 16:20+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -373,6 +373,16 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Diese Seite definiert ein neues Makro »%s« mit »%s« (eingebetteter "
+"Kommentar: %s), aber Sie haben das erwartete Po4a-Verhalten nicht "
+"festgelegt, wenn »%s« verwandt wird. Sie werden einen Fehler erhalten, falls "
+"dieses Makro tatsächlich in Ihrer Seite verwandt wird.\n"
+"Fügen Sie Ihr Makro zu einem der Parameter »%s«, »%s«, »%s«, »%s«, »%s« oder "
+"»%s« hinzu, um Probleme zu vermeiden\n"
+"Wird beispielsweise »%s« an po4a übergeben, wird sichergestellt, dass das "
+"Makro vor Übersetzern versteckt bleibt.\n"
+"Bitte lesen Sie die Handbuchseite von Locale::Po4a::Man für weitere "
+"Informationen über diese Parameter.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2256
 #, perl-format
@@ -387,6 +397,16 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Diese Seite definiert ein neues Makro »%s« mit »%s«, aber Sie haben das "
+"erwartete Po4a-Verhalten nicht festgelegt, wenn »%s« verwandt wird. Sie "
+"werden einen Fehler erhalten, falls dieses Makro tatsächlich in Ihrer Seite "
+"verwandt wird.\n"
+"Fügen Sie Ihr Makro zu einem der Parameter »%s«, »%s«, »%s«, »%s«, »%s« oder "
+"»%s« hinzu, um Probleme zu vermeiden\n"
+"Wird beispielsweise »%s« an po4a übergeben, wird sichergestellt, dass das "
+"Makro vor Übersetzern versteckt bleibt.\n"
+"Bitte lesen Sie die Handbuchseite von Locale::Po4a::Man für weitere "
+"Informationen über diese Parameter.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2294
 #, perl-format
@@ -397,6 +417,11 @@ msgid ""
 "macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Diese Seite definiert ein neues Makro »%s«. Da Po4a kein echter Groff-"
+"Auswerter ist, wird das nicht unterstützt. Die Option »%s« sorgt dafür, dass "
+"diese Makros unverändert in die übersetzte Datei kopiert werden, aber das "
+"ist nicht sehr robust. »%s« zeigt diese Makros den Übersetzern, aber Groff-"
+"Makros sind für Übersetzer nicht sehr anwendungsfreundlich."
 
 #: ../../lib/Locale/Po4a/Man.pm:2362
 msgid "The .ie macro must be followed by a .el macro."
@@ -411,6 +436,12 @@ msgid ""
 "these macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Diese Seite verwendet Bedingungen mit »%s«. Da Po4a kein echter Groff-"
+"Auswerter ist, wird das standardmäßig nicht unterstützt. Die Option »%s« "
+"sorgt dafür, dass diese Makros unverändert in die übersetzte Datei kopiert "
+"werden, aber das ist nicht sehr robust. »%s« zeigt diese Makros den "
+"Übersetzern, aber Groff-Makros sind für Übersetzer nicht sehr "
+"anwendungsfreundlich."
 
 #: ../../lib/Locale/Po4a/Man.pm:2450
 #, perl-format
@@ -698,7 +729,7 @@ msgid ""
 "To see the error message, rerun po4a with this additional argument:\n"
 "   -o debug=onsgmls"
 msgstr ""
-"Um weitere Fehlermeldungen zu sehen, führen Sie Po4a mit den folgenden "
+"Um weitere Fehlermeldungen zu sehen, führen Sie po4a mit den folgenden "
 "Argumenten erneut aus:\n"
 "   -o debug=onsgmls"
 
@@ -806,7 +837,12 @@ msgid ""
 "'yfm_lenient' option for a stricter behavior.\n"
 "Ignored error: %s"
 msgstr ""
+"Es wird fortgefahren, selbst falls die »YAML Front Matter« nicht ausgewertet "
+"werden könnte. Verwenden Sie die Option »yfm_lenient« für ein strikteres "
+"Verhalten.\n"
+"Ignorierter Fehler: %s"
 
+# FIXME YAML front matter → YAML Front Matter
 #: ../../lib/Locale/Po4a/Text.pm:656
 #, perl-format
 msgid ""
@@ -816,6 +852,12 @@ msgid ""
 "Error: %s\n"
 "Content of the YFM: %s"
 msgstr ""
+"Die »YAML Front Matter« konnte aus der Datei nicht erhalten werden. Falls "
+"Sie einen horizontalen Strich statt einer YAML Front Matter planten, "
+"verwenden Sie stattedessen »----« oder übergeben Sie die Option "
+"»yfm_lenient«.\n"
+"Fehler: %s\n"
+"Inhalt der YFM: %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:792
 #, perl-format
@@ -823,6 +865,8 @@ msgid ""
 "Malformed fenced div block: Block starting at %s not closed before the end "
 "of the file."
 msgstr ""
+"Fehlerhaft abgeschlossener div-Block: Der bei %s beginnende Block wird nicht "
+"vor dem Ende der Datei abgeschlossen."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:513
 #, perl-format
@@ -1535,6 +1579,7 @@ msgstr ""
 "Übersetzung: %s\n"
 "(Die bisherigen Ergebnisse wurden in »gettextization.failed.po« geschrieben)"
 
+# FIXME po4a(1) → po4a
 #: ../../po4a-gettextize:572
 msgid ""
 "You must provide the same amount of master files and localized files to "
@@ -1544,7 +1589,15 @@ msgid ""
 "convenient way of using po4a is to write a po4a.conf file and use the "
 "integrated po4a(1) program."
 msgstr ""
+"Sie müssen die gleiche Anzahl an Master-Dateien und lokalisierten Dateien "
+"zur Synchronisation bereitstellen, da po4a-gettextize zur Synchronisierung "
+"von Master-Dateien und bereits bestehenden Übersetzungen gedacht ist. Falls "
+"Sie nur POT-Dateien aus Ihrer Master-Datei generieren möchten, verwenden Sie "
+"bitte po4a-updatepo. Beachten Sie bitte, dass die bequemste Art der "
+"Verwendung von Po4a die Erstellung einer Datei po4a.conf und der Einsatz des "
+"integrierten po4a-Programms ist."
 
+# FIXME po4a(1) → po4a
 #: ../../po4a-gettextize:585
 msgid ""
 "po4a-gettextize is only useful to convert previously existing translations "
@@ -1552,18 +1605,28 @@ msgid ""
 "po4a, you should use the po4a(1) program to maintain it and update your "
 "translations."
 msgstr ""
+"po4a-gettextize ist nur zur Umwandlung bereits bestehender Übersetzungen in "
+"einen PO-basierten Arbeitsablauf nützlich. Sobald Sie Ihr Projekt "
+"erfolgreich in Po4a umgewandelt haben, sollten Sie das Programm po4a zur "
+"Verwaltung und Aktualisierung der Übersetzungen verwenden."
 
+# FIXME po4atemp.localized.po → po4atemp.localized.po.
 #: ../../po4a-gettextize:629
 msgid ""
 "Temporary master and localized POT files dumped to po4atemp.master.po and "
 "po4atemp.localized.po"
 msgstr ""
+"Temporäre Master- und übersetzte POT-Dateien werden nach po4atemp.master.po "
+"und po4atemp.localized.po rausgeschrieben."
 
+# FIXME po4a(1) → po4a
 #: ../../po4a-normalize:173
 msgid ""
 "po4a-normalize is mostly useful to debug po4a itself. Users are advised to "
 "use the po4a(1) program instead."
 msgstr ""
+"po4a-normalize ist hauptsächlich zur Fehlersuche in Po4a nützlich. Benutzern "
+"wird empfohlen, stattdessen das Programm po4a zu verwenden."
 
 #: ../../po4a-normalize:189
 #, perl-format
@@ -1580,11 +1643,14 @@ msgstr "Normiertes Dokument wird nach %s geschrieben."
 msgid "Write the normalized PO file to %s."
 msgstr "Normierte PO-Datei wird nach %s geschrieben."
 
+# FIXME po4a(1) → po4a
 #: ../../po4a-translate:264
 msgid ""
 "po4a-translate is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-translate ist veraltet. Das vereinigte Programm po4a ist bequemer und "
+"weniger fehleranfällig."
 
 #: ../../po4a-translate:288
 #, perl-format
@@ -1597,11 +1663,14 @@ msgstr ""
 msgid "Discard the translation of %s (addendum %s does not apply)."
 msgstr "Die Übersetzung von %s wird verworfen (Addendum %s nicht zutreffend)."
 
+# FIXME po4a(1) → po4a
 #: ../../po4a-updatepo:275
 msgid ""
 "po4a-updatepo is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone."
 msgstr ""
+"po4a-updatepo is veraltet. Das vereinigte Programm po4a ist bequemer und "
+"weniger fehleranfällig."
 
 #: ../../po4a-updatepo:282
 msgid "po4a-updatepo can't take the input PO from stdin."
