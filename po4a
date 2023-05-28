@@ -1615,7 +1615,7 @@ if ( $po4a_opts{"split"} ) {
                 mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
             }
             my $outfile = $po4a_opts{"force"} ? find_output_file($master_pot) : $tmp_file;
-            my $cmd     = "msggrep$Config{_exe} $split_pot_files{$master_pot} -o $outfile $pot_filename";
+            my $cmd     = "msggrep$Config{_exe} $split_pot_files{$master_pot} -o $outfile $pot_filename --force-po";
             run_cmd($cmd);
 
             die wrap_msg(
