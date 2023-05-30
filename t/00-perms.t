@@ -18,10 +18,10 @@ unless ( $^O eq 'MSWin32' ) {
 
     my @cmds = (
         "chmod 755 t/cfg",
-        "chmod 755 `find t/add t/cfg -maxdepth 1 -type d`",
-        "chmod 755 `find t/add t/cfg -maxdepth 2 -type d`",
-        "chmod 755 `find t/add t/cfg -type d`",
-        "chmod 644 `find t -type f`"
+        "find t/add t/cfg t/charset -maxdepth 1 -type d -exec chmod 755 {} \\;",
+        "find t/add t/cfg t/charset -maxdepth 2 -type d -exec chmod 755 {} \\;",
+        "find t/add t/cfg t/charset             -type d -exec chmod 755 {} \\;",
+        "find t                                 -type f -exec chmod 644 {} \\;"
     );
 
     foreach my $cmd (@cmds) {

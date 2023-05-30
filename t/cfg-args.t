@@ -60,7 +60,12 @@ push @tests, {
     'options'          => '--no-update --keep 100',
     'expected_outfile' => '_output-keep100',
     'expected_files'   => 'man.it.1'
-
+  },
+  {
+    'doc'            => 'spaces in the directory and file names',
+    'po4a.conf'      => 'cfg/space_in_name/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'some\ directory space\ in\ name.fr.po  space\ in\ name.pot',
   };
 
 run_all_tests(@tests);

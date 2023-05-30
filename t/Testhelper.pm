@@ -293,11 +293,11 @@ sub run_one_po4aconf {
     }
 
     my %expected;
-    map { $expected{$_} = 1 } split / +/, $expected_files;
+    map { s/\\ / /g; $expected{$_} = 1 } split /(?<!\\) +/, $expected_files;
     if ( length $expected_files == 0 ) {
         note("Expecting no output file.");
     } else {
-        note( "Expecting " . ( scalar %expected ) . " output files: $expected_files" );
+        note( "Expecting " . ( scalar %expected ) . " output files: " . join( ":", keys %expected ) );
     }
     $expected{'output'}      = 1;
     $expected{'diff_output'} = 1;
@@ -312,12 +312,13 @@ sub run_one_po4aconf {
         } else {
             delete $expected{$file};
             next FILE if $file eq 'output' || $file eq 'diff_output';
+            next FILE if -d "$path/$file";
             if ( scalar grep { m{$tmppath/$file} } @tests ) {
                 note("Using the provided test to compare the content of $file");
             } elsif ( -e "$path/_$file" ) {
-                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/_$file $tmppath/$file";
+                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " \"$path/_$file\" \"$tmppath/$file\"";
             } elsif ( -e "$path/$file" ) {
-                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " $path/$file $tmppath/$file";
+                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " \"$path/$file\" \"$tmppath/$file\"";
             } else {
                 teardown( \@teardown );
                 fail("Broken test $path: $path/_$file should be the expected content of produced file $file");
