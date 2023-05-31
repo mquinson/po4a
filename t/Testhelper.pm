@@ -316,9 +316,13 @@ sub run_one_po4aconf {
             if ( scalar grep { m{$tmppath/$file} } @tests ) {
                 note("Using the provided test to compare the content of $file");
             } elsif ( -e "$path/_$file" ) {
-                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " \"$path/_$file\" \"$tmppath/$file\"";
+                push @tests,
+                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u --strip-trailing-cr" )
+                  . " \"$path/_$file\" \"$tmppath/$file\"";
             } elsif ( -e "$path/$file" ) {
-                push @tests, ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u" ) . " \"$path/$file\" \"$tmppath/$file\"";
+                push @tests,
+                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u --strip-trailing-cr" )
+                  . " \"$path/$file\" \"$tmppath/$file\"";
             } else {
                 teardown( \@teardown );
                 fail("Broken test $path: $path/_$file should be the expected content of produced file $file");
@@ -333,7 +337,7 @@ sub run_one_po4aconf {
 
         #        print STDERR "cmd: $tcmd\n";
         $tcmd =~ s/PATH/${execpath}/g;
-        $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
+        $tcmd =~ s/PODIFF/diff -u --strip-trailing-cr $PODIFF /g;
         $tcmd =~ s/\$tmppath/$tmppath/g;
         $tcmd =~ s/\$path/$path/g;
         if ( system_failed( "$tcmd 2>&1 > $tmppath/_cmd_output", "" ) ) {

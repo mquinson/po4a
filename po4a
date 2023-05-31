@@ -1059,6 +1059,7 @@ my ( $line, $nb ) = ( "", 0 );
 while (<CONFIG>) {
     $nb++;
     s/#.*//;
+    s/\R//g;    # Deal with CRLF
     $line .= $_;
     $line =~ s/\t/ /g;
     $line =~ s/ +/ /g;

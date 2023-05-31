@@ -66,6 +66,13 @@ push @tests, {
     'po4a.conf'      => 'cfg/space_in_name/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'some\ directory space\ in\ name.fr.po  space\ in\ name.pot',
+  },
+  {
+    'doc'            => 'Just like single-uptodate, but with the config file in DOS encoding',
+    'po4a.conf'      => 'cfg/windows-CRLF/windows-CRLF.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'single-uptodate.fr.po  single-uptodate.pot single-uptodate.man.fr.1',
+
   };
 
 run_all_tests(@tests);
