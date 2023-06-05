@@ -857,8 +857,11 @@ sub get_options {
 
 # Split a line into an array of lines. There is a lame attempt to deal with quotes and escaped spaces.
 # Remaining issues:
-#   - Quotes cannot be mixed: "da 'd d'" is invalid
-#   - Empty elements are ignored: "\\ a" results in "a" not " a"
+#   - Quotes cannot be mixed: >>"da 'd d'<< is invalid
+#   - Empty elements are ignored: >>\\ a<< results in "a" not " a"
+#   - Quotes and space escaping cannot be mixed: >>"a b"c\\ d<< is invalid
+#
+# See also https://stackoverflow.com/questions/29041011/perl-split-string-that-has-double-quotes-and-space/76404839#76404839
 sub split_line {
     my $string = shift;
     my $orig_line = $string;
@@ -871,7 +874,7 @@ sub split_line {
 
         # Found a string boundary in this token
         if ( $tok =~ /'|"/ ) {
-	    my $orig_sep_char = $sep_char;
+	        my $orig_sep_char = $sep_char;
 
             # Check that we are not mismatching simple and double quote
             if ( $tok =~ /'/ ) {
@@ -888,7 +891,7 @@ sub split_line {
             # Cleanup the sep char and check that we are done
             $tok =~ s/"|'//;
 
-            if ( $tok =~ s/('|")// ) { # Two quotes in the same chunk. Deal with it if it's eg: "something"
+            if ( $tok =~ s/('|")// ) { # Two quotes in the same chunk. Deal with it if it's eg: >>"something"<<
                 die "Mismatch between simple quote (') and double quote (\") in $orig_line" if ($sep_char ne $1);
                 die "Please don't use more than two quote signs per elements, that's too hard to parse." if ( $tok =~ /'|"/ );
 
@@ -904,9 +907,10 @@ sub split_line {
                     push @result, $tok;
                 }
                 next;
-	    }
+	        }
 
-            # Accumulate the string, or push the previously accumulated things
+            # Accumulate the string if entering the string (in_str = false before that chunk),
+            # or push the previously accumulated things if existing the string (in_str = true previously).
             if ($in_str) {
                 push @result, "$accumulated $tok";
                 $accumulated = "";
