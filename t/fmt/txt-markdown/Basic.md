@@ -18,3 +18,7 @@ The second paragraph.
 ## Subtitle
 
 And more text in a paragraph.
+
+This is a [link][] with long URL.
+
+[link]: https://example.com/sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo/long

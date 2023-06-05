@@ -736,6 +736,24 @@ sub parse_markdown {
         $self->pushline( $line . "\n" );
         $paragraph        = "";
         $end_of_paragraph = 1;
+    } elsif ( $line =~ /^([ ]{0,3})(\[[^\]]+\]:[ \t]?.+)$/ ) {
+        my $indentation   = $1;
+        my $linkreference = $2;
+
+        # Link reference
+        # TODO: support multiline link reference definition
+        # TODO: treat link title properly
+        # https://spec.commonmark.org/0.30/#link-reference-definitions
+        do_paragraph( $self, $paragraph, $wrapped_mode );
+        $wrapped_mode = 0;
+        $paragraph    = "";
+        my $t = $self->translate(
+            $linkreference, $self->{ref}, "Link reference",
+            "wrap"  => 0,
+            "flags" => "link-reference"
+        );
+        $self->pushline( $indentation . $t . "\n" );
+        $wrapped_mode = $defaultwrap;
     } elsif ( $line =~ /^([ ]{0,3})(([~`])\3{2,})(\s*)([^`]*)\s*$/ ) {
         my $fence_space_before  = $1;
         my $fence               = $2;
