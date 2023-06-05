@@ -260,14 +260,14 @@ sub initialize {
         $self->{counter} = {};
     }
 
-    $self->{po}        = ();
-    $self->{count}     = 0;                          # number of msgids in the PO
+    $self->{po}               = ();
+    $self->{count}            = 0;                   # number of msgids in the PO
                                                      # count_doc: number of strings in the document
                                                      # (duplicate strings counted multiple times)
-    $self->{count_doc} = 0;
-    $self->{gettextize_types} = (); # Type of each msgid found in the doc, in order
-    # We cannot use {$msgid}{'type'} as a type because for duplicate entries, the type is overwritten.
-    # So we have to copy the same info to this separate array, which is accessed through type_doc()
+    $self->{count_doc}        = 0;
+    $self->{gettextize_types} = ();                  # Type of each msgid found in the doc, in order
+        # We cannot use {$msgid}{'type'} as a type because for duplicate entries, the type is overwritten.
+        # So we have to copy the same info to this separate array, which is accessed through type_doc()
     $self->{header_comment} =
         " SOME DESCRIPTIVE TITLE\n"
       . " Copyright (C) YEAR "
@@ -325,7 +325,7 @@ sub read {
     $lang =~ s/\.po$//;
     $self->{lang} = $lang;
 
-    my $cmd = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o /dev/null " . $filename;
+    my $cmd = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o /dev/null \"" . $filename . '"';
 
     my $locale = $ENV{'LC_ALL'};
     $ENV{'LC_ALL'} = "C";
@@ -1241,12 +1241,14 @@ sub push_raw {
 
             if ($keep_conflict) {
                 if ( $self->{po}{$msgid}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s ) {
-                    $msgstr = $self->{po}{$msgid}{'msgstr'} . "\\n#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n" . $msgstr;
+                    $msgstr =
+                      $self->{po}{$msgid}{'msgstr'} . "\\n#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n" . $msgstr;
                 } else {
                     $msgstr =
                         "#-#-#-#-#  "
                       . $self->{po}{$msgid}{'transref'}
-                      . " (type " . $self->{po}{$msgid}{'type'}
+                      . " (type "
+                      . $self->{po}{$msgid}{'type'}
                       . ")  #-#-#-#-#\\n"
                       . $self->{po}{$msgid}{'msgstr'} . "\\n"
                       . "#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n"
@@ -1293,9 +1295,9 @@ sub push_raw {
     $self->{po}{$msgid}{'automatic'} = $automatic;
     $self->{po}{$msgid}{'previous'}  = $previous;
 
-    $self->{po}{$msgid}{pos_doc} = () unless (defined( $self->{po}{$msgid}{pos_doc}));
-    CORE::push( @{ $self->{po}{$msgid}{pos_doc} }, $self->{count_doc}++);
-    CORE::push( @{ $self->{gettextize_types} }, $type);
+    $self->{po}{$msgid}{pos_doc} = () unless ( defined( $self->{po}{$msgid}{pos_doc} ) );
+    CORE::push( @{ $self->{po}{$msgid}{pos_doc} }, $self->{count_doc}++ );
+    CORE::push( @{ $self->{gettextize_types} },    $type );
 
     unless ( defined( $self->{po}{$msgid}{'pos'} ) ) {
         $self->{po}{$msgid}{'pos'} = $self->{count}++;
