@@ -1170,7 +1170,9 @@ sub do_paragraph {
         $end = $2 || "";
     }
 
-    # Detect index entries and translate them separately
+    # Detect index entries and translate them separately.
+    # They are moved in front of the paragraph, regardless of their original location,
+    #  but that's consistant with the specification.
     my $pattern = qr/\(\(\(([^\)]+)\)\)\)/;
     if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
 	for my $index (@indexes) {
