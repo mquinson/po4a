@@ -1170,6 +1170,22 @@ sub do_paragraph {
         $end = $2 || "";
     }
 
+    # Detect index entries and translate them separately
+    my $pattern = qr/\(\(\(([^\)]+)\)\)\)/;
+    if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
+	for my $index (@indexes) {
+	    my @trans_list = map  {$self->translate(
+		    $_,
+		    $self->{ref},
+		    "Index entry",
+		    "wrap" => 1,
+		    "wrapcol" => 0);} split(/,/, $index);
+
+	    $paragraph =~ s/\(\(\($index\)\)\)\n?//;
+	    $self->pushline("(((" . join (",", @trans_list) . ")))");
+	}
+    }
+
     my $t = $self->translate(
         $paragraph,
         $self->{ref},
