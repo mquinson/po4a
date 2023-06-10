@@ -262,6 +262,7 @@ sub initialize {
     $self->register_attributelist('[caption]');
     $self->register_attributelist('[-icons,caption]');
     $self->register_macro('image_[1,alt,title,link]') unless $self->{options}{'noimagetargets'};
+    $self->register_macro('indexterm[1,2,3]') unless $self->{options}{'noimagetargets'};
 
     if ( $self->{options}{'definitions'} ) {
         $self->parse_definition_file( $self->{options}{'definitions'} );
@@ -1170,10 +1171,40 @@ sub do_paragraph {
         $end = $2 || "";
     }
 
+    $paragraph = $self->translate_indexterms($paragraph, qr/\(\(\(([^\)]+)\)\)\)/);
+    $paragraph = $self->translate_indexterms($paragraph, qr/indexterm:\[([^\]]+)\]/);
+
+    my $t = $self->translate(
+        $paragraph,
+        $self->{ref},
+        $type,
+        "comment" => join( "\n", @comments ),
+        "wrap"    => $wrap
+    );
+    my $bullet = $self->{bullet} || "";
+    # print STDERR "translated: '$t', $bullet\n";
+
+    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && (! ($t =~ /\+\n/) ) ;
+    if ($unwrap_result) {
+        $t =~ s/(\n| )+/ /g;
+    }
+
+    @comments = ();
+    if ( defined $self->{bullet} ) {
+        my $bullet  = $self->{bullet};
+        my $indent1 = $self->{indent};
+        my $indent2 = $indent1 . ( ' ' x length($bullet) );
+        $t =~ s/^/$indent1$bullet/s;
+        $t =~ s/\n(.)/\n$indent2$1/sg;
+    }
+    $self->pushline( $t . $end );
+}
+
+sub translate_indexterms {
     # Detect index entries and translate them separately.
     # They are moved in front of the paragraph, regardless of their original location,
     #  but that's consistant with the specification.
-    my $pattern = qr/\(\(\(([^\)]+)\)\)\)/;
+    my ($self, $paragraph, $pattern) = @_;
     if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
 	for my $index (@indexes) {
 	    my @terms = ();
@@ -1201,35 +1232,12 @@ sub do_paragraph {
 				  "wrapcol" => 0);
 		}
 	    }
-	    $paragraph =~ s/\(\(\(\Q$index\E\)\)\)\n?//;
 	    $self->pushline("(((" . join (",", @terms) . ")))");
 
 	}
     }
-    my $t = $self->translate(
-        $paragraph,
-        $self->{ref},
-        $type,
-        "comment" => join( "\n", @comments ),
-        "wrap"    => $wrap
-    );
-    my $bullet = $self->{bullet} || "";
-    # print STDERR "translated: '$t', $bullet\n";
-
-    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && (! ($t =~ /\+\n/) ) ;
-    if ($unwrap_result) {
-        $t =~ s/(\n| )+/ /g;
-    }
-
-    @comments = ();
-    if ( defined $self->{bullet} ) {
-        my $bullet  = $self->{bullet};
-        my $indent1 = $self->{indent};
-        my $indent2 = $indent1 . ( ' ' x length($bullet) );
-        $t =~ s/^/$indent1$bullet/s;
-        $t =~ s/\n(.)/\n$indent2$1/sg;
-    }
-    $self->pushline( $t . $end );
+    $paragraph =~ s/$pattern\n?//g;
+    return $paragraph;
 }
 
 sub parse_style {
