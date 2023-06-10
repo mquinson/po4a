@@ -1176,18 +1176,36 @@ sub do_paragraph {
     my $pattern = qr/\(\(\(([^\)]+)\)\)\)/;
     if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
 	for my $index (@indexes) {
-	    my @trans_list = map  {$self->translate(
-		    $_,
-		    $self->{ref},
-		    "Index entry",
-		    "wrap" => 1,
-		    "wrapcol" => 0);} split(/,/, $index);
+	    my @terms = ();
+	    while (
+		$index =~ m/\G(
+       "(?:[^"\\])+"               # quoted term
+       |  (?:[^,\\])+                # unquoted term
+         )(,\s*+)?/gx
+      )
+	    {
+		my $term = $1;
+		if ( $term =~ /^"(.*)"$/ ) {
+		    push @terms, '"' . ($self->translate(
+				  $1,
+				  $self->{ref},
+				  "Index entry",
+				  "wrap" => 1,
+				  "wrapcol" => 0)) . '"';
+		} else {
+		    push @terms, $self->translate(
+				  $term,
+				  $self->{ref},
+				  "Index entry",
+				  "wrap" => 1,
+				  "wrapcol" => 0);
+		}
+	    }
+	    $paragraph =~ s/\(\(\(\Q$index\E\)\)\)\n?//;
+	    $self->pushline("(((" . join (",", @terms) . ")))");
 
-	    $paragraph =~ s/\(\(\($index\)\)\)\n?//;
-	    $self->pushline("(((" . join (",", @trans_list) . ")))");
 	}
     }
-
     my $t = $self->translate(
         $paragraph,
         $self->{ref},
