@@ -899,7 +899,7 @@ sub parse {
             $self->pushline(".$t\n");
             @comments = ();
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^(\s*)((?:[-*o+\.]+|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\))\s+)(.*)$/ ) )
+            and ( $line =~ m/^(\s*)((?:(?:[-*o+\.]+(?:\s+\[[ xX\*]\])?)|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\))\s+)(.*)$/ ) )
         {
             my $indent = $1 || "";
             my $bullet = $2;
@@ -1127,13 +1127,13 @@ sub do_paragraph {
         # - blah         o blah         + blah
         # 1. blah       1) blah       (1) blah
       TEST_BULLET:
-        if ( $paragraph =~ m/^(\s*)((?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+)([^\n]*\n)(.*)$/s ) {
+        if ( $paragraph =~ m/^(\s*)((?:(?:[-*o+](?:\s+\[[ Xx\*]\])?)|([0-9]+[.\)])|\([0-9]+\))\s+)([^\n]*\n)(.*)$/s ) {
             my $para    = $5;
             my $bullet  = $2;
             my $indent1 = $1;
             my $indent2 = "$1" . ( ' ' x length $bullet );
             my $text    = $4;
-            while ( $para !~ m/$indent2(?:[-*o+]|([0-9]+[.\)])|\([0-9]+\))\s+/
+            while ( $para !~ m/$indent2(?:(?:[-*o+](?:\\s+[[ Xx\*]\])?)|([0-9]+[.\)])|\([0-9]+\))\s+/
                 and $para =~ s/^$indent2(\S[^\n]*\n)//s )
             {
                 $text .= $1;
