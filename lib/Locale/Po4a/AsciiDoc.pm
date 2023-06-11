@@ -583,6 +583,8 @@ sub parse {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $wrapped_mode = 0;
             $paragraph    = "";
+	    $self->pushline( $titlelevel1 . $titlespaces);
+	    $title = $self->translate_indexterms($title);
             my $t = $self->translate(
                 $title,
                 $self->{ref},
@@ -590,7 +592,7 @@ sub parse {
                 "comment" => join( "\n", @comments ),
                 "wrap"    => 0
             );
-            $self->pushline( $titlelevel1 . $titlespaces . $t . $titlelevel2 . "\n" );
+            $self->pushline( $t . $titlelevel2 . "\n" );
             @comments     = ();
             $wrapped_mode = 1;
         } elsif ( ( $line =~ m/^(\/{4,}|\+{4,}|-{4,}|\.{4,}|\*{4,}|_{4,}|={4,}|~{4,})$/ )
@@ -1170,9 +1172,12 @@ sub do_paragraph {
         $paragraph =~ s/^(.*?)(\n*)$/$1/s;
         $end = $2 || "";
     }
-
-    $paragraph = $self->translate_indexterms($paragraph, qr/\(\(\(([^\)]+)\)\)\)/);
-    $paragraph = $self->translate_indexterms($paragraph, qr/indexterm:\[([^\]]+)\]/);
+    if ( defined $self->{bullet} ) {
+        my $bullet  = $self->{bullet};
+        my $indent1 = $self->{indent};
+	$self->pushline($indent1 . $bullet);
+    }
+    $paragraph = $self->translate_indexterms($paragraph);
 
     my $t = $self->translate(
         $paragraph,
@@ -1194,13 +1199,18 @@ sub do_paragraph {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
         my $indent2 = $indent1 . ( ' ' x length($bullet) );
-        $t =~ s/^/$indent1$bullet/s;
         $t =~ s/\n(.)/\n$indent2$1/sg;
     }
     $self->pushline( $t . $end );
 }
 
 sub translate_indexterms {
+    my ($self, $paragraph) = @_;
+    $paragraph = $self->translate_in_regex($paragraph, qr/\(\(\(([^\)]+)\)\)\)/);
+    return $self->translate_in_regex($paragraph, qr/indexterm:\[([^\]]+)\]/);
+}
+
+sub translate_in_regex {
     # Detect index entries and translate them separately.
     # They are moved in front of the paragraph, regardless of their original location,
     #  but that's consistant with the specification.
