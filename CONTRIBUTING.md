@@ -93,7 +93,7 @@ to run, and make it verbose. The tests are executed from the "_t_"
 directory.
 
 ```
-  ./Build test --test_files t/25-yaml.t verbose=1
+  ./Build test --test_files t/fmt-yaml.t verbose=1
 ```
 
 The PERL5LIB variable can be used to run your modified modules without
