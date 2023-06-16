@@ -1308,9 +1308,15 @@ sub handle_yaml {
         my ( $self, $is_yfm, $blockref, $hash, $indent, $ctx, $yfm_keys, $yfm_skip_array, $yfm_paths ) = @_;
 
         foreach my $name ( sort keys %$hash ) {
-            my $el     = $hash->{$name};
+            my $el     = $hash->{$name} // "";
             my $header = ( '  ' x $indent ) . YAML::Tiny::_dump_scalar( "dummy", $name, 1 ) . ":";
-            my $type   = ref $el;
+
+            unless ( length($el) > 0 ) {    # empty element, as in "tags: " with nothing after the column
+                $self->pushline( $header . "\n" );
+                next;
+            }
+
+            my $type = ref $el;
             if ( !$type ) {
                 my %keys  = %{$yfm_keys};
                 my %paths = %{$yfm_paths};

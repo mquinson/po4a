@@ -6,6 +6,7 @@ numeric_ignored_value: 22
 tags:
 - yaml
 - markdown
+emptytag:
 people:
   - 
     name: John D'vloper
