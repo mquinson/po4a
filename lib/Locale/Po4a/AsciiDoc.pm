@@ -761,7 +761,7 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^(\s*)([-%~\$[*_+`'#<>[:alnum:]\\"(].*?)((?::::?|;;|\?\?|:-)(?: *\\)?)$/ ) )
+            and ( $line =~ m/^(\s*)([-%~\$[*_+`'#<>[:alnum:]\\"(|\{].*?)((?::::?|;;|\?\?|:-)(?: *\\)?)$/ ) )
         {
             my $indent   = $1;
             my $label    = $2;
