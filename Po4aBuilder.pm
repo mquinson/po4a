@@ -293,7 +293,7 @@ sub postats {
 	} elsif ($stat =~ /(\d+)/) {
 	  ($trans) = ($1);
 	} else {
-	  print "Unparsable content\n";
+	  print "Unparsable content: $stat\n";
 	}
         my $total = $trans+$fuzz+$untr;
 	my $ratio = $trans / $total * 100;
