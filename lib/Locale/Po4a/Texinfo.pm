@@ -336,7 +336,7 @@ sub translate_buffer_menuentry {
 
     my $translated_buffer = "";
 
-    if (   $buffer =~ m/^(.*?)(::)\s+(.*)$/s
+    if (   $buffer =~ m/^(.*?)(::)(?:\s+(.*))?$/s
         or $buffer =~ m/^(.*?: .*?)(\.)\s+(.*)$/s )
     {
         my ( $name, $sep, $description ) = ( $1, $2, $3 );
@@ -347,8 +347,9 @@ sub translate_buffer_menuentry {
             $translated_buffer .= ' ' x ( $menu_sep_width - 1 - $l );
             $l = $menu_sep_width - 1;
         }
-        ( $t, @e ) = $self->translate_buffer( $description, $no_wrap, @env );
-
+        if ($description) {
+            ( $t, @e ) = $self->translate_buffer( $description, $no_wrap, @env );
+        }
         # Replace newlines with space for proper wrapping
         # See https://github.com/mquinson/po4a/issues/122
         $t =~ s/\n/ /sg;
