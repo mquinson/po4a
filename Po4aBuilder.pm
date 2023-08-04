@@ -245,20 +245,17 @@ sub ACTION_man {
         foreach $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
             copy( File::Spec->catdir( "share", "doc", $file ), $man1path ) or die;
         }
+        my $docbook_xsl_url   = "http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl";
+        my $local_docbook_xsl = `xmlcatalog --noout "" "$docbook_xsl_url"` =~ m,file://(.+\.xsl), && $1;
         foreach $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
             if ( $file =~ m,(.*/man(.))/([^/]*)\.xml$, ) {
                 my ( $outdir, $section, $outfile ) = ( $1, $2, $3 );
-                if ( -e "/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl" )
-                {    # Location on Debian at least
+                if ($local_docbook_xsl) {
                     print "Convert $outdir/$outfile.$section (local docbook.xsl file). ";
-                    system(
-                        "xsltproc -o $outdir/$outfile.$section --nonet /usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl $file"
-                    ) and die;
+                    system("xsltproc -o $outdir/$outfile.$section --nonet $local_docbook_xsl $file") and die;
                 } else {    # Not found locally, use the XSL file online
                     print "Convert $outdir/$outfile.$section (online docbook.xsl file). ";
-                    system(
-                        "xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file"
-                    ) and die;
+                    system("xsltproc -o $outdir/$outfile.$section --nonet $docbook_xsl_url $file") and die;
                 }
                 system("gzip -9 -n -f $outdir/$outfile.$section") and die;
             }
