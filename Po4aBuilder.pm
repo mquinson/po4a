@@ -173,13 +173,13 @@ sub ACTION_man {
     # Translate binaries manpages
     my %options;
     $options{utf8} = 1;
-    my $parser = Pod::Man->new (%options);
+    my $parser = Pod::Man->new(%options);
 
-    my $manpath  = File::Spec->catdir( 'blib', 'man' );
-    File::Path::rmtree( $manpath, 0, 1);
+    my $manpath = File::Spec->catdir( 'blib', 'man' );
+    File::Path::rmtree( $manpath, 0, 1 );
 
-    my $cmd = "perl -Ilib po4a "; # Use this version of po4a
-    $cmd .= $ENV{PO4AFLAGS}." " if defined($ENV{PO4AFLAGS});
+    my $cmd = "perl -Ilib po4a ";    # Use this version of po4a
+    $cmd .= $ENV{PO4AFLAGS} . " " if defined( $ENV{PO4AFLAGS} );
     $cmd .= "--previous po/pod.cfg";
     system($cmd) and die;
 
@@ -191,19 +191,20 @@ sub ACTION_man {
     File::Path::mkpath( $man3path, 0, oct(755) ) or die;
     File::Path::mkpath( $man5path, 0, oct(755) ) or die;
     File::Path::mkpath( $man7path, 0, oct(755) ) or die;
-    copy ( File::Spec->catdir("doc", "po4a.7.pod"), $man7path) or die;
-    foreach $file (perl_scripts()) {
-        $file =~ m,([^/]*)$,;
-        copy($file, File::Spec->catdir($man1path, "$1.1p.pod")) or die "Cannot copy $file over";
-    }
-    foreach $file (@{$self->rscan_dir('lib',qr{\.pm$})}) {
-        $file =~ m,([^/]*).pm$,;
-        copy($file, File::Spec->catdir($man3path, "Locale::Po4a::$1.3pm.pod")) or die;
-    }
-    $self->delete_filetree( File::Spec->catdir("blib", "bindoc") );
-    $self->delete_filetree( File::Spec->catdir("blib", "libdoc") );
+    copy( File::Spec->catdir( "doc", "po4a.7.pod" ), $man7path ) or die;
 
-    foreach $file (@{$self->rscan_dir($manpath, qr{\.pod$})}) {
+    foreach $file ( perl_scripts() ) {
+        $file =~ m,([^/]*)$,;
+        copy( $file, File::Spec->catdir( $man1path, "$1.1p.pod" ) ) or die "Cannot copy $file over";
+    }
+    foreach $file ( @{ $self->rscan_dir( 'lib', qr{\.pm$} ) } ) {
+        $file =~ m,([^/]*).pm$,;
+        copy( $file, File::Spec->catdir( $man3path, "Locale::Po4a::$1.3pm.pod" ) ) or die;
+    }
+    $self->delete_filetree( File::Spec->catdir( "blib", "bindoc" ) );
+    $self->delete_filetree( File::Spec->catdir( "blib", "libdoc" ) );
+
+    foreach $file ( @{ $self->rscan_dir( $manpath, qr{\.pod$} ) } ) {
         next if $file =~ m/^man7/;
         my $out = $file;
         $out =~ s/\.pod$//;
@@ -211,49 +212,55 @@ sub ACTION_man {
         $parser->{name} =~ s/^.*\///;
         $parser->{name} =~ s/^(.*).(1p|3pm|5|7)/$1/;
         $parser->{section} = $2;
-        if ($parser->{section} ne "3pm") {
+        if ( $parser->{section} ne "3pm" ) {
             $parser->{name} = uc $parser->{name};
         }
 
         my $lang = $out;
         $lang =~ s/^blib\/man\/([^\/]*)\/.*$/$1/;
 
-        if ($lang =~ m/man\d/) {
-                $parser->{release} = $parser->{center} = "Po4a Tools";
+        if ( $lang =~ m/man\d/ ) {
+            $parser->{release} = $parser->{center} = "Po4a Tools";
         } else {
-                my $command;
-                $command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
-                $command .= "msgconv -t UTF-8 | ";
-                $command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
-                $command .= "&& cat || cat > /dev/null'";
+            my $command;
+            $command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
+            $command .= "msgconv -t UTF-8 | ";
+            $command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
+            $command .= "&& cat || cat > /dev/null'";
 
-                my $title = `$command 2> /dev/null`;
-                $title = "Po4a Tools" unless length $title;
-                $title = Encode::decode_utf8($title);
-                $parser->{release} = $parser->{center} = $title;
+            my $title = `$command 2> /dev/null`;
+            $title             = "Po4a Tools" unless length $title;
+            $title             = Encode::decode_utf8($title);
+            $parser->{release} = $parser->{center} = $title;
         }
-        $parser->parse_from_file ($file, $out);
+        $parser->parse_from_file( $file, $out );
 
         system("gzip -9 -n -f $out") and die;
         unlink "$file" || die;
     }
 
-    if ($^O ne 'MSWin32') {
+    if ( $^O ne 'MSWin32' ) {
+
         # Install the manpages written in XML DocBook
         foreach $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
-            copy ( File::Spec->catdir("share", "doc", $file), $man1path) or die;
+            copy( File::Spec->catdir( "share", "doc", $file ), $man1path ) or die;
         }
-        foreach $file (@{$self->rscan_dir($manpath, qr{\.xml$})}) {
-            if ($file =~ m,(.*/man(.))/([^/]*)\.xml$,) {
-                my ($outdir, $section, $outfile) = ($1, $2, $3);
-            if (-e "/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl") { # Location on Debian at least
-            print "Convert $outdir/$outfile.$section (local docbook.xsl file). ";
-            system("xsltproc -o $outdir/$outfile.$section --nonet /usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl $file") and die;
-            } else { # Not found locally, use the XSL file online
-            print "Convert $outdir/$outfile.$section (online docbook.xsl file). ";
-            system("xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file") and die;
-            }
-                system ("gzip -9 -n -f $outdir/$outfile.$section") and die;
+        foreach $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
+            if ( $file =~ m,(.*/man(.))/([^/]*)\.xml$, ) {
+                my ( $outdir, $section, $outfile ) = ( $1, $2, $3 );
+                if ( -e "/usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl" )
+                {    # Location on Debian at least
+                    print "Convert $outdir/$outfile.$section (local docbook.xsl file). ";
+                    system(
+                        "xsltproc -o $outdir/$outfile.$section --nonet /usr/share/xml/docbook/stylesheet/docbook-xsl/manpages/docbook.xsl $file"
+                    ) and die;
+                } else {    # Not found locally, use the XSL file online
+                    print "Convert $outdir/$outfile.$section (online docbook.xsl file). ";
+                    system(
+                        "xsltproc -o $outdir/$outfile.$section --nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $file"
+                    ) and die;
+                }
+                system("gzip -9 -n -f $outdir/$outfile.$section") and die;
             }
             unlink "$file" || die;
         }
