@@ -878,6 +878,7 @@ sub parse {
                 @comments = ();
             }
         } elsif ( not defined $self->{verbatim}
+		  and ($paragraph =~ m/^\s*$/)
             and ( $line !~ m/^\.\./ )
             and ( $line =~ m/^\.(\S.*)$/ ) )
         {
