@@ -919,6 +919,9 @@ sub parse {
             $paragraph      = $text . "\n";
             $self->{indent} = "";
             $self->{bullet} = $bullet;
+	} elsif ( not defined $self->{verbatim}
+		  and ( $line eq " +") ) {
+	    $paragraph .= $line . "\n";
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
 
             # When not in table, empty lines or lines containing only spaces do break paragraphs
@@ -1190,7 +1193,7 @@ sub do_paragraph {
     }
 
     @comments = ();
-    if ( defined $self->{bullet} ) {
+    if ( ( defined $self->{bullet} ) && !($t =~ /\+\n/ ) ) {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
         my $indent2 = $indent1 . ( ' ' x length($bullet) );
