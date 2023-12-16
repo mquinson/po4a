@@ -1080,12 +1080,6 @@ sub parse {
             $paragraph .= $line . "\n";
         }
 
-        # paragraphs starting by a bullet, or numbered
-        # or paragraphs with a line containing many consecutive spaces
-        # (more than 3)
-        # are considered as verbatim paragraphs
-        $wrapped_mode = 0 if ( $paragraph =~ m/^(\*|[0-9]+[.)] )/s
-            or $paragraph =~ m/[ \t][ \t][ \t]/s );
         ( $line, $ref ) = $self->shiftline();
     }
     if ( length $paragraph ) {
