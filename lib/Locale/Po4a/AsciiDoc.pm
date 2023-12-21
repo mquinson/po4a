@@ -1061,7 +1061,7 @@ sub parse {
 
             if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) )
             {
-		if ( !$self->{options}{'nolinting'} ) {
+		if ( ( !$self->{options}{'nolinting'} ) && ($paragraph !~ m/ \+\n/ ) ) {
 		    # Second line of an item block is not indented. It is unindented
 		    # (and allowed) additional text or a new list item.
 		    warn wrap_mod(
