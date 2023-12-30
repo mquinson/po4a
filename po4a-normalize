@@ -178,7 +178,6 @@ unless ($no_deprecation) {
 
 my $parser = Locale::Po4a::Chooser::new( $type, %options );
 if ( length $mastchar && $mastchar !~ /ascii/i && $mastchar ne "CHARSET" ) {
-    $parser->{TT}{ascii_input} = 0;
     $parser->detected_charset($mastchar);
 }
 $parser->{TT}{file_in_charset} = $mastchar;

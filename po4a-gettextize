@@ -347,9 +347,7 @@ use Locale::Po4a::Common;
 
 use Pod::Usage qw(pod2usage);
 
-our %debug = (
-    'encoding' => 0,
-);
+our %debug = ( 'encoding' => 0, );
 
 Locale::Po4a::Common::textdomain('po4a');
 
@@ -437,8 +435,8 @@ sub gettextize {
 
         #       print STDERR "Matches [[$orig]]<<$trans>>\n";
 
-        my ( $reforig,  $reftrans )  = ( $poorig->{po}{$orig}{'reference'}, $potrans->{po}{$trans}{'reference'} );
-        my ( $typeorig, $typetrans ) = ( $poorig->type_doc($o),             $potrans->type_doc($t) );
+        my ( $reforig, $reftrans ) = ( $poorig->{po}{$orig}{'reference'}, $potrans->{po}{$trans}{'reference'} );
+        my ( $typeorig, $typetrans ) = ( $poorig->type_doc($o), $potrans->type_doc($t) );
 
         #
         # Make sure the type of both string exist
@@ -510,7 +508,6 @@ sub gettextize {
     return $pores;
 }
 
-
 sub show_version {
     Locale::Po4a::Common::show_version("po4a-gettextize");
     exit 0;
@@ -568,11 +565,15 @@ foreach (@options) {
     }
 }
 
-if (scalar @locfile == 0) {
-    die wrap_msg(gettext("You must provide the same amount of master files and localized files to synchronize them, ".
-                         "as po4a-gettextize is intended to synchronize master files and previously existing translations. ".
-                         "If just want to extract POT files of your master files, please use po4a-updatepo. ".
-                         "Please note that the most convenient way of using po4a is to write a po4a.conf file and use the integrated po4a(1) program."))
+if ( scalar @locfile == 0 ) {
+    die wrap_msg(
+        gettext(
+                "You must provide the same amount of master files and localized files to synchronize them, "
+              . "as po4a-gettextize is intended to synchronize master files and previously existing translations. "
+              . "If just want to extract POT files of your master files, please use po4a-updatepo. "
+              . "Please note that the most convenient way of using po4a is to write a po4a.conf file and use the integrated po4a(1) program."
+        )
+    );
 }
 
 # Check file existence
@@ -594,9 +595,7 @@ my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Local
 foreach my $file (@masterfile) {
     $mastertt->read( $file, $file );
 }
-if ( $mastertt->{TT}{ascii_input} ) {
-    $mastertt->detected_charset('ascii');
-} elsif ( defined($mastchar) ) {
+if ( defined($mastchar) ) {
     $mastertt->detected_charset($mastchar);
     $mastertt->{TT}{po_in}->set_charset($mastchar);
 }
@@ -622,8 +621,7 @@ if ($keep_temps) {
     $transtt->getpoout()->write("po4atemp.localized.po");
     print wrap_msg(
         dgettext(
-            "po4a",
-            "Temporary master and localized POT files dumped to po4atemp.master.po and po4atemp.localized.po"
+            "po4a", "Temporary master and localized POT files dumped to po4atemp.master.po and po4atemp.localized.po"
         )
     );
 }

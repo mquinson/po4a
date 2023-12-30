@@ -863,7 +863,7 @@ sub get_options {
 #
 # See also https://stackoverflow.com/questions/29041011/perl-split-string-that-has-double-quotes-and-space/76404839#76404839
 sub split_line {
-    my $string = shift;
+    my $string    = shift;
     my $orig_line = $string;
 
     my $accumulated = '';
@@ -874,7 +874,7 @@ sub split_line {
 
         # Found a string boundary in this token
         if ( $tok =~ /'|"/ ) {
-	        my $orig_sep_char = $sep_char;
+            my $orig_sep_char = $sep_char;
 
             # Check that we are not mismatching simple and double quote
             if ( $tok =~ /'/ ) {
@@ -886,16 +886,17 @@ sub split_line {
                 $sep_char = '"';
             }
 
-            die "Please don't mix quotes and escaped spaces"                          if ( $tok =~ /\\$/ );
+            die "Please don't mix quotes and escaped spaces" if ( $tok =~ /\\$/ );
 
             # Cleanup the sep char and check that we are done
             $tok =~ s/"|'//;
 
-            if ( $tok =~ s/('|")// ) { # Two quotes in the same chunk. Deal with it if it's eg: >>"something"<<
-                die "Mismatch between simple quote (') and double quote (\") in $orig_line" if ($sep_char ne $1);
-                die "Please don't use more than two quote signs per elements, that's too hard to parse." if ( $tok =~ /'|"/ );
+            if ( $tok =~ s/('|")// ) {    # Two quotes in the same chunk. Deal with it if it's eg: >>"something"<<
+                die "Mismatch between simple quote (') and double quote (\") in $orig_line" if ( $sep_char ne $1 );
+                die "Please don't use more than two quote signs per elements, that's too hard to parse."
+                  if ( $tok =~ /'|"/ );
 
-                $sep_char = $orig_sep_char; # Revert the fact that we are entering a quote
+                $sep_char = $orig_sep_char;    # Revert the fact that we are entering a quote
 
                 # Deal with that chunk as if it were not quoted
                 if ($in_str) {
@@ -907,7 +908,7 @@ sub split_line {
                     push @result, $tok;
                 }
                 next;
-	        }
+            }
 
             # Accumulate the string if entering the string (in_str = false before that chunk),
             # or push the previously accumulated things if existing the string (in_str = true previously).
@@ -1616,16 +1617,6 @@ if ($update_pot_file) {
         %file_opts = get_options( split_opts($options), @ORIGINAL_ARGV )    if ( length $options );
 
         my $doc = Locale::Po4a::Chooser::new( $document{$master}{'format'}, %{ $file_opts{"options"} } );
-
-        # If we know that the input isn't UTF-8, say so to the TransTractor
-        if (   length $po4a_opts{"mastchar"}
-            && ( not $po4a_opts{"mastchar"} =~ /UTF-8/i )
-            && $po4a_opts{"mastchar"} ne "CHARSET" )
-        {
-            print STDERR "mastchar: " . $po4a_opts{"mastchar"} . "\n";
-            $doc->{TT}{ascii_input} =
-              0;    # this actually mean "don't mess up with the encoding", not litteraly that it's in ascii
-        }
 
         $doc->setpoout($potfile);
         my @file_in_name;
