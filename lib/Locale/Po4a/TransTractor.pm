@@ -976,7 +976,7 @@ sub translate {
     # If the input document isn't completely in ascii, we should see what to
     # do with the current string
     unless ( $self->{TT}{ascii_input} ) {
-        my $out_charset = $self->{TT}{po_out}->get_charset // "UTF-8";
+        my $out_charset = $self->{TT}{po_out}->get_charset;
 
         # We set the output po charset
         if ( $out_charset eq "CHARSET" ) {
@@ -1066,7 +1066,8 @@ sub detected_charset {
     }
 
     if ( length $self->{TT}{'file_in_charset'}
-        and $self->{TT}{'file_in_charset'} !~ m/ascii/i )
+        and $self->{TT}{'file_in_charset'} !~ m/ascii/i
+        and $self->{TT}{'file_in_charset'} ne "UTF-8")
     {
         $self->{TT}{ascii_input} = 0;
     }
