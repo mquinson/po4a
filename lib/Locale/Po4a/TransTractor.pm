@@ -406,10 +406,6 @@ sub new {
     # Input document is in ascii until we prove the opposite (in read())
     $self->{TT}{ascii_input} = 1;
 
-    # We try not to use utf unless it's forced from the outside (in case the
-    # document isn't in ascii)
-    $self->{TT}{utf_mode} = 0;
-
     return $self;
 }
 
@@ -984,11 +980,7 @@ sub translate {
 
         # We set the output po charset
         if ( $out_charset eq "CHARSET" ) {
-            if ( $self->{TT}{utf_mode} ) {
-                $out_charset = "UTF-8";
-            } else {
-                $out_charset = $in_charset;
-            }
+            $out_charset = "UTF-8";
             $self->{TT}{po_out}->set_charset($out_charset);
         }
         if ( $in_charset !~ /^$out_charset$/i ) {
@@ -1101,7 +1093,7 @@ sub get_out_charset {
     if ( length( $self->{TT}{'file_out_charset'} ) ) {
         $charset = $self->{TT}{'file_out_charset'};
     } else {
-        if ( $self->{TT}{utf_mode} && $self->{TT}{ascii_input} ) {
+        if ( $self->{TT}{ascii_input} ) {
             $charset = "UTF-8";
         } else {
             $charset = $self->{TT}{po_in}->get_charset;

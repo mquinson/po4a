@@ -181,7 +181,6 @@ if ( length $mastchar && $mastchar !~ /ascii/i && $mastchar ne "CHARSET" ) {
     $parser->{TT}{ascii_input} = 0;
     $parser->detected_charset($mastchar);
 }
-$parser->{TT}{utf_mode}        = 1;
 $parser->{TT}{file_in_charset} = $mastchar;
 
 my $filename = shift || pod2usage(1);
@@ -204,7 +203,6 @@ if ($blank) {
     $parser = Locale::Po4a::Chooser::new( $type, %options );
     $parser->{TT}{po_in} = $empty_po;
     $parser->read($filename);
-    $parser->{TT}{utf_mode}        = 1;
     $parser->{TT}{file_in_charset} = $mastchar;
     $parser->parse();
 }

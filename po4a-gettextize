@@ -594,7 +594,6 @@ my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Local
 foreach my $file (@masterfile) {
     $mastertt->read( $file, $file );
 }
-$mastertt->{TT}{utf_mode} = 1;
 if ( $mastertt->{TT}{ascii_input} ) {
     $mastertt->detected_charset('ascii');
 } elsif ( defined($mastchar) ) {
@@ -614,8 +613,6 @@ foreach my $file (@locfile) {
     $transtt->read( $file, $file );
 }
 
-# We force the conversion to utf if the master document wasn't in ascii
-$transtt->{TT}{utf_mode} = !$mastertt->{TT}{ascii_input};
 $transtt->detected_charset($locchar);
 $transtt->{TT}{po_in}->set_charset($locchar);
 $transtt->parse;
