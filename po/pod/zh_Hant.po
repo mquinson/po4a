@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.67\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2023-01-01 01:07+0100\n"
+"POT-Creation-Date: 2023-12-30 20:49+0100\n"
 "PO-Revision-Date: 2023-08-13 09:52+0000\n"
 "Last-Translator: Haowei Hsu <hwhsu1231@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://hosted.weblate.org/projects/"
@@ -176,7 +176,7 @@ msgstr ""
 #. type: =head1
 #: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:187
 #: po4a-gettextize:76 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
-#: msguntypot:29 doc/po4a.7.pod:181 lib/Locale/Po4a/Chooser.pm:7
+#: msguntypot:29 doc/po4a.7.pod:182 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Guide.pm:10 lib/Locale/Po4a/Halibut.pm:14
 #: lib/Locale/Po4a/Ini.pm:8 lib/Locale/Po4a/KernelHelp.pm:7
@@ -1305,8 +1305,8 @@ msgstr ""
 #. type: textblock
 #: po4a:126
 msgid ""
-"To have one PO file per master file, you simply have to use the string C<"
-"$master> in the name of your PO files on the C<[po4a_paths]> line, as "
+"To have one PO file per master file, you simply have to use the string "
+"C<$master> in the name of your PO files on the C<[po4a_paths]> line, as "
 "follows."
 msgstr ""
 "要在每個主檔案中有一個 PO 檔案，只需在 C<[po4a_paths]> 行上的 PO 檔名中使用字"
@@ -1405,21 +1405,33 @@ msgstr "指定要翻譯的文件"
 
 #. type: textblock
 #: po4a:133
+#, fuzzy
+#| msgid ""
+#| "You must also list the documents that should be translated. For each "
+#| "master file, you must specify the format parser to use, the location of "
+#| "the translated document to produce, and optionally some configuration. "
+#| "Here is an example:"
 msgid ""
 "You must also list the documents that should be translated. For each master "
 "file, you must specify the format parser to use, the location of the "
-"translated document to produce, and optionally some configuration. Here is "
-"an example:"
+"translated document to produce, and optionally some configuration. File "
+"names should be quoted or escaped if they contain spaces. Here is an example:"
 msgstr ""
 "您還必須列出應翻譯的文件。對於每個主檔案，必須指定要使用的格式解析器、要生成"
 "的轉換文件的位置，以及一些可選的配置。下面是一個例子："
 
 #. type: verbatim
 #: po4a:134
-#, no-wrap
+#, fuzzy, no-wrap
+#| msgid ""
+#| " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
+#| "              de:doc/de/mein_kram.sgml\n"
+#| " [type: man] script fr:doc/fr/script.1 de:doc/de/script.1\n"
+#| " [type: docbook] doc/script.xml fr:doc/fr/script.xml \\\n"
+#| "             de:doc/de/script.xml\n"
+#| "\n"
 msgid ""
-" [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
-"              de:doc/de/mein_kram.sgml\n"
+" [type: sgml] \"doc/my stuff.sgml\"  \"fr:doc/fr/mon truc.sgml\"  de:doc/de/mein\\ kram.sgml\n"
 " [type: man] script fr:doc/fr/script.1 de:doc/de/script.1\n"
 " [type: docbook] doc/script.xml fr:doc/fr/script.xml \\\n"
 "             de:doc/de/script.xml\n"
@@ -1436,8 +1448,8 @@ msgstr ""
 #: po4a:135
 msgid ""
 "But again, these complex lines are difficult to read and modify, e.g. when "
-"adding a new language. It is much simpler to reorganize things using the C<"
-"$lang> template as follows:"
+"adding a new language. It is much simpler to reorganize things using the "
+"C<$lang> template as follows:"
 msgstr ""
 "但同樣，這些複雜的行很難閱讀和修改，例如在新增新語言時。使用 C<$lang> 模板重"
 "新組織內容要簡單得多，如下所示："
@@ -1921,7 +1933,7 @@ msgstr ""
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:78 po4a-normalize:31 po4a-translate:56
-#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:187
+#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:188
 #: lib/Locale/Po4a/AsciiDoc.pm:54 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
@@ -1975,10 +1987,11 @@ msgid "COPYRIGHT AND LICENSE"
 msgstr "版權和許可"
 
 #. type: textblock
-#: po4a:192 po4a-gettextize:81
+#: po4a:192 po4a-gettextize:81 po4a-normalize:34 po4a-translate:59
+#: po4a-updatepo:58
 #, fuzzy
 #| msgid "Copyright 2002-2020 by SPI, inc."
-msgid "Copyright 2002-2022 by SPI, inc."
+msgid "Copyright 2002-2023 by SPI, inc."
 msgstr "版權所有 2002-2020，SPI，Inc."
 
 #. type: textblock
@@ -2661,11 +2674,6 @@ msgstr ""
 "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: textblock
-#: po4a-normalize:34 po4a-translate:59 po4a-updatepo:58
-msgid "Copyright 2002-2020 by SPI, inc."
-msgstr "版權所有 2002-2020，SPI，Inc."
-
-#. type: textblock
 #: po4a-translate:2
 msgid "po4a-translate - convert a PO file back to documentation format"
 msgstr "po4a-translate - 將 PO 檔案轉換回文件格式"
@@ -2802,8 +2810,8 @@ msgstr "向生成的檔案新增內容（翻譯旁邊）"
 #: po4a-translate:50
 msgid ""
 "To add some extra content to the generated document beside what you "
-"translated (like the name of the translator, or an \"About this translation"
-"\" section), you should use the B<--addendum> option."
+"translated (like the name of the translator, or an \"About this "
+"translation\" section), you should use the B<--addendum> option."
 msgstr ""
 "若要在翻譯的內容旁邊向生成的文件新增一些額外內容（如翻譯人員的姓名或\"關於此"
 "翻譯\"部分），應使用 B<--addendum> 選項。"
@@ -4667,6 +4675,14 @@ msgstr ""
 #. type: textblock
 #: doc/po4a.7.pod:152
 msgid ""
+"L<Jamulus|https://jamulus.io/> (markdown, yaml, HTML): a FOSS application "
+"for online jamming in real time. The website documentation is maintained in "
+"multiple languages using po4a."
+msgstr ""
+
+#. type: textblock
+#: doc/po4a.7.pod:153
+msgid ""
 "Other item to sort out: L<https://gitlab.com/fdroid/fdroid-website/> "
 "L<https://github.com/fsfe/reuse-docs/pull/61>"
 msgstr ""
@@ -4674,17 +4690,17 @@ msgstr ""
 "github.com/fsfe/reuse-docs/pull/61>"
 
 #. type: =head1
-#: doc/po4a.7.pod:153
+#: doc/po4a.7.pod:154
 msgid "FAQ"
 msgstr "常見問題解答"
 
 #. type: =head2
-#: doc/po4a.7.pod:154
+#: doc/po4a.7.pod:155
 msgid "How do you pronounce po4a?"
 msgstr "如何發音 po4a？"
 
 #. type: textblock
-#: doc/po4a.7.pod:155
+#: doc/po4a.7.pod:156
 msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
@@ -4694,24 +4710,24 @@ msgstr ""
 "聲詞，我們用它來代替 yuck(雅克 ) :) 我可能有一種奇怪的幽默感 :)"
 
 #. type: =head2
-#: doc/po4a.7.pod:156
+#: doc/po4a.7.pod:157
 msgid "What about the other translation tools for documentation using gettext?"
 msgstr "其他使用 gettext 的文件翻譯工具又如何呢？"
 
 #. type: textblock
-#: doc/po4a.7.pod:157
+#: doc/po4a.7.pod:158
 msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:158
+#: doc/po4a.7.pod:159
 msgid "B<poxml>"
 msgstr "B<poxml>"
 
 #. type: textblock
-#: doc/po4a.7.pod:159
+#: doc/po4a.7.pod:160
 msgid ""
 "This is the tool developed by KDE people to handle DocBook XML. AFAIK, it "
 "was the first program to extract strings to translate from documentation to "
@@ -4721,7 +4737,7 @@ msgstr ""
 "轉換為 PO 檔案，並在轉換後注入它們的程式。"
 
 #. type: textblock
-#: doc/po4a.7.pod:160
+#: doc/po4a.7.pod:161
 msgid ""
 "It can only handle XML, and only a particular DTD. I'm quite unhappy with "
 "the handling of lists, which end in one big msgid. When the list become big, "
@@ -4731,12 +4747,12 @@ msgstr ""
 "的 msgid 結尾。當清單變得很大時，大塊就變得更難處理了。"
 
 #. type: =item
-#: doc/po4a.7.pod:161
+#: doc/po4a.7.pod:162
 msgid "B<po-debiandoc>"
 msgstr "B<po-debiandoc>"
 
 #. type: textblock
-#: doc/po4a.7.pod:162
+#: doc/po4a.7.pod:163
 msgid ""
 "This program done by Denis Barbier is a sort of precursor of the po4a SGML "
 "module, which more or less deprecates it. As the name says, it handles only "
@@ -4746,12 +4762,12 @@ msgstr ""
 "了它。顧名思義，它只處理 DebianDoc DTD，這或多或少是一個過時的 DTD。"
 
 #. type: =item
-#: doc/po4a.7.pod:163
+#: doc/po4a.7.pod:164
 msgid "B<xml2po.py>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:164
+#: doc/po4a.7.pod:165
 msgid ""
 "Used by the GIMP Documentation Team since 2004, works quite well even if, as "
 "the name suggests, only with XML files and needs specially configured "
@@ -4759,12 +4775,12 @@ msgid ""
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:165
+#: doc/po4a.7.pod:166
 msgid "B<Sphinx>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:166
+#: doc/po4a.7.pod:167
 msgid ""
 "The Sphinx Documentation Project also uses gettext extensively to manage its "
 "translations. Unfortunately, it works only for a few text formats, rest and "
@@ -4773,7 +4789,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:167
+#: doc/po4a.7.pod:168
 msgid ""
 "The main advantages of po4a over them are the ease of extra content addition "
 "(which is even worse there) and the ability to achieve gettextization."
@@ -4782,19 +4798,19 @@ msgstr ""
 "的能力。"
 
 #. type: =head2
-#: doc/po4a.7.pod:168
+#: doc/po4a.7.pod:169
 msgid "SUMMARY of the advantages of the gettext based approach"
 msgstr "基於gettext 的方法的優點的摘要"
 
 #. type: textblock
-#: doc/po4a.7.pod:169
+#: doc/po4a.7.pod:170
 msgid ""
 "The translations are not stored along with the original, which makes it "
 "possible to detect if translations become out of date."
 msgstr "翻譯不會與原始版本一起儲存，這使得可以檢測翻譯是否過時。"
 
 #. type: textblock
-#: doc/po4a.7.pod:170
+#: doc/po4a.7.pod:171
 msgid ""
 "The translations are stored in separate files from each other, which "
 "prevents translators of different languages from interfering, both when "
@@ -4804,7 +4820,7 @@ msgstr ""
 "碼級別上的相互干擾。"
 
 #. type: textblock
-#: doc/po4a.7.pod:171
+#: doc/po4a.7.pod:172
 msgid ""
 "It is based internally on B<gettext> (but B<po4a> offers a very simple "
 "interface so that you don't need to understand the internals to use it).  "
@@ -4816,7 +4832,7 @@ msgstr ""
 "這些工具或多或少沒有錯誤。"
 
 #. type: textblock
-#: doc/po4a.7.pod:172
+#: doc/po4a.7.pod:173
 msgid ""
 "Nothing changed for the end-user (beside the fact translations will "
 "hopefully be better maintained). The resulting documentation file "
@@ -4826,7 +4842,7 @@ msgstr ""
 "同。"
 
 #. type: textblock
-#: doc/po4a.7.pod:173
+#: doc/po4a.7.pod:174
 msgid ""
 "No need for translators to learn a new file syntax and their favorite PO "
 "file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just "
@@ -4836,7 +4852,7 @@ msgstr ""
 "式、Lokalize 或 GTranslator)就可以很好地工作。"
 
 #. type: textblock
-#: doc/po4a.7.pod:174
+#: doc/po4a.7.pod:175
 msgid ""
 "gettext offers a simple way to get statistics about what is done, what "
 "should be reviewed and updated, and what is still to do. Some example can be "
@@ -4846,7 +4862,7 @@ msgstr ""
 "及仍要做的工作的統計資料。可以在這些地址找到一些示例："
 
 #. type: verbatim
-#: doc/po4a.7.pod:175
+#: doc/po4a.7.pod:176
 #, no-wrap
 msgid ""
 " - https://docs.kde.org/stable5/en/kdesdk/lokalize/project-view.html\n"
@@ -4858,19 +4874,19 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:176
+#: doc/po4a.7.pod:177
 msgid ""
 "But everything isn't green, and this approach also has some disadvantages we "
 "have to deal with."
 msgstr "但是，並非所有事物都是綠色的，而且這種方法還存在一些必須解決的缺點。"
 
 #. type: textblock
-#: doc/po4a.7.pod:177
+#: doc/po4a.7.pod:178
 msgid "Addenda are… strange at the first glance."
 msgstr "附錄是…… 乍一看很奇怪。"
 
 #. type: textblock
-#: doc/po4a.7.pod:178
+#: doc/po4a.7.pod:179
 msgid ""
 "You can't adapt the translated text to your preferences, like splitting a "
 "paragraph here, and joining two other ones there. But in some sense, if "
@@ -4880,13 +4896,13 @@ msgstr ""
 "兩個段落。但在某種意義上，如果原始版本有問題，無論如何都應該報告為 bug。"
 
 #. type: textblock
-#: doc/po4a.7.pod:179
+#: doc/po4a.7.pod:180
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
 msgstr "即使有一個簡單的介面，它仍然是一個人們必須學習的新工具。"
 
 #. type: textblock
-#: doc/po4a.7.pod:180
+#: doc/po4a.7.pod:181
 msgid ""
 "One of my dreams would be to integrate somehow po4a to Gtranslator or "
 "Lokalize. When a documentation file is opened, the strings are automatically "
@@ -4899,13 +4915,13 @@ msgstr ""
 "制作 MSWord(TM) 模組(或者至少是 RTF)，專業翻譯人員甚至可以使用它。"
 
 #. type: textblock
-#: doc/po4a.7.pod:182
+#: doc/po4a.7.pod:183
 msgid ""
 "The documentation of the all-in-one tool that you should use: L<po4a(1)>."
 msgstr "您應該使用的多合一工具的文件：L<po4a(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:183
+#: doc/po4a.7.pod:184
 msgid ""
 "The documentation of the individual po4a scripts: L<po4a-gettextize(1)>, "
 "L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
@@ -4914,7 +4930,7 @@ msgstr ""
 "late(1)>、L<po4a-Normalize(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:184
+#: doc/po4a.7.pod:185
 msgid ""
 "The additional helping scripts: L<msguntypot(1)>, L<po4a-display-man(1)>, "
 "L<po4a-display-pod(1)>."
@@ -4923,7 +4939,7 @@ msgstr ""
 "pod(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:185
+#: doc/po4a.7.pod:186
 msgid ""
 "The parsers of each formats, in particular to see the options accepted by "
 "each of them: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
@@ -4947,7 +4963,7 @@ msgstr ""
 "Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:186
+#: doc/po4a.7.pod:187
 msgid ""
 "The implementation of the core infrastructure: L<Locale::Po4a::"
 "TransTractor(3pm)> (particularly important to understand the code "
@@ -4961,7 +4977,7 @@ msgstr ""
 "查原始碼樹中的 F<CONTRIBUTING.md> 檔案。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:188
+#: doc/po4a.7.pod:189
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier,linuxfr.org>\n"
@@ -5950,9 +5966,9 @@ msgstr "此格式記錄在這裡： http://www.gentoo.org/doc/en/xml-guide.xml"
 #. type: textblock
 #: lib/Locale/Po4a/Guide.pm:9
 msgid ""
-"The only known issue is that it doesn't include files with the <include href="
-"\"...\"> tag, but you can translate all those files alone, and it's usually "
-"better to have them separated."
+"The only known issue is that it doesn't include files with the <include "
+"href=\"...\"> tag, but you can translate all those files alone, and it's "
+"usually better to have them separated."
 msgstr ""
 "唯一已知的問題是它不包含帶有 <include href=\"...\"> 標記的檔案，但是您可以單"
 "獨轉換所有這些檔案，通常最好將它們分開。"
@@ -10398,8 +10414,8 @@ msgid ""
 "releases."
 msgstr ""
 "此模組適用於一些簡單的文件，但還很年輕。目前，該模組最大的問題可能是它不能處"
-"理包含非 XML 內聯標記的文件，例如通常在 WML中定義的 <email \"foo@example.org"
-"\">。在將來的版本中將新增改進。"
+"理包含非 XML 內聯標記的文件，例如通常在 WML中定義的 <email \"foo@example."
+"org\">。在將來的版本中將新增改進。"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Wml.pm:12
@@ -11840,6 +11856,9 @@ msgstr ""
 " 版權所有 © 2008-2009, 2018 Jonas Smedegaard <dr@jones.dk>.\n"
 " 版權所有 © 2020 Martin Quinson <mquinson#debian.org>.\n"
 "\n"
+
+#~ msgid "Copyright 2002-2020 by SPI, inc."
+#~ msgstr "版權所有 2002-2020，SPI，Inc."
 
 #~ msgid ""
 #~ "Comma-separated list of keys to process for translation in the YAML Front "

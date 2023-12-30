@@ -61,6 +61,10 @@ push @tests,
     'potfile' => 'fmt/yaml/pathsoption1.pot',
     'pofile'  => 'fmt/yaml/pathsoption1.po',
     'trans'   => 'fmt/yaml/pathsoption1.trans',
+  },
+  {
+    'format' => "yaml",
+    'input'  => "fmt/yaml/arraylikestring.yaml",
   };
 
 run_all_tests(@tests);

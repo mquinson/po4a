@@ -1322,7 +1322,7 @@ sub handle_yaml {
                 my %paths = %{$yfm_paths};
                 my $path  = "$ctx $name" =~ s/^\s+|\s+$//gr;  # Need to trim the path, at least when there is no ctx yet
 
-                if ( ( $el eq 'false' ) or ( $el eq 'true' ) ) {    # Do not translate not quote booleans
+                if ( ( $el eq 'false' ) or ( $el eq 'true' ) ) {    # Do not translate nor quote booleans
                     $self->pushline("$header $el\n");
                 } elsif (
                     ( scalar %keys > 0  && exists $keys{$name} )  or    # the key we need is provided
@@ -1335,20 +1335,14 @@ sub handle_yaml {
                         ( $is_yfm ? "Yaml Front Matter " : "" ) . "Hash Value:$ctx $name",
                         "wrap" => 0
                     );
-                    if ( $el =~ /^\[.*\]$/ ) {                          # Do not quote the lists
-                        $self->pushline( $header . " $translation\n" );
-                    } else {
 
-                        # add extra quotes to the parameter, as a protection to the extra chars that the translator could add
-                        $self->pushline( $header . ' ' . format_scalar($translation) . "\n" );
-                    }
+                    # add extra quotes to the parameter, as a protection to the extra chars that the translator could add
+                    $self->pushline( $header . ' ' . format_scalar($translation) . "\n" );
                 } else {
 
                     # Work around a bug in YAML::Tiny that quotes numbers
                     # See https://github.com/Perl-Toolchain-Gang/YAML-Tiny#additional-perl-specific-notes
                     if ( Scalar::Util::looks_like_number($el) ) {
-                        $self->pushline("$header $el\n");
-                    } elsif ( $el =~ /^\[.*\]$/ ) {    # Do not quote the lists either
                         $self->pushline("$header $el\n");
                     } else {
                         $self->pushline( $header . ' ' . YAML::Tiny::_dump_scalar( "dummy", $el ) . "\n" );

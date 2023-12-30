@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a pod\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2023-01-01 01:07+0100\n"
+"POT-Creation-Date: 2023-12-30 20:49+0100\n"
 "PO-Revision-Date: 2017-04-02 07:44+0200\n"
 "Last-Translator: Jordi Vilalta <jvprat@gmail.com>\n"
 "Language-Team: CA\n"
@@ -154,7 +154,7 @@ msgstr ""
 #. type: =head1
 #: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:187
 #: po4a-gettextize:76 po4a-normalize:29 po4a-translate:54 po4a-updatepo:53
-#: msguntypot:29 doc/po4a.7.pod:181 lib/Locale/Po4a/Chooser.pm:7
+#: msguntypot:29 doc/po4a.7.pod:182 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Guide.pm:10 lib/Locale/Po4a/Halibut.pm:14
 #: lib/Locale/Po4a/Ini.pm:8 lib/Locale/Po4a/KernelHelp.pm:7
@@ -1224,8 +1224,8 @@ msgstr ""
 #. type: textblock
 #: po4a:126
 msgid ""
-"To have one PO file per master file, you simply have to use the string C<"
-"$master> in the name of your PO files on the C<[po4a_paths]> line, as "
+"To have one PO file per master file, you simply have to use the string "
+"C<$master> in the name of your PO files on the C<[po4a_paths]> line, as "
 "follows."
 msgstr ""
 
@@ -1293,8 +1293,8 @@ msgstr "Especificant els documents a traduir"
 msgid ""
 "You must also list the documents that should be translated. For each master "
 "file, you must specify the format parser to use, the location of the "
-"translated document to produce, and optionally some configuration. Here is "
-"an example:"
+"translated document to produce, and optionally some configuration. File "
+"names should be quoted or escaped if they contain spaces. Here is an example:"
 msgstr ""
 
 #. type: verbatim
@@ -1307,8 +1307,7 @@ msgstr ""
 #| "             add_fr:doc/l10n/script.fr.add\n"
 #| "\n"
 msgid ""
-" [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
-"              de:doc/de/mein_kram.sgml\n"
+" [type: sgml] \"doc/my stuff.sgml\"  \"fr:doc/fr/mon truc.sgml\"  de:doc/de/mein\\ kram.sgml\n"
 " [type: man] script fr:doc/fr/script.1 de:doc/de/script.1\n"
 " [type: docbook] doc/script.xml fr:doc/fr/script.xml \\\n"
 "             de:doc/de/script.xml\n"
@@ -1324,8 +1323,8 @@ msgstr ""
 #: po4a:135
 msgid ""
 "But again, these complex lines are difficult to read and modify, e.g. when "
-"adding a new language. It is much simpler to reorganize things using the C<"
-"$lang> template as follows:"
+"adding a new language. It is much simpler to reorganize things using the "
+"C<$lang> template as follows:"
 msgstr ""
 
 #. type: verbatim
@@ -1753,7 +1752,7 @@ msgstr ""
 
 #. type: =head1
 #: po4a:189 po4a-gettextize:78 po4a-normalize:31 po4a-translate:56
-#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:187
+#: po4a-updatepo:55 msguntypot:32 doc/po4a.7.pod:188
 #: lib/Locale/Po4a/AsciiDoc.pm:54 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
@@ -1807,10 +1806,11 @@ msgid "COPYRIGHT AND LICENSE"
 msgstr "DRET DE CÒPIA I LLICÈNCIA"
 
 #. type: textblock
-#: po4a:192 po4a-gettextize:81
+#: po4a:192 po4a-gettextize:81 po4a-normalize:34 po4a-translate:59
+#: po4a-updatepo:58
 #, fuzzy
 #| msgid "Copyright 2002-2012 by SPI, inc."
-msgid "Copyright 2002-2022 by SPI, inc."
+msgid "Copyright 2002-2023 by SPI, inc."
 msgstr "Copyright 2002-2012 per SPI, inc."
 
 #. type: textblock
@@ -2512,13 +2512,6 @@ msgstr ""
 "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: textblock
-#: po4a-normalize:34 po4a-translate:59 po4a-updatepo:58
-#, fuzzy
-#| msgid "Copyright 2002-2012 by SPI, inc."
-msgid "Copyright 2002-2020 by SPI, inc."
-msgstr "Copyright 2002-2012 per SPI, inc."
-
-#. type: textblock
 #: po4a-translate:2
 msgid "po4a-translate - convert a PO file back to documentation format"
 msgstr "po4a-translate - retorna un fitxer PO al format de documentació"
@@ -2655,16 +2648,16 @@ msgstr "Afegint contingut (a part de la traducció) als fitxers generats"
 #, fuzzy
 #| msgid ""
 #| "To add some extra content to the generated document beside what you "
-#| "translated (like the name of the translator, or a \"About this translation"
-#| "\" section), you should use the B<--addendum> option."
+#| "translated (like the name of the translator, or a \"About this "
+#| "translation\" section), you should use the B<--addendum> option."
 msgid ""
 "To add some extra content to the generated document beside what you "
-"translated (like the name of the translator, or an \"About this translation"
-"\" section), you should use the B<--addendum> option."
+"translated (like the name of the translator, or an \"About this "
+"translation\" section), you should use the B<--addendum> option."
 msgstr ""
 "Per afegir algun contingut extra al document generat a part del què hagueu "
-"traduït (com ara el nom del traductor, o una secció \"Sobre aquesta traducció"
-"\"), heu d'utilitzar l'opció B<--addendum>."
+"traduït (com ara el nom del traductor, o una secció \"Sobre aquesta "
+"traducció\"), heu d'utilitzar l'opció B<--addendum>."
 
 #. type: textblock
 #: po4a-translate:51
@@ -4076,9 +4069,9 @@ msgid ""
 "B<endboundary>, because it will match with C<the[ fi]le>, which is obviously "
 "not what you expect. The correct B<endboundary> in that case is: C<^\\.fi$>."
 msgstr ""
-"no utilitzeu B<.fi> com a B<endboundary>, perquè encaixarà amb \"el[ fi]txer"
-"\", que obviament no és el què s'esperava. L'B<endboundary> correcte en "
-"aquest cas és: F<^\\.fi$>."
+"no utilitzeu B<.fi> com a B<endboundary>, perquè encaixarà amb "
+"\"el[ fi]txer\", que obviament no és el què s'esperava. L'B<endboundary> "
+"correcte en aquest cas és: F<^\\.fi$>."
 
 #. type: textblock
 #: doc/po4a.7.pod:113
@@ -4175,10 +4168,10 @@ msgid ""
 "\"Copyright Big Dude\"), use a B<position> matching this line, B<mode=after> "
 "and give a B<beginboundary> matching any line."
 msgstr ""
-"Si voleu afegir quelcom a una secció (com ara després de \"Copyright Big Dude"
-"\")  en lloc d'afegir una secció completa, proporcioneu una B<position> que "
-"encaixi amb aquesta línia, i doneu un B<beginboundary> que encaixi qualsevol "
-"línia."
+"Si voleu afegir quelcom a una secció (com ara després de \"Copyright Big "
+"Dude\")  en lloc d'afegir una secció completa, proporcioneu una B<position> "
+"que encaixi amb aquesta línia, i doneu un B<beginboundary> que encaixi "
+"qualsevol línia."
 
 #. type: verbatim
 #: doc/po4a.7.pod:123
@@ -4255,8 +4248,8 @@ msgstr ""
 #, fuzzy
 #| msgid ""
 #| "Then, the following addendum will ensure that a section (in French) about "
-#| "the translator is added at the end of the file. (in French, \"TRADUCTEUR"
-#| "\" means \"TRANSLATOR\", and \"moi\" means \"me\")"
+#| "the translator is added at the end of the file. (in French, "
+#| "\"TRADUCTEUR\" means \"TRANSLATOR\", and \"moi\" means \"me\")"
 msgid ""
 "Then, the following addendum will ensure that a section (in French) about "
 "the translator is added at the end of the file (in French, \"TRADUCTEUR\" "
@@ -4511,24 +4504,32 @@ msgstr ""
 #. type: textblock
 #: doc/po4a.7.pod:152
 msgid ""
+"L<Jamulus|https://jamulus.io/> (markdown, yaml, HTML): a FOSS application "
+"for online jamming in real time. The website documentation is maintained in "
+"multiple languages using po4a."
+msgstr ""
+
+#. type: textblock
+#: doc/po4a.7.pod:153
+msgid ""
 "Other item to sort out: L<https://gitlab.com/fdroid/fdroid-website/> "
 "L<https://github.com/fsfe/reuse-docs/pull/61>"
 msgstr ""
 
 #. type: =head1
-#: doc/po4a.7.pod:153
+#: doc/po4a.7.pod:154
 msgid "FAQ"
 msgstr "PMF"
 
 #. type: =head2
-#: doc/po4a.7.pod:154
+#: doc/po4a.7.pod:155
 #, fuzzy
 #| msgid "How to use po4a?"
 msgid "How do you pronounce po4a?"
 msgstr "Com fer servir po4a?"
 
 #. type: textblock
-#: doc/po4a.7.pod:155
+#: doc/po4a.7.pod:156
 msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
@@ -4536,26 +4537,26 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:156
+#: doc/po4a.7.pod:157
 msgid "What about the other translation tools for documentation using gettext?"
 msgstr ""
 "Què hi ha de les altres eines de traducció de documentació que utilitzen "
 "gettext?"
 
 #. type: textblock
-#: doc/po4a.7.pod:157
+#: doc/po4a.7.pod:158
 msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:158
+#: doc/po4a.7.pod:159
 msgid "B<poxml>"
 msgstr "B<poxml>"
 
 #. type: textblock
-#: doc/po4a.7.pod:159
+#: doc/po4a.7.pod:160
 msgid ""
 "This is the tool developed by KDE people to handle DocBook XML. AFAIK, it "
 "was the first program to extract strings to translate from documentation to "
@@ -4567,7 +4568,7 @@ msgstr ""
 "les injectava en el document."
 
 #. type: textblock
-#: doc/po4a.7.pod:160
+#: doc/po4a.7.pod:161
 msgid ""
 "It can only handle XML, and only a particular DTD. I'm quite unhappy with "
 "the handling of lists, which end in one big msgid. When the list become big, "
@@ -4578,12 +4579,12 @@ msgstr ""
 "gran. Quan la llista creix, el bloc esdevé difícil de tractar."
 
 #. type: =item
-#: doc/po4a.7.pod:161
+#: doc/po4a.7.pod:162
 msgid "B<po-debiandoc>"
 msgstr "B<po-debiandoc>"
 
 #. type: textblock
-#: doc/po4a.7.pod:162
+#: doc/po4a.7.pod:163
 msgid ""
 "This program done by Denis Barbier is a sort of precursor of the po4a SGML "
 "module, which more or less deprecates it. As the name says, it handles only "
@@ -4594,12 +4595,12 @@ msgstr ""
 "DTD de DebianDoc, que és més o menys un DTD obsolet."
 
 #. type: =item
-#: doc/po4a.7.pod:163
+#: doc/po4a.7.pod:164
 msgid "B<xml2po.py>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:164
+#: doc/po4a.7.pod:165
 msgid ""
 "Used by the GIMP Documentation Team since 2004, works quite well even if, as "
 "the name suggests, only with XML files and needs specially configured "
@@ -4607,12 +4608,12 @@ msgid ""
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:165
+#: doc/po4a.7.pod:166
 msgid "B<Sphinx>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:166
+#: doc/po4a.7.pod:167
 msgid ""
 "The Sphinx Documentation Project also uses gettext extensively to manage its "
 "translations. Unfortunately, it works only for a few text formats, rest and "
@@ -4621,7 +4622,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:167
+#: doc/po4a.7.pod:168
 msgid ""
 "The main advantages of po4a over them are the ease of extra content addition "
 "(which is even worse there) and the ability to achieve gettextization."
@@ -4631,12 +4632,12 @@ msgstr ""
 "gettextització."
 
 #. type: =head2
-#: doc/po4a.7.pod:168
+#: doc/po4a.7.pod:169
 msgid "SUMMARY of the advantages of the gettext based approach"
 msgstr "RESUM dels avantatges de l'enfoc basat en gettext"
 
 #. type: textblock
-#: doc/po4a.7.pod:169
+#: doc/po4a.7.pod:170
 #, fuzzy
 msgid ""
 "The translations are not stored along with the original, which makes it "
@@ -4646,7 +4647,7 @@ msgstr ""
 "detectar quan les traduccions es tornen antiquades."
 
 #. type: textblock
-#: doc/po4a.7.pod:170
+#: doc/po4a.7.pod:171
 #, fuzzy
 msgid ""
 "The translations are stored in separate files from each other, which "
@@ -4658,7 +4659,7 @@ msgstr ""
 "o bé a nivell de la codificació de fitxers."
 
 #. type: textblock
-#: doc/po4a.7.pod:171
+#: doc/po4a.7.pod:172
 msgid ""
 "It is based internally on B<gettext> (but B<po4a> offers a very simple "
 "interface so that you don't need to understand the internals to use it).  "
@@ -4671,7 +4672,7 @@ msgstr ""
 "ampli ús, podem pensar que són unes eines més o menys lliures d'errors."
 
 #. type: textblock
-#: doc/po4a.7.pod:172
+#: doc/po4a.7.pod:173
 msgid ""
 "Nothing changed for the end-user (beside the fact translations will "
 "hopefully be better maintained). The resulting documentation file "
@@ -4682,7 +4683,7 @@ msgstr ""
 "exactament el mateix."
 
 #. type: textblock
-#: doc/po4a.7.pod:173
+#: doc/po4a.7.pod:174
 msgid ""
 "No need for translators to learn a new file syntax and their favorite PO "
 "file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just "
@@ -4693,7 +4694,7 @@ msgstr ""
 "d'emacs, Lokalize o Gtranslator)."
 
 #. type: textblock
-#: doc/po4a.7.pod:174
+#: doc/po4a.7.pod:175
 #, fuzzy
 msgid ""
 "gettext offers a simple way to get statistics about what is done, what "
@@ -4705,7 +4706,7 @@ msgstr ""
 "alguns exemples a aquestes adreces:"
 
 #. type: verbatim
-#: doc/po4a.7.pod:175
+#: doc/po4a.7.pod:176
 #, fuzzy, no-wrap
 #| msgid ""
 #| " - http://kv-53.narod.ru/kaider1.png\n"
@@ -4721,7 +4722,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:176
+#: doc/po4a.7.pod:177
 msgid ""
 "But everything isn't green, and this approach also has some disadvantages we "
 "have to deal with."
@@ -4730,14 +4731,14 @@ msgstr ""
 "haureu de tenir en compte."
 
 #. type: textblock
-#: doc/po4a.7.pod:177
+#: doc/po4a.7.pod:178
 #, fuzzy
 #| msgid "Addenda are... strange at the first glance."
 msgid "Addenda are… strange at the first glance."
 msgstr "Els annexes són... estranys, a primer cop d'ull."
 
 #. type: textblock
-#: doc/po4a.7.pod:178
+#: doc/po4a.7.pod:179
 msgid ""
 "You can't adapt the translated text to your preferences, like splitting a "
 "paragraph here, and joining two other ones there. But in some sense, if "
@@ -4748,7 +4749,7 @@ msgstr ""
 "algun problema amb l'original, s'hauria d'informar com a error."
 
 #. type: textblock
-#: doc/po4a.7.pod:179
+#: doc/po4a.7.pod:180
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
 msgstr ""
@@ -4756,7 +4757,7 @@ msgstr ""
 "gent ha d'aprendre."
 
 #. type: textblock
-#: doc/po4a.7.pod:180
+#: doc/po4a.7.pod:181
 #, fuzzy
 #| msgid ""
 #| "One of my dreams would be to integrate somehow po4a to Gtranslator or "
@@ -4778,13 +4779,13 @@ msgstr ""
 "i tot podrien utilitzar-lo traductors professionals."
 
 #. type: textblock
-#: doc/po4a.7.pod:182
+#: doc/po4a.7.pod:183
 msgid ""
 "The documentation of the all-in-one tool that you should use: L<po4a(1)>."
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:183
+#: doc/po4a.7.pod:184
 #, fuzzy
 #| msgid ""
 #| "L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, "
@@ -4796,14 +4797,14 @@ msgstr ""
 "L<po4a-gettextize(1)>, L<po4a-normalize(1)>, L<po4a-translate(1)>, L<po4a(7)>"
 
 #. type: textblock
-#: doc/po4a.7.pod:184
+#: doc/po4a.7.pod:185
 msgid ""
 "The additional helping scripts: L<msguntypot(1)>, L<po4a-display-man(1)>, "
 "L<po4a-display-pod(1)>."
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:185
+#: doc/po4a.7.pod:186
 #, fuzzy
 #| msgid ""
 #| "L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
@@ -4834,7 +4835,7 @@ msgstr ""
 "L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::Wml(3pm)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:186
+#: doc/po4a.7.pod:187
 msgid ""
 "The implementation of the core infrastructure: L<Locale::Po4a::"
 "TransTractor(3pm)> (particularly important to understand the code "
@@ -4844,7 +4845,7 @@ msgid ""
 msgstr ""
 
 #. type: verbatim
-#: doc/po4a.7.pod:188
+#: doc/po4a.7.pod:189
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier,linuxfr.org>\n"
@@ -5668,8 +5669,8 @@ msgid ""
 msgstr ""
 "Aquest mòdul tan sols tradueix diagrames de Dia descomprimits.  Podeu desar "
 "els vostres diagrames descomprimits directament amb el Dia, desmarcant "
-"l'opció \"Comprimeix els fitxers del diagrama\" al diàleg \"Desa el diagrama"
-"\"."
+"l'opció \"Comprimeix els fitxers del diagrama\" al diàleg \"Desa el "
+"diagrama\"."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Dia.pm:9
@@ -5841,9 +5842,9 @@ msgstr ""
 #. type: textblock
 #: lib/Locale/Po4a/Guide.pm:9
 msgid ""
-"The only known issue is that it doesn't include files with the <include href="
-"\"...\"> tag, but you can translate all those files alone, and it's usually "
-"better to have them separated."
+"The only known issue is that it doesn't include files with the <include "
+"href=\"...\"> tag, but you can translate all those files alone, and it's "
+"usually better to have them separated."
 msgstr ""
 "L'únic problema conegut és que no s'inclouen fitxers amb el tag <include "
 "href=\"...\">, però podeu traduir tots aquests per separat, i normalment "
@@ -7491,9 +7492,10 @@ msgstr "set_charset($)"
 #| msgid ""
 #| "This sets the character set of the PO header to the value specified in "
 #| "its first argument. If you never call this function (and no file with a "
-#| "specified character set is read), the default value is left to \"CHARSET"
-#| "\". This value doesn't change the behavior of this module, it's just used "
-#| "to fill that field in the header, and to return it in get_charset()."
+#| "specified character set is read), the default value is left to "
+#| "\"CHARSET\". This value doesn't change the behavior of this module, it's "
+#| "just used to fill that field in the header, and to return it in "
+#| "get_charset()."
 msgid ""
 "This sets the character set of the PO header to the value specified in its "
 "first argument. If you never call this function (and no file with a "
@@ -9562,8 +9564,8 @@ msgid ""
 "e. that '<p>' tags are the only tags present, and that this tag is at the "
 "very beginning of each paragraph."
 msgstr ""
-"El següent exemple analitza una llista de paràgrafs que comencen amb \"<p>"
-"\". Per simplificar-ho, suposarem que el document està formatejat "
+"El següent exemple analitza una llista de paràgrafs que comencen amb "
+"\"<p>\". Per simplificar-ho, suposarem que el document està formatejat "
 "correctament, és a dir, que només hi ha tags '<p>', i que aquest està "
 "present al principi de cada paràgraf."
 
@@ -11378,9 +11380,9 @@ msgid ""
 "\"tag_options\" contains the option characters in front of the tag hierarchy "
 "in the module \"tags\" option."
 msgstr ""
-"La cadena trobada és el contingut d'un tag traduïble. L'entrada \"tag_options"
-"\" conté els caràcters d'opcions de davant la jerarquia de tags de l'opció "
-"\"tags\" del mòdul."
+"La cadena trobada és el contingut d'un tag traduïble. L'entrada "
+"\"tag_options\" conté els caràcters d'opcions de davant la jerarquia de tags "
+"de l'opció \"tags\" del mòdul."
 
 #. type: =item
 #: lib/Locale/Po4a/Xml.pm:115
@@ -12031,6 +12033,11 @@ msgstr ""
 " Copyright 2005-2008 per Nicolas FRANÇOIS <nicolas.francois@centraliens."
 "net>.\n"
 "\n"
+
+#, fuzzy
+#~| msgid "Copyright 2002-2012 by SPI, inc."
+#~ msgid "Copyright 2002-2020 by SPI, inc."
+#~ msgstr "Copyright 2002-2012 per SPI, inc."
 
 #, fuzzy
 #~| msgid "Copyright 2006 by BitDefender"

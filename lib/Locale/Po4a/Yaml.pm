@@ -90,7 +90,7 @@ use vars qw(@ISA @EXPORT $AUTOLOAD);
 @ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();
 
-my %yfm_keys = ();
+my %yfm_keys  = ();
 my %yfm_paths = ();
 
 sub initialize {
@@ -113,22 +113,41 @@ sub initialize {
         $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
         $yfm_keys{$_} = 1
     } ( split( /[, ]/, $self->{options}{keys} ) );
+
     # map { print STDERR "key: '$_'\n"; } (keys %yfm_keys);
 
     map {
         $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
         $yfm_paths{$_} = 1
-    } ( split( /,/, $self->{options}{paths} ));
+    } ( split( /,/, $self->{options}{paths} ) );
 }
 
 sub parse {
     my $self = shift;
     my $yfm;
-    my ( $nextline, $ref ) = $self->shiftline();
-    while ( defined($nextline) ) {
+
+    # Get the ref of the first line. We'll use it as the ref for the whole doc
+    my ( $line, $ref ) = $self->shiftline();
+    $self->unshiftline( $line, $ref );
+
+    while (1) {
+        my ( $nextline, $nextref ) = $self->shiftline();
+
+        if ( not defined($nextline) ) {
+            last;
+        } elsif ( $nextline =~ /: [\[\{]/ ) {
+            die wrap_mod(
+                "po4a::text",
+                dgettext(
+                    "po4a",
+                    "Inline lists and dictionaries on a single line are not correctly handled the parser we use (YAML::Tiny): they are interpreted as regular strings. "
+                      . "Please use multi-lines definitions instead. Offending line:\n %s"
+                ),
+                $nextline
+            );
+        }
+
         $yfm .= $nextline;
-        my $nextref;
-        ( $nextline, $nextref ) = $self->shiftline();
     }
 
     my $yamlarray = YAML::Tiny->read_string($yfm)

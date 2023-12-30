@@ -618,6 +618,18 @@ sub parse_markdown_yaml_front_matter {
         last if ( $nextline =~ /^(---|\.\.\.)$/ );
         $yfm .= $nextline;
         ( $nextline, $nextref ) = $self->shiftline();
+        if ( $nextline =~ /: [\[\{]/ ) {
+            die wrap_mod(
+                "po4a::text",
+                dgettext(
+                    "po4a",
+                    "Inline lists and dictionaries on a single line are not correctly handled the parser we use (YAML::Tiny): they are interpreted as regular strings. "
+                      . "Please use multi-lines definitions instead. Offending line:\n %s"
+                ),
+                $nextline
+            );
+
+        }
         push @saved_ctn, ( $nextline, $nextref );
     }
 
@@ -792,7 +804,7 @@ sub parse_markdown {
 
         # fenced div block (fenced with ::: where code blocks are fenced with ` or ~)
         # https://pandoc.org/MANUAL.html#divs-and-spans
-        my $info = join( "|" , map {chomp $_;$_} @info_string );
+        my $info = join( "|", map { chomp $_; $_ } @info_string );
         my $type = "Fenced div block" . ( $info ? " ($info)" : "" );
         do_paragraph( $self, $paragraph, $wrapped_mode );
         $wrapped_mode = 0;
@@ -814,21 +826,21 @@ sub parse_markdown {
 
             #            print STDERR "within $lvl: $nextline";
             if ( $nextline =~ /^\s*:::+\s*$/ ) {
-                my $info = join( "|" , map {chomp $_;$_} @info_string );
+                my $info = join( "|", map { chomp $_; $_ } @info_string );
                 $type = "Fenced div block" . ( $info ? " ($info)" : "" );
-                if ($paragraph ne "") {
+                if ( $paragraph ne "" ) {
                     do_paragraph( $self, $paragraph, $wrapped_mode, $type );
-                    $paragraph        = "";
+                    $paragraph = "";
                 }
                 $self->pushline($nextline);
                 $lvl--;
-                while (scalar @info_string > $lvl) {
+                while ( scalar @info_string > $lvl ) {
                     pop @info_string;
                 }
             } elsif ( $nextline =~ /^([ ]{0,3})(([:])\3{2,})(\s*)([^`]*)\s*$/ ) {
-                if ($paragraph ne "") {
+                if ( $paragraph ne "" ) {
                     do_paragraph( $self, $paragraph, $wrapped_mode, $type );
-                    $paragraph        = "";
+                    $paragraph = "";
                 }
                 $self->pushline($nextline);
                 push @info_string, $5;
