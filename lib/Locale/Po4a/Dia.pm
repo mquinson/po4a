@@ -79,7 +79,7 @@ under the terms of GPL (see the COPYING file).
 
 package Locale::Po4a::Dia;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

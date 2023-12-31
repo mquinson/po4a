@@ -21,7 +21,7 @@ the AsciiDoc format.
 
 package Locale::Po4a::AsciiDoc;
 
-use 5.010;
+use 5.16.0;
 use strict;
 use warnings;
 

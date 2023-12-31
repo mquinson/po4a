@@ -50,7 +50,7 @@ It is a very simple module, but still young.
 
 package Locale::Po4a::BibTeX;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

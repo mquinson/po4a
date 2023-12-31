@@ -5,7 +5,7 @@ require Exporter;
 package Locale::Po4a::TransTractor;
 use DynaLoader;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

@@ -48,7 +48,7 @@ XML-based documents.
 
 package Locale::Po4a::Xml;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

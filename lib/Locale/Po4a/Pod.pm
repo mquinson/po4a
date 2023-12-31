@@ -16,7 +16,7 @@ use Locale::Po4a::TransTractor qw(process new get_out_charset);
 
 package Locale::Po4a::Pod;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

@@ -1,5 +1,7 @@
 package Po4aBuilder;
 
+use 5.16.0;
+use strict;
 use Module::Build;
 use File::Basename;
 use File::Path qw(mkpath rmtree);
@@ -7,7 +9,7 @@ use File::Spec;
 use File::Copy qw(copy);
 use File::stat;
 
-@ISA = qw(Module::Build);
+our @ISA = qw(Module::Build);
 
 sub ACTION_build {
     my $self = shift;
@@ -60,7 +62,7 @@ sub ACTION_binpo {
         chdir "../..";
 	
         if ( -e "po/bin/po4a.pot") {
-            $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
+            my $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
             if ( $diff eq "" ) {
                 unlink "po/bin/po4a.pot.new" || die;
                 # touch it
@@ -86,7 +88,7 @@ sub ACTION_binpo {
             # Typically all that changes was a date. I'd
             # prefer not to commit such changes, so detect
             # and ignore them.
-            $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
+            my $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
             if ($diff eq "") {
                 unlink "$_.new" || die;
                 # touch it
@@ -193,18 +195,18 @@ sub ACTION_man {
     File::Path::mkpath( $man7path, 0, oct(755) ) or die;
     copy( File::Spec->catdir( "doc", "po4a.7.pod" ), $man7path ) or die;
 
-    foreach $file ( perl_scripts() ) {
+    foreach my $file ( perl_scripts() ) {
         $file =~ m,([^/]*)$,;
         copy( $file, File::Spec->catdir( $man1path, "$1.1p.pod" ) ) or die "Cannot copy $file over";
     }
-    foreach $file ( @{ $self->rscan_dir( 'lib', qr{\.pm$} ) } ) {
+    foreach my $file ( @{ $self->rscan_dir( 'lib', qr{\.pm$} ) } ) {
         $file =~ m,([^/]*).pm$,;
         copy( $file, File::Spec->catdir( $man3path, "Locale::Po4a::$1.3pm.pod" ) ) or die;
     }
     $self->delete_filetree( File::Spec->catdir( "blib", "bindoc" ) );
     $self->delete_filetree( File::Spec->catdir( "blib", "libdoc" ) );
 
-    foreach $file ( @{ $self->rscan_dir( $manpath, qr{\.pod$} ) } ) {
+    foreach my $file ( @{ $self->rscan_dir( $manpath, qr{\.pod$} ) } ) {
         next if $file =~ m/^man7/;
         my $out = $file;
         $out =~ s/\.pod$//;
@@ -242,12 +244,12 @@ sub ACTION_man {
     if ( $^O ne 'MSWin32' ) {
 
         # Install the manpages written in XML DocBook
-        foreach $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
+        foreach my $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
             copy( File::Spec->catdir( "share", "doc", $file ), $man1path ) or die;
         }
         my $docbook_xsl_url   = "http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl";
         my $local_docbook_xsl = `xmlcatalog --noout "" "$docbook_xsl_url"` =~ m,file://(.+\.xsl), && $1;
-        foreach $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
+        foreach my $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
             if ( $file =~ m,(.*/man(.))/([^/]*)\.xml$, ) {
                 my ( $outdir, $section, $outfile ) = ( $1, $2, $3 );
                 if ($local_docbook_xsl) {
@@ -285,8 +287,7 @@ sub postats {
     print "$dir (pot: $potsize)\n";
     my @files = @{$self->rscan_dir($dir,qr{\.po$})};
     my (@t100,@t95,@t90,@t80,@t70,@t50,@t33,@t20,@starting);
-    foreach (sort @files) {
-        $file = $_;
+    foreach my $file (sort @files) {
         my $lang = fileparse($file, qw{.po});
         my $stat = `msgfmt -o /dev/null -c --statistics $file 2>&1`;
 	my ($trans, $fuzz, $untr) = (0,0,0);

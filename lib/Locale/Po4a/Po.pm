@@ -116,7 +116,7 @@ use Locale::Po4a::TransTractor;
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::Po $Locale::Po4a::TransTractor::VERSION");
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

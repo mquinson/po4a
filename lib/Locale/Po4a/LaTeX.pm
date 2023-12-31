@@ -64,7 +64,7 @@ under the terms of GPL (see COPYING file).
 
 package Locale::Po4a::LaTeX;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

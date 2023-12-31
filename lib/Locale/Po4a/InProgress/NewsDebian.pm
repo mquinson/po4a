@@ -53,7 +53,7 @@ supposed to change that often.
 
 package Locale::Po4a::NewsDebian;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

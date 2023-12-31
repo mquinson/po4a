@@ -80,7 +80,7 @@ use YAML::Tiny;
 use Scalar::Util;
 use Encode;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

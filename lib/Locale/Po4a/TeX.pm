@@ -64,7 +64,7 @@ These are this module's particular options:
 
 package Locale::Po4a::TeX;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

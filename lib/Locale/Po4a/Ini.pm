@@ -13,7 +13,7 @@ use Locale::Po4a::Common;
 
 package Locale::Po4a::Ini;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

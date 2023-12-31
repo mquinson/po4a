@@ -43,7 +43,7 @@ package Locale::Po4a::RubyDoc;
 use Locale::Po4a::TransTractor qw(process new);
 use Locale::Po4a::Common;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

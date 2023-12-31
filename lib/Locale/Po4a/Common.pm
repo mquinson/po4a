@@ -39,7 +39,7 @@ use vars qw(@ISA @EXPORT);
 @ISA    = qw(Exporter);
 @EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod textdomain gettext dgettext);
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

@@ -199,7 +199,7 @@ and line number) afterward. I'm not sure what the best thing to do is.
 
 package Locale::Po4a::Sgml;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 

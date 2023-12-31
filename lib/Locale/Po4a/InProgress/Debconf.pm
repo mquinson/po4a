@@ -59,7 +59,7 @@ DO NOT USE THIS MODULE TO PRODUCE TEMPLATES. It's only good to extract data.
 
 package Locale::Po4a::Debconf;
 
-use 5.006;
+use 5.16.0;
 use strict;
 use warnings;
 
