@@ -580,13 +580,17 @@ This function returns a non-null integer on error.
 
 # Internal function to read the header.
 sub addendum_parse {
-    my ( $filename, $header ) = shift;
+    my ( $filename, $charset ) = (shift, shift);
+    my $header;
 
     my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = ( 1, "", "", "", "", "" );
 
     unless ( open( INS, "<$filename" ) ) {
         warn wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
         goto END_PARSE_ADDFILE;
+    }
+    if (length($charset // '') > 0) {
+        binmode(INS, ":encoding($charset)");
     }
 
     unless ( defined( $header = <INS> ) && $header ) {
@@ -682,14 +686,8 @@ sub addendum {
     die wrap_msg( dgettext( "po4a", "Addendum %s does not exist." ), $filename )
       unless -e $filename;
 
-    my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = addendum_parse($filename);
+    my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = addendum_parse($filename, $self->{TT}{'addendum_charset'});
     return 0 if ($errcode);
-
-    # We only recode the addendum if an origin charset is specified, else we
-    # suppose it's already in the output document's charset
-    if ( length( $self->{TT}{'addendum_charset'} ) ) {
-        Encode::from_to( $content, $self->{TT}{'addendum_charset'}, $self->get_out_charset );
-    }
 
     # In order to make addendum more intuitive, each array item of
     # @{$self->{TT}{doc_out}} must not have internal "\n".  But previous parser
