@@ -919,6 +919,9 @@ sub parse {
             $paragraph      = $text . "\n";
             $self->{indent} = "";
             $self->{bullet} = $bullet;
+	} elsif ( not defined $self->{verbatim}
+		  and ( $line eq " +") ) {
+	    $paragraph .= $line . "\n";
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
 
             # When not in table, empty lines or lines containing only spaces do break paragraphs
@@ -1058,7 +1061,7 @@ sub parse {
 
             if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) )
             {
-		if ( !$self->{options}{'nolinting'} ) {
+		if ( ( !$self->{options}{'nolinting'} ) && ($paragraph !~ m/ \+\n/ ) ) {
 		    # Second line of an item block is not indented. It is unindented
 		    # (and allowed) additional text or a new list item.
 		    warn wrap_mod(
@@ -1080,12 +1083,6 @@ sub parse {
             $paragraph .= $line . "\n";
         }
 
-        # paragraphs starting by a bullet, or numbered
-        # or paragraphs with a line containing many consecutive spaces
-        # (more than 3)
-        # are considered as verbatim paragraphs
-        $wrapped_mode = 0 if ( $paragraph =~ m/^(\*|[0-9]+[.)] )/s
-            or $paragraph =~ m/[ \t][ \t][ \t]/s );
         ( $line, $ref ) = $self->shiftline();
     }
     if ( length $paragraph ) {
@@ -1196,7 +1193,7 @@ sub do_paragraph {
     }
 
     @comments = ();
-    if ( defined $self->{bullet} ) {
+    if ( ( defined $self->{bullet} ) && !($t =~ /\+\n/ ) ) {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
         my $indent2 = $indent1 . ( ' ' x length($bullet) );
