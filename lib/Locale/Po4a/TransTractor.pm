@@ -451,19 +451,20 @@ sub read() {
         my @entry = ( $textline, $ref );
         push @{ $self->{TT}{doc_in} }, @entry;
 
-        if ( !defined( $self->{TT}{'file_in_charset'} ) ) {
+        # Detect if this file has non-ascii characters
+        if ( $self->{TT}{ascii_input} ) {
+            my $decoder = guess_encoding($textline);
+            if ( ref($decoder) and $decoder =~ /Encode::utf8=/ ) {
 
-            # Detect if this file has non-ascii characters
-            if ( $self->{TT}{ascii_input} ) {
-                my $decoder = guess_encoding($textline);
-                if ( !ref($decoder) or $decoder !~ /Encode::XS=/ ) {
+                # That's fine
 
-                    # We have detected a non-ascii line
-                    $self->{TT}{ascii_input} = 0;
+            } elsif ( !ref($decoder) or $decoder !~ /Encode::XS=/ ) {
 
-                    # Save the reference for future error message
-                    $self->{TT}{non_ascii_ref} ||= $ref;
-                }
+                # We have detected a non-ascii line
+                $self->{TT}{ascii_input} = 0;
+
+                # Save the reference for future error message
+                $self->{TT}{non_ascii_ref} ||= $ref;
             }
         }
     }
@@ -981,11 +982,11 @@ sub translate {
         my $out_charset = $self->{TT}{po_out}->get_charset;
 
         # We set the output po charset
-        if ( $out_charset eq "CHARSET" ) {
+        if ( $out_charset eq "CHARSET" || $out_charset eq '' ) {
             $out_charset = "UTF-8";
             $self->{TT}{po_out}->set_charset($out_charset);
         }
-        if ( $in_charset !~ /^$out_charset$/i ) {
+        if ( $in_charset ne '' and $in_charset !~ /^$out_charset$/i ) {
             Encode::from_to( $string, $in_charset, $out_charset );
             if ( length( $options{'comment'} ) ) {
                 Encode::from_to( $options{'comment'}, $in_charset, $out_charset );
