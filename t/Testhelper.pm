@@ -372,7 +372,7 @@ sub run_one_format {
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
       ( keys %{$test} );
 
-    die "Broken test: input file $input does not exist or not readable." unless -e $input && -r $input;
+    fail "Broken test: input file $input does not exist or not readable." unless -e $input && -r $input;
 
     my $format = $test->{'format'} // die "Broken test $input: no format provided\n";
 

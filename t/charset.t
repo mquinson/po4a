@@ -32,6 +32,20 @@ push @tests,
     'closed_path'    => 'charset/*/',
     'options'        => '--keep 0',
     'expected_files' => 'utf8.up.po utf8.pot utf8.up.pod ',
+  },
+  {
+    'format'  => 'asciidoc',
+    'options' => '-M UTF-8',
+    'input'   => "charset/asciidoc/CharsetUtf.adoc",
+  },
+  {
+    'format' => 'asciidoc',
+    'input'  => "charset/asciidoc/CharsetLatin1.adoc",
+  },
+  {
+    'format'  => 'yaml',
+    'options' => "-M UTF-8",
+    'input'   => "charset/yaml/utf8.yaml",
   };
 
 run_all_tests(@tests);
