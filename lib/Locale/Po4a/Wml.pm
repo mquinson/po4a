@@ -82,7 +82,7 @@ sub initialize {
 }
 
 sub read {
-    my ( $self, $filename, $refname ) = @_;
+    my ( $self, $filename, $refname, $charset ) = @_;
     my $tmp_filename;
     ( undef, $tmp_filename ) = File::Temp::tempfile(
         "po4aXXXX",
@@ -134,7 +134,7 @@ sub read {
 
     push @{ $self->{DOCXML}{infile} }, $tmp_filename;
     $self->{DOCWML}{$tmp_filename} = $filename;
-    $self->Locale::Po4a::TransTractor::read( $tmp_filename, $refname );
+    $self->Locale::Po4a::TransTractor::read( $tmp_filename, $refname, $charset );
     unlink "$tmp_filename";
 }
 

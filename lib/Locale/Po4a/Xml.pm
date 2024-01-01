@@ -158,9 +158,9 @@ sub shiftline {
 }
 
 sub read {
-    my ( $self, $filename, $refname ) = @_;
+    my ( $self, $filename, $refname, $charset ) = @_;
     push @{ $self->{DOCPOD}{infile} }, $filename;
-    $self->Locale::Po4a::TransTractor::read( $filename, $refname );
+    $self->Locale::Po4a::TransTractor::read( $filename, $refname, $charset );
 }
 
 sub parse {
@@ -1043,9 +1043,7 @@ sub tag_trans_close {
             warn wrap_ref_mod(
                 $tag[1],
                 "po4a::xml",
-                dgettext(
-                    "po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"
-                ),
+                dgettext( "po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…" ),
                 $name
             );
         } elsif ( $ontagerror ne "silent" ) {
@@ -1218,9 +1216,9 @@ $self->unshiftline($$) >>.
 =cut
 
 sub extract_tag {
-    my ( $self, $type, $remove ) = ( shift, shift, shift );
+    my ( $self,   $type, $remove ) = ( shift, shift, shift );
     my ( $match1, $match2 ) = ( $tag_types[$type]->{beginning}, $tag_types[$type]->{end} );
-    my ( $eof, @tag );
+    my ( $eof,    @tag );
     if ( defined( $tag_types[$type]->{f_extract} ) ) {
 
         # <!--# ... -->, <!-- ... -->, <!DOCTYPE ... >, or <![CDATA[ ... ]]>
@@ -1701,16 +1699,17 @@ sub treat_content {
             # Append or remove the opening/closing tag from the tag path
             if ( $tag_types[$type]->{'end'} eq "" ) {
                 if ( $tag_types[$type]->{'beginning'} eq "" ) {
-                    $self->treat_content_open_tag(\@tag, \@paragraph, \@text);
+                    $self->treat_content_open_tag( \@tag, \@paragraph, \@text );
                 } elsif ( $tag_types[$type]->{'beginning'} eq "/" ) {
-                    $self->treat_content_close_tag(\@tag, \@paragraph, \@text);
+                    $self->treat_content_close_tag( \@tag, \@paragraph, \@text );
                 }
             } elsif ( $tag_types[$type]->{'beginning'} eq ""
-                && $tag_types[$type]->{'end'} eq "/" ) {
+                && $tag_types[$type]->{'end'} eq "/" )
+            {
                 # As for empty-element tag,
                 # treat as if both open and close tags exist
-                $self->treat_content_open_tag(\@tag, \@paragraph, \@text);
-                $self->treat_content_close_tag(\@tag, \@paragraph, \@text);
+                $self->treat_content_open_tag( \@tag, \@paragraph, \@text );
+                $self->treat_content_close_tag( \@tag, \@paragraph, \@text );
             }
             push @paragraph, @text;
         }
@@ -1788,7 +1787,7 @@ sub treat_content {
 # Performs special process for placeholder and attribute folding.
 sub treat_content_open_tag {
     my $self = shift;
-    my ($tag, $paragraph, $text) = @_;
+    my ( $tag, $paragraph, $text ) = @_;
 
     # tag is <tag >
     my $cur_tag_name = $self->get_tag_name(@$tag);
@@ -1803,9 +1802,9 @@ sub treat_content_open_tag {
         my $last_holder = $save_holders[$#save_holders];
         my $placeholder_str =
             "<placeholder type=\""
-            . $cur_tag_name
-            . "\" id=\""
-            . ( $#{ $last_holder->{'sub_translations'} } + 1 ) . "\"/>";
+          . $cur_tag_name
+          . "\" id=\""
+          . ( $#{ $last_holder->{'sub_translations'} } + 1 ) . "\"/>";
         push @$paragraph, ( $placeholder_str, $text->[1] );
         my @saved_paragraph = @$paragraph;
 
@@ -1813,13 +1812,12 @@ sub treat_content_open_tag {
 
         # make attributes be able to be translated
         my $open_tag = $self->join_lines(@$text);
-        if ($open_tag =~ m/^<(\s*)(\S+\s+\S.*)>$/s) {
-            my ($ws, $tag_inner) = ($1, $2);
+        if ( $open_tag =~ m/^<(\s*)(\S+\s+\S.*)>$/s ) {
+            my ( $ws, $tag_inner ) = ( $1, $2 );
             $tag_inner =~ s|(\s*/)$||;
             my $postfix = $1;
             push @path, $cur_tag_name;
-            $open_tag = "<" . $ws . $self->treat_attributes($tag_inner)
-                . $postfix . ">";
+            $open_tag = "<" . $ws . $self->treat_attributes($tag_inner) . $postfix . ">";
             pop @path;
         }
 
@@ -1851,7 +1849,7 @@ sub treat_content_open_tag {
         my $tag_full = $self->join_lines(@$text);
         my $tag_ref  = $text->[1];
         if ( $tag_full =~ m/^<(\s*)(\S+\s+\S.*)>$/s ) {
-            my ($ws, $tag_inner) = ($1, $2);
+            my ( $ws, $tag_inner ) = ( $1, $2 );
             my $holder = $save_holders[$#save_holders];
             my $id     = 0;
             foreach ( keys %{ $holder->{folded_attributes} } ) {
@@ -1862,9 +1860,7 @@ sub treat_content_open_tag {
             $tag_inner =~ s|(\s*/)$||;
             my $postfix = $1;
             push @path, $cur_tag_name;
-            $holder->{folded_attributes}->{$id} =
-                "<" . $ws . $self->treat_attributes($tag_inner)
-                . $postfix . ">";
+            $holder->{folded_attributes}->{$id} = "<" . $ws . $self->treat_attributes($tag_inner) . $postfix . ">";
             pop @path;
 
             @$text = ( "<$cur_tag_name po4a-id=$id>", $tag_ref );
@@ -1881,7 +1877,7 @@ sub treat_content_open_tag {
 # Performs special process for placeholder.
 sub treat_content_close_tag {
     my $self = shift;
-    my ($tag, $paragraph, $text) = @_;
+    my ( $tag, $paragraph, $text ) = @_;
 
     # tag is </tag>
 
@@ -1897,21 +1893,12 @@ sub treat_content_close_tag {
             warn wrap_ref_mod(
                 $tag->[1],
                 "po4a::xml",
-                dgettext(
-                    "po4a",
-                    "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…"
-                ),
+                dgettext( "po4a", "Unexpected closing tag </%s> found. The main document may be wrong.  Continuing…" ),
                 $name
             );
         } elsif ( $ontagerror ne "silent" ) {
-            die wrap_ref_mod(
-                $tag->[1],
-                "po4a::xml",
-                dgettext(
-                    "po4a", "Unexpected closing tag </%s> found. The main document may be wrong."
-                ),
-                $name
-            );
+            die wrap_ref_mod( $tag->[1], "po4a::xml",
+                dgettext( "po4a", "Unexpected closing tag </%s> found. The main document may be wrong." ), $name );
         }
     }
 
@@ -1950,7 +1937,6 @@ sub treat_content_close_tag {
         @$paragraph = @{ $previous_holder->{'paragraph'} };
     }
 }
-
 
 # Translate a @paragraph array of (string, reference).
 # The $translate argument indicates if the strings must be translated or
@@ -2401,7 +2387,7 @@ sub get_string_until {
     if ( defined( $options->{unquoted} ) ) { $unquoted = $options->{unquoted}; }
     if ( defined( $options->{regex} ) )    { $regex    = $options->{regex}; }
 
-    my ( $line, $ref )   = $self->shiftline();
+    my ( $line, $ref ) = $self->shiftline();
     my ( @text, $paragraph );
     my ( $eof,  $found ) = ( 0, 0 );
 

@@ -186,7 +186,7 @@ my $filename = shift || pod2usage(1);
 $filename eq '-' || -e $filename || die wrap_msg( gettext("File %s does not exist."), $filename );
 die wrap_msg( gettext("Options %s and %s cannot be provided together"), "quiet", "verbose" ) if $verbose && $quiet;
 
-$parser->read( $filename, $filename );
+$parser->read( $filename, $filename, $mastchar // '' );
 my %pot_options = ( 'wrap-po' => $wrappo );
 $parser->setpoout( Locale::Po4a::Po->new( \%pot_options ) );
 $parser->parse();
@@ -207,7 +207,7 @@ if ($blank) {
 }
 print wrap_msg( dgettext( "po4a", "Write the normalized document to %s." ), $localized )
   unless $quiet;
-$parser->write($localized);
+$parser->write( $localized, '' );
 print wrap_msg( dgettext( "po4a", "Write the normalized PO file to %s." ), $potfile )
   unless $quiet;
 $parser->writepo($potfile);

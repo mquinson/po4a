@@ -135,10 +135,10 @@ sub textblock {
 sub end_pod { }
 
 sub read {
-    my ( $self, $filename, $refname ) = @_;
+    my ( $self, $filename, $refname, $charset ) = @_;
 
     push @{ $self->{DOCPOD}{infile} }, ( $filename, $refname );
-    $self->Locale::Po4a::TransTractor::read( $filename, $refname );
+    $self->Locale::Po4a::TransTractor::read( $filename, $refname, $charset );
 }
 
 sub parse {

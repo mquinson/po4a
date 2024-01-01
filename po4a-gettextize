@@ -593,7 +593,7 @@ my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Local
 
 # Parse master file forcing conversion to utf if it's not in ascii
 foreach my $file (@masterfile) {
-    $mastertt->read( $file, $file );
+    $mastertt->read( $file, $file, $mastchar // '' );
 }
 if ( defined($mastchar) ) {
     $mastertt->detected_charset($mastchar);
@@ -609,7 +609,7 @@ $mastertt->parse;
 # Let's merge the two transtractor files
 
 foreach my $file (@locfile) {
-    $transtt->read( $file, $file );
+    $transtt->read( $file, $file, $locchar );
 }
 
 $transtt->detected_charset($locchar);

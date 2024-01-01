@@ -287,8 +287,12 @@ sub process {
             || $_ eq 'calldir' );
     }
 
-    $self->detected_charset( $params{'file_in_charset'} ) if defined $params{'file_in_charset'};
-    $self->{TT}{'file_out_charset'} = $params{'file_out_charset'};
+    if ( defined $params{'file_in_charset'} ) {
+        $self->detected_charset( $params{'file_in_charset'} );
+    } else {
+        $params{'file_in_charset'} = '';
+    }
+    $self->{TT}{'file_out_charset'} = $params{'file_out_charset'} // '';
     if ( length( $self->{TT}{'file_out_charset'} ) ) {
         $self->{TT}{'file_out_encoder'} = find_encoding( $self->{TT}{'file_out_charset'} );
     }
@@ -327,7 +331,7 @@ sub process {
         my $infile = _input_file($file);
         print STDERR wrap_mod( "po4a::transtractor::process", "Read document $infile" )
           if $self->debug();
-        $self->read( $infile, $file );
+        $self->read( $infile, $file, $params{'file_in_charset'} );
     }
     print STDERR wrap_mod( "po4a::transtractor::process", "Call parse()" ) if $self->debug();
     $self->parse();
@@ -343,7 +347,7 @@ sub process {
         my $outfile = _output_file( $params{'file_out_name'} );
         print STDERR wrap_mod( "po4a::transtractor::process", "Write document $outfile" )
           if $self->debug();
-        $self->write($outfile);
+        $self->write( $outfile, $self->{TT}{'file_out_charset'} );
     }
     if ( defined $params{'po_out_name'} ) {
         my $outfile = _output_file( $params{'po_out_name'} );
@@ -431,11 +435,11 @@ function when you're done with packing input files into the document.
 =cut
 
 sub read() {
-    my $self = shift;
-    my ( $filename, $refname ) = ( shift, shift );
-    confess "read() requires a filename. Please report that bug."
-      unless defined $filename;
-    $refname //= $filename;
+    my $self     = shift;
+    my $filename = shift or confess "Cannot write to a file without filename";
+    my $refname  = shift or confess "Cannot write to a file without refname";
+    my $charset  = shift;
+    confess "read() requires a charset." unless defined $charset;
     my $linenum = 0;
 
     open INPUT, "<$filename"
@@ -480,8 +484,9 @@ This translated document data are provided by:
 
 sub write {
     my $self     = shift;
-    my $filename = shift
-      or croak wrap_msg( dgettext( "po4a", "Cannot write to a file without filename" ) );
+    my $filename = shift or confess "Cannot write to a file without filename";
+    my $charset  = shift;
+    confess "Cannot write file '$filename' without a charset" unless defined $charset;
 
     my $fh;
     if ( $filename eq '-' ) {
