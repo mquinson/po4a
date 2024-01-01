@@ -336,8 +336,10 @@ sub read {
       unless ( $? == 0 );
 
     my $fh;
+    my $close_fh = 1;
     if ( $filename eq '-' ) {
-        $fh = *STDIN;
+        $fh       = *STDIN;
+        $close_fh = 0;
     } else {
         open $fh, "<$filename"
           or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
@@ -350,10 +352,10 @@ sub read {
         $pofile .= $textline;
     }
 
-    #    close INPUT
-    #        or croak (sprintf(dgettext("po4a",
-    #                                   "Cannot close %s after reading: %s"),
-    #                          $filename,$!)."\n");
+    if ($close_fh) {
+        close $fh
+          or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
+    }
 
     my $linenum = 0;
 
