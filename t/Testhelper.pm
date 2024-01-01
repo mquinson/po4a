@@ -567,7 +567,6 @@ sub run_all_tests {
             $cmd =~ s/PATH/${execpath}/;
             my $exit_status = system($cmd);
             is( $exit_status, 0, "Executing " . $test->{'doc'} . " -- Command: $cmd" );
-            next TEST unless ( $exit_status == 0 );
 
             fail "Malformed test " . $test->{'doc'} . ": missing tests." unless scalar $test->{tests};
             for my $cmd ( @{ $test->{tests} } ) {

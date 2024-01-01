@@ -124,22 +124,6 @@ B<msgmerge>).  This option will become the default in a future release, because
 it is more sensible.  The B<nowrap> option is available so that users who want
 to keep the old behavior can do so.
 
-=item B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)
-
-Specify how the po file should be wrapped. This gives the choice between either
-files that are nicely wrapped but could lead to git conflicts, or files that are
-easier to handle automatically, but harder to read for humans.
-
-Historically, the gettext suite has reformatted the po files at the 77th column
-for cosmetics. This option specifies the behavior of po4a. If set to a numerical
-value, po4a will wrap the po file after this column and after newlines in the
-content. If set to B<newlines>, po4a will only split the msgid and msgstr after
-newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
-The wrapping of the reference comments is controlled by the B<--porefs> option.
-
-Note that this option has no impact on how the msgid and msgstr are wrapped, ie
-on how newlines are added to the content of these strings.
-
 =back
 
 =head1 Adding content (beside translations) to generated files
@@ -191,7 +175,7 @@ use Locale::Po4a::Chooser;
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
-use Pod::Usage qw(pod2usage);
+use Pod::Usage   qw(pod2usage);
 use Getopt::Long qw(GetOptions);
 
 Locale::Po4a::Common::textdomain("po4a");
@@ -203,7 +187,7 @@ sub show_version {
 
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
 my ( $outfile,         $width,    $threshold ) = ( '-', 80, 80 );
-my ( $help,            $help_fmt, @verbose, $debug, $wrappo, @addfiles, $format, @options, $no_deprecation );
+my ( $help,            $help_fmt, @verbose, $debug, $ignored_wrappo, @addfiles, $format, @options, $no_deprecation );
 my ( $master_filename, $po_filename );
 my ( $mastchar,        $locchar, $addchar );
 GetOptions(
@@ -219,12 +203,14 @@ GetOptions(
     'master-charset|M=s'    => \$mastchar,
     'localized-charset|L=s' => \$locchar,
     'addendum-charset|A=s'  => \$addchar,
-    'wrap-po=s'             => \$wrappo,
 
     'option|o=s' => \@options,
 
     # undocumented option to silence the warning about po4a-translate being deprecated
     'no-deprecation' => \$no_deprecation,
+
+    # undocumented and ignored option that we must accept for the tests to pass it to the other scripts
+    'wrap-po=s' => \$ignored_wrappo,
 
     'width|w=s' => \$width,
     'verbose|v' => \@verbose,
@@ -274,7 +260,6 @@ $doc->process(
     'file_in_charset'  => $mastchar,
     'file_out_charset' => $locchar,
     'addendum_charset' => $addchar,
-    'wrap-po'          => $wrappo
 );
 
 my ( $percent, $hit, $queries ) = $doc->stats();

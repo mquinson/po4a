@@ -267,26 +267,24 @@ Sets the debugging.
 =cut
 
 sub process {
-    ## Determine if we were called via an object-ref or a classname
     my $self = shift;
-
-    ## Any remaining arguments are treated as initial values for the
-    ## hash that is used to represent this object.
+    ## Parameters are passed as an hash to avoid long and error-prone parameter lists
     my %params = @_;
 
-    # Build the args for new()
-    my %newparams = ();
+    # Parameter checking
     foreach ( keys %params ) {
-        next
-          if ( $_ eq 'po_in_name'
+        confess "Unexpected parameter to process(): $_. Please report that bug."
+          unless ( $_ eq 'po_in_name'
             || $_ eq 'po_out_name'
             || $_ eq 'file_in_name'
             || $_ eq 'file_in_charset'
             || $_ eq 'file_out_name'
             || $_ eq 'file_out_charset'
             || $_ eq 'addendum'
-            || $_ eq 'addendum_charset' );
-        $newparams{$_} = $params{$_};
+            || $_ eq 'addendum_charset'
+            || $_ eq 'srcdir'
+            || $_ eq 'destdir'
+            || $_ eq 'calldir' );
     }
 
     $self->detected_charset( $params{'file_in_charset'} ) if defined $params{'file_in_charset'};
@@ -580,7 +578,7 @@ This function returns a non-null integer on error.
 
 # Internal function to read the header.
 sub addendum_parse {
-    my ( $filename, $charset ) = (shift, shift);
+    my ( $filename, $charset ) = ( shift, shift );
     my $header;
 
     my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = ( 1, "", "", "", "", "" );
@@ -589,8 +587,8 @@ sub addendum_parse {
         warn wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
         goto END_PARSE_ADDFILE;
     }
-    if (length($charset // '') > 0) {
-        binmode(INS, ":encoding($charset)");
+    if ( length( $charset // '' ) > 0 ) {
+        binmode( INS, ":encoding($charset)" );
     }
 
     unless ( defined( $header = <INS> ) && $header ) {
@@ -686,7 +684,8 @@ sub addendum {
     die wrap_msg( dgettext( "po4a", "Addendum %s does not exist." ), $filename )
       unless -e $filename;
 
-    my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = addendum_parse($filename, $self->{TT}{'addendum_charset'});
+    my ( $errcode, $mode, $position, $boundary, $bmode, $content ) =
+      addendum_parse( $filename, $self->{TT}{'addendum_charset'} );
     return 0 if ($errcode);
 
     # In order to make addendum more intuitive, each array item of
@@ -1063,9 +1062,9 @@ sub detected_charset {
         $self->{TT}{'file_in_encoder'} = find_encoding($charset);
     }
 
-    if ( length $self->{TT}{'file_in_charset'}
+    if (    length $self->{TT}{'file_in_charset'}
         and $self->{TT}{'file_in_charset'} !~ m/ascii/i
-        and $self->{TT}{'file_in_charset'} ne "UTF-8")
+        and $self->{TT}{'file_in_charset'} ne "UTF-8" )
     {
         $self->{TT}{ascii_input} = 0;
     }
