@@ -170,7 +170,7 @@ sub read {
 
 sub parse {
     my $self = shift;
-    map { $self->parse_file($_) } @{ $self->{DOCPOD}{infile} };
+    map { $self->{'current_file'} = $_; $self->parse_file($_) } @{ $self->{DOCPOD}{infile} };
 }
 
 # @save_holders is a stack of references to ('paragraph', 'translation',
@@ -903,10 +903,12 @@ sub tag_trans_xmlhead {
             "po4a::xml",
             dgettext(
                 "po4a",
-                "The file declares %s as encoding, but you provided %s as master charset. Please change either setting."
+                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting. Offending chunk:\n%s"
             ),
+            $self->{'current_file'},
             $in_charset,
-            $input_charset
+            $input_charset,
+            $tag
         ) if ( length( $input_charset // '' ) > 0 && uc($input_charset) ne uc($in_charset) );
 
         $tag =~ s/$in_charset/$out_charset/;

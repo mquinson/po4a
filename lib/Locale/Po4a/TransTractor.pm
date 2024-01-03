@@ -15,7 +15,7 @@ $VERSION = "0.70-alpha";
 @ISA     = qw(DynaLoader);
 @EXPORT  = qw(new process translate
   read write readpo writepo
-  getpoout setpoout get_out_charset handle_yaml);
+  getpoout setpoout get_in_charset get_out_charset handle_yaml);
 
 # Try to use a C extension if present.
 eval("bootstrap Locale::Po4a::TransTractor $VERSION");
@@ -965,6 +965,16 @@ TransTractor.
 
 sub debug {
     return $_[0]->{TT}{debug};
+}
+
+=item get_in_charset()
+
+This function return the charset that was provided as master charset
+
+=cut
+
+sub get_in_charset() {
+    return $_[0]->{TT}{'file_in_charset'};
 }
 
 =item get_out_charset()

@@ -12,7 +12,7 @@
 ############################################################################
 
 use Pod::Parser;
-use Locale::Po4a::TransTractor qw(process new get_out_charset);
+use Locale::Po4a::TransTractor qw(process new get_in_charset get_out_charset);
 
 package Locale::Po4a::Pod;
 
@@ -82,9 +82,20 @@ sub command {
     } elsif ( $command eq 'encoding' ) {
         my $charset = $paragraph;
         $charset =~ s/^\s*(.*?)\s*$/$1/s;
-        $self->detected_charset($charset)
 
-          # The =encoding line will be added by docheader
+        my $master_charset = $self->get_in_charset;
+        croak wrap_mod(
+            "po4a::pod",
+            dgettext(
+                "po4a",
+                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
+            ),
+            $self->{DOCPOD}{refname},
+            $charset,
+            $master_charset,
+        ) if ( length( $master_charset // '' ) > 0 && uc($charset) ne uc($master_charset) );
+
+        # The =encoding line will be added by docheader
     } else {
         $paragraph = $self->translate( $paragraph, $self->{DOCPOD}{refname} . ":$line_num", "=$command", "wrap" => 1 );
         $self->pushline("=$command $paragraph\n\n");
