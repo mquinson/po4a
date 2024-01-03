@@ -177,10 +177,6 @@ unless ($no_deprecation) {
 }
 
 my $parser = Locale::Po4a::Chooser::new( $type, %options );
-if ( length $mastchar && $mastchar !~ /ascii/i && $mastchar ne "CHARSET" ) {
-    $parser->detected_charset($mastchar);
-}
-$parser->{TT}{file_in_charset} = $mastchar;
 
 my $filename = shift || pod2usage(1);
 $filename eq '-' || -e $filename || die wrap_msg( gettext("File %s does not exist."), $filename );

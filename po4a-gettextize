@@ -405,23 +405,6 @@ sub gettextize {
         $please_fail = 1;
     }
 
-    if ( $poorig->get_charset =~ /^utf-8$/i ) {
-        $potrans->to_utf8;
-        $pores->set_charset("UTF-8");
-    } else {
-        my $charset = $potrans->get_charset();
-        $charset = "UTF-8" if $charset eq "CHARSET";
-        $pores->set_charset($charset);
-    }
-    print "Po character sets:\n"
-      . "  original="
-      . $poorig->get_charset . "\n"
-      . "  translated="
-      . $potrans->get_charset . "\n"
-      . "  result="
-      . $pores->get_charset . "\n"
-      if $debug{'encoding'};
-
     for (
         my ( $o, $t ) = ( 0, 0 ) ;
         $o < $poorig->count_entries_doc() && $t < $potrans->count_entries_doc() ;
@@ -595,10 +578,6 @@ my ( $mastertt, $transtt ) = ( Locale::Po4a::Chooser::new( $type, %opts ), Local
 foreach my $file (@masterfile) {
     $mastertt->read( $file, $file, $mastchar // '' );
 }
-if ( defined($mastchar) ) {
-    $mastertt->detected_charset($mastchar);
-    $mastertt->{TT}{po_in}->set_charset($mastchar);
-}
 $mastertt->parse;
 
 # Implementation note:
@@ -611,9 +590,6 @@ $mastertt->parse;
 foreach my $file (@locfile) {
     $transtt->read( $file, $file, $locchar );
 }
-
-$transtt->detected_charset($locchar);
-$transtt->{TT}{po_in}->set_charset($locchar);
 $transtt->parse;
 
 if ($keep_temps) {

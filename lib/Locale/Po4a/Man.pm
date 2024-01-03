@@ -1201,11 +1201,12 @@ sub post_trans {
             } elsif ( $first eq '>' ) {
                 $lvl--;
             }
-            if ($first eq "\n") {
+            if ( $first eq "\n" ) {
+
                 # Don't accept \n within B<> parameters as troff seems to reset font on new line (Debian's #1016753)
-                $done .= ' ' if ( $lvl > 0);
+                $done .= ' ' if ( $lvl > 0 );
             } else {
-                $done .= $first if ( $lvl > 0);
+                $done .= $first if ( $lvl > 0 );
             }
             $rest = substr( $rest, 1 );
         }
@@ -1357,7 +1358,7 @@ sub r {
     # some non-breaking spaces may have been added during the parsing
     $str =~ s/\Q$nbs/\\ /sg;
 
-    return $self->recode_skipped_text($str);
+    return $str;
 }
 
 sub do_paragraph {
@@ -2226,14 +2227,15 @@ $macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
         my $comment;
         my $macroname = $_[1];
         $macroname = $ds_variables{$macroname} if ( $_[0] eq "dei" || $_[0] eq "dei1" );
-        if ($macroname =~ m/(.*?)\\"(.*)$/) {
+        if ( $macroname =~ m/(.*?)\\"(.*)$/ ) {
+
             # Remove comments after the macro name (Debian's #1017837)
-            ($macroname, $comment) = ($1, $2);
+            ( $macroname, $comment ) = ( $1, $2 );
         }
         $macroname =~ s/^ *//;
         $macroname =~ s/ *$//;
-        unless (exists $macro{$macroname} || exists $inline{$macroname}) {
-            if (defined $comment) {
+        unless ( exists $macro{$macroname} || exists $inline{$macroname} ) {
+            if ( defined $comment ) {
                 $comment =~ s/^ *//;
                 $comment =~ s/ *$//;
                 warn wrap_mod(
@@ -2241,27 +2243,44 @@ $macro{'de'} = $macro{'de1'} = $macro{'dei'} = $macro{'dei1'} = sub {
                     dgettext(
                         "po4a",
                         "This page defines a new macro '%s' with '%s' (inline comment: %s), but you did not specify the expected po4a behavior "
-                        . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
-                        . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
-                        . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
-                        . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
+                          . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
+                          . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
+                          . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
+                          . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
                     ),
-                    $macroname, $_[0], $comment, $macroname,
-                    'untranslated', 'noarg', 'translate_joined', 'translate_each', 'no_wrap', 'inline', "-o untranslated=$macroname");
+                    $macroname,
+                    $_[0],
+                    $comment,
+                    $macroname,
+                    'untranslated',
+                    'noarg',
+                    'translate_joined',
+                    'translate_each',
+                    'no_wrap',
+                    'inline',
+                    "-o untranslated=$macroname"
+                );
             } else {
                 warn wrap_mod(
                     "po4a::man",
                     dgettext(
                         "po4a",
                         "This page defines a new macro '%s' with '%s', but you did not specify the expected po4a behavior "
-                        . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
-                        . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
-                        . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
-                        . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
+                          . "when '%s' is used. You will get an error if this macro is actually used in your page.\n"
+                          . "Add your macro to one of the '%s', '%s', '%s', '%s', '%s' or '%s' parameters to avoid issues.\n"
+                          . "For example, passing '%s' to po4a will ensure that the defined macro remains hidden from translators.\n"
+                          . "Please refer to the manpage of Locale::Po4a::Man for more info on these parameters.\n"
                     ),
                     $macroname,
-                    $_[0],$macroname,
-                    'untranslated', 'noarg', 'translate_joined', 'translate_each', 'no_wrap', 'inline', "-o untranslated=$macroname"
+                    $_[0],
+                    $macroname,
+                    'untranslated',
+                    'noarg',
+                    'translate_joined',
+                    'translate_each',
+                    'no_wrap',
+                    'inline',
+                    "-o untranslated=$macroname"
                 );
             }
         }

@@ -71,6 +71,7 @@ my %entities;
 
 my @comments;
 my %translate_options_cache;
+my $input_charset;
 
 # This shiftline function returns the next line of the document being parsed
 # (and its reference).
@@ -115,7 +116,7 @@ sub shiftline {
                 }
                 next if ($tmp_in_comment);
 
-                open( my $in, $entities{$k} )
+                open( my $in, '<:encoding(' . ( $input_charset // 'UTF-8' ) . ')', $entities{$k} )
                   or croak wrap_mod( "po4a::xml::shiftline", dgettext( "po4a", "%s: Cannot read from %s: %s" ),
                     $ref, $entities{$k}, $! );
                 while ( defined( my $textline = <$in> ) ) {
@@ -159,6 +160,10 @@ sub shiftline {
 
 sub read {
     my ( $self, $filename, $refname, $charset ) = @_;
+    croak wrap_mod( "po4a::xml", dgettext( "po4a", "Cannot have more than one input charset in XML files (%s and %s)" ),
+        $input_charset, $charset )
+      if ( defined $input_charset && $input_charset ne $charset );
+    $input_charset = $charset;
     push @{ $self->{DOCPOD}{infile} }, $filename;
     $self->Locale::Po4a::TransTractor::read( $filename, $refname, $charset );
 }
@@ -890,11 +895,20 @@ sub tag_trans_xmlhead {
     # We don't have to translate anything from here: throw away references
     my $tag = $self->join_lines(@tag);
     $tag =~ /encoding=(("|')|)(.*?)(\s|\2)/s;
-    my $in_charset = $3;
-    $self->detected_charset($in_charset);
+    my $in_charset  = $3;
     my $out_charset = $self->get_out_charset;
 
     if ( defined $in_charset ) {
+        croak wrap_mod(
+            "po4a::xml",
+            dgettext(
+                "po4a",
+                "The file declares %s as encoding, but you provided %s as master charset. Please change either setting."
+            ),
+            $in_charset,
+            $input_charset
+        ) if ( length( $input_charset // '' ) > 0 && uc($input_charset) ne uc($in_charset) );
+
         $tag =~ s/$in_charset/$out_charset/;
     } else {
         if ( $tag =~ m/standalone/ ) {
@@ -1435,7 +1449,7 @@ sub treat_attributes {
                                 $ref, $value,
                                 $self->get_path . $name
                             ) if $self->{options}{'debug'};
-                            $text .= $self->recode_skipped_text($value);
+                            $text .= $value;
                         }
                         $text .= $quot;
                     }
@@ -2022,7 +2036,7 @@ sub translate_paragraph {
                 "%s: path='%s', translation option='%s' (no translation)",
                 $paragraph[1], $self->get_path, $translate
             ) if $self->{options}{'debug'};
-            $self->pushline( $self->recode_skipped_text($para) );
+            $self->pushline($para);
         }
     }
 

@@ -4,10 +4,18 @@ user-visible changes while the day to day changes are in the git logs.
 =======================================================================
         ___  _____ ___
 __   __/ _ \|___  / _ \
-\ \ / / | | |  / / | | |          unnamed
+\ \ / / | | |  / / | | |          The PerlIO cleanup release.
  \ V /| |_| | / /| |_| |
   \_/  \___(_)_/  \___/           (not released yet)
 
+Major cleanup: 
+ * Greatly simplify the code by using PerlIO instead of messing up 
+   with encodings manually.
+ * This is a very intrusive change, and even if all tests of our 
+   comprehensive suite pass, I still expect issues with this on some
+   corner cases, such as projects not using UTF-8 but a mixture of 
+   encodings. Please report any issue, and accept my apologies.
+ * This greatly simplifies the code, enabling future maintenance.
 
 Asciidoc:
  * Correctly handle lines that start with a dot in a paragraph.
@@ -40,7 +48,7 @@ Markdown:
    (GitHub's #426) [Martin].
 
 YAML:
- * Verbosly fail on inline lists and dictionnaries, as YAML::Tiny does not
+ * Verbosely fail on inline lists and dictionaries, as YAML::Tiny does not
    handle them as lists or dicts anyway. Do quote list-looking strings
    (GitHub's #439) [Martin & gemmaro].
 

@@ -25,10 +25,6 @@ use Locale::Po4a::Po;
 use Locale::Po4a::Common;
 
 use File::Path;    # mkdir before write
-
-use Encode;
-use Encode::Guess;
-
 use File::Spec;
 
 =encoding UTF-8
@@ -216,8 +212,7 @@ List of filenames where we should read the input document.
 
 =item file_in_charset ($)
 
-Charset used in the input document (if it isn't specified, it will try
-to detect it from the input document).
+Charset used in the input document (if it isn't specified, use UTF-8).
 
 =item file_out_name ($)
 
@@ -225,8 +220,7 @@ Filename where we should write the output document.
 
 =item file_out_charset ($)
 
-Charset used in the output document (if it isn't specified, it will use
-the PO file charset).
+Charset used in the output document (if it isn't specified, use UTF-8).
 
 =item po_in_name (@)
 
@@ -287,15 +281,8 @@ sub process {
             || $_ eq 'calldir' );
     }
 
-    if ( defined $params{'file_in_charset'} ) {
-        $self->detected_charset( $params{'file_in_charset'} );
-    } else {
-        $params{'file_in_charset'} = '';
-    }
-    $self->{TT}{'file_out_charset'} = $params{'file_out_charset'} // '';
-    if ( length( $self->{TT}{'file_out_charset'} ) ) {
-        $self->{TT}{'file_out_encoder'} = find_encoding( $self->{TT}{'file_out_charset'} );
-    }
+    $self->{TT}{'file_in_charset'}  = $params{'file_in_charset'}  // 'UTF-8';
+    $self->{TT}{'file_out_charset'} = $params{'file_out_charset'} // 'UTF-8';
     $self->{TT}{'addendum_charset'} = $params{'addendum_charset'};
 
     our ( $destdir, $srcdir, $calldir ) = ( $params{'destdir'}, $params{'srcdir'}, $params{'calldir'} );
@@ -405,9 +392,6 @@ sub new {
         $self->{TT}{debug} = $options{'debug'};
     }
 
-    # Input document is in ascii until we prove the opposite (in read())
-    $self->{TT}{ascii_input} = 1;
-
     return $self;
 }
 
@@ -438,39 +422,28 @@ sub read() {
     my $self     = shift;
     my $filename = shift or confess "Cannot write to a file without filename";
     my $refname  = shift or confess "Cannot write to a file without refname";
-    my $charset  = shift;
-    confess "read() requires a charset." unless defined $charset;
-    my $linenum = 0;
+    my $charset  = shift || 'UTF-8';
+    my $linenum  = 0;
 
-    open INPUT, "<$filename"
+    use warnings FATAL => 'utf8';
+    use Encode qw(:fallbacks);
+    use PerlIO::encoding;
+    $PerlIO::encoding::fallback = FB_CROAK;
+
+    my $fh;
+    open( $fh, "<:encoding($charset)", $filename )
       or croak wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
-    while ( defined( my $textline = <INPUT> ) ) {
+
+    while ( defined( my $textline = <$fh> ) ) {
         $linenum++;
         my $ref = "$refname:$linenum";
         $textline =~ s/\r$//;
         my @entry = ( $textline, $ref );
         push @{ $self->{TT}{doc_in} }, @entry;
-
-        # Detect if this file has non-ascii characters
-        if ( $self->{TT}{ascii_input} ) {
-            my $decoder = guess_encoding($textline);
-            if ( ref($decoder) and $decoder =~ /Encode::utf8=/ ) {
-
-                # That's fine
-
-            } elsif ( !ref($decoder) or $decoder !~ /Encode::XS=/ ) {
-
-                # We have detected a non-ascii line
-                $self->{TT}{ascii_input} = 0;
-
-                # Save the reference for future error message
-                $self->{TT}{non_ascii_ref} ||= $ref;
-            }
-        }
     }
-    close INPUT
-      or croak wrap_msg( dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
 
+    close $fh
+      or croak wrap_msg( dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
 }
 
 =item write($)
@@ -486,8 +459,9 @@ This translated document data are provided by:
 sub write {
     my $self     = shift;
     my $filename = shift or confess "Cannot write to a file without filename";
-    my $charset  = shift;
-    confess "Cannot write file '$filename' without a charset" unless defined $charset;
+    my $charset  = shift || 'UTF-8';
+
+    use warnings FATAL => 'utf8';
 
     my $fh;
     if ( $filename eq '-' ) {
@@ -502,7 +476,7 @@ sub write {
             File::Path::mkpath( $dir, 0, 0755 )    # Croaks on error
               if ( length($dir) && !-e $dir );
         }
-        open $fh, ">$filename"
+        open( $fh, ">:encoding($charset)", $filename )
           or croak wrap_msg( dgettext( "po4a", "Cannot write to %s: %s" ), $filename, $! );
     }
 
@@ -584,17 +558,15 @@ This function returns a non-null integer on error.
 
 # Internal function to read the header.
 sub addendum_parse {
-    my ( $filename, $charset ) = ( shift, shift );
+    my $filename = shift;
+    my $charset  = shift || 'UTF-8';
     my $header;
 
     my ( $errcode, $mode, $position, $boundary, $bmode, $content ) = ( 1, "", "", "", "", "" );
 
-    unless ( open( INS, "<$filename" ) ) {
+    unless ( open( INS, "<:encoding($charset)", $filename ) ) {
         warn wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
         goto END_PARSE_ADDFILE;
-    }
-    if ( length( $charset // '' ) > 0 ) {
-        binmode( INS, ":encoding($charset)" );
     }
 
     unless ( defined( $header = <INS> ) && $header ) {
@@ -933,30 +905,6 @@ sub translate {
     #            unless $validoption{$_};
     # }
 
-    my $in_charset;
-    if ( $self->{TT}{ascii_input} ) {
-        $in_charset = "UTF-8";
-    } else {
-        if ( ( $self->{TT}{'file_in_charset'} // '' ) !~ m/ascii/i ) {    # // '' to have a default value
-            $in_charset = $self->{TT}{'file_in_charset'} // "UTF-8";
-        } else {
-
-            # The document charset have to be determined *before* we see the first string to recode.
-            die wrap_mod(
-                "po4a",
-                dgettext(
-                    "po4a",
-                    "Couldn't determine the input document's charset. Please specify it on the command line. (non-ASCII char at %s)"
-                ),
-                $self->{TT}{non_ascii_ref}
-            );
-        }
-    }
-
-    if ( $self->{TT}{po_in}->get_charset ne "CHARSET" ) {
-        $string = encode_from_to( $string, $self->{TT}{'file_in_encoder'}, $self->{TT}{po_in}{encoder} );
-    }
-
     if ( defined $options{'wrapcol'} && $options{'wrapcol'} < 0 ) {
 
         # FIXME: should be the parameter given with --width
@@ -968,32 +916,6 @@ sub translate {
         'wrapcol' => $options{'wrapcol'}
     );
 
-    if ( $self->{TT}{po_in}->get_charset ne "CHARSET" ) {
-        my $out_encoder = $self->{TT}{'file_out_encoder'};
-        unless ( defined $out_encoder ) {
-            $out_encoder = find_encoding( $self->get_out_charset );
-        }
-        $transstring = encode_from_to( $transstring, $self->{TT}{po_in}{encoder}, $out_encoder );
-    }
-
-    # If the input document isn't completely in ascii, we should see what to
-    # do with the current string
-    unless ( $self->{TT}{ascii_input} ) {
-        my $out_charset = $self->{TT}{po_out}->get_charset;
-
-        # We set the output po charset
-        if ( $out_charset eq "CHARSET" || $out_charset eq '' ) {
-            $out_charset = "UTF-8";
-            $self->{TT}{po_out}->set_charset($out_charset);
-        }
-        if ( $in_charset ne '' and $in_charset !~ /^$out_charset$/i ) {
-            Encode::from_to( $string, $in_charset, $out_charset );
-            if ( length( $options{'comment'} ) ) {
-                Encode::from_to( $options{'comment'}, $in_charset, $out_charset );
-            }
-        }
-    }
-
     # the comments provided by the modules are automatic comments from the PO point of view
     $self->{TT}{po_out}->push(
         'msgid'     => $string,
@@ -1004,11 +926,6 @@ sub translate {
         'wrap'      => $options{'wrap'} || 0,
         'wrapcol'   => $options{'wrapcol'}
     );
-
-    #    if ($self->{TT}{po_in}->get_charset ne "CHARSET") {
-    #        Encode::from_to($transstring,$self->{TT}{po_in}->get_charset,
-    #            $self->get_out_charset);
-    #    }
 
     if ( $options{'wrap'} || 0 ) {
         $transstring =~ s/( *)$//s;
@@ -1050,32 +967,6 @@ sub debug {
     return $_[0]->{TT}{debug};
 }
 
-=item detected_charset($)
-
-This tells TransTractor that a new charset (the first argument) has been
-detected from the input document. It can usually be read from the document
-header. Only the first charset will remain, coming either from the
-process() arguments or detected from the document.
-
-=cut
-
-sub detected_charset {
-    my ( $self, $charset ) = ( shift, shift );
-    $charset //= "UTF-8";
-    unless ( length( $self->{TT}{'file_in_charset'} ) ) {
-        $self->{TT}{'file_in_charset'} = $charset;
-        croak "Please provide a valid charset to detected_charset()" unless defined $charset;
-        $self->{TT}{'file_in_encoder'} = find_encoding($charset);
-    }
-
-    if (    length $self->{TT}{'file_in_charset'}
-        and $self->{TT}{'file_in_charset'} !~ m/ascii/i
-        and $self->{TT}{'file_in_charset'} ne "UTF-8" )
-    {
-        $self->{TT}{ascii_input} = 0;
-    }
-}
-
 =item get_out_charset()
 
 This function will return the charset that should be used in the output
@@ -1091,86 +982,16 @@ encoding is performed.
 
 sub get_out_charset {
     my $self = shift;
-    my $charset;
 
-    # Use the value specified at the command line
-    if ( length( $self->{TT}{'file_out_charset'} ) ) {
-        $charset = $self->{TT}{'file_out_charset'};
-    } else {
-        if ( $self->{TT}{ascii_input} ) {
-            $charset = "UTF-8";
-        } else {
-            $charset = $self->{TT}{po_in}->get_charset;
-            $charset = $self->{TT}{'file_in_charset'}
-              if $charset eq "CHARSET"
-              and length( $self->{TT}{'file_in_charset'} );
-            $charset = "ascii"
-              if $charset eq "CHARSET";
-        }
-    }
-    return $charset;
-}
+    # Prefer the value specified on the command line
+    return $self->{TT}{'file_out_charset'}
+      if length( $self->{TT}{'file_out_charset'} );
 
-=item recode_skipped_text($)
+    return $self->{TT}{po_in}->get_charset if $self->{TT}{po_in}->get_charset ne 'CHARSET';
 
-This function returns the recoded text passed as argument, from the input
-document's charset to the output document's one. This isn't needed when
-translating a string (translate() recodes everything itself), but it is when
-you skip a string from the input document and you want the output document to
-be consistent with the global encoding.
+    return $self->{TT}{'file_in_charset'} if length( $self->{TT}{'file_in_charset'} );
 
-=cut
-
-sub recode_skipped_text {
-    my ( $self, $text ) = ( shift, shift );
-    unless ( $self->{TT}{'ascii_input'} ) {
-        if ( length( $self->{TT}{'file_in_charset'} ) ) {
-            $text = encode_from_to( $text, $self->{TT}{'file_in_encoder'}, find_encoding( $self->get_out_charset ) );
-        } else {
-            die wrap_mod(
-                "po4a",
-                dgettext(
-                    "po4a",
-                    "Couldn't determine the input document's charset. Please specify it on the command line. (non-ASCII char at %s)"
-                ),
-                $self->{TT}{non_ascii_ref}
-            );
-        }
-    }
-    return $text;
-}
-
-# encode_from_to($,$,$)
-#
-# Encode the given text from one encoding to another one.
-# It differs from Encode::from_to because it does not take the name of the
-# encoding in argument, but the encoders (as returned by the
-# Encode::find_encoding(<name>) method). Thus it permits to save a bunch
-# of call to find_encoding.
-#
-# If the "from" encoding is undefined, it is considered as UTF-8 (or
-# ascii).
-# If the "to" encoding is undefined, it is considered as UTF-8.
-#
-sub encode_from_to {
-    my ( $text, $from, $to ) = ( shift, shift, shift );
-
-    if ( not defined $from ) {
-
-        # for ascii and UTF-8, no conversion needed to get an utf-8
-        # string.
-    } else {
-        $text = $from->decode( $text, 0 );
-    }
-
-    if ( not defined $to ) {
-
-        # Already in UTF-8, no conversion needed
-    } else {
-        $text = $to->encode( $text, 0 );
-    }
-
-    return $text;
+    return 'UTF-8';
 }
 
 # Push the translation of a Yaml document or Yaml Front-Matter header, parsed by YAML::Tiny in any case

@@ -136,8 +136,10 @@ sub end_pod { }
 
 sub read {
     my ( $self, $filename, $refname, $charset ) = @_;
-
-    push @{ $self->{DOCPOD}{infile} }, ( $filename, $refname );
+    $charset ||= "UTF-8";
+    my $fh;
+    open $fh, "<:encoding($charset)", $filename;
+    push @{ $self->{DOCPOD}{infile} }, ( $fh, $refname );
     $self->Locale::Po4a::TransTractor::read( $filename, $refname, $charset );
 }
 
@@ -146,9 +148,10 @@ sub parse {
 
     my @list = @{ $self->{DOCPOD}{infile} };
     while ( scalar @list ) {
-        my ( $filename, $refname ) = ( shift @list, shift @list );
+        my ( $fh, $refname ) = ( shift @list, shift @list );
         $self->{DOCPOD}{refname} = $refname;
-        $self->parse_from_file($filename);
+        $self->parse_from_filehandle($fh);
+        close $fh;
     }
 }
 

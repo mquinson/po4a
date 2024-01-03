@@ -1010,20 +1010,6 @@ sub read_file {
         if ( length($textline) ) {
             my @entry = ( $textline, $ref );
             push @entries, @entry;
-
-            # Detect if this file has non-ascii characters
-            if ( $self->{TT}{ascii_input} ) {
-
-                my $decoder = guess_encoding($textline);
-                if ( !ref($decoder) or $decoder !~ /Encode::XS=/ ) {
-
-                    # We have detected a non-ascii line
-                    $self->{TT}{ascii_input} = 0;
-
-                    # Save the reference for future error message
-                    $self->{TT}{non_ascii_ref} ||= $ref;
-                }
-            }
         }
     }
     close $in
