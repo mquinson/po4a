@@ -429,6 +429,12 @@ sub run_one_format {
     } elsif ( $error != 0 && $exit_status != 0 ) {
         pass("Expected error detected in $doc");
         note("  Failing as expected: $cmd (retcode: $exit_status)");
+        note("Produced output:");
+        open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
+        while (<FH>) {
+            note("  $_");
+        }
+        note("(end of command output)\n");
     } else {
         fail("Normalizing $doc: $exit_status");
         note("  FAIL: $cmd");

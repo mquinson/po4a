@@ -86,7 +86,7 @@ use vars qw(@ISA @EXPORT);
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 use File::Basename qw(dirname);
-use Carp qw(croak);
+use Carp           qw(croak);
 
 use Encode;
 use Encode::Guess;
@@ -926,15 +926,16 @@ Overloads Transtractor's read().
 
 =cut
 
-sub read {
+sub read ($$$$) {
     my $self     = shift;
     my $filename = shift;
     my $refname  = shift;
+    my $charset  = shift;
 
     # keep the directory name of the main file.
     $my_dirname = dirname($filename);
 
-    push @{ $self->{TT}{doc_in} }, read_file( $self, $filename, $refname );
+    push @{ $self->{TT}{doc_in} }, read_file( $self, $filename, $refname, $charset );
 }
 
 =item B<read_file>
@@ -954,10 +955,11 @@ sub read_file {
     my $filename = shift
       or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from file without having a filename" ) );
     my $refname = shift // $filename;
+    my $charset = shift || 'UTF-8';
     my $linenum = 0;
     my @entries = ();
 
-    open( my $in, $filename )
+    open( my $in, "<:encoding($charset)", $filename )
       or croak wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     while ( defined( my $textline = <$in> ) ) {
         $linenum++;
@@ -995,11 +997,19 @@ sub read_file {
                 open( KPSEA, "kpsewhich " . $newfilename . " |" );
                 my $newfilepath = <KPSEA>;
 
-                if ( $newfilename ne "" and $newfilepath eq "" ) {
-                    die wrap_mod( "po4a::tex", dgettext( "po4a", "Cannot find %s with kpsewhich" ), $filename );
+                if ( $newfilename ne "" and ( $newfilepath // '' ) eq '' ) {
+                    die wrap_mod(
+                        "po4a::tex",
+                        dgettext(
+                            "po4a",
+                            "Cannot find '%s' with kpsewhich. To prevent this file to be included, add '-o exclude_include=%s' to the options, either on the command line or in your po4a.conf file."
+                        ),
+                        $newfilename,
+                        $newfilename
+                    );
                 }
 
-                push @entries, read_file( $self, $newfilepath, $newfilename );
+                push @entries, read_file( $self, $newfilepath, $newfilename, $charset );
                 if ( $tag eq "include" ) {
                     $textline = "\\clearpage" . $end;
                 } else {
