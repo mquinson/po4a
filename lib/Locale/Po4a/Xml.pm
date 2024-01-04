@@ -903,12 +903,11 @@ sub tag_trans_xmlhead {
             "po4a::xml",
             dgettext(
                 "po4a",
-                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting. Offending chunk:\n%s"
+                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
             ),
             $self->{'current_file'},
             $in_charset,
-            $input_charset,
-            $tag
+            $input_charset
         ) if ( length( $input_charset // '' ) > 0 && uc($input_charset) ne uc($in_charset) );
 
         $tag =~ s/$in_charset/$out_charset/;
