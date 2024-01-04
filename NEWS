@@ -72,6 +72,10 @@ po4a main script (the deprecated po4a-* scripts are still buggy):
 po4a-translate:
  * Remove the wrap-po option that was not used internally.
 
+po4a-updatepo:
+ * Do not pass empty PO files to msgmerge, as it stumbles on such things when
+   the POT file has UTF chars in the msgids. (Debian's #1022216) [Mt]
+
 Build scripts:
  * Use xmlcatalog(1) to find DocBook XSL file (GitHub's #431).
 

@@ -301,17 +301,25 @@ $doc->process(
 print STDERR wrap_msg( gettext("done.") ) if $verbose;
 
 while ( my $po_filename = shift @pofiles ) {
+    my $usable_pofile = 0;
     if ( -e $po_filename ) {
+
+        # Check that the po file is not empty, as msgmerge has issues in this case (see Debian's #1022216)
+        my $pofile = Locale::Po4a::Po->new();
+        $pofile->read($po_filename);
+        $usable_pofile = 1 if ( $pofile->count_entries() > 0 );
+    }
+    if ($usable_pofile) {
         print STDERR wrap_msg( gettext("Updating %s:"), $po_filename )
           if $verbose;
         my @cmd = ( "msgmerge" . $Config{_exe} );
         push( @cmd, split( /\s+/, $msgmerge_opt ) ) if length($msgmerge_opt);
         push @cmd, ( "-U", $po_filename, $pot_filename );
-        print STDERR join( ' ', @cmd ) . "\n" if $debug;
+        print STDERR "Running " . join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd) == 0
           or die wrap_msg( gettext("Could not run msgmerge: %s"), $! );
         @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename );
-        print STDERR join( ' ', @cmd ) . "\n" if $debug;
+        print STDERR "Running " . join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd)
           if $verbose;
     } else {
