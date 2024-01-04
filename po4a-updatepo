@@ -317,7 +317,7 @@ while ( my $po_filename = shift @pofiles ) {
         push @cmd, ( "-U", $po_filename, $pot_filename );
         print STDERR "Running " . join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd) == 0
-          or die wrap_msg( gettext("Could not run msgmerge: %s"), $! );
+          or die wrap_msg( gettext("Could not run msgmerge: %s\nThe command was: %s"), $!, join( ' ', @cmd ) );
         @cmd = ( "msgfmt" . $Config{_exe}, "--statistics", "-v", "-o", File::Spec->devnull(), $po_filename );
         print STDERR "Running " . join( ' ', @cmd ) . "\n" if $debug;
         system(@cmd)
