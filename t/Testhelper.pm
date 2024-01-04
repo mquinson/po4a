@@ -68,6 +68,7 @@
 #            If the file does not exist, the normalization is expected to not output anything
 #   - error (optional boolean -- default: false): whether the normalization is expected to fail
 #            If so, the translation is not attempted (and the translation files don't have to exist)
+#   - trans (default: $basename.trans): expected translated document (translated with provided PO file)
 #   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
 #            If the file does not exist, the normalization is expected to not output anything
 #   - options (optional): options to pass to the translation, updatepo and normalization

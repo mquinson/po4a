@@ -38,6 +38,13 @@ push @tests,
     'input'  => "charset/asciidoc/CharsetUtf.adoc",
   },
   {
+    'doc'    => "UTF with BOM marker (code point of width 3 at the beginning of the doc to indicate that it's UTF-8)",
+    'format' => 'asciidoc',
+    'input'  => "charset/asciidoc/CharsetUtfBOM.adoc",
+    'norm'   => "charset/asciidoc/CharsetUtf.norm",
+    'trans'  => "charset/asciidoc/CharsetUtf.trans",
+  },
+  {
     'format'  => 'asciidoc',
     'options' => '-M iso-8859-1',
     'input'   => "charset/asciidoc/CharsetLatin1.adoc",

@@ -436,6 +436,17 @@ sub read() {
 
     while ( defined( my $textline = <$fh> ) ) {
         $linenum++;
+        if ( $linenum == 1 && $textline =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
+            croak wrap_msg(
+                dgettext(
+                    "po4a",
+                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified %s instead."
+                ),
+                $filename,
+                $charset
+            ) if ( uc($charset) ne 'UTF-8' );
+            $textline =~ s/^\N{BOM}//;
+        }
         my $ref = "$refname:$linenum";
         $textline =~ s/\r$//;
         my @entry = ( $textline, $ref );

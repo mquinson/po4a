@@ -362,6 +362,19 @@ sub read {
         }
     }
 
+    if ( $pofile =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
+        croak "BOM detected";
+        croak wrap_msg(
+            dgettext(
+                "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified %s instead."
+            ),
+            $filename,
+            $charset
+        ) if ( uc($charset) ne 'UTF-8' );
+        $pofile =~ s/^\N{BOM}//;
+    }
+
     if ( $filename ne '-' ) {
         close $fh
           or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot close %s after reading: %s" ), $filename, $! );
