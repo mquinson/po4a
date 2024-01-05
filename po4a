@@ -980,14 +980,12 @@ sub parse_config_options {
 
 my %po4a_opts = get_options(@ARGV);
 
-our ( $destdir, $srcdir, $calldir ) = ( $po4a_opts{'destdir'}, $po4a_opts{'srcdir'}, $po4a_opts{'calldir'} );
-
 sub find_input_file {
     my $filename = $_[0];
     my $debug    = $_[1];
     print STDERR "Search for input file $filename\n" if $debug;
     return $filename                                 if ( File::Spec->file_name_is_absolute($filename) );
-    foreach ( ( $destdir, $calldir, $srcdir ) ) {
+    foreach ( ( $po4a_opts{'destdir'}, $po4a_opts{'calldir'}, $po4a_opts{'srcdir'} ) ) {
         next unless defined $_;
         my $p = File::Spec->catfile( $_, $filename );
         print STDERR "Test $p: " . ( -e $p ? "OK" : "nope" ) . "\n"
@@ -1000,7 +998,7 @@ sub find_input_file {
 sub find_output_file {
     my $filename = $_[0];
     return $filename if ( File::Spec->file_name_is_absolute($filename) );
-    foreach ( ( $destdir, $calldir ) ) {
+    foreach ( ( $po4a_opts{'destdir'}, $po4a_opts{'calldir'} ) ) {
         next unless defined $_;
         return File::Spec->catfile( $_, $filename ) if -d $_ and -w $_;
     }
@@ -1197,6 +1195,7 @@ while (<CONFIG>) {
         # Step 1. collect the files in every candidate po_directory we find.
         my $po_directory = $main;
         my @po_files;
+        my ( $destdir, $srcdir, $calldir ) = ( $po4a_opts{'destdir'}, $po4a_opts{'srcdir'}, $po4a_opts{'calldir'} );
         print STDERR "Searching for po_directory '$po_directory'."
           if $po4a_opts{"debug"};
         if ( File::Spec->file_name_is_absolute($po_directory) ) {
@@ -1799,7 +1798,7 @@ if ( not $po4a_opts{"no-update"} ) {
                     if ( $po4a_opts{'split'} ) {
                         printf( gettext("Creating an empty PO file for the language %s.\n"), $lang );
                     } else {
-                        printf( gettext("Creating an empty PO file in %s.\n"), $po_filename{$lang} );
+                        printf( gettext("Creating an empty PO file in %s.\n"), $outfile );
                     }
                 }
 
