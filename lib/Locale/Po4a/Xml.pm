@@ -2532,7 +2532,7 @@ L<po4a(7)|po4a.7>
  Copyright © 2008-2009 Nicolas François <nicolas.francois@centraliens.net>
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut
 

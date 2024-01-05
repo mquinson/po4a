@@ -1,3 +1,8 @@
+# Po4aBuilder -- tools and configs to build the po4a distribution when releasing
+#
+# This program is free software; you may redistribute it and/or modify it
+# under the terms of GPL v2.0 or later (see COPYING).
+
 package Po4aBuilder;
 
 use 5.16.0;

@@ -1,3 +1,8 @@
+# Build.PL -- script in charge of building the po4a distribution when releasing
+#
+# This program is free software; you may redistribute it and/or modify it
+# under the terms of GPL v2.0 or later (see COPYING).
+
 #!/usr/bin/perl
 
 use lib q(.);

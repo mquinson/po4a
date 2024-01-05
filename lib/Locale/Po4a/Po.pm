@@ -1,7 +1,7 @@
 # Locale::Po4a::Po -- manipulation of PO files
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING).
+# under the terms of GPL v2.0 or later (see COPYING).
 
 ############################################################################
 # Modules and declarations

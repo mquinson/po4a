@@ -1427,7 +1427,7 @@ Tested successfully on simple AsciiDoc files.
  Copyright © 2017 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 __END__
 

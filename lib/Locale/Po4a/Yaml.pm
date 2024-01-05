@@ -1,7 +1,7 @@
 # Locale::Po4a::Yaml -- Convert yaml files to PO file, for translation.
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING).
+# under the terms of GPL v2.0 or later (see COPYING).
 #
 
 =encoding UTF-8
@@ -64,7 +64,7 @@ Copyright © 2017 Brian Exelbierd.
 Copyright © 2022 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut
 

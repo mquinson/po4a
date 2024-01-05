@@ -1,7 +1,7 @@
 # Locale::Po4a::Chooser -- Manage po4a modules
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING).
+# under the terms of GPL v2.0 or later (see COPYING).
 #
 # This module converts POD to PO file, so that it becomes possible to
 # translate POD formatted documentation. See gettext documentation for
@@ -173,6 +173,6 @@ L<Locale::Po4a::Yaml(3pm)>.
 Copyright © 2002-2005, 2014, 2017 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut

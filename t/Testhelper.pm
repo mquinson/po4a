@@ -1,5 +1,4 @@
-# Provides a common test routine to avoid repeating the same
-# code over and over again.
+# Provides common test routines to avoid repeating the same code over and over again.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

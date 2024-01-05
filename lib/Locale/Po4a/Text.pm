@@ -1059,7 +1059,7 @@ Tested successfully on simple text files and NEWS.Debian files.
  Copyright © 2020 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut
 

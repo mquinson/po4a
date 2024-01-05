@@ -1,7 +1,9 @@
 # Locale::Po4a::RubyDoc -- Convert Ruby Document data to PO file, for translation
-# version 0.15
 #
 # Copyright © 2016-2017 Francesco Poli <invernomuto@paranoici.org>
+#
+# This program is free software; you may redistribute it and/or modify it
+# under the terms of GPL v2.0 or later (see COPYING).
 #
 # This work is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

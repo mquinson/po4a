@@ -1,7 +1,7 @@
 # Locale::Po4a::Pod -- Convert POD data to PO file, for translation.
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING file).
+# under the terms of GPL v2.0 or later (see COPYING file).
 #
 # This module converts POD to PO file, so that it becomes possible to
 # translate POD formatted documentation. See gettext documentation for
@@ -337,6 +337,6 @@ L<po4a(7)|po4a.7>
 Copyright © 2002 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut

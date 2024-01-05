@@ -1,7 +1,7 @@
 # Locale::Po4a::KernelHelp -- Convert kernel configuration help from/to PO files
 #
 # This program is free software; you may redistribute it and/or modify it
-# under the terms of GPL (see COPYING).
+# under the terms of GPL v2.0 or later (see COPYING).
 #
 # See gettext documentation for more info about PO files.
 
@@ -165,6 +165,6 @@ L<po4a(7)|po4a.7>
 Copyright © 2002 SPI, Inc.
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see the COPYING file).
+under the terms of GPL v2.0 or later (see the COPYING file).
 
 =cut

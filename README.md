@@ -128,7 +128,7 @@ the git tree), use the PERLLIB environment variable as such:
 # Copyright and license
 
 This program is free software; you may redistribute it and/or modify it
-under the terms of GPL (see COPYING file).
+under the terms of GPL v2.0 or later (GPL2+ -- see COPYING file).
 
 Copyright © 2002-2023 by SPI, inc.
 
