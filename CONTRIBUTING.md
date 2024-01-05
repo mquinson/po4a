@@ -10,27 +10,23 @@ the basics of Open Source development and Social Coding.
 po4a is architectured around the idea of TransTractors, that are
 specific parsers in charge of separating the document structure from
 the translatable content, and to reinject the translated content back
-into the structure.
+into the structure. The [project overview](https://po4a.org/man/man7/po4a.7.php)
+document contains a section detailing this architecture and hopefuly explaining
+how to improve the existing parsers, or add new ones. We try to document the
+source code and simplify it when possible. Please ask any question that may arise.
 
-You can learn more on TransTractors in
-[their documentation](https://po4a.org/man/man3/Locale::Po4a::TransTractor.3pm.php),
-or by browsing the code of
-[all existing ones](https://github.com/mquinson/po4a/tree/master/lib/Locale/Po4a).
-Also don't miss the [project overview](https://po4a.org/man/man7/po4a.7.php)
-if you did not read it yet.
-
-Several binaries are built around these TransTractors, each of them
-are dedicated to one step of the [translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ)
+Several binaries are built around these TransTractors. The
+[po4a command](https://po4a.org/man/man1/po4a.1.php) takes automatically care of
+the translation workflow, updating the po files and translations when needed.
+Some deprecated tools implement separately the steps of the
+[translation workflow](https://po4a.org/man/man7/po4a.7.php#lbAJ) (but new projects
+should not use them as they are deprecated):
 ([po4a-translate](https://po4a.org/man/man1/po4a-translate.1.php),
 [po4a-updatepo](https://po4a.org/man/man1/po4a-updatepo.1.php), and
 also
 [po4a-gettextize](https://po4a.org/man/man1/po4a-gettextize.1.php)).
-Some [other tools](https://po4a.org/man/) and are built on top of the
-transtractors.
-
-Finally, the [po4a command](https://po4a.org/man/man1/po4a.1.php) tool
-takes automatically care of the translation workflow, updating the po
-files and translations when needed.
+The implementation of all these tools is sketched in the
+[project overview](https://po4a.org/man/man7/po4a.7.php).
 
 # Finding something to hack
 

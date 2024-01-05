@@ -40,7 +40,7 @@ program as it would seem that you just have to copy the documentation source
 file and start translating the content. However, when the original
 documentation is modified, keeping track of the modifications quickly turns
 into a nightmare for the translators. If done manually, this task is unpleasant
-and error prone.
+and error-prone.
 
 Outdated translations are often worse than no translation at all. End-users can
 be tricked by documentation describing an old behavior of the program.
@@ -161,30 +161,30 @@ See L<Locale::Po4a:Docbook> for greater details.
 
 =item Guide XML (probably mature parser)
 
-A XML documentation format. This module was developed specifically to help with supporting 
-and maintaining translations of Gentoo Linux documentation up until at least March 2016 
+A XML documentation format. This module was developed specifically to help with supporting
+and maintaining translations of Gentoo Linux documentation up until at least March 2016
 (Based on the Wayback Machine). Gentoo have since moved to the DevBook XML format.
 
 See L<Locale::Po4a:Guide> for greater details.
 
 =item Wml (probably mature parser)
 
-The Web Markup Language, do not mixup WML with the WAP stuff used on cell phones. 
+The Web Markup Language, do not mixup WML with the WAP stuff used on cell phones.
 This module relies on the Xhtml module, which itself relies on the XmL module.
 
 See L<Locale::Po4a::Wml> for greater details.
 
 =item Yaml (probably mature parser)
 
-A strict superset of JSON. YAML is often used as systems or configuration projects. 
+A strict superset of JSON. YAML is often used as systems or configuration projects.
 YAML is at the core of Red Hat's Ansible.
 
 See L<Locale::Po4a::Yaml> for greater details.
 
 =item RubyDoc (probably mature parser)
 
-The Ruby Document (RD) format, originally the default documentation format for Ruby 
-and Ruby projects before converted to RDoc in 2002. Though apparently the Japanese 
+The Ruby Document (RD) format, originally the default documentation format for Ruby
+and Ruby projects before converted to RDoc in 2002. Though apparently the Japanese
 version of the Ruby Reference Manual still use RD.
 
 See L<Locale::Po4a::RubyDoc> for greater details.
@@ -192,7 +192,7 @@ See L<Locale::Po4a::RubyDoc> for greater details.
 
 =item Halibut (probably experimental parser)
 
-A documentation production system, with elements similar to TeX, debiandoc-sgml, 
+A documentation production system, with elements similar to TeX, debiandoc-sgml,
 TeXinfo, and others, developed by Simon Tatham, the developer of PuTTY.
 
 See L<Locale::Po4a:Halibut> for greater details.
@@ -241,7 +241,7 @@ original one. It makes it easier to spot the glitches introduced by the parsing
 process.
 
 Most projects only require the features of L<po4a-updatepo(1)> and
-L<po4a-translate(1)>, but these scripts proved to be cumbersome and error prone
+L<po4a-translate(1)>, but these scripts proved to be cumbersome and error-prone
 to use. If the documentation to translate is split over several source files, it
 is difficult to keep the PO files up to date and build the documentation files
 correctly. As an answer, a all-in-one tool was provided: L<po4a(1)>. This tool
@@ -249,7 +249,7 @@ takes a configuration file describing the structure of the translation project:
 the location of the PO files, the list of files to translate, and the options to
 use, and it fully automates the process. When you invoke L<po4a(1)>, it both
 updates the PO files and regenerate the translation files that need to. If
-everything is already up to date, L<po4a(1)> does not change any file.
+everything is already up-to-date, L<po4a(1)> does not change any file.
 
 The rest of this section gives an overview of how use the scripts' interface of
 po4a. Most users will probably prefer to use the all-in-one tool, that is
@@ -357,7 +357,7 @@ in their language.
 
 If you prefer to use the individual scripts separately, you should use
 L<po4a-gettextize(1)> as follows to bootstrap the POT file when converting your
-project to po4a (prefer L<po4a-updatepo(1)> once everything is setup, and reserve
+project to po4a (prefer L<po4a-updatepo(1)> once everything is set up, and reserve
 L<po4a-gettextize(1)> to this initial conversion). The obtained POT file can then
 be copied into F<XX.po> to initiate a new translation.
 
@@ -444,7 +444,7 @@ The exact same effect could be obtained with the following header, that is equiv
 Here, po4a searches for the first line matching C<<section>> after the line
 matching C<About this document> in the translation, and add the addendum
 B<before> that line since we provided a I<beginboundary>, i.e. a boundary marking
-the beginning of the next section. So this header line requires to place the
+the beginning of the next section. So this header line requires placing the
 addendum after the section containing C<About this document>, and instruct po4a
 that a section starts with a line containing the C<<section>> tag. This is
 equivalent to the previous example because what you really want is to add this
@@ -512,7 +512,7 @@ If you want to add something after the following nroff section:
 
   .SH "AUTHORS"
 
-You should select a two step approach by setting B<mode=after>. Then you should
+You should select a two-step approach by setting B<mode=after>. Then you should
 narrow down search to the line after B<AUTHORS> with the B<position> argument
 regex. Then, you should match the beginning of the next section (i.e.,
 B<^\.SH>) with the B<beginboundary> argument regex. That is to say:
@@ -580,11 +580,13 @@ To avoid this you may accomplish the same using B<mode>=I<before>:
 =head1 How does it work?
 
 This chapter gives you a brief overview of the po4a internals, so that you
-may feel more confident to help us maintaining and improving it. It may also
-help you understanding why it does not do what you expected, and how to
+may feel more confident to help us to maintain and to improve it. It may also
+help you to understand why it does not do what you expected, and how to
 solve your problems.
 
-The po4a architecture is object oriented. The
+=head2 TransTractors and project architecture
+
+At the core of the po4a project, the
 L<Locale::Po4a::TransTractor(3pm)|TransTractor> class is the common ancestor to
 all po4a parsers. This strange name comes from the fact that it is at the same
 time in charge of translating document and extracting strings.
@@ -592,7 +594,7 @@ time in charge of translating document and extracting strings.
 More formally, it takes a document to translate plus a PO file containing
 the translations to use as input while producing two separate outputs:
 Another PO file (resulting of the extraction of translatable strings from
-the input document), and a translated document (with the same structure than
+the input document), and a translated document (with the same structure as
 the input one, but with all translatable strings replaced with content of
 the input PO). Here is a graphical representation of this:
 
@@ -603,13 +605,70 @@ the input PO). Here is a graphical representation of this:
    Input PO --------/                             \---> Output PO
                                                          (extracted)
 
+This little bone is the core of all the po4a architecture. If you provide both
+input and disregard the output PO, you get B<po4a-translate>. If you disregard
+the output document instead, you get B<po4a-updatepo>. The B<po4a> uses a first
+TransTractor to get an up-to-date output POT file (disregarding the output
+documents), calls B<msgmerge -U> to update the translation PO files on disk, and
+builds a second TransTractor with these updated PO files to update the output
+documents. In short, B<po4a> provides one-stop solution to update what needs to
+be, using a single configuration file.
 
-This little bone is the core of all the po4a architecture. If you omit the input
-PO and the output document, you get B<po4a-gettextize>. If you provide both
-input and disregard the output PO, you get B<po4a-translate>. The B<po4a> calls
-TransTractor twice and calls B<msgmerge -U> between these TransTractor
-invocations to provide one-stop solution with a single configuration file.
-Please see L<Locale::Po4a::TransTractor(3pm)> for more details.
+B<po4a-gettextize> also uses two TransTractors, but another way: It builds one
+TransTractor per language, and then build a new PO file using the msgids of the
+original document as msgids, and the msgids of the translated document as
+msgstrs. Much care is needed to ensure that the strings matched this way
+actually match, as described in L<po4a-gettextize(1)>.
+
+=head2 Format-specific parsers
+
+All po4a format parsers are implemented on top of the TransTractor. Some of them
+are very simple, such as the Text, Markdown and AsciiDoc ones. They load the
+lines one by one using C<TransTractor::shiftline()>, accumulate the paragraphs'
+content or whatever. Once a string is completely parsed, the parser uses
+C<TransTractor::translate()> to (1) add this string to the output PO file and
+(2) get the translation from the input PO file. The parser then pushes the
+result to the output file using C<TransTractor::pushline()>.
+
+Some other parsers are more complex because they rely on an external parser to
+analyze the input document. The Xml, HTML, SGML and Pod parsers are built on top
+of SAX parsers. They declare callbacks to events such as "I found a new title
+which content is the following" to update the output document and output POT
+files according to the input content using C<TransTractor::translate()> and
+C<TransTractor::pushline()>. The Yaml parser is similar but different: it
+serializes a data structure produced by the YAML::Tiny parser. This is why the
+Yaml module of po4a fails to declare the reference lines: the location of each
+string in the input file is not kept by the parser, so we can only provide
+"$filename:1" as a string location. The SAX-oriented parsers use globals and
+other tricks to save the file name and line numbers of references.
+
+One specific issues arises from file encodings and BOM markers. Simple parsers
+can forget about this issue, that is handled by C<TransTractor::read()> (used
+internally to get the lines of an input document), but the modules relying on an
+external parser must ensure that all files are read with an appropriate PerlIO
+decoding layer. The easiest is to open the file yourself, and provide an
+filehandle or directly the full string to your external parser. Check on
+C<Pod::read()> and C<Pod::parse()> for an example. The content read by the
+TransTractor is ignored, but a fresh filehandle is passed to the external
+parser. The important part is the C<"<:encoding($charset)"> mode that is passed
+to the B<open()> perl function.
+
+=head2 Po objects
+
+The L<Locale::Po4a::Po(3pm)|Po> class is in charge of loading and using PO and
+POT files. Basically, you can read a file, add entries, get translations with
+the gettext() method, write the PO into a file. More advanced features such as
+merging a PO file against a POT file or validating a file are delegated to
+B<msgmerge> and B<msgfmt> respectively.
+
+=head2 Contributing to po4a
+
+Even if you have never contributed to any Open Source project in the past, you
+are welcome: we are willing to help and mentor you here. po4a is best maintained
+by its users nowadays. As we lack manpower, we try to make the project welcoming
+by improving the doc and the automatic tests to make you confident in
+contributing to the project. Please refer to the CONTRIBUTING.md file for more
+details.
 
 =head1 Open-source projects using po4a
 
@@ -633,9 +692,9 @@ aptitude (docbook, svg): terminal-based package manager for Debian
 
 =item 
 
-L<F-Droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): 
-installable catalogue of FOSS (Free and Open Source
-Software) applications for the Android platform.
+L<F-Droid website|https://gitlab.com/fdroid/fdroid-website> (markdown):
+installable catalog of FOSS (Free and Open Source Software) applications for the
+Android platform.
 
 =item 
 
