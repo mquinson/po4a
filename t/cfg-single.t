@@ -101,12 +101,12 @@ push @tests, {
     'po4a.conf'      => 'cfg/single-podirectory-emptypot-emptypo/po4a.conf',
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'fr.po  single.pot',
-        'tests'          => [
-            'PODIFF -I#: $path/_fr.po.expected $tmppath/fr.po', #
-            'PODIFF -I#: $path/_single.pot.expected $tmppath/single.pot',
-            'rm $tmppath/single.pot && touch $tmppath/single.pot',    # This file is empty on purpose
-            'rm $tmppath/fr.po && touch $tmppath/fr.po', # This file is empty on purpose
-        ]
+    'tests'          => [
+        'PODIFF -I#: $path/_fr.po.expected $tmppath/fr.po',       #
+        'PODIFF -I#: $path/_single.pot.expected $tmppath/single.pot',
+        'rm $tmppath/single.pot && touch $tmppath/single.pot',    # This file is empty on purpose
+        'rm $tmppath/fr.po && touch $tmppath/fr.po',              # This file is empty on purpose
+    ]
 
   },
   {
@@ -115,12 +115,17 @@ push @tests, {
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'po single.man.fr.1',
     'tests'          => [
-        'PODIFF -I#: $path/po/fr.po $tmppath/po/fr.po',    #
+        'PODIFF -I#: $path/po/fr.po $tmppath/po/fr.po',           #
         'PODIFF -I#: $path/_single.pot $tmppath/po/single.pot',
         'rm $tmppath/po/single.pot && touch $tmppath/po/single.pot'
-        ,                                                  # The $path/po/single.pot exists, but it's empty (on purpose)
+        ,    # The $path/po/single.pot exists, but it's empty (on purpose)
     ]
-
+  },
+  {
+    'doc'            => 'Single language, empty PO file and UTF in msgids (see Debian\'s #1022216)',
+    'po4a.conf'      => 'cfg/single-emptypo/po4a.conf',
+    'closed_path'    => 'cfg/*/',
+    'expected_files' => 'fr.po single.pot single.man.fr.1',
   };
 
 run_all_tests(@tests);

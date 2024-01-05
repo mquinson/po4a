@@ -317,23 +317,28 @@ sub read {
     my $self     = shift;
     my $filename = shift
       or croak wrap_mod( "po4a::po", dgettext( "po4a", "Please provide a non-null filename" ) );
+
     my $charset = shift // 'UTF-8';
     $charset = 'UTF-8' if $charset eq "CHARSET";
     warn "Read $filename with encoding: $charset" if $debug{'encoding'};
+
+    my $checkvalidity = shift // 1;
 
     my $lang = basename($filename);
     $lang =~ s/\.po$//;
     $self->{lang} = $lang;
 
-    my $cmd = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o /dev/null \"" . $filename . '"';
+    if ($checkvalidity) {   # We sometimes need to read a file even if it may be invalid (eg to test whether it's empty)
+        my $cmd = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o /dev/null \"" . $filename . '"';
 
-    my $locale = $ENV{'LC_ALL'};
-    $ENV{'LC_ALL'} = "C";
-    my $out = qx/$cmd 2>&1/;
-    $ENV{'LC_ALL'} = $locale;
+        my $locale = $ENV{'LC_ALL'};
+        $ENV{'LC_ALL'} = "C";
+        my $out = qx/$cmd 2>&1/;
+        $ENV{'LC_ALL'} = $locale;
 
-    die wrap_msg( dgettext( "po4a", "Invalid po file %s:\n%s" ), $filename, $out )
-      unless ( $? == 0 );
+        die wrap_msg( dgettext( "po4a", "Invalid po file %s:\n%s" ), $filename, $out )
+          unless ( $? == 0 );
+    }
 
     my $fh;
     if ( $filename eq '-' ) {
@@ -348,6 +353,7 @@ sub read {
     while ( defined( my $textline = <$fh> ) ) {
         $pofile .= $textline;
     }
+    $pofile =~ s/\r\n/\n/sg;    # Reading a DOS-encoded file from Linux (native files are handled in all cases)
 
     # If we did not get the charset right, reload the file with the right one
     if ( $pofile =~ /charset=(.*?)[\s\\]/ ) {
@@ -357,7 +363,7 @@ sub read {
         {
             warn "Reloading the PO file, changing the charset from '$charset' to '$detected_charset'"
               if $debug{'encoding'};
-            $self->read( $filename, $detected_charset );
+            $self->read( $filename, $detected_charset, $checkvalidity );
             return;
         }
     }

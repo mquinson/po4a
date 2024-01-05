@@ -304,7 +304,7 @@ while ( my $po_filename = shift @pofiles ) {
     my $usable_pofile = 0;
     if ( -e $po_filename ) {
 
-        # Check that the po file is not empty, as msgmerge has issues in this case (see Debian's #1022216)
+        # Check that the po file is not empty, as msgmerge has issues in this case (see Debian's #1022216 and GitHub's #442)
         my $pofile = Locale::Po4a::Po->new();
         $pofile->read($po_filename);
         $usable_pofile = 1 if ( $pofile->count_entries() > 0 );
