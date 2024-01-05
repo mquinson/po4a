@@ -255,15 +255,21 @@ The rest of this section gives an overview of how use the scripts' interface of
 po4a. Most users will probably prefer to use the all-in-one tool, that is
 described in the documentation of L<po4a(1)>.
 
-=head2 Graphical overview of the po4a scripts
+=head2 Detailed schema of the po4a workflow
 
-The following schema gives an overview of how each po4a script can be used.
-Here, F<master.doc> is an example name for the documentation to be translated;
-F<XX.doc> is the same document translated in the language XX while F<doc.XX.po>
-is the translation catalog for that document in the XX language. Documentation
-authors will mostly be concerned with F<master.doc> (which can be a manpage, an
-XML document, an asciidoc file or similar); the translators will be mostly
-concerned with the PO file, while the end users will only see the F<XX.doc> file.
+This sections probably gives too much details for a first read. Make sure to read L<po4a(1)> first,
+as it gives a simplified overview of the po4a workflow. Come back here when you want to get the full
+scary picture, with almost all details.
+
+In the following schema, F<master.doc> is an example name for the documentation to be translated;
+F<XX.doc> is the same document translated in the language XX while F<doc.XX.po> is the translation
+catalog for that document in the XX language. Documentation authors will mostly be concerned with
+F<master.doc> (which can be a manpage, an XML document, an AsciidDoc file, etc); the translators
+will be mostly concerned with the PO file, while the end users will only see the F<XX.doc> file.
+
+Transitions with square brackets such as C<[po4a updates po]> represent the execution of a po4a tool
+while transitions with curly brackets such as C<{ update of master.doc }> represent a manual
+modification of the project's files.
 
                                    master.doc
                                        |
@@ -279,7 +285,7 @@ concerned with the PO file, while the end users will only see the F<XX.doc> file
   [po4a-gettextize]   doc.XX.po -->+   |                        |
           |            (old)       |   |                        |
           |              ^         V   V                        |
-          |              |     [po4a-updatepo]                  |
+          |              |   [po4a updates po]                  |
           V              |           |                          V
    translation.pot       ^           V                          |
           |              |        doc.XX.po                     |
@@ -299,31 +305,27 @@ concerned with the PO file, while the end users will only see the F<XX.doc> file
                                      +------>-----+------<------+
                                                   |
                                                   V
-                                           [po4a-translate]
+                                     [po4a updates translations]
                                                   |
                                                   V
                                                 XX.doc
                                              (up-to-date)
 
-This schema is complicated, but in practice only the right part (involving
-L<po4a-updatepo(1)> and L<po4a-translate(1)>) is used once the project is setup
-and configured.
+Again, this schema is overly complicated. Check on L<po4a(1)> for a simplified overview.
 
-The left part depicts how L<po4a-gettextize(1)> can be used to convert an
-existing translation project to the po4a infrastructure. This script takes an
-original document and its translated counterpart, and tries to build the
-corresponding PO file. Such manual conversion is rather cumbersome (see the
-L<po4a-gettextize(1)> documentation for more details), but it is only needed
-once to convert your existing translations. If you don't have any translation to
-convert, you can forget about this and focus on the right part of the schema.
+The left part depicts how L<po4a-gettextize(1)> can be used to convert an existing translation
+project to the po4a infrastructure. This script takes an original document and its translated
+counterpart, and tries to build the corresponding PO file. Such manual conversion is rather
+cumbersome (see the L<po4a-gettextize(1)> documentation for more details), but it is only needed
+once to convert your existing translations. If you don't have any translation to convert, you can
+forget about this and focus on the right part of the schema.
 
-On the top right part, the action of the original author is depicted, updating
-the documentation. The middle right part depicts the automatic actions of
-L<po4a-updatepo(1)>. The new material is extracted and compared against the
-exiting translation. The previous translation is used for the parts that didn't
-change, while partially modified parts are connected to the previous translation
-with a "fuzzy" marker indicating that the translation must be updated. New or
-heavily modified material is left untranslated.
+On the top right part, the action of the original author is depicted, updating the documentation.
+The middle right part depicts the automatic updates of translation files: the new material is
+extracted and compared against the exiting translation. The previous translation is used for the
+parts that didn't change, while partially modified parts are connected to the previous translation
+with a "fuzzy" marker indicating that the translation must be updated. New or heavily modified
+material is left untranslated.
 
 Then, the I<manual editing> reported depicts the action of the translators, that
 modify the PO files to provide translations to every original string and
@@ -333,58 +335,35 @@ localization platform such as B<weblate> or B<pootle>. The translation result is
 a set of PO files, one per language. Please refer to the gettext documentation
 for more details.
 
-The bottom part of the figure shows how L<po4a-translate(1)> creates a
-translated source document from the F<master.doc> original document and the
-F<doc.XX.po> translation catalog that was updated by the translators. The
-structure of the document is reused, while the original content is replaced by
-its translated counterpart. Optionally, an addendum can be used to add some
-extra text to the translation. This is often used to add the name of the
-translator to the final document. See below for details.
+The bottom part of the figure shows how B<po4a> creates a translated source document from the
+F<master.doc> original document and the F<doc.XX.po> translation catalog that was updated by the
+translators. The structure of the document is reused, while the original content is replaced by its
+translated counterpart. Optionally, an addendum can be used to add some extra text to the
+translation. This is often used to add the name of the translator to the final document. See below
+for details.
 
-As noted before, the L<po4a(1)> program combines the effects of the separated
-scripts, updating the PO files and the translated document in one invocation.
-The underlying logic remains the same.
+Upon invocation, B<po4a> updates both the translation files and the translated documentation files
+automatically.
 
-=head2 Starting a new translation
+=head2 Starting a new translation project
 
-If you use L<po4a(1)>, there is no specific step to start a translation. You
-just have to list the languages in the configuration file, and the missing PO
-files are automatically created. Naturally, the translator then have to provide
-translations for every content used in your documents. L<po4a(1)> also creates a
-POT file, that is a PO template file. Potential translators can translate your
-project into a new language by renaming this file and providing the translations
-in their language.
+If you start from scratch, you just have to write a configuration file for po4a, and you are set.
+The relevant templates are created for the missing files, allowing your contributors to translate
+your project to their language. Please refer to L<po4a(1)> for a quick start tutorial and for all
+details.
 
-If you prefer to use the individual scripts separately, you should use
-L<po4a-gettextize(1)> as follows to bootstrap the POT file when converting your
-project to po4a (prefer L<po4a-updatepo(1)> once everything is set up, and reserve
-L<po4a-gettextize(1)> to this initial conversion). The obtained POT file can then
-be copied into F<XX.po> to initiate a new translation.
+If you have an existing translation, i.e. a documentation file that was translated manually, you can
+integrate its content in your po4a workflow using B<po4a-gettextize>. This task is a bit cumbersome
+(as described in the tool's manpage), but once your project is converted to po4a workflow,
+everything will be updated automatically.
 
-  $ po4a-gettextize --format <format> --master <master.doc> --po <translation.pot>
+=head2 Updating the translations and documents
 
-The master document is used in input, while the POT file is the output of this process.
-
-=head2 Integrating changes to the original document
-
-The script to use for that is L<po4a-updatepo(1)> (please refer to its
-documentation for details):
-
-  $ po4a-updatepo --format <format> --master <new_master.doc> --po <old_doc.XX.po>
-
-The master document is used in input, while the PO file is updated: it is used
-both in input and output.
-
-=head2 Generating a translated document
-
-Once you're done with the translation, you want to get the translated
-documentation and distribute it to users along with the original one.
-For that, use the L<po4a-translate(1)> program as follows:
-
-  $ po4a-translate --format <format> --master <master.doc> --po <doc.XX.po> --localized <XX.doc>
-
-Both the master and PO files are used in input, while the localized file is the
-output of this process.
+Once setup, invoking B<po4a> is enough to update both the translation PO files and translated
+documents. You may pass the C<--no-translations> to B<po4a> to not update the translations (thus
+only updating the PO files) or C<--no-update> to not update the PO files (thus only updating the
+translations). This roughly corresponds to the individual B<po4a-updatepo> and B<po4a-translate>
+scripts which are now deprecated (see "Why are the individual scripts deprecated" in the FAQ below).
 
 =head2 Using addenda to add extra text to translations
 
@@ -735,6 +714,25 @@ L<https://github.com/fsfe/reuse-docs/pull/61>
 
 I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, which
 is a French onomatopoetic that we use in place of yuck :) I may have a strange sense of humor :)
+
+=head2 Why are the individual scripts deprecated?
+
+Indeed, B<po4a-updatepo> and B<po4a-translate> are deprecated in flavor of B<po4a>. The reason is
+that while B<po4a> can be used as a drop-in replacement to these scripts, there is quite a lot of
+code duplication here. Individual scripts last around 150 lines of codes while the B<po4a> program
+lasts 1200 lines, so they do a lot in addition of the common internals. The code duplication results
+in bugs occuring in both versions and needing two fixes. One example of such duplication are the
+bugs #1022216 in Debian and the issue #442 in GitHub that had the exact same fix, but one in B<po4a>
+and the other B<po4a-updatepo>.
+
+In the long run, I would like to drop the individual scripts and only maintain one version of this
+code. The sure thing is that the individual scripts will not get improved anymore, so only B<po4a>
+will get the new features. That being said, there is no deprecation urgency. I plan to keep the
+individual scripts as long as possible, and at least until 2030. If your project still use
+B<po4a-updatepo> and B<po4a-translate> in 2030, you may have a problem.
+
+We may also remove the deprecation of these scripts at some point, if a refactoring reduces the code
+duplication to zero. If you have an idea (or better: a patch), your help is welcome.
 
 =head2 What about the other translation tools for documentation using gettext?
 
