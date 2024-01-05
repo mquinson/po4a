@@ -230,36 +230,15 @@ file formats used by programs such as game scenarios or wine resource files.
 
 =head1 Using po4a
 
-Historically, po4a was built around four scripts, each fulfilling a specific
-task. L<po4a-gettextize(1)> helps bootstrapping translations and optionally
-converting existing translation projects to po4a. L<po4a-updatepo(1)> reflects
-the changes to the original documentation into the corresponding po files.
-L<po4a-translate(1)> builds translated source file from the original file and
-the corresponding PO file. In addition, L<po4a-normalize(1)> is mostly useful to
-debug the po4a parsers, as it produces an untranslated document from the
-original one. It makes it easier to spot the glitches introduced by the parsing
-process.
-
-Most projects only require the features of L<po4a-updatepo(1)> and
-L<po4a-translate(1)>, but these scripts proved to be cumbersome and error-prone
-to use. If the documentation to translate is split over several source files, it
-is difficult to keep the PO files up to date and build the documentation files
-correctly. As an answer, a all-in-one tool was provided: L<po4a(1)>. This tool
-takes a configuration file describing the structure of the translation project:
-the location of the PO files, the list of files to translate, and the options to
-use, and it fully automates the process. When you invoke L<po4a(1)>, it both
-updates the PO files and regenerate the translation files that need to. If
-everything is already up-to-date, L<po4a(1)> does not change any file.
-
-The rest of this section gives an overview of how use the scripts' interface of
-po4a. Most users will probably prefer to use the all-in-one tool, that is
-described in the documentation of L<po4a(1)>.
+The easiest way to use this tool in your project is to write a configuration file for the B<po4a>
+program, and only interact with this program. Please refer to its documentation, in L<po4a(1)>. The
+rest of this section provides more details for the advanced users of po4a wanting to deepen their
+understanding.
 
 =head2 Detailed schema of the po4a workflow
 
-This sections probably gives too much details for a first read. Make sure to read L<po4a(1)> first,
-as it gives a simplified overview of the po4a workflow. Come back here when you want to get the full
-scary picture, with almost all details.
+Make sure to read L<po4a(1)> before this overly detailed section to get a simplified overview of the
+po4a workflow. Come back here when you want to get the full scary picture, with almost all details.
 
 In the following schema, F<master.doc> is an example name for the documentation to be translated;
 F<XX.doc> is the same document translated in the language XX while F<doc.XX.po> is the translation
@@ -826,7 +805,7 @@ we have to deal with.
 
 =item
 
-Addenda are… strange at the first glance.
+Addenda are somewhat strange at the first glance.
 
 =item
 
