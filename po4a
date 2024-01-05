@@ -1756,6 +1756,11 @@ if ( not $po4a_opts{"no-update"} ) {
               ( find_input_file( $po_filename{$lang} ), find_output_file( $po_filename{$lang} ) );
             my $updated_potfile = find_input_file($pot_filename);
 
+            my $dir = dirname($outfile);
+            if ( not -d $dir ) {
+                mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
+            }
+
             my $usable_pofile = 0;
             if ( -e $infile ) {
 
@@ -1766,11 +1771,6 @@ if ( not $po4a_opts{"no-update"} ) {
                 $usable_pofile = 1 if ( $pofile->count_entries() > 0 );
             }
             if ($usable_pofile) {
-                my $dir = dirname($outfile);
-                if ( not -d $dir ) {
-                    mkdir $dir or die wrap_msg( gettext("Cannot create directory '%s': %s"), $dir, $! );
-                }
-
                 my $msgmerge_opt = $po4a_opts{"msgmerge-opt"};
                 $msgmerge_opt =~ s/\$lang\b/$lang/g if scalar @langs;
                 my $cmd = "msgmerge" . $Config{_exe} . " \"$infile\" \"$updated_potfile\" " . $msgmerge_opt;
