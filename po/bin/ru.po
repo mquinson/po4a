@@ -5,7 +5,7 @@
 # Yuri Kozlov <yuray@komyakino.ru>, 2005, 2006, 2007, 2008.
 # Yuri Kozlov <yuray@komyakino.ru>, 2009, 2010, 2012.
 # Alexander Golubev <fatzer2@gmail.com>, 2017.
-# Golubev Alexander <fatzer2@gmail.com>, 2020.
+# Golubev Alexander <fatzer2@gmail.com>, 2020, 2024.
 # Yuriy Balyuk <veksho@gmail.com>, 2020.
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # Azamat H. Hackimov <azamat.hackimov@gmail.com>, 2021.
@@ -13,18 +13,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.52-pre\n"
-"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
 "POT-Creation-Date: 2024-01-06 10:37+0100\n"
-"PO-Revision-Date: 2023-06-07 22:51+0000\n"
-"Last-Translator: Виталий Наумов <hbvit7zoom@gmail.com>\n"
+"PO-Revision-Date: 2024-01-12 05:06+0000\n"
+"Last-Translator: Golubev Alexander <fatzer2@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: ../../lib/Locale/Po4a/AsciiDoc.pm:226 ../../lib/Locale/Po4a/Man.pm:496
 #: ../../lib/Locale/Po4a/Po.pm:234 ../../lib/Locale/Po4a/RubyDoc.pm:76
@@ -348,7 +348,7 @@ msgid ""
 "Po4a::Man manpage to see how po4a can handle new macros."
 msgstr ""
 "Неизвестный макрос «%s». Удалите его из документа или прочтите документацию "
-"на man странице Locale::Po4a::Man о том, как обрабатывать новые макросы в "
+"на man-странице Locale::Po4a::Man о том, как обрабатывать новые макросы в "
 "po4a."
 
 #: ../../lib/Locale/Po4a/Man.pm:1700
@@ -374,6 +374,15 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Данная страница определяет новый макрос '%s' с '%s' (комментарий: %s), но вы "
+"не указали, как po4a должен вести себя при встрече с '%s'. В случае, если "
+"этот макрос действительно будет использован, то вы получите ошибку.\n"
+"Дабы избежать подобных проблем, укажите ваш макрос в одном из следующих "
+"параметров: '%s', '%s', '%s', '%s', '%s' или '%s'.\n"
+"Например, при указании '%s' po4a сделает так, что указанный макрос и всё его "
+"содержимое будут сокрыты от переводчиков.\n"
+"Больше сведений о данных параметрах вы можете почерпнуть из man-страницы "
+"Locale::Po4a::Man.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2268
 #, perl-format
@@ -388,6 +397,15 @@ msgid ""
 "Please refer to the manpage of Locale::Po4a::Man for more info on these "
 "parameters.\n"
 msgstr ""
+"Данная страница определяет новый макрос '%s' с '%s', но вы не указали, как "
+"po4a должен вести себя при встрече с '%s'. В случае, если этот макрос "
+"действительно будет использован, то вы получите ошибку.\n"
+"Дабы избежать подобных проблем, укажите ваш макрос в одном из следующих "
+"параметров: '%s', '%s', '%s', '%s', '%s' или '%s'.\n"
+"Например, при указании '%s' po4a сделает так, что указанный макрос и всё его "
+"содержимое будут сокрыты от переводчиков.\n"
+"Больше сведений о данных параметрах вы можете почерпнуть из man-страницы "
+"Locale::Po4a::Man.\n"
 
 #: ../../lib/Locale/Po4a/Man.pm:2313
 #, perl-format
@@ -398,6 +416,13 @@ msgid ""
 "macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Данная страница определяет новый макрос '%s'. Однако, po4a не поддерживает "
+"это в полной мере т.к. он, по факту, не является groff-парсером. При "
+"указании параметра '%s' этот макрос будет скопирован в переведённый файл без "
+"каких-либо изменений, но это может быть недостаточно избирательно. При "
+"указании '%s' этот макрос будет полностью передан на откуп переводчикам, но "
+"учтите, что groff-макросы не слишком приятны на глаз, так что это несколько "
+"осложнит задачу последних."
 
 #: ../../lib/Locale/Po4a/Man.pm:2381
 msgid "The .ie macro must be followed by a .el macro."
@@ -412,6 +437,13 @@ msgid ""
 "these macros to the translators, but groff macros are not user-friendly for "
 "translators."
 msgstr ""
+"Данная страница условно использует макрос '%s'. Однако, po4a не поддерживает "
+"это в полной мере т.к. он, по факту, не является groff-парсером. При "
+"указании параметра '%s' этот макрос будет скопирован в переведённый файл без "
+"каких-либо изменений, но это может быть недостаточно избирательно. При "
+"указании '%s' этот макрос будет полностью передан на откуп переводчикам, но "
+"учтите, что groff-макросы не слишком приятны на глаз, так что это несколько "
+"осложнит задачу последних."
 
 #: ../../lib/Locale/Po4a/Man.pm:2469
 #, perl-format
@@ -484,6 +516,8 @@ msgid ""
 "The file %s starts with a BOM char indicating that its encoding is UTF-8, "
 "but you specified %s instead."
 msgstr ""
+"В начале файла %s обнаружена BOM-последовательность, что говорит о том, что "
+"его кодировка UTF-8, однако вы указали кодировку '%s'."
 
 #: ../../lib/Locale/Po4a/Po.pm:386 ../../lib/Locale/Po4a/TeX.pm:1026
 #: ../../lib/Locale/Po4a/TransTractor.pm:457 ../../lib/Locale/Po4a/Xhtml.pm:146
@@ -516,6 +550,8 @@ msgid ""
 "Force the encoding of %s to UTF-8 (was %s), as mixing encodings may break "
 "msgmerge.\n"
 msgstr ""
+"Кодировка %s принудительно установлена в UTF-8 (была %s), ибо смешение "
+"кодировок может помешать работе msgmerge.\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:605
 msgid "Cannot write PO files with more than two plural forms."
@@ -524,10 +560,9 @@ msgstr ""
 "поддерживается."
 
 #: ../../lib/Locale/Po4a/Po.pm:618
-#, fuzzy, perl-format
-#| msgid "Cannot close %s after writing: %s"
+#, perl-format
 msgid "Cannot close %s after writing: %s\n"
-msgstr "Не удалось закрыть %s после записи: %s"
+msgstr "Не удалось закрыть %s после записи: %s\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:639
 #, perl-format
@@ -593,6 +628,8 @@ msgid ""
 "The file %s declares %s as encoding, but you provided %s as master charset. "
 "Please change either setting."
 msgstr ""
+"Данный файл (%s) заявляет кодировку %s, однако в качестве кодировки мастер-"
+"файла указана %s . Приведите эти параметры в соответствие."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:220
 msgid ""
@@ -754,6 +791,9 @@ msgid ""
 "o exclude_include=%s' to the options, either on the command line or in your "
 "po4a.conf file."
 msgstr ""
+"Не удалось найти '%s' с помощью kpsewhich. Дабы этот файл не включался, "
+"добавьте '-o exclude_include=%s' в параметры (непосредственно в командной "
+"строке или же в po4a.conf)."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1051
 #, perl-format
@@ -827,6 +867,11 @@ msgid ""
 "use multi-lines definitions instead. Offending line:\n"
 " %s"
 msgstr ""
+"Встроенные списки и словари в сокращённой, однострочной, форме не "
+"поддерживаются нашим парсером (YAML::Tiny): они будут интерпретированы как "
+"обычные строки. Используйте вместо этого обычные многострочные списки. "
+"Проблемная строка:\n"
+" %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:651
 #, perl-format
@@ -835,6 +880,10 @@ msgid ""
 "'yfm_lenient' option for a stricter behavior.\n"
 "Ignored error: %s"
 msgstr ""
+"Обработка файла будет продолжена, несмотря на то, что не удалось разобрать "
+"вступительную секцию YAML (Front Matter). Для боле строгого поведения po4a "
+"уберите параметр 'yfm_lenient'.\n"
+"Проигнорированная ошибка: %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:668
 #, perl-format
@@ -845,6 +894,12 @@ msgid ""
 "Error: %s\n"
 "Content of the YFM: %s"
 msgstr ""
+"Не удалось вычленить вступительную секцию YAML (Front Matter) из файла. "
+"Замечание: если данный блок не является вступительной секцией, а просто "
+"горизонтальной линией, то просто используйте четыре или больше чёрточек "
+"`----` (а не параметр 'yfm_lenient').\n"
+"Ошибка: %s\n"
+"Содержимое YFM: %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:822
 #, perl-format
@@ -852,6 +907,8 @@ msgid ""
 "Malformed fenced div block: Block starting at %s not closed before the end "
 "of the file."
 msgstr ""
+"Некорректное обрамление блока: Блок, начинается на строке %s, но не "
+"закрывается до конца файла."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:498
 #, perl-format
@@ -963,7 +1020,7 @@ msgstr "%s: Не удалось закрыть %s после чтения: %s"
 #: ../../lib/Locale/Po4a/Xml.pm:163
 #, perl-format
 msgid "Cannot have more than one input charset in XML files (%s and %s)"
-msgstr ""
+msgstr "Невозможно иметь более одной кодировки в XML-файлах (%s и %s)"
 
 #: ../../lib/Locale/Po4a/Xml.pm:235
 #, perl-format
@@ -1118,17 +1175,18 @@ msgid "Handling %s"
 msgstr "Обработка %s"
 
 #: ../../msguntypot:213 ../../po4a-updatepo:324
-#, fuzzy, perl-format
-#| msgid "Could not run msgmerge: %s"
+#, perl-format
 msgid ""
 "Could not run msgmerge: %s\n"
 "The command was: %s"
-msgstr "Не удалось запустить msgmerge: %s"
+msgstr ""
+"Не удалось запустить msgmerge: %s\n"
+"Команда была: %s"
 
 #: ../../msguntypot:227
 #, perl-format
 msgid "msguntypot changed msgid \"%s\" to \"%s\" in %s\n"
-msgstr ""
+msgstr "msguntypot заменил msgid \"%s\" на \"%s\" в %s\n"
 
 #: ../../msguntypot:234
 #, perl-format
@@ -1322,16 +1380,12 @@ msgid "The master file '%s' does not exist."
 msgstr "Мастер-файл «%s» не существует."
 
 #: ../../po4a:1375
-#, fuzzy
-#| msgid ""
-#| "Option 'master:file' is deprecated. Please use 'pot' instead for the same "
-#| "effect."
 msgid ""
 "Option 'master:file=' is deprecated. Please use 'pot=' instead for the same "
 "effect."
 msgstr ""
-"Параметр «master:file» устарел. Используйте вместо него «pot» для достижения "
-"того же эффекта."
+"Параметр «master:file=» устарел. Используйте вместо него «pot=» для "
+"достижения того же эффекта."
 
 #: ../../po4a:1398
 #, perl-format
@@ -1443,13 +1497,12 @@ msgstr "Обновление перевода на язык %s:"
 #: ../../po4a:1799
 #, perl-format
 msgid "Creating an empty PO file for the language %s.\n"
-msgstr ""
+msgstr "Создание пустого PO-файла для языка %s.\n"
 
 #: ../../po4a:1801
-#, fuzzy, perl-format
-#| msgid "Cannot create a temporary PO file: %s"
+#, perl-format
 msgid "Creating an empty PO file in %s.\n"
-msgstr "Не удалось создать временный PO файл: %s"
+msgstr "Создание временного PO-файла: %s\n"
 
 #: ../../po4a:1905
 #, perl-format
@@ -1569,6 +1622,12 @@ msgid ""
 "convenient way of using po4a is to write a po4a.conf file and use the "
 "integrated po4a(1) program."
 msgstr ""
+"Вы должны указать одинаковое количество мастер-файлов и файлов локализации, "
+"так как po4a-gettextize предназначен для синхронизации мастер-файлов с уже "
+"существующими переводами. Если вы хотите просто создать POT-файлы для ваших "
+"мастер-файлов, то используйте po4a-updatepo. Однако имейте в виду, что для "
+"большинства задач будет проще и удобнее написать po4a.conf и использовать "
+"po4a(1)."
 
 #: ../../po4a-gettextize:569
 msgid ""
@@ -1577,18 +1636,26 @@ msgid ""
 "po4a, you should use the po4a(1) program to maintain it and update your "
 "translations."
 msgstr ""
+"po4a-gettextize необходимо использовать только для создания PO-файлов на "
+"основе уже существующих переводов. После того как вы полностью преобразуете "
+"свой проект для использования po4a, вы, вероятно, будете использовать po4a(1)"
+" для поддержки и обновления переводов."
 
 #: ../../po4a-gettextize:600
 msgid ""
 "Temporary master and localized POT files dumped to po4atemp.master.po and "
 "po4atemp.localized.po"
 msgstr ""
+"Временные POT-файлы основного и переведённого документов записаны в "
+"po4atemp.master.po и po4atemp.localized.po"
 
 #: ../../po4a-normalize:173
 msgid ""
 "po4a-normalize is mostly useful to debug po4a itself. Users are advised to "
 "use the po4a(1) program instead."
 msgstr ""
+"po4a-normalize полезна в основном для отладки самого po4a. Пользователям "
+"рекомендуется использовать непосредственно po4a(1)."
 
 #: ../../po4a-normalize:183
 #, perl-format
@@ -1611,6 +1678,9 @@ msgid ""
 "and less error prone. Once configured, `po4a --no-update` can be used as a "
 "drop-in replacement to `po4a-translate`."
 msgstr ""
+"po4a-translate устарел. Подход с использованием po4a(1) удобнее и менее "
+"чреват ошибками. В качестве прямой замены `po4a-translate` можно "
+"использовать `po4a --no-update'."
 
 #: ../../po4a-translate:277
 #, perl-format
@@ -1628,6 +1698,9 @@ msgid ""
 "and less error prone. Once configured, `po4a --no-translations` can be used "
 "as a drop-in replacement to `po4a-updatepo`."
 msgstr ""
+"po4a-updatepo устарел. Подход с использованием po4a(1) удобнее и менее "
+"чреват ошибками. В качестве прямой замены `po4a-updatepo` можно использовать "
+"`po4a --no-translations'."
 
 #: ../../po4a-updatepo:286
 msgid "po4a-updatepo can't take the input PO from stdin."
@@ -1636,18 +1709,15 @@ msgstr ""
 "потока."
 
 #: ../../po4a-updatepo:297
-#, fuzzy
-#| msgid "Parse input files… "
 msgid "Parse input files... "
-msgstr "Анализ входных файлов… "
+msgstr "Анализ входных файлов... "
 
 #: ../../po4a-updatepo:305
 msgid "done."
 msgstr "выполнено."
 
 #: ../../po4a-updatepo:333
-#, fuzzy, perl-format
-#| msgid "Could not copy the PO file (%s → %s): %s"
+#, perl-format
 msgid "Could not copy the PO file (%s -> %s): %s"
 msgstr "Не удалось скопировать PO-файл (%s -> %s): %s"
 
