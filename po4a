@@ -963,9 +963,18 @@ sub parse_config_options {
     my $line    = shift;    # the line to parse
     my $options = shift;    # reference to an hash of options
 
-    if ( $line =~ m/^(?:opt(?:_(.+?))?:)?(.*)/ ) {
-        my $lang = $1 // 'global';
-        my $opt  = $2;
+    if ( $line =~ m/^(opt(?:_(.+?))?:)?(.*)/ ) {
+        my $prefixed = $1;
+        my $lang     = $2 // 'global';
+        my $opt      = $3;
+
+        if ( !$prefixed and $opt =~ m/ / ) {
+            if ( $opt =~ m/'/ ) {
+                $opt = qq{"$opt"};
+            } else {
+                $opt = qq{'$opt'};
+            }
+        }
 
         if ( !defined $options->{$lang} ) {
             $options->{$lang} = $opt;
