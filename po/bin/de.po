@@ -4,13 +4,13 @@
 # Tim Fuchs, 2005.
 # Thomas Mueller <thomas.mueller@tmit.eu>, 2009, 2010.
 # Thomas Müller <thomas.mueller@tmit.eu>, 2010.
-# Helge Kreutzmann <debian@helgefjell.de>, 2012, 2017-2020, 2022,2023.
+# Helge Kreutzmann <debian@helgefjell.de>, 2012, 2017-2020, 2022-2024.
 msgid ""
 msgstr ""
-"Project-Id-Version: po4a 0.69\n"
+"Project-Id-Version: po4a 0.70\n"
 "Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
 "POT-Creation-Date: 2024-01-06 10:37+0100\n"
-"PO-Revision-Date: 2023-01-04 16:20+0100\n"
+"PO-Revision-Date: 2024-01-13 16:03+0100\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -514,6 +514,8 @@ msgid ""
 "The file %s starts with a BOM char indicating that its encoding is UTF-8, "
 "but you specified %s instead."
 msgstr ""
+"Die Datei %s beginnt mit einem BOM-Zeichen, das anzeigt, dass die Datei "
+"UTF-8 ist, aber Sie haben stattdessen %s angegeben."
 
 #: ../../lib/Locale/Po4a/Po.pm:386 ../../lib/Locale/Po4a/TeX.pm:1026
 #: ../../lib/Locale/Po4a/TransTractor.pm:457 ../../lib/Locale/Po4a/Xhtml.pm:146
@@ -545,6 +547,8 @@ msgid ""
 "Force the encoding of %s to UTF-8 (was %s), as mixing encodings may break "
 "msgmerge.\n"
 msgstr ""
+"Es wird die Umwandlung von %s in UTF-8 (war %s) erzwungen, da das Mischen "
+"von Kodierungen das Zusammenführen der Meldungen beschädigen könnte.\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:605
 msgid "Cannot write PO files with more than two plural forms."
@@ -552,10 +556,9 @@ msgstr ""
 "PO-Dateien mit mehr als zwei Pluralformen können nicht geschrieben werden."
 
 #: ../../lib/Locale/Po4a/Po.pm:618
-#, fuzzy, perl-format
-#| msgid "Cannot close %s after writing: %s"
+#, perl-format
 msgid "Cannot close %s after writing: %s\n"
-msgstr "%s kann nach Beschreiben nicht geschlossen werden: %s"
+msgstr "%s kann nach Beschreiben nicht geschlossen werden: %s\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:639
 #, perl-format
@@ -621,6 +624,8 @@ msgid ""
 "The file %s declares %s as encoding, but you provided %s as master charset. "
 "Please change either setting."
 msgstr ""
+"Die Datei %s erklärt %s als Kodierung, aber Sie haben %s als "
+"Hauptzeichensatz bereitgestellt. Bitte ändern Sie eine der Einstellungen."
 
 #: ../../lib/Locale/Po4a/Sgml.pm:220
 msgid ""
@@ -791,6 +796,9 @@ msgid ""
 "o exclude_include=%s' to the options, either on the command line or in your "
 "po4a.conf file."
 msgstr ""
+"»%s« kann mit kpsewhich nicht gefunden werden. Um zu verhindern, dass diese "
+"Datei einbezogen wird, fügen Sie entweder auf der Befehlszeile oder in Ihrer "
+"po4a.conf-Datei »-o exclude_include=%s« hinzu."
 
 #: ../../lib/Locale/Po4a/TeX.pm:1051
 #, perl-format
@@ -867,6 +875,11 @@ msgid ""
 "use multi-lines definitions instead. Offending line:\n"
 " %s"
 msgstr ""
+"Von dem von uns verwandten Auswerteprogramm (YAML::Tiny) werden integrierte "
+"Listen und Wörterbücher auf einer einzelnen Zeile nicht korrekt gehandhabt: "
+"Sie werden als reguläre Zeichenketten interpretiert. Bitte verwenden Sie "
+"stattdessen mehrzeilige Definitionen. Betroffene Zeile:\n"
+" %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:651
 #, perl-format
@@ -1017,6 +1030,8 @@ msgstr "%s: %s kann nach dem Lesen nicht geschlossen werden: %s"
 #, perl-format
 msgid "Cannot have more than one input charset in XML files (%s and %s)"
 msgstr ""
+"Es kann nicht mehr als ein Eingabezeichensatz in XML-Dateien geben (%s und "
+"%s)"
 
 #: ../../lib/Locale/Po4a/Xml.pm:235
 #, perl-format
@@ -1170,17 +1185,17 @@ msgid "Handling %s"
 msgstr "%s wird verwendet"
 
 #: ../../msguntypot:213 ../../po4a-updatepo:324
-#, fuzzy, perl-format
-#| msgid "Could not run msgmerge: %s"
+#, perl-format
 msgid ""
 "Could not run msgmerge: %s\n"
 "The command was: %s"
-msgstr "Msgmerge konnte nicht ausgeführt werden: %s"
+msgstr "Msgmerge konnte nicht ausgeführt werden: %s\n"
+"Der Befehl war: %s"
 
 #: ../../msguntypot:227
 #, perl-format
 msgid "msguntypot changed msgid \"%s\" to \"%s\" in %s\n"
-msgstr ""
+msgstr "msguntypot änderte Msgid »%s« in »%s« in %s\n"
 
 #: ../../msguntypot:234
 #, perl-format
@@ -1381,15 +1396,11 @@ msgid "The master file '%s' does not exist."
 msgstr "Die Master-Datei »%s« existiert nicht."
 
 #: ../../po4a:1375
-#, fuzzy
-#| msgid ""
-#| "Option 'master:file' is deprecated. Please use 'pot' instead for the same "
-#| "effect."
 msgid ""
 "Option 'master:file=' is deprecated. Please use 'pot=' instead for the same "
 "effect."
 msgstr ""
-"Die Option »master:file« ist veraltet. Bitte verwenden Sie stattdessen »pot« "
+"Die Option »master:file« ist veraltet. Bitte verwenden Sie stattdessen »pot=« "
 "für die gleiche Wirkung."
 
 #: ../../po4a:1398
@@ -1505,13 +1516,12 @@ msgstr "Aktualisierung der Übersetzung in Sprache: %s"
 #: ../../po4a:1799
 #, perl-format
 msgid "Creating an empty PO file for the language %s.\n"
-msgstr ""
+msgstr "Für die Sprache %s wird eine leere PO-Datei erstellt.\n"
 
 #: ../../po4a:1801
-#, fuzzy, perl-format
-#| msgid "Cannot create a temporary PO file: %s"
+#, perl-format
 msgid "Creating an empty PO file in %s.\n"
-msgstr "Temporäre PO-Datei kann nicht erstellt werden: %s"
+msgstr "Eine temporäre PO-Datei wird in %s erstellt.\n"
 
 #: ../../po4a:1905
 #, perl-format
@@ -1690,17 +1700,14 @@ msgstr "Normierte PO-Datei wird nach %s geschrieben."
 
 # FIXME po4a(1) → po4a
 #: ../../po4a-translate:251
-#, fuzzy
-#| msgid ""
-#| "po4a-translate is deprecated. The unified po4a(1) program is more "
-#| "convenient and less error prone."
 msgid ""
 "po4a-translate is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone. Once configured, `po4a --no-update` can be used as a "
 "drop-in replacement to `po4a-translate`."
 msgstr ""
 "po4a-translate ist veraltet. Das vereinigte Programm po4a ist bequemer und "
-"weniger fehleranfällig."
+"weniger fehleranfällig. Sobald konfiguriert kann »po4a --no-update« als "
+"direkter Ersatz für »po4a-translate« verwendet werden."
 
 #: ../../po4a-translate:277
 #, perl-format
@@ -1715,17 +1722,14 @@ msgstr "Die Übersetzung von %s wird verworfen (Addendum %s nicht zutreffend)."
 
 # FIXME po4a(1) → po4a
 #: ../../po4a-updatepo:276
-#, fuzzy
-#| msgid ""
-#| "po4a-updatepo is deprecated. The unified po4a(1) program is more "
-#| "convenient and less error prone."
 msgid ""
 "po4a-updatepo is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone. Once configured, `po4a --no-translations` can be used "
 "as a drop-in replacement to `po4a-updatepo`."
 msgstr ""
 "po4a-updatepo is veraltet. Das vereinigte Programm po4a ist bequemer und "
-"weniger fehleranfällig."
+"weniger fehleranfällig. Sobald konfiguriert kann »po4a --no-translations« "
+"als direkter Ersatz für »po4a-translate« verwendet werden."
 
 #: ../../po4a-updatepo:286
 msgid "po4a-updatepo can't take the input PO from stdin."
