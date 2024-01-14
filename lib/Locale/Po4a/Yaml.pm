@@ -60,8 +60,8 @@ L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright © 2017 Brian Exelbierd.
-Copyright © 2022 Martin Quinson <mquinson#debian.org>.
+ Copyright © 2017 Brian Exelbierd.
+ Copyright © 2022 Martin Quinson <mquinson#debian.org>.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL v2.0 or later (see the COPYING file).
