@@ -247,7 +247,7 @@ F<master.doc> (which can be a manpage, an XML document, an AsciidDoc file, etc);
 will be mostly concerned with the PO file, while the end users will only see the F<XX.doc> file.
 
 Transitions with square brackets such as C<[po4a updates po]> represent the execution of a po4a tool
-while transitions with curly brackets such as C<{ update of master.doc }> represent a manual
+while transitions with curly brackets such as C<{update of master.doc}> represent a manual
 modification of the project's files.
 
                                    master.doc
@@ -255,7 +255,7 @@ modification of the project's files.
                                        V
      +<-----<----+<-----<-----<--------+------->-------->-------+
      :           |                     |                        :
-{translation}    |         { update of master.doc }             :
+{translation}    |          {update of master.doc}              :
      :           |                     |                        :
    XX.doc        |                     V                        V
  (optional)      |                 master.doc ->-------->------>+
@@ -269,7 +269,7 @@ modification of the project's files.
    translation.pot       ^           V                          |
           |              |        doc.XX.po                     |
           |              |         (fuzzy)                      |
-   { translation }       |           |                          |
+    {translation}        |           |                          |
           |              ^           V                          V
           |              |     {manual editing}                 |
           |              |           |                          |
@@ -399,14 +399,14 @@ The exact same effect could be obtained with the following header, that is equiv
 
  PO4A-HEADER: position=About this document; mode=after; beginboundary=<section>
 
-Here, po4a searches for the first line matching C<<section>> after the line
+Here, po4a searches for the first line matching C<< <section> >> after the line
 matching C<About this document> in the translation, and add the addendum
 B<before> that line since we provided a I<beginboundary>, i.e. a boundary marking
 the beginning of the next section. So this header line requires placing the
 addendum after the section containing C<About this document>, and instruct po4a
-that a section starts with a line containing the C<<section>> tag. This is
+that a section starts with a line containing the C<< <section> >> tag. This is
 equivalent to the previous example because what you really want is to add this
-addendum either after C</section>> or before C<<section>>.
+addendum either after C<< </section> >> or before C<< <section> >>.
 
 You can also set the insertion I<mode> to the value C<before>, with a similar
 semantic: combining C<mode=before> with an C<endboundary> will put the addendum
@@ -454,8 +454,8 @@ data string and can not be within the internal data string.
 
 =item
 
-Pass the B<-vv> argument to po4a to understand how the addenda are added to the
-translation. It may also help to run po4a in debug mode to see the actual
+Pass the C<-vv> argument to B<po4a> to understand how the addenda are added to the
+translation. It may also help to run B<po4a> in debug mode to see the actual
 internal data string when your addendum does not apply.
 
 =back
@@ -525,7 +525,7 @@ To put your addendum before the AUTHOR, use the following header:
 
  PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1
 
-This works because the next line matching the B<beginboundary> /^=head1/ after
+This works because the next line matching the B<beginboundary> C</^=head1/> after
 the section "NAME" (translated to "NOM" in French), is the one declaring the
 authors. So, the addendum will be put between both sections. Note that if 
 another section is added between NAME and AUTHOR sections later, po4a
@@ -561,7 +561,7 @@ the input PO). Here is a graphical representation of this:
                       +-->--   parse()  --------+
                      /                           \
    Input PO --------/                             \---> Output PO
-                                                         (extracted)
+                                                       (extracted)
 
 This little bone is the core of all the po4a architecture. If you provide both
 input and disregard the output PO, you get B<po4a-translate>. If you disregard
@@ -608,14 +608,14 @@ decoding layer. The easiest is to open the file yourself, and provide an
 filehandle or directly the full string to your external parser. Check on
 C<Pod::read()> and C<Pod::parse()> for an example. The content read by the
 TransTractor is ignored, but a fresh filehandle is passed to the external
-parser. The important part is the C<"<:encoding($charset)"> mode that is passed
+parser. The important part is the C<< "<:encoding($charset)" >> mode that is passed
 to the B<open()> perl function.
 
 =head2 Po objects
 
 The L<Locale::Po4a::Po(3pm)|Po> class is in charge of loading and using PO and
 POT files. Basically, you can read a file, add entries, get translations with
-the gettext() method, write the PO into a file. More advanced features such as
+the B<gettext()> method, write the PO into a file. More advanced features such as
 merging a PO file against a POT file or validating a file are delegated to
 B<msgmerge> and B<msgfmt> respectively.
 
@@ -696,7 +696,7 @@ is a French onomatopoetic that we use in place of yuck :) I may have a strange s
 
 =head2 Why are the individual scripts deprecated?
 
-Indeed, B<po4a-updatepo> and B<po4a-translate> are deprecated in flavor of B<po4a>. The reason is
+Indeed, B<po4a-updatepo> and B<po4a-translate> are deprecated in favor of B<po4a>. The reason is
 that while B<po4a> can be used as a drop-in replacement to these scripts, there is quite a lot of
 code duplication here. Individual scripts last around 150 lines of codes while the B<po4a> program
 lasts 1200 lines, so they do a lot in addition of the common internals. The code duplication results
