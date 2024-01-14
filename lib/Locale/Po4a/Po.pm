@@ -549,6 +549,7 @@ sub write {
     my $header = $self->{header};
     $header =~ /charset=([^\s\\]*)/i;
     my $oldcharset = $1 // '';
+    # TODO: rewrite to "msgmerge suffers some bugs when PO files are not encoded in UTF-8; Recoding %s to UTF-8 (was %s) to circumvent the issue"
     warn sprintf(
         dgettext( "po4a", "Force the encoding of %s to UTF-8 (was %s), as mixing encodings may break msgmerge.\n" ),
         $filename, $oldcharset )
