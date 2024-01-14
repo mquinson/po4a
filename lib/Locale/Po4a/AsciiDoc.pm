@@ -87,7 +87,7 @@ Note that not wrapping the files produced by po4a should not be a
 problem since those files are meant to be processed automatically.
 They should not be regarded as source files anyway.
 
-With this option, po4a will produce better-looking source files, that
+With this option, po4a will produce better-looking AsciiDoc files, but it
 may lead to possibly erroneous formatted outputs.
 
 =item B<noimagetargets>
@@ -1409,8 +1409,6 @@ sub unquote_space {
     return $text;
 }
 
-1;
-
 =head1 STATUS OF THIS MODULE
 
 Tested successfully on simple AsciiDoc files.
@@ -1428,6 +1426,10 @@ Tested successfully on simple AsciiDoc files.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL v2.0 or later (see the COPYING file).
+
+=cut
+
+1;
 
 __END__
 
