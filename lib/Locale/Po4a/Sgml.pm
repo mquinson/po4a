@@ -54,25 +54,28 @@ Also make sure that the DTD of the SGML files are installed in the system.
 
 =item B<debug>
 
-Space separated list of keywords indicating which part you want to debug. Possible values are: tag, generic, entities and refs.
-
+Space-separated list of keywords indicating which category of extra debug
+messages should be shown. Possible values are: C<entities>, C<generic>,
+C<onsgml>, C<refs> and C<tag>.
+ 
 =item B<verbose>
 
 Give more information about what's going on.
 
 =item B<translate>
 
-Space separated list of extra tags (beside the DTD provided ones) whose
-content should form an extra msgid.
+Space-separated list of extra tags (beside the DTD provided ones) whose
+content should form an extra msgid, i.e that should be translated.
 
 =item B<section>
 
-Space separated list of extra tags (beside the DTD provided ones)
+Space-separated list of extra tags (beside the DTD provided ones)
 containing other tags, some of them being of category B<translate>.
 
 =item B<indent>
 
-Space separated list of tags which increase the indentation level.
+Space-separated list of tags which increase the indentation level. This will
+affect the identation in the resulting document.
 
 =item B<verbatim>
 
@@ -88,43 +91,48 @@ Tags not needing to be closed.
 
 Tags ignored and considered as plain char data by po4a. That is to say that
 they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
-for this category since putting it in the translate section would create
-msgids not being whole sentences, which is bad.
+for this category since putting it in the B<translate> section would create a
+msgids with only its content, (and it's ususally not a whole sentence), which
+is bad.
 
 =item B<attributes>
 
-A space separated list of attributes that need to be translated. You can
-specify the attributes by their name (for example, "lang"), but you can also
+A space-separated list of attributes that need to be translated. You can
+specify the attributes by their name (for example, C<lang>), but you can also
 prefix it with a tag hierarchy, to specify that this attribute will only be
 translated when it is into the specified tag. For example:
-E<lt>bbbE<gt>E<lt>aaaE<gt>lang specifies that the lang attribute will only be
-translated if it is in an E<lt>aaaE<gt> tag, which is in a E<lt>bbbE<gt> tag.
+C<< <bbb><aaa>lang >> specifies that the lang attribute will only be
+translated if it is in an C<< <aaa> >> tag, which is in a C<< <bbb> >> tag.
 The tag names are actually regular expressions so you can also write things
-like E<lt>aaa|bbbbE<gt>lang to only translate lang attributes that are in
-an E<lt>aaaE<gt> or a E<lt>bbbE<gt> tag.
+like C<< <aaa|bbbb>lang >> to only translate C<lang> attributes that are in
+an C<< <aaa> >> or a C<< <bbb> >> tag.
 
 =item B<qualify>
 
-A space separated list of attributes for which the translation must be
-qualified by the attribute name. Note that this setting automatically adds the
-given attribute into the 'attributes' list too.
+A space-separated list of attributes for which the translation must be
+qualified by the attribute name, i.e. the text extracted for the transalation
+will include both the attributes name and it's value. e.g. for a tag like
+C<< <aaa lang_en="foo"> >> translators will be presented with the string
+C<lang_en="foo">. Note that this also automatically adds the given attribute
+into the B<attributes> list too.
+
 
 =item B<force>
 
-Proceed even if the DTD is unknown or if onsgmls finds errors in the input
+Proceed even if the DTD is unknown or if B<onsgmls> finds errors in the input
 file.
 
 =item B<include-all>
 
-By default, msgids containing only one entity (like '&version;') are skipped
-for the translator comfort. Activating this option prevents this
+By default, msgids containing only one entity (like C<&version;>) are skipped
+for the translators' comfort. Activating this option prevents this
 optimisation. It can be useful if the document contains a construction like
-"<title>&Aacute;</title>", even if I doubt such things to ever happen...
+C<< <title>&Aacute;</title> >>, even if I doubt such things to ever happen...
 
 =item B<ignore-inclusion>
 
-Space separated list of entities that won't be inlined.
-Use this option with caution: it may cause onsgmls (used internally) to add
+Space-separated list of entities that won't be inlined.
+Use this option with caution: it may cause B<onsgmls> (used internally) to add
 tags and render the output document invalid.
 
 =back
@@ -132,25 +140,25 @@ tags and render the output document invalid.
 =head1 STATUS OF THIS MODULE
 
 The result is perfect. I.e., the generated documents are exactly the
-same. But there are still some problems:
+same as the originals. But there are still some problems:
 
 =over 2
 
 =item *
 
-The error output of onsgmls is redirected to /dev/null by default, which is clearly
+The error output of B<onsgmls> is redirected to /dev/null by default, which is clearly
 bad. I don't know how to avoid that.
 
 The problem is that I have to "protect" the conditional inclusions (i.e. the
-C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from onsgmls. Otherwise
-onsgmls eats them, and I don't know how to restore them in the final
+C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from B<onsgmls>. Otherwise
+B<onsgmls> eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
 C<{PO4A-end}>.
 
 The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
-If you want to view the onsgmls output, just add the following to your command line (or po4a configuration line):
+If you want to view the B<onsgmls> output, just add the following to your command line (or po4a configuration line):
 
   -o debug=onsgmls
 
@@ -184,9 +192,9 @@ In case of file inclusion, string reference of messages in PO files
 
 This is because I preprocess the file to protect the conditional inclusion
 (i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
-&version;) from onsgmls because I want them verbatim to the generated
+C<&version;>) from B<onsgmls> because I want them verbatim to the generated
 document. For that, I make a temp copy of the input file and do all the
-changes I want to this before passing it to onsgmls for parsing.
+changes I want to this before passing it to B<onsgmls> for parsing.
 
 So that it works, I replace the entities asking for a file inclusion by the
 content of the given file (so that I can protect what needs to be in a subfile
