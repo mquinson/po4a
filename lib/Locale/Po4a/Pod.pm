@@ -234,11 +234,11 @@ pages, see below) which contains:
   C<" #n">
 
 Lack of luck, in the po4a version, this was split on the space by the
-wrapping. As result, in the original version, the man page contains
+wrapping. As result, in the original version, the man page contains:
 
  " #n"
 
-and mine contains
+and mine contains:
 
  "" #n""
 
@@ -246,14 +246,15 @@ which is logic since CE<lt>foobarE<gt> is rewritten "foobar".
 
 Complete list of pages having this problem on my box (from 564 pages; note
 that it depends on the chosen wrapping column):
-/usr/lib/perl5/Tk/MainWindow.pod
-/usr/share/perl/5.8.0/overload.pod
-/usr/share/perl/5.8.0/pod/perlapi.pod
-/usr/share/perl/5.8.0/pod/perldelta.pod
-/usr/share/perl/5.8.0/pod/perlfaq5.pod
-/usr/share/perl/5.8.0/pod/perlpod.pod
-/usr/share/perl/5.8.0/pod/perlre.pod
-/usr/share/perl/5.8.0/pod/perlretut.pod
+
+ /usr/lib/perl5/Tk/MainWindow.pod
+ /usr/share/perl/5.8.0/overload.pod
+ /usr/share/perl/5.8.0/pod/perlapi.pod
+ /usr/share/perl/5.8.0/pod/perldelta.pod
+ /usr/share/perl/5.8.0/pod/perlfaq5.pod
+ /usr/share/perl/5.8.0/pod/perlpod.pod
+ /usr/share/perl/5.8.0/pod/perlre.pod
+ /usr/share/perl/5.8.0/pod/perlretut.pod
 
 
 
