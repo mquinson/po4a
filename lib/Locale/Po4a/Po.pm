@@ -71,7 +71,7 @@ content. If set to B<newlines>, po4a will only split the msgid and msgstr after
 newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
 The reference comments are always wrapped by the gettext tools that we use internally.
 
-Note that this option has no impact on how the msgid and msgstr are wrapped, ie
+Note that this option has no impact on how the msgid and msgstr are wrapped, i.e.
 on how newlines are added to the content of these strings.
 
 =item B<--msgid-bugs-address> I<email@address>
