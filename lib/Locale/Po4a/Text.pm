@@ -68,10 +68,11 @@ These are this module's particular options:
 
 =item B<keyvalue>
 
-Treat paragraphs that look like a key value pair as verbatim (with the no-wrap flag in the PO file).
-Key value pairs are defined as a line containing one or more non-colon
-and non-space characters followed by a colon followed by at least one
-non-space character before the end of the line.
+Treat paragraphs that look like a colon-separated key-value pair as verbatim
+(with the C<no-wrap> flag in the PO file). A key-value pair string is a string
+like C<key: value>, containing one or more non-colon and non-space characters 
+followed by a colon followed by at least one non-space character before the
+end of the line.
 
 =cut
 
@@ -82,7 +83,7 @@ my $keyvalue = 0;
 Deactivate the detection of bullets.
 
 By default, when a bullet is detected, the bullet paragraph is not considered
-as a verbatim paragraph (with the no-wrap flag in the PO file). Instead, the
+as a verbatim paragraph (with the C<no-wrap> flag in the PO file). Instead, the
 corresponding paragraph is rewrapped in the translation.
 
 =cut
@@ -192,10 +193,10 @@ Do not translate array values in the YAML Front Matter section.
 
 my $yfm_skip_array = 0;
 
-=item B<control>[B<=>I<taglist>]
+=item B<control>[B<=>I<field_list>]
 
-Handle control files.
-A comma-separated list of tags to be translated can be provided.
+Handle Debian's control files.
+A comma-separated list of fields to be translated can be provided.
 
 =cut
 
