@@ -1,11 +1,11 @@
 # KURASAWA Nozomu <nabetaro@debian.or.jp>, 2010.
-# gemmaro <gemmaro.dev@gmail.com>, 2022, 2023.
+# gemmaro <gemmaro.dev@gmail.com>, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
 "POT-Creation-Date: 2024-01-06 10:37+0100\n"
-"PO-Revision-Date: 2023-03-26 03:52+0000\n"
+"PO-Revision-Date: 2024-01-14 05:24+0000\n"
 "Last-Translator: gemmaro <gemmaro.dev@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/po4a/po4a/ja/>\n"
 "Language: ja\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 5.4-dev\n"
 
 #: ../../lib/Locale/Po4a/AsciiDoc.pm:226 ../../lib/Locale/Po4a/Man.pm:496
 #: ../../lib/Locale/Po4a/Po.pm:234 ../../lib/Locale/Po4a/RubyDoc.pm:76
@@ -498,7 +498,8 @@ msgstr "%s から読み込めません: %s"
 msgid ""
 "The file %s starts with a BOM char indicating that its encoding is UTF-8, "
 "but you specified %s instead."
-msgstr ""
+msgstr "ファイル%sはBOM文字から始まるため符号化方式はUTF-8であることを示していますが"
+"、%sが指定されました。"
 
 #: ../../lib/Locale/Po4a/Po.pm:386 ../../lib/Locale/Po4a/TeX.pm:1026
 #: ../../lib/Locale/Po4a/TransTractor.pm:457 ../../lib/Locale/Po4a/Xhtml.pm:146
@@ -529,17 +530,17 @@ msgstr "%s へ書き込めません: %s"
 msgid ""
 "Force the encoding of %s to UTF-8 (was %s), as mixing encodings may break "
 "msgmerge.\n"
-msgstr ""
+msgstr "%sの符号化方式（%s）をUTF-8に強制変更しました。符号化方式が混在するとmsgmerge"
+"が動作しないためです。\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:605
 msgid "Cannot write PO files with more than two plural forms."
 msgstr "2種類以上の複数形を持つPOファイルは書き込めません。"
 
 #: ../../lib/Locale/Po4a/Po.pm:618
-#, fuzzy, perl-format
-#| msgid "Cannot close %s after writing: %s"
+#, perl-format
 msgid "Cannot close %s after writing: %s\n"
-msgstr "書き込み後に %s をクローズできません: %s"
+msgstr "書き込み後に %s をクローズできません: %s\n"
 
 #: ../../lib/Locale/Po4a/Po.pm:639
 #, perl-format
@@ -602,7 +603,8 @@ msgstr ""
 msgid ""
 "The file %s declares %s as encoding, but you provided %s as master charset. "
 "Please change either setting."
-msgstr ""
+msgstr "ファイル%sは%sを符号化方式として宣言していますが、%sをマスター文書の文字集合"
+"として与えています。何れかの設定に変更してください。"
 
 #: ../../lib/Locale/Po4a/Sgml.pm:220
 msgid ""
@@ -762,6 +764,9 @@ msgid ""
 "o exclude_include=%s' to the options, either on the command line or in your "
 "po4a.conf file."
 msgstr ""
+"kpsewhichで「%s」が見付けられません。このファイルが含まれるのを防ぐには、オプ"
+"ションまたはコマンドラインまたはpo4a.confファイルに「-o "
+"exclude_include=%s」を追加してください。"
 
 #: ../../lib/Locale/Po4a/TeX.pm:1051
 #, perl-format
@@ -834,6 +839,10 @@ msgid ""
 "use multi-lines definitions instead. Offending line:\n"
 " %s"
 msgstr ""
+"単一行内の行内リストと行内辞書は使用している構文解析器 (YAML::Tiny) で正しく"
+"扱われません。通常の文字列として解釈されます。代わりに複数行の定義を使ってく"
+"ださい。問題がある行は以下です。\n"
+" %s"
 
 #: ../../lib/Locale/Po4a/Text.pm:651
 #, perl-format
@@ -979,7 +988,7 @@ msgstr "%s: 読み込み後に %s をクローズできません: %s"
 #: ../../lib/Locale/Po4a/Xml.pm:163
 #, perl-format
 msgid "Cannot have more than one input charset in XML files (%s and %s)"
-msgstr ""
+msgstr "入力の文字集合は複数あってはなりません（%sと%sがあります）"
 
 #: ../../lib/Locale/Po4a/Xml.pm:235
 #, perl-format
@@ -1131,17 +1140,18 @@ msgid "Handling %s"
 msgstr "%s を処理中"
 
 #: ../../msguntypot:213 ../../po4a-updatepo:324
-#, fuzzy, perl-format
-#| msgid "Could not run msgmerge: %s"
+#, perl-format
 msgid ""
 "Could not run msgmerge: %s\n"
 "The command was: %s"
-msgstr "msgmerge を実行できません: %s"
+msgstr ""
+"msgmerge を実行できませんでした: %s\n"
+"コマンドは%sでした。"
 
 #: ../../msguntypot:227
 #, perl-format
 msgid "msguntypot changed msgid \"%s\" to \"%s\" in %s\n"
-msgstr ""
+msgstr "msguntypotはmsgid%sを%sに変更しました。全体は%sです。\n"
 
 #: ../../msguntypot:234
 #, perl-format
@@ -1337,16 +1347,11 @@ msgid "The master file '%s' does not exist."
 msgstr "マスターファイル %s は存在しません。"
 
 #: ../../po4a:1375
-#, fuzzy
-#| msgid ""
-#| "Option 'master:file' is deprecated. Please use 'pot' instead for the same "
-#| "effect."
 msgid ""
 "Option 'master:file=' is deprecated. Please use 'pot=' instead for the same "
 "effect."
-msgstr ""
-"オプション 'master:file' は時代遅れです。同じ効果のある 'pot' を代わりに使っ"
-"てください。"
+msgstr "オプション 'master:file=' は非推奨です。同じ効果のある 'pot=' "
+"を代わりに使ってください。"
 
 #: ../../po4a:1398
 #, perl-format
@@ -1460,13 +1465,12 @@ msgstr "言語%sの翻訳を更新しています："
 #: ../../po4a:1799
 #, perl-format
 msgid "Creating an empty PO file for the language %s.\n"
-msgstr ""
+msgstr "言語%sのための空のPOファイルを作成中です。\n"
 
 #: ../../po4a:1801
-#, fuzzy, perl-format
-#| msgid "Cannot create a temporary PO file: %s"
+#, perl-format
 msgid "Creating an empty PO file in %s.\n"
-msgstr "一時 PO ファイルが作成できません: %s"
+msgstr "%s中に空のPOファイルを作成中です。\n"
 
 #: ../../po4a:1905
 #, perl-format
@@ -1630,17 +1634,14 @@ msgid "Write the normalized PO file to %s."
 msgstr "正規化されたPOファイルを%sに書き込みます。"
 
 #: ../../po4a-translate:251
-#, fuzzy
-#| msgid ""
-#| "po4a-translate is deprecated. The unified po4a(1) program is more "
-#| "convenient and less error prone."
 msgid ""
 "po4a-translate is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone. Once configured, `po4a --no-update` can be used as a "
 "drop-in replacement to `po4a-translate`."
 msgstr ""
-"po4a-translateは時代遅れです。統合されたpo4a(1)プログラムの方がもっと便利でエ"
-"ラーが少ないです。"
+"po4a-translateは非推奨です。統合されたpo4a(1)プログラムの方がもっと便利でエラ"
+"ーが少ないです。構成が済んだら`po4a-translate`の代わりに`po4a --no-"
+"update`がそのまま使えます。"
 
 #: ../../po4a-translate:277
 #, perl-format
@@ -1653,17 +1654,14 @@ msgid "Discard the translation of %s (addendum %s does not apply)."
 msgstr "%s の翻訳を破棄します。(追加内容 %s を適用していません)。"
 
 #: ../../po4a-updatepo:276
-#, fuzzy
-#| msgid ""
-#| "po4a-updatepo is deprecated. The unified po4a(1) program is more "
-#| "convenient and less error prone."
 msgid ""
 "po4a-updatepo is deprecated. The unified po4a(1) program is more convenient "
 "and less error prone. Once configured, `po4a --no-translations` can be used "
 "as a drop-in replacement to `po4a-updatepo`."
 msgstr ""
-"po4a-updatepoは時代遅れです。統合されたpo4a(1)のほうがもっと便利でエラーが少"
-"ないです。"
+"po4a-updatepoは非推奨です。統合されたpo4a(1)のほうがもっと便利でエラーが少な"
+"いです。構成が済んだら`po4a-updatepo`の代わりに`po4a --no-"
+"translations`がそのまま使えます。"
 
 #: ../../po4a-updatepo:286
 msgid "po4a-updatepo can't take the input PO from stdin."
