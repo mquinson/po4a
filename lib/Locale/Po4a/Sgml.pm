@@ -104,7 +104,7 @@ translated when it is into the specified tag. For example:
 C<< <bbb><aaa>lang >> specifies that the lang attribute will only be
 translated if it is in an C<< <aaa> >> tag, which is in a C<< <bbb> >> tag.
 The tag names are actually regular expressions so you can also write things
-like C<< <aaa|bbbb>lang >> to only translate C<lang> attributes that are in
+like C<< <aaa|bbb>lang >> to only translate C<lang> attributes that are in
 an C<< <aaa> >> or a C<< <bbb> >> tag.
 
 =item B<qualify>
