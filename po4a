@@ -856,103 +856,88 @@ sub get_options {
     return %opts;
 }
 
-# Split a line into an array of lines. There is a lame attempt to deal with quotes and escaped spaces.
-# Remaining issues:
-#   - Quotes cannot be mixed: >>"da 'd d'<< is invalid
-#   - Empty elements are ignored: >>\\ a<< results in "a" not " a"
-#   - Quotes and space escaping cannot be mixed: >>"a b"c\\ d<< is invalid
+# Split a line into an array of lines. This should correctly deal with quotes and escaped spaces.
+#   - Simple and double quotes can be mixed: {'"tutu truc" blah' "'blah tutu' truc"} => {"tutu truc" blah}{'blah tutu' truc}
+#   - Quotes can be in the middle of words: {h ij'k l'  m} => {h}{ijk l}{m}
+#   - Spaces can be escaped everywhere: {\ a b\ c d\   e} => { a}{b c}{d }{e}
+#   - Quotes and space escaping can be mixed: {'a b'c\ d} => {a bc d}
 #
-# See also https://stackoverflow.com/questions/29041011/perl-split-string-that-has-double-quotes-and-space/76404839#76404839
+# Submitted as https://stackoverflow.com/questions/29041011/perl-split-string-that-has-double-quotes-and-space/76404839#76404839
 sub split_line {
-    my $string    = shift;
-    my $orig_line = $string;
+    my ($string) = @_;
 
-    my $accumulated = '';
     my @result      = ();
-    my $in_str      = 0;
-    my $sep_char    = '';
-    for my $tok ( split /\s/, $string ) {
+    my @quote       = ();    # stack of quotes we've seen so far, to handle nested single and double quotes
+    my $accumulated = "";    # the token we are building
+    my $seen_quotes = 0
+      ; # Whether we've seen at least a quote or whether we should pass a chunk of only spaces (to pass separating spaces)
 
-        # Found a string boundary in this token
-        if ( $tok =~ /'|"/ ) {
-            my $orig_sep_char = $sep_char;
+    # eat the string piece by piece, separating a quote, some spaces, or a chunk w/o quotes and spaces.
+    while ( $string =~ s/('|"|\s+|[^"'\s]+)(.*)$/$2/ ) {
+        my $token = $1;
 
-            # Check that we are not mismatching simple and double quote
-            if ( $tok =~ /'/ ) {
-                die "Simple quote (') matched with double quote (\") in $orig_line" if ( $sep_char eq '"' );
-                $sep_char = "'";
-            }
-            if ( $tok =~ /"/ ) {
-                die "Double quote (\") matched with simple quote (') in $orig_line" if ( $sep_char eq "'" );
-                $sep_char = '"';
-            }
-
-            die "Please don't mix quotes and escaped spaces" if ( $tok =~ /\\$/ );
-
-            # Cleanup the sep char and check that we are done
-            $tok =~ s/"|'//;
-
-            if ( $tok =~ s/('|")// ) {    # Two quotes in the same chunk. Deal with it if it's eg: >>"something"<<
-                die "Mismatch between simple quote (') and double quote (\") in $orig_line" if ( $sep_char ne $1 );
-                die "Please don't use more than two quote signs per elements, that's too hard to parse."
-                  if ( $tok =~ /'|"/ );
-
-                $sep_char = $orig_sep_char;    # Revert the fact that we are entering a quote
-
-                # Deal with that chunk as if it were not quoted
-                if ($in_str) {
-                    $accumulated .= " $tok";
-                } elsif ( length $accumulated ) {
-                    push @result, "$accumulated $tok";
-                    $accumulated = "";
+        #        print "Seen $token (last quote: ".(scalar @quote>0?$quote[-1]:"none")."; accumulated:$accumulated) -- ";
+        if ( $token eq "'" || $token eq '"' ) {
+            $seen_quotes = 1;
+            if ( scalar @quote > 0 ) {
+                if ( $quote[-1] eq $token ) {
+                    pop @quote;
                 } else {
-                    push @result, $tok;
+                    $accumulated .= $token;
                 }
-                next;
-            }
-
-            # Accumulate the string if entering the string (in_str = false before that chunk),
-            # or push the previously accumulated things if existing the string (in_str = true previously).
-            if ($in_str) {
-                push @result, "$accumulated $tok";
-                $accumulated = "";
-                $sep_char    = '';
             } else {
-                $accumulated = $tok;
+                push @quote, $token;
             }
-            $in_str = not $in_str;
-            next;
-        }
+        } elsif ( $token =~ /\\$/ ) {
+            if ( defined( my $next_char = substr( $string, 0, 1 ) ) ) {
 
-        # This token is ended with an escaped space
-        if ( $tok =~ /\\$/ ) {
-            chop $tok;
-            $accumulated = ( length $accumulated ? "$accumulated " : '' ) . $tok;
-            next;
-        }
-
-        # Currently within a string, no boundary in sight
-        if ($in_str) {
-            $accumulated .= " $tok";
-            next;
-        }
-
-        # Nothing specific about this item
-        if ( length $accumulated ) {
-            push @result, "$accumulated $tok";
-            $accumulated = "";
+                #                print " steal '$next_char' ";
+                $token =~ s/.$/$next_char/;
+                $string = substr( $string, 1 );
+            } else {
+                die "Error: backslash escape at end of string\n";
+            }
+            $accumulated .= $token;
+        } elsif ( $token =~ /^\s*$/ ) {
+            if ( scalar @quote > 0 ) {
+                $accumulated .= $token;
+            }
         } else {
-            push @result, $tok;
+            $accumulated .= $token;
+        }
+
+        #        print " (last quote: ".(scalar @quote>0?$quote[-1]:"none")."; accumulated:$accumulated)";
+
+        # Push the string if we're out of quotes, and if the coming chunk is a separating space
+        if ( scalar @quote == 0 && ( $string eq '' || substr( $string, 0, 1 ) eq ' ' ) ) {
+
+            #            print " Push\n";
+            # Pass the separating quotes, that are space only and never contained any quote
+            if ( $accumulated ne '' && $seen_quotes || $accumulated =~ /\S/ ) {
+                push @result, $accumulated;
+            }
+            $accumulated = '';
+            $seen_quotes = 0;
+
+            #        } else {
+            #            print " Pass\n";
         }
     }
-    die "Expecting end of quote" if $in_str;
+
+    if ( scalar @quote > 0 ) {
+        die "Error: unclosed quote at end of string\n";
+    }
+
     return @result;
 }
 
 # Test the split_line function
-# print join "#", split_line("a  'b c   c d  ' 'titi' \"toto\" e\\ f  g\\  h ij'k l'  m\"n \" 'l '");
-# print "#\n";
-# __END__
+#my $testline = "a  'b c   c d  ' 'titi' \"toto\" ' ' \" \" '\"' \"'\" '\"tutu truc\" blah' \"'blah tutu' truc\" e\\ f  g\\   h ij'k l'  m\"n \" 'l ' "
+#                ."\\\" \\' '\\'' \"'\\''\" BHA\\RO \\ n \"o p\"q\\ r";
+#print "$testline\n";
+#print join "#", split_line($testline);
+#print "#\n";
+#__END__
 
 # Parse a config line and extract the parameters that correspond to options.
 # These options are appended to the options provided in argument (as a
