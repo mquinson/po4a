@@ -85,8 +85,8 @@ sub ACTION_binpo {
 
     foreach (@{$self->rscan_dir('po/bin',qr{\.po$})}) {
         my $lang = fileparse($_, qw{.po});
-      # DO NOT update languages. They are updated by the weblate robot directly
-      if (0) {
+      # Only update german languages. The others updated by the weblate robot directly
+      if ($lang eq 'de') {
         unless ($self->up_to_date("po/bin/po4a.pot", $_)) {
             print "XX Sync $_: ";
             system("msgmerge --previous $_ po/bin/po4a.pot -o $_.new") && die;
