@@ -47,6 +47,13 @@ push @tests, {
 
   },
   {
+    'doc'            => '-k 0 in type alias, but with a redefinition of the same alias',
+    'po4a.conf'      => 'cfg/args-alias-redef/po4a.conf',
+    'modes'          => 'dstdir',
+    'options'        => '--no-update',
+    'expected_files' => 'man.de.1 man.fr.1 man.it.1'
+  },
+  {
     'doc'            => '-k 40 in master doc',
     'po4a.conf'      => 'cfg/args-master/po4a.conf',
     'modes'          => 'dstdir',

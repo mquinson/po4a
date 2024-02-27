@@ -1441,14 +1441,23 @@ while (<CONFIG>) {
         }
     } elsif ( $cmd =~ m/po4a_alias: *(.*)/ ) {
         my $name  = $1;
-        my %alias = ();
-        $alias{"module"} = $main;
         shift @split_args;
-        my %options;
-        @split_args = map { parse_config_options( "$config_file:$nb", $_, \%options ); } @split_args;
 
-        %{ $alias{"options"} } = %options;
-        %{ $aliases{$name} } = %alias;
+        if ( defined $aliases{$name} ) { # If that alias was previously defined
+            die "Alias $name redefined from ".$aliases{$name}{"module"}." to $main\n"
+                if ( $aliases{$name}{"module"} ne $main );  # Sanity checks
+            # Concat the new content to the existing alias
+            @split_args = map { parse_config_options( "$config_file:$nb", $_, \%{ $aliases{$name}{"options"} } ); } @split_args;
+        } else {
+            # Otherwise, define a new option set accordingly
+            my %alias = ();
+            $alias{"module"} = $main;
+
+            my %options;
+            @split_args = map { parse_config_options( "$config_file:$nb", $_, \%options ); } @split_args;
+            %{ $alias{"options"} } = %options;
+            %{ $aliases{$name} } = %alias;
+        }
     } elsif ( $cmd eq "options" ) {
         my %options;
         %options = %{ $document{''}{"options"} } if ( defined $document{''}{"options"} );  # Add to the existing options
