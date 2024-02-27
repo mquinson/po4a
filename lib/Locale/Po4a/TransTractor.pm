@@ -434,23 +434,40 @@ sub read() {
     open( $fh, "<:encoding($charset)", $filename )
       or croak wrap_msg( dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
 
-    while ( defined( my $textline = <$fh> ) ) {
-        $linenum++;
-        if ( $linenum == 1 && $textline =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
-            croak wrap_msg(
-                dgettext(
-                    "po4a",
-                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified %s instead."
-                ),
-                $filename,
-                $charset
-            ) if ( uc($charset) ne 'UTF-8' );
-            $textline =~ s/^\N{BOM}//;
+    # If we see a BOM while not in UTF-8, we want to croak. But this code is in an eval to deal with
+    # encoding issues. So save the BOM error until after the eval block
+    my $BOM_detected = 0;
+
+    eval {
+        while ( defined( my $textline = <$fh> ) ) {
+            $linenum++;
+            if ( $linenum == 1 && $textline =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
+                $BOM_detected = 1 if ( uc($charset) ne 'UTF-8' );    # Save the error message for after the eval{} bloc
+                $textline =~ s/^\N{BOM}//;
+            }
+            my $ref = "$refname:$linenum";
+            $textline =~ s/\r$//;
+            my @entry = ( $textline, $ref );
+            push @{ $self->{TT}{doc_in} }, @entry;
         }
-        my $ref = "$refname:$linenum";
-        $textline =~ s/\r$//;
-        my @entry = ( $textline, $ref );
-        push @{ $self->{TT}{doc_in} }, @entry;
+    };
+    my $error = $@;
+    if ( length($error) ) {
+        chomp $error;
+        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
+            $filename, $charset, $error );
+    }
+
+    # Croak if we need to
+    if ($BOM_detected) {
+        croak wrap_msg(
+            dgettext(
+                "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified %s instead."
+            ),
+            $filename,
+            $charset
+        );
     }
 
     close $fh
@@ -492,7 +509,24 @@ sub write {
     }
 
     map { print $fh $_ } $self->docheader();
-    map { print $fh $_ } @{ $self->{TT}{doc_out} };
+    eval {
+        map { print $fh $_ } @{ $self->{TT}{doc_out} };
+    } or do {
+        my $error = $@ || 'Unknown failure';
+        chomp $error;
+        if ( $charset ne 'UTF-8' && $error =~ /^"\\x\{([^"}]*)\}"/ ) {
+
+            # Attempt to write the char that cannot be written. Very fragile code
+            binmode STDERR, ':encoding(UTF-8)';
+            my $char = chr( hex($1) );
+            die wrap_msg(
+                dgettext( "po4a", "Malformed encoding while writing char '%s' to file %s with charset %s: %s" ),
+                $char, $filename, $charset, $error );
+        } else {
+            die wrap_msg( dgettext( "po4a", "Malformed encoding while writing to file %s with charset %s: %s" ),
+                $filename, $charset, $error );
+        }
+    };
 
     if ( $filename ne '-' ) {
         close $fh or croak wrap_msg( dgettext( "po4a", "Cannot close %s after writing: %s" ), $filename, $! );
@@ -580,10 +614,18 @@ sub addendum_parse {
         goto END_PARSE_ADDFILE;
     }
 
-    unless ( defined( $header = <INS> ) && $header ) {
-        warn wrap_msg( dgettext( "po4a", "Cannot read po4a header from %s." ), $filename );
-        goto END_PARSE_ADDFILE;
-    }
+    $PerlIO::encoding::fallback = FB_CROAK;
+    eval {
+        unless ( defined( $header = <INS> ) && $header ) {
+            warn wrap_msg( dgettext( "po4a", "Cannot read po4a header from %s." ), $filename );
+            goto END_PARSE_ADDFILE;
+        }
+    } or do {
+        my $error = $@ || 'Unknown failure';
+        chomp $error;
+        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
+            $filename, $charset, $error );
+    };
 
     unless ( $header =~ s/PO4A-HEADER://i ) {
         warn wrap_msg( dgettext( "po4a", "First line of %s does not look like a po4a header." ), $filename );
@@ -645,8 +687,16 @@ sub addendum_parse {
         goto END_PARSE_ADDFILE;
     }
 
-    while ( defined( my $line = <INS> ) ) {
-        $content .= $line;
+    eval {
+        while ( defined( my $line = <INS> ) ) {
+            $content .= $line;
+        }
+    };
+    my $error = $@;
+    if ( length($error) ) {
+        chomp $error;
+        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
+            $filename, $charset, $error );
     }
     close INS;
 
