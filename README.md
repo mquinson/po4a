@@ -13,6 +13,7 @@ module for the following formats:
   - asciidoc: AsciiDoc format.
   - dia: uncompressed Dia diagrams.
   - docbook: DocBook XML.
+  - gemtext: Gemini's native plain text format.
   - guide: Gentoo Linux's XML documentation format.
   - halibut: Simon Tatham's documentation production system.
   - ini: INI format.
