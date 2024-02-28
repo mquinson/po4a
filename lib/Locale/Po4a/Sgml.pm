@@ -57,7 +57,7 @@ Also make sure that the DTD of the SGML files are installed in the system.
 Space-separated list of keywords indicating which category of extra debug
 messages should be shown. Possible values are: C<entities>, C<generic>,
 C<onsgml>, C<refs> and C<tag>.
- 
+
 =item B<verbose>
 
 Give more information about what's going on.
