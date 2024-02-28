@@ -68,6 +68,8 @@ sub list {
           . "\n  - "
           . gettext("docbook: DocBook XML.")
           . "\n  - "
+          . gettext("gemtext: Gemini's native plain text format.")
+          . "\n  - "
           . gettext("guide: Gentoo Linux's XML documentation format.")
           . "\n  - "
           . gettext("ini: INI format.")
@@ -145,6 +147,7 @@ L<po4a(7)|po4a.7>
 
 L<Locale::Po4a::Dia(3pm)>,
 L<Locale::Po4a::Docbook(3pm)>,
+L<Locale::Po4a::Gemtext(3pm)>,
 L<Locale::Po4a::Guide(3pm)>,
 L<Locale::Po4a::Halibut(3pm)>,
 L<Locale::Po4a::Ini(3pm)>,
