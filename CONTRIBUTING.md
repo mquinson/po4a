@@ -317,6 +317,7 @@ Here is the checklist of things to remember when releasing po4a:
   - Reuse the release name and paste the changelog of this release.
   - Also upload the tarball to the github release: the file META.yml
     is missing from the tarball generated automatically (see #115).
+    A link to the tar.gz in the text is not enough (see #469).
 - Announce the release on the Mailing List.
 - Add a News entry to the website, update VERSION, rebuild it, and re-push it
 
