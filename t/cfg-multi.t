@@ -11,9 +11,9 @@ use Testhelper;
 
 my @tests;
 push @tests, {
-    'doc'         => 'Multiple languages, no pot no po',
-    'po4a.conf'   => 'cfg/multiple-nopotpo/po4a.conf',
-    'closed_path' => 'cfg/*/',                             # Do not use or modify the other tests
+    'doc'            => 'Multiple languages, no pot no po',
+    'po4a.conf'      => 'cfg/multiple-nopotpo/po4a.conf',
+    'closed_path'    => 'cfg/*/',                             # Do not use or modify the other tests
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po multiple.pot',
   },
   {
@@ -47,6 +47,22 @@ push @tests, {
     'expected_files' => 'multiple.de.po multiple.es.po multiple.fr.po multiple.it.po '
       . 'multiple.man.de.1 multiple.man.es.1 multiple.man.fr.1 multiple.man.it.1 multiple.pot',
 
+  },
+  {
+    'doc'              => 'Multiple languages, translation uptodate, translate only one language',
+    'po4a.conf'        => 'cfg/multiple-uptodate/po4a.conf',
+    'options'          => ' --translate-only multiple.man.de.1',
+    'closed_path'      => 'cfg/*/',
+    'expected_outfile' => 'cfg/multiple-uptodate/_output-only-one',
+    'expected_files'   => 'multiple.man.de.1',
+  },
+  {
+    'doc'              => 'Multiple languages, translation uptodate, translate only two languages',
+    'po4a.conf'        => 'cfg/multiple-uptodate/po4a.conf',
+    'options'          => ' --translate-only multiple.man.de.1 --translate-only multiple.man.es.1',
+    'closed_path'      => 'cfg/*/',
+    'expected_outfile' => 'cfg/multiple-uptodate/_output-only-two',
+    'expected_files'   => 'multiple.man.de.1 multiple.man.es.1',
   },
   {
     'doc'            => 'Multiple languages, translation already fuzzy',

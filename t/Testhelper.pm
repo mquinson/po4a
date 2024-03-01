@@ -270,7 +270,7 @@ sub run_one_po4aconf {
     pass("Change directory back to $cwd");
 
     my $expected_outfile = $t->{'expected_outfile'} // "$path/_output";
-    unless ( $t->{'diff_outfile'} ) {
+    unless ( -e $expected_outfile ) {
         $expected_outfile = "$path/$expected_outfile"
           if ( not -e $expected_outfile ) && ( -e "$path/$expected_outfile" );
         unless ( -e $expected_outfile ) {

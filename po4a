@@ -1319,11 +1319,12 @@ while (<CONFIG>) {
         }
         if ( scalar @{ $po4a_opts{"partial"} } ) {
             foreach my $file ( @{ $po4a_opts{"partial"} } ) {
-                if ( grep ( m/(\S+):\Q$file\E\b/, @split_args ) ) {
-                    $partial{'lang'}{$1}      = 1;
-                    $partial{'master'}{$main} = 1;
-                    $partial{'files'}{$file}  = 1;
-                    last;
+                foreach my $arg (@split_args) {
+                    if ( $arg =~ m/(\S+):\Q$file\E\b/ ) {
+                        $partial{'lang'}{$1}      = 1;
+                        $partial{'master'}{$main} = 1;
+                        $partial{'files'}{$file}  = 1;
+                    }
                 }
             }
         }
@@ -1344,7 +1345,7 @@ while (<CONFIG>) {
             $document{$main}{'format'} = $aliases{$1}{"module"};
             if ( defined $aliases{$1}{"options"} ) {
 
-                #                print STDERR "Override the global options with the alias ones\n";
+                # print STDERR "Override the global options with the alias ones\n";
                 %options = %{ $aliases{$1}{"options"} };    # XXX not a merge, but overwrite
             }
         }
@@ -1440,16 +1441,18 @@ while (<CONFIG>) {
             }
         }
     } elsif ( $cmd =~ m/po4a_alias: *(.*)/ ) {
-        my $name  = $1;
+        my $name = $1;
         shift @split_args;
 
-        if ( defined $aliases{$name} ) { # If that alias was previously defined
-            die "Alias $name redefined from ".$aliases{$name}{"module"}." to $main\n"
-                if ( $aliases{$name}{"module"} ne $main );  # Sanity checks
-            # Concat the new content to the existing alias
-            @split_args = map { parse_config_options( "$config_file:$nb", $_, \%{ $aliases{$name}{"options"} } ); } @split_args;
-        } else {
-            # Otherwise, define a new option set accordingly
+        if ( defined $aliases{$name} ) {    # If that alias was previously defined
+            die "Alias $name redefined from " . $aliases{$name}{"module"} . " to $main\n"
+              if ( $aliases{$name}{"module"} ne $main );
+
+            # Concat the new content to the existing alias after a sanity check
+            @split_args =
+              map { parse_config_options( "$config_file:$nb", $_, \%{ $aliases{$name}{"options"} } ); } @split_args;
+
+        } else {                            # Otherwise, define a new option set accordingly
             my %alias = ();
             $alias{"module"} = $main;
 
@@ -1530,13 +1533,33 @@ if ( $pot_filename =~ m/\$master/ ) {
 
         # Skip documents not specified, strings are read directly from POT file
         foreach my $master ( keys %document ) {
-            next                      unless length $master;
-            delete $document{$master} unless exists $partial{'master'}{$master};
+            next unless length $master;
+            if ( exists $partial{'master'}{$master} ) {
+                print wrap_msg( gettext("Document %s kept for update (--translate-only)."), $master )
+                  if ( $po4a_opts{"verbose"} );
+            } else {
+                print wrap_msg( gettext("Skip the update of %s as requested (--translate-only)."), $master )
+                  if ( $po4a_opts{"verbose"} );
+                delete $document{$master};
+            }
         }
 
         # Do not read PO files if no file is processed for this language
-        foreach my $lang ( keys %po_filename ) {
-            delete $po_filename{$lang} unless exists $partial{'lang'}{$lang};
+        my $skipped_langs = "";
+        my $kept_langs    = "";
+        foreach my $lang ( sort keys %po_filename ) {
+            if ( exists $partial{'lang'}{$lang} ) {
+                $kept_langs .= " $lang";
+            } else {
+                $skipped_langs .= " $lang";
+                delete $po_filename{$lang};
+            }
+        }
+        if ( $po4a_opts{"verbose"} ) {
+            $skipped_langs =~ s/^ //;
+            $kept_langs    =~ s/^ //;
+            print wrap_msg( gettext("Languages skipped because of --translate-only: %s; kept languages: %s."),
+                $skipped_langs, $kept_langs );
         }
     }
 
@@ -1654,8 +1677,16 @@ if ($update_pot_file) {
     print wrap_msg( gettext(" (%d entries)"), $potfile->count_entries() )
       unless ( $po4a_opts{"quiet"} );
 } else {
-    print wrap_msg( gettext("POT file %s already up to date."), $pot_filename )
-      if ( $po4a_opts{"verbose"} and not $po4a_opts{"no-update"} );
+    if ( $po4a_opts{"no-update"} ) {
+        print wrap_msg( gettext("NOT updating the POT file %s as requested (--no-update)."), $pot_filename )
+          if ( $po4a_opts{"verbose"} );
+    } elsif ( scalar @{ $po4a_opts{"partial"} } ) {
+        print wrap_msg( gettext("NOT updating the POT file %s because of --translate-only."), $pot_filename )
+          if ( $po4a_opts{"verbose"} );
+    } else {
+        print wrap_msg( gettext("POT file %s already up to date."), $pot_filename )
+          if ( $po4a_opts{"verbose"} and not $po4a_opts{"no-update"} );
+    }
 }
 
 my %split_po;           # po_files: '$lang','$master' => '$path'
@@ -1930,7 +1961,12 @@ if ( not $po4a_opts{"no-translations"} ) {
             next if ( $master eq '' );
             next unless defined $document{$master}{$lang};
             if ( scalar @{ $po4a_opts{"partial"} } ) {
-                next unless defined $partial{'files'}{ $document{$master}{$lang} };
+                unless ( defined $partial{'files'}{ $document{$master}{$lang} } ) {
+                    print wrap_msg( gettext("Skip master file %s in language %s because of --translate-only."),
+                        $master, $lang )
+                      if ( $po4a_opts{"verbose"} );
+                    next;
+                }
             }
 
             unless ( $po4a_opts{"force"} ) {
