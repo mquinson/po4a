@@ -43,6 +43,11 @@ push @tests,
     'input'   => "fmt/asciidoc/LineBreak.adoc",
   },
   {
+    'format'  => 'asciidoc',
+    'options' => '-o cleanspaces=1',
+    'input'   => "fmt/asciidoc/CleanSpaces.adoc",
+  },
+  {
     'format' => 'asciidoc',
     'input'  => "fmt/asciidoc/YamlFrontMatter.adoc",
   },

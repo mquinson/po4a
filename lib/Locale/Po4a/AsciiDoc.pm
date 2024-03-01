@@ -111,6 +111,11 @@ equality of length of opening and closing block fences.
 
 Disable linting messages. When the source code cannot be fixed for clearer document structure, these messages are useless.
 
+=item B<cleanspaces>
+
+Remove extra spaces from the source segments in no-wrap mode. This is useful when the
+translation tools are sensitive to the number of spaces.
+
 =item B<yfm_keys>
 
 Comma-separated list of keys to process for translation in the YAML Front Matter
@@ -221,6 +226,7 @@ sub initialize {
     $self->{options}{'yfm_skip_array'} = 0;
     $self->{options}{'yfm_paths'}      = '';
     $self->{options}{'nolinting'}      = 0;
+    $self->{options}{'cleanspaces'}    = 0;
 
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::asciidoc", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -395,13 +401,20 @@ BEGIN {
 sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;
-    if ( ($options{'wrap'}==1) && ($str =~ / \+\n/) ) {
-        $options{'wrap'} = 0;
-        $str =~ s/([^+])\n/$1 /g;
-	$str =~ s/ \+\n/\n/g;
-        $str = $self->SUPER::translate( $str, $ref, $type, %options);
-	$str =~ s/\n/ +\n/g;
-	$options{'wrap'} = 1;
+    if ( $options{'wrap'} == 1 ) {
+	if ($str =~ / \+\n/) {
+	    $options{'wrap'} = 0;
+	    $str =~ s/([^+])\n/$1 /g;
+	    $str =~ s/ \+\n/\n/g;
+	    $str = $self->SUPER::translate( $str, $ref, $type, %options);
+	    $str =~ s/\n/ +\n/g;
+	    $options{'wrap'} = 1;
+	} else {
+	    if ( $self->{options}{'cleanspaces'} == 1 ) {
+		$str =~ s/[ \n]+/ /g;
+	    }
+	    $str = $self->SUPER::translate( $str, $ref, $type, %options);
+	}
     } else {
         $str = $self->SUPER::translate( $str, $ref, $type, %options );
     }
@@ -1167,8 +1180,8 @@ sub do_paragraph {
 
     my $end = "";
     if ($wrap) {
-        $paragraph =~ s/^(.*?)(\n*)$/$1/s;
-        $end = $2 || "";
+        $paragraph =~ s/(\n*)$//s;
+        $end = $1 || "";
     }
     if ( defined $self->{bullet} ) {
         my $bullet  = $self->{bullet};
@@ -1189,7 +1202,7 @@ sub do_paragraph {
 
     my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && (! ($t =~ /\+\n/) ) ;
     if ($unwrap_result) {
-        $t =~ s/(\n| )+/ /g;
+        $t =~ s/[\n ]+/ /g;
     }
 
     @comments = ();
