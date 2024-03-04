@@ -13,6 +13,7 @@ module for the following formats:
   - asciidoc: AsciiDoc format.
   - dia: uncompressed Dia diagrams.
   - docbook: DocBook XML.
+  - gemtext: Gemini's native plain text format.
   - guide: Gentoo Linux's XML documentation format.
   - halibut: Simon Tatham's documentation production system.
   - ini: INI format.
@@ -20,6 +21,7 @@ module for the following formats:
   - latex: LaTeX format.
   - bibtex: bibtex format.
   - man: Good old manual page format.
+  - org: document format for the Org mode.
   - pod: Perl Online Documentation format.
   - sgml: either DebianDoc or DocBook DTD.
   - texinfo: The info page format.
@@ -117,6 +119,12 @@ the git tree), use the PERLLIB environment variable as such:
 * YAML::Tiny
 
   This module is used to parse and serialize the YAML file.
+
+## Org module specific dependencies
+
+* List::Util
+
+  This module is used for ease of implementation.
 
 # Project hosting
 
