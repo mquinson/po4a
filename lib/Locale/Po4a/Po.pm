@@ -1002,7 +1002,7 @@ sub gettext {
     }
 
     if ( $opt{'wrap'} ) {
-        $res = wrap( $res, $opt{'wrapcol'} || 76 );
+        $res = wrap( $res, $opt{'wrapcol'} || 76, 0 );
     }
 
     #    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
@@ -1117,9 +1117,7 @@ This information is written to the PO file using the B<wrap> or B<no-wrap> flag.
 
 =item B<wrapcol>
 
-the column at which we should wrap (default: 76).
-
-This information is not written to the PO file.
+ignored; the key is kept for backward computability.
 
 =back
 
@@ -1539,18 +1537,29 @@ sub canonize {
     return $text;
 }
 
-# wraps the string. We don't use Text::Wrap since it mangles whitespace at the end of the split line
+
+# Wraps the string. We don't use Text::Wrap since it mangles whitespace at the
+# end of the split line.
+#
+# Mandatory arguments:
+#  - A string to wrap. May content line breaks, in such case each line will be
+#    wrapped separately.
+# Optional arguments:
+#  - A column to wrap on. Default: 76.
+#  - The extra length allowed for the first line. Default: -10 (which means it
+#    will be wrapped 10 characters shorter).
 sub wrap {
-    my $text = shift;
+    my $text        = shift;
     return "0" if ( $text eq '0' );
-    my $col   = shift || 76;
-    my @lines = split( /\n/, "$text" );
-    my $res   = "";
-    my $first = 1;
+    my $col         = shift || 76;
+    my $first_shift = shift || -10;
+    my @lines       = split( /\n/, "$text" );
+    my $res         = "";
+
     while ( defined( my $line = shift @lines ) ) {
-        if ( $first && length($line) > $col - 10 ) {
+        if ( $first_shift != 0 && length($line) > $col + $first_shift ) {
             unshift @lines, $line;
-            $first = 0;
+            $first_shift = 0;
             next;
         }
         if ( length($line) > $col ) {
@@ -1573,7 +1582,7 @@ sub wrap {
                 unshift @lines, $end;
             }
         }
-        $first = 0;
+        $first_shift = 0;
         $res .= "$line\n";
     }
 

@@ -256,7 +256,17 @@ Sets the verbosity.
 
 Sets the debugging.
 
+=item wrapcol ($)
+
+The column at which we should wrap text in output document (default: 76).
+
+The negative value means not to wrap lines at all.
+
 =back
+
+Also it accepts next options for underlying Po-files: B<porefs>,
+B<copyright-holder>, B<msgid-bugs-address>, B<package-name>,
+B<package-version>, B<wrap-po>.
 
 =cut
 
@@ -355,13 +365,14 @@ sub new {
     bless $self, $class;
 
     ## initialize the plugin
-    # prevent the plugin from croaking on the options intended for Po.pm
+    # prevent the plugin from croaking on the options intended for Po.pm or ourself
     $self->{options}{'porefs'}             = '';
     $self->{options}{'copyright-holder'}   = '';
     $self->{options}{'msgid-bugs-address'} = '';
     $self->{options}{'package-name'}       = '';
     $self->{options}{'package-version'}    = '';
     $self->{options}{'wrap-po'}            = '';
+    $self->{options}{'wrapcol'}            = '';
 
     # let the plugin parse the options and such
     $self->initialize(%options);
@@ -390,6 +401,15 @@ sub new {
     }
     if ( defined $options{'debug'} ) {
         $self->{TT}{debug} = $options{'debug'};
+    }
+    if ( defined $options{'wrapcol'} ) {
+        if ( $options{'wrapcol'} < 0) {
+            $self->{TT}{wrapcol} = 'Inf';
+        } else {
+            $self->{TT}{wrapcol} = $options{'wrapcol'};
+        }
+    } else {
+        $self->{TT}{wrapcol} = 76;
     }
 
     return $self;
@@ -925,7 +945,10 @@ a translation or extracting it, and wraps the translation.
 
 =item B<wrapcol>
 
-the column at which we should wrap (default: 76).
+the column at which we should wrap (default: the value of B<wrapcol> specified
+during creation of the TransTractor or 76).
+
+The negative value will be substracted from the default.
 
 =item B<comment>
 
@@ -971,10 +994,10 @@ sub translate {
     #            unless $validoption{$_};
     # }
 
-    if ( defined $options{'wrapcol'} && $options{'wrapcol'} < 0 ) {
-
-        # FIXME: should be the parameter given with --width
-        $options{'wrapcol'} = 76 + $options{'wrapcol'};
+    if ( !defined $options{'wrapcol'} ) {
+        $options{'wrapcol'} = $self->{TT}{wrapcol}
+    } elsif ( $options{'wrapcol'} < 0 ) {
+        $options{'wrapcol'} = $self->{TT}{wrapcol} + $options{'wrapcol'};
     }
     my $transstring = $self->{TT}{po_in}->gettext(
         $string,
@@ -990,7 +1013,6 @@ sub translate {
         'automatic' => $options{'comment'},
         'flags'     => $options{'flags'},
         'wrap'      => $options{'wrap'} || 0,
-        'wrapcol'   => $options{'wrapcol'}
     );
 
     if ( $options{'wrap'} || 0 ) {
