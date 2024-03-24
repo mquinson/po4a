@@ -122,78 +122,106 @@ In order to define a new test, you can use some convenience
 helpers. If you follow some conventions, you don't have to
 write much boilerplate code.
 
-Each test is defined using a perl hash with several keys.
-Every test needs to have the key "_doc_", which contains
-a short description of the test.
+Each test is defined using a perl hash with several keys.  Every test
+should have the key `doc`, which contains a short description of the
+test.
 
-If you need to test the output of a module, it should suffice
-to define a second key in the hash, named "_normalize_".
-This key points to a string which can be used for the
-script `po4a-normalize`. See for example the YAML tests
-for some easy test definitions.
+Currently the test suit supports 3 types of tests:
 
-The "_normalize_" tests expect to find at least four files
-in the corresponding test directory:
+ - *po4a.conf* - to test the __po4a__ utility
+ - *format* - to test the specific format modules
+ - *run* - old generic run-commands-tests that wasn't or couldn't be
+    converted to one of the above formats
 
-1. The master file used as input for po4a.
-2. The expected .pot file, using the same name as the master
-   file. The extension is changed to "_.pot_".
-3. The expected translated file, again using the same name
-   as the master file. The extension is changed to "_.out_".
-4. The expected messages on stderr, again using the same name
-   as the master file. The extension is changed to "_.err_".
-
-Here's an example. If you define the following hash:
-
-```
-push @tests,
-  {
-    'doc'       => "YAML UTF-8 test",
-    'normalize' => "-f yaml -M UTF-8 t-25-yaml/yamlutf8.yaml",
-  };
-```
-
-... you need to have at least the following four files:
-
-```
-t-25-yaml/yamlutf8.yaml
-t-25-yaml/yamlutf8.pot
-t-25-yaml/yamlutf8.out
-t-25-yaml/yamlutf8.err
-```
-
-You can also check that the translation works, using the file
-name of the master file, with the extension changed to
-"_.trans.po_". The actual language does not matter, the
-extension is always the same. Similarly to the above files,
-you also need to add the expected translated output and
-the expected messages from stderr:
-
-```
-t-25-yaml/yamlutf8.trans.po
-t-25-yaml/yamlutf8.trans.out
-t-25-yaml/yamlutf8.trans.err
-```
-
-If you need to have more control over your tests, you can
-use the "_run_" and "_test_" keys in the hash. The "_run_"
-key defines the commands to run; the "_test_" key has
-the commands to check the generated output.
-
-Last, not least, you can mark a test as TODO with the
-hash key "_todo_". Usually, it's best to write a short
-description or to add a link to the online bug report.
+Also, you can mark a test as TODO with the hash key "_todo_". Usually,
+it's best to write a short description or to add a link to the online
+bug report.
 
 Example:
 
 ```
 push @tests,
   {
-    'doc'       => 'WML normalisation test',
-    'normalize' => "-f wml t-22-wml/general.wml",
+    'format'    => "wml" 
+    'input'     => "fmt/wml/general.wml",
     'todo'      => "https://github.com/mquinson/po4a/issues/138",
   };
 ```
+### *po4a.conf* tests
+
+Thees tests are used to check how well po4a can handle different
+options in a `po4a.conf` see example tests and **Testhelper.pm** for
+more details.
+
+### *Format* tests
+
+If you need to test the output of a module, you should define at least
+two keys in the hash: `format` and `input`. The first one
+specifies the format which will be passed to option `-f` of utilities
+like *po4a-translate* or *po4a-normalize*. The second one specifies
+the input file to perform the tests on. It is not strictly necessary
+to specify the `doc` key, but it is encouraged if you have more than
+one test for a single `format`.
+
+See for example the manpage tests for some simple test definitions.
+
+The "*format*" tests expect to find the next five files:
+
+1. The master file (`input`) used as input for po4a.
+2. The expected normalized file, with the same basename and the
+   "*.norm*" extension. (May be overridden with `norm` key).
+3. The expected .pot file, again with the same basename as the master
+   file and the extension "_.pot_" (May be overridden with `potfile`
+   key).
+4. The expected .po file, using again the same basename and the
+   extension "_.po_" (May be overridden with `pofile` key ).
+5. The expected translated file, again with the same basename and the
+   "*.trans*" extension. (May be overridden with `trans` key).
+
+Here's an example. If you define the following hash:
+
+```
+push @tests,
+  {
+    'format' => 'man',
+    'input'  => 'fmt/man/null.man'
+  };
+```
+... you need to have the following five files:
+
+```
+fmt/man/null.man
+fmt/man/null.norm
+fmt/man/null.pot
+fmt/man/null.po
+fmt/man/null.trans
+```
+
+The actual language of PO-files does not generally matter, but all
+existing *format* tests use uppercase of the original strings for
+translations so it would be easier to all contributors.
+
+The master file you have to write yourself, the rest could be easily
+generated with *po4a-normalize*:
+
+```
+cd t/fmt/man/
+PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f man null.man -l null.norm -p null.pot
+PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f man null.man -l null.trans -p null.po
+```
+
+... but you should furiously check those, that they are actually what
+you expect.
+
+The *format* tests also have other options. For full list and
+description see comments in **Testhelper.pm**.
+
+### *Run* tests
+
+If you need to have more control over your tests, you can
+use the "_run_" and "_test_" keys in the hash. The "_run_"
+key defines the commands to run; the "_test_" key has
+the commands to check the generated output.
 
 # Submitting Your Patch
 
