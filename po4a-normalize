@@ -44,6 +44,11 @@ plugin for more information about the valid options and their meanings. For
 example, you could pass '-o tablecells' to the AsciiDoc parser, while the 
 text parser would accept '-o tabs=split'.
 
+=item B<-w>, B<--width>
+
+Column at which we should wrap the resulting file if the format supports it
+(default: 76).
+
 =item B<-b>, B<--blank>
 
 Create an blank translated document.
@@ -126,7 +131,7 @@ sub show_version {
 
 my ( $blank, $help_fmt, $help, $type, $debug, $verbose, $quiet, $wrappo, @options, $no_deprecation );
 my ($mastchar);
-my ( $localized, $potfile ) = ( 'po4a-normalize.output', 'po4a-normalize.po' );
+my ( $localized, $potfile, $width ) = ( 'po4a-normalize.output', 'po4a-normalize.po', 76 );
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
 GetOptions(
     'help|h'        => \$help,
@@ -145,6 +150,7 @@ GetOptions(
     'option|o=s' => \@options,
     'wrap-po=s'  => \$wrappo,
 
+    'width|w=s' => \$width,
     'verbose|v' => \$verbose,
     'quiet|q'   => \$quiet,
     'debug|d'   => \$debug,
@@ -158,6 +164,7 @@ pod2usage() unless scalar @ARGV == 1;
 my %options = (
     "verbose" => $verbose,
     "debug"   => $debug,
+    "wrapcol" => $width
 );
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {

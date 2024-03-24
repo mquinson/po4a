@@ -88,7 +88,8 @@ at least at 80% to get written.
 
 =item B<-w>, B<--width>
 
-Column at which we should wrap the resulting file.
+Column at which we should wrap the resulting file if the format supports it
+(default: 76).
 
 =item B<-h>, B<--help>
 
@@ -186,7 +187,7 @@ sub show_version {
 }
 
 Getopt::Long::Configure( 'no_auto_abbrev', 'no_ignore_case' );
-my ( $outfile,         $width,    $threshold ) = ( '-', 80, 80 );
+my ( $outfile,         $width,    $threshold ) = ( '-', 76, 80 );
 my ( $help,            $help_fmt, @verbose, $debug, $ignored_wrappo, @addfiles, $format, @options, $no_deprecation );
 my ( $master_filename, $po_filename );
 my ( $mastchar,        $locchar, $addchar );
@@ -234,7 +235,8 @@ push @masters, $master_filename;
 
 my %options = (
     "verbose" => scalar @verbose,
-    "debug"   => $debug
+    "debug"   => $debug,
+    "wrapcol" => $width
 );
 
 foreach (@options) {
