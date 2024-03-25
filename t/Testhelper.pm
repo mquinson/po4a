@@ -67,6 +67,8 @@
 #            If the file does not exist, the normalization is expected to not output anything
 #   - error (optional boolean -- default: false): whether the normalization is expected to fail
 #            If so, the translation is not attempted (and the translation files don't have to exist)
+#   - skip (optional): a set of stages that should be skipped, may contain 'normalize', 'translation' or 'updatepo'
+#                      in any combination
 #   - trans (default: $basename.trans): expected translated document (translated with provided PO file)
 #   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
 #            If the file does not exist, the normalization is expected to not output anything
@@ -367,7 +369,7 @@ sub run_one_format {
 
     my %valid_options;
     map { $valid_options{$_} = 1 } qw(format input potfile pofile doc options todo
-      norm   norm_stderr   error
+      norm   norm_stderr   error   skip
       trans  trans_stderr );
     map { die "Invalid test " . $test->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} }
       ( keys %{$test} );
@@ -410,51 +412,51 @@ sub run_one_format {
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
-    # Normalize the document
-    my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
-    my $cmd =
-        "${execpath}/po4a-normalize --no-deprecation -f $format --quiet "
-      . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
-      . " > $real_stderr 2>&1";
+    unless (exists $test->{'skip'}{'normalize'}) {
+        # Normalize the document
+        my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
+        my $cmd =
+            "${execpath}/po4a-normalize --no-deprecation -f $format --quiet "
+          . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
+          . " > $real_stderr 2>&1";
 
-    chdir $path || fail "Cannot change directory to $path: $!";
-    note("Change directory to $path");
-    my $exit_status = system($cmd);
-    $cmd =~ s{$root_dir/}{}g;
-    $cmd =~ s{t/../po4a}{po4a};
+        chdir $path || fail "Cannot change directory to $path: $!";
+        note("Change directory to $path");
+        my $exit_status = system($cmd);
+        $cmd =~ s{$root_dir/}{}g;
+        $cmd =~ s{t/../po4a}{po4a};
 
-    if ( $error == 0 && $exit_status == 0 ) {
-        pass("Normalizing $doc");
-        note("  Pass: $cmd (retcode: $exit_status)");
-    } elsif ( $error != 0 && $exit_status != 0 ) {
-        pass("Expected error detected in $doc");
-        note("  Failing as expected: $cmd (retcode: $exit_status)");
-        note("Produced output:");
-        open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
-        while (<FH>) {
-            note("  $_");
+        if ( $error == 0 && $exit_status == 0 ) {
+            pass("Normalizing $doc");
+            note("  Pass: $cmd (retcode: $exit_status)");
+        } elsif ( $error != 0 && $exit_status != 0 ) {
+            pass("Expected error detected in $doc");
+            note("  Failing as expected: $cmd (retcode: $exit_status)");
+            note("Produced output:");
+            open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                note("  $_");
+            }
+            note("(end of command output)\n");
+        } else {
+            fail("Normalizing $doc: $exit_status");
+            note("  FAIL: $cmd");
+            note("Produced output:");
+            open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
+            while (<FH>) {
+                note("  $_");
+            }
+            note("(end of command output)\n");
         }
-        note("(end of command output)\n");
-    } else {
-        fail("Normalizing $doc: $exit_status");
-        note("  FAIL: $cmd");
-        note("Produced output:");
-        open FH, $real_stderr || die "Cannot open output file that I just created, I'm puzzled";
-        while (<FH>) {
-            note("  $_");
-        }
-        note("(end of command output)\n");
 
+        push @tests, "diff -uNwB $norm_stderr $real_stderr";
+        push @tests, "PODIFF  $potfile  $tmpbase.pot"  unless $error;
+        push @tests, "diff -u $output   $tmpbase.norm" unless $error;
     }
 
-    push @tests, "diff -uNwB $norm_stderr $real_stderr";
-    push @tests, "PODIFF  $potfile  $tmpbase.pot"  unless $error;
-    push @tests, "diff -u $output   $tmpbase.norm" unless $error;
-
-    unless ($error) {
-
+    unless ($error or exists $test->{'skip'}{'traslate'}) {
         # Translate the document
-        $cmd =
+        my $cmd =
             "${execpath}/po4a-translate --no-deprecation -f $format $options --master $basename.$ext"
           . " --po $cwd/$pofile --localized $cwd/${tmpbase}.trans"
           . " > $cwd/$tmpbase.trans.stderr 2>&1";
@@ -469,10 +471,12 @@ sub run_one_format {
         }
         push @tests, "diff -uNwB $trans_stderr $tmpbase.trans.stderr";
         push @tests, "diff -uN $transfile $tmpbase.trans";
+    }
 
+    unless ($error or exists $test->{'skip'}{'updatepo'}) {
         # Update PO
         copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
-        $cmd =
+        my $cmd =
             "${execpath}/po4a-updatepo --no-deprecation -f $format $options "
           . "--master $basename.$ext --po $cwd/${tmpbase}.po_updated"
           . " > $cwd/tmp/$path/update.stderr 2>&1";

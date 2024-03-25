@@ -1,0 +1,45 @@
+% The document title with length over 40 symbols
+% The document first author; The document second author
+
+A nice long title which shouldn't be rewrapped
+==============================================
+
+This paragraph is 39 columns width.....
+
+This paragraph is 40 columns width......
+
+This paragraph is 41 columns width.......
+
+This paragraph is 39 columns
+width.....
+
+This paragraph is 40 columns
+width......
+
+This paragraph is 41 columns
+width.......
+
+
+# List items should be rewrapped two symbols shorter to accomodate the bullet marker
+
+* This list item is 37 columns width...
+* This list item is 38 columns width....
+* This list item is 39 columns width.....
+  * Nested items should be rewrapped even shorter.
+  * Like this: nested items should be
+    rewrapped even shorter.
+  * Or even as short as this one here....
+  * But not like this one..............
+
+* This list item is 37 columns width.
+
+This paragraph is 42 columns [width][link]
+
+    This is a very long verbatim paragraph that shouldn't be rewraped no matter how long it is.
+
+```
+This is a very long verbatim paragraph that shouldn't
+be rewraped no matter how long it is.
+```
+
+[link]: https://example.com/sooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo/long

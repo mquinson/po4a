@@ -26,6 +26,13 @@ push @tests,
     'format'  => 'text',
     'options' => '-o markdown',
     'input'   => "fmt/txt-markdown/NestedLists.md",
+  },
+  {
+    'doc'     => "Rewrap output of a Markdown file to the given width",
+    'format'  => 'text',
+    'options' => '-o markdown -w 40',
+    'input'   => "fmt/txt-markdown/Width.md",
+    'skip'    => { 'updatepo' => 1 }
   };
 
 # Some tests specific to the Pandoc dialect of Markdown

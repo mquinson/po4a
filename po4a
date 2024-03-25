@@ -159,6 +159,11 @@ Minimal threshold for translation percentage to keep (i.e. write) the
 resulting file (default: 80). I.e. by default, files have to be translated
 at least at 80% to be written on disk.
 
+=item B<-w>, B<--width>
+
+Column at which we should wrap the resulting file if the format supports it
+(default: 76).
+
 =item B<-h>, B<--help>
 
 Show a short help message.
@@ -758,6 +763,7 @@ sub get_options {
         "no-backups"         => 0,
         "rm-backups"         => 0,
         "threshold"          => 80,
+        "width"              => 76,
         "mastlang"           => "",
         "mastchar"           => "",
         "locchar"            => "",
@@ -790,6 +796,7 @@ sub get_options {
         'stamp'                => \$opts{"stamp"},
         'quiet|q'              => \$opts{"quiet"},
         'keep|k=s'             => \$opts{"threshold"},
+        'width|w=s'            => \$opts{"width"},
         'no-translations'      => \$opts{"no-translations"},
         'no-update'            => \$opts{"no-update"},
         'keep-translations'    => \$opts{"keep-translations"},
@@ -824,7 +831,8 @@ sub get_options {
     # options to transmit to the modules
     $opts{"options"} = {
         "verbose" => $opts{"verbose"},
-        "debug"   => $opts{"debug"}
+        "debug"   => $opts{"debug"},
+        "wrapcol" => $opts{"width"}
     };
     foreach (@options) {
         if (m/^([^=]*)=(.*)$/) {
