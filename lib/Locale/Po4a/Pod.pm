@@ -211,7 +211,7 @@ Locale::Po4a::Pod - convert POD data from/to PO files
 =head1 SYNOPSIS
 
     use Locale::Po4a::Pod;
-    my $parser = Locale::Po4a::Pod->new (sentence => 0, width => 78);
+    my $parser = Locale::Po4a::Pod->new();
 
     # Read POD from STDIN and write to STDOUT.
     $parser->parse_from_filehandle;
@@ -264,62 +264,6 @@ As a derived class from Pod::Parser, Locale::Po4a::Pod supports the same
 methods and interfaces.  See L<Pod::Parser> for all the details; briefly,
 one creates a new parser with C<< Locale::Po4a::Pod->new() >> and then
 calls either parse_from_filehandle() or parse_from_file().
-
-new() can take options, in the form of key/value pairs, that control the
-behavior of the parser.  The recognized options common to all Pod::Parser
-children are:
-
-=over 4
-
-=item B<alt>
-
-If set to a true value, selects an alternate output format that, among other
-things, uses a different heading style and marks B<=item> entries with a
-colon in the left margin.  Defaults to false.
-
-=item B<code>
-
-If set to a true value, the non-POD parts of the input file will be included
-in the output.  Useful for viewing code documented with POD blocks with the
-POD rendered and the code left intact.
-
-=item B<indent>
-
-The number of spaces to indent regular text, and the default indentation for
-B<=over> blocks.  Defaults to 4.
-
-=item B<loose>
-
-If set to a true value, a blank line is printed after a B<=head1> heading.
-If set to false (the default), no blank line is printed after B<=head1>,
-although one is still printed after B<=head2>.  This is the default because
-it's the expected formatting for manual pages; if you're formatting
-arbitrary text documents, setting this to true may result in more pleasing
-output.
-
-=item B<quotes>
-
-Sets the quote marks used to surround CE<lt>> text.  If the value is a
-single character, it is used as both the left and right quote; if it is two
-characters, the first character is used as the left quote and the second as
-the right quote; and if it is four characters, the first two are used as
-the left quote and the second two as the right quote.
-
-This may also be set to the special value B<none>, in which case no quote
-marks are added around CE<lt>> text.
-
-=item B<sentence>
-
-If set to a true value, Locale::Po4a::Pod will assume that each sentence
-ends in two spaces, and will try to preserve that spacing.  If set to
-false, all consecutive whitespace in non-verbatim paragraphs is compressed
-into a single space.  Defaults to true.
-
-=item B<width>
-
-The column at which to wrap text on the right-hand side.  Defaults to 76.
-
-=back
 
 =head1 SEE ALSO
 
