@@ -511,6 +511,11 @@ sub write {
     map { print $fh $_ } $self->docheader();
     eval {
         map { print $fh $_ } @{ $self->{TT}{doc_out} };
+
+        # we use the "eval {} or do {}" approach to deal with exceptions, cf https://perlmaven.com/fatal-errors-in-external-modules
+        # but we want it to fail only if there is an error. It seems to be some cases where "map" returns false even if there is no error.
+        # Thus this final 1 to evaluate to true in absence of error.
+        1;
     } or do {
         my $error = $@ || 'Unknown failure';
         chomp $error;
