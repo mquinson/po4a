@@ -19,17 +19,18 @@ module for the following formats:
   - kernelhelp: Help messages of each kernel compilation option.
   - latex: LaTeX format.
   - bibtex: bibtex format.
-  - man: Good old manual page format.
+  - man: Good old manual page format (either roff or mdoc).
+  - markdown: MD documents (using the txt module).
   - pod: Perl Online Documentation format.
+  - rubydoc: RubyDoc (RD) documents.
   - sgml: either DebianDoc or DocBook DTD.
-  - texinfo: The info page format.
+  - texinfo: The info page format (experimental).
   - tex: generic TeX documents (see also latex).
   - text: simple text document.
   - wml: WML documents.
   - xhtml: XHTML documents.
   - xml: generic XML documents (see also docbook).
   - yaml: YAML documents.
-  - rubydoc: RubyDoc (RD) documents.
 
 # Installation
 
