@@ -908,11 +908,14 @@ sub parse {
           &$parse_func( $self, $line, $ref, $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
 
         # paragraphs starting by a bullet, or numbered
-        # or paragraphs with a line containing many consecutive spaces
-        # (more than 3)
+        # or paragraphs with a line containing more than 3 consecutive spaces
         # are considered as verbatim paragraphs
         $wrapped_mode = 0 if ( $paragraph =~ m/^(\*|[0-9]+[.)] )/s
             or $paragraph =~ m/[ \t][ \t][ \t]/s );
+
+        # Paragraphs starting with a table formating (GH extension) are also considered verbatim
+        $wrapped_mode = 0 if ( $paragraph =~ m/^\|/ );
+
         $wrapped_mode = 0 if ( $tabs eq "verbatim"
             and $paragraph =~ m/\t/s );
 
