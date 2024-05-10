@@ -424,8 +424,8 @@ my $FONT_RE = "\\\\f(?:\\[[^\\]]*\\]|\\(..|[^\\(\\[])";
 
 # Variable used to identify non breaking spaces.
 # These non breaking spaces are used to ease the parsing, and a
-# translator can use them in her translation (and they will be translated
-# into the groff non-breaking space.
+# translator can use them in their translation (and they will be translated
+# into the groff non-breaking space).
 my $nbs;
 
 # Indicate if the page uses the mdoc macros
@@ -1023,7 +1023,7 @@ sub pre_trans {
         return $str;
     }
 
-    # Note: if you want to implement \c support, the gdb man page is your playground
+    # Note: if you want to implement \c support, the groff man page is your playground
     if ( not defined $self->{type} ) {
         $str =~ s/(\G|^(?:.*?)\n|^)        # Last position, or begin of a line
                    ([ \t]*[^.'][^\n]*(?<!\\)(?:\\\\)*) # the new line, which
@@ -1031,7 +1031,7 @@ sub pre_trans {
                    (?![ \t]*[.'])/$1$2/sgx;    # not followed by a command (.')
     }
     die wrap_ref_mod( $ref, "po4a::man",
-        dgettext( "po4a", "Escape sequence \\c encountered. This is not completely handled yet." ) )
+        dgettext( "po4a", "Escape sequence \\c encountered. This is not completely handled yet. Faulty input: $str" ) )
       if ( $str =~ /\\c/ );
 
     $str =~ s/>/E<gt>/sg;
@@ -1095,6 +1095,7 @@ sub pre_trans {
     # non-breaking spaces
     # some non-breaking spaces may have been added during the parsing
     $str =~ s/\Q$nbs/\\ /sg;
+    $str =~ s/\\~/\\ /sg;
 
     print STDERR "$str\n" if ( $debug{'pretrans'} );
     return $str;
@@ -2032,6 +2033,13 @@ sub parse_tp_tq {
     while ( $l2 =~ /^\.PD/ ) {
         $self->pushline( $self->r($l2) . "\n" );
         ( $l2, $ref2 ) = $self->shiftline();
+        chomp($l2);
+    }
+
+    # Deal with \c line continuation in .TP or .TQ
+    while ( $l2 =~ s/\\c$// ) {
+        my ( $l3, $ref3 ) = $self->shiftline();
+        $l2 .= $l3;
         chomp($l2);
     }
     if ( $l2 =~ /^([.'][\t ]*([^\t ]*))(?:([\t ]+)(.*)$|$)/ ) {
