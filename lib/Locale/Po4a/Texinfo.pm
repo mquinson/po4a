@@ -188,7 +188,7 @@ sub parse {
     print STDERR "The TexInfo module of po4a is not ready for production use, and needs a new maintainer.\n"
       . "Please contact the po4a team if you want to help: send us patches, not bug reports.\n"
       . "(use -o no-warn to remove this message)\n"
-      if $self->{options}{'no-warn'};
+      unless $self->{options}{'no-warn'};
   LINE:
     undef $self->{type};
     ( $line, $ref ) = $self->shiftline();
