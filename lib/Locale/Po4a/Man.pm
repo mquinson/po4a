@@ -1031,7 +1031,8 @@ sub pre_trans {
                    (?![ \t]*[.'])/$1$2/sgx;    # not followed by a command (.')
     }
     die wrap_ref_mod( $ref, "po4a::man",
-        dgettext( "po4a", "Escape sequence \\c encountered. This is not completely handled yet. Faulty input: $str" ) )
+        dgettext( "po4a", "Escape sequence \\c encountered. This is not completely handled yet. Faulty input: %s" ),
+        $str )
       if ( $str =~ /\\c/ );
 
     $str =~ s/>/E<gt>/sg;
