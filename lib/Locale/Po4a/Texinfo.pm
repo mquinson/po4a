@@ -55,7 +55,7 @@ These are this module's particular options:
 
 Do not warn about the current state of this module.
 
-=cut
+=back
 
 =head1 SEE ALSO
 

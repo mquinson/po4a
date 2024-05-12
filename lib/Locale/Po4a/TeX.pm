@@ -124,6 +124,12 @@ our $verbatim_environments = "verbatim";
 our %separated_command     = ();
 our %separated_environment = ();
 
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over 4
+
 =item B<debug>
 
 Activate debugging for some internal mechanisms of this module.
