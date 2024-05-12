@@ -54,12 +54,6 @@ See the section B<WRITING DERIVATIVE MODULES> below, for the process description
 This module can also be customized by lines starting with "% po4a:" in the
 TeX file. This process is described in the B<INLINE CUSTOMIZATION> section.
 
-=head1 OPTIONS ACCEPTED BY THIS MODULE
-
-These are this module's particular options:
-
-=over 4
-
 =cut
 
 package Locale::Po4a::TeX;
@@ -1647,6 +1641,7 @@ sub initialize {
     $self->{options}{'verbatim'}        = '';
     $self->{options}{'debug'}           = '';
     $self->{options}{'verbose'}         = '';
+    $self->{options}{'no-warn'}         = 0;    # TexInfo option to not warn about the state of the module
 
     %debug = ();
 

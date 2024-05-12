@@ -42,8 +42,20 @@ Only the comments starting with 'TRANSLATORS' are added to the PO files to guide
 
 =head1 STATUS OF THIS MODULE
 
-This module is still beta.
-Please send feedback and feature requests.
+This module is still beta and not ready for production use.
+Please send patches to contribute, not bug reports as we don't know how to deal with them.
+
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over 4
+
+=item no-warn
+
+Do not warn about the current state of this module.
+
+=cut
 
 =head1 SEE ALSO
 
@@ -173,6 +185,10 @@ sub parse {
     my $t         = "";
     $docheader_pushed = 0;
 
+    print STDERR "The TexInfo module of po4a is not ready for production use, and needs a new maintainer.\n"
+      . "Please contact the po4a team if you want to help: send us patches, not bug reports.\n"
+      . "(use -o no-warn to remove this message)\n"
+      if $self->{options}{'no-warn'};
   LINE:
     undef $self->{type};
     ( $line, $ref ) = $self->shiftline();
@@ -350,6 +366,7 @@ sub translate_buffer_menuentry {
         if ($description) {
             ( $t, @e ) = $self->translate_buffer( $description, $no_wrap, @env );
         }
+
         # Replace newlines with space for proper wrapping
         # See https://github.com/mquinson/po4a/issues/122
         $t =~ s/\n/ /sg;
