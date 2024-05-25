@@ -11,7 +11,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION @ISA @EXPORT);
-$VERSION = "0.72";
+$VERSION = "0.73-alpha";
 @ISA     = qw(DynaLoader);
 @EXPORT  = qw(new process translate
   read write readpo writepo
@@ -403,7 +403,7 @@ sub new {
         $self->{TT}{debug} = $options{'debug'};
     }
     if ( defined $options{'wrapcol'} ) {
-        if ( $options{'wrapcol'} < 0) {
+        if ( $options{'wrapcol'} < 0 ) {
             $self->{TT}{wrapcol} = 'Inf';
         } else {
             $self->{TT}{wrapcol} = $options{'wrapcol'};
@@ -995,7 +995,7 @@ sub translate {
     # }
 
     if ( !defined $options{'wrapcol'} ) {
-        $options{'wrapcol'} = $self->{TT}{wrapcol}
+        $options{'wrapcol'} = $self->{TT}{wrapcol};
     } elsif ( $options{'wrapcol'} < 0 ) {
         $options{'wrapcol'} = $self->{TT}{wrapcol} + $options{'wrapcol'};
     }
