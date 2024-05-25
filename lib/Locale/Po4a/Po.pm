@@ -541,6 +541,9 @@ sub write {
           or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot write to %s: %s" ), $filename, $! );
     }
 
+    # Some old perl versions qwak when the encoding is only set to utf. We need to first reset it to raw before setting utf8 again. Not sure why it's so.
+    binmode( $fh, ':raw' );
+    binmode( $fh, ':utf8' );
     print $fh "" . format_comment( $self->{header_comment}, "" )
       if length( $self->{header_comment} );
 
@@ -1537,7 +1540,6 @@ sub canonize {
     return $text;
 }
 
-
 # Wraps the string. We don't use Text::Wrap since it mangles whitespace at the
 # end of the split line.
 #
@@ -1549,7 +1551,7 @@ sub canonize {
 #  - The extra length allowed for the first line. Default: -10 (which means it
 #    will be wrapped 10 characters shorter).
 sub wrap {
-    my $text        = shift;
+    my $text = shift;
     return "0" if ( $text eq '0' );
     my $col         = shift || 76;
     my $first_shift = shift || -10;
