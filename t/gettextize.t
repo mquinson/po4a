@@ -23,13 +23,13 @@ $PODIFF .= " -I ^#:";
 push @tests,
   {
     'run' =>
-      "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_ok.md -l ../gettextize/TEST_OK.md -p ./generated.po 2> ./err",
+      "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_ok.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
     'tests' => [ "diff $PODIFF -u gettextize/test_ok.po tmp/generated.po", "diff -u gettextize/test_ok.err tmp/err" ],
     'doc'   => "Gettextize a simple file.",
   },
   {
     'run' =>
-      "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_dups.md -l ../gettextize/TEST_OK.md -p ./generated.po 2> ./err",
+      "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_dups.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
     'tests' =>
       [ "diff $PODIFF -u gettextize/test_dups.po tmp/generated.po", "diff -u gettextize/test_dups.err tmp/err" ],
     'doc' => "Gettextize a file with dupplicate entries.",
