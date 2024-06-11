@@ -440,8 +440,8 @@ function when you're done with packing input files into the document.
 
 sub read() {
     my $self     = shift;
-    my $filename = shift or confess "Cannot write to a file without filename";
-    my $refname  = shift or confess "Cannot write to a file without refname";
+    my $filename = shift or confess "Cannot read from a file without filename";
+    my $refname  = shift or confess "Cannot read from a file without refname";
     my $charset  = shift || 'UTF-8';
     my $linenum  = 0;
 
