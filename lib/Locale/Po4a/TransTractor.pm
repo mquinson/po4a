@@ -477,8 +477,14 @@ sub read() {
     my $error = $@;
     if ( length($error) ) {
         chomp $error;
-        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
-            $filename, $charset, $error );
+        die wrap_msg(
+            dgettext(
+                "po4a",
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+            ),
+            $filename,
+            $charset, $error, $charset
+        );
     }
 
     # Croak if we need to
@@ -548,11 +554,23 @@ sub write {
             binmode STDERR, ':encoding(UTF-8)';
             my $char = chr( hex($1) );
             die wrap_msg(
-                dgettext( "po4a", "Malformed encoding while writing char '%s' to file %s with charset %s: %s" ),
-                $char, $filename, $charset, $error );
+                dgettext(
+                    "po4a",
+                    "Malformed encoding while writing char '%s' to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --localized-charset or other similar flags."
+                ),
+                $char,
+                $filename,
+                $charset, $error, $charset
+            );
         } else {
-            die wrap_msg( dgettext( "po4a", "Malformed encoding while writing to file %s with charset %s: %s" ),
-                $filename, $charset, $error );
+            die wrap_msg(
+                dgettext(
+                    "po4a",
+                    "Malformed encoding while writing to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --localized-charset or other similar flags."
+                ),
+                $filename,
+                $charset, $error, $charset
+            );
         }
     };
 
@@ -651,8 +669,14 @@ sub addendum_parse {
     } or do {
         my $error = $@ || 'Unknown failure';
         chomp $error;
-        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
-            $filename, $charset, $error );
+        die wrap_msg(
+            dgettext(
+                "po4a",
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+            ),
+            $filename,
+            $charset, $error, $charset
+        );
     };
 
     unless ( $header =~ s/PO4A-HEADER://i ) {
@@ -723,8 +747,14 @@ sub addendum_parse {
     my $error = $@;
     if ( length($error) ) {
         chomp $error;
-        die wrap_msg( dgettext( "po4a", "Malformed encoding while reading from file %s with charset %s: %s" ),
-            $filename, $charset, $error );
+        die wrap_msg(
+            dgettext(
+                "po4a",
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+            ),
+            $filename,
+            $charset, $error, $charset
+        );
     }
     close INS;
 
