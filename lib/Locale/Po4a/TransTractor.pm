@@ -421,11 +421,14 @@ sub new {
 
 =over 4
 
-=item read($$)
+=item read($$$)
 
-Add another input document data at the end of the existing array
-C<< @{$self->{TT}{doc_in}} >>. The argument is the filename to read. If a second
-argument is provided, it is the filename to use in the references.
+Add another input document data at the end of the existing array C<< @{$self->{TT}{doc_in}} >>.
+
+This function takes two mandatory arguments and an optional one.
+ * The filename to read on disk;
+ * The name to use as filename when building the reference in the PO file;
+ * The charset to use to read that file (UTF-8 by default)
 
 This array C<< @{$self->{TT}{doc_in}} >> holds this input document data as an
 array of strings with alternating meanings.
