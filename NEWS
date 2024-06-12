@@ -13,6 +13,23 @@ General:
    (GitHub's #495) [Ineiev].
  * Improve various error messages to help users debugging encoding issues.
 
+   The thing is that po4a v0.70 and later is much more picky about encodings.
+   Before, it was relying on the default Perl behavior to do "the right thing",
+   happily parsing latin-1 or UTF-8 files and converting to the Perl internal
+   string representation. The drawback was that this setup forced po4a to
+   convert back and forth internally after reading and before writing.
+
+   The new new code uses PerlIO to handle all encoding issues, removing all manual
+   conversions in the code of po4a. The price for this is that users must specify
+   the used encoding more precisely (I sometimes suspect that previously, user
+   settings were only used as an hint of the actual conversion, not a ground truth).
+   So the users now see the mess of Perl encodings, where utf8 and UTF-8 are actually
+   not the same encoding: https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8
+
+   This new behavior broke the build of several Debian packages, but in most cases,
+   it was just the result of po4a being less forgiving about user configuration.
+   (Debian's #1072643 and #1073038)
+
 Documentation:
  * Fix the doc of TransTractor::read() now that the refname is mandatory
    (GitHub's #504, also involved in Debian's #1072760)
