@@ -27,7 +27,7 @@ use vars qw(@ISA);
 
 use Carp qw(croak confess);
 
-use Locale::Po4a::Common qw(dgettext);
+use Locale::Po4a::Common;
 
 sub initialize { }
 
