@@ -900,7 +900,9 @@ sub tag_trans_xmlhead {
 
     if ( defined $in_charset ) {
         if ( length( $input_charset // '' ) > 0 && uc($in_charset) ne uc($input_charset) ) {
-            if ($in_charset eq 'UTF-8' || lc($in_charset) eq 'utf8') && ($input_charset eq 'UTF-8' || lc($input_charset) eq 'utf8') {
+            if (   ( $in_charset eq 'UTF-8' || lc($in_charset) eq 'utf8' )
+                && ( $input_charset eq 'UTF-8' || lc($input_charset) eq 'utf8' ) )
+            {
                 croak wrap_mod(
                     "po4a::pod",
                     dgettext(
