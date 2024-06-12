@@ -86,16 +86,35 @@ sub command {
         $charset =~ s/^\s*(.*?)\s*$/$1/s;
 
         my $master_charset = $self->get_in_charset;
-        croak wrap_mod(
-            "po4a::pod",
-            dgettext(
-                "po4a",
-                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
-            ),
-            $self->{DOCPOD}{refname},
-            $charset,
-            $master_charset,
-        ) if ( length( $master_charset // '' ) > 0 && uc($charset) ne uc($master_charset) );
+        if ( length( $master_charset // '' ) > 0 && uc($charset) ne uc($master_charset) ) {
+            if (   ( $charset eq 'UTF-8' || lc($charset) eq 'utf8' )
+                && ( $master_charset eq 'UTF-8' || lc($master_charset) eq 'utf8' ) )
+            {
+                croak wrap_mod(
+                    "po4a::pod",
+                    dgettext(
+                        "po4a",
+                        "The file %s declares %s as encoding, but you provided %s as master charset. ".
+                        "Please change either setting because they really are different encoding in Perl ".
+                        "(see https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8). You probably mean UTF-8."
+                    ),
+                    $self->{DOCPOD}{refname},
+                    $charset,
+                    $master_charset,
+                );
+            } else {
+                croak wrap_mod(
+                    "po4a::pod",
+                    dgettext(
+                        "po4a",
+                        "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
+                    ),
+                    $self->{DOCPOD}{refname},
+                    $charset,
+                    $master_charset,
+                );
+            }
+        }
 
         # The =encoding line will be added by docheader
     } else {

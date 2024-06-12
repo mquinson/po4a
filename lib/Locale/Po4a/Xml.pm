@@ -899,16 +899,31 @@ sub tag_trans_xmlhead {
     my $out_charset = $self->get_out_charset;
 
     if ( defined $in_charset ) {
-        croak wrap_mod(
-            "po4a::xml",
-            dgettext(
-                "po4a",
-                "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
-            ),
-            $self->{'current_file'},
-            $in_charset,
-            $input_charset
-        ) if ( length( $input_charset // '' ) > 0 && uc($input_charset) ne uc($in_charset) );
+        if ( length( $input_charset // '' ) > 0 && uc($in_charset) ne uc($input_charset) ) {
+            if ($in_charset eq 'UTF-8' || lc($in_charset) eq 'utf8') && ($input_charset eq 'UTF-8' || lc($input_charset) eq 'utf8') {
+                croak wrap_mod(
+                    "po4a::pod",
+                    dgettext(
+                        "po4a",
+                        "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting because they really are different encoding in Perl. See https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8"
+                    ),
+                    $self->{DOCPOD}{refname},
+                    $in_charset,
+                    $input_charset,
+                );
+            } else {
+                croak wrap_mod(
+                    "po4a::pod",
+                    dgettext(
+                        "po4a",
+                        "The file %s declares %s as encoding, but you provided %s as master charset. Please change either setting."
+                    ),
+                    $self->{DOCPOD}{refname},
+                    $in_charset,
+                    $input_charset,
+                );
+            }
+        }
 
         $tag =~ s/$in_charset/$out_charset/;
     } else {
