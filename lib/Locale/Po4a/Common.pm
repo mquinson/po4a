@@ -224,7 +224,9 @@ BEGIN {
     if ( eval { require Locale::gettext } ) {
         import Locale::gettext;
         require POSIX;
-        POSIX::setlocale( &POSIX::LC_MESSAGES, '' );
+
+        # This cannot be done on Windows
+        POSIX::setlocale( &POSIX::LC_MESSAGES, '' ) unless $^O eq 'MSWin32';
     } else {
         eval '
            sub bindtextdomain($$) { }
