@@ -19,16 +19,22 @@ General:
    string representation. The drawback was that this setup forced po4a to
    convert back and forth internally after reading and before writing.
 
-   The new new code uses PerlIO to handle all encoding issues, removing all manual
-   conversions in the code of po4a. The price for this is that users must specify
-   the used encoding more precisely (I sometimes suspect that previously, user
-   settings were only used as an hint of the actual conversion, not a ground truth).
-   So the users now see the mess of Perl encodings, where utf8 and UTF-8 are actually
-   not the same encoding: https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8
+   The v0.70 code uses PerlIO to handle all encoding issues automatically,
+   removing all manual conversions in the code of po4a. The price for this is
+   that users must specify the used encoding more precisely (I sometimes
+   suspect that previously, user settings were only used as an hint of the
+   actual conversion, not a ground truth). So the users are now more exposed
+   to the mess of Perl encodings, where utf8 and UTF-8 are actually different.
+   https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8
 
-   This new behavior broke the build of several Debian packages, but in most cases,
-   it was just the result of po4a being less forgiving about user configuration.
-   (Debian's #1072643 and #1073038)
+   This new behavior broke the build of several Debian packages. In some cases,
+   it was just the result of po4a being less forgiving about user configuration
+   (eg, Debian's #1072643). In Debian's #1073038, it was that po4a made a
+   difference between utf8 and UTF-8 in the encoding specification embedded in
+   a POD file. There is no such difference in this context, only in Perl
+   internals: utf8 is lax parsing while UTF-8 is picky parsing, but both lead
+   to the same result if the file is correctly encoded following the UTF-8
+   standard. po4a now takes UTF-8 (picky parsing) in both cases for POD files.
 
 Documentation:
  * Fix the doc of TransTractor::read() now that the refname is mandatory
