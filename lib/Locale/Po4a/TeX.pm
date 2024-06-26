@@ -971,7 +971,7 @@ sub read_file {
         while (
             $textline =~ /^((?:[^%]|(?<!\\)(?:\\\\)*\\%)*)
                               \\(include|input)
-                              \{([^\{]*)\}(.*)$/x
+                              \{([^\{\}]*)\}(.*)$/x
           )
         {
             my ( $begin, $newfilename, $end ) = ( $1, $3, $4 );
