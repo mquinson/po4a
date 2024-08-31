@@ -78,6 +78,8 @@ sub list {
           . "\n  - "
           . gettext("man: Good old manual page format.")
           . "\n  - "
+          . gettext("org: document format for Org mode.")
+          . "\n  - "
           . gettext("pod: Perl Online Documentation format.")
           . "\n  - "
           . gettext("rubydoc: Ruby Documentation (RD) format.")
@@ -149,6 +151,7 @@ L<Locale::Po4a::Ini(3pm)>,
 L<Locale::Po4a::KernelHelp(3pm)>,
 L<Locale::Po4a::LaTeX(3pm)>,
 L<Locale::Po4a::Man(3pm)>,
+L<Locale::Po4a::Org(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::RubyDoc(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
