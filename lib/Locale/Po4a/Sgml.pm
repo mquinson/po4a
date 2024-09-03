@@ -483,7 +483,7 @@ sub parse_file {
     }
 
     # Add the definition of new tags that will be used for the
-    # conditionnal inclusions
+    # conditional inclusions
     if ( $origfile =~ /^.*<!DOCTYPE[^[>]*\[/is ) {
         $origfile =~
           s/^(.*<!DOCTYPE[^[>]*\[)/$1 <!ELEMENT PO4ABEG - o empty> <!ATTLIST PO4ABEG name CDATA #REQUIRED> <!ELEMENT PO4AEND - o empty>/is;
@@ -1089,7 +1089,7 @@ sub parse_file {
             if ( $verbatim{ $event->data->name() } ) {
                 $verb++;
 
-                # Keep a reference to the line that openned the verbatim
+                # Keep a reference to the line that opened the verbatim
                 # section. This is needed to check if its data starts on
                 # the same line.
                 $verb_last_ref = $ref;
