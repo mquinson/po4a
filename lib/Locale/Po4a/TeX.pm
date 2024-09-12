@@ -995,7 +995,7 @@ sub read_file {
 
                 # search the file
                 open( KPSEA, "kpsewhich " . $newfilename . " |" );
-                my $newfilepath = <KPSEA>;
+                chomp( my $newfilepath = <KPSEA> // '' );
 
                 if ( $newfilename ne "" and ( $newfilepath // '' ) eq '' ) {
                     die wrap_mod(
