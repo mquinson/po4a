@@ -10,13 +10,14 @@
 # Artem <KovalevArtem.ru@gmail.com>, 2020.
 # Azamat H. Hackimov <azamat.hackimov@gmail.com>, 2021.
 # Виталий Наумов <hbvit7zoom@gmail.com>, 2023.
+# Alex Karabanov <lksj@yandex.ru>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.52-pre\n"
-"Report-Msgid-Bugs-To: po4a@packages.debian.org\n"
+"Report-Msgid-Bugs-To: martin.quinson@debian.org\n"
 "POT-Creation-Date: 2024-06-17 22:06+0200\n"
-"PO-Revision-Date: 2024-02-28 21:43+0000\n"
-"Last-Translator: Golubev Alexander <fatzer2@gmail.com>\n"
+"PO-Revision-Date: 2024-09-10 17:44+0000\n"
+"Last-Translator: Alex Karabanov <lksj@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/po4a/po4a/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: ../../lib/Locale/Po4a/AsciiDoc.pm:232 ../../lib/Locale/Po4a/Man.pm:496
 #: ../../lib/Locale/Po4a/Po.pm:234 ../../lib/Locale/Po4a/RubyDoc.pm:76
@@ -321,14 +322,13 @@ msgstr ""
 "строке."
 
 #: ../../lib/Locale/Po4a/Man.pm:1034
-#, fuzzy, perl-format
-#| msgid "Escape sequence \\c encountered. This is not completely handled yet."
+#, perl-format
 msgid ""
 "Escape sequence \\c encountered. This is not completely handled yet. Faulty "
 "input: %s"
 msgstr ""
 "Обнаружена управляющая последовательность \\c. На данный момент она пока "
-"поддерживается лишь частично."
+"поддерживается лишь частично. Ошибка ввода: %s"
 
 #: ../../lib/Locale/Po4a/Man.pm:1216
 #, perl-format
@@ -924,6 +924,10 @@ msgid ""
 "If %s is not the expected charset, you need to configure the right one with "
 "with --master-charset or other similar flags."
 msgstr ""
+"Неправильное кодирование файла при чтении из %s, используя набор символов %s:"
+" %s\n"
+"Если набор символов %s не ожидается, вам нужно установить правильный с "
+"помощью --master-charset или других подобных флагов."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:559
 #, perl-format
@@ -932,6 +936,10 @@ msgid ""
 "If %s is not the expected charset, you need to configure the right one with "
 "with --localized-charset or other similar flags."
 msgstr ""
+"Неправильное кодирование при записи символа '%s' в файл %s с набором "
+"символов %s: %s\n"
+"Если набор символов %s не ожидается, вам нужно установить правильный с "
+"помощью --localized-charset или других подобных флагов."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:569
 #, perl-format
@@ -940,6 +948,9 @@ msgid ""
 "If %s is not the expected charset, you need to configure the right one with "
 "with --localized-charset or other similar flags."
 msgstr ""
+"Неправильное кодирование при записи в файл %s с набором символов %s: %s\n"
+"Если набор символов %s не ожидается, вам нужно установить правильный с "
+"помощью --localized-charset или других подобных флагов."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:578
 #, perl-format
@@ -988,7 +999,7 @@ msgstr "В заголовке po4a %s не определена позиция."
 #: ../../lib/Locale/Po4a/TransTractor.pm:730
 msgid "No ending boundary given in the po4a header, but mode=after."
 msgstr ""
-"Не указана конечная граница в заголовке po4a при заданном режиме after."
+"Не указана конечная граница в заголовке po4a при заданном режиме mode=after."
 
 #: ../../lib/Locale/Po4a/TransTractor.pm:734
 msgid "No position needed when mode=eof."
@@ -1073,17 +1084,16 @@ msgid "Internal error: unknown type identifier '%s'."
 msgstr "Внутренняя ошибка: неизвестный тип идентификатора «%s»."
 
 #: ../../lib/Locale/Po4a/Xml.pm:910
-#, fuzzy, perl-format
-#| msgid ""
-#| "The file %s declares %s as encoding, but you provided %s as master "
-#| "charset. Please change either setting."
+#, perl-format
 msgid ""
 "The file %s declares %s as encoding, but you provided %s as master charset. "
 "Please change either setting because they really are different encoding in "
 "Perl. See https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8"
 msgstr ""
-"Данный файл (%s) заявляет кодировку %s, однако в качестве кодировки мастер-"
-"файла указана %s . Приведите эти параметры в соответствие."
+"Файл %s заявляет кодировку %s, однако в качестве кодировки мастер-файла "
+"указана %s . Приведите эти параметры в соответствие, поскольку они "
+"действительно представляют разные кодировки в Perl. См. https://perldoc.perl."
+"org/Encode#UTF-8-vs.-utf8-vs.-UTF8"
 
 #: ../../lib/Locale/Po4a/Xml.pm:982
 #, perl-format
@@ -1476,18 +1486,19 @@ msgstr ""
 #: ../../po4a:1546
 #, perl-format
 msgid "Document %s kept for update (--translate-only)."
-msgstr ""
+msgstr "Документ %s остаётся обновляемым (--translate-only)."
 
 #: ../../po4a:1549
-#, fuzzy, perl-format
-#| msgid "NOT updating %s as requested (--no-update)."
+#, perl-format
 msgid "Skip the update of %s as requested (--translate-only)."
-msgstr "«%s» НЕ будет обновлён, согластно заданным параметрам (--no-update)."
+msgstr ""
+"Пропущено обновление %s, согласно заданным параметрам (--translate-only)."
 
 #: ../../po4a:1569
 #, perl-format
 msgid "Languages skipped because of --translate-only: %s; kept languages: %s."
 msgstr ""
+"Языки, пропущенные из-за опции --translate-only: %s; сохраненные языки: %s."
 
 #: ../../po4a:1606
 #, perl-format
@@ -1520,15 +1531,15 @@ msgid " (%d entries)"
 msgstr " (%d записей)"
 
 #: ../../po4a:1689
-#, fuzzy, perl-format
-#| msgid "NOT updating %s as requested (--no-update)."
+#, perl-format
 msgid "NOT updating the POT file %s as requested (--no-update)."
-msgstr "«%s» НЕ будет обновлён, согластно заданным параметрам (--no-update)."
+msgstr ""
+"POT-файл %s НЕ будет обновлён, согласно заданным параметрам (--no-update)."
 
 #: ../../po4a:1692
 #, perl-format
 msgid "NOT updating the POT file %s because of --translate-only."
-msgstr ""
+msgstr "POT-файл %s не обновляется, поскольку указана опция --translate-only."
 
 #: ../../po4a:1695
 #, perl-format
@@ -1589,6 +1600,8 @@ msgstr "PO-файл «%s» для языка «%s» не найден — про
 #, perl-format
 msgid "Skip master file %s in language %s because of --translate-only."
 msgstr ""
+"Пропущен мастер-файл %s на языке %s, поскольку указана опция --translate-"
+"only."
 
 #: ../../po4a:1993
 #, perl-format
@@ -1728,7 +1741,7 @@ msgstr ""
 #: ../../po4a-normalize:184
 msgid ""
 "Both B<--blank> and B<--capitalize> can't be specified at the same time."
-msgstr ""
+msgstr "B<--blank> и B<--capitalize> не могут быть указаны одновременно."
 
 #: ../../po4a-normalize:197
 msgid ""
