@@ -20,6 +20,7 @@ module for the following formats:
   - latex: LaTeX format.
   - bibtex: bibtex format.
   - man: Good old manual page format (either roff or mdoc).
+  - org: document format for the Org mode.
   - markdown: MD documents (using the txt module).
   - pod: Perl Online Documentation format.
   - rubydoc: RubyDoc (RD) documents.
