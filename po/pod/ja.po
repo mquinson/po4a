@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: po4a\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2024-09-13 09:19+0200\n"
-"PO-Revision-Date: 2024-09-06 17:09+0000\n"
+"PO-Revision-Date: 2024-09-15 05:09+0000\n"
 "Last-Translator: gemmaro <gemmaro.dev@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "ja/>\n"
@@ -3833,42 +3833,30 @@ msgstr "gemtext（極めて実験的な構文解析器）"
 
 #. type: textblock
 #: doc/po4a.7.pod:66
-#, fuzzy
-#| msgid ""
-#| "The native plain text format of the Gemini protocol.  The extension \"."
-#| "gmi\" is commonly used.  Support for this module in po4a is still in its "
-#| "infancy.  If you find anything, please file a bug or feature request."
 msgid ""
 "The native plain text format of the Gemini protocol.  The extension C<.gmi> "
 "is commonly used.  Support for this module in po4a is still in its infancy.  "
 "If you find anything, please file a bug or feature request."
 msgstr ""
-"Geminiプロトコル固有の素のテキスト形式です。拡張子「.gmi」が一般に使われま"
-"す。po4aにおけるこのモジュールの対応はまだ始まったばかりです。何か気付いたこ"
-"とがあれば不具合を報告したり機能の提案をお願いします。"
+"Geminiプロトコル固有の素のテキスト形式です。拡張子 C<.gmi> が一般に使われます"
+"。po4aにおけるこのモジュールの対応はまだ始まったばかりです。何か気付いたこと"
+"があれば不具合を報告したり機能の提案をお願いします。"
 
 #. type: =item
 #: doc/po4a.7.pod:67
-#, fuzzy
-#| msgid "texinfo (very highly experimental parser)"
 msgid "org (very highly experimental parser)"
-msgstr "texinfo（極めて実験的な構文解析器）"
+msgstr "org（極めて実験的な構文解析器）"
 
 #. type: textblock
 #: doc/po4a.7.pod:68
-#, fuzzy
-#| msgid ""
-#| "The native plain text format of the Gemini protocol.  The extension \"."
-#| "gmi\" is commonly used.  Support for this module in po4a is still in its "
-#| "infancy.  If you find anything, please file a bug or feature request."
 msgid ""
 "The document format used by the Org mode.  Support for this module in po4a "
 "is still in its infancy.  If you find anything, please file a bug or feature "
 "request."
 msgstr ""
-"Geminiプロトコル固有の素のテキスト形式です。拡張子「.gmi」が一般に使われま"
-"す。po4aにおけるこのモジュールの対応はまだ始まったばかりです。何か気付いたこ"
-"とがあれば不具合を報告したり機能の提案をお願いします。"
+"Orgモードで使われる文書形式です。po4aにおけるこのモジュールの対応はまだ始まっ"
+"たばかりです。何か気付いたことがあれば不具合を報告したり機能の提案をお願いし"
+"ます。"
 
 #. type: =item
 #: doc/po4a.7.pod:69
@@ -4828,14 +4816,14 @@ msgstr ""
 "その他の構文解析器はもっと複雑ですが、それは入力文書を解析するために外部の構"
 "文解析器に依存しているためです。Xml、HTML、SGML、Podの構文解析器はSAX構文解析"
 "器を土台に構築されています。これらの解析器は「以下の内容の新規題名を見付けま"
-"した」というようなイベントのコールバックを宣言し、C<TransTractor::"
-"translate()>とC<TransTractor::pushline()>を使って入力の内容に沿って出力文書と"
-"出力POTファイルを更新します。Yaml構文解析器はより単純ですが毛色が違います。"
-"YAML::Tiny構文解析器により生成されるデータ構造を直列化するのです。これがpo4a"
-"のYamlモジュールでは参照行の宣言ができないことの理由です。入力ファイルの各文"
-"字列の位置は構文解析器で保持されず、文字列の場所として与えられるのは"
-"「$filename:1」のみなのです。SAXに基づく構文解析は大域変数とその他の仕掛けを"
-"使ってファイル名と参照のための行番号を保存します。"
+"した」というようなイベントのコールバックを宣言し、 "
+"C<TransTractor::translate()> と C<TransTractor::pushline()> を使って入力の内"
+"容に沿って出力文書と出力POTファイルを更新します。Yaml構文解析器はより単純です"
+"が毛色が違います。YAML::Tiny構文解析器により生成されるデータ構造を直列化する"
+"のです。これがpo4aのYamlモジュールでは参照行の宣言ができないことの理由です。"
+"入力ファイルの各文字列の位置は構文解析器で保持されず、文字列の場所として与え"
+"られるのは「$filename:1」のみなのです。SAXに基づく構文解析は大域変数とその他"
+"の仕掛けを使ってファイル名と参照のための行番号を保存します。"
 
 #. type: textblock
 #: doc/po4a.7.pod:143
@@ -4851,16 +4839,16 @@ msgid ""
 "passed to the external parser. The important part is the C<< \"<:"
 "encoding($charset)\" >> mode that is passed to the B<open()> perl function."
 msgstr ""
-"ファイルの符号化方式とBOMの印により引き起こされる問題があります。単純な構文解"
-"析器では C<TransTractor::read()> （入力文書の行を取得するために内部的に使用さ"
-"れます）で対処されるためこの問題を無視できます。しかし外部の構文解析器に依存"
-"するモジュールでは全てのファイルがPerlIOデコード層で適切に読み込まれるように"
-"しなくてはなりません。最も簡単なのは、外部の構文解析器にファイルを自分で開い"
-"てファイルハンドルないし完全な文字列を与えることです。一例についてはC<Pod::"
-"read()>とC<Pod::parse()>を見てください。TransTractorにより読まれた内容は無視"
-"されますが、外部の構文解析器に新しいファイルハンドルが渡されています。重要な"
-"部分は C<< \"<:encoding($charset)\" >> モードで、これがB<open()> perl関数に渡"
-"されます。"
+"ファイルの符号化方式とBOMの印により引き起こされる問題があります。"
+"単純な構文解析器では C<TransTractor::read()> （入力文書の行を取得するために内"
+"部的に使用されます）で対処されるためこの問題を無視できます。しかし外部の構文"
+"解析器に依存するモジュールでは全てのファイルがPerlIOデコード層で適切に読み込"
+"まれるようにしなくてはなりません。最も簡単なのは、外部の構文解析器にファイル"
+"を自分で開いてファイルハンドルないし完全な文字列を与えることです。"
+"一例については C<Pod::read()> と C<Pod::parse()> を見てください。TransTractor"
+"により読まれた内容は無視されますが、外部の構文解析器に新しいファイルハンドル"
+"が渡されています。重要な部分は C<< \"<:encoding($charset)\" >> モードで、"
+"これが B<open()> perl関数に渡されます。"
 
 #. type: =head2
 #: doc/po4a.7.pod:144
@@ -5334,18 +5322,6 @@ msgstr ""
 
 #. type: textblock
 #: doc/po4a.7.pod:196
-#, fuzzy
-#| msgid ""
-#| "The parsers of each formats, in particular to see the options accepted by "
-#| "each of them: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
-#| "L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, L<Locale::Po4a::"
-#| "KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::"
-#| "RubyDoc(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, "
-#| "L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::"
-#| "BibTeX(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
-#| "Halibut(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Pod(3pm)>, "
-#| "L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::"
-#| "Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 msgid ""
 "The parsers of each formats, in particular to see the options accepted by "
 "each of them: L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, "
@@ -5359,15 +5335,18 @@ msgid ""
 "TeX(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 msgstr ""
 "それぞれのフォーマットの構文解析器は次の通り。詳しくはそれぞれの解析器で受け"
-"付けるオプションを見てください：L<Locale::Po4a::AsciiDoc(3pm)> L<Locale::"
-"Po4a::Dia(3pm)>, L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
-"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::"
-"RubyDoc(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, "
-"L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::"
-"BibTeX(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::Halibut(3pm)>, "
-"L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::"
-"Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::"
-"Po4a::Xml(3pm)>。"
+"付けるオプションを見てください：L<Locale::Po4a::AsciiDoc(3pm)> "
+"L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Gemtext(3pm)>, "
+"L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
+"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>, "
+"L<Locale::Po4a::RubyDoc(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, "
+"L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::Xhtml(3pm)>, "
+"L<Locale::Po4a::Yaml(3pm)>, L<Locale::Po4a::BibTeX(3pm)>, "
+"L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::Halibut(3pm)>, "
+"L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Org(3pm)>, "
+"L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::Sgml(3pm)>, "
+"L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::Wml(3pm)>, "
+"L<Locale::Po4a::Xml(3pm)>。"
 
 #. type: textblock
 #: doc/po4a.7.pod:197
@@ -5955,16 +5934,6 @@ msgstr "モジュールについては以下を参照してください:"
 
 #. type: textblock
 #: lib/Locale/Po4a/Chooser.pm:11
-#, fuzzy
-#| msgid ""
-#| "L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
-#| "Guide(3pm)>, L<Locale::Po4a::Halibut(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
-#| "L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::"
-#| "Po4a::Man(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::"
-#| "RubyDoc(3pm)>, L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, "
-#| "L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, L<Locale::"
-#| "Po4a::Wml(3pm)>.  L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Xml(3pm)>, "
-#| "L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Yaml(3pm)>."
 msgid ""
 "L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
 "Gemtext(3pm)>, L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Halibut(3pm)>, "
@@ -5976,14 +5945,17 @@ msgid ""
 "L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::"
 "Yaml(3pm)>."
 msgstr ""
-"L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
-"Guide(3pm)>, L<Locale::Po4a::Halibut(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
-"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::"
-"Po4a::Man(3pm)>, L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::RubyDoc(3pm)>, "
-"L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::"
-"Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, L<Locale::Po4a::Wml(3pm)>.  "
-"L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::"
-"Wml(3pm)>, L<Locale::Po4a::Yaml(3pm)>."
+"L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, "
+"L<Locale::Po4a::Gemtext(3pm)>, L<Locale::Po4a::Guide(3pm)>, "
+"L<Locale::Po4a::Halibut(3pm)>, L<Locale::Po4a::Ini(3pm)>, "
+"L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, "
+"L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::Org(3pm)>, "
+"L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::RubyDoc(3pm)>, "
+"L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::TeX(3pm)>, "
+"L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::Text(3pm)>, "
+"L<Locale::Po4a::Wml(3pm)>.  L<Locale::Po4a::Xhtml(3pm)>, "
+"L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::Wml(3pm)>, "
+"L<Locale::Po4a::Yaml(3pm)>."
 
 #. type: verbatim
 #: lib/Locale/Po4a/Chooser.pm:13 lib/Locale/Po4a/KernelHelp.pm:10
@@ -6393,33 +6365,24 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/Gemtext.pm:2
-#, fuzzy
-#| msgid "Locale::Po4a::Text - convert text documents from/to PO files"
 msgid "Locale::Po4a::Gemtext - convert Gettext documents from/to PO files."
-msgstr "Locale::Po4a::Text - PO ファイルとテキストドキュメントの変換"
+msgstr "Locale::Po4a::Gemtext - PO ファイルとGemtext文書の変換。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Gemtext.pm:5
-#, fuzzy
-#| msgid ""
-#| "Locale::Po4a::Text is a module to help the translation of text documents "
-#| "into other [human] languages."
 msgid ""
 "Locale::Po4a::Gemtext is a module to help the translation of Gemtext "
 "documents into other [human] languages."
-msgstr ""
-"Locale::Po4a::Text は、テキストドキュメントをほかの [自然] 言語へ翻訳するのを"
-"助けるモジュールです。"
+msgstr "Locale::Po4a::Gemtext は、Gemtext文書をほかの [自然] "
+"言語へ翻訳するのを助けるモジュールです。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Gemtext.pm:7
-#, fuzzy
-#| msgid "Tested successfully on simple text files and NEWS.Debian files."
 msgid ""
 "Tested successfully on simple Gemtext files, such as the official Gemtext "
 "documentation."
-msgstr ""
-"シンプルなテキストファイルと NEWS.Debian ファイルでのテストが成功しています。"
+msgstr "シンプルなGemtextファイルで正常な動作のテスト済みです。例えば公式のGemtext文"
+"書です。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Gemtext.pm:9 lib/Locale/Po4a/Ini.pm:9
@@ -6434,15 +6397,18 @@ msgid ""
 " gemmaro <gemmaro.dev@gmail.com>\n"
 "\n"
 msgstr ""
+" gemmaro <gemmaro.dev@gmail.com>\n"
+"\n"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Gemtext.pm:13
-#, fuzzy, no-wrap
-#| msgid "Copyright © 2004 Jordi Vilalta <jvprat@gmail.com>"
+#, no-wrap
 msgid ""
 " Copyright © 2024 gemmaro <gemmaro.dev@gmail.com>.\n"
 "\n"
-msgstr "Copyright © 2004 Jordi Vilalta <jvprat@gmail.com>"
+msgstr ""
+" Copyright © 2024 gemmaro <gemmaro.dev@gmail.com>.\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Guide.pm:2
@@ -7556,10 +7522,8 @@ msgstr "Copyright © 2002-2008 SPI, Inc."
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:2
-#, fuzzy
-#| msgid "Locale::Po4a::Sgml - convert SGML documents from/to PO files"
 msgid "Locale::Po4a::Org - convert Org documents from/to PO files."
-msgstr "Locale::Po4a::Sgml - PO ファイルと SGML ドキュメントの変換"
+msgstr "Locale::Po4a::Org - PO ファイルとOrg文書の変換。"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Org.pm:4
@@ -7578,61 +7542,57 @@ msgid ""
 "\t\t    ORDERED'\"\n"
 "\n"
 msgstr ""
+" [type:org] /path/to/master.org\t\t\t\t\\\n"
+"\t    $lang:/path/to/translation.$lang.org\t\\\n"
+"\t    opt:\"\t\t\t\t\t\\\n"
+"\t\t--option skip_keywords='\t\t\\\n"
+"\t\t    include\t\t\t\t\\\n"
+"\t\t    export_file_name\t\t\t\\\n"
+"\t\t    link'\t\t\t\t\\\n"
+"\t\t--option skip_properties='\t\t\\\n"
+"\t\t    copying\t\t\t\t\\\n"
+"\t\t    NOBLOCKING\t\t\t\t\\\n"
+"\t\t    ORDERED'\"\n"
+"\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:7
-#, fuzzy
-#| msgid ""
-#| "Locale::Po4a::Sgml is a module to help the translation of documentation "
-#| "in the SGML format into other [human] languages."
 msgid ""
 "C<Locale::Po4a::Org> is a module to help the translation of documentation in "
 "the Org format, used by the L<Org Mode|https://orgmode.org/>."
 msgstr ""
-"Locale::Po4a::Sgml は、SGML フォーマットのドキュメントをほかの [自然] 言語へ"
-"翻訳するのを助けるモジュールです。"
+"C<Locale::Po4a::Org> はOrg形式で書かれた文書の翻訳を補助するモジュールです。"
+"この形式は L<Orgモード|https://orgmode.org/> で使われています。"
 
 #. type: =head1
 #: lib/Locale/Po4a/Org.pm:8
-#, fuzzy
-#| msgid "CONFIGURATION FILE"
 msgid "CONFIGURATION"
-msgstr "設定ファイル"
+msgstr "設定"
 
 #. type: =item
 #: lib/Locale/Po4a/Org.pm:9
-#, fuzzy
-#| msgid "B<skip_array>"
 msgid "B<skip_keywords>"
-msgstr "B<skip_array>"
+msgstr "B<skip_keywords>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:10
-#, fuzzy
-#| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of keywords which won't be translated."
-msgstr "翻訳するタグの空白区切りリストです。"
+msgstr "翻訳しないキーワードの空白区切りのリストです。"
 
 #. type: =item
 #: lib/Locale/Po4a/Org.pm:11
-#, fuzzy
-#| msgid "B<skip_array>"
 msgid "B<skip_properties>"
-msgstr "B<skip_array>"
+msgstr "B<skip_properties>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:12
-#, fuzzy
-#| msgid "Space-separated list of tags you want to translate."
 msgid "Space-separated list of properties which won't be translated."
-msgstr "翻訳するタグの空白区切りリストです。"
+msgstr "翻訳しないプロパティの空白区切りのリストです。"
 
 #. type: =item
 #: lib/Locale/Po4a/Org.pm:13
-#, fuzzy
-#| msgid "B<skip_array>"
 msgid "B<skip_heading>"
-msgstr "B<skip_array>"
+msgstr "B<skip_heading>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:14
@@ -7641,6 +7601,9 @@ msgid ""
 "is converted to Texinfo format, the translation of headings can cause node "
 "names to become bizarre.  This option prevents that."
 msgstr ""
+"この値が真値であれば、見出しを翻訳しません。翻訳がTexinfo形式に変換される場合"
+"、見出しの翻訳により、ノード名が奇妙なことになることがあります。このオプショ"
+"ンはそうした問題を防ぎます。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:16
@@ -7651,32 +7614,29 @@ msgid ""
 "orgmode.org/worg/org-syntax.html>; footnotes and nested plain lists cannot "
 "currently be parsed, for example."
 msgstr ""
+"このモジュールは開発の初期の段階にあります。単純なOrgファイルでは正常な動作が"
+"確認されています。例えば L<Orgモードの小さな手引き|https://orgmode.org/guide/"
+"> です。しかし、完全な L<Orgの構文|https://orgmode.org/worg/org-syntax.html> "
+"は対応していません。例えば、脚註や入れ子の素のリストは現時点で構文解析できま"
+"せん。"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Org.pm:22
-#, fuzzy, no-wrap
-#| msgid ""
-#| " Copyright © 2005 SPI, Inc.\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " Copyright © 2024 gemmaro.\n"
 "\n"
 msgstr ""
-" Copyright © 2005 SPI, Inc.\n"
+" Copyright © 2024 gemmaro.\n"
 "\n"
 
 #. type: textblock
 #: lib/Locale/Po4a/Org.pm:23
-#, fuzzy
-#| msgid ""
-#| "This program is free software; you may redistribute it and/or modify it "
-#| "under the terms of GPL v2.0 or later (see the COPYING file)."
 msgid ""
 "This program is free software; you may redistribute it and/or modify it "
 "under the terms of GPL v2.0 or later (see the F<COPYING> file)."
-msgstr ""
-"本プログラムは自由ソフトウェアです。GPL v2.0以降の条項に基づき再頒布と変更を"
-"行えます（COPYINGファイルを参照）。"
+msgstr "本プログラムは自由ソフトウェアです。GPL v2."
+"0以降の条項に基づき再頒布と変更を行えます（F<COPYING> ファイルを参照）。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:2
