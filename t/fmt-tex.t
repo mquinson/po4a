@@ -40,6 +40,15 @@ push @tests,
     'potfile' => "fmt/tex/input-in-basic.pot",
     'pofile'  => "fmt/tex/input-in-basic.po",
     'trans'   => "fmt/tex/input-in-basic.trans"
+  },
+  {
+    'doc'     => 'input command surrounded curly braces',
+    'format'  => 'latex',
+    'input'   => "fmt/tex/input-merge-basic-surrounded-curly-braces.tex",
+    'norm'    => "fmt/tex/input-merge-basic-surrounded-curly-braces.norm",
+    'potfile' => "fmt/tex/input-merge-basic-surrounded-curly-braces.pot",
+    'pofile'  => "fmt/tex/input-merge-basic-surrounded-curly-braces.po",
+    'trans'   => "fmt/tex/input-merge-basic-surrounded-curly-braces.trans"
   };
 
 run_all_tests(@tests);
