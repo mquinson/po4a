@@ -49,6 +49,18 @@ push @tests,
     'potfile' => "fmt/tex/input-merge-basic-surrounded-curly-braces.pot",
     'pofile'  => "fmt/tex/input-merge-basic-surrounded-curly-braces.po",
     'trans'   => "fmt/tex/input-merge-basic-surrounded-curly-braces.trans"
+  },
+  {
+    'doc'     => 'long text with --width=0 parameter',
+    'format'  => 'latex',
+    'options' => '--width=0',
+    'input'   => "fmt/tex/width0.tex",
+  },
+  {
+    'doc'     => 'long text with --width=-1 parameter',
+    'format'  => 'latex',
+    'options' => '--width=-1',
+    'input'   => "fmt/tex/width0.tex",
   };
 
 run_all_tests(@tests);
