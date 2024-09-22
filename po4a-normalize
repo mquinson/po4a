@@ -46,8 +46,9 @@ text parser would accept '-o tabs=split'.
 
 =item B<-w>, B<--width>
 
-Column at which we should wrap the resulting file if the format supports it
-(default: 76).
+Column at which we should wrap the resulting file if the format supports it (default: 76).
+If the provided value is 0 or negative, then the resulting file will not be wraped at all.
+This is useful with some formats that could break when rewraped.
 
 =item B<-b>, B<--blank>
 
@@ -180,8 +181,8 @@ my %options = (
     "debug"   => $debug,
     "wrapcol" => $width
 );
-if ($blank and $capitalize) {
-    die wrap_msg( gettext("Both B<--blank> and B<--capitalize> can't be specified at the same time."));
+if ( $blank and $capitalize ) {
+    die wrap_msg( gettext("Both B<--blank> and B<--capitalize> can't be specified at the same time.") );
 }
 foreach (@options) {
     if (m/^([^=]*)=(.*)$/) {
@@ -209,22 +210,22 @@ $parser->read( $filename, $filename, $mastchar // '' );
 my %pot_options = ( 'wrap-po' => $wrappo );
 $parser->setpoout( Locale::Po4a::Po->new( \%pot_options ) );
 $parser->parse();
-if ($blank or $capitalize) {
+if ( $blank or $capitalize ) {
     foreach my $msgid ( keys %{ $parser->{TT}{po_out}{po} } ) {
-        if ( $blank ) {
+        if ($blank) {
             if ( $msgid =~ m/\n$/s ) {
                 $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = "\n";
             } else {
                 $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = " ";
             }
-        } else { # $capitalize
-            ($parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = $msgid) =~ s/(?<!\\)(.)/\U$1/g;
+        } else {    # $capitalize
+            ( $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = $msgid ) =~ s/(?<!\\)(.)/\U$1/g;
         }
     }
     my $modified_po = $parser->{TT}{po_out};
     $parser = Locale::Po4a::Chooser::new( $type, %options );
     $parser->{TT}{po_in} = $modified_po;
-    $parser->read($filename, $filename, $mastchar // '' );
+    $parser->read( $filename, $filename, $mastchar // '' );
     $parser->{TT}{file_in_charset} = $mastchar;
     $parser->parse();
     $parser->{TT}{po_out} = $modified_po;

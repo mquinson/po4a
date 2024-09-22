@@ -1005,7 +1005,7 @@ sub gettext {
     }
 
     if ( $opt{'wrap'} ) {
-        $res = wrap( $res, $opt{'wrapcol'} || 76, 0 );
+        $res = wrap( $res, $opt{'wrapcol'}, 0 );
     }
 
     #    print STDERR "Gettext >>>$text<<<(escaped=$esc_text)=[[[$res]]]\n\n";
@@ -1547,13 +1547,15 @@ sub canonize {
 #  - A string to wrap. May content line breaks, in such case each line will be
 #    wrapped separately.
 # Optional arguments:
-#  - A column to wrap on. Default: 76.
+#  - A column to wrap on. Default: 76. If the provided value is 0, then no wrapping is done
 #  - The extra length allowed for the first line. Default: -10 (which means it
 #    will be wrapped 10 characters shorter).
 sub wrap {
     my $text = shift;
     return "0" if ( $text eq '0' );
-    my $col         = shift || 76;
+    my $col = shift // 76;
+    return $text if ( $col == 0 );    # Finally, no wrap required
+
     my $first_shift = shift || -10;
     my @lines       = split( /\n/, "$text" );
     my $res         = "";
