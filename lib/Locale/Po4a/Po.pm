@@ -318,7 +318,9 @@ sub read {
     my $filename = shift
       or croak wrap_mod( "po4a::po", dgettext( "po4a", "Please provide a non-null filename" ) );
 
-    my $charset = shift // 'UTF-8';
+    my $charset = shift;
+    my $did_request_charset = defined($charset);
+    $charset //= 'UTF-8';
     $charset = 'UTF-8' if $charset eq "CHARSET";
     warn "Read $filename with encoding: $charset" if $debug{'encoding'};
 
@@ -339,6 +341,12 @@ sub read {
         die wrap_msg( dgettext( "po4a", "Invalid po file %s:\n%s" ), $filename, $out )
           unless ( $? == 0 );
     }
+
+    # Allow reading with the wrong encoding.
+    # We will read the expected encoding from the file itself later.
+    use Encode qw(:fallback_all);
+    use PerlIO::encoding;
+    $PerlIO::encoding::fallback = $did_request_charset ? WARN_ON_ERR : FB_DEFAULT;
 
     my $fh;
     if ( $filename eq '-' ) {
@@ -366,6 +374,10 @@ sub read {
             $self->read( $filename, $detected_charset, $checkvalidity );
             return;
         }
+    } elsif ( !$did_request_charset ) {
+        # Read again, this time requesting explicitely UTF-8 encoding to printing warnings if the charset does not match
+        $self->read( $filename, 'UTF-8', $checkvalidity );
+        return;
     }
 
     if ( $pofile =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
