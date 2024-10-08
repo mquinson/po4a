@@ -393,7 +393,6 @@ under the terms of GPL v2.0 or later (see the COPYING file).
 =cut
 
 package Locale::Po4a::Man;
-use DynaLoader;
 
 use 5.16.0;
 use strict;
@@ -401,11 +400,8 @@ use warnings;
 
 require Exporter;
 use vars qw(@ISA @EXPORT);
-@ISA    = qw(Locale::Po4a::TransTractor DynaLoader);
+@ISA    = qw(Locale::Po4a::TransTractor);
 @EXPORT = qw();                                        #  new initialize);
-
-# Try to use a C extension if present.
-eval('bootstrap Locale::Po4a::Man "0.30"');
 
 use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;

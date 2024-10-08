@@ -101,20 +101,16 @@ use IO::File;
 require Exporter;
 
 package Locale::Po4a::Po;
-use DynaLoader;
 
 use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use subs qw(makespace);
 use vars qw(@ISA @EXPORT_OK);
-@ISA       = qw(Exporter DynaLoader);
+@ISA       = qw(Exporter);
 @EXPORT    = qw(%debug);
 @EXPORT_OK = qw(&move_po_if_needed);
 
 use Locale::Po4a::TransTractor;
-
-# Try to use a C extension if present.
-eval("bootstrap Locale::Po4a::Po $Locale::Po4a::TransTractor::VERSION");
 
 use 5.16.0;
 use strict;
