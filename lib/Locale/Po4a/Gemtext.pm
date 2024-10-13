@@ -21,19 +21,19 @@
 #
 ########################################################################
 
-require Exporter;
-
 package Locale::Po4a::Gemtext;
 
 use 5.006;
 use strict;
 use warnings;
 
-use vars qw(@ISA @EXPORT @AUTOLOAD);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use parent qw(Locale::Po4a::TransTractor);
+
+require Exporter;
+
+use vars qw(@EXPORT @AUTOLOAD);
 @EXPORT = qw();
 
-use Locale::Po4a::TransTractor qw(process new);
 use Locale::Po4a::Common;
 
 =encoding UTF-8
