@@ -11,19 +11,15 @@
 # Modules and declarations
 ############################################################################
 
-use Pod::Parser;
-use Locale::Po4a::TransTractor qw(process new get_in_charset get_out_charset);
-
 package Locale::Po4a::Pod;
 
 use 5.16.0;
 use strict;
 use warnings;
 
-require Exporter;
+use parent qw(Locale::Po4a::TransTractor Pod::Parser);
 
-use vars qw(@ISA);
-@ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
+require Exporter;
 
 use Carp qw(croak confess);
 
