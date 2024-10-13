@@ -112,3 +112,5 @@ sub found_string {
 
     return $text;
 }
+
+1;
