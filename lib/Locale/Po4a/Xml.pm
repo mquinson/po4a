@@ -52,12 +52,12 @@ use 5.16.0;
 use strict;
 use warnings;
 
+use parent qw(Locale::Po4a::TransTractor);
+
 require Exporter;
-use vars qw(@ISA @EXPORT);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use vars qw(@EXPORT);
 @EXPORT = qw(new initialize @tag_types);
 
-use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 use Carp qw(croak);
 use File::Basename;
