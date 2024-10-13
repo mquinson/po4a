@@ -62,9 +62,10 @@ use 5.16.0;
 use strict;
 use warnings;
 
+use parent qw(Locale::Po4a::TransTractor);
+
 require Exporter;
-use vars qw(@ISA @EXPORT);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use vars qw(@EXPORT);
 @EXPORT = qw(%commands %environments
   $RE_ESCAPE $ESCAPE $RE_VERBATIM
   $no_wrap_environments
@@ -77,7 +78,6 @@ use vars qw(@ISA @EXPORT);
   &register_generic_command
   &register_generic_environment);
 
-use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 use File::Basename qw(dirname);
 use Carp           qw(croak);
