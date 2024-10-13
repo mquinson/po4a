@@ -7,14 +7,15 @@ package Po4aBuilder;
 
 use 5.16.0;
 use strict;
-use Module::Build;
+use warnings;
+
+use parent qw(Module::Build);
+
 use File::Basename;
 use File::Path qw(mkpath rmtree);
 use File::Spec;
 use File::Copy qw(copy);
 use File::stat;
-
-our @ISA = qw(Module::Build);
 
 sub ACTION_build {
     my $self = shift;
