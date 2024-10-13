@@ -203,13 +203,13 @@ If the PO get lost, keeping this translation up-to-date will be harder.
 $encoding
 EOT
 }
-1;
 
 ##############################################################################
 # Module return value and documentation
 ##############################################################################
 
 1;
+
 __END__
 
 =encoding UTF-8
