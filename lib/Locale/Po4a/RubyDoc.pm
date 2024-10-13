@@ -42,17 +42,15 @@
 
 package Locale::Po4a::RubyDoc;
 
-use Locale::Po4a::TransTractor qw(process new);
-use Locale::Po4a::Common;
-
 use 5.16.0;
 use strict;
 use warnings;
 
-require Exporter;
+use parent qw(Locale::Po4a::TransTractor);
 
-use vars qw(@ISA);
-@ISA = qw(Locale::Po4a::TransTractor);
+use Locale::Po4a::Common;
+
+require Exporter;
 
 ######################
 #  Global variables  #
