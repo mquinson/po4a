@@ -8,19 +8,19 @@
 # Modules and declarations
 ############################################################################
 
-use Locale::Po4a::TransTractor qw(process new);
-use Locale::Po4a::Common;
-
 package Locale::Po4a::Ini;
 
 use 5.16.0;
 use strict;
 use warnings;
 
+use parent qw(Locale::Po4a::TransTractor);
+
+use Locale::Po4a::Common;
+
 require Exporter;
 
-use vars qw(@ISA @EXPORT $AUTOLOAD);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use vars qw(@EXPORT $AUTOLOAD);
 @EXPORT = qw();
 
 my $debug = 0;
