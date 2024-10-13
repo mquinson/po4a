@@ -151,3 +151,5 @@ sub initialize {
     print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 }
+
+1;
