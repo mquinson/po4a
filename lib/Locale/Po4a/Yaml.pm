@@ -74,20 +74,20 @@ under the terms of GPL v2.0 or later (see the COPYING file).
 
 package Locale::Po4a::Yaml;
 
-use Locale::Po4a::TransTractor;
+use 5.16.0;
+use strict;
+use warnings;
+
+use parent qw(Locale::Po4a::TransTractor);
+
 use Locale::Po4a::Common;
 use YAML::Tiny;
 use Scalar::Util;
 use Encode;
 
-use 5.16.0;
-use strict;
-use warnings;
-
 require Exporter;
 
-use vars qw(@ISA @EXPORT $AUTOLOAD);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use vars qw(@EXPORT $AUTOLOAD);
 @EXPORT = qw();
 
 my %yfm_keys  = ();
