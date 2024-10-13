@@ -93,15 +93,13 @@ use 5.16.0;
 use strict;
 use warnings;
 
-use Locale::Po4a::Xml;
+use parent qw(Locale::Po4a::Xml);
+
 use vars qw(@tag_types);
 *tag_types = \@Locale::Po4a::Xml::tag_types;
 
 use Locale::Po4a::Common;
 use Carp qw(croak);
-
-use vars qw(@ISA);
-@ISA = qw(Locale::Po4a::Xml);
 
 sub tag_extract_SSI {
     my ( $self, $remove ) = ( shift, shift );
