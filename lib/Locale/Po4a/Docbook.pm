@@ -2058,3 +2058,5 @@ sub initialize {
       if $self->{options}{'debug'};
     $self->treat_options;
 }
+
+1;
