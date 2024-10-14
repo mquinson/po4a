@@ -19,8 +19,6 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor Pod::Parser);
 
-require Exporter;
-
 use Carp qw(croak confess);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
