@@ -53,6 +53,13 @@ push @tests,
     'format'  => 'yaml',
     'options' => "-M UTF-8",
     'input'   => "charset/yaml/utf8.yaml",
+  },
+  {
+    'doc' => 'implicit encoding: iso8859',
+    'po4a.conf' => 'charset/implicit-iso8859/po4a.conf',
+    'closed_path'    => 'charset/*/',
+    'options' => '--keep 0',
+    'expected_files' => 'iso8859.pot iso8859.en.po iso8859.up.pod ',
   };
 
 run_all_tests(@tests);
