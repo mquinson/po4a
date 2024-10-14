@@ -64,20 +64,6 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-require Exporter;
-use vars qw(@EXPORT);
-@EXPORT = qw(%commands %environments
-  $RE_ESCAPE $ESCAPE $RE_VERBATIM
-  $no_wrap_environments
-  $verbatim_environments
-  %separated_command
-  %separated_environment
-  %translate_buffer_env
-  &add_comment
-  &generic_command
-  &register_generic_command
-  &register_generic_environment);
-
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
 use File::Basename qw(dirname);
 use Carp           qw(croak);
