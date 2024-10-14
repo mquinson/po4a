@@ -1,21 +1,14 @@
 #!/usr/bin/perl -w
 
-require Exporter;
-
 package Locale::Po4a::TransTractor;
-
-sub import { }
 
 use 5.16.0;
 use strict;
 use warnings;
 
 use subs qw(makespace);
-use vars qw($VERSION @EXPORT);
+use vars qw($VERSION);
 $VERSION = "0.74-alpha";
-@EXPORT  = qw(new process translate
-  read write readpo writepo
-  getpoout setpoout get_in_charset get_out_charset handle_yaml);
 
 use Carp qw(croak confess);
 use Locale::Po4a::Po;
