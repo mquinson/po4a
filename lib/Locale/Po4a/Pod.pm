@@ -25,8 +25,6 @@ use Carp qw(croak confess);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 
-sub initialize { }
-
 sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;

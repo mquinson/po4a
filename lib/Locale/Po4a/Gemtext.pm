@@ -53,8 +53,6 @@ other [human] languages.
 
 =cut
 
-sub initialize { }
-
 sub parse {
     my $self = shift;
 

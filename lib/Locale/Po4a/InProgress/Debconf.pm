@@ -71,8 +71,6 @@ use vars qw(@EXPORT);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 
-sub initialize { }
-
 sub parse {
     my $self = shift;
 
