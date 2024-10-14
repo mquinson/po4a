@@ -62,8 +62,6 @@ use vars qw(@EXPORT);
 
 use Locale::Po4a::Common;
 
-sub initialize { }
-
 sub parse {
     my $self = shift;
     my ( $line, $ref );

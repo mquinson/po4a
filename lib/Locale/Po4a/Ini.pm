@@ -25,8 +25,6 @@ use vars qw(@EXPORT $AUTOLOAD);
 
 my $debug = 0;
 
-sub initialize { }
-
 sub parse {
     my $self = shift;
     my ( $line, $ref );
