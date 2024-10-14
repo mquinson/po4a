@@ -41,7 +41,7 @@ use warnings;
 use parent qw(Exporter);
 
 use vars qw(@EXPORT);
-@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod textdomain gettext dgettext);
+@EXPORT = qw(wrap_msg wrap_mod wrap_ref_mod gettext dgettext);
 
 sub import {
     my $class = shift;
