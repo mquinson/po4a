@@ -69,11 +69,8 @@ use strict;
 use warnings;
 
 use parent qw(Locale::Po4a::TeX);
-
-require Exporter;
-use vars qw($VERSION @EXPORT);
+use vars qw($VERSION);
 $VERSION = $Locale::Po4a::TeX::VERSION;
-@EXPORT  = qw();
 
 use subs qw(&generic_command
   &parse_definition_file
