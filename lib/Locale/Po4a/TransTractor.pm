@@ -405,6 +405,8 @@ sub new {
     return $self;
 }
 
+sub initialize { }
+
 =back
 
 =head2 Manipulating document files
