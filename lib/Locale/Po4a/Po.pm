@@ -103,15 +103,13 @@ use strict;
 use warnings;
 
 use parent qw(Exporter);
+our @EXPORT_OK = qw(move_po_if_needed);
 
 use IO::File;
 
 use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use subs qw(makespace);
-use vars qw(@EXPORT @EXPORT_OK);
-@EXPORT    = qw(%debug);
-@EXPORT_OK = qw(&move_po_if_needed);
 
 use Locale::Po4a::TransTractor;
 
