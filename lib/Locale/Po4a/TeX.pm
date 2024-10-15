@@ -78,7 +78,7 @@ use vars qw(@EXPORT);
   &register_generic_command
   &register_generic_environment);
 
-use Locale::Po4a::Common qw(wrap_mod);
+use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod);
 use File::Basename qw(dirname);
 use Carp           qw(croak);
 

@@ -404,7 +404,7 @@ require Exporter;
 use vars qw(@EXPORT);
 @EXPORT = qw();    #  new initialize);
 
-use Locale::Po4a::Common qw(wrap_mod);
+use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod);
 
 use File::Spec;
 use Getopt::Std;
