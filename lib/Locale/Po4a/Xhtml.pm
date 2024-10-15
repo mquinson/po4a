@@ -241,3 +241,5 @@ sub initialize {
         }
     }
 }
+
+1;
