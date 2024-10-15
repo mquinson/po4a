@@ -27,10 +27,6 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-require Exporter;
-use vars qw(@EXPORT);
-@EXPORT = qw();
-
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 use YAML::Tiny;
 
