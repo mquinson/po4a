@@ -20,10 +20,7 @@ use parent qw(Locale::Po4a::TransTractor);
 use Pod::Parser;
 use Locale::Po4a::Common qw(wrap_ref_mod gettext);
 
-require Exporter;
-
-use vars qw(@EXPORT $AUTOLOAD);
-@EXPORT = qw();    # new process write read writepo readpo);
+use vars qw($AUTOLOAD);
 
 my $debug = 0;
 
