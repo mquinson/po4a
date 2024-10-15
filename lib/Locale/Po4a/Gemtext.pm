@@ -29,10 +29,7 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-require Exporter;
-
-use vars qw(@EXPORT @AUTOLOAD);
-@EXPORT = qw();
+use vars qw(@AUTOLOAD);
 
 use Locale::Po4a::Common;
 
