@@ -16,7 +16,7 @@ package Locale::Po4a::Chooser;
 use 5.16.0;
 use strict;
 use warnings;
-use Locale::Po4a::Common qw(wrap_msg);
+use Locale::Po4a::Common qw(wrap_msg wrap_mod);
 
 sub new {
     my ($module)  = shift;

@@ -19,7 +19,7 @@ $VERSION = "0.74-alpha";
 
 use Carp qw(croak confess);
 use Locale::Po4a::Po;
-use Locale::Po4a::Common qw(wrap_msg);
+use Locale::Po4a::Common qw(wrap_msg wrap_mod);
 
 use File::Path;    # mkdir before write
 use File::Spec;

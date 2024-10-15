@@ -58,7 +58,7 @@ require Exporter;
 use vars qw(@EXPORT);
 @EXPORT = qw(new initialize @tag_types);
 
-use Locale::Po4a::Common;
+use Locale::Po4a::Common qw(wrap_mod);
 use Carp qw(croak);
 use File::Basename;
 use File::Spec;
