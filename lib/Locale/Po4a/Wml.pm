@@ -68,7 +68,7 @@ require Exporter;
 use vars qw(@EXPORT);
 @EXPORT = qw();
 
-use Locale::Po4a::Common qw(wrap_msg);
+use Locale::Po4a::Common qw(wrap_msg gettext);
 use File::Temp;
 
 sub initialize {

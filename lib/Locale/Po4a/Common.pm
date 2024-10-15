@@ -40,8 +40,8 @@ use warnings;
 
 use parent qw(Exporter);
 
-our @EXPORT = qw(gettext dgettext);
-our @EXPORT_OK = qw(wrap_msg wrap_mod wrap_ref_mod);
+our @EXPORT = qw(dgettext);
+our @EXPORT_OK = qw(wrap_msg wrap_mod wrap_ref_mod gettext);
 
 sub import {
     my $class = shift;
