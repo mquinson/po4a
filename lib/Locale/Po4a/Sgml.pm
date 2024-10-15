@@ -213,10 +213,6 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-require Exporter;
-use vars qw(@EXPORT);
-@EXPORT = qw();
-
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
 
 eval qq{use SGMLS};
