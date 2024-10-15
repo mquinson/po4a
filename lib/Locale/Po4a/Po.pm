@@ -111,8 +111,6 @@ use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
 
 use subs qw(makespace);
 
-use Locale::Po4a::TransTractor;
-
 use Carp qw(croak);
 use File::Basename;
 use File::Path;    # mkdir before write
