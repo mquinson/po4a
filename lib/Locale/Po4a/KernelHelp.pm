@@ -18,7 +18,7 @@ use warnings;
 use parent qw(Locale::Po4a::TransTractor);
 
 use Pod::Parser;
-use Locale::Po4a::Common qw(wrap_ref_mod);
+use Locale::Po4a::Common qw(wrap_ref_mod gettext);
 
 require Exporter;
 
