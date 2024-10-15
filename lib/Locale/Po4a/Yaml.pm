@@ -80,7 +80,7 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-use Locale::Po4a::Common qw(wrap_mod);
+use Locale::Po4a::Common qw(wrap_mod dgettext);
 use YAML::Tiny;
 use Scalar::Util;
 use Encode;

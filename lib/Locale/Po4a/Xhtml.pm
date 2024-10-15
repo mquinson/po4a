@@ -98,7 +98,7 @@ use parent qw(Locale::Po4a::Xml);
 use vars qw(@tag_types);
 *tag_types = \@Locale::Po4a::Xml::tag_types;
 
-use Locale::Po4a::Common qw(wrap_mod);
+use Locale::Po4a::Common qw(wrap_mod dgettext);
 use Carp qw(croak);
 
 sub tag_extract_SSI {
