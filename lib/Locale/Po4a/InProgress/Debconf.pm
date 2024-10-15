@@ -69,7 +69,7 @@ require Exporter;
 use vars qw(@EXPORT);
 @EXPORT = qw();
 
-use Locale::Po4a::Common qw(wrap_mod);
+use Locale::Po4a::Common qw(wrap_mod dgettext);
 
 sub initialize { }
 
