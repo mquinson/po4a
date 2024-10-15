@@ -52,8 +52,7 @@ use 5.16.0;
 use strict;
 use warnings;
 
-use parent qw(Locale::Po4a::TransTractor Exporter);
-our @EXPORT = qw(initialize);
+use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
 use Carp qw(croak);
