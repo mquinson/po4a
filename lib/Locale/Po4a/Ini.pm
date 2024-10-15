@@ -18,10 +18,7 @@ use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common;
 
-require Exporter;
-
-use vars qw(@EXPORT $AUTOLOAD);
-@EXPORT = qw();
+use vars qw($AUTOLOAD);
 
 my $debug = 0;
 
