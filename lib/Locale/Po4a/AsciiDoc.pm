@@ -31,7 +31,7 @@ require Exporter;
 use vars qw(@EXPORT);
 @EXPORT = qw();
 
-use Locale::Po4a::Common;
+use Locale::Po4a::Common qw(wrap_mod);
 use YAML::Tiny;
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
