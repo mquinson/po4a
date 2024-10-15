@@ -85,10 +85,7 @@ use YAML::Tiny;
 use Scalar::Util;
 use Encode;
 
-require Exporter;
-
-use vars qw(@EXPORT $AUTOLOAD);
-@EXPORT = qw();
+use vars qw($AUTOLOAD);
 
 my %yfm_keys  = ();
 my %yfm_paths = ();
