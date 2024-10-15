@@ -53,7 +53,7 @@ use strict;
 use warnings;
 
 use parent qw(Locale::Po4a::TransTractor Exporter);
-our @EXPORT = qw(initialize @tag_types);
+our @EXPORT = qw(initialize);
 
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
 use Carp qw(croak);
