@@ -75,11 +75,9 @@ use 5.16.0;
 use strict;
 use warnings;
 
-use Locale::Po4a::Common;
-use Locale::Po4a::Xml;
+use parent qw(Locale::Po4a::Xml);
 
-use vars qw(@ISA);
-@ISA = qw(Locale::Po4a::Xml);
+use Locale::Po4a::Common;
 
 sub initialize {
     my $self    = shift;
@@ -151,3 +149,5 @@ sub initialize {
     print "Call treat_options\n" if $self->{options}{'debug'};
     $self->treat_options;
 }
+
+1;

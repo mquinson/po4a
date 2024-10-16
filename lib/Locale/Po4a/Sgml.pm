@@ -211,12 +211,12 @@ use 5.16.0;
 use strict;
 use warnings;
 
+use parent qw(Locale::Po4a::TransTractor);
+
 require Exporter;
-use vars qw(@ISA @EXPORT);
-@ISA    = qw(Locale::Po4a::TransTractor);
+use vars qw(@EXPORT);
 @EXPORT = qw();
 
-use Locale::Po4a::TransTractor;
 use Locale::Po4a::Common;
 
 eval qq{use SGMLS};

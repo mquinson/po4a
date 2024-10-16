@@ -11,19 +11,15 @@
 # Modules and declarations
 ############################################################################
 
-use Pod::Parser;
-use Locale::Po4a::TransTractor qw(process new get_in_charset get_out_charset);
-
 package Locale::Po4a::Pod;
 
 use 5.16.0;
 use strict;
 use warnings;
 
-require Exporter;
+use parent qw(Locale::Po4a::TransTractor Pod::Parser);
 
-use vars qw(@ISA);
-@ISA = qw(Locale::Po4a::TransTractor Pod::Parser);
+require Exporter;
 
 use Carp qw(croak confess);
 
@@ -203,13 +199,13 @@ If the PO get lost, keeping this translation up-to-date will be harder.
 $encoding
 EOT
 }
-1;
 
 ##############################################################################
 # Module return value and documentation
 ##############################################################################
 
 1;
+
 __END__
 
 =encoding UTF-8

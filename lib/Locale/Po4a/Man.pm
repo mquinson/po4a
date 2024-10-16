@@ -398,12 +398,12 @@ use 5.16.0;
 use strict;
 use warnings;
 
-require Exporter;
-use vars qw(@ISA @EXPORT);
-@ISA    = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw();                                        #  new initialize);
+use parent qw(Locale::Po4a::TransTractor);
 
-use Locale::Po4a::TransTractor;
+require Exporter;
+use vars qw(@EXPORT);
+@EXPORT = qw();    #  new initialize);
+
 use Locale::Po4a::Common;
 
 use File::Spec;

@@ -96,25 +96,24 @@ Set the package version for the POT header. The default is "VERSION".
 
 =cut
 
-use IO::File;
-
-require Exporter;
-
 package Locale::Po4a::Po;
-
-use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
-
-use subs qw(makespace);
-use vars qw(@ISA @EXPORT_OK);
-@ISA       = qw(Exporter);
-@EXPORT    = qw(%debug);
-@EXPORT_OK = qw(&move_po_if_needed);
-
-use Locale::Po4a::TransTractor;
 
 use 5.16.0;
 use strict;
 use warnings;
+
+use parent qw(Exporter);
+
+use IO::File;
+
+use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
+
+use subs qw(makespace);
+use vars qw(@EXPORT @EXPORT_OK);
+@EXPORT    = qw(%debug);
+@EXPORT_OK = qw(&move_po_if_needed);
+
+use Locale::Po4a::TransTractor;
 
 use Carp qw(croak);
 use File::Basename;

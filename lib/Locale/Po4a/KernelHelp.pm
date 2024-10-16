@@ -9,21 +9,21 @@
 # Modules and declarations
 ############################################################################
 
-use Pod::Parser;
-use Locale::Po4a::TransTractor qw(process new);
-use Locale::Po4a::Common;
-
 package Locale::Po4a::KernelHelp;
 
 use 5.16.0;
 use strict;
 use warnings;
 
+use parent qw(Locale::Po4a::TransTractor);
+
+use Pod::Parser;
+use Locale::Po4a::Common;
+
 require Exporter;
 
-use vars qw(@ISA @EXPORT $AUTOLOAD);
-@ISA    = qw(Locale::Po4a::TransTractor);
-@EXPORT = qw();                             # new process write read writepo readpo);
+use vars qw(@EXPORT $AUTOLOAD);
+@EXPORT = qw();    # new process write read writepo readpo);
 
 my $debug = 0;
 
@@ -119,13 +119,13 @@ sub docheader {
 #
 EOT
 }
-1;
 
 ##############################################################################
 # Module return value and documentation
 ##############################################################################
 
 1;
+
 __END__
 
 =encoding UTF-8
