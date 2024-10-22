@@ -33,6 +33,11 @@ push @tests,
     'options' => '-o markdown -w 40',
     'input'   => "fmt/txt-markdown/Width.md",
     'skip'    => { 'updatepo' => 1 }
+  },
+  {
+    'format'  => 'text',
+    'options' => "-o markdown --option multiline_footnote",
+    'input'   => 'fmt/txt-markdown/MultilineFootnote.md',
   };
 
 # Some tests specific to the Pandoc dialect of Markdown
