@@ -202,6 +202,25 @@ my %control = ();
 
 Prevent po4a from wrapping any lines. This means that every content is handled verbatim, even simple paragraphs.
 
+=item B<multiline_footnote>
+
+Allow footnote definitions to span multiple lines.
+
+For example, the following footnotes can be defined
+A blank line ends the definition.
+
+ [^1]: This is a first sentence.
+       This is a second one.
+
+Note the indentation in the second line.
+For some processors, this indentation may be significant.
+This is why labels are included in the translation target.
+
+By default, only a single line is used; subsequent lines are handled separately.
+This is the regular behavior seen in the Commonmark processor.
+
+Footnotes is a syntax used in Markdown and cannot be used in other cases.
+
 =cut
 
 my $defaultwrap = 1;
@@ -218,21 +237,22 @@ sub initialize {
     my $self    = shift;
     my %options = @_;
 
-    $self->{options}{'control'}         = "";
-    $self->{options}{'breaks'}          = 1;
-    $self->{options}{'debianchangelog'} = 1;
-    $self->{options}{'debug'}           = 1;
-    $self->{options}{'fortunes'}        = 1;
-    $self->{options}{'markdown'}        = 1;
-    $self->{options}{'yfm_keys'}        = '';
-    $self->{options}{'yfm_lenient'}     = 0;
-    $self->{options}{'yfm_paths'}       = '';
-    $self->{options}{'yfm_skip_array'}  = 0;
-    $self->{options}{'nobullets'}       = 0;
-    $self->{options}{'keyvalue'}        = 1;
-    $self->{options}{'tabs'}            = 1;
-    $self->{options}{'verbose'}         = 1;
-    $self->{options}{'neverwrap'}       = 1;
+    $self->{options}{'control'}            = "";
+    $self->{options}{'breaks'}             = 1;
+    $self->{options}{'debianchangelog'}    = 1;
+    $self->{options}{'debug'}              = 1;
+    $self->{options}{'fortunes'}           = 1;
+    $self->{options}{'markdown'}           = 1;
+    $self->{options}{'yfm_keys'}           = '';
+    $self->{options}{'yfm_lenient'}        = 0;
+    $self->{options}{'yfm_paths'}          = '';
+    $self->{options}{'yfm_skip_array'}     = 0;
+    $self->{options}{'nobullets'}          = 0;
+    $self->{options}{'keyvalue'}           = 1;
+    $self->{options}{'tabs'}               = 1;
+    $self->{options}{'verbose'}            = 1;
+    $self->{options}{'neverwrap'}          = 1;
+    $self->{options}{'multiline_footnote'} = 0;
 
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::text", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -265,7 +285,7 @@ sub initialize {
         $yfm_skip_array = $self->{options}{'yfm_skip_array'};
         $yfm_lenient    = $self->{options}{'yfm_lenient'};
     } else {
-        foreach my $opt (qw(yfm_keys yfm_lenient yfm_skip_array)) {
+        foreach my $opt (qw(yfm_keys yfm_lenient yfm_skip_array multiline_footnote)) {
             die wrap_mod( "po4a::text", dgettext( "po4a", "Option %s is only valid when parsing markdown files." ),
                 $opt )
               if exists $options{$opt};
@@ -745,7 +765,40 @@ sub parse_markdown {
         $self->pushline( $line . "\n" );
         $paragraph        = "";
         $end_of_paragraph = 1;
-    } elsif ( $line =~ /^([ ]{0,3})(\[[^\]]+\]:[ \t]?.+)$/ ) {
+    } elsif ( $line =~ / \A ([ ]{0,3}) (\[ \^ ([^\]]+) \] : [ \t]* .+) \Z /xms ) {
+        my $indent   = $1;
+        my $footnote = $2;
+        my $label    = $3;
+
+        # Footnote definition
+        do_paragraph( $self, $paragraph, $wrapped_mode );
+        $wrapped_mode = $defaultwrap;
+        $paragraph    = "";
+
+        my $multiline = $self->{options}{multiline_footnote};
+        if ($multiline) {
+            my ( $line, $ref ) = $self->shiftline();
+
+            while ( defined $line ) {
+                chomp $line;
+
+                if ( $line =~ / \A \s* \Z /xms ) {
+                    $self->unshiftline( "$line\n", $ref );
+                    last;
+                }
+
+                $footnote .= "\n$line";
+                ( $line, $ref ) = $self->shiftline();
+            }
+        }
+
+        my $t = $self->translate(
+            $footnote, $self->{ref}, "Footnote $label",
+            wrap  => 0,
+            flags => "multiline-footnote"
+        );
+        $self->pushline("$indent$t\n");
+    } elsif ( $line =~ / \A ([ ]{0,3}) ( \[ [^\]]+ \] : [ \t]? .+) \Z /xms ) {
         my $indentation   = $1;
         my $linkreference = $2;
 
