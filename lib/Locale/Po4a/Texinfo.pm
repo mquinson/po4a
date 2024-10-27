@@ -396,15 +396,12 @@ sub translate_buffer_ignore {
 $translate_buffer_env{"ignore"} = \&translate_buffer_ignore;
 
 foreach (
-    qw(appendix section cindex findex kindex opindex pindex tindex vindex subsection
-    dircategory subtitle include
-    exdent center unnumberedsec
-    heading unnumbered unnumberedsubsec
-    unnumberedsubsubsec appendixsec appendixsubsec
-    appendixsubsubsec majorheading chapheading subheading
-    subsubheading shorttitlepage
-    subsubsection top item itemx chapter settitle
-    title author)
+    qw(appendix appendixsec appendixsubsec appendixsubsubsec author center
+    chapheading chapter cindex defline deftypeline dircategory exdent findex
+    heading include item itemx kindex majorheading opindex pindex section
+    settitle shorttitlepage subheading subsection subsubheading subsubsection
+    subtitle tindex title top unnumbered unnumberedsec unnumberedsubsec
+    unnumberedsubsubsec vindex)
   )
 {
     $commands{$_}               = \&line_command;
@@ -412,9 +409,9 @@ foreach (
     $translate_line_command{$_} = 1;
 }
 foreach (
-    qw(c comment clear set setfilename setchapternewpage vskip synindex
-    syncodeindex need fonttextsize printindex headings finalout sp
-    definfoenclose)
+    qw(c clear comment definfoenclose finalout fonttextsize frenchspacing
+    headings need printindex set setchapternewpage setfilename sp syncodeindex
+    synindex vskip)
   )
 {
     $commands{$_}   = \&line_command;
@@ -555,18 +552,17 @@ sub environment_line_command {
 #}
 #
 foreach (
-    qw(detailmenu menu titlepage group copying
-    documentdescription cartouche
-    direntry
-    ifdocbook ifhtml ifinfo ifplaintext iftex ifxml
-    ifnotdocbook ifnothtml ifnotinfo ifnotplaintext ifnottex ifnotxml)
-  )
+    qw(cartouche copying copyingg defblock detailmenu direntry displaymath
+    documentdescription group ifdocbook ifhtml ifinfo iflatex ifnotdocbook
+    ifnothtml ifnotinfo ifnotplaintextg ifnottex ifnotxml ifplaintext iftex
+    ifxml menu nodedescriptionblock titlepage)
+)
 {
     $commands{$_}               = \&environment_line_command;
     $translate_line_command{$_} = 0;
     $break_line{$_}             = 1;
 }
-foreach (qw(enumerate multitable ifclear ifset)) {
+foreach (qw(enumerate multitable ifclear ifset float linemacro)) {
     $commands{$_}   = \&environment_line_command;
     $break_line{$_} = 1;
 }
@@ -589,15 +585,11 @@ register_generic_command("*end,  ");
 $commands{'end'}   = $end_command;
 $break_line{'end'} = 1;
 
-register_generic_command("*macro,  ");
-$commands{'macro'}   = \&environment_command;
-$break_line{'macro'} = 1;
-register_generic_command("*itemize,  ");
-$commands{'itemize'}   = \&environment_command;
-$break_line{'itemize'} = 1;
-register_generic_command("*table,  ");
-$commands{'table'}   = \&environment_command;
-$break_line{'table'} = 1;
+foreach (qw(itemize macro ftable table vtable)) {
+    register_generic_command("*$_,  ");
+    $commands{$_}   = \&environment_command;
+    $break_line{$_} = 1;
+}
 
 # TODO: is_closed, use a regexp: \ does not escape the closing brace.
 # TBC on LaTeX.
