@@ -29,6 +29,7 @@ module for the following formats:
   - texinfo: The info page format (experimental).
   - tex: generic TeX documents (see also latex).
   - text: simple text document.
+  - vimhelp: Vim help documents.
   - wml: WML documents.
   - xhtml: XHTML documents.
   - xml: generic XML documents (see also docbook).
