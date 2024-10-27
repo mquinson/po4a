@@ -23,7 +23,7 @@ my $build = Po4aBuilder->new
 
                      'SGMLS' => 0,          # Needed for the Sgml module.
 
-                     'Unicode::GCString' => 0, # Used by the Text module (asciidoc)
+                     'Unicode::GCString' => 0, # Used by the AsciiDoc and VimHelp modules
 
                      'Locale::gettext' => '1.01', # Only used for
                                                   # translating the
