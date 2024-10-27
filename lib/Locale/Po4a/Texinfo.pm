@@ -234,16 +234,16 @@ sub parse {
             $self->push_docheader();
             $self->pushline( $line . "\n" );
         } elsif ( $closed
-            and ( $line =~ /^@([^ ]*?)(?: +(.*))?$/ )
-            and ( defined $commands{$1} )
-            and ( $break_line{$1} ) )
+            and ( $line =~ /(^\s*)@([^ ]*?)(?: +(.*))?$/ )
+            and ( defined $commands{$2} )
+            and ( $break_line{$2} ) )
         {
+            my ($spaces, $cmd, $arg) = ($1, $2, $3);
             if ( length($paragraph) ) {
                 ( $t, @env ) = translate_buffer( $self, $paragraph, undef, @env );
                 $self->pushline($t);
                 $paragraph = "";
             }
-            my $arg  = $2;
             my @args = ();
             if ( defined $arg and length $arg ) {
 
@@ -251,8 +251,8 @@ sub parse {
                 $arg =~ s/\s*$//s;
                 @args = ( " ", $arg );
             }
-            ( $t, @env ) = &{ $commands{$1} }( $self, $1, "", \@args, \@env, 1 );
-            $self->pushline( $t . "\n" );
+            ( $t, @env ) = &{ $commands{$cmd} }( $self, $cmd, "", \@args, \@env, 1 );
+            $self->pushline( $spaces . $t . "\n" );
         } else {
 
             # continue the same paragraph
