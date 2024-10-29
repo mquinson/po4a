@@ -53,6 +53,13 @@ push @tests,
     'format'  => 'yaml',
     'options' => "-M UTF-8",
     'input'   => "charset/yaml/utf8.yaml",
+  },
+  {
+    'doc'            => 'PO file encoding: iso8859-1',
+    'po4a.conf'      => 'charset/po-iso8859/po4a.conf',
+    'closed_path'    => 'charset/*/',
+    'options'        => '--no-update',
+    'expected_files' => 'utf8.up.pod iso8859.up.pod',
   };
 
 run_all_tests(@tests);

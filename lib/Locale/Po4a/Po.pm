@@ -309,7 +309,7 @@ sub read {
     my $filename = shift
       or croak wrap_mod( "po4a::po", dgettext( "po4a", "Please provide a non-null filename" ) );
 
-    my $charset = shift // 'UTF-8';
+    my $charset = shift // '';
     $charset = 'UTF-8' if $charset eq "CHARSET";
     warn "Read $filename with encoding: $charset" if $debug{'encoding'};
 
@@ -335,42 +335,69 @@ sub read {
     if ( $filename eq '-' ) {
         $fh = *STDIN;
     } else {
-        open( $fh, "<:encoding($charset)", $filename )
+        open( $fh, "<", $filename )
           or croak wrap_mod( "po4a::po", dgettext( "po4a", "Cannot read from %s: %s" ), $filename, $! );
     }
 
-    ## Read paragraphs line-by-line
     my $pofile = "";
+    ## Read the first msgid/msgstr to detect encoding
     while ( defined( my $textline = <$fh> ) ) {
         $pofile .= $textline;
+        last if ( $textline =~ /^msgid/ );
     }
-    $pofile =~ s/\r\n/\n/sg;    # Reading a DOS-encoded file from Linux (native files are handled in all cases)
+    while ( defined( my $textline = <$fh> ) ) {
+        $pofile .= $textline;
+        last if ( $textline =~ /^\s*$/ );
+    }
 
-    # If we did not get the charset right, reload the file with the right one
-    if ( $pofile =~ /charset=(.*?)[\s\\]/ ) {
+    my $is_charset_detected;
+    # Detect the charset
+    if ( $pofile =~ /^msgid ""\s*$/m &&
+         $pofile =~ /^msgstr ""\s*$/m &&
+         $pofile =~ /charset=(.*?)[\s\\]/
+    ) {
         my $detected_charset = $1;
-
-        if ( $detected_charset ne $charset && uc($detected_charset) ne $charset && uc($detected_charset) ne 'CHARSET' )
-        {
-            warn "Reloading the PO file, changing the charset from '$charset' to '$detected_charset'"
-              if $debug{'encoding'};
-            $self->read( $filename, $detected_charset, $checkvalidity );
-            return;
+        if (   $detected_charset ne $charset &&
+            uc($detected_charset) ne $charset &&
+            uc($detected_charset) ne 'CHARSET'
+        ) {
+            warn "Detected '$detected_charset' in the PO file. Using it instead of '$charset'"
+                if $debug{'encoding'};
+            $charset = $detected_charset;
+            $is_charset_detected = 1;
         }
     }
 
+    if (not length $charset) {
+        warn "Failed to autodetect encoding of '$filename' and none was provided. Assuming 'UTF-8'." if $debug{'encoding'};
+        $charset = 'UTF-8';
+    }
     if ( $pofile =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
         croak "BOM detected";
         croak wrap_msg(
-            dgettext(
-                "po4a",
-                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified %s instead."
-            ),
+            $is_charset_detected ? dgettext( "po4a",
+                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but '%s' was detected."
+                ) : dgettext( "po4a",
+                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified '%s' instead."
+                ),
             $filename,
             $charset
         ) if ( uc($charset) ne 'UTF-8' );
         $pofile =~ s/^\N{BOM}//;
     }
+
+    # Decode already read part of the PO file with the charset
+    $pofile = decode($charset, $pofile);
+
+    warn "Imbuing PO file '$filename' with '$charset'" if $debug{'encoding'};
+    binmode( $fh, ":encoding($charset)");
+
+    # Reading the rest of the file
+    while ( defined( my $textline = <$fh> ) ) {
+        $pofile .= $textline;
+    }
+
+    $pofile =~ s/\r\n/\n/sg;    # Reading a DOS-encoded file from Linux (native files are handled in all cases)
 
     if ( $filename ne '-' ) {
         close $fh
