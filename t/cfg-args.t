@@ -80,6 +80,13 @@ push @tests, {
     'closed_path'    => 'cfg/*/',
     'expected_files' => 'single-uptodate.fr.po  single-uptodate.pot single-uptodate.man.fr.1',
 
+  },
+  {
+    'doc'              => '--target-lang',
+    'po4a.conf'        => 'cfg/args-global/po4a.conf',
+    'options'          => '--no-update --target-lang=de --target-lang=fr',
+    'expected_outfile' => '_output-target-lang',
+    'expected_files'   => 'man.de.1 man.fr.1'
   };
 
 run_all_tests(@tests);
