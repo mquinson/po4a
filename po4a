@@ -8,7 +8,6 @@ eval 'exec perl -S $0 ${1+"$@"}'
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL v2.0 or later (see COPYING).
-
 =encoding UTF-8
 
 =head1 NAME
@@ -292,6 +291,12 @@ This option can be used multiple times.
 Define a variable that will be expanded in the B<po4a> configuration file.
 Every occurrence of I<$(var)> will be replaced by I<value>.
 This option can be used multiple times.
+
+=item B<--target-lang> I<LANG>
+
+Update PO files and generate translated documents only for the
+specified language. This option can be used multiple times.
+
 
 =item B<--srcdir> I<SRCDIR>
 
@@ -780,6 +785,7 @@ sub get_options {
         "package-version"    => undef,
         "srcdir"             => undef,
         "destdir"            => undef,
+	"target-lang"        => [],
         "calldir"            => cwd()
     );
     Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
@@ -818,7 +824,8 @@ sub get_options {
         'previous'             => \$previous,
         'msgmerge-opt=s'       => \$msgmerge_opt,
         'srcdir=s'             => \$opts{"srcdir"},
-        'destdir=s'            => \$opts{"destdir"}
+        'destdir=s'            => \$opts{"destdir"},
+	'target-lang=s'        => \@{ $opts{"target-lang"} }
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -1042,11 +1049,27 @@ my $config_file = shift(@ARGV) || pod2usage();
 
 # Parse the config file
 my (@langs);
+my (@target_langs) = @{ $po4a_opts{"target-lang"}};
 my (%aliases);                # module aliases ([po4a_alias:...]
 my $pot_filename     = "";    # In split mode, this is the temp file name for the big POT
 my $pot_filename_cfg = "";    # This is never modified, useful in split mode to find the cfg content
 my (%po_filename);            # po_files: '$lang'=>'$path'
 my (%add_filename);           # Global addendum_files: '$lang'=>array of '$path'
+
+sub check_target_langs {
+    my ($nb, $line) = @_;
+    if ( scalar @target_langs ) {
+	# check that all languages are in the list of destination languages are in the list of languages
+	foreach my $lang (@target_langs) {
+	    die wrap_ref_mod( "$config_file:$nb", "", gettext("Specified destination language '%s' not found in the list of languages."), $lang )
+		unless grep { $_ eq $lang } @langs;
+	}
+	$line = "";
+	@langs = @target_langs;
+    }
+    return $line;
+}
+
 
 # The document hash table contains all the information about the files to translate.
 # Each key of the hash map a master file, ie a file to translate. For each such master file, we have a sub-hashmap containing:
@@ -1180,9 +1203,12 @@ while (<CONFIG>) {
         }
 
     } elsif ( $cmd eq "po4a_langs" ) {
+
         die wrap_ref_mod( "$config_file:$nb", "", gettext("'%s' redeclared"), "po4a_langs" )
           if (@langs);
         @langs = map { $_ } @split_args;    # deep copy
+
+	$line = check_target_langs($nb, $line);
 
     } elsif ( $cmd eq "po_directory" ) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("The list of languages cannot be set twice.") )
@@ -1309,6 +1335,8 @@ while (<CONFIG>) {
             warn wrap_ref_mod( "$config_file:$nb", "",
                 gettext("Please create an empty file with the 'pot' extension (e.g. 'myproject.pot').") );
         }
+
+	$line = check_target_langs($nb, $line);
 
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
 
