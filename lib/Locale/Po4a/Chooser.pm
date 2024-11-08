@@ -40,6 +40,8 @@ sub new {
         $modname = 'AsciiDoc';
     } elsif ( $module eq 'Rd' || $module eq 'rubydoc' ) {
         $modname = 'RubyDoc';
+    } elsif ( $module eq 'vimhelp' ) {
+        $modname = 'VimHelp';
     } else {
         $modname = ucfirst($module);
     }
