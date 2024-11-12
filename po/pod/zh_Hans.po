@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.54\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
-"POT-Creation-Date: 2024-09-25 13:28+0200\n"
+"POT-Creation-Date: 2024-11-12 16:02+0100\n"
 "PO-Revision-Date: 2022-03-24 13:50+0000\n"
 "Last-Translator: taotieren <admin@taotieren.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -89,8 +89,8 @@ msgstr ""
 #: lib/Locale/Po4a/Pod.pm:7 lib/Locale/Po4a/RubyDoc.pm:3
 #: lib/Locale/Po4a/Sgml.pm:3 lib/Locale/Po4a/TeX.pm:3
 #: lib/Locale/Po4a/Texinfo.pm:3 lib/Locale/Po4a/Text.pm:3
-#: lib/Locale/Po4a/TransTractor.pm:3 lib/Locale/Po4a/Wml.pm:3
-#: lib/Locale/Po4a/Xhtml.pm:3 lib/Locale/Po4a/Xml.pm:3
+#: lib/Locale/Po4a/TransTractor.pm:3 lib/Locale/Po4a/VimHelp.pm:3
+#: lib/Locale/Po4a/Wml.pm:3 lib/Locale/Po4a/Xhtml.pm:3 lib/Locale/Po4a/Xml.pm:3
 #: lib/Locale/Po4a/Yaml.pm:3
 msgid "DESCRIPTION"
 msgstr "描述"
@@ -174,9 +174,9 @@ msgstr ""
 "refentrytitle><manvolnum>1</manvolnum></citerefentry>."
 
 #. type: =head1
-#: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:189
+#: share/doc/po4a-display-man.xml:21 share/doc/po4a-display-pod.xml:20 po4a:191
 #: po4a-gettextize:76 po4a-normalize:36 po4a-translate:50 po4a-updatepo:55
-#: msguntypot:29 doc/po4a.7.pod:192 lib/Locale/Po4a/Chooser.pm:7
+#: msguntypot:29 doc/po4a.7.pod:194 lib/Locale/Po4a/Chooser.pm:7
 #: lib/Locale/Po4a/Dia.pm:12 lib/Locale/Po4a/Docbook.pm:15
 #: lib/Locale/Po4a/Gemtext.pm:8 lib/Locale/Po4a/Guide.pm:10
 #: lib/Locale/Po4a/Halibut.pm:14 lib/Locale/Po4a/Ini.pm:8
@@ -184,8 +184,8 @@ msgstr ""
 #: lib/Locale/Po4a/Man.pm:107 lib/Locale/Po4a/Org.pm:17
 #: lib/Locale/Po4a/Pod.pm:21 lib/Locale/Po4a/RubyDoc.pm:14
 #: lib/Locale/Po4a/TeX.pm:118 lib/Locale/Po4a/Texinfo.pm:14
-#: lib/Locale/Po4a/Xhtml.pm:15 lib/Locale/Po4a/Xml.pm:187
-#: lib/Locale/Po4a/Yaml.pm:15
+#: lib/Locale/Po4a/VimHelp.pm:25 lib/Locale/Po4a/Xhtml.pm:15
+#: lib/Locale/Po4a/Xml.pm:187 lib/Locale/Po4a/Yaml.pm:15
 msgid "SEE ALSO"
 msgstr "参见"
 
@@ -299,7 +299,8 @@ msgstr "Florentin Duneau"
 #: lib/Locale/Po4a/RubyDoc.pm:1 lib/Locale/Po4a/Sgml.pm:1
 #: lib/Locale/Po4a/TeX.pm:1 lib/Locale/Po4a/Texinfo.pm:1
 #: lib/Locale/Po4a/Text.pm:1 lib/Locale/Po4a/TransTractor.pm:1
-#: lib/Locale/Po4a/Wml.pm:1 lib/Locale/Po4a/Xhtml.pm:1 lib/Locale/Po4a/Xml.pm:1
+#: lib/Locale/Po4a/VimHelp.pm:1 lib/Locale/Po4a/Wml.pm:1
+#: lib/Locale/Po4a/Xhtml.pm:1 lib/Locale/Po4a/Xml.pm:1
 #: lib/Locale/Po4a/Yaml.pm:1
 msgid "NAME"
 msgstr "名称"
@@ -942,18 +943,30 @@ msgstr ""
 
 #. type: =item
 #: po4a:78
+msgid "B<--target-lang> I<LANG>"
+msgstr ""
+
+#. type: textblock
+#: po4a:79
+msgid ""
+"Update PO files and generate translated documents only for the specified "
+"language. This option can be used multiple times."
+msgstr ""
+
+#. type: =item
+#: po4a:80
 msgid "B<--srcdir> I<SRCDIR>"
 msgstr "B<--srcdir> I<SRCDIR>"
 
 #. type: textblock
-#: po4a:79
+#: po4a:81
 msgid ""
 "Set the base directory for all input documents specified in the B<po4a> "
 "configuration file."
 msgstr "为 B<po4a> 配置文件中指定的所有输入文档设置基本目录。"
 
 #. type: textblock
-#: po4a:80
+#: po4a:82
 msgid ""
 "If both I<destdir> and I<srcdir> are specified, input files are searched in "
 "the following directories, in order: I<destdir>, the current directory and "
@@ -965,12 +978,12 @@ msgstr ""
 "目录。"
 
 #. type: =item
-#: po4a:81
+#: po4a:83
 msgid "B<--destdir> I<DESTDIR>"
 msgstr "B<--destdir> I<DESTDIR>"
 
 #. type: textblock
-#: po4a:82
+#: po4a:84
 msgid ""
 "Set the base directory for all the output documents specified in the B<po4a> "
 "configuration file (see B<--srcdir> above)."
@@ -979,17 +992,17 @@ msgstr ""
 "srcdir>）。"
 
 #. type: =head2
-#: po4a:83
+#: po4a:85
 msgid "Options modifying the POT header"
 msgstr "选项修改 POT 头"
 
 #. type: =item
-#: po4a:84 lib/Locale/Po4a/Po.pm:14
+#: po4a:86 lib/Locale/Po4a/Po.pm:14
 msgid "B<--porefs> I<type>"
 msgstr "B<--porefs> I<type>"
 
 #. type: textblock
-#: po4a:85 po4a-translate:43 po4a-updatepo:39 lib/Locale/Po4a/Po.pm:15
+#: po4a:87 po4a-translate:43 po4a-updatepo:39 lib/Locale/Po4a/Po.pm:15
 msgid ""
 "Specify the reference format. Argument I<type> can be one of B<never> to not "
 "produce any reference, B<file> to only specify the file without the line "
@@ -1001,12 +1014,12 @@ msgstr ""
 "完整引用（默认值：full）。"
 
 #. type: =item
-#: po4a:86 po4a-updatepo:41 lib/Locale/Po4a/Po.pm:16
+#: po4a:88 po4a-updatepo:41 lib/Locale/Po4a/Po.pm:16
 msgid "B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)"
 msgstr "B<--wrap-po> B<no>|B<newlines>|I<number> (default: 76)"
 
 #. type: textblock
-#: po4a:87 po4a-updatepo:42 lib/Locale/Po4a/Po.pm:17
+#: po4a:89 po4a-updatepo:42 lib/Locale/Po4a/Po.pm:17
 msgid ""
 "Specify how the po file should be wrapped. This gives the choice between "
 "either files that are nicely wrapped but could lead to git conflicts, or "
@@ -1016,7 +1029,7 @@ msgstr ""
 "者更容易自动处理但对人类来说更难读取的文件。"
 
 #. type: textblock
-#: po4a:88 lib/Locale/Po4a/Po.pm:18
+#: po4a:90 lib/Locale/Po4a/Po.pm:18
 msgid ""
 "Historically, the gettext suite has reformatted the po files at the 77th "
 "column for cosmetics. This option specifies the behavior of po4a. If set to "
@@ -1033,7 +1046,7 @@ msgstr ""
 "gettext 工具封装。"
 
 #. type: textblock
-#: po4a:89 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:19
+#: po4a:91 po4a-updatepo:44 lib/Locale/Po4a/Po.pm:19
 msgid ""
 "Note that this option has no impact on how the msgid and msgstr are wrapped, "
 "i.e.  on how newlines are added to the content of these strings."
@@ -1042,12 +1055,12 @@ msgstr ""
 "容中）没有影响。"
 
 #. type: =item
-#: po4a:90
+#: po4a:92
 msgid "B<--master-language>"
 msgstr "B<--master-language>"
 
 #. type: textblock
-#: po4a:91
+#: po4a:93
 msgid ""
 "Language of the source files containing the documents to translate. Note "
 "that all master documents must use the same language."
@@ -1055,12 +1068,12 @@ msgstr ""
 "包含要翻译的文档的源文件的语言。 请注意，所有主文档必须使用相同的语言。"
 
 #. type: =item
-#: po4a:92 po4a-gettextize:38 po4a-updatepo:47 lib/Locale/Po4a/Po.pm:20
+#: po4a:94 po4a-gettextize:38 po4a-updatepo:47 lib/Locale/Po4a/Po.pm:20
 msgid "B<--msgid-bugs-address> I<email@address>"
 msgstr "B<--msgid-bugs-address> I<email@address>"
 
 #. type: textblock
-#: po4a:93 po4a-gettextize:39 po4a-updatepo:48 lib/Locale/Po4a/Po.pm:21
+#: po4a:95 po4a-gettextize:39 po4a-updatepo:48 lib/Locale/Po4a/Po.pm:21
 msgid ""
 "Set the report address for msgid bugs. By default, the created POT files "
 "have no Report-Msgid-Bugs-To fields."
@@ -1069,64 +1082,64 @@ msgstr ""
 "Bugs-To 字段。"
 
 #. type: =item
-#: po4a:94 po4a-gettextize:40 po4a-updatepo:49 lib/Locale/Po4a/Po.pm:22
+#: po4a:96 po4a-gettextize:40 po4a-updatepo:49 lib/Locale/Po4a/Po.pm:22
 msgid "B<--copyright-holder> I<string>"
 msgstr "B<--copyright-holder> I<string>"
 
 #. type: textblock
-#: po4a:95 po4a-gettextize:41 po4a-updatepo:50 lib/Locale/Po4a/Po.pm:23
+#: po4a:97 po4a-gettextize:41 po4a-updatepo:50 lib/Locale/Po4a/Po.pm:23
 msgid ""
 "Set the copyright holder in the POT header. The default value is \"Free "
 "Software Foundation, Inc.\""
 msgstr "在 POT 标头中设置版权所有者。 默认值为“自由软件基金会有限公司。”"
 
 #. type: =item
-#: po4a:96 po4a-gettextize:42 po4a-updatepo:51 lib/Locale/Po4a/Po.pm:24
+#: po4a:98 po4a-gettextize:42 po4a-updatepo:51 lib/Locale/Po4a/Po.pm:24
 msgid "B<--package-name> I<string>"
 msgstr "B<--package-name> I<string>"
 
 #. type: textblock
-#: po4a:97 po4a-gettextize:43 po4a-updatepo:52 lib/Locale/Po4a/Po.pm:25
+#: po4a:99 po4a-gettextize:43 po4a-updatepo:52 lib/Locale/Po4a/Po.pm:25
 msgid "Set the package name for the POT header. The default is \"PACKAGE\"."
 msgstr "设置 POT 标头的程序包名称。 默认值为“封装”。"
 
 #. type: =item
-#: po4a:98 po4a-gettextize:44 po4a-updatepo:53 lib/Locale/Po4a/Po.pm:26
+#: po4a:100 po4a-gettextize:44 po4a-updatepo:53 lib/Locale/Po4a/Po.pm:26
 msgid "B<--package-version> I<string>"
 msgstr "B<--package-version> I<string>"
 
 #. type: textblock
-#: po4a:99 po4a-gettextize:45 po4a-updatepo:54 lib/Locale/Po4a/Po.pm:27
+#: po4a:101 po4a-gettextize:45 po4a-updatepo:54 lib/Locale/Po4a/Po.pm:27
 msgid "Set the package version for the POT header. The default is \"VERSION\"."
 msgstr "设置 POT 标头的软件包版本。 默认值为“版本”。"
 
 #. type: =head2
-#: po4a:100
+#: po4a:102
 msgid "Options to modify the PO files"
 msgstr "修改 PO 文件的选项"
 
 #. type: =item
-#: po4a:101 po4a-updatepo:26
+#: po4a:103 po4a-updatepo:26
 msgid "B<--msgmerge-opt> I<options>"
 msgstr "B<--msgmerge-opt> I<options>"
 
 #. type: textblock
-#: po4a:102 po4a-updatepo:27
+#: po4a:104 po4a-updatepo:27
 msgid "Extra options for B<msgmerge>(1)."
 msgstr "B<msgmerge>(1) 的其他选项。"
 
 #. type: textblock
-#: po4a:103
+#: po4a:105
 msgid "Note: B<$lang> will be extended to the current language."
 msgstr "注意： B<$lang> 将扩展为当前语言。"
 
 #. type: =item
-#: po4a:104 po4a-updatepo:22
+#: po4a:106 po4a-updatepo:22
 msgid "B<--no-previous>"
 msgstr "B<--no-previous>"
 
 #. type: textblock
-#: po4a:105
+#: po4a:107
 msgid ""
 "This option removes B<--previous> from the options passed to B<msgmerge>.  "
 "This is necessary to support versions of B<gettext> earlier than 0.16."
@@ -1135,12 +1148,12 @@ msgstr ""
 "B<gettext> 版本所必需的。"
 
 #. type: =item
-#: po4a:106 po4a-updatepo:24
+#: po4a:108 po4a-updatepo:24
 msgid "B<--previous>"
 msgstr "B<--previous>"
 
 #. type: textblock
-#: po4a:107 po4a-updatepo:25
+#: po4a:109 po4a-updatepo:25
 msgid ""
 "This option adds B<--previous> to the options passed to B<msgmerge>.  It "
 "requires B<gettext> 0.16 or later, and is activated by default."
@@ -1149,38 +1162,38 @@ msgstr ""
 "0.16 或更高版本，并在默认情况下激活。"
 
 #. type: =head1
-#: po4a:108
+#: po4a:110
 msgid "CONFIGURATION FILE"
 msgstr "配置文件"
 
 #. type: textblock
-#: po4a:109
+#: po4a:111
 msgid ""
 "po4a expects a configuration file as argument. This file must contain the "
 "following elements:"
 msgstr "po4a 需要一个配置文件作为参数。此文件必须包含以下元素："
 
 #. type: textblock
-#: po4a:110
+#: po4a:112
 msgid ""
 "The path to the PO files and the list of languages existing in the project;"
 msgstr "PO 文件的路径和项目中存在的语言列表;"
 
 #. type: textblock
-#: po4a:111
+#: po4a:113
 msgid ""
 "Optionally, some global options and so-called configuration aliases that are "
 "used as templates to configure individual master files;"
 msgstr "可选地，一些全局选项和所谓的配置别名，用作配置单个主文件的模板;"
 
 #. type: textblock
-#: po4a:112
+#: po4a:114
 msgid ""
 "The list of each master file to translate, along with specific parameters."
 msgstr "要转换的每个主文件的列表以及特定参数。"
 
 #. type: textblock
-#: po4a:113
+#: po4a:115
 msgid ""
 "All lines contain a command between square braces, followed by its "
 "parameters.  Comments begin with the char '#' and run until the end of the "
@@ -1190,7 +1203,7 @@ msgstr ""
 "到行的末尾。您可以转义行尾，将命令分散到几行。"
 
 #. type: textblock
-#: po4a:114
+#: po4a:116
 msgid ""
 "Some full examples are presented on this page, while other examples can be "
 "found in the C<t/cfg> directory of the source distribution."
@@ -1198,19 +1211,19 @@ msgstr ""
 "本页提供了一些完整的示例，而其他示例可以在源代码分发的 C<t/cfg> 目录中找到。"
 
 #. type: =head2
-#: po4a:115
+#: po4a:117
 msgid "Finding the PO and POT files"
 msgstr "查找 PO 和 POT 文件"
 
 #. type: textblock
-#: po4a:116
+#: po4a:118
 msgid ""
 "The simplest solution is to explicitly give the path to POT and PO files, as "
 "follows:"
 msgstr "最简单的解决方案是显式指定 POT 和 PO 文件的路径，如下所示："
 
 #. type: verbatim
-#: po4a:117
+#: po4a:119
 #, no-wrap
 msgid ""
 " [po4a_paths] man/po/project.pot de:man/po/de.po fr:man/po/fr.po\n"
@@ -1220,21 +1233,21 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:118
+#: po4a:120
 msgid ""
 "This specifies the path to the POT file first, and then the paths to the "
 "German and French PO files."
 msgstr "首先指定 POT 文件的路径，然后指定德语和法语 PO 文件的路径。"
 
 #. type: textblock
-#: po4a:119
+#: po4a:121
 msgid ""
 "The same information can be written as follows to reduce the risk of copy/"
 "paste errors:"
 msgstr "可以按如下方式写入相同的信息，以降低复制/粘贴错误的风险："
 
 #. type: verbatim
-#: po4a:120
+#: po4a:122
 #, no-wrap
 msgid ""
 " [po4a_langs] fr de\n"
@@ -1246,7 +1259,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:121
+#: po4a:123
 msgid ""
 "The C<$lang> component is automatically expanded using the provided "
 "languages list, reducing the risk of copy/paste error when a new language is "
@@ -1256,7 +1269,7 @@ msgstr ""
 "的风险。"
 
 #. type: textblock
-#: po4a:122
+#: po4a:124
 msgid ""
 "You can further compact the same information by only providing the path to "
 "the directory containing your translation project, as follows."
@@ -1264,7 +1277,7 @@ msgstr ""
 "通过只提供包含翻译项目的目录的路径，您可以进一步压缩相同的信息，如下所示。"
 
 #. type: verbatim
-#: po4a:123
+#: po4a:125
 #, no-wrap
 msgid ""
 " [po_directory] man/po/\n"
@@ -1274,7 +1287,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:124
+#: po4a:126
 msgid ""
 "The provided directory must contain a set of PO files, each named F<XX.po> "
 "with C<XX> the ISO 639-1 of the language used in this file. The directory "
@@ -1288,7 +1301,7 @@ msgstr ""
 "称)。"
 
 #. type: textblock
-#: po4a:125
+#: po4a:127
 msgid ""
 "Note that you must choose only one between C<po_directory> and "
 "C<po4a_paths>. The first one (C<po_directory>) is more compact, further "
@@ -1303,12 +1316,12 @@ msgstr ""
 "一个项目时使用。"
 
 #. type: =head3
-#: po4a:126
+#: po4a:128
 msgid "Centralized or split PO files?"
 msgstr "集中或拆分 PO 文件？"
 
 #. type: textblock
-#: po4a:127
+#: po4a:129
 msgid ""
 "By default, po4a produces one single PO file per target language, containing "
 "the whole content of your translation project. As your project grows, the "
@@ -1323,7 +1336,7 @@ msgstr ""
 "喜欢将内容分成几个文件。"
 
 #. type: textblock
-#: po4a:128
+#: po4a:130
 msgid ""
 "To have one PO file per master file, you simply have to use the string "
 "C<$master> in the name of your PO files on the C<[po4a_paths]> line, as "
@@ -1333,7 +1346,7 @@ msgstr ""
 "字符串 C<$master>，如下所示。"
 
 #. type: verbatim
-#: po4a:129
+#: po4a:131
 #, no-wrap
 msgid ""
 " [po4a_paths] doc/$master/$master.pot $lang:doc/$master/$lang.po\n"
@@ -1343,7 +1356,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:130
+#: po4a:132
 #, fuzzy
 #| msgid ""
 #| "With this line, po4a will produce separate POT and PO files for each "
@@ -1370,7 +1383,7 @@ msgstr ""
 "示。此功能还可用于将多个翻译后的文件组合到同一 POT 文件中。"
 
 #. type: textblock
-#: po4a:131
+#: po4a:133
 msgid ""
 "This feature can also be used to group several translated files into the "
 "same POT file. The following example only produces 2 POT files: F<l10n/po/"
@@ -1379,7 +1392,7 @@ msgid ""
 msgstr ""
 
 #. type: verbatim
-#: po4a:132
+#: po4a:134
 #, fuzzy, no-wrap
 #| msgid ""
 #| " [po4a_langs] de fr ja\n"
@@ -1404,7 +1417,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:133
+#: po4a:135
 msgid ""
 "In split mode, B<po4a> builds a temporary compendium during the PO update, "
 "to share the translations between all the PO files. If two PO files have "
@@ -1419,12 +1432,12 @@ msgstr ""
 "时，翻译将自动用于每个 PO 文件中。"
 
 #. type: =head2
-#: po4a:134
+#: po4a:136
 msgid "Specifying the documents to translate"
 msgstr "指定要翻译的文档"
 
 #. type: textblock
-#: po4a:135
+#: po4a:137
 #, fuzzy
 #| msgid ""
 #| "You must also list the documents that should be translated. For each "
@@ -1441,7 +1454,7 @@ msgstr ""
 "的转换文档的位置，以及一些可选的配置。下面是一个例子："
 
 #. type: verbatim
-#: po4a:136
+#: po4a:138
 #, fuzzy, no-wrap
 #| msgid ""
 #| " [type: sgml] doc/my_stuff.sgml fr:doc/fr/mon_truc.sgml \\\n"
@@ -1465,7 +1478,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:137
+#: po4a:139
 msgid ""
 "But again, these complex lines are difficult to read and modify, e.g. when "
 "adding a new language. It is much simpler to reorganize things using the "
@@ -1475,7 +1488,7 @@ msgstr ""
 "新组织内容要简单得多，如下所示："
 
 #. type: verbatim
-#: po4a:138
+#: po4a:140
 #, no-wrap
 msgid ""
 " [type: sgml]    doc/my_stuff.sgml $lang:doc/$lang/my_stuff.sgml\n"
@@ -1489,12 +1502,12 @@ msgstr ""
 "\n"
 
 #. type: =head2
-#: po4a:139
+#: po4a:141
 msgid "Specifying options"
 msgstr "指定选项"
 
 #. type: textblock
-#: po4a:140
+#: po4a:142
 msgid ""
 "There is two types of options: I<po4a options> are default values to the "
 "po4a command line options while I<format options> are used to change the "
@@ -1512,7 +1525,7 @@ msgstr ""
 "B<nostrip> 传递给 XML 解析器，以不除去提取的字符串周围的空格。"
 
 #. type: textblock
-#: po4a:141
+#: po4a:143
 msgid ""
 "You can pass these options for a specific master file, or even for a "
 "specific translation of that file, using C<opt:> and C<opt_XX:> for the "
@@ -1526,7 +1539,7 @@ msgstr ""
 "持）。"
 
 #. type: verbatim
-#: po4a:142
+#: po4a:144
 #, no-wrap
 msgid ""
 " [type:xml] toto.xml $lang:toto.$lang.xml opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
@@ -1536,7 +1549,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:143
+#: po4a:145
 msgid ""
 "In any case, these configuration chunks must be located at the end of the "
 "line.  The declaration of files must come first, then the addendum if any "
@@ -1549,7 +1562,7 @@ msgstr ""
 "串。以下示例都是等效的："
 
 #. type: verbatim
-#: po4a:144
+#: po4a:146
 #, no-wrap
 msgid ""
 "  [type:xml] toto.xml $lang:toto.$lang.xml opt:\"--keep 20\" opt:\"-o nostrip\" opt_fr:\"--keep 0\"\n"
@@ -1563,7 +1576,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:145
+#: po4a:147
 msgid ""
 "Note that language specific options are not used when building the POT file. "
 "It is for example impossible to pass B<nostrip> to the parser only when "
@@ -1576,12 +1589,12 @@ msgstr ""
 "以特定于语言的选项是生成翻译时使用的选项，如 C<--keep> 选项。"
 
 #. type: =head3
-#: po4a:146
+#: po4a:148
 msgid "Configuration aliases"
 msgstr "配置别名"
 
 #. type: textblock
-#: po4a:147
+#: po4a:149
 msgid ""
 "To pass the same options to several files, the best is to define a type "
 "alias as follows. In the next example, C<--keep 0> is passed to every "
@@ -1593,7 +1606,7 @@ msgstr ""
 "大利语翻译。"
 
 #. type: verbatim
-#: po4a:148
+#: po4a:150
 #, no-wrap
 msgid ""
 "  [po4a_alias:test] man opt_it:\"--keep 0\"\n"
@@ -1605,7 +1618,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:149
+#: po4a:151
 msgid ""
 "You can also extend an existing type reusing the same name for the alias as "
 "follows. This is not interpreted as as an erroneous recursive definition."
@@ -1614,7 +1627,7 @@ msgstr ""
 "归定义。"
 
 #. type: verbatim
-#: po4a:150
+#: po4a:152
 #, no-wrap
 msgid ""
 "  [po4a_alias:man] man opt_it:\"--keep 0\"\n"
@@ -1626,12 +1639,12 @@ msgstr ""
 "\n"
 
 #. type: =head3
-#: po4a:151
+#: po4a:153
 msgid "Global default options"
 msgstr "全局默认选项"
 
 #. type: textblock
-#: po4a:152
+#: po4a:154
 msgid ""
 "You can also use C<[options]> lines to define options that must be used for "
 "all files, regardless of their type."
@@ -1639,7 +1652,7 @@ msgstr ""
 "您还可以使用 C<[options]> 行定义必须用于所有文件的选项，无论其类型如何。"
 
 #. type: verbatim
-#: po4a:153
+#: po4a:155
 #, no-wrap
 msgid ""
 "  [options] --keep 20 --option nostrip\n"
@@ -1649,14 +1662,14 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:154
+#: po4a:156
 msgid ""
 "As with the command line options, you can abbreviate the parameters passed "
 "in the configuration file:"
 msgstr "与命令行选项一样，您可以缩写配置文件中传递的参数："
 
 #. type: verbatim
-#: po4a:155
+#: po4a:157
 #, no-wrap
 msgid ""
 "  [options] -k 20 -o nostrip\n"
@@ -1666,12 +1679,12 @@ msgstr ""
 "\n"
 
 #. type: =head3
-#: po4a:156
+#: po4a:158
 msgid "Option priorities"
 msgstr "选项优先权"
 
 #. type: textblock
-#: po4a:157
+#: po4a:159
 msgid ""
 "The options of every sources are concatenated, ensuring that the default "
 "values can easily be overridden by more specific options. The order is as "
@@ -1680,21 +1693,21 @@ msgstr ""
 "每个源的选项都是串联的，确保默认值可以很容易地被更具体的选项覆盖。顺序如下："
 
 #. type: textblock
-#: po4a:158
+#: po4a:160
 msgid ""
 "C<[options]> lines provide default values that can be overridden by any "
 "other source."
 msgstr "C<[options]> 行提供可由任何其他源重写的默认值。"
 
 #. type: textblock
-#: po4a:159
+#: po4a:161
 msgid ""
 "Type aliases are then used. Language specific settings override the ones "
 "applicable to all languages."
 msgstr "然后使用类型别名。特定于语言的设置将覆盖适用于所有语言的设置。"
 
 #. type: textblock
-#: po4a:160
+#: po4a:162
 msgid ""
 "Settings that are specific to a given master file override both the default "
 "ones and the ones coming from the type alias. In this case also, language "
@@ -1704,44 +1717,44 @@ msgstr ""
 "特定于语言的设置也会覆盖全局设置。"
 
 #. type: textblock
-#: po4a:161
+#: po4a:163
 msgid ""
 "Finally, parameters provided on the B<po4a> command line override any "
 "settings from the configuration file."
 msgstr "最后，B<po4a> 命令行上提供的参数会覆盖配置文件中的任何设置。"
 
 #. type: =head3
-#: po4a:162
+#: po4a:164
 msgid "Example"
 msgstr "示例"
 
 #. type: textblock
-#: po4a:163
+#: po4a:165
 msgid "Here is an example showing how to quote the spaces and quotes:"
 msgstr "下面是一个示例，演示如何引用空格和引号："
 
 #. type: verbatim
-#: po4a:164
-#, no-wrap
-msgid ""
-" [po_directory] man/po/\n"
-" \n"
-msgstr ""
-" [po_directory] man/po/\n"
-" \n"
-
-#. type: verbatim
-#: po4a:165
-#, no-wrap
-msgid ""
-" [options] --master-charset UTF-8\n"
-" \n"
-msgstr ""
-" [options] --master-charset UTF-8\n"
-" \n"
-
-#. type: verbatim
 #: po4a:166
+#, no-wrap
+msgid ""
+" [po_directory] man/po/\n"
+" \n"
+msgstr ""
+" [po_directory] man/po/\n"
+" \n"
+
+#. type: verbatim
+#: po4a:167
+#, no-wrap
+msgid ""
+" [options] --master-charset UTF-8\n"
+" \n"
+msgstr ""
+" [options] --master-charset UTF-8\n"
+" \n"
+
+#. type: verbatim
+#: po4a:168
 #, no-wrap
 msgid ""
 " [po4a_alias:man] man opt:\"-o \\\"mdoc=NAME,SEE ALSO\\\"\"\n"
@@ -1755,12 +1768,12 @@ msgstr ""
 "\n"
 
 #. type: =head2
-#: po4a:167
+#: po4a:169
 msgid "Addendum: Adding extra content in the translation"
 msgstr "附录：在译文中增加额外内容"
 
 #. type: textblock
-#: po4a:168
+#: po4a:170
 msgid ""
 "If you want to add an extra section to the translation, for example to give "
 "credit to the translator, then you need to define an addendum to the line "
@@ -1772,46 +1785,46 @@ msgstr ""
 "页。"
 
 #. type: verbatim
-#: po4a:169
-#, no-wrap
-msgid ""
-" [type: pod] script fr:doc/fr/script.1 \\\n"
-"             add_fr:doc/l10n/script.fr.add\n"
-"\n"
-msgstr ""
-" [type: pod] script fr:doc/fr/script.1 \\\n"
-"             add_fr:doc/l10n/script.fr.add\n"
-"\n"
-
-#. type: textblock
-#: po4a:170
-msgid "You can also use language templates as follow:"
-msgstr "您还可以使用语言模板，如下所示："
-
-#. type: verbatim
 #: po4a:171
 #, no-wrap
 msgid ""
-" [type: pod] script $lang:doc/$lang/script.1 \\\n"
-"             add_$lang:doc/l10n/script.$lang.add\n"
+" [type: pod] script fr:doc/fr/script.1 \\\n"
+"             add_fr:doc/l10n/script.fr.add\n"
 "\n"
 msgstr ""
-" [type: pod] script $lang:doc/$lang/script.1 \\\n"
-"             add_$lang:doc/l10n/script.$lang.add\n"
+" [type: pod] script fr:doc/fr/script.1 \\\n"
+"             add_fr:doc/l10n/script.fr.add\n"
 "\n"
 
 #. type: textblock
 #: po4a:172
+msgid "You can also use language templates as follow:"
+msgstr "您还可以使用语言模板，如下所示："
+
+#. type: verbatim
+#: po4a:173
+#, no-wrap
+msgid ""
+" [type: pod] script $lang:doc/$lang/script.1 \\\n"
+"             add_$lang:doc/l10n/script.$lang.add\n"
+"\n"
+msgstr ""
+" [type: pod] script $lang:doc/$lang/script.1 \\\n"
+"             add_$lang:doc/l10n/script.$lang.add\n"
+"\n"
+
+#. type: textblock
+#: po4a:174
 msgid "If an addendum fails to apply, the translation is discarded."
 msgstr "如果补遗不适用，翻译将被丢弃。"
 
 #. type: =head3
-#: po4a:173
+#: po4a:175
 msgid "Modifiers for the addendum declaration"
 msgstr "附录声明的修饰符"
 
 #. type: textblock
-#: po4a:174
+#: po4a:176
 msgid ""
 "Addendum modifiers can simplify the configuration file in the case where not "
 "all languages provide an addendum, or when the list of addenda changes from "
@@ -1822,22 +1835,22 @@ msgstr ""
 "时，附录修饰符可以简化配置文件。修饰符是位于文件名之前的单个字符。"
 
 #. type: =item
-#: po4a:175
+#: po4a:177
 msgid "B<?>"
 msgstr "B<?>"
 
 #. type: textblock
-#: po4a:176
+#: po4a:178
 msgid "Include I<addendum_path> if this file does exist, otherwise do nothing."
 msgstr "如果此文件确实存在，请包括 I<appendment_path>，否则不执行任何操作。"
 
 #. type: =item
-#: po4a:177
+#: po4a:179
 msgid "B<@>"
 msgstr "B<@>"
 
 #. type: textblock
-#: po4a:178
+#: po4a:180
 msgid ""
 "I<addendum_path> is not a regular addendum but a file containing a list of "
 "addenda, one by line.  Each addendum may be preceded by modifiers."
@@ -1846,12 +1859,12 @@ msgstr ""
 "面都可以加上修饰符。"
 
 #. type: =item
-#: po4a:179
+#: po4a:181
 msgid "B<!>"
 msgstr "B<!>"
 
 #. type: textblock
-#: po4a:180
+#: po4a:182
 msgid ""
 "I<addendum_path> is discarded, it is not loaded and will not be loaded by "
 "any further addendum specification."
@@ -1859,7 +1872,7 @@ msgstr ""
 "I<appendment_path> 被丢弃，它不会被加载，也不会被任何进一步的附录规范加载。"
 
 #. type: textblock
-#: po4a:181
+#: po4a:183
 msgid ""
 "The following includes an addendum in any language, but if only it exists. "
 "No error is reported if the addendum does not exist."
@@ -1868,7 +1881,7 @@ msgstr ""
 "何错误。"
 
 #. type: verbatim
-#: po4a:182
+#: po4a:184
 #, no-wrap
 msgid ""
 " [type: pod] script $lang:doc/$lang/script.1  add_$lang:?doc/l10n/script.$lang.add\n"
@@ -1878,12 +1891,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:183
+#: po4a:185
 msgid "The following includes a list of addendum for every language:"
 msgstr "以下为每种语言的附录清单："
 
 #. type: verbatim
-#: po4a:184
+#: po4a:186
 #, no-wrap
 msgid ""
 " [type: pod] script $lang:doc/$lang/script.1  add_$lang:@doc/l10n/script.$lang.add\n"
@@ -1893,12 +1906,12 @@ msgstr ""
 "\n"
 
 #. type: =head2
-#: po4a:185
+#: po4a:187
 msgid "Filtering the translated strings"
 msgstr "过滤翻译的字符串"
 
 #. type: textblock
-#: po4a:186
+#: po4a:188
 msgid ""
 "Sometimes, you want to hide some strings from the translation process. To "
 "that extend, you can give a C<pot_in> parameter to your master file to "
@@ -1910,7 +1923,7 @@ msgstr ""
 "例子："
 
 #. type: verbatim
-#: po4a:187
+#: po4a:189
 #, no-wrap
 msgid ""
 "  [type:docbook] book.xml          \\\n"
@@ -1924,7 +1937,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: po4a:188
+#: po4a:190
 msgid ""
 "With this setting, the strings to translate will be extracted from the "
 "F<book-filtered.xml> (that must be produced before calling B<po4a>) while "
@@ -1943,7 +1956,7 @@ msgstr ""
 "因此您可能需要使用 C<--keep> 选项来确保无论如何都会生成文档。"
 
 #. type: textblock
-#: po4a:190
+#: po4a:192
 #, fuzzy
 #| msgid ""
 #| "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, "
@@ -1953,8 +1966,8 @@ msgstr ""
 "L<po4a-gettextize(1)>, L<po4a-translate(1)>, L<po4a-updatepo(1)>, L<po4a(7)>"
 
 #. type: =head1
-#: po4a:191 po4a-gettextize:78 po4a-normalize:38 po4a-translate:52
-#: po4a-updatepo:57 msguntypot:32 doc/po4a.7.pod:198
+#: po4a:193 po4a-gettextize:78 po4a-normalize:38 po4a-translate:52
+#: po4a-updatepo:57 msguntypot:32 doc/po4a.7.pod:200
 #: lib/Locale/Po4a/AsciiDoc.pm:56 lib/Locale/Po4a/BibTeX.pm:11
 #: lib/Locale/Po4a/Chooser.pm:12 lib/Locale/Po4a/Common.pm:28
 #: lib/Locale/Po4a/Dia.pm:14 lib/Locale/Po4a/Docbook.pm:17
@@ -1966,13 +1979,14 @@ msgstr ""
 #: lib/Locale/Po4a/RubyDoc.pm:16 lib/Locale/Po4a/Sgml.pm:53
 #: lib/Locale/Po4a/TeX.pm:120 lib/Locale/Po4a/Texinfo.pm:16
 #: lib/Locale/Po4a/Text.pm:45 lib/Locale/Po4a/TransTractor.pm:158
-#: lib/Locale/Po4a/Wml.pm:11 lib/Locale/Po4a/Xhtml.pm:17
-#: lib/Locale/Po4a/Xml.pm:189 lib/Locale/Po4a/Yaml.pm:17
+#: lib/Locale/Po4a/VimHelp.pm:27 lib/Locale/Po4a/Wml.pm:11
+#: lib/Locale/Po4a/Xhtml.pm:17 lib/Locale/Po4a/Xml.pm:189
+#: lib/Locale/Po4a/Yaml.pm:17
 msgid "AUTHORS"
 msgstr "作者"
 
 #. type: verbatim
-#: po4a:192 po4a-gettextize:79 po4a-normalize:39 po4a-translate:53
+#: po4a:194 po4a-gettextize:79 po4a-normalize:39 po4a-translate:53
 #: po4a-updatepo:58 lib/Locale/Po4a/Man.pm:110
 #, fuzzy, no-wrap
 #| msgid ""
@@ -1992,7 +2006,7 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: po4a:193 po4a-gettextize:80 po4a-normalize:40 po4a-translate:54
+#: po4a:195 po4a-gettextize:80 po4a-normalize:40 po4a-translate:54
 #: po4a-updatepo:59 msguntypot:34 lib/Locale/Po4a/AsciiDoc.pm:58
 #: lib/Locale/Po4a/BibTeX.pm:13 lib/Locale/Po4a/Chooser.pm:14
 #: lib/Locale/Po4a/Common.pm:30 lib/Locale/Po4a/Dia.pm:16
@@ -2003,14 +2017,14 @@ msgstr ""
 #: lib/Locale/Po4a/Org.pm:21 lib/Locale/Po4a/Pod.pm:25
 #: lib/Locale/Po4a/RubyDoc.pm:18 lib/Locale/Po4a/Sgml.pm:58
 #: lib/Locale/Po4a/TeX.pm:122 lib/Locale/Po4a/Texinfo.pm:18
-#: lib/Locale/Po4a/Text.pm:47 lib/Locale/Po4a/Wml.pm:13
-#: lib/Locale/Po4a/Xhtml.pm:19 lib/Locale/Po4a/Xml.pm:191
-#: lib/Locale/Po4a/Yaml.pm:19
+#: lib/Locale/Po4a/Text.pm:47 lib/Locale/Po4a/VimHelp.pm:29
+#: lib/Locale/Po4a/Wml.pm:13 lib/Locale/Po4a/Xhtml.pm:19
+#: lib/Locale/Po4a/Xml.pm:191 lib/Locale/Po4a/Yaml.pm:19
 msgid "COPYRIGHT AND LICENSE"
 msgstr "版权和许可"
 
 #. type: textblock
-#: po4a:194 po4a-gettextize:81 po4a-normalize:41 po4a-translate:55
+#: po4a:196 po4a-gettextize:81 po4a-normalize:41 po4a-translate:55
 #: po4a-updatepo:60
 #, fuzzy
 #| msgid "Copyright 2002-2020 by SPI, inc."
@@ -2018,7 +2032,7 @@ msgid "Copyright 2002-2023 by SPI, inc."
 msgstr "版权所有 2002-2020，SPI，Inc."
 
 #. type: textblock
-#: po4a:195 po4a-gettextize:82 po4a-normalize:42 po4a-translate:56
+#: po4a:197 po4a-gettextize:82 po4a-normalize:42 po4a-translate:56
 #: po4a-updatepo:61 msguntypot:36 lib/Locale/Po4a/AsciiDoc.pm:60
 #: lib/Locale/Po4a/BibTeX.pm:15 lib/Locale/Po4a/Chooser.pm:16
 #: lib/Locale/Po4a/Common.pm:32 lib/Locale/Po4a/Dia.pm:18
@@ -2632,7 +2646,8 @@ msgstr "B<po4a-normalize> B<-f> I<fmt> I<master.doc>"
 #: lib/Locale/Po4a/RubyDoc.pm:4 lib/Locale/Po4a/Sgml.pm:4
 #: lib/Locale/Po4a/TeX.pm:4 lib/Locale/Po4a/Texinfo.pm:4
 #: lib/Locale/Po4a/Text.pm:4 lib/Locale/Po4a/TransTractor.pm:4
-#: lib/Locale/Po4a/Wml.pm:4 lib/Locale/Po4a/Xhtml.pm:4 lib/Locale/Po4a/Xml.pm:4
+#: lib/Locale/Po4a/VimHelp.pm:4 lib/Locale/Po4a/Wml.pm:4
+#: lib/Locale/Po4a/Xhtml.pm:4 lib/Locale/Po4a/Xml.pm:4
 msgid ""
 "The po4a (PO for anything) project goal is to ease translations (and more "
 "interestingly, the maintenance of translations) using gettext tools on areas "
@@ -3730,11 +3745,26 @@ msgstr ""
 
 #. type: =item
 #: doc/po4a.7.pod:69
+#, fuzzy
+#| msgid "texinfo (very highly experimental parser)"
+msgid "vimhelp (very highly experimental parser)"
+msgstr "texinfo (高度实验性的解析器)"
+
+#. type: textblock
+#: doc/po4a.7.pod:70
+msgid ""
+"The format used for Vim help files (and some third-party plugin "
+"documentation).  Support for this format in po4a is still in its infancy.  "
+"If you find anything, please file a bug report or feature request."
+msgstr ""
+
+#. type: =item
+#: doc/po4a.7.pod:71
 msgid "Others supported formats"
 msgstr "其他支持的格式"
 
 #. type: textblock
-#: doc/po4a.7.pod:70
+#: doc/po4a.7.pod:72
 #, fuzzy
 #| msgid ""
 #| "Po4a can also handle some more rare or specialized formats, such as the "
@@ -3757,12 +3787,12 @@ msgstr ""
 "面的更多信息，请参见 L<Locale::Po4a::TransTractor(3pm)>。"
 
 #. type: =item
-#: doc/po4a.7.pod:71
+#: doc/po4a.7.pod:73
 msgid "Unsupported formats"
 msgstr "不支持的格式"
 
 #. type: textblock
-#: doc/po4a.7.pod:72
+#: doc/po4a.7.pod:74
 msgid ""
 "Unfortunately, po4a still lacks support for several documentation formats. "
 "Many of them would be easy to support in po4a. This includes formats not "
@@ -3777,12 +3807,12 @@ msgstr ""
 "式。"
 
 #. type: =head1
-#: doc/po4a.7.pod:73
+#: doc/po4a.7.pod:75
 msgid "Using po4a"
 msgstr "使用 po4a"
 
 #. type: textblock
-#: doc/po4a.7.pod:74
+#: doc/po4a.7.pod:76
 msgid ""
 "The easiest way to use this tool in your project is to write a configuration "
 "file for the B<po4a> program, and only interact with this program. Please "
@@ -3792,12 +3822,12 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:75
+#: doc/po4a.7.pod:77
 msgid "Detailed schema of the po4a workflow"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:76
+#: doc/po4a.7.pod:78
 msgid ""
 "Make sure to read L<po4a(1)> before this overly detailed section to get a "
 "simplified overview of the po4a workflow. Come back here when you want to "
@@ -3805,7 +3835,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:77
+#: doc/po4a.7.pod:79
 #, fuzzy
 #| msgid ""
 #| "The following schema gives an overview of how each po4a script can be "
@@ -3832,7 +3862,7 @@ msgstr ""
 "doc> 文件。"
 
 #. type: textblock
-#: doc/po4a.7.pod:78
+#: doc/po4a.7.pod:80
 msgid ""
 "Transitions with square brackets such as C<[po4a updates po]> represent the "
 "execution of a po4a tool while transitions with curly brackets such as "
@@ -3841,7 +3871,7 @@ msgid ""
 msgstr ""
 
 #. type: verbatim
-#: doc/po4a.7.pod:79
+#: doc/po4a.7.pod:81
 #, fuzzy, no-wrap
 #| msgid ""
 #| "                                   master.doc\n"
@@ -3968,14 +3998,14 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:80
+#: doc/po4a.7.pod:82
 msgid ""
 "Again, this schema is overly complicated. Check on L<po4a(1)> for a "
 "simplified overview."
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:81
+#: doc/po4a.7.pod:83
 msgid ""
 "The left part depicts how L<po4a-gettextize(1)> can be used to convert an "
 "existing translation project to the po4a infrastructure. This script takes "
@@ -3993,7 +4023,7 @@ msgstr ""
 "正确部分。"
 
 #. type: textblock
-#: doc/po4a.7.pod:82
+#: doc/po4a.7.pod:84
 #, fuzzy
 #| msgid ""
 #| "On the top right part, the action of the original author is depicted, "
@@ -4020,7 +4050,7 @@ msgstr ""
 "新。新的或大量修改的资料未翻译。"
 
 #. type: textblock
-#: doc/po4a.7.pod:83
+#: doc/po4a.7.pod:85
 #, fuzzy
 #| msgid ""
 #| "Then, the I<manual editing> reported depicts the action of the "
@@ -4046,7 +4076,7 @@ msgstr ""
 "请参阅 gettext 文档。"
 
 #. type: textblock
-#: doc/po4a.7.pod:84
+#: doc/po4a.7.pod:86
 #, fuzzy
 #| msgid ""
 #| "The bottom part of the figure shows how L<po4a-translate(1)> creates a "
@@ -4071,7 +4101,7 @@ msgstr ""
 "用于将翻译人员的姓名添加到最终文档中。详情见下文。"
 
 #. type: textblock
-#: doc/po4a.7.pod:85
+#: doc/po4a.7.pod:87
 #, fuzzy
 #| msgid "po4a - update both the PO files and translated documents in one shot"
 msgid ""
@@ -4080,14 +4110,14 @@ msgid ""
 msgstr "po4a - 一次性更新 PO 文件和翻译文档"
 
 #. type: =head2
-#: doc/po4a.7.pod:86
+#: doc/po4a.7.pod:88
 #, fuzzy
 #| msgid "Starting a new translation"
 msgid "Starting a new translation project"
 msgstr "开始新的翻译"
 
 #. type: textblock
-#: doc/po4a.7.pod:87
+#: doc/po4a.7.pod:89
 msgid ""
 "If you start from scratch, you just have to write a configuration file for "
 "po4a, and you are set.  The relevant templates are created for the missing "
@@ -4097,7 +4127,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:88
+#: doc/po4a.7.pod:90
 msgid ""
 "If you have an existing translation, i.e. a documentation file that was "
 "translated manually, you can integrate its content in your po4a workflow "
@@ -4107,14 +4137,14 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:89
+#: doc/po4a.7.pod:91
 #, fuzzy
 #| msgid "Generating a translated document"
 msgid "Updating the translations and documents"
 msgstr "生成翻译的文档"
 
 #. type: textblock
-#: doc/po4a.7.pod:90
+#: doc/po4a.7.pod:92
 msgid ""
 "Once setup, invoking B<po4a> is enough to update both the translation PO "
 "files and translated documents. You may pass the C<--no-translations> to "
@@ -4126,12 +4156,12 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:91
+#: doc/po4a.7.pod:93
 msgid "Using addenda to add extra text to translations"
 msgstr "使用附录向翻译添加额外文本"
 
 #. type: textblock
-#: doc/po4a.7.pod:92
+#: doc/po4a.7.pod:94
 msgid ""
 "Adding new text to the translation is probably the only thing that is easier "
 "in the long run when you translate files manually :). This happens when you "
@@ -4145,7 +4175,7 @@ msgstr ""
 "会发生这种情况。典型的用例是给翻译团队加分，并指出如何报告特定于翻译的问题。"
 
 #. type: textblock
-#: doc/po4a.7.pod:93
+#: doc/po4a.7.pod:95
 msgid ""
 "With po4a, you have to specify B<addendum> files, that can be conceptually "
 "viewed as patches applied to the localized document after processing. Each "
@@ -4161,7 +4191,7 @@ msgstr ""
 "法--见下文)，而文件的其余部分被逐字添加到确定的位置。"
 
 #. type: textblock
-#: doc/po4a.7.pod:94
+#: doc/po4a.7.pod:96
 msgid ""
 "The header line must begin with the string B<PO4A-HEADER:>, followed by a "
 "semi-colon separated list of I<key>B<=>I<value> fields."
@@ -4170,14 +4200,14 @@ msgstr ""
 "段列表。"
 
 #. type: textblock
-#: doc/po4a.7.pod:95
+#: doc/po4a.7.pod:97
 msgid ""
 "For example, the following header declares an addendum that must be placed "
 "at the very end of the translation."
 msgstr "例如，下面的标题声明了一个附录，该附录必须放在翻译的最后。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:96
+#: doc/po4a.7.pod:98
 #, no-wrap
 msgid ""
 " PO4A-HEADER: mode=eof\n"
@@ -4187,7 +4217,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:97
+#: doc/po4a.7.pod:99
 msgid ""
 "Things are more complex when you want to add your extra content in the "
 "middle of the document. The following header declares an addendum that must "
@@ -4198,7 +4228,7 @@ msgstr ""
 "翻译时必须放在包含字符串 C<About this document> 的 XML 部分之后。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:98
+#: doc/po4a.7.pod:100
 #, no-wrap
 msgid ""
 " PO4A-HEADER: position=About this document; mode=after; endboundary=</section>\n"
@@ -4208,7 +4238,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:99
+#: doc/po4a.7.pod:101
 msgid ""
 "In practice, when trying to apply an addendum, po4a searches for the first "
 "line matching the C<position> argument (this can be a regexp). Do not forget "
@@ -4221,7 +4251,7 @@ msgstr ""
 "是英文的，但如果您打算将附录应用于文档的法语翻译，则您的行可能应该如下所示。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:100
+#: doc/po4a.7.pod:102
 #, no-wrap
 msgid ""
 " PO4A-HEADER: position=À propos de ce document; mode=after; endboundary=</section>\n"
@@ -4231,7 +4261,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:101
+#: doc/po4a.7.pod:103
 msgid ""
 "Once the C<position> is found in the target document, po4a searches for the "
 "next line after the C<position> that matches the provided C<endboundary>. "
@@ -4243,14 +4273,14 @@ msgstr ""
 "了 I<endboundary>，即结束于当前部分的边界)。"
 
 #. type: textblock
-#: doc/po4a.7.pod:102
+#: doc/po4a.7.pod:104
 msgid ""
 "The exact same effect could be obtained with the following header, that is "
 "equivalent:"
 msgstr "使用下面的 Header 可以获得完全相同的效果，即等效："
 
 #. type: verbatim
-#: doc/po4a.7.pod:103
+#: doc/po4a.7.pod:105
 #, no-wrap
 msgid ""
 " PO4A-HEADER: position=About this document; mode=after; beginboundary=<section>\n"
@@ -4260,7 +4290,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:104
+#: doc/po4a.7.pod:106
 #, fuzzy
 #| msgid ""
 #| "Here, po4a searches for the first line matching C<<section>> after the "
@@ -4291,7 +4321,7 @@ msgstr ""
 "C<<section>>之前添加此附录。"
 
 #. type: textblock
-#: doc/po4a.7.pod:105
+#: doc/po4a.7.pod:107
 #, fuzzy
 #| msgid ""
 #| "You can also set the insertion I<mode> to the value C<before>, with a "
@@ -4314,7 +4344,7 @@ msgstr ""
 "匹配边界 B<before>，也就是 C<position> 之前的最后一条潜在边界线。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:106
+#: doc/po4a.7.pod:108
 #, no-wrap
 msgid ""
 "  Mode   | Boundary kind |     Used boundary      | Insertion point compared to the boundary\n"
@@ -4336,12 +4366,12 @@ msgstr ""
 "\n"
 
 #. type: =head3
-#: doc/po4a.7.pod:107
+#: doc/po4a.7.pod:109
 msgid "Hint and tricks about addenda"
 msgstr "关于附录的提示和技巧"
 
 #. type: textblock
-#: doc/po4a.7.pod:108
+#: doc/po4a.7.pod:110
 msgid ""
 "Remember that these are regexp. For example, if you want to match the end of "
 "a nroff section ending with the line C<.fi>, do not use C<.fi> as "
@@ -4354,7 +4384,7 @@ msgstr ""
 "是：C<^\\.fi$>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:109
+#: doc/po4a.7.pod:111
 msgid ""
 "White spaces ARE important in the content of the C<position> and boundaries. "
 "So the two following lines B<are different>. The second one will only be "
@@ -4364,7 +4394,7 @@ msgstr ""
 "有在翻译的文档中有足够的尾随空格时，才会找到第二个空格。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:110
+#: doc/po4a.7.pod:112
 #, no-wrap
 msgid ""
 " PO4A-HEADER: position=About this document; mode=after; beginboundary=<section>\n"
@@ -4376,7 +4406,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:111
+#: doc/po4a.7.pod:113
 msgid ""
 "Although this context search may be considered to operate roughly on each "
 "line of the B<translated> document, it actually operates on the internal "
@@ -4392,7 +4422,7 @@ msgstr ""
 "据字符串之前或之后，并且不能在内部数据字符串内。"
 
 #. type: textblock
-#: doc/po4a.7.pod:112
+#: doc/po4a.7.pod:114
 #, fuzzy
 #| msgid ""
 #| "Pass the B<-vv> argument to po4a to understand how the addenda are added "
@@ -4407,17 +4437,17 @@ msgstr ""
 "在调试模式下运行 po4a 以查看实际的内部数据字符串也可能会有所帮助。"
 
 #. type: =head3
-#: doc/po4a.7.pod:113
+#: doc/po4a.7.pod:115
 msgid "Addenda examples"
 msgstr "附录示例"
 
 #. type: textblock
-#: doc/po4a.7.pod:114
+#: doc/po4a.7.pod:116
 msgid "If you want to add something after the following nroff section:"
 msgstr "如果要在以下 nroff 部分之后添加内容："
 
 #. type: verbatim
-#: doc/po4a.7.pod:115
+#: doc/po4a.7.pod:117
 #, no-wrap
 msgid ""
 "  .SH \"AUTHORS\"\n"
@@ -4427,7 +4457,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:116
+#: doc/po4a.7.pod:118
 #, fuzzy
 #| msgid ""
 #| "You should select a two step approach by setting B<mode=after>. Then you "
@@ -4446,7 +4476,7 @@ msgstr ""
 "B<^\\.SH>)与 B<BEGINBOLDER> 参数 regex 相匹配。这就是说："
 
 #. type: verbatim
-#: doc/po4a.7.pod:117
+#: doc/po4a.7.pod:119
 #, no-wrap
 msgid ""
 " PO4A-HEADER:mode=after;position=AUTHORS;beginboundary=\\.SH\n"
@@ -4456,7 +4486,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:118
+#: doc/po4a.7.pod:120
 msgid ""
 "If you want to add something right after a given line (e.g. after the line "
 "\"Copyright Big Dude\"), use a B<position> matching this line, B<mode=after> "
@@ -4467,7 +4497,7 @@ msgstr ""
 "B<beginboundary>。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:119
+#: doc/po4a.7.pod:121
 #, no-wrap
 msgid ""
 " PO4A-HEADER:mode=after;position=Copyright Big Dude, 2004;beginboundary=^\n"
@@ -4477,7 +4507,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:120
+#: doc/po4a.7.pod:122
 msgid ""
 "If you want to add something at the end of the document, give a B<position> "
 "matching any line of your document (but only one line. Po4a won't proceed if "
@@ -4491,7 +4521,7 @@ msgstr ""
 "小的字符串。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:121
+#: doc/po4a.7.pod:123
 #, no-wrap
 msgid ""
 " PO4A-HEADER:mode=after;position=About this document;beginboundary=FakePo4aBoundary\n"
@@ -4501,17 +4531,17 @@ msgstr ""
 "\n"
 
 #. type: =head3
-#: doc/po4a.7.pod:122
+#: doc/po4a.7.pod:124
 msgid "More detailed example"
 msgstr "更详细的示例"
 
 #. type: textblock
-#: doc/po4a.7.pod:123
+#: doc/po4a.7.pod:125
 msgid "Original document (POD formatted):"
 msgstr "原始文件(POD 格式)："
 
 #. type: verbatim
-#: doc/po4a.7.pod:124
+#: doc/po4a.7.pod:126
 #, no-wrap
 msgid ""
 " |=head1 NAME\n"
@@ -4533,7 +4563,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:125
+#: doc/po4a.7.pod:127
 msgid ""
 "Then, the following addendum will ensure that a section (in French) about "
 "the translator is added at the end of the file (in French, \"TRADUCTEUR\" "
@@ -4543,7 +4573,7 @@ msgstr ""
 "\"翻译\" 表示 \"TRANSLATOR\"，\"我\" 表示 \"me\"）。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:126
+#: doc/po4a.7.pod:128
 #, no-wrap
 msgid ""
 " |PO4A-HEADER:mode=after;position=AUTEUR;beginboundary=^=head\n"
@@ -4563,12 +4593,12 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:127
+#: doc/po4a.7.pod:129
 msgid "To put your addendum before the AUTHOR, use the following header:"
 msgstr "要将附录放在作者之前，请使用以下标题："
 
 #. type: verbatim
-#: doc/po4a.7.pod:128
+#: doc/po4a.7.pod:130
 #, no-wrap
 msgid ""
 " PO4A-HEADER:mode=after;position=NOM;beginboundary=^=head1\n"
@@ -4578,7 +4608,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:129
+#: doc/po4a.7.pod:131
 #, fuzzy
 #| msgid ""
 #| "This works because the next line matching the B<beginboundary> /^=head1/ "
@@ -4600,12 +4630,12 @@ msgstr ""
 "之前。"
 
 #. type: textblock
-#: doc/po4a.7.pod:130
+#: doc/po4a.7.pod:132
 msgid "To avoid this you may accomplish the same using B<mode>=I<before>:"
 msgstr "要避免出现这种情况，您可以使用 B<mode>=I<BEFORE> 来完成相同的操作："
 
 #. type: verbatim
-#: doc/po4a.7.pod:131
+#: doc/po4a.7.pod:133
 #, no-wrap
 msgid ""
 " PO4A-HEADER:mode=before;position=^=head1 AUTEUR\n"
@@ -4615,12 +4645,12 @@ msgstr ""
 "\n"
 
 #. type: =head1
-#: doc/po4a.7.pod:132
+#: doc/po4a.7.pod:134
 msgid "How does it work?"
 msgstr "它是如何工作的？"
 
 #. type: textblock
-#: doc/po4a.7.pod:133
+#: doc/po4a.7.pod:135
 #, fuzzy
 #| msgid ""
 #| "This chapter gives you a brief overview of the po4a internals, so that "
@@ -4637,12 +4667,12 @@ msgstr ""
 "它。它还可能帮助您理解为什么它没有达到您的预期，以及如何解决您的问题。"
 
 #. type: =head2
-#: doc/po4a.7.pod:134
+#: doc/po4a.7.pod:136
 msgid "TransTractors and project architecture"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:135
+#: doc/po4a.7.pod:137
 #, fuzzy
 #| msgid ""
 #| "The po4a architecture is object oriented. The L<Locale::Po4a::"
@@ -4660,7 +4690,7 @@ msgstr ""
 "提取字符串。"
 
 #. type: textblock
-#: doc/po4a.7.pod:136
+#: doc/po4a.7.pod:138
 #, fuzzy
 #| msgid ""
 #| "More formally, it takes a document to translate plus a PO file containing "
@@ -4683,7 +4713,7 @@ msgstr ""
 "下是这一点的图形表示："
 
 #. type: verbatim
-#: doc/po4a.7.pod:137
+#: doc/po4a.7.pod:139
 #, fuzzy, no-wrap
 #| msgid ""
 #| "   Input document --\\                             /---> Output document\n"
@@ -4711,7 +4741,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:138
+#: doc/po4a.7.pod:140
 #, fuzzy
 #| msgid ""
 #| "This little bone is the core of all the po4a architecture. If you omit "
@@ -4738,7 +4768,7 @@ msgstr ""
 "TransTractor(3pm)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:139
+#: doc/po4a.7.pod:141
 msgid ""
 "B<po4a-gettextize> also uses two TransTractors, but another way: It builds "
 "one TransTractor per language, and then build a new PO file using the msgids "
@@ -4748,12 +4778,12 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:140
+#: doc/po4a.7.pod:142
 msgid "Format-specific parsers"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:141
+#: doc/po4a.7.pod:143
 msgid ""
 "All po4a format parsers are implemented on top of the TransTractor. Some of "
 "them are very simple, such as the Text, Markdown and AsciiDoc ones. They "
@@ -4766,7 +4796,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:142
+#: doc/po4a.7.pod:144
 msgid ""
 "Some other parsers are more complex because they rely on an external parser "
 "to analyze the input document. The Xml, HTML, SGML and Pod parsers are built "
@@ -4783,7 +4813,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:143
+#: doc/po4a.7.pod:145
 msgid ""
 "One specific issue arises from file encodings and BOM markers. Simple "
 "parsers can forget about this issue, that is handled by C<TransTractor::"
@@ -4798,12 +4828,12 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:144
+#: doc/po4a.7.pod:146
 msgid "Po objects"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:145
+#: doc/po4a.7.pod:147
 msgid ""
 "The L<Locale::Po4a::Po(3pm)|Po> class is in charge of loading and using PO "
 "and POT files. Basically, you can read a file, add entries, get translations "
@@ -4813,12 +4843,12 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:146
+#: doc/po4a.7.pod:148
 msgid "Contributing to po4a"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:147
+#: doc/po4a.7.pod:149
 msgid ""
 "Even if you have never contributed to any Open Source project in the past, "
 "you are welcome: we are willing to help and mentor you here. po4a is best "
@@ -4829,12 +4859,12 @@ msgid ""
 msgstr ""
 
 #. type: =head1
-#: doc/po4a.7.pod:148
+#: doc/po4a.7.pod:150
 msgid "Open-source projects using po4a"
 msgstr "使用 po4a 的开源项目"
 
 #. type: textblock
-#: doc/po4a.7.pod:149
+#: doc/po4a.7.pod:151
 msgid ""
 "Here is a very partial list of projects that use po4a in production for "
 "their documentation. If you want to add your project to the list, just drop "
@@ -4844,22 +4874,22 @@ msgstr ""
 "目添加到列表中，只需给我们发送电子邮件(或合并请求)即可。"
 
 #. type: textblock
-#: doc/po4a.7.pod:150
+#: doc/po4a.7.pod:152
 msgid "adduser (man): users and groups management tool."
 msgstr "adduser (man): 用户和组管理工具。"
 
 #. type: textblock
-#: doc/po4a.7.pod:151
+#: doc/po4a.7.pod:153
 msgid "apt (man, docbook): Debian package manager."
 msgstr "apt (man, docbook): Debian 包管理器。"
 
 #. type: textblock
-#: doc/po4a.7.pod:152
+#: doc/po4a.7.pod:154
 msgid "aptitude (docbook, svg): terminal-based package manager for Debian"
 msgstr "aptitude (docbook, svg): Debian 基于终端的包管理器"
 
 #. type: textblock
-#: doc/po4a.7.pod:153
+#: doc/po4a.7.pod:155
 #, fuzzy
 #| msgid ""
 #| "L<F-Droid website|https://gitlab.com/fdroid/fdroid-website> (markdown): "
@@ -4874,7 +4904,7 @@ msgstr ""
 "于 Android 平台的自由与开放源码软件(FOSS)应用程序的可安装目录。"
 
 #. type: textblock
-#: doc/po4a.7.pod:154
+#: doc/po4a.7.pod:156
 msgid ""
 "L<git|https://github.com/jnavila/git-manpages-l10n> (asciidoc): distributed "
 "version-control system for tracking changes in source code."
@@ -4883,7 +4913,7 @@ msgstr ""
 "码更改的分布式版本控制系统。"
 
 #. type: textblock
-#: doc/po4a.7.pod:155
+#: doc/po4a.7.pod:157
 msgid ""
 "L<Linux manpages|https://salsa.debian.org/manpages-l10n-team/manpages-l10n> "
 "(man)"
@@ -4892,7 +4922,7 @@ msgstr ""
 "(man)"
 
 #. type: textblock
-#: doc/po4a.7.pod:156
+#: doc/po4a.7.pod:158
 msgid ""
 "This project provides an infrastructure for translating many manpages to "
 "different languages, ready for integration into several major distributions "
@@ -4902,7 +4932,7 @@ msgstr ""
 "中(Arch Linux、Debian 和衍生品、Fedora)。"
 
 #. type: textblock
-#: doc/po4a.7.pod:157
+#: doc/po4a.7.pod:159
 msgid ""
 "L<Stellarium|https://github.com/Stellarium/stellarium> (HTML): a free open "
 "source planetarium for your computer. po4a is used to translate the sky "
@@ -4912,7 +4942,7 @@ msgstr ""
 "供免费的开源天文馆。po4a 用于翻译天空文化描述。"
 
 #. type: textblock
-#: doc/po4a.7.pod:158
+#: doc/po4a.7.pod:160
 msgid ""
 "L<Jamulus|https://jamulus.io/> (markdown, yaml, HTML): a FOSS application "
 "for online jamming in real time. The website documentation is maintained in "
@@ -4920,7 +4950,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:159
+#: doc/po4a.7.pod:161
 msgid ""
 "Other item to sort out: L<https://gitlab.com/fdroid/fdroid-website/> "
 "L<https://github.com/fsfe/reuse-docs/pull/61>"
@@ -4929,17 +4959,17 @@ msgstr ""
 "github.com/fsfe/reuse-docs/pull/61>"
 
 #. type: =head1
-#: doc/po4a.7.pod:160
+#: doc/po4a.7.pod:162
 msgid "FAQ"
 msgstr "常见问题解答"
 
 #. type: =head2
-#: doc/po4a.7.pod:161
+#: doc/po4a.7.pod:163
 msgid "How do you pronounce po4a?"
 msgstr "如何发音 po4a？"
 
 #. type: textblock
-#: doc/po4a.7.pod:162
+#: doc/po4a.7.pod:164
 msgid ""
 "I personally vocalize it as L<pouah|https://en.wiktionary.org/wiki/pouah>, "
 "which is a French onomatopoetic that we use in place of yuck :) I may have a "
@@ -4949,12 +4979,12 @@ msgstr ""
 "声词，我们用它来代替 yuck(雅克 ) :) 我可能有一种奇怪的幽默感 :)"
 
 #. type: =head2
-#: doc/po4a.7.pod:163
+#: doc/po4a.7.pod:165
 msgid "Why are the individual scripts deprecated?"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:164
+#: doc/po4a.7.pod:166
 msgid ""
 "Indeed, B<po4a-updatepo> and B<po4a-translate> are deprecated in favor of "
 "B<po4a>. The reason is that while B<po4a> can be used as a drop-in "
@@ -4968,7 +4998,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:165
+#: doc/po4a.7.pod:167
 msgid ""
 "In the long run, I would like to drop the individual scripts and only "
 "maintain one version of this code. The sure thing is that the individual "
@@ -4980,7 +5010,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:166
+#: doc/po4a.7.pod:168
 msgid ""
 "We may also remove the deprecation of these scripts at some point, if a "
 "refactoring reduces the code duplication to zero. If you have an idea (or "
@@ -4988,24 +5018,24 @@ msgid ""
 msgstr ""
 
 #. type: =head2
-#: doc/po4a.7.pod:167
+#: doc/po4a.7.pod:169
 msgid "What about the other translation tools for documentation using gettext?"
 msgstr "其他使用 gettext 的文档翻译工具又如何呢？"
 
 #. type: textblock
-#: doc/po4a.7.pod:168
+#: doc/po4a.7.pod:170
 msgid ""
 "There are a few of them. Here is a possibly incomplete list, and more tools "
 "are coming at the horizon."
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:169
+#: doc/po4a.7.pod:171
 msgid "B<poxml>"
 msgstr "B<poxml>"
 
 #. type: textblock
-#: doc/po4a.7.pod:170
+#: doc/po4a.7.pod:172
 msgid ""
 "This is the tool developed by KDE people to handle DocBook XML. AFAIK, it "
 "was the first program to extract strings to translate from documentation to "
@@ -5015,7 +5045,7 @@ msgstr ""
 "档转换为 PO 文件，并在转换后注入它们的程序。"
 
 #. type: textblock
-#: doc/po4a.7.pod:171
+#: doc/po4a.7.pod:173
 msgid ""
 "It can only handle XML, and only a particular DTD. I'm quite unhappy with "
 "the handling of lists, which end in one big msgid. When the list become big, "
@@ -5025,12 +5055,12 @@ msgstr ""
 "的 msgid 结尾。当清单变得很大时，大块就变得更难处理了。"
 
 #. type: =item
-#: doc/po4a.7.pod:172
+#: doc/po4a.7.pod:174
 msgid "B<po-debiandoc>"
 msgstr "B<po-debiandoc>"
 
 #. type: textblock
-#: doc/po4a.7.pod:173
+#: doc/po4a.7.pod:175
 msgid ""
 "This program done by Denis Barbier is a sort of precursor of the po4a SGML "
 "module, which more or less deprecates it. As the name says, it handles only "
@@ -5040,12 +5070,12 @@ msgstr ""
 "了它。顾名思义，它只处理 DebianDoc DTD，这或多或少是一个过时的 DTD。"
 
 #. type: =item
-#: doc/po4a.7.pod:174
+#: doc/po4a.7.pod:176
 msgid "B<xml2po.py>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:175
+#: doc/po4a.7.pod:177
 msgid ""
 "Used by the GIMP Documentation Team since 2004, works quite well even if, as "
 "the name suggests, only with XML files and needs specially configured "
@@ -5053,12 +5083,12 @@ msgid ""
 msgstr ""
 
 #. type: =item
-#: doc/po4a.7.pod:176
+#: doc/po4a.7.pod:178
 msgid "B<Sphinx>"
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:177
+#: doc/po4a.7.pod:179
 msgid ""
 "The Sphinx Documentation Project also uses gettext extensively to manage its "
 "translations. Unfortunately, it works only for a few text formats, rest and "
@@ -5067,7 +5097,7 @@ msgid ""
 msgstr ""
 
 #. type: textblock
-#: doc/po4a.7.pod:178
+#: doc/po4a.7.pod:180
 msgid ""
 "The main advantages of po4a over them are the ease of extra content addition "
 "(which is even worse there) and the ability to achieve gettextization."
@@ -5076,19 +5106,19 @@ msgstr ""
 "的能力。"
 
 #. type: =head2
-#: doc/po4a.7.pod:179
+#: doc/po4a.7.pod:181
 msgid "SUMMARY of the advantages of the gettext based approach"
 msgstr "基于gettext 的方法的优点的摘要"
 
 #. type: textblock
-#: doc/po4a.7.pod:180
+#: doc/po4a.7.pod:182
 msgid ""
 "The translations are not stored along with the original, which makes it "
 "possible to detect if translations become out of date."
 msgstr "翻译不会与原始版本一起存储，这使得可以检测翻译是否过时。"
 
 #. type: textblock
-#: doc/po4a.7.pod:181
+#: doc/po4a.7.pod:183
 msgid ""
 "The translations are stored in separate files from each other, which "
 "prevents translators of different languages from interfering, both when "
@@ -5098,7 +5128,7 @@ msgstr ""
 "码级别上的相互干扰。"
 
 #. type: textblock
-#: doc/po4a.7.pod:182
+#: doc/po4a.7.pod:184
 msgid ""
 "It is based internally on B<gettext> (but B<po4a> offers a very simple "
 "interface so that you don't need to understand the internals to use it).  "
@@ -5110,7 +5140,7 @@ msgstr ""
 "这些工具或多或少没有错误。"
 
 #. type: textblock
-#: doc/po4a.7.pod:183
+#: doc/po4a.7.pod:185
 msgid ""
 "Nothing changed for the end-user (beside the fact translations will "
 "hopefully be better maintained). The resulting documentation file "
@@ -5120,7 +5150,7 @@ msgstr ""
 "同。"
 
 #. type: textblock
-#: doc/po4a.7.pod:184
+#: doc/po4a.7.pod:186
 msgid ""
 "No need for translators to learn a new file syntax and their favorite PO "
 "file editor (like Emacs' PO mode, Lokalize or Gtranslator) will work just "
@@ -5130,7 +5160,7 @@ msgstr ""
 "式、Lokalize 或 GTranslator)就可以很好地工作。"
 
 #. type: textblock
-#: doc/po4a.7.pod:185
+#: doc/po4a.7.pod:187
 msgid ""
 "gettext offers a simple way to get statistics about what is done, what "
 "should be reviewed and updated, and what is still to do. Some example can be "
@@ -5140,7 +5170,7 @@ msgstr ""
 "及仍要做的工作的统计数据。可以在这些地址找到一些示例："
 
 #. type: verbatim
-#: doc/po4a.7.pod:186
+#: doc/po4a.7.pod:188
 #, no-wrap
 msgid ""
 " - https://docs.kde.org/stable5/en/kdesdk/lokalize/project-view.html\n"
@@ -5152,21 +5182,21 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: doc/po4a.7.pod:187
+#: doc/po4a.7.pod:189
 msgid ""
 "But everything isn't green, and this approach also has some disadvantages we "
 "have to deal with."
 msgstr "但是，并非所有事物都是绿色的，而且这种方法还存在一些必须解决的缺点。"
 
 #. type: textblock
-#: doc/po4a.7.pod:188
+#: doc/po4a.7.pod:190
 #, fuzzy
 #| msgid "Addenda are… strange at the first glance."
 msgid "Addenda are somewhat strange at the first glance."
 msgstr "附录是…… 乍一看很奇怪。"
 
 #. type: textblock
-#: doc/po4a.7.pod:189
+#: doc/po4a.7.pod:191
 msgid ""
 "You can't adapt the translated text to your preferences, like splitting a "
 "paragraph here, and joining two other ones there. But in some sense, if "
@@ -5176,13 +5206,13 @@ msgstr ""
 "两个段落。但在某种意义上，如果原始版本有问题，无论如何都应该报告为 bug。"
 
 #. type: textblock
-#: doc/po4a.7.pod:190
+#: doc/po4a.7.pod:192
 msgid ""
 "Even with an easy interface, it remains a new tool people have to learn."
 msgstr "即使有一个简单的界面，它仍然是一个人们必须学习的新工具。"
 
 #. type: textblock
-#: doc/po4a.7.pod:191
+#: doc/po4a.7.pod:193
 msgid ""
 "One of my dreams would be to integrate somehow po4a to Gtranslator or "
 "Lokalize. When a documentation file is opened, the strings are automatically "
@@ -5195,13 +5225,13 @@ msgstr ""
 "法制作 MSWord(TM) 模块(或者至少是 RTF)，专业翻译人员甚至可以使用它。"
 
 #. type: textblock
-#: doc/po4a.7.pod:193
+#: doc/po4a.7.pod:195
 msgid ""
 "The documentation of the all-in-one tool that you should use: L<po4a(1)>."
 msgstr "您应该使用的多合一工具的文档：L<po4a(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:194
+#: doc/po4a.7.pod:196
 msgid ""
 "The documentation of the individual po4a scripts: L<po4a-gettextize(1)>, "
 "L<po4a-updatepo(1)>, L<po4a-translate(1)>, L<po4a-normalize(1)>."
@@ -5210,7 +5240,7 @@ msgstr ""
 "late(1)>、L<po4a-Normalize(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:195
+#: doc/po4a.7.pod:197
 msgid ""
 "The additional helping scripts: L<msguntypot(1)>, L<po4a-display-man(1)>, "
 "L<po4a-display-pod(1)>."
@@ -5219,7 +5249,7 @@ msgstr ""
 "pod(1)>。"
 
 #. type: textblock
-#: doc/po4a.7.pod:196
+#: doc/po4a.7.pod:198
 #, fuzzy
 #| msgid ""
 #| "The parsers of each formats, in particular to see the options accepted by "
@@ -5242,7 +5272,8 @@ msgid ""
 "L<Locale::Po4a::BibTeX(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
 "Halibut(3pm)>, L<Locale::Po4a::LaTeX(3pm)>, L<Locale::Po4a::Org(3pm)>, "
 "L<Locale::Po4a::Pod(3pm)>, L<Locale::Po4a::Sgml(3pm)>, L<Locale::Po4a::"
-"TeX(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
+"TeX(3pm)>, L<Locale::Po4a::VimHelp>, L<Locale::Po4a::Wml(3pm)>, L<Locale::"
+"Po4a::Xml(3pm)>."
 msgstr ""
 "每种格式的解析器，特别是查看每种格式接受的选项：L<Locale::Po4a::"
 "AsciiDoc(3pm)> L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Guide(3pm)>, "
@@ -5255,7 +5286,7 @@ msgstr ""
 "Po4a::Wml(3pm)>, L<Locale::Po4a::Xml(3pm)>."
 
 #. type: textblock
-#: doc/po4a.7.pod:197
+#: doc/po4a.7.pod:199
 msgid ""
 "The implementation of the core infrastructure: L<Locale::Po4a::"
 "TransTractor(3pm)> (particularly important to understand the code "
@@ -5269,7 +5300,7 @@ msgstr ""
 "查源代码树中的 F<CONTRIBUTING.md> 文件。"
 
 #. type: verbatim
-#: doc/po4a.7.pod:199
+#: doc/po4a.7.pod:201
 #, no-wrap
 msgid ""
 " Denis Barbier <barbier,linuxfr.org>\n"
@@ -5685,8 +5716,9 @@ msgstr "这将属性条目声明为可翻译。默认情况下，它们不会被
 #: lib/Locale/Po4a/Man.pm:96 lib/Locale/Po4a/Org.pm:15 lib/Locale/Po4a/Pod.pm:9
 #: lib/Locale/Po4a/RubyDoc.pm:6 lib/Locale/Po4a/Sgml.pm:34
 #: lib/Locale/Po4a/TeX.pm:104 lib/Locale/Po4a/Texinfo.pm:8
-#: lib/Locale/Po4a/Text.pm:43 lib/Locale/Po4a/Wml.pm:9
-#: lib/Locale/Po4a/Xhtml.pm:12 lib/Locale/Po4a/Xml.pm:181
+#: lib/Locale/Po4a/Text.pm:43 lib/Locale/Po4a/VimHelp.pm:9
+#: lib/Locale/Po4a/Wml.pm:9 lib/Locale/Po4a/Xhtml.pm:12
+#: lib/Locale/Po4a/Xml.pm:181
 msgid "STATUS OF THIS MODULE"
 msgstr "此模块的状态"
 
@@ -5848,8 +5880,8 @@ msgid ""
 "LaTeX(3pm)>, L<Locale::Po4a::Man(3pm)>, L<Locale::Po4a::Org(3pm)>, L<Locale::"
 "Po4a::Pod(3pm)>, L<Locale::Po4a::RubyDoc(3pm)>, L<Locale::Po4a::Sgml(3pm)>, "
 "L<Locale::Po4a::TeX(3pm)>, L<Locale::Po4a::Texinfo(3pm)>, L<Locale::Po4a::"
-"Text(3pm)>, L<Locale::Po4a::Wml(3pm)>.  L<Locale::Po4a::Xhtml(3pm)>, "
-"L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::Wml(3pm)>, L<Locale::Po4a::"
+"Text(3pm)>, L<Locale::Po4a::VimHelp(3pm)>, L<Locale::Po4a::Wml(3pm)>, "
+"L<Locale::Po4a::Xhtml(3pm)>, L<Locale::Po4a::Xml(3pm)>, L<Locale::Po4a::"
 "Yaml(3pm)>."
 msgstr ""
 "L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Docbook(3pm)>, L<Locale::Po4a::"
@@ -6277,12 +6309,14 @@ msgstr "在简单文本文件和 NEWS.Debian 文件上测试成功。"
 
 #. type: textblock
 #: lib/Locale/Po4a/Gemtext.pm:9 lib/Locale/Po4a/Ini.pm:9
-#: lib/Locale/Po4a/Org.pm:18 lib/Locale/Po4a/Yaml.pm:16
+#: lib/Locale/Po4a/Org.pm:18 lib/Locale/Po4a/VimHelp.pm:26
+#: lib/Locale/Po4a/Yaml.pm:16
 msgid "L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>"
 msgstr "L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>"
 
 #. type: verbatim
 #: lib/Locale/Po4a/Gemtext.pm:11 lib/Locale/Po4a/Org.pm:20
+#: lib/Locale/Po4a/VimHelp.pm:28
 #, no-wrap
 msgid ""
 " gemmaro <gemmaro.dev@gmail.com>\n"
@@ -7385,7 +7419,7 @@ msgstr ""
 "Locale::Po4a::Sgml 是一个帮助将 SGML 格式的文档翻译成其他 [人类] 语言的模块。"
 
 #. type: =head1
-#: lib/Locale/Po4a/Org.pm:8
+#: lib/Locale/Po4a/Org.pm:8 lib/Locale/Po4a/VimHelp.pm:6
 #, fuzzy
 #| msgid "CONFIGURATION FILE"
 msgid "CONFIGURATION"
@@ -7445,7 +7479,7 @@ msgid ""
 msgstr ""
 
 #. type: verbatim
-#: lib/Locale/Po4a/Org.pm:22
+#: lib/Locale/Po4a/Org.pm:22 lib/Locale/Po4a/VimHelp.pm:30
 #, fuzzy, no-wrap
 #| msgid ""
 #| " Copyright © 2005 SPI, Inc.\n"
@@ -7458,7 +7492,7 @@ msgstr ""
 "\n"
 
 #. type: textblock
-#: lib/Locale/Po4a/Org.pm:23
+#: lib/Locale/Po4a/Org.pm:23 lib/Locale/Po4a/VimHelp.pm:31
 #, fuzzy
 #| msgid ""
 #| "This program is free software; you may redistribute it and/or modify it "
@@ -10858,6 +10892,138 @@ msgstr ""
 "\n"
 
 #. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:2
+#, fuzzy
+#| msgid "Locale::Po4a::Yaml - convert YAML files from/to PO files"
+msgid "Locale::Po4a::VimHelp - convert Vim help files from/to PO files."
+msgstr "Locale::Po4a::Yaml - 将 YAML 文件从/转换为 PO 文件"
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:5
+msgid ""
+"C<Locale::Po4a::VimHelp> is a module to help the translation of Vim help "
+"file.  See also L<Writing help files|https://vimhelp.org/helphelp.txt."
+"html#help-writing> for its syntax."
+msgstr ""
+
+#. type: =item
+#: lib/Locale/Po4a/VimHelp.pm:7
+#, fuzzy
+#| msgid "B<width>"
+msgid "B<textwidth>"
+msgstr "B<width>"
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:8
+msgid ""
+"The default value of the text width parameter for the document (default is "
+"78, as used in most original Vim help files).  If specified in the source "
+"document modeline, this value will be overridden."
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:10
+msgid ""
+"This module is in an early stage of development.  It has been successfully "
+"tested on simple files like C<helphelp.txt>.  However, it has not yet been "
+"tested on full help files, and the way it parses them may change for fixes "
+"and improvements, especially paragraph wrapping."
+msgstr ""
+
+#. type: =head1
+#: lib/Locale/Po4a/VimHelp.pm:11
+msgid "DEVELOPING"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:12
+msgid ""
+"Parsing Vim help files for po4a is difficult.  Here are some obstacles while "
+"developing this module.  If you have a better idea, feel free to suggest a "
+"patch (with additional test cases)."
+msgstr ""
+
+#. type: =item
+#: lib/Locale/Po4a/VimHelp.pm:13
+msgid "C<1. foo> sounds like an ordered list"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:14
+msgid "Not necessarily.  Consider the following paragraph."
+msgstr ""
+
+#. type: verbatim
+#: lib/Locale/Po4a/VimHelp.pm:15
+#, no-wrap
+msgid ""
+" There are 2 wandering tanukis, not\n"
+" 1. He's using his cloning technique.\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:16
+msgid ""
+"For the same reason, what appears to be a heading (e.g. C<1.1 bar>) or an "
+"unordered list (e.g. C<o baz>) cannot be detected."
+msgstr ""
+
+#. type: =item
+#: lib/Locale/Po4a/VimHelp.pm:17
+msgid "Flushed right tags should be excluded from translation target"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:18
+msgid ""
+"This topic is also difficult since it relates to language differences in "
+"localization."
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:19
+msgid "Consider the following example."
+msgstr ""
+
+#. type: verbatim
+#: lib/Locale/Po4a/VimHelp.pm:20
+#, no-wrap
+msgid ""
+" Such a common and short concept in some languages *tags*\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:21
+#, fuzzy
+#| msgid "Filtering the translated strings"
+msgid "which might be translated to"
+msgstr "过滤翻译的字符串"
+
+#. type: verbatim
+#: lib/Locale/Po4a/VimHelp.pm:22
+#, no-wrap
+msgid ""
+" They are unfamiliar, there are no corresponding concepts and *tags*\n"
+" it takes a longer sentence to express them in this language\n"
+"\n"
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:23
+msgid ""
+"When this happens, you have to decide at what point you want to add a tag "
+"I<nicely>.  This shouldn't be easy.  The Vim help file is in a hard wrapped "
+"format, even for parts that are not code blocks."
+msgstr ""
+
+#. type: textblock
+#: lib/Locale/Po4a/VimHelp.pm:24
+msgid "The same applies to tag references such as C<|ref|>."
+msgstr ""
+
+#. type: textblock
 #: lib/Locale/Po4a/Wml.pm:2
 msgid ""
 "Locale::Po4a::Wml - convert WML (web markup language) documents from/to PO "
@@ -12442,9 +12608,6 @@ msgstr ""
 #~ "如果设置为真值，Locale::Po4a::Pod 将假定每个句子以两个空格结束，并将尝试保"
 #~ "留该空格。如果设置为 false，则非逐字段落中的所有连续空格都将压缩为一个空"
 #~ "格。默认值为 true。"
-
-#~ msgid "B<width>"
-#~ msgstr "B<width>"
 
 #~ msgid ""
 #~ "The column at which to wrap text on the right-hand side.  Defaults to 76."
