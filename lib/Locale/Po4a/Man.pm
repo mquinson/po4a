@@ -1674,25 +1674,25 @@ sub splitargs {
     # anymore. Let's play safe.
     $arguments =~ s/\\ /$nbs/g;
     $arguments =~ s/^ +//;
-    $arguments =~ s/\\&"/\\(dq/g;
     $arguments =~ s/^ *//;
     while ( length $arguments ) {
+        my $a;
         if ( $arguments =~ s/^"((?:[^"]|"")*)"(?!") *// ) {
-            my $a = $1;
+            $a = $1;
             $a =~ s/""/"/g if defined $a;
-            push @args, $a;
         } elsif ( $arguments =~ s/^"((?:[^"]|"")*) *$// ) {
 
             # Unterminated quote, but this seems to be handled by removing
             # the trailing spaces and closing the quotes.
-            my $a = $1;
+            $a = $1;
             $a =~ s/""/"/g if defined $a;
-            push @args, $a;
         } elsif ( $arguments =~ s/^([^ ]+) *// ) {
-            push @args, $1;
+            $a = $1;
         } else {
             die wrap_ref_mod( $ref, "po4a::man", dgettext( "po4a", "Cannot parse command arguments: %s" ), $arguments );
         }
+        $a =~ s/\\&"/\\(dq/g if (defined $a);
+        push @args, $a;
     }
     if ( $debug{'splitargs'} ) {
         print STDERR "ARGS=";
