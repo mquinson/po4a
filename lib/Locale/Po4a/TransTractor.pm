@@ -472,7 +472,7 @@ sub read() {
         die wrap_msg(
             dgettext(
                 "po4a",
-                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with --master-charset or other similar flags."
             ),
             $filename,
             $charset, $error, $charset
@@ -548,7 +548,7 @@ sub write {
             die wrap_msg(
                 dgettext(
                     "po4a",
-                    "Malformed encoding while writing char '%s' to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --localized-charset or other similar flags."
+                    "Malformed encoding while writing char '%s' to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with --localized-charset or other similar flags."
                 ),
                 $char,
                 $filename,
@@ -558,7 +558,7 @@ sub write {
             die wrap_msg(
                 dgettext(
                     "po4a",
-                    "Malformed encoding while writing to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --localized-charset or other similar flags."
+                    "Malformed encoding while writing to file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with --localized-charset or other similar flags."
                 ),
                 $filename,
                 $charset, $error, $charset
@@ -664,7 +664,7 @@ sub addendum_parse {
         die wrap_msg(
             dgettext(
                 "po4a",
-                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with --master-charset or other similar flags."
             ),
             $filename,
             $charset, $error, $charset
@@ -742,7 +742,7 @@ sub addendum_parse {
         die wrap_msg(
             dgettext(
                 "po4a",
-                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with with --master-charset or other similar flags."
+                "Malformed encoding while reading from file %s with charset %s: %s\nIf %s is not the expected charset, you need to configure the right one with --master-charset or other similar flags."
             ),
             $filename,
             $charset, $error, $charset
