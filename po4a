@@ -719,6 +719,7 @@ use Pod::Usage qw(pod2usage);
 use File::Temp;
 use File::Basename;
 use File::Copy;
+use File::Compare;
 use File::Spec;
 use Fcntl;    # sysopen flags
 use Cwd;      # cwd
@@ -2044,18 +2045,11 @@ if ( not $po4a_opts{"no-translations"} ) {
             $doc->{TT}{po_in} = $po;
             $doc->{TT}{po_in}->stats_clear();
 
-            my $translation_out;
-            if ( $po4a_opts{"keep-translations"}
-                && -e find_output_file( $document{$master}{$lang} ) )
-            {
-                ( undef, $translation_out ) = File::Temp::tempfile(
-                    "$document{$master}{$lang}.new-XXXX",
-                    OPEN   => 0,
-                    UNLINK => 0
+            my ( undef, $translation_out ) = File::Temp::tempfile(
+                basename($document{$master}{$lang}) . ".new-XXXX",
+                OPEN   => 0,
+                UNLINK => 0
                 );
-            } else {
-                $translation_out = $document{$master}{$lang};
-            }
 
             $doc->process(
                 'file_in_name'     => \@file_in_name,
@@ -2067,6 +2061,7 @@ if ( not $po4a_opts{"no-translations"} ) {
                 'destdir'          => $po4a_opts{"destdir"},
                 'calldir'          => $po4a_opts{"calldir"}
             );
+            unlink( find_output_file($translation_out) );
 
             my ( $percent, $hit, $queries ) = $doc->stats();
             if ( $percent < $file_opts{"threshold"} ) {
@@ -2077,8 +2072,6 @@ if ( not $po4a_opts{"no-translations"} ) {
                 );
                 unlink( find_output_file( $document{$master}{$lang} ) )
                   if ( !$po4a_opts{"keep-translations"} );
-                unlink( find_output_file($translation_out) )
-                  if ( $po4a_opts{"keep-translations"} );
                 if ( $po4a_opts{"stamp"} && ( not $po4a_opts{"force"} ) ) {
                     touch( find_output_file( $document{$master}{$lang} ) . ".po4a-stamp" );
                     print wrap_msg( gettext("Timestamp %s created."), $document{$master}{$lang} . ".po4a-stamp" )
@@ -2087,7 +2080,6 @@ if ( not $po4a_opts{"no-translations"} ) {
                 next DOC;
 
             } else {    # The translated document reached the threshold and was kept
-                rename( $translation_out, find_output_file( $document{$master}{$lang} ) );
 
                 unless ( $po4a_opts{"force"} ) {
                     if ( -e $document{$master}{$lang} . ".po4a-stamp" ) {
@@ -2108,8 +2100,8 @@ if ( not $po4a_opts{"no-translations"} ) {
                 if ( !$doc->addendum( find_input_file($add) ) ) {
                     die wrap_msg( gettext("Addendum %s does NOT apply to %s (translation discarded)."),
                         $add, $document{$master}{$lang} );
-                    my $outfile = find_output_file( $document{$master}{$lang} );
-                    unlink($outfile) if ( -e $outfile );
+                    unlink( find_output_file( $document{$master}{$lang} ) )
+                        if ( -e find_output_file( $document{$master}{$lang} ) );
                     next DOC;
                 }
             }
@@ -2126,7 +2118,17 @@ if ( not $po4a_opts{"no-translations"} ) {
                 }
             }
 
-            $doc->write( find_output_file( $document{$master}{$lang} ), $file_opts{"locchar"} // '' );
+            my $target_file =  find_output_file( $document{$master}{$lang});
+            if ( -e $target_file ) {
+                $doc->write( $translation_out, $file_opts{"locchar"} // '' );
+                if ( compare( $translation_out, $target_file ) ) {
+                    rename( $translation_out, $target_file );
+                } else {
+                    unlink $translation_out;
+                }
+            } else {
+                $doc->write( $target_file, $file_opts{"locchar"} // '' );
+            }
         }
     }
 }
