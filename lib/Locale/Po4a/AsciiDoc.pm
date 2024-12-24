@@ -186,6 +186,11 @@ translatable attributes.
 If a minus sign (B<->) is prepended to the style name, then this
 attribute is not translated.
 
+If a percent signe (B<%>) is appended to the style name, then the
+style is processed as verbatim. The lines in paragraph or block of
+such style are preserved in the po files and the corresponding entries
+are marked as no-wrap.
+
 =item B<//po4a: entry >I<name>
 
 This declares an attribute entry as being translatable.  By default,
@@ -258,7 +263,7 @@ sub initialize {
         entry => {}
     };
 
-    $self->register_attributelist('[verse,2,3,attribution,citetitle]');
+    $self->register_attributelist('[verse%,2,3,attribution,citetitle]');
     $self->register_attributelist('[quote,2,3,attribution,citetitle]');
     $self->register_attributelist('[icon]');
     $self->register_attributelist('[caption]');
@@ -292,7 +297,7 @@ sub register_attributelist {
     $list =~ s/\]$//;
     $list =~ s/\s+//;
     $list = "," . $list . ",";
-    $list =~ m/^,([-+]?)([^,]*)/;
+    $list =~ m/^,([-+]?)([^,%]*)/;
     my $command = $2;
     $self->{translate}->{$type}->{$command} = $list;
     print STDERR "Definition: $type $command: $list\n" if $debug{definitions};
@@ -357,14 +362,8 @@ sub parse_definition_file {
     close IN;
 }
 
-my $RE_SECTION_TEMPLATES = "sect1|sect2|sect3|sect4|preface|colophon|dedication|synopsis|index";
+
 my $RE_STYLE_ADMONITION  = "TIP|NOTE|IMPORTANT|WARNING|CAUTION";
-my $RE_STYLE_PARAGRAPH =
-  "normal|literal|verse|quote|listing|abstract|partintro|comment|example|sidebar|source|music|latex|graphviz";
-my $RE_STYLE_NUMBERING = "arabic|loweralpha|upperalpha|lowerroman|upperroman";
-my $RE_STYLE_LIST      = "appendix|horizontal|qanda|glossary|bibliography";
-my $RE_STYLES =
-  "$RE_SECTION_TEMPLATES|$RE_STYLE_ADMONITION|$RE_STYLE_PARAGRAPH|$RE_STYLE_NUMBERING|$RE_STYLE_LIST|float";
 
 BEGIN {
     my $UnicodeGCString_available = 0;
@@ -553,6 +552,7 @@ sub parse {
             # Found title
 
             $wrapped_mode = 0;
+            undef $self->{type};
             my $level = $line;
             $level     =~ s/^(.).*$/$1/;
             $paragraph =~ s/\n$//s;
@@ -654,12 +654,12 @@ sub parse {
                     } elsif ( $t eq "_" ) {
 
                         # QuoteBlock
-                        if (    ( defined $self->{type} )
-                            and ( $self->{type} eq "verse" ) )
-                        {
+                        if ( ( defined $self->{type} )
+                             and (exists $self->{translate}->{style}->{$self->{type}})
+                             and $self->{translate}->{style}->{$self->{type}} =~ m/^,[^,%]+\%,/ ) {
                             $wrapped_mode = 0;
                             $self->{verbatim} = 1;
-                            print STDERR "QuoteBlock verse\n" if $debug{parse};
+                            print STDERR "QuoteBlock $self->{type}\n" if $debug{parse};
                         } else {
                             $wrapped_mode = 1;
                         }
@@ -727,33 +727,16 @@ sub parse {
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^\[($RE_STYLES)\]$/ ) )
-        {
-            my $type = $1;
-            do_paragraph( $self, $paragraph, $wrapped_mode );
-            $paragraph    = "";
-            $wrapped_mode = 1;
-            $self->pushline( $line . "\n" );
-            if ( $type eq "verse" ) {
-                $wrapped_mode = 0;
-            }
-            undef $self->{bullet};
-            undef $self->{indent};
-        } elsif ( not defined $self->{verbatim}
             and ( $line =~ m/^\[[^\]]+\]$/ ) )
         {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph = "";
-            my $t = $self->parse_style($line);
+            my ($type, $t) = $self->parse_style($line);
+            $self->{type} = $type;
             $self->pushline("$t\n");
             @comments     = ();
-            $wrapped_mode = 1;
-            if ( $line =~ m/^\[(['"]?)(verse|quote)\1,/ ) {
-                $self->{type} = $2;
-                if ( $self->{type} eq 'verse' ) {
-                    $wrapped_mode = 0;
-                }
-                print STDERR "Starting verse\n" if $debug{parse};
+            if ( exists $self->{translate}->{style}->{$type}  and $self->{translate}->{style}->{$type} =~ m/^,[^,%]+\%,/ ) {
+                $wrapped_mode = 0;
             }
             if ( ( ( $line =~ m/^\[format=(['"]?)(csv|tsv|dsv)\1,/ ) || ( $line =~ m/^\[separator=[^\|]/ ) )
                 && $self->{options}{'tablecells'} )
@@ -1273,7 +1256,9 @@ sub parse_style {
         return "[$t]";
     }
     my @attributes = $self->split_attributelist($text);
-    return "[" . join( ", ", $self->join_attributelist( "style", @attributes ) ) . "]";
+    my $type = $attributes[0];
+    $type =~ s/=.*//;
+    return ($type, "[" . join( ", ", $self->join_attributelist( "style", @attributes ) ) . "]");
 }
 
 sub parse_macro {
