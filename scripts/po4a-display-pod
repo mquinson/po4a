@@ -11,28 +11,28 @@ PO=""
 OPTIONS=""
 
 usage () {
-	echo "Usage : $(basename $0) -m POD_FILE -p PO_FILE [-o PO4A_OPT]"
+    echo "Usage : $(basename $0) -m POD_FILE -p PO_FILE [-o PO4A_OPT]"
 }
 
 while getopts m:p:o:h option; do
-	case $option in
-	m)
-	    MASTER=$OPTARG
-	    ;;
-	p)
-	    PO=$OPTARG
-	    ;;
-	o)
-	    OPTIONS="$OPTIONS $OPTARG"
-	    ;;
-	h)
-	    usage
-	    exit 0
-	    ;;
-	[?])
-	    usage 1>&2
-	    exit 1
-	    ;;
+    case $option in
+    m)
+        MASTER=$OPTARG
+        ;;
+    p)
+        PO=$OPTARG
+        ;;
+    o)
+        OPTIONS="$OPTIONS $OPTARG"
+        ;;
+    h)
+        usage
+        exit 0
+        ;;
+    [?])
+        usage 1>&2
+        exit 1
+        ;;
     esac
 done
 
@@ -58,6 +58,6 @@ fi
 #SECTION=$(basename $MASTER .pod | sed -e 's/.*\.//')
 
 po4a-translate -f pod -m $MASTER -p $PO -L UTF-8 -k 0 $OPTIONS \
-	| pod2man -r '' -c TRANSLATED -n $MASTER --utf8 \
-	| man -l -
+    | pod2man -r '' -c TRANSLATED -n $MASTER --utf8 \
+    | man -l -
 

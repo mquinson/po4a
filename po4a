@@ -786,7 +786,7 @@ sub get_options {
         "package-version"    => undef,
         "srcdir"             => undef,
         "destdir"            => undef,
-	"target-lang"        => [],
+        "target-lang"        => [],
         "calldir"            => cwd()
     );
     Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
@@ -826,7 +826,7 @@ sub get_options {
         'msgmerge-opt=s'       => \$msgmerge_opt,
         'srcdir=s'             => \$opts{"srcdir"},
         'destdir=s'            => \$opts{"destdir"},
-	'target-lang=s'        => \@{ $opts{"target-lang"} }
+        'target-lang=s'        => \@{ $opts{"target-lang"} }
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -1060,13 +1060,13 @@ my (%add_filename);           # Global addendum_files: '$lang'=>array of '$path'
 sub check_target_langs {
     my ($nb, $line) = @_;
     if ( scalar @target_langs ) {
-	# check that all languages are in the list of destination languages are in the list of languages
-	foreach my $lang (@target_langs) {
-	    die wrap_ref_mod( "$config_file:$nb", "", gettext("Specified destination language '%s' not found in the list of languages."), $lang )
-		unless grep { $_ eq $lang } @langs;
-	}
-	$line = "";
-	@langs = @target_langs;
+        # check that all languages are in the list of destination languages are in the list of languages
+        foreach my $lang (@target_langs) {
+            die wrap_ref_mod( "$config_file:$nb", "", gettext("Specified destination language '%s' not found in the list of languages."), $lang )
+            unless grep { $_ eq $lang } @langs;
+        }
+        $line = "";
+        @langs = @target_langs;
     }
     return $line;
 }
@@ -1209,7 +1209,7 @@ while (<CONFIG>) {
           if (@langs);
         @langs = map { $_ } @split_args;    # deep copy
 
-	$line = check_target_langs($nb, $line);
+        $line = check_target_langs($nb, $line);
 
     } elsif ( $cmd eq "po_directory" ) {
         die wrap_ref_mod( "$config_file:$nb", "", gettext("The list of languages cannot be set twice.") )
@@ -1337,7 +1337,7 @@ while (<CONFIG>) {
                 gettext("Please create an empty file with the 'pot' extension (e.g. 'myproject.pot').") );
         }
 
-	$line = check_target_langs($nb, $line);
+        $line = check_target_langs($nb, $line);
 
     } elsif ( $cmd =~ m/type: *(.*)/ ) {
 

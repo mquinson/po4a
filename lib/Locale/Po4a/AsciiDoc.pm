@@ -398,19 +398,19 @@ sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;
     if ( $options{'wrap'} == 1 ) {
-	if ($str =~ / \+\n/) {
-	    $options{'wrap'} = 0;
-	    $str =~ s/([^+])\n/$1 /g;
-	    $str =~ s/ \+\n/\n/g;
-	    $str = $self->SUPER::translate( $str, $ref, $type, %options);
-	    $str =~ s/\n/ +\n/g;
-	    $options{'wrap'} = 1;
-	} else {
-	    if ( $self->{options}{'cleanspaces'} == 1 ) {
-		$str =~ s/[ \n]+/ /g;
-	    }
-	    $str = $self->SUPER::translate( $str, $ref, $type, %options);
-	}
+        if ($str =~ / \+\n/) {
+            $options{'wrap'} = 0;
+            $str =~ s/([^+])\n/$1 /g;
+            $str =~ s/ \+\n/\n/g;
+            $str = $self->SUPER::translate( $str, $ref, $type, %options);
+            $str =~ s/\n/ +\n/g;
+            $options{'wrap'} = 1;
+        } else {
+            if ( $self->{options}{'cleanspaces'} == 1 ) {
+                $str =~ s/[ \n]+/ /g;
+            }
+            $str = $self->SUPER::translate( $str, $ref, $type, %options);
+        }
     } else {
         $str = $self->SUPER::translate( $str, $ref, $type, %options );
     }
@@ -592,8 +592,8 @@ sub parse {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $wrapped_mode = 0;
             $paragraph    = "";
-	    $self->pushline( $titlelevel1 . $titlespaces);
-	    $title = $self->translate_indexterms($title);
+            $self->pushline( $titlelevel1 . $titlespaces);
+            $title = $self->translate_indexterms($title);
             my $t = $self->translate(
                 $title,
                 $self->{ref},
@@ -699,19 +699,19 @@ sub parse {
         {
             # Found BlockId
             do_paragraph( $self, $paragraph, $wrapped_mode );
-	    my $block_id = $1;
-	    $paragraph    = "";
+            my $block_id = $1;
+            $paragraph    = "";
             $wrapped_mode = 1;
-	    if ($block_id =~ m/^([^,]+),(.+)$/) {
-		# Found BlockId with a xlabel
-		my $xlabel = $2;
-		$block_id = $1;
-		$self->pushline( "[[$block_id," );
-		do_paragraph( $self, $xlabel, 0);
-		$self->pushline( "]]\n" );
-	    } else {
-		$self->pushline( $line . "\n" );
-	    }
+            if ($block_id =~ m/^([^,]+),(.+)$/) {
+                # Found BlockId with a xlabel
+                my $xlabel = $2;
+                $block_id = $1;
+                $self->pushline( "[[$block_id," );
+                do_paragraph( $self, $xlabel, 0);
+                $self->pushline( "]]\n" );
+            } else {
+                $self->pushline( $line . "\n" );
+            }
             undef $self->{bullet};
             undef $self->{indent};
         } elsif ( not defined $self->{verbatim}
@@ -820,18 +820,18 @@ sub parse {
             my $attrname  = $1;
             my $attrsep   = $2;
             my $attrvalue = $3;
-	    my $linebreak = "";
+            my $linebreak = "";
             while ( $attrvalue =~ s/ ([\\+])$//s ) {
-		$linebreak = $1;
-		# add a carriage return at the end of attrvalue if there is none
-		$attrvalue .= "\n" if $attrvalue !~ m/\n$/;
+                $linebreak = $1;
+                # add a carriage return at the end of attrvalue if there is none
+                $attrvalue .= "\n" if $attrvalue !~ m/\n$/;
                 ( $line, $ref ) = $self->shiftline();
                 $ref  =~ m/^(.*):[0-9]+$/;
                 $line =~ s/^\s+|\s+$//;
-		print STDERR "appending attribute with $line" if $debug{parse};
+                print STDERR "appending attribute with $line" if $debug{parse};
                 $attrvalue .= $line;
             }
-	    print STDERR "attr definition: $attrvalue\n" if $debug{parse};
+            print STDERR "attr definition: $attrvalue\n" if $debug{parse};
             # Found an Attribute entry
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
@@ -846,10 +846,10 @@ sub parse {
                     "comment" => join( "\n", @comments ),
                     "wrap"    => 1
                 );
-		$t =~ s/\n/ \\\n/g;
+                $t =~ s/\n/ \\\n/g;
                 $self->pushline(":$attrname$attrsep$t\n");
             } else {
-		$attrvalue =~ s/\n/ $linebreak\n/g;
+                $attrvalue =~ s/\n/ $linebreak\n/g;
                 $self->pushline(":$attrname$attrsep$attrvalue\n");
             }
             @comments = ();
@@ -887,7 +887,7 @@ sub parse {
                 @comments = ();
             }
         } elsif ( not defined $self->{verbatim}
-		  and ($paragraph =~ m/^\s*$/)
+            and ( $paragraph =~ m/^\s*$/ )
             and ( $line !~ m/^\.\./ )
             and ( $line =~ m/^\.(\S.*)$/ ) )
         {
@@ -928,9 +928,9 @@ sub parse {
             $paragraph      = $text . "\n";
             $self->{indent} = "";
             $self->{bullet} = $bullet;
-	} elsif ( not defined $self->{verbatim}
-		  and ( $line eq " +") ) {
-	    $paragraph .= $line . "\n";
+        } elsif ( not defined $self->{verbatim}
+            and ( $line eq " +") ) {
+            $paragraph .= $line . "\n";
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
 
             # When not in table, empty lines or lines containing only spaces do break paragraphs
@@ -1070,19 +1070,19 @@ sub parse {
 
             if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) )
             {
-		if ( ( !$self->{options}{'nolinting'} ) && ($paragraph !~ m/ \+\n/ ) ) {
-		    # Second line of an item block is not indented. It is unindented
-		    # (and allowed) additional text or a new list item.
-		    warn wrap_mod(
-			"$ref",
-			dgettext(
-			    "po4a",
-			    "It seems that you are adding unindented content to an item. "
-			    . "The standard allows this, but you may still want to change your document "
-			    . "to use indented text to provide better visual clues to writers."
-			)
-			);
-		}
+                if ( ( !$self->{options}{'nolinting'} ) && ($paragraph !~ m/ \+\n/ ) ) {
+                    # Second line of an item block is not indented. It is unindented
+                    # (and allowed) additional text or a new list item.
+                    warn wrap_mod(
+                        "$ref",
+                        dgettext(
+                            "po4a",
+                            "It seems that you are adding unindented content to an item. "
+                          . "The standard allows this, but you may still want to change your document "
+                          . "to use indented text to provide better visual clues to writers."
+                        )
+                    );
+                }
             } else {
                 undef $self->{bullet};
                 undef $self->{indent};
@@ -1182,7 +1182,7 @@ sub do_paragraph {
     if ( defined $self->{bullet} ) {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
-	$self->pushline($indent1 . $bullet);
+        $self->pushline($indent1 . $bullet);
     }
     $paragraph = $self->translate_indexterms($paragraph);
 
@@ -1223,35 +1223,35 @@ sub translate_in_regex {
     #  but that's consistant with the specification.
     my ($self, $paragraph, $pattern) = @_;
     if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
-	for my $index (@indexes) {
-	    my @terms = ();
-	    while (
-		$index =~ m/\G(
-       "(?:[^"\\])+"               # quoted term
-       |  (?:[^,\\])+                # unquoted term
-         )(,\s*+)?/gx
-      )
-	    {
-		my $term = $1;
-		if ( $term =~ /^"(.*)"$/ ) {
-		    push @terms, '"' . ($self->translate(
-				  $1,
-				  $self->{ref},
-				  "Index entry",
-				  "wrap" => 1,
-				  "wrapcol" => 0)) . '"';
-		} else {
-		    push @terms, $self->translate(
-				  $term,
-				  $self->{ref},
-				  "Index entry",
-				  "wrap" => 1,
-				  "wrapcol" => 0);
-		}
-	    }
-	    $self->pushline("(((" . join (",", @terms) . ")))");
+        for my $index (@indexes) {
+            my @terms = ();
+            while (
+                $index =~ m/\G(
+                    "(?:[^"\\])+"               # quoted term
+                   | (?:[^,\\])+                # unquoted term
+                  )(,\s*+)?/gx
+              )
+            {
+                my $term = $1;
+                if ( $term =~ /^"(.*)"$/ ) {
+                    push @terms, '"' . ($self->translate(
+                            $1,
+                            $self->{ref},
+                            "Index entry",
+                            "wrap" => 1,
+                            "wrapcol" => 0)) . '"';
+                } else {
+                    push @terms, $self->translate(
+                        $term,
+                        $self->{ref},
+                        "Index entry",
+                        "wrap" => 1,
+                        "wrapcol" => 0);
+                }
+          }
+          $self->pushline("(((" . join (",", @terms) . ")))");
 
-	}
+        }
     }
     $paragraph =~ s/$pattern\n?//g;
     return $paragraph;
