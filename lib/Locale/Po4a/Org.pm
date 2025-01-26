@@ -402,17 +402,17 @@ Locale::Po4a::Org - convert Org documents from/to PO files.
 
 =head1 SYNOPSIS
 
- [type:org] /path/to/master.org				\
-	    $lang:/path/to/translation.$lang.org	\
-	    opt:"					\
-		--option skip_keywords='		\
-		    include				\
-		    export_file_name			\
-		    link'				\
-		--option skip_properties='		\
-		    copying				\
-		    NOBLOCKING				\
-		    ORDERED'"
+ [type:org] /path/to/master.org              \
+        $lang:/path/to/translation.$lang.org \
+        opt:"                                \
+        --option skip_keywords='             \
+            include                          \
+            export_file_name                 \
+            link'                            \
+        --option skip_properties='           \
+            copying                          \
+            NOBLOCKING                       \
+            ORDERED'"
 
 =head1 DESCRIPTION
 
