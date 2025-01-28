@@ -48,6 +48,11 @@ qsort (x:xs) = qsort (filter (< x) xs) ++ [x] ++
                qsort (filter (>= x) xs)
 ```
 
+```diff
+- Code block that includes bullet-like text.
+- Ensure that it doesn't get interpreted.
+```
+
 This first pandoc fenced_div is non-nested.
 
 ::::: {#special .sidebar}
