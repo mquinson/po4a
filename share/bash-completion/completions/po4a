@@ -1,0 +1,50 @@
+# bash completion for po4a(7) utilities.                   -*- shell-script -*-
+# this file provides completions for po4a itself and old-style scripts:
+# po4a-updatepo po4a-normalize po4a-gettextize po4a-translate
+
+_comp_cmd_po4a_utils() {
+    local cur prev words cword comp_args
+    _comp_initialize -- "$@" || return
+
+    local cmd="$(basename "${comp_args[0]}")"
+
+    case $prev in
+        -h | --help | -V | --version) return ;;
+        --help-format) [[ "$cmd" != "po4a" ]] && return ;;
+        --porefs)
+            if [[ "$cmd" != "po4a-translate" ]]; then
+                COMPREPLY=( $( compgen -W 'never file counter full' -- "$cur" ) )
+                return
+            fi
+            ;;
+        -f | --format)
+            if [[ "$cmd" != "po4a" ]]; then
+                local formats="
+                    $(command "${cmd}" --help-format 2>&1 | {
+                        local rx='^  - ([a-z]+):';
+                        while IFS= read line; do
+                            [[ $line =~ $rx ]] && echo "${BASH_REMATCH[1]}"
+                        done
+                    })"
+
+                COMPREPLY=( $( compgen -W "${formats}" -- "$cur" ) )
+                return
+            fi
+            ;;
+    esac
+
+    if [[ $cur == -* ]]; then
+        # po4a lists some arguments of other commands in its help message and
+        # they can end up first on the line e.g. msgmerge's "-U", so we should
+        # avoid leeking them to complitiones
+        _comp_compgen_help - < <(
+            command "${comp_args[0]}" --help 2>/dev/null |
+            command grep '^    -'  2>/dev/null
+        )
+        return
+    fi
+
+    _filedir
+} && complete -F _comp_cmd_po4a_utils po4a po4a-updatepo po4a-normalize po4a-gettextize po4a-translate
+
+# ex: filetype=sh
