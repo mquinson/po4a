@@ -476,8 +476,9 @@ sub run_one_format {
     unless ($error or exists $test->{'skip'}{'updatepo'}) {
         # Update PO
         copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
+        my $updatepo_options = $options =~ s/--width= [-]? [0-9]+//rxms;
         my $cmd =
-            "${execpath}/po4a-updatepo --no-deprecation -f $format $options "
+            "${execpath}/po4a-updatepo --no-deprecation -f $format $updatepo_options "
           . "--master $basename.$ext --po $cwd/${tmpbase}.po_updated"
           . " > $cwd/tmp/$path/update.stderr 2>&1";
 
