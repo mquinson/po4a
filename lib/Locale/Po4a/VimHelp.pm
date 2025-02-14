@@ -141,7 +141,7 @@ sub skip_tags {
 sub is_tags {
     my $line = shift;
 
-    $line =~ / \A \s* [*] [^*]+ [*] (?: \s+ [*] [^*]+ [*] )* (\s+ [>])? \Z /xms or return;
+    $line =~ / \A \s* [*] [^*]+ [*] (?: \s+ [*] [^*]+ [*] )* (\s+ [>] (vim)?)? \Z /xms or return;
     my $codeblock = $1;
 
     return { codeblock => $codeblock };
@@ -174,7 +174,7 @@ sub translate_codeblock_with_start_line {
 }
 
 sub is_codeblock_start_line {
-    return shift =~ / \A [>] \Z /xms;
+    return shift =~ / \A [>] (vim)? \Z /xms;
 }
 
 sub translate_paragraph {
@@ -221,7 +221,7 @@ sub translate_paragraph {
 sub parse_paragraph_line {
     my $line = shift;
 
-    $line =~ / \A (.*?) (\s+ [>])? \Z /xms or die "unreachable";
+    $line =~ / \A (.*?) (\s+ [>] (vim)?)? \Z /xms or die "unreachable";
     my $content   = $1;
     my $codeblock = $2;
 
