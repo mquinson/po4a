@@ -780,7 +780,7 @@ sub parse_markdown {
         $paragraph = "";
         my ( $nextline, $nextref ) = $self->shiftline();
 
-        while ( $nextline !~ /^\s{0,3}$fence$fencechar*\s*$/ ) {
+        while ( $nextline && $nextline !~ /^\s{0,3}$fence$fencechar*\s*$/ ) {
             $paragraph .= "$nextline";
             ( $nextline, $nextref ) = $self->shiftline();
         }
