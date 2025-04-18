@@ -17,6 +17,8 @@ use File::Spec;
 use File::Copy qw(copy);
 use File::stat;
 
+use IPC::Open3;
+
 sub ACTION_build {
     my $self = shift;
     $self->depends_on('code');
@@ -257,9 +259,13 @@ sub ACTION_man {
         my $docbook_xsl_url = "http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl";
         my $local_docbook_xsl;
 
+        my $pid = open3( undef, my $stdout, undef, "xmlcatalog", "--noout", "", $docbook_xsl_url );
+        waitpid $pid, 0;
+        my $detected_uri = do { local $/; <$stdout> };
+
         # There appear to be two file path formats:
         # "file:///path/to/XSLT/file" and "file:/path/to/XSLT/file".
-        `xmlcatalog --noout "" "$docbook_xsl_url"` =~ m,file:(?://)?(.+\.xsl), and $local_docbook_xsl = $1;
+        $detected_uri =~ m,file:(?://)?(.+\.xsl), and $local_docbook_xsl = $1;
 
         foreach my $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
             if ( $file =~ m,(.*/man(.))/([^/]*)\.xml$, ) {
