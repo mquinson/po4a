@@ -12,7 +12,7 @@ use Testhelper;
 my @tests;
 
 foreach my $t (
-    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks Lists Footnotes Callouts Comments Tables TablesImageText Attributes StyleMacro MacroIncludesHugo IndexEntries)
+    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks Lists Footnotes Callouts Comments Tables TablesImageText Attributes MacroIncludesHugo IndexEntries)
   )
 {
     push @tests, { 'format' => 'asciidoc', 'input' => "fmt/asciidoc/$t.adoc" };
@@ -62,6 +62,12 @@ push @tests,
     'format'  => 'asciidoc',
     'options' => "-o yfm_skip_array -o yfm_keys='subtitle  , paragraph' -o yfm_paths='people title'",
     'input'   => "fmt/asciidoc/YamlFrontMatter_KeysPaths.adoc",
+  },
+  {
+    'format'  => 'asciidoc',
+    'options' => '-o "style=[synopsis%,3]"',
+    'input'   => 'fmt/asciidoc/StyleMacro.adoc',
+    'doc'     => 'style blocks'
   };
 
 run_all_tests(@tests);

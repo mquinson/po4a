@@ -12,7 +12,7 @@ my @tests;
 
 # Generic tests
 
-foreach my $t (qw(Basic Rules)) {
+foreach my $t (qw(Basic Rules Codeblocks)) {
     push @tests, { 'format' => 'text', 'options' => '-o markdown', 'input' => "fmt/txt-markdown/$t.md" };
 }
 
