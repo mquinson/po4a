@@ -17,6 +17,8 @@ use File::Spec;
 use File::Copy qw(copy);
 use File::stat;
 
+use IPC::Open3;
+
 sub ACTION_build {
     my $self = shift;
     $self->depends_on('code');
@@ -253,8 +255,18 @@ sub ACTION_man {
         foreach my $file (qw(po4a-display-man.xml po4a-display-pod.xml)) {
             copy( File::Spec->catdir( "share", "doc", $file ), $man1path ) or die;
         }
-        my $docbook_xsl_url   = "http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl";
-        my $local_docbook_xsl = `xmlcatalog --noout "" "$docbook_xsl_url"` =~ m,file://(.+\.xsl), && $1;
+
+        my $docbook_xsl_url = "http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl";
+        my $local_docbook_xsl;
+
+        my $pid = open3( undef, my $stdout, undef, "xmlcatalog", "--noout", "", $docbook_xsl_url );
+        waitpid $pid, 0;
+        my $detected_uri = do { local $/; <$stdout> };
+
+        # There appear to be two file path formats:
+        # "file:///path/to/XSLT/file" and "file:/path/to/XSLT/file".
+        $detected_uri =~ m,file:(?://)?(.+\.xsl), and $local_docbook_xsl = $1;
+
         foreach my $file ( @{ $self->rscan_dir( $manpath, qr{\.xml$} ) } ) {
             if ( $file =~ m,(.*/man(.))/([^/]*)\.xml$, ) {
                 my ( $outdir, $section, $outfile ) = ( $1, $2, $3 );

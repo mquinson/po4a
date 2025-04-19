@@ -8,40 +8,53 @@
 use lib q(.);
 use Po4aBuilder;
 
-my $build = Po4aBuilder->new
-  ( module_name => 'po4a',
-      license => 'gpl',
-      dist_version_from => 'lib/Locale/Po4a/TransTractor.pm', # finds $VERSION
-      requires => { 'Pod::Parser' => 0 },   # Used for building po4a itself
-      configure_requires => { 'Module::Build' => 0.42 },
-      recommends => {'Text::WrapI18N' => 0, # Only used for wrapping long
-                                            # error/wraning lines.
+my $build = Po4aBuilder->new(
+    module_name       => 'po4a',
+    license           => 'gpl',
+    dist_version_from => 'lib/Locale/Po4a/TransTractor.pm',    # finds $VERSION
 
-                     'Term::ReadKey' => 0,  # Needed to detect terminal
-                                            # width. Not needed if you
-                                            # don't have Text::WrapI18N.
+    # Used for building po4a itself.
+    requires => {
+        'Pod::Parser' => 0,
+        'IPC::Open3'  => 0,
+    },
 
-                     'SGMLS' => 0,          # Needed for the Sgml module.
+    configure_requires => { 'Module::Build' => 0.42 },
+    recommends         => {
+        'Text::WrapI18N' => 0,                                 # Only used for wrapping long
+                                                               # error/wraning lines.
 
-                     'Unicode::GCString' => 0, # Used by the AsciiDoc and VimHelp modules
+        'Term::ReadKey' => 0,                                  # Needed to detect terminal
+                                                               # width. Not needed if you
+                                                               # don't have Text::WrapI18N.
 
-                     'Locale::gettext' => '1.01', # Only used for
-                                                  # translating the
-                                                  # po4a's messages.
-	             'YAML::Tiny' => 0, # Used by the Yaml module
-                    },
-      test_requires => {'SGMLS' => 0,             # Needed for the Sgml module.
-                        'Unicode::GCString' => 0, # Used by the Text module (asciidoc)
-                       },
-      script_files => ['po4a-gettextize', 'po4a-updatepo',
-          'po4a-translate', 'po4a-normalize', 'po4a', 'msguntypot',
-          'scripts/po4a-display-man', 'scripts/po4a-display-pod'],
-      add_to_cleanup => ['t/tmp','po/bin/*.gmo', 'blib', '_build'],
-      dist_abstract => 'Maintain the translations of your documentation with ease (PO for anything)',
-      dist_author => ['Martin Quinson (mquinson#debian.org)',
-          'Denis Barbier <barbier@linuxfr.org>',
-          'Nicolas François <nicolas.francois@centraliens.net>',
-          'Neil Williams <linux@codehelp.co.uk>']
-  );
+        'SGMLS' => 0,                                          # Needed for the Sgml module.
+
+        'Unicode::GCString' => 0,                              # Used by the AsciiDoc and VimHelp modules
+
+        'Locale::gettext' => '1.01',                           # Only used for
+                                                               # translating the
+                                                               # po4a's messages.
+        'YAML::Tiny'      => 0,                                # Used by the Yaml module
+    },
+    test_requires => {
+        'SGMLS'             => 0,                              # Needed for the Sgml module.
+        'Unicode::GCString' => 0,                              # Used by the Text module (asciidoc)
+    },
+    script_files => [
+        'po4a-gettextize',          'po4a-updatepo',
+        'po4a-translate',           'po4a-normalize',
+        'po4a',                     'msguntypot',
+        'scripts/po4a-display-man', 'scripts/po4a-display-pod'
+    ],
+    add_to_cleanup => [ 't/tmp', 'po/bin/*.gmo', 'blib', '_build' ],
+    dist_abstract  => 'Maintain the translations of your documentation with ease (PO for anything)',
+    dist_author    => [
+        'Martin Quinson (mquinson#debian.org)',
+        'Denis Barbier <barbier@linuxfr.org>',
+        'Nicolas François <nicolas.francois@centraliens.net>',
+        'Neil Williams <linux@codehelp.co.uk>'
+    ]
+);
 
 $build->create_build_script;

@@ -5,10 +5,11 @@ ENV COLUMNS 120
 COPY . /srv/po4a
 WORKDIR /srv/po4a
 
-# Install Debian dependencies
+# Install Debian dependencies.
+# The libxml2-utils package provides the xmlcatalog program.
 RUN apt update
 RUN apt install -y liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl libpod-parser-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl
-RUN apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc
+RUN apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc libxml2-utils
 RUN apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
 
 # Install CPAN dependencies
