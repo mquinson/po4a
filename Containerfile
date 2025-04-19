@@ -1,6 +1,7 @@
 FROM ubuntu:latest
 
 ENV COLUMNS 120
+ENV LC_ALL UTF-8
 
 COPY . /srv/po4a
 WORKDIR /srv/po4a
