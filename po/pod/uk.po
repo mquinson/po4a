@@ -1,4 +1,4 @@
-# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2020, 2021, 2022, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2018, 2020, 2021, 2022, 2024, 2025.
 # Tymofij Lytvynenko <till.svit@gmail.com>, 2021.
 # Artem <artem@molotov.work>, 2022.
 msgid ""
@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Ukrainian (po4a)\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2025-03-07 18:40+0100\n"
-"PO-Revision-Date: 2024-11-18 23:03+0000\n"
+"PO-Revision-Date: 2025-04-20 14:13+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "uk/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.11.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -6056,6 +6056,9 @@ msgid ""
 "preserved in the po files and the corresponding entries are marked as no-"
 "wrap."
 msgstr ""
+"Якщо до назви стилю додано символ відсотків (B<%>), стиль буде оброблено "
+"буквально. Рядки у абзаці або блоці такого стилю буде збережено у файлах po, "
+"а відповідні запис буде позначено як записи без перенесення рядків."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:53
@@ -7875,15 +7878,7 @@ msgstr "Locale::Po4a::Org — перетворення документів Org 
 
 #. type: verbatim
 #: lib/Locale/Po4a/Org.pm:4
-#, fuzzy, no-wrap
-#| msgid ""
-#| "   Input document --\\                             /---> Output document\n"
-#| "                     \\                           /       (translated)\n"
-#| "                      +-> parse() function -----+\n"
-#| "                     /                           \\\n"
-#| "   Input PO --------/                             \\---> Output PO\n"
-#| "                                                         (extracted)\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type:org] /path/to/master.org              \\\n"
 "        $lang:/path/to/translation.$lang.org \\\n"
@@ -7898,12 +7893,17 @@ msgid ""
 "            ORDERED'\"\n"
 "\n"
 msgstr ""
-"   Вхідний документ --\\                             /---> Вихідний документ\n"
-"                     \\                           /       (перекладений)\n"
-"                      +-> функція parse() ------+\n"
-"                     /                           \\\n"
-" Вхідний PO --------/                             \\---> Вихідний PO\n"
-"                                                         (видобутий)\n"
+" [type:org] /шлях/до/основи.org              \\\n"
+"        $lang:/шлях/до/перекладу.$lang.org \\\n"
+"        opt:\"                                \\\n"
+"        --option skip_keywords='             \\\n"
+"            include                          \\\n"
+"            назва_файла_експортованого                 \\\n"
+"            link'                            \\\n"
+"        --option skip_properties='           \\\n"
+"            copying                          \\\n"
+"            NOBLOCKING                       \\\n"
+"            ORDERED'\"\n"
 "\n"
 
 #. type: textblock
