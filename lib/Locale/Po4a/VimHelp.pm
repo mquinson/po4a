@@ -29,14 +29,8 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-use Locale::Po4a::Common qw(wrap_mod dgettext);
-use Unicode::GCString;
-use Carp qw(croak);
-
 sub initialize {
     my ( $self, %options ) = @_;
-    $self->{textwidth} = 78;
-    $options{textwidth} and $self->{textwidth} = $options{textwidth};
     $self->{debug} = $options{debug};
     return;
 }
@@ -61,8 +55,6 @@ sub parse {
 
         ( $line, $ref ) = $self->shiftline();
     }
-
-    $self->check_textwidth();
 }
 
 sub translate_firstline {
@@ -150,15 +142,7 @@ sub is_tags {
 sub skip_modeline {
     my ( $self, $line ) = @_;
 
-    $line =~ / \A \s* vim: (.+) /xms or return;
-    my $content = $1;
-
-    for my $element ( split ":", $content ) {
-        my ( $key, $value ) = split ":", $element;
-        ( $key eq "tw" or $key eq "textwidth" ) or next;
-        $self->{textwidth} = $value;
-    }
-
+    $line =~ / \A \s* vim: /xms or return;
     $self->pushline("$line\n");
 
     return 1;
@@ -334,22 +318,6 @@ sub is_blank {
     return !$line || $line =~ / \A \s* \Z /xms;
 }
 
-sub check_textwidth {
-    my $self = shift;
-
-    my $textwidth = $self->{textwidth};
-    my @lines = split "\n", join "", @{ $self->{TT}{doc_out} };
-    for my $index ( 0 .. $#lines ) {
-        my $line    = $lines[$index];
-        my $columns = Unicode::GCString->new($line)->columns;
-        $columns > $textwidth or next;
-        my $linenum = $index + 1;
-        warn wrap_mod( "po4a::vimhelp", dgettext( "po4a", "line#%s has columns %s (> %s)" ),
-            $linenum, $columns, $textwidth );
-    }
-    return;
-}
-
 1;
 
 __END__
@@ -370,19 +338,6 @@ C<Locale::Po4a::VimHelp> is a module to help the translation of Vim
 help file.  See also L<Writing help
 files|https://vimhelp.org/helphelp.txt.html#help-writing> for its
 syntax.
-
-=head1 CONFIGURATION
-
-=over
-
-=item B<textwidth>
-
-The default value of the text width parameter for the document
-(default is 78, as used in most original Vim help files).  If
-specified in the source document modeline, this value will be
-overridden.
-
-=back
 
 =head1 STATUS OF THIS MODULE
 
@@ -429,6 +384,33 @@ hard wrapped format, even for parts that are not code blocks.
 
 The same applies to tag references such as C<|ref|>.
 
+=item Leveraging C<--wrapcol> to monitor text widths
+
+Using the C<--wrapcol> option to issue warnings when text width exceeds
+specified limits seems like a reasonable approach.  The official Vim help
+files feature a mode line, such as C<vim:tw=78:ts=8:noet:ft=help:norl:>, as
+seen in
+L<C<runtime/doc/if_perl.txt>|https://github.com/vim/vim/blob/04cc8975930b7b2c5d6753d3eddf57dab2816518/runtime/doc/if_perl.txt#L307>.
+However, there are a few challenges to consider:
+
+=over
+
+=item File Parsing Behavior
+
+If this option is implemented, it would be ideal to read the entire file
+first, detect whether the mode line exists, and determine which sections are
+affected.  Unfortunately, the progressive parsing mechanism is not employed in
+this case.
+
+=item Default vs. Custom Values
+
+The generic default value of C<--wrapcol> is 76, whereas Vim help files
+commonly use 78.  In most cases, the value in the options passed to this
+module defaults to 76, but it is unclear whether this value was explicitly set
+or implicitly applied.
+
+=back
+
 =back
 
 =head1 SEE ALSO
@@ -441,7 +423,7 @@ L<Locale::Po4a::TransTractor(3pm)>, L<po4a(7)|po4a.7>
 
 =head1 COPYRIGHT AND LICENSE
 
- Copyright © 2024 gemmaro.
+ Copyright © 2024, 2025 gemmaro.
 
 This program is free software; you may redistribute it and/or modify it
 under the terms of GPL v2.0 or later (see the F<COPYING> file).
