@@ -188,6 +188,8 @@ sub parse_heading {
     my $content = $3;
     my $tags    = $4;
 
+    $self->handle_paragraph_if_any();
+
     if ( $self->{options}{skip_heading} ) {
         $self->pushline("$line\n");
     } else {
