@@ -44,7 +44,7 @@ sub post_trans {
     my ( $self, $str, $ref, $type ) = @_;
 
     # Change ascii non-breaking space to POD one
-    my $nbs_out    = "\xA0";
+    my $nbs_out = "\xA0";
     my $enc_length = Encode::from_to( $nbs_out, "latin1", $self->get_out_charset );
     if ( defined $enc_length ) {
         while ( $str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s ) {
@@ -82,7 +82,7 @@ sub command {
         # in POD at least, there is no difference between utf8 and UTF-8. The major POD parsers handle "both encodings" in the exact same way.
         # Despite https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8
         $master_charset = 'UTF-8' if $master_charset // '' =~ /utf-?8/i;
-        $charset        = 'UTF-8' if $charset              =~ /utf-?8/i;
+        $charset        = 'UTF-8' if $charset =~ /utf-?8/i;
 
         if ( length( $master_charset // '' ) > 0 && uc($charset) ne uc($master_charset) ) {
             croak wrap_mod(
