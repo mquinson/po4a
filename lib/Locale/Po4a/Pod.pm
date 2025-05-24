@@ -19,9 +19,15 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor Pod::Parser);
 
-use Carp qw(croak confess);
+use Carp qw(croak);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
+
+sub initialize {
+    my ( $self, %args ) = @_;
+    $self->{options}{no_warn_simple} = delete $args{'no-warn-simple'};
+    $self->SUPER::initialize(%args);
+}
 
 sub translate {
     my ( $self, $str, $ref, $type ) = @_;
@@ -44,7 +50,7 @@ sub post_trans {
     my ( $self, $str, $ref, $type ) = @_;
 
     # Change ascii non-breaking space to POD one
-    my $nbs_out    = "\xA0";
+    my $nbs_out = "\xA0";
     my $enc_length = Encode::from_to( $nbs_out, "latin1", $self->get_out_charset );
     if ( defined $enc_length ) {
         while ( $str =~ m/(^|.*\s)(\S+?)\Q$nbs_out\E(\S+?)(\s.*$|$)/s ) {
@@ -82,7 +88,7 @@ sub command {
         # in POD at least, there is no difference between utf8 and UTF-8. The major POD parsers handle "both encodings" in the exact same way.
         # Despite https://perldoc.perl.org/Encode#UTF-8-vs.-utf8-vs.-UTF8
         $master_charset = 'UTF-8' if $master_charset // '' =~ /utf-?8/i;
-        $charset        = 'UTF-8' if $charset              =~ /utf-?8/i;
+        $charset        = 'UTF-8' if $charset =~ /utf-?8/i;
 
         if ( length( $master_charset // '' ) > 0 && uc($charset) ne uc($master_charset) ) {
             croak wrap_mod(
@@ -159,6 +165,15 @@ sub read {
 sub parse {
     my $self = shift;
 
+    $self->{options}{no_warn_simple}
+      or warn wrap_mod(
+        "po4a::pod",
+        dgettext(
+            "po4a",
+            "A new SimplePod parser is now available.  Please consider using it instead of the current Pod module. If you encounter any bugs, your reports would be greatly appreciated.  To use it, add the following line at the top of your po4a configuration file: \"[po4a_alias:Pod] SimplePod\".  You can disable this message by setting the no-warn-simple option.  Sorry for the noise, and thank you!"
+        )
+      );
+
     my @list = @{ $self->{DOCPOD}{infile} };
     while ( scalar @list ) {
         my ( $fh, $refname ) = ( shift @list, shift @list );
@@ -226,6 +241,13 @@ Locale::Po4a::Pod - convert POD data from/to PO files
 Locale::Po4a::Pod is a module to help the translation of documentation in
 the POD format (the preferred language for documenting Perl) into other
 [human] languages.
+
+A new L<SimplePod|Locale::Po4a::SimplePod> parser is now available.  Please
+consider using it instead of the current Pod module.  If you encounter any
+bugs, your reports would be greatly appreciated.
+
+The above warning message will be displayed for a transitional period.  To
+disable it, set the C<no-warn-simple> option.
 
 =head1 STATUS OF THIS MODULE
 

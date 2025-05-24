@@ -25,6 +25,7 @@ module for the following formats:
   - markdown: MD documents (using the txt module).
   - pod: Perl Online Documentation format.
   - rubydoc: RubyDoc (RD) documents.
+  - simplepod: Perl Online Documentation format (new option).
   - sgml: either DebianDoc or DocBook DTD.
   - texinfo: The info page format (experimental).
   - tex: generic TeX documents (see also latex).
