@@ -19,7 +19,7 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor Pod::Parser);
 
-use Carp qw(croak confess);
+use Carp qw(croak);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 
