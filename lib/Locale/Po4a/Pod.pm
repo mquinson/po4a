@@ -23,6 +23,12 @@ use Carp qw(croak);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 
+sub initialize {
+    my ( $self, %args ) = @_;
+    $self->{options}{no_warn_simple} = delete $args{'no-warn-simple'};
+    $self->SUPER::initialize(%args);
+}
+
 sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;
@@ -159,6 +165,15 @@ sub read {
 sub parse {
     my $self = shift;
 
+    $self->{options}{no_warn_simple}
+      or warn wrap_mod(
+        "po4a::pod",
+        dgettext(
+            "po4a",
+            "A new SimplePod parser is now available.  Please consider using it instead of the current Pod module. If you encounter any bugs, your reports would be greatly appreciated.  To use it, add the following line at the top of your po4a configuration file: \"[po4a_alias:Pod] SimplePod\".  You can disable this message by setting the no-warn-simple option.  Sorry for the noise, and thank you!"
+        )
+      );
+
     my @list = @{ $self->{DOCPOD}{infile} };
     while ( scalar @list ) {
         my ( $fh, $refname ) = ( shift @list, shift @list );
@@ -226,6 +241,13 @@ Locale::Po4a::Pod - convert POD data from/to PO files
 Locale::Po4a::Pod is a module to help the translation of documentation in
 the POD format (the preferred language for documenting Perl) into other
 [human] languages.
+
+A new L<SimplePod|Locale::Po4a::SimplePod> parser is now available.  Please
+consider using it instead of the current Pod module.  If you encounter any
+bugs, your reports would be greatly appreciated.
+
+The above warning message will be displayed for a transitional period.  To
+disable it, set the C<no-warn-simple> option.
 
 =head1 STATUS OF THIS MODULE
 
