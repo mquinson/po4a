@@ -42,6 +42,8 @@ sub new {
         $modname = 'RubyDoc';
     } elsif ( $module eq 'vimhelp' ) {
         $modname = 'VimHelp';
+    } elsif ( $module eq 'simplepod' ) {
+        $modname = 'SimplePod';
     } else {
         $modname = ucfirst($module);
     }
@@ -87,6 +89,8 @@ sub list {
           . gettext("pod: Perl Online Documentation format.")
           . "\n  - "
           . gettext("rubydoc: Ruby Documentation (RD) format.")
+          . "\n  - "
+          . gettext("simplepod: Perl Online Documentation format (new option).")
           . "\n  - "
           . gettext("sgml: either DebianDoc or DocBook DTD.")
           . "\n  - "
@@ -162,6 +166,7 @@ L<Locale::Po4a::Org(3pm)>,
 L<Locale::Po4a::Pod(3pm)>,
 L<Locale::Po4a::RubyDoc(3pm)>,
 L<Locale::Po4a::Sgml(3pm)>,
+L<Locale::Po4a::SimplePod(3pm)>,
 L<Locale::Po4a::TeX(3pm)>,
 L<Locale::Po4a::Texinfo(3pm)>,
 L<Locale::Po4a::Text(3pm)>,
