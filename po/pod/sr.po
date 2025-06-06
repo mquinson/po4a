@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the po4a package.
-# eevan78 <ivan.pesic@gmail.com>, 2024.
+# eevan78 <ivan.pesic@gmail.com>, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.72\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2025-03-07 18:40+0100\n"
-"PO-Revision-Date: 2024-11-20 18:38+0000\n"
+"PO-Revision-Date: 2025-04-21 10:12+0000\n"
 "Last-Translator: eevan78 <ivan.pesic@gmail.com>\n"
 "Language-Team: Serbian <https://hosted.weblate.org/projects/po4a/po4a-doc/sr/"
 ">\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.9-dev\n"
+"X-Generator: Weblate 5.11.1-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -5956,6 +5956,10 @@ msgid ""
 "preserved in the po files and the corresponding entries are marked as no-"
 "wrap."
 msgstr ""
+"Ако се на крај имена стила допише знак за проценат (B<%>), онда се стил "
+"обрађује дословно онако како је наведен. Линије у пасусу или блокови таквог "
+"стила се задржавају у po фајловима и одговарајуће ставке се означавају као "
+"no-wrap."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:53
@@ -7746,15 +7750,7 @@ msgstr "Locale::Po4a::Org - двосмерна конверзија Org доку
 
 #. type: verbatim
 #: lib/Locale/Po4a/Org.pm:4
-#, fuzzy, no-wrap
-#| msgid ""
-#| "   Input document --\\                             /---> Output document\n"
-#| "                     \\                           /       (translated)\n"
-#| "                      +-> parse() function -----+\n"
-#| "                     /                           \\\n"
-#| "   Input PO --------/                             \\---> Output PO\n"
-#| "                                                         (extracted)\n"
-#| "\n"
+#, no-wrap
 msgid ""
 " [type:org] /path/to/master.org              \\\n"
 "        $lang:/path/to/translation.$lang.org \\\n"
@@ -7769,12 +7765,17 @@ msgid ""
 "            ORDERED'\"\n"
 "\n"
 msgstr ""
-"   Улазни документ --\\                             /---> Излазни документ\n"
-"                      \\                           /       (преведен)\n"
-"                       +-> parse() функција -----+\n"
-"                      /                           \\\n"
-"   Улазни PO --------/                             \\---> Излазни PO\n"
-"                                                         (издвојен)\n"
+" [type:org] /путања/до/master.org              \\\n"
+"        $lang:/путања/до/translation.$lang.org \\\n"
+"        opt:\"                                \\\n"
+"        --option skip_keywords='             \\\n"
+"            include                          \\\n"
+"            export_file_name                 \\\n"
+"            link'                            \\\n"
+"        --option skip_properties='           \\\n"
+"            copying                          \\\n"
+"            NOBLOCKING                       \\\n"
+"            ORDERED'\"\n"
 "\n"
 
 #. type: textblock
