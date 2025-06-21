@@ -13,14 +13,15 @@ my $build = Po4aBuilder->new(
     license           => 'gpl',
     dist_version_from => 'lib/Locale/Po4a/TransTractor.pm',    # finds $VERSION
 
-    # Used for building po4a itself.
-    requires => {
-        'Pod::Parser' => 0,
-        'IPC::Open3'  => 0,
-    },
-
     configure_requires => { 'Module::Build' => 0.42 },
-    recommends         => {
+    build_requires     => {
+        'IPC::Open3' => 0,
+        'Pod::Man'   => 0,
+    },
+    recommends => {
+        'Pod::Parser' => 0,                                    # Used by KernelHelp and Pod modules.
+        'Pod::Simple' => 0,                                    # Used by SimplePod module.
+
         'Text::WrapI18N' => 0,                                 # Only used for wrapping long
                                                                # error/wraning lines.
 
