@@ -1,0 +1,16 @@
+# bash completion for po4a(7) utilities.                   -*- shell-script -*-
+# this file provides completion for po4a-display-pod and po4a-display-man
+
+_comp_cmd_po4a_scripts() {
+    local cur prev words cword comp_args
+    _comp_initialize -- "$@" || return
+
+    if [[ $cur == -* ]]; then
+        COMPREPLY=( $( compgen -W '-m -o -p' -- "$cur" ) )
+        return
+    fi
+
+    _filedir
+} && complete -F _comp_cmd_po4a_scripts po4a-display-pod po4a-display-man
+
+# ex: filetype=sh

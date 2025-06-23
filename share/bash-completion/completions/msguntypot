@@ -1,0 +1,16 @@
+# bash completion for po4a(7) utilities.                   -*- shell-script -*-
+# this file provides completion for msguntypot
+
+_comp_cmd_po4a_msguntypot() {
+    local cur prev words cword comp_args
+    _comp_initialize -- "$@" || return
+
+    if [[ $cur == -* ]]; then
+        COMPREPLY=( $( compgen -W '-o -n' -- "$cur" ) )
+        return
+    fi
+
+    _filedir
+} && complete -F _comp_cmd_po4a_msguntypot msguntypot
+
+# ex: filetype=sh
