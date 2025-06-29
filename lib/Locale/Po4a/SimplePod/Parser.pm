@@ -208,7 +208,7 @@ sub _handle_element_end {
 
 sub translate_block {
     my ( $self, $line, $type, $wrap ) = @_;
-    my $ref = "$self->{source_filename}:$line";
+    my $ref = "$self->{current_ref}:$line";
     my $text = $self->{tractor}->translate( $self->{text}, $ref, $type, wrap => $wrap );
     undef $self->{text};
     return $text;

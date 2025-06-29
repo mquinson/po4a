@@ -16,12 +16,15 @@ sub initialize {
 
 sub read {
     my ( $self, $filename, $refname, $charset ) = @_;
-    push @{ $self->{inputs} }, $filename;
+    push @{ $self->{inputs} }, { file => $filename, ref => $refname };
 }
 
 sub parse {
     my $self = shift;
-    $self->{parser}->parse_file($_) for @{ $self->{inputs} };
+    for my $input ( @{ $self->{inputs} } ) {
+        $self->{parser}->{current_ref} = $input->{ref};
+        $self->{parser}->parse_file( $input->{file} );
+    }
 }
 
 # We cannot use =begin since parsing this file with POD parser might cause
