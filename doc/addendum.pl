@@ -1,4 +1,4 @@
-PO4A-HEADER:mode=after;position=^=head1 AUTORZY;beginboundary=^=head1
+PO4A-HEADER:mode=after;position=\AAUTORZY;beginboundary=^=head1
 
 =head1 TŁUMACZENIE
 
