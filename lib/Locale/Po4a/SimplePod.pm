@@ -141,7 +141,7 @@ This module is intended to replace the current L<Locale::Po4a::Pod> module.
 The reason is that L<Pod::Parser>, which is used by the current
 L<Locale::Po4a::Pod>, is now deprecated, and it is recommended to use
 L<Pod::Simple> instead.  See also L<GitHub issue #256 "Consider migrating away
-from deprecated C<Pod::Parser>|https://github.com/mquinson/po4a/issues/256>.
+from deprecated C<Pod::Parser>"|https://github.com/mquinson/po4a/issues/256>.
 
 =head1 SEE ALSO
 
