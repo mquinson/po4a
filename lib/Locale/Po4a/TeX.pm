@@ -49,7 +49,7 @@ blocks, or even smaller like titles or indexes).
 There are some options (described in the next section) that can customize
 this behavior.  If this doesn't fit to your document format you're encouraged
 to write your own derivative module from this, to describe your format's details.
-See the section B<WRITING DERIVATIVE MODULES> below, for the process description.
+See the section B<WRITING DERIVATE MODULES> below, for the process description.
 
 This module can also be customized by lines starting with "% po4a:" in the
 TeX file. This process is described in the B<INLINE CUSTOMIZATION> section.
