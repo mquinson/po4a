@@ -419,12 +419,12 @@ hard wrapped format, even for parts that are not code blocks.
 
 The same applies to tag references such as C<|ref|>.
 
-=item Leveraging C<--wrapcol> to monitor text widths
+=item Leveraging C<wrapcol> to monitor text widths
 
-Using the C<--wrapcol> option to issue warnings when text width exceeds
-specified limits seems like a reasonable approach.  The official Vim help
-files feature a mode line, such as C<vim:tw=78:ts=8:noet:ft=help:norl:>, as
-seen in
+Using the C<wrapcol> (command line argument C<--width>) option to issue
+warnings when text width exceeds specified limits seems like a reasonable
+approach. The official Vim help files feature a mode line, such as
+C<vim:tw=78:ts=8:noet:ft=help:norl:>, as seen in
 L<C<runtime/doc/if_perl.txt>|https://github.com/vim/vim/blob/04cc8975930b7b2c5d6753d3eddf57dab2816518/runtime/doc/if_perl.txt#L307>.
 However, there are a few challenges to consider:
 
@@ -439,10 +439,10 @@ this case.
 
 =item Default vs. Custom Values
 
-The generic default value of C<--wrapcol> is 76, whereas Vim help files
-commonly use 78.  In most cases, the value in the options passed to this
-module defaults to 76, but it is unclear whether this value was explicitly set
-or implicitly applied.
+The generic default value of C<wrapcol> is 76, whereas Vim help files commonly
+use 78.  In most cases, the value in the options passed to this module defaults
+to 76, but it is unclear whether this value was explicitly set or implicitly
+applied.
 
 =back
 
