@@ -67,7 +67,7 @@
 #            If the file does not exist, the normalization is expected to not output anything
 #   - error (optional boolean -- default: false): whether the normalization is expected to fail
 #            If so, the translation is not attempted (and the translation files don't have to exist)
-#   - skip (optional): a set of stages that should be skipped, may contain 'normalize', 'translation' or 'updatepo'
+#   - skip (optional): a set of stages that should be skipped, may contain 'normalize', 'translate' or 'updatepo'
 #                      in any combination
 #   - trans (default: $basename.trans): expected translated document (translated with provided PO file)
 #   - trans_stderr (optional -- default: $basename.trans.stderr): expected output of the translation
@@ -412,6 +412,8 @@ sub run_one_format {
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
+    chdir $path || fail "Cannot change directory to $path: $!";
+    note("Change directory to $path");
     unless (exists $test->{'skip'}{'normalize'}) {
         # Normalize the document
         my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
@@ -420,8 +422,6 @@ sub run_one_format {
           . "--pot $cwd/${tmpbase}.pot --localized $cwd/${tmpbase}.norm $options $basename.$ext"
           . " > $real_stderr 2>&1";
 
-        chdir $path || fail "Cannot change directory to $path: $!";
-        note("Change directory to $path");
         my $exit_status = system($cmd);
         $cmd =~ s{$root_dir/}{}g;
         $cmd =~ s{t/../po4a}{po4a};
@@ -454,7 +454,7 @@ sub run_one_format {
         push @tests, "diff -u $output   $tmpbase.norm" unless $error;
     }
 
-    unless ($error or exists $test->{'skip'}{'traslate'}) {
+    unless ($error or exists $test->{'skip'}{'translate'}) {
         # Translate the document
         my $cmd =
             "${execpath}/po4a-translate --no-deprecation -f $format $options --master $basename.$ext"
