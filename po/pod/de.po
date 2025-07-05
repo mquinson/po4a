@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.74\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2025-07-04 21:37+0200\n"
-"PO-Revision-Date: 2025-07-05 12:43+0200\n"
+"PO-Revision-Date: 2025-07-05 16:38+0200\n"
 "Last-Translator: Helge Kreutzmann <debian@helgefjell.de>\n"
 "Language-Team: German <debian-l10n-german@lists.debian.org>\n"
 "Language: de\n"
@@ -4019,6 +4019,10 @@ msgid ""
 "expected.  If you notice any strange behavior, please let us know.  "
 "Eventually, this module will replace I<pod>."
 msgstr ""
+"Ähnlich zu dem vorher erwähnten I<pod>, verwendet dieser das neue L<Pod::"
+"Simple> als Auswertprogramm. Da es neu erstellt wurde, sind Fehler "
+"wahrscheinlich. Falls Sie merkwürdiges Verhalten bemerken, lassen Sie es uns "
+"bitte wissen. Dieses Modul wird irgendwann I<pod> ersetzen."
 
 #. type: =item
 #: doc/po4a.7.pod:73
@@ -6000,6 +6004,7 @@ msgstr ""
 "Falls dem Stilnamen ein Minuszeichen (B<->) vorangestellt wird, dann wird "
 "dieses Attribut nicht übersetzt."
 
+# FIXME signe → sign
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:52
 msgid ""
@@ -6008,6 +6013,10 @@ msgid ""
 "preserved in the po files and the corresponding entries are marked as no-"
 "wrap."
 msgstr ""
+"Falls ein Prozentzeichen (B<%>) an den Stilnamen angehängt wird, dann wird "
+"der Stil wortwörtlich verarbeitet. Die Zeilen in Absätzen oder Blöcken mit "
+"diesem Stil werden in den PO-Dateien erhalten und die entsprechenden "
+"Einträge werden als »no-wrap« markiert."
 
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:53
@@ -7923,6 +7932,21 @@ msgid ""
 "    # Write back to a file\n"
 "    $pofile->write('otherfile.po');"
 msgstr ""
+"    use Locale::Po4a::Po;\n"
+"    my $pofile=Locale::Po4a::Po->new();\n"
+"\n"
+"    # PO-Datei einlesen\n"
+"    $pofile->read('Datei.po');\n"
+"\n"
+"    # Einen Eintrag hinzufügen\n"
+"    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour',\n"
+"                  'flags' => \"wrap\", 'reference'=>'file.c:46');\n"
+"\n"
+"    # Eine Übersetzung herauslösen\n"
+"    $pofile->gettext(\"Hello\"); # returns 'bonjour'\n"
+"\n"
+"    # In eine Datei zurückschreiben\n"
+"    $pofile->write('Anderedatei.po');"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:6
@@ -8436,6 +8460,14 @@ msgid ""
 "    # Read POD from file.pod and write to file.txt.\n"
 "    $parser->parse_from_file ('file.pod', 'file.txt');"
 msgstr ""
+"    use Locale::Po4a::Pod;\n"
+"    my $parser = Locale::Po4a::Pod->new();\n"
+"\n"
+"    # POD von STDIN lesen und nach STDOUT schreiben.\n"
+"    $parser->parse_from_filehandle;\n"
+"\n"
+"    # POD von Datei.pod lesen und nach Datei.txt schreiben.\n"
+"    $parser->parse_from_file ('Datei.pod', 'Datei.txt');"
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:6
@@ -8455,6 +8487,10 @@ msgid ""
 "consider using it instead of the current Pod module.  If you encounter any "
 "bugs, your reports would be greatly appreciated."
 msgstr ""
+"Ein neues Auswertprogramm L<SimplePod|Locale::Po4a::SimplePod> ist jetzt "
+"verfügbar. Bitte ziehen Sie dessen Verwendung anstelle des aktuellen Pod-"
+"Moduls in Betracht. Falls Sie Fehler bemerken, wären wir für Ihre "
+"Fehlerberichte (auf Englisch) sehr dankbar."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:8
@@ -8462,6 +8498,8 @@ msgid ""
 "The above warning message will be displayed for a transitional period.  To "
 "disable it, set the C<no-warn-simple> option."
 msgstr ""
+"Die obige Warnmeldung wird für eine Übergangszeit angezeigt. Um sie zu "
+"deaktivieren, setzen Sie die Option C<no-warn-simple>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:10
@@ -9228,6 +9266,8 @@ msgid ""
 "The main differences between the current Pod format and the SimplePod format "
 "are as follows:"
 msgstr ""
+"Die Hauptunterschiede zwischen dem aktuellen Pod-Format und dem SimplePod-"
+"Format sind wie folgt:"
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:12
@@ -9236,6 +9276,9 @@ msgid ""
 "translated.  The current Pod format, however, may contain extra newlines, "
 "particularly in verbatim message entries."
 msgstr ""
+"Das SimplePod-Format enthält niemals zusätzliche Zeilenumbrüche in zu "
+"übersetzenden Meldungen. Das aktuelle POD-Format kann allerdings zusätzliche "
+"Zeilenumbrüche enthalten, insbesondere in »verbatim«-Meldungseinträgen."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:13
@@ -9245,6 +9288,10 @@ msgid ""
 "replicate with L<Pod::Simple>.  However, L<Pod::Simple> appears to produce a "
 "more natural output."
 msgstr ""
+"Absätze können mit Zeilenumbruch dargestellt werden. Das Modul L<Pod::"
+"Parser> könnte besondere Handhabungen für Zeilenumbruch anwenden, wodurch "
+"die Nachbildung mit L<Pod::Simple> schwierig wird. Allerdings scheint L<Pod::"
+"Simple> eine natürlichere Ausgabe zu erstellen."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:14
@@ -9255,6 +9302,11 @@ msgid ""
 "resulting in a message like C<comment text>.  The former behavior is "
 "considered more comfortable for translators."
 msgstr ""
+"In SimplePod enthält die Meldung C<=for> (z.B. C<=für Kommentartext>) keinen "
+"Formatnamen (wie C<comment>), so dass die Meldung ausschließlich aus Text "
+"besteht. Im Gegensatz dazu behält das aktuelle Pod-Format den Formatnamen "
+"bei, was zu Meldungen wie C<comment text> führt. Das frühere Verhalten wird "
+"für Übersetzer als komfortabler betrachtet."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:15
@@ -9263,6 +9315,9 @@ msgid ""
 "present as seen in the current Pod module.  Since these are not translatable "
 "messages, their absence is an improvement."
 msgstr ""
+"Einträge wie der nachfolgende, die C<=end comment> anzeigen, werden nicht "
+"mehr so dargestellt, wie es das aktuelle Pod-Modul macht. Da dies keine "
+"übersetzbaren Meldungen sind, ist deren Abwesenheit eine Verbesserung."
 
 #. type: verbatim
 #: lib/Locale/Po4a/SimplePod.pm:16
@@ -9286,6 +9341,10 @@ msgid ""
 "block.  In the Pod module, these were not treated as C<no-wrap>, which "
 "sometimes resulted in line wrapping."
 msgstr ""
+"Textblöcke, deren POD-Formatgültigkeit nicht sicher ist, werden jetzt als "
+"C<no-wrap> behandelt. Dies gilt beispielsweise für den Inhalt innerhalb "
+"eines Blocks C<=begin html>. Im Pod-Modul wurden sie nicht als C<no-wrap> "
+"behandelt, was manchmal zu Zeilenumbrüchen führte."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:18
@@ -9294,6 +9353,9 @@ msgid ""
 "current Pod module, it is included.  If there is a demand to include it in "
 "translation, please report it."
 msgstr ""
+"Der Parameter C<=begin> unterliegt jetzt nicht mehr der Übersetzung. Im "
+"aktuellen Pod-Modul wurde er aufgenommen. Falls es Bedarf gibt, ihn in die "
+"Übersetzung aufzunehmen, melden Sie sich bitte."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:20
@@ -9305,6 +9367,13 @@ msgid ""
 "Feedback and use cases from real-world applications will play a key role in "
 "guiding its future development."
 msgstr ""
+"Das Modul ist noch ganz neu entwickelt, daher ist es weniger stabil als "
+"L<Locale::Po4a::Pod>. Es entwickelt sich weiter und es gibt Raum für "
+"Verfeinerungen. Sein Verhalten könnte sich im Laufe der Zeit ändern und "
+"zusätzliche Optionen könnten eingeführt werden, um die Übersetzungsleistung "
+"für Benutzer zu optimieren. Rückmeldungen und Anwendungsfälle von realen "
+"Anwendungen werden eine Schlüsselrolle zum Anleiten der zukünftigen "
+"Entwicklung darstellen."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:21
@@ -9315,6 +9384,12 @@ msgid ""
 "module is ready for production use, even if some bugs may inevitably be "
 "discovered as it gains wider adoption."
 msgstr ""
+"Der Code ist vollständig durch unsere Test-Suite abgedeckt und uns sind "
+"keine bestehenden Fehler bekannt. Stand 2025 wurde es aber noch keinen "
+"Kampfeinsätzen in realen Übersetzungsabläufen in externen Projekten "
+"unterzogen. Trotz dieser Aussage glauben wir, dass das Modul für den "
+"Produktionseinsatz bereit ist, selbst wenn es unvermeidlich sein könnte, "
+"dass einige Fehler entdeckt werden, wenn das Modul breiteren Einsatz findet."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:22
@@ -9326,6 +9401,12 @@ msgid ""
 "away from deprecated C<Pod::Parser>\"|https://github.com/mquinson/po4a/"
 "issues/256>."
 msgstr ""
+"Das Modul ist als Ersatz für das aktuelle Modul L<Locale::Po4a::Pod> "
+"gedacht. Der Grund liegt darin, dass L<Pod::Parser>, der vom aktuellen "
+"L<Locale::Po4a::Pod> verwandt wird, jetzt veraltet ist und es empfohlen "
+"wird, stattdessen L<Pod::Simple> zu verwenden. Siehe auch L<GitHub Ticket "
+"#256 »Consider migrating away from deprecated C<Pod::Parser>«|https://github."
+"com/mquinson/po4a/issues/256>."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:24
@@ -11647,10 +11728,11 @@ msgstr ""
 msgid "The same applies to tag references such as C<|ref|>."
 msgstr "Das gleiche gilt für Markierungsreferenzen wie C<|ref|>."
 
+# FIXME Missing full stop?
 #. type: =item
 #: lib/Locale/Po4a/VimHelp.pm:22
 msgid "Leveraging C<--wrapcol> to monitor text widths"
-msgstr ""
+msgstr "Nutzen von C<--wrapcol>, um die Textbreite zu überwachen."
 
 #. type: textblock
 #: lib/Locale/Po4a/VimHelp.pm:23
@@ -11662,11 +11744,18 @@ msgid ""
 "04cc8975930b7b2c5d6753d3eddf57dab2816518/runtime/doc/if_perl.txt#L307>.  "
 "However, there are a few challenges to consider:"
 msgstr ""
+"Es scheint ein vernünftiger Ansatz zu sein, die Option C<--wrapcol> zu "
+"verwenden, um Warnungen auszugeben, wenn die Textbreite die festgelegten "
+"Grenzen überschreitet. Die offizielle Vim-Hilfedatei enthält eine "
+"Moduszeile, wie C<vim:tw=78:ts=8:noet:ft=help:norl:>, wie das in L<C<runtime/"
+"doc/if_perl.txt>|https://github.com/vim/vim/blob/"
+"04cc8975930b7b2c5d6753d3eddf57dab2816518/runtime/doc/if_perl.txt#L307> "
+"gesehen werden kann. Allerdings sind ein paar Herausforderungen zu meistern:"
 
 #. type: =item
 #: lib/Locale/Po4a/VimHelp.pm:24
 msgid "File Parsing Behavior"
-msgstr ""
+msgstr "Dateiauswertverhalten"
 
 #. type: textblock
 #: lib/Locale/Po4a/VimHelp.pm:25
@@ -11676,11 +11765,15 @@ msgid ""
 "affected.  Unfortunately, the progressive parsing mechanism is not employed "
 "in this case."
 msgstr ""
+"Wenn diese Option implementiert ist, wäre es ideal, die gesamte Datei zuerst "
+"einzulesen, zu ermitteln, ob eine Moduszeile existiert, und dann zu "
+"bestimmen, welche Abschnitte betroffen sind. Unglücklicherweise wird der "
+"fortschreitende Auswertmechanismus in diesem Fall nicht eingesetzt."
 
 #. type: =item
 #: lib/Locale/Po4a/VimHelp.pm:26
 msgid "Default vs. Custom Values"
-msgstr ""
+msgstr "Standard kontra angepasste Werte"
 
 #. type: textblock
 #: lib/Locale/Po4a/VimHelp.pm:27
@@ -11690,6 +11783,11 @@ msgid ""
 "module defaults to 76, but it is unclear whether this value was explicitly "
 "set or implicitly applied."
 msgstr ""
+"Der generische Standardwert von C<--wrapcol> ist 76, während VIM-"
+"Hilfedateien typischerweise 78 verwenden. In den meisten Fällen ist der "
+"Wert, der in den Optionen an dieses Modul übergeben wird, standardmäßig 76, "
+"aber es ist nicht klar, ob dieser Wert explizit gesetzt oder implizit "
+"angewandt wurde."
 
 #. type: verbatim
 #: lib/Locale/Po4a/VimHelp.pm:33
