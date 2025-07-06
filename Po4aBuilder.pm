@@ -72,15 +72,15 @@ sub ACTION_binpo {
         if ( -e "po/bin/po4a.pot") {
             my $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
             if ( $diff eq "" ) {
-                unlink "po/bin/po4a.pot.new" || die;
+                unlink "po/bin/po4a.pot.new" or die;
                 # touch it
                 my ($atime, $mtime) = (time,time);
                 utime $atime, $mtime, "po/bin/po4a.pot";
             } else {
-                rename "po/bin/po4a.pot.new", "po/bin/po4a.pot" || die;
+                rename "po/bin/po4a.pot.new", "po/bin/po4a.pot" or die;
             }
         } else {
-            rename "po/bin/po4a.pot.new", "po/bin/po4a.pot" || die;
+            rename "po/bin/po4a.pot.new", "po/bin/po4a.pot" or die;
         }
     } else {
         print "XX po/bin/po4a.pot uptodate.\n";
@@ -98,12 +98,12 @@ sub ACTION_binpo {
             # and ignore them.
             my $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
             if ($diff eq "") {
-                unlink "$_.new" || die;
+                unlink "$_.new" or die;
                 # touch it
                 my ($atime, $mtime) = (time,time);
                 utime $atime, $mtime, $_;
             } else {
-                rename "$_.new", $_ || die;
+                rename "$_.new", $_ or die;
             }
         } else {
             print "XX $_ uptodate.\n";
@@ -149,7 +149,7 @@ sub ACTION_dist {
 
     if ( -e "$dist_dir.tar.gz") {
         # Delete the distfile if it already exists
-        unlink "$dist_dir.tar.gz" || die;
+        unlink "$dist_dir.tar.gz" or die;
     }
 
     $self->make_tarball($dist_dir);
@@ -246,7 +246,7 @@ sub ACTION_man {
         $parser->parse_from_file( $file, $out );
 
         system("gzip -9 -n -f $out") and die;
-        unlink "$file" || die;
+        unlink "$file" or die;
     }
 
     if ( $^O ne 'MSWin32' ) {
@@ -279,7 +279,7 @@ sub ACTION_man {
                 }
                 system("gzip -9 -n -f $outdir/$outfile.$section") and die;
             }
-            unlink "$file" || die;
+            unlink "$file" or die;
         }
     }
 }
