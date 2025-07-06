@@ -5,8 +5,7 @@
 
 package Po4aBuilder;
 
-use 5.16.0;
-use strict;
+use v5.16.0;
 use warnings;
 
 use parent qw(Module::Build);
