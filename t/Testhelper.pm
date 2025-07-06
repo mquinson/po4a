@@ -100,7 +100,7 @@ my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 
 # msginit annoyances, see https://github.com/mquinson/po4a/issues/338
 my $PODIFF =
-    "-I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' "
+    "--ignore-trailing-space -I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' "
   . "-I'^# [^[:blank:]]* translations for ' -I'^# Language [^[:blank:]]* translations for ' -I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# This file is distributed under the same license as the' -I'^# Automatically generated, 20...' ";
 
 sub show_files {
