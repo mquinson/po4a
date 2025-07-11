@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.20\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2025-07-04 21:37+0200\n"
-"PO-Revision-Date: 2025-06-30 20:01+0000\n"
+"PO-Revision-Date: 2025-07-11 22:01+0000\n"
 "Last-Translator: Marco Ciampa <ciampix@posteo.net>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/po4a/po4a-doc/it/"
 ">\n"
@@ -4150,6 +4150,10 @@ msgid ""
 "If you notice any strange behavior, please let us know.  Eventually, this "
 "module will replace I<pod>."
 msgstr ""
+"Simile al modulo I<pod> menzionato in precedenza, questo adotta il nuovo "
+"L<Pod::Simple> come analizzatore. Essendo di nuova creazione, ci si può "
+"aspettare qualche difetto. Se si notano comportamenti anomali, vi preghiamo "
+"di segnalarcelo. A breve, questo modulo sostituirà I<pod>."
 
 #. type: =item
 #: doc/po4a.7.pod:73
@@ -8315,6 +8319,21 @@ msgid ""
 "    # Write back to a file\n"
 "    $pofile->write('otherfile.po');"
 msgstr ""
+"    use Locale::Po4a::Po;\n"
+"    my $pofile=Locale::Po4a::Po->new();\n"
+"\n"
+"    # Lettura file PO \n"
+"    $pofile->read('file.po');\n"
+"\n"
+"    # Aggiunta di una voce\n"
+"    $pofile->push('msgid' => 'Hello', 'msgstr' => 'bonjour',\n"
+"                  'flags' => \"wrap\", 'reference'=>'file.c:46');\n"
+"\n"
+"    # Estrazione traduzione\n"
+"    $pofile->gettext(\"Hello\"); # returns 'bonjour'\n"
+"\n"
+"    # Scrittura di nuovo in un file\n"
+"    $pofile->write('otherfile.po');"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:6
@@ -8820,6 +8839,14 @@ msgid ""
 "    # Read POD from file.pod and write to file.txt.\n"
 "    $parser->parse_from_file ('file.pod', 'file.txt');"
 msgstr ""
+"    use Locale::Po4a::Pod;\n"
+"    my $parser = Locale::Po4a::Pod->new();\n"
+"\n"
+"    # Lettura POD da STDIN e scrittura su STDOUT.\n"
+"    $parser->parse_from_filehandle;\n"
+"\n"
+"    # Lettura POD da file.pod scrittura in file.txt.\n"
+"    $parser->parse_from_file ('file.pod', 'file.txt');"
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:6
@@ -8839,6 +8866,9 @@ msgid ""
 "consider using it instead of the current Pod module.  If you encounter any "
 "bugs, your reports would be greatly appreciated."
 msgstr ""
+"È ora disponibile un nuovo analizzatore L<SimplePod|Locale::Po4a::"
+"SimplePod>. Valutarne l'utilizzo in sostituzione dell'attuale modulo Pod. Se "
+"si riscontrano difetti, le segnalazioni saranno molto apprezzate."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:8
@@ -8846,6 +8876,8 @@ msgid ""
 "The above warning message will be displayed for a transitional period.  To "
 "disable it, set the C<no-warn-simple> option."
 msgstr ""
+"Il messaggio di avviso sopra riportato verrà visualizzato per un periodo di "
+"transizione.  Per disattivarlo, impostare l'opzione C<no-warn-simple>."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:10
@@ -9599,7 +9631,7 @@ msgstr "1"
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:2
 msgid "__END__"
-msgstr ""
+msgstr "__END__"
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:4
@@ -9616,11 +9648,13 @@ msgid ""
 "  [po4a_paths] /path/to/pot $lang:/path/to/po\n"
 "  [type:SimplePod] /path/to/source.pod $lang:/path/to/localized.pod"
 msgstr ""
+"  [po4a_paths] /percorso/per/pot $lang:/percorso/per/po\n"
+"  [type:SimplePod] /percorso/per/source.pod $lang:/percorso/per/localized.pod"
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:7
 msgid "or"
-msgstr ""
+msgstr "o"
 
 #. type: verbatim
 #: lib/Locale/Po4a/SimplePod.pm:8
@@ -9630,6 +9664,9 @@ msgid ""
 "  [po4a_alias:pod] SimplePod\n"
 "  [type:pod] /path/to/source.pod $lang:/path/to/localized.pod"
 msgstr ""
+"  [po4a_paths] /percorso/per/pot $lang:/path/to/po\n"
+"  [po4a_alias:pod] SimplePod\n"
+"  [type:pod] /percorso/per/source.pod $lang:/percorso/per/localized.pod"
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:10
@@ -9652,6 +9689,8 @@ msgid ""
 "The main differences between the current Pod format and the SimplePod format "
 "are as follows:"
 msgstr ""
+"Le principali differenze tra l'attuale formato Pod e il formato SimplePod "
+"sono le seguenti:"
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:12
@@ -9660,6 +9699,9 @@ msgid ""
 "translated.  The current Pod format, however, may contain extra newlines, "
 "particularly in verbatim message entries."
 msgstr ""
+"Il formato SimplePod non include mai nuove righe aggiuntive nei messaggi da "
+"tradurre.  L'attuale formato Pod, tuttavia, potrebbe contenere nuove righe "
+"aggiuntive, in particolare nelle voci verbatim."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:13
@@ -9669,6 +9711,10 @@ msgid ""
 "replicate with L<Pod::Simple>.  However, L<Pod::Simple> appears to produce a "
 "more natural output."
 msgstr ""
+"I paragrafi possono venire resi con il ritorno a capo. Il modulo L<Pod::"
+"Parser> potrebbe applicare una gestione speciale per il ritorno a capo, "
+"rendendo difficile la replica con L<Pod::Simple>. Tuttavia, L<Pod::Simple> "
+"sembra produrre risultati più naturali."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:14
@@ -9679,6 +9725,11 @@ msgid ""
 "resulting in a message like C<comment text>.  The former behavior is "
 "considered more comfortable for translators."
 msgstr ""
+"In SimplePod, il messaggio C<=for> (ad esempio, C<=for comment text>) non "
+"include un nome di formato (come C<comment>), quindi il messaggio è composto "
+"esclusivamente da testo. Al contrario, il formato Pod attuale mantiene il "
+"nome del formato, risultando in un messaggio del tipo C<comment text>. Il "
+"primo comportamento è considerato più comodo per i traduttori."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:15
@@ -9687,6 +9738,9 @@ msgid ""
 "present as seen in the current Pod module.  Since these are not translatable "
 "messages, their absence is an improvement."
 msgstr ""
+"Voci come quella qui sotto, che indicano C<=end comment>, non sono più "
+"presenti nell'attuale modulo Pod. Poiché non si tratta di messaggi "
+"traducibili, la loro assenza rappresenta un miglioramento."
 
 #. type: verbatim
 #: lib/Locale/Po4a/SimplePod.pm:16
@@ -9697,6 +9751,10 @@ msgid ""
 "  msgid \"comment\"\n"
 "  msgstr \"\""
 msgstr ""
+"  #. type: =end\n"
+"  #: sample.pod:10\n"
+"  msgid \"commento\"\n"
+"  msgstr \"\""
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:17
@@ -9706,6 +9764,11 @@ msgid ""
 "block.  In the Pod module, these were not treated as C<no-wrap>, which "
 "sometimes resulted in line wrapping."
 msgstr ""
+"I blocchi di testo la cui validità del formato POD è incerta vengono ora "
+"trattati come C<no-wrap>. Questo vale, ad esempio, per il contenuto "
+"all'interno di un blocco C<=begin html>. Nel modulo Pod, questi non venivano "
+"trattati come C<no-wrap>, il che a volte comportava il ritorno a capo "
+"automatico."
 
 #. type: =item
 #: lib/Locale/Po4a/SimplePod.pm:18
@@ -9714,6 +9777,9 @@ msgid ""
 "current Pod module, it is included.  If there is a demand to include it in "
 "translation, please report it."
 msgstr ""
+"La sezione del parametro C<=begin> non è più soggetta a traduzione. È "
+"inclusa nell'attuale modulo Pod. Se c'è una richiesta di includerla nella "
+"traduzione, vi preghiamo di segnalarcelo."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:20
@@ -9725,6 +9791,13 @@ msgid ""
 "Feedback and use cases from real-world applications will play a key role in "
 "guiding its future development."
 msgstr ""
+"Questo modulo è ancora in fase di sviluppo, quindi è meno stabile di "
+"L<Locale::Po4a::Pod>. Continua a evolversi e c'è spazio per ulteriori "
+"perfezionamenti. Il suo comportamento potrebbe cambiare nel tempo e "
+"potrebbero essere introdotte opzioni aggiuntive per ottimizzare l'esperienza "
+"di traduzione per gli utenti. Il feedback e i casi d'uso derivanti da "
+"applicazioni reali svolgeranno un ruolo chiave nel guidarne lo sviluppo "
+"futuro."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:21
@@ -9735,6 +9808,12 @@ msgid ""
 "module is ready for production use, even if some bugs may inevitably be "
 "discovered as it gains wider adoption."
 msgstr ""
+"Il codice è completamente coperto dalla nostra suite di test e non siamo a "
+"conoscenza di alcun bug esistente. Tuttavia, al 2025, non è stato ancora "
+"testato sul campo in flussi di lavoro di traduzione reali da progetti "
+"esterni. Detto questo, riteniamo che il modulo sia pronto per l'uso in "
+"produzione, anche se alcuni difetti potrebbero inevitabilmente venire "
+"rilevati con la sua più ampia adozione."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:22
@@ -9745,6 +9824,12 @@ msgid ""
 "instead.  See also L<GitHub issue #256 \"Consider migrating away from "
 "deprecated C<Pod::Parser>\"|https://github.com/mquinson/po4a/issues/256>."
 msgstr ""
+"Questo modulo è destinato a sostituire l'attuale modulo L<Locale::Po4a::"
+"Pod>.  Il motivo è che L<Pod::Parser>, utilizzato dall'attuale modulo "
+"L<Locale::Po4a::Pod>, è ora deprecato e si consiglia di utilizzare L<Pod::"
+"Simple> al suo posto.  Consultare anche L<GitHub issue #256 "
+"\"Valutare la migrazione da C<Pod::Parser> deprecato\"|https://github.com/"
+"mquinson/po4a/issues/256>."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:24
