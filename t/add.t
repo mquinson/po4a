@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use lib q(t);
-use Testhelper;
+use Testhelper qw( run_all_tests );
 
 my @tests;
 
