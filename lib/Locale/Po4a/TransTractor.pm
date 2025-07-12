@@ -14,8 +14,8 @@ use Carp qw(croak confess);
 use Locale::Po4a::Po;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod gettext dgettext);
 
-use File::Path;    # mkdir before write
-use File::Spec;
+use File::Path ();    # mkdir before write
+use File::Spec ();
 
 =encoding UTF-8
 
