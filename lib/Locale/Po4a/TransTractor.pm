@@ -8,7 +8,7 @@ use warnings;
 
 use subs qw(makespace);
 use vars qw($VERSION);
-$VERSION = "0.74-alpha";
+$VERSION = "0.74";
 
 use Carp qw(croak confess);
 use Locale::Po4a::Po;

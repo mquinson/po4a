@@ -327,7 +327,7 @@ Here is the checklist of things to remember when releasing po4a:
   - `wlc commit && wlc push`
   - merge the pull request
   - `git pull && git pull salsa master`
-- Bump the version number in lib/Locale/Po4a/TransTractor.pm and
+- Bump the $VERSION number in lib/Locale/Po4a/TransTractor.pm and
   regenerate the building script: `perl Build.PL`
 - Check that `./Build test` reports no error.
 - Generate translation statistics: `./Build postats`
