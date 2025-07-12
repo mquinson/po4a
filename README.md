@@ -23,7 +23,7 @@ module for the following formats:
   - man: Good old manual page format (either roff or mdoc).
   - org: document format for the Org mode.
   - markdown: MD documents (using the txt module).
-  - pod: Perl Online Documentation format.
+  - pod: Perl Online Documentation format (deprecated option).
   - rubydoc: RubyDoc (RD) documents.
   - simplepod: Perl Online Documentation format (new option).
   - sgml: either DebianDoc or DocBook DTD.
