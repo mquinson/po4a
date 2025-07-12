@@ -10,13 +10,13 @@ use warnings;
 
 use parent qw(Module::Build);
 
-use File::Basename;
+use File::Basename qw(fileparse);
 use File::Path qw(mkpath rmtree);
-use File::Spec;
+use File::Spec ();
 use File::Copy qw(copy);
-use File::stat;
+use File::stat qw(lstat stat);
 
-use IPC::Open3;
+use IPC::Open3 qw(open3);
 
 sub ACTION_build {
     my $self = shift;
