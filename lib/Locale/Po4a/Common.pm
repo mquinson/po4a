@@ -100,6 +100,7 @@ takes the name of the script as an argument.
 
 sub show_version {
     my $name = shift;
+    require Locale::Po4a::TransTractor;
 
     print sprintf(
         gettext(
