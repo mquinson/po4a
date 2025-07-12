@@ -7,7 +7,7 @@ use strict;
 use warnings;
 
 use lib q(t);
-use Testhelper;
+use Testhelper qw( run_all_tests );
 
 # TODO: alias option overriding generic option
 # TODO: file-specific overriding alias option
