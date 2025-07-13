@@ -18,6 +18,8 @@ use strict;
 use warnings;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod gettext);
 
+my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX VimHelp );
+
 sub new {
     my ($module)  = shift;
     my (%options) = @_;
@@ -26,24 +28,10 @@ sub new {
       unless defined $module;
 
     my $modname;
-    if ( $module eq 'kernelhelp' ) {
-        $modname = 'KernelHelp';
-    } elsif ( $module eq 'newsdebian' ) {
-        $modname = 'NewsDebian';
-    } elsif ( $module eq 'latex' ) {
-        $modname = 'LaTeX';
-    } elsif ( $module eq 'bibtex' ) {
-        $modname = 'BibTex';
-    } elsif ( $module eq 'tex' ) {
-        $modname = 'TeX';
-    } elsif ( $module eq 'asciidoc' ) {
-        $modname = 'AsciiDoc';
-    } elsif ( $module eq 'Rd' || $module eq 'rubydoc' ) {
+    if ( exists($_mod_lookup{$module}) ) {
+        $modname = $_mod_lookup{$module};
+    } elsif ( $module eq 'Rd' ) {
         $modname = 'RubyDoc';
-    } elsif ( $module eq 'vimhelp' ) {
-        $modname = 'VimHelp';
-    } elsif ( $module eq 'simplepod' ) {
-        $modname = 'SimplePod';
     } else {
         $modname = ucfirst($module);
     }
