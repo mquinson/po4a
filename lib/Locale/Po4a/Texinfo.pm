@@ -408,10 +408,12 @@ foreach (
     $break_line{$_}             = 1;
     $translate_line_command{$_} = 1;
 }
-foreach (
-    qw(c clear comment definfoenclose finalout fonttextsize frenchspacing
-    headings need printindex set setchapternewpage setfilename sp syncodeindex
-    synindex vskip)
+foreach ( qw(c clear comment definfoenclose documentencoding documentlanguage
+    finalout fonttextsize frenchspacing headings need paragraphindent
+    printindex set setchapternewpage setfilename sp syncodeindex synindex
+    vskip)
+# TODO: It would be nice to substitute correct values for @documentencoding and
+#       @documentlanguage <2025-07-18 Fat-Zer>
   )
 {
     $commands{$_}   = \&line_command;
