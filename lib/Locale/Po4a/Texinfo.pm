@@ -238,7 +238,7 @@ sub parse {
             and ( defined $commands{$2} )
             and ( $break_line{$2} ) )
         {
-            my ($spaces, $cmd, $arg) = ($1, $2, $3);
+            my ( $spaces, $cmd, $arg ) = ( $1, $2, $3 );
             if ( length($paragraph) ) {
                 ( $t, @env ) = translate_buffer( $self, $paragraph, undef, @env );
                 $self->pushline($t);
@@ -397,7 +397,7 @@ $translate_buffer_env{"ignore"} = \&translate_buffer_ignore;
 
 foreach (
     qw(appendix appendixsec appendixsubsec appendixsubsubsec author center
-    chapheading chapter cindex defline deftypeline dircategory exdent findex
+    chapheading chapter cindex defline deftypeline dircategory documentlanguage exdent findex
     heading include item itemx kindex majorheading opindex pindex section
     settitle shorttitlepage subheading subsection subsubheading subsubsection
     subtitle tindex title top unnumbered unnumberedsec unnumberedsubsec
@@ -408,12 +408,14 @@ foreach (
     $break_line{$_}             = 1;
     $translate_line_command{$_} = 1;
 }
-foreach ( qw(c clear comment definfoenclose documentencoding documentlanguage
+foreach (
+    qw(c clear comment definfoenclose documentencoding
     finalout fonttextsize frenchspacing headings need paragraphindent
     printindex set setchapternewpage setfilename sp syncodeindex synindex
     vskip)
-# TODO: It would be nice to substitute correct values for @documentencoding and
-#       @documentlanguage <2025-07-18 Fat-Zer>
+
+    # TODO: It would be nice to substitute correct values for @documentencoding and
+    #       @documentlanguage <2025-07-18 Fat-Zer>
   )
 {
     $commands{$_}   = \&line_command;
@@ -558,7 +560,7 @@ foreach (
     documentdescription group ifdocbook ifhtml ifinfo iflatex ifnotdocbook
     ifnothtml ifnotinfo ifnotplaintextg ifnottex ifnotxml ifplaintext iftex
     ifxml menu nodedescriptionblock titlepage)
-)
+  )
 {
     $commands{$_}               = \&environment_line_command;
     $translate_line_command{$_} = 0;
