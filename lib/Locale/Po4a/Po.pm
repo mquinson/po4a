@@ -103,7 +103,7 @@ use strict;
 use warnings;
 
 use parent qw(Exporter);
-our @EXPORT_OK = qw(move_po_if_needed);
+our @EXPORT_OK = qw(move_po_if_needed gettext_wrap_opts);
 
 use IO::File;
 
@@ -1424,6 +1424,33 @@ sub get_charset() {
         return $1;
     } else {
         return "UTF-8";
+    }
+}
+
+=item gettext_wrap_opts($)
+
+A small utility function that returns a string with appropriate
+C<--no-wrap>/C<--width> gettext utilities' options coresponding to the given
+B<wrap-po> value.
+
+=cut
+
+sub gettext_wrap_opts($) {
+    my $wrap_po = shift;
+    if ( ! defined $wrap_po or ! length $wrap_po ) {
+        return "";
+    } elsif ( $wrap_po eq 'no' or $wrap_po eq 'newlines' ) {
+        # Note: gettext will always wrap on newlines, so there is no difference between the two
+        return "--no-wrap";
+    } elsif( $wrap_po =~ /^[+-]?\d+$/ ) {
+        return "--width=$wrap_po";
+    } else {
+        warn wrap_mod( "po4a::po",
+            dgettext( "po4a",
+                "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)"),
+            $wrap_po
+        );
+        return "";
     }
 }
 
