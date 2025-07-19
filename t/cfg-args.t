@@ -87,6 +87,18 @@ push @tests, {
     'options'          => '--no-update --target-lang=de --target-lang=fr',
     'expected_outfile' => '_output-target-lang',
     'expected_files'   => 'man.de.1 man.fr.1'
+  },
+  {
+    'doc'              => '--wrap-po 60',
+    'po4a.conf'        => 'cfg/args-wrap-po/po4a.conf',
+    'options'          => '--wrap-po 60',
+    'expected_files'   => 'args-wrap-po.pot args-wrap-po.en.po args-wrap-po.fr.po man.en.1'
+  },
+  {
+    'doc'              => '--wrap-po newlines',
+    'po4a.conf'        => 'cfg/args-wrap-po-newlines/po4a.conf',
+    'options'          => '--wrap-po newlines',
+    'expected_files'   => 'args-wrap-po.pot args-wrap-po.en.po args-wrap-po.fr.po man.en.1'
   };
 
 run_all_tests(@tests);
