@@ -130,6 +130,12 @@ content. If set to B<newlines>, po4a will only split the msgid and msgstr after
 newlines in the content. If set to B<no>, po4a will not wrap the po file at all.
 The wrapping of the reference comments is controlled by the B<--porefs> option.
 
+Based on the value of this option appropriate flags (B<--no-wrap> or
+B<--width>=I<number>) will be passed to underlying gettext tutilities.
+Unfortunately getext doesn't prowide any counterpart for B<--wrap-po> I<no>, so
+in that case B<--no-wrap> will be passed (the same as for B<--wrap-po>
+I<newlines>).
+
 Note that this option has no impact on how the msgid and msgstr are wrapped, i.e.
 on how newlines are added to the content of these strings.
 
@@ -249,6 +255,7 @@ pod2usage() if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 $msgmerge_opt .= " --previous" unless $noprevious;
 $msgmerge_opt .= " --add-location=file" if ( $porefs =~ m/^file/ );
+$msgmerge_opt .= " " . Locale::Po4a::Po::gettext_wrap_opts($wrappo) if ( $wrappo );
 $msgmerge_opt =~ s/^\s+//;
 
 my %options = (
