@@ -150,8 +150,21 @@ of each paragraph.
    }
  }
 
-Once you've implemented the parse function, you can use your document
-class, using the public interface presented in the next section.
+Once you've implemented the parse function, you can use your document class, using the public interface presented in the next section.
+
+By default, your document class will only read from the user-provided file. To handle file inclusion (e.g. with \include in LaTeX or similar), you need
+to call C<read()> on each file to be included. See the Tex.pm module for an example of an overridden C<read()> function that not only loads the master
+file but also search for inclusion requests and gracefully adds the included files to the array of lines to be parsed. The included files are inlined
+in the translated document by the Tex.pm module: all the content is placed in the output translation document instead of creating separate files for the
+translation of included files. This is somewhat suboptimal, in particular if an included file is used in many files, but changing this would be quite complex
+and no document class does it so far. It would imply overloading the C<write()> function that is in charge of writing the content into the produced localized
+file, but I'm not sure that the usage benefit would worth the code complexity. Localized files are worthless files that can be removed from disk once the
+document compilation is done, so the waste of space is very discutable.
+
+Please note that using C<read()> to add content to the list and C<shiftline()> to get this content is optional. For example, the Sgml.pm module does
+not use this mechanism because it uses an external parser instead. Check the C<read()> function from Sgml.pm to see how the filenames are saved in a
+private array, and then how C<parse()> is overridden to not use the classical parse features but a SGML-specific C<parse_file()> instead. This later
+function is very different from the rest of the po4a code base, as all the grunt work is done by the C<onsgmls> external binary.
 
 =head1 PUBLIC INTERFACE for scripts using your parser
 
