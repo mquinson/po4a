@@ -1430,7 +1430,7 @@ sub get_charset() {
 =item gettext_wrap_opts($)
 
 A small utility function that returns a string with appropriate
-C<--no-wrap>/C<--width> gettext utilities' options coresponding to the given
+C<--no-wrap>/C<--width> gettext utilities' options corresponding to the given
 B<wrap-po> value.
 
 =cut
