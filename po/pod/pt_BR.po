@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: po4a 0.45\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2025-07-22 01:18+0200\n"
-"PO-Revision-Date: 2025-07-03 18:01+0000\n"
+"PO-Revision-Date: 2025-08-07 19:01+0000\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/po4a/"
 "po4a-doc/pt_BR/>\n"
@@ -1150,6 +1150,11 @@ msgid ""
 "so in that case B<--no-wrap> will be passed (the same as for B<--wrap-po> "
 "I<newlines>)."
 msgstr ""
+"Com base no valor desta opção, os sinalizadores apropriados (B<--no-wrap> ou "
+"B<--width>=I<número>) serão passados para as funcionalidades subjacentes do "
+"gettext. Infelizmente, o gettext não oferece nenhuma contrapartida para B"
+"<--wrap-po> I<no>, então, nesse caso, B<--no-wrap> será passado (o mesmo que "
+"para B<--wrap-po> I<newlines>)."
 
 #. type: textblock
 #: po4a:91 po4a-updatepo:45 lib/Locale/Po4a/Po.pm:15
@@ -3320,8 +3325,7 @@ msgstr "L<po4a(7)>"
 
 #. type: verbatim
 #: msguntypot:33
-#, fuzzy, no-wrap
-#| msgid " Martin Quinson (mquinson#debian,org)"
+#, no-wrap
 msgid " Martin Quinson (mquinson#debian.org)"
 msgstr " Martin Quinson (mquinson#debian.org)"
 
@@ -4589,7 +4593,7 @@ msgstr ""
 "Você deve selecionar uma abordagem em duas etapas configurando "
 "B<mode=after>. Em seguida, você deve restringir a pesquisa à linha após "
 "B<AUTHORS> com a regex de argumento B<position>. Então, você deve combinar o "
-"início da próxima seção (isto é, B<^ \\. SH>) com a regex de argumento "
+"início da próxima seção (isto é, B<^\\.SH>) com a regex de argumento "
 "B<beginboundary>. Isso é para dizer:"
 
 #. type: verbatim
@@ -5820,7 +5824,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:47
 msgid "B<//po4a: style >B<[>I<attribute list>B<]>"
-msgstr "B<//po4a: estilo >B<[>I<lista de atributos>B<]>"
+msgstr "B<//po4a: style >B<[>I<lista de atributos>B<]>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:48
@@ -5878,7 +5882,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/AsciiDoc.pm:53
 msgid "B<//po4a: entry >I<name>"
-msgstr "B<//po4a: entrada >I<nome>"
+msgstr "B<//po4a: entry >I<nome>"
 
 #. type: textblock
 #: lib/Locale/Po4a/AsciiDoc.pm:54
@@ -6424,10 +6428,10 @@ msgid ""
 "            -o untranslated=\\\"<bookinfo>\\\" \\\n"
 "            -o translated=\\\"<author>\\\"\""
 msgstr ""
-"  opt:\"-k 0 -o nodefault=\\\"<bookinfo> <author>\\\" \\\n"
-"            -o break=\\\"<bookinfo> <author>\\\" \\\n"
+"  opt:\"-k 0 -o nodefault=\\\"<bookinfo> <autor>\\\" \\\n"
+"            -o break=\\\"<bookinfo> <autor>\\\" \\\n"
 "            -o untranslated=\\\"<bookinfo>\\\" \\\n"
-"            -o translated=\\\"<author>\\\"\""
+"            -o translated=\\\"<autor>\\\"\""
 
 #. type: textblock
 #: lib/Locale/Po4a/Docbook.pm:14
@@ -7692,8 +7696,8 @@ msgid ""
 msgstr ""
 "Este módulo está em um estágio inicial de desenvolvimento. Ele foi testado "
 "com sucesso em arquivos Org simples, como o L<Org Mode Compact Guide|https://"
-"orgmode.org/guide/>. No entanto, ele não suporta a sintaxe L<Org completa|"
-"https://orgmode.org/worg/org-syntax.html>; notas de rodapé e listas simples "
+"orgmode.org/guide/>. No entanto, ele não suporta a L<sintaxe Org|https://"
+"orgmode.org/worg/org-syntax.html> completa; notas de rodapé e listas simples "
 "aninhadas não podem ser analisadas atualmente, por exemplo."
 
 #. type: verbatim
@@ -8242,10 +8246,8 @@ msgstr ""
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:88
-#, fuzzy
-#| msgid "gettext($)"
 msgid "gettext_wrap_opts($)"
-msgstr "gettext($)"
+msgstr "gettext_wrap_opts($)"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:89
@@ -8254,6 +8256,9 @@ msgid ""
 "C<--width> gettext utilities' options coresponding to the given B<wrap-po> "
 "value."
 msgstr ""
+"Uma pequena função utilitária que retorna uma string com opções apropriadas "
+"do utilitário gettext C<--no-wrap>/C<--width> correspondentes ao valor B"
+"<wrap-po> fornecido."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:2
@@ -9181,14 +9186,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:22
-#, fuzzy
-#| msgid ""
-#| "This module is intended to replace the current L<Locale::Po4a::Pod> "
-#| "module.  The reason is that L<Pod::Parser>, which is used by the current "
-#| "L<Locale::Po4a::Pod>, is now deprecated, and it is recommended to use "
-#| "L<Pod::Simple> instead.  See also L<GitHub issue #256 \"Consider "
-#| "migrating away from deprecated C<Pod::Parser>|https://github.com/mquinson/"
-#| "po4a/issues/256>."
 msgid ""
 "This module is intended to replace the current L<Locale::Po4a::Pod> module.  "
 "The reason is that L<Pod::Parser>, which is used by the current L<Locale::"
@@ -9199,8 +9196,9 @@ msgstr ""
 "Este módulo visa substituir o módulo L<Locale::Po4a::Pod> atual. O motivo é "
 "que o L<Pod::Parser>, usado pelo L<Locale::Po4a::Pod> atual, está "
 "descontinuado, e recomenda-se usar o L<Pod::Simple> em seu lugar. Consulte "
-"também o L<issue #256 do GitHub \"Consider migrating away from deprecated "
-"C<Pod::Parser>\"|https://github.com/mquinson/po4a/issues/256>."
+"também o L<issue #256 do GitHub "
+"\"Consider migrating away from deprecated C<Pod::Parser>\"|https://"
+"github.com/mquinson/po4a/issues/256>."
 
 #. type: textblock
 #: lib/Locale/Po4a/SimplePod.pm:24
@@ -9268,13 +9266,6 @@ msgstr ""
 
 #. type: textblock
 #: lib/Locale/Po4a/TeX.pm:9
-#, fuzzy
-#| msgid ""
-#| "There are some options (described in the next section) that can customize "
-#| "this behavior.  If this doesn't fit to your document format you're "
-#| "encouraged to write your own derivative module from this, to describe "
-#| "your format's details.  See the section B<WRITING DERIVATIVE MODULES> "
-#| "below, for the process description."
 msgid ""
 "There are some options (described in the next section) that can customize "
 "this behavior.  If this doesn't fit to your document format you're "
