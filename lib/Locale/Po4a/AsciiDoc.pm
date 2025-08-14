@@ -28,7 +28,7 @@ use warnings;
 use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
-use YAML::Tiny;
+use YAML::Tiny qw();
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
