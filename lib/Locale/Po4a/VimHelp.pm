@@ -29,9 +29,20 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
+use Locale::Po4a::Common qw(wrap_mod dgettext);
+
 sub initialize {
     my ( $self, %options ) = @_;
-    $self->{debug} = $options{debug};
+
+    $self->{options}{split_codeblocks} = 0;
+
+    foreach my $opt ( keys %options ) {
+        if ( defined $options{$opt} ) {
+            die wrap_mod( "po4a::vimhelp", dgettext( "po4a", "Unknown option: %s" ), $opt )
+              unless exists $self->{options}{$opt};
+            $self->{options}{$opt} = $options{$opt};
+        }
+    }
     return;
 }
 
@@ -62,14 +73,20 @@ sub translate_firstline {
 
     my ( $line, $ref ) = $self->shiftline();
     chomp $line;
-    $line =~ / \A ([*] [^*]+ [*] \s+) (.*) /xms or warn "no first line";
-    my $pre         = $1;
-    my $description = $2;
+    if ( $line =~ / \A ([*] [^*]+ [*] \s+) (.*) /xms ) {
+        my $pre         = $1;
+        my $description = $2;
 
-    $description = $self->translate( $description, $ref, "description" );
-    $self->pushline("$pre$description\n");
-
-    return;
+        $description = $self->translate( $description, $ref, "description",
+            wrapcol => 0 );
+        $self->pushline("$pre$description\n");
+        return 1;
+    } else {
+        warn wrap_mod( "po4a::vimhelp",
+            dgettext( "po4a", "The first line of the vimhelp file doesn't appear to be well-formatted"));
+        $self->unshiftline($line, $ref);
+        return 0;
+    }
 }
 
 sub skip_separator {
@@ -87,11 +104,15 @@ sub is_separator {
 sub translate_columnheading {
     my ( $self, $line, $ref ) = @_;
 
+    # Note: columnheading may represent different things ranging from section
+    # headers or table headers to multiline lists
     my ( $content, $suffix ) = is_columnheading($line) or return;
-    my $following_ref;
-    ( $line, $following_ref ) = $self->shiftline();
 
-    while ( defined $line ) {
+    # If there are several consecutive columnheading strings (ending with ~) we
+    # would likely want to translate them together, so loop through them,
+    # until we will find a string that doesn't match
+    my $following_ref;
+    while ( ( $line, $following_ref ) = $self->shiftline() and $line ) {
         chomp $line;
         my ($following_content) = is_columnheading($line);
 
@@ -101,7 +122,6 @@ sub translate_columnheading {
         }
 
         $content .= "\n$following_content";
-        ( $line, $following_ref ) = $self->shiftline();
     }
 
     $content = $self->translate( $content, $ref, "column heading" );
@@ -176,10 +196,7 @@ sub translate_paragraph {
 
     my @content = $content;
 
-    my $ref;
-    ( $line, $ref ) = $self->shiftline();
-
-    while ( defined $line ) {
+    while ( my ( $line, $ref ) = $self->shiftline() and defined $line ) {
         chomp $line;
 
         if ( paragraph_breakable($line) ) {
@@ -190,14 +207,17 @@ sub translate_paragraph {
         my $following_content;
         ( $following_content, $codeblock ) = parse_paragraph_line($line);
         push @content, $following_content;
-        $codeblock and last;
 
-        ( $line, $ref ) = $self->shiftline();
+        if ($codeblock) {
+            last;
+        }
     }
 
     $content = $self->translate_indented( \@content, $initial_ref, $type );
     $self->pushline("$content$codeblock\n");
-    $codeblock and $self->translate_codeblock();
+    if ($codeblock) {
+        $self->translate_codeblock();
+    }
 
     return 1;
 }
@@ -224,6 +244,7 @@ sub translate_codeblock {
     my ($self) = @_;
 
     my ( $line, $ref ) = $self->shiftline();
+    # skip initial blank lines of a code block
     while ( defined $line ) {
         chomp $line;
         is_blank($line) or last;
@@ -233,73 +254,70 @@ sub translate_codeblock {
     my $initial_ref = $ref;
 
     my @content;
+    my $end = "";
     while ( defined $line ) {
         chomp $line;
-        $initial_ref //= $ref;
 
-        if ( $line =~ / \A ([<]) (.*) /xms ) {
-            my $end = $1;
+        if ( $line =~ / \A ([<]\s*) (.*) /xms ) { # end of the codeblock by "< "
+            $end = $1;
             $line = $2;
-
-            if (@content) {
-                my $content = $self->translate_indented( \@content, $initial_ref, "codeblock" );
-                $self->pushline("$content\n$end");
-            } else {
-                $self->pushline($end);
-            }
             $self->unshiftline( $line, $ref );
             last;
-
-        } elsif ( $line =~ / \A \S /xms ) {
-            if (@content) {
-                my $content = $self->translate_indented( \@content, $initial_ref, "codeblock" );
-                $self->pushline("$content\n");
-            }
+        } elsif ( $line =~ / \A \S /xms ) { # end of codeblock by line started by a non-space character
             $self->unshiftline( $line, $ref );
             last;
-
-        } elsif ( is_blank($line) ) {
-            if (@content) {
-                my $content = $self->translate_indented( \@content, $initial_ref, "codeblock" );
-                $self->pushline("$content\n");
-                undef @content;
-                undef $initial_ref;
-            }
-            $self->pushline("$line\n");
-
-        } else {
+        } elsif ( $self->{options}{split_codeblocks} and is_blank($line) ) {
+            my $t = $self->translate_indented( \@content, $initial_ref, "codeblock",
+                wrap => 0 );
+            $self->pushline("$t\n\n");
+            @content = ();
+            ( $line, $ref ) = $self->shiftline();
+            $initial_ref = $ref;
+        } else { # codeblock continues
             push @content, $line;
+            ( $line, $ref ) = $self->shiftline();
         }
-
-        ( $line, $ref ) = $self->shiftline();
     }
 
-    return;
+    if ( not defined $line ) {
+        warn wrap_mod( "po4a::vimhelp",
+            dgettext( "po4a", "Unexpected end of file while reading a codeblock")
+        );
+        return 0;
+    }
+
+    if (@content) {
+        my $t = $self->translate_indented( \@content, $initial_ref, "codeblock",
+            wrap => 0 );
+        $self->pushline("$t\n$end");
+    }
+    return 1;
 }
 
 sub translate_indented {
-    my ( $self, $content, $ref, $type ) = @_;
+    my ( $self, $content, $ref, $type, %options ) = @_;
 
-    my $indent    = 0;
-    my $firstline = shift @{$content};
-    for my $char_index ( 0 .. length($firstline) - 1 ) {
-        my $char = substr( $firstline, $char_index, 1 ) or last;
-        $char =~ / \s /xms or last;
-        my $common = 1;
-        for my $line ( @{$content} ) {
-            substr( $line, $char_index, 1 ) eq $char and next;
-            undef $common;
+    ${$content}[0] =~ / \A(\s*) /x or die "unreachable";
+    my $indent = $1;
+
+    # check if all nonempty strings have at least the same indentation as the first one
+    for my $line (@{$content}) {
+        if (length $line and not starts_with($line, $indent)) {
+            warn wrap_mod( "po4a::vimhelp",
+                dgettext( "po4a", "The codeblock at %s has inconsistent indenation: %s"),
+                "$ref"
+            );
+            $indent = "";
             last;
         }
-        $common or last;
-        $indent += 1;
     }
 
-    my $prefix = substr( $firstline, 0, $indent );
-    unshift @{$content}, $firstline;
-    @{$content} = map { substr( $_, $indent ) } @{$content};
-    my $translation = $self->translate( join( "\n", @{$content} ), $ref, $type );
-    $translation =~ s/ ^ /$prefix/xmsg;
+    @{$content} = map { length($_) ? substr( $_, length($indent)) : $_ } @{$content};
+    my $translation = $self->translate( join( "\n", @{$content} ), $ref, $type,
+        wrapcol => -length($indent),
+        %options
+    );
+    $translation =~ s/ ^ (?!$) /$indent/xmsg;
     return $translation;
 }
 
@@ -316,6 +334,10 @@ sub is_blank {
     my $line = shift;
 
     return !$line || $line =~ / \A \s* \Z /xms;
+}
+
+sub starts_with {
+    return substr($_[0], 0, length($_[1])) eq $_[1];
 }
 
 1;
@@ -338,6 +360,19 @@ C<Locale::Po4a::VimHelp> is a module to help the translation of Vim
 help file.  See also L<Writing help
 files|https://vimhelp.org/helphelp.txt.html#help-writing> for its
 syntax.
+
+=head1 OPTIONS ACCEPTED BY THIS MODULE
+
+These are this module's particular options:
+
+=over
+
+=item B<split_codeblocks>
+
+If true the codeblocks will be split at newlines to smaller blocks which will
+be translated as separate paragraphs.
+
+=back
 
 =head1 STATUS OF THIS MODULE
 
@@ -384,12 +419,12 @@ hard wrapped format, even for parts that are not code blocks.
 
 The same applies to tag references such as C<|ref|>.
 
-=item Leveraging C<--wrapcol> to monitor text widths
+=item Leveraging C<wrapcol> to monitor text widths
 
-Using the C<--wrapcol> option to issue warnings when text width exceeds
-specified limits seems like a reasonable approach.  The official Vim help
-files feature a mode line, such as C<vim:tw=78:ts=8:noet:ft=help:norl:>, as
-seen in
+Using the C<wrapcol> (command line argument C<--width>) option to issue
+warnings when text width exceeds specified limits seems like a reasonable
+approach. The official Vim help files feature a mode line, such as
+C<vim:tw=78:ts=8:noet:ft=help:norl:>, as seen in
 L<C<runtime/doc/if_perl.txt>|https://github.com/vim/vim/blob/04cc8975930b7b2c5d6753d3eddf57dab2816518/runtime/doc/if_perl.txt#L307>.
 However, there are a few challenges to consider:
 
@@ -404,10 +439,10 @@ this case.
 
 =item Default vs. Custom Values
 
-The generic default value of C<--wrapcol> is 76, whereas Vim help files
-commonly use 78.  In most cases, the value in the options passed to this
-module defaults to 76, but it is unclear whether this value was explicitly set
-or implicitly applied.
+The generic default value of C<wrapcol> is 76, whereas Vim help files commonly
+use 78.  In most cases, the value in the options passed to this module defaults
+to 76, but it is unclear whether this value was explicitly set or implicitly
+applied.
 
 =back
 

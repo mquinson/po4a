@@ -376,6 +376,8 @@ sub new {
     $self->{options}{'package-version'}    = '';
     $self->{options}{'wrap-po'}            = '';
     $self->{options}{'wrapcol'}            = '';
+    $self->{options}{'debug'}              = '';
+    $self->{options}{'verbose'}            = '';
 
     # let the plugin parse the options and such
     $self->initialize(%options);
