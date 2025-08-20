@@ -644,7 +644,7 @@ The L<Locale::Po4a::Po(3pm)|Po> class is in charge of loading and using PO and
 POT files. Basically, you can read a file, add entries, get translations with
 the B<gettext()> method, write the PO into a file. More advanced features such as
 merging a PO file against a POT file or validating a file are delegated to
-B<msgmerge> and B<msgfmt> respectively.
+L<msgmerge(1)> and L<msgfmt(1)> respectively.
 
 =head2 Contributing to po4a
 
@@ -724,7 +724,7 @@ is a French onomatopoetic that we use in place of yuck :) I may have a strange s
 =head2 Why are the individual scripts deprecated?
 
 Indeed, B<po4a-updatepo> and B<po4a-translate> are deprecated in favor of B<po4a>. The reason is
-that while B<po4a> can be used as a drop-in replacement to these scripts, there is quite a lot of
+that while B<po4a> can be used as a replacement to these scripts once you provide a config file, there is quite a lot of
 code duplication here. Individual scripts last around 150 lines of codes while the B<po4a> program
 lasts 1200 lines, so they do a lot in addition of the common internals. The code duplication results
 in bugs occurring in both versions and needing two fixes. One example of such duplication are the
@@ -872,8 +872,8 @@ L<msguntypot(1)>, L<po4a-display-man(1)>, L<po4a-display-pod(1)>.
 
 =item
 
-The parsers of each formats, in particular to see the options accepted
-by each of them: L<Locale::Po4a::AsciiDoc(3pm)>
+The parser of each format, in particular to see the options they accept:
+L<Locale::Po4a::AsciiDoc(3pm)>, 
 L<Locale::Po4a::Dia(3pm)>, L<Locale::Po4a::Gemtext(3pm)>,
 L<Locale::Po4a::Guide(3pm)>, L<Locale::Po4a::Ini(3pm)>,
 L<Locale::Po4a::KernelHelp(3pm)>, L<Locale::Po4a::Man(3pm)>,

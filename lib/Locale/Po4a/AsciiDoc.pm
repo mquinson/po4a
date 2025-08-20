@@ -28,7 +28,7 @@ use warnings;
 use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
-use YAML::Tiny qw();
+use YAML::Tiny           qw();
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
 
@@ -186,7 +186,7 @@ translatable attributes.
 If a minus sign (B<->) is prepended to the style name, then this
 attribute is not translated.
 
-If a percent signe (B<%>) is appended to the style name, then the
+If a percent sign (B<%>) is appended to the style name, then the
 style is processed as verbatim. The lines in paragraph or block of
 such style are preserved in the po files and the corresponding entries
 are marked as no-wrap.
@@ -269,7 +269,7 @@ sub initialize {
     $self->register_attributelist('[caption]');
     $self->register_attributelist('[-icons,caption]');
     $self->register_macro('image_[1,alt,title,link]') unless $self->{options}{'noimagetargets'};
-    $self->register_macro('indexterm[1,2,3]') unless $self->{options}{'noimagetargets'};
+    $self->register_macro('indexterm[1,2,3]')         unless $self->{options}{'noimagetargets'};
 
     if ( $self->{options}{'definitions'} ) {
         $self->parse_definition_file( $self->{options}{'definitions'} );
@@ -362,8 +362,7 @@ sub parse_definition_file {
     close IN;
 }
 
-
-my $RE_STYLE_ADMONITION  = "TIP|NOTE|IMPORTANT|WARNING|CAUTION";
+my $RE_STYLE_ADMONITION = "TIP|NOTE|IMPORTANT|WARNING|CAUTION";
 
 BEGIN {
     my $UnicodeGCString_available = 0;
@@ -397,18 +396,18 @@ sub translate {
     my ( $self, $str, $ref, $type ) = @_;
     my (%options) = @_;
     if ( $options{'wrap'} == 1 ) {
-        if ($str =~ / \+\n/) {
+        if ( $str =~ / \+\n/ ) {
             $options{'wrap'} = 0;
             $str =~ s/([^+])\n/$1 /g;
             $str =~ s/ \+\n/\n/g;
-            $str = $self->SUPER::translate( $str, $ref, $type, %options);
+            $str = $self->SUPER::translate( $str, $ref, $type, %options );
             $str =~ s/\n/ +\n/g;
             $options{'wrap'} = 1;
         } else {
             if ( $self->{options}{'cleanspaces'} == 1 ) {
                 $str =~ s/[ \n]+/ /g;
             }
-            $str = $self->SUPER::translate( $str, $ref, $type, %options);
+            $str = $self->SUPER::translate( $str, $ref, $type, %options );
         }
     } else {
         $str = $self->SUPER::translate( $str, $ref, $type, %options );
@@ -592,7 +591,7 @@ sub parse {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $wrapped_mode = 0;
             $paragraph    = "";
-            $self->pushline( $titlelevel1 . $titlespaces);
+            $self->pushline( $titlelevel1 . $titlespaces );
             $title = $self->translate_indexterms($title);
             my $t = $self->translate(
                 $title,
@@ -654,9 +653,10 @@ sub parse {
                     } elsif ( $t eq "_" ) {
 
                         # QuoteBlock
-                        if ( ( defined $self->{type} )
-                             and (exists $self->{translate}->{style}->{$self->{type}})
-                             and $self->{translate}->{style}->{$self->{type}} =~ m/^,[^,%]+\%,/ ) {
+                        if (    ( defined $self->{type} )
+                            and ( exists $self->{translate}->{style}->{ $self->{type} } )
+                            and $self->{translate}->{style}->{ $self->{type} } =~ m/^,[^,%]+\%,/ )
+                        {
                             $wrapped_mode = 0;
                             $self->{verbatim} = 1;
                             print STDERR "QuoteBlock $self->{type}\n" if $debug{parse};
@@ -702,13 +702,14 @@ sub parse {
             my $block_id = $1;
             $paragraph    = "";
             $wrapped_mode = 1;
-            if ($block_id =~ m/^([^,]+),(.+)$/) {
+            if ( $block_id =~ m/^([^,]+),(.+)$/ ) {
+
                 # Found BlockId with a xlabel
                 my $xlabel = $2;
                 $block_id = $1;
-                $self->pushline( "[[$block_id," );
-                do_paragraph( $self, $xlabel, 0);
-                $self->pushline( "]]\n" );
+                $self->pushline("[[$block_id,");
+                do_paragraph( $self, $xlabel, 0 );
+                $self->pushline("]]\n");
             } else {
                 $self->pushline( $line . "\n" );
             }
@@ -731,11 +732,13 @@ sub parse {
         {
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph = "";
-            my ($type, $t) = $self->parse_style($line);
+            my ( $type, $t ) = $self->parse_style($line);
             $self->{type} = $type;
             $self->pushline("$t\n");
-            @comments     = ();
-            if ( exists $self->{translate}->{style}->{$type}  and $self->{translate}->{style}->{$type} =~ m/^,[^,%]+\%,/ ) {
+            @comments = ();
+            if ( exists $self->{translate}->{style}->{$type}
+                and $self->{translate}->{style}->{$type} =~ m/^,[^,%]+\%,/ )
+            {
                 $wrapped_mode = 0;
             }
             if ( ( ( $line =~ m/^\[format=(['"]?)(csv|tsv|dsv)\1,/ ) || ( $line =~ m/^\[separator=[^\|]/ ) )
@@ -806,6 +809,7 @@ sub parse {
             my $linebreak = "";
             while ( $attrvalue =~ s/ ([\\+])$//s ) {
                 $linebreak = $1;
+
                 # add a carriage return at the end of attrvalue if there is none
                 $attrvalue .= "\n" if $attrvalue !~ m/\n$/;
                 ( $line, $ref ) = $self->shiftline();
@@ -815,6 +819,7 @@ sub parse {
                 $attrvalue .= $line;
             }
             print STDERR "attr definition: $attrvalue\n" if $debug{parse};
+
             # Found an Attribute entry
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
@@ -871,8 +876,8 @@ sub parse {
             }
         } elsif ( not defined $self->{verbatim}
             and ( $paragraph =~ m/^\s*$/ )
-            and ( $line !~ m/^\.\./ )
-            and ( $line =~ m/^\.(\S.*)$/ ) )
+            and ( $line      !~ m/^\.\./ )
+            and ( $line      =~ m/^\.(\S.*)$/ ) )
         {
             my $title = $1;
 
@@ -891,8 +896,11 @@ sub parse {
             );
             $self->pushline(".$t\n");
             @comments = ();
-        } elsif ( not defined $self->{verbatim}
-            and ( $line =~ m/^(\s*)((?:(?:[-*o+\.]+(?:\s+\[[ xX\*]\])?)|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\))\s+)(.*)$/ ) )
+        } elsif (
+            not defined $self->{verbatim}
+            and ( $line =~
+                m/^(\s*)((?:(?:[-*o+\.]+(?:\s+\[[ xX\*]\])?)|(?:[0-9]+[.\)])|(?:[a-z][.\)])|\([0-9]+\))\s+)(.*)$/ )
+          )
         {
             my $indent = $1 || "";
             my $bullet = $2;
@@ -912,7 +920,8 @@ sub parse {
             $self->{indent} = "";
             $self->{bullet} = $bullet;
         } elsif ( not defined $self->{verbatim}
-            and ( $line eq " +") ) {
+            and ( $line eq " +" ) )
+        {
             $paragraph .= $line . "\n";
         } elsif ( ( $line =~ /^\s*$/ ) and ( !defined( $self->{type} ) or ( $self->{type} ne "Table" ) ) ) {
 
@@ -1051,9 +1060,9 @@ sub parse {
                 $wrapped_mode = 0;
             }
 
-            if (   ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) )
-            {
-                if ( ( !$self->{options}{'nolinting'} ) && ($paragraph !~ m/ \+\n/ ) ) {
+            if ( ( $paragraph ne "" && $self->{bullet} && length( $self->{indent} || "" ) == 0 ) ) {
+                if ( ( !$self->{options}{'nolinting'} ) && ( $paragraph !~ m/ \+\n/ ) ) {
+
                     # Second line of an item block is not indented. It is unindented
                     # (and allowed) additional text or a new list item.
                     warn wrap_mod(
@@ -1061,8 +1070,8 @@ sub parse {
                         dgettext(
                             "po4a",
                             "It seems that you are adding unindented content to an item. "
-                          . "The standard allows this, but you may still want to change your document "
-                          . "to use indented text to provide better visual clues to writers."
+                              . "The standard allows this, but you may still want to change your document "
+                              . "to use indented text to provide better visual clues to writers."
                         )
                     );
                 }
@@ -1165,7 +1174,7 @@ sub do_paragraph {
     if ( defined $self->{bullet} ) {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
-        $self->pushline($indent1 . $bullet);
+        $self->pushline( $indent1 . $bullet );
     }
     $paragraph = $self->translate_indexterms($paragraph);
 
@@ -1177,15 +1186,16 @@ sub do_paragraph {
         "wrap"    => $wrap
     );
     my $bullet = $self->{bullet} || "";
+
     # print STDERR "translated: '$t', $bullet\n";
 
-    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && (! ($t =~ /\+\n/) ) ;
+    my $unwrap_result = !$self->{options}{'forcewrap'} && $wrap && ( !( $t =~ /\+\n/ ) );
     if ($unwrap_result) {
         $t =~ s/[\n ]+/ /g;
     }
 
     @comments = ();
-    if ( ( defined $self->{bullet} ) && !($t =~ /\+\n/ ) ) {
+    if ( ( defined $self->{bullet} ) && !( $t =~ /\+\n/ ) ) {
         my $bullet  = $self->{bullet};
         my $indent1 = $self->{indent};
         my $indent2 = $indent1 . ( ' ' x length($bullet) );
@@ -1195,17 +1205,18 @@ sub do_paragraph {
 }
 
 sub translate_indexterms {
-    my ($self, $paragraph) = @_;
-    $paragraph = $self->translate_in_regex($paragraph, qr/\(\(\(([^\)]+)\)\)\)/);
-    return $self->translate_in_regex($paragraph, qr/indexterm:\[([^\]]+)\]/);
+    my ( $self, $paragraph ) = @_;
+    $paragraph = $self->translate_in_regex( $paragraph, qr/\(\(\(([^\)]+)\)\)\)/ );
+    return $self->translate_in_regex( $paragraph, qr/indexterm:\[([^\]]+)\]/ );
 }
 
 sub translate_in_regex {
+
     # Detect index entries and translate them separately.
     # They are moved in front of the paragraph, regardless of their original location,
     #  but that's consistant with the specification.
-    my ($self, $paragraph, $pattern) = @_;
-    if ( my @indexes = ($paragraph =~ m/$pattern/g ) ) {
+    my ( $self, $paragraph, $pattern ) = @_;
+    if ( my @indexes = ( $paragraph =~ m/$pattern/g ) ) {
         for my $index (@indexes) {
             my @terms = ();
             while (
@@ -1217,22 +1228,29 @@ sub translate_in_regex {
             {
                 my $term = $1;
                 if ( $term =~ /^"(.*)"$/ ) {
-                    push @terms, '"' . ($self->translate(
+                    push @terms,
+                      '"'
+                      . (
+                        $self->translate(
                             $1,
                             $self->{ref},
                             "Index entry",
-                            "wrap" => 1,
-                            "wrapcol" => 0)) . '"';
+                            "wrap"    => 1,
+                            "wrapcol" => 0
+                        )
+                      ) . '"';
                 } else {
-                    push @terms, $self->translate(
+                    push @terms,
+                      $self->translate(
                         $term,
                         $self->{ref},
                         "Index entry",
-                        "wrap" => 1,
-                        "wrapcol" => 0);
+                        "wrap"    => 1,
+                        "wrapcol" => 0
+                      );
                 }
-          }
-          $self->pushline("(((" . join (",", @terms) . ")))");
+            }
+            $self->pushline( "(((" . join( ",", @terms ) . ")))" );
 
         }
     }
@@ -1256,9 +1274,9 @@ sub parse_style {
         return "[$t]";
     }
     my @attributes = $self->split_attributelist($text);
-    my $type = $attributes[0];
+    my $type       = $attributes[0];
     $type =~ s/=.*//;
-    return ($type, "[" . join( ", ", $self->join_attributelist( "style", @attributes ) ) . "]");
+    return ( $type, "[" . join( ", ", $self->join_attributelist( "style", @attributes ) ) . "]" );
 }
 
 sub parse_macro {

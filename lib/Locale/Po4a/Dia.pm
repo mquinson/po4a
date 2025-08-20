@@ -42,7 +42,7 @@ Locale::Po4a::Dia is a module to help the translation of diagrams in the
 uncompressed Dia format into other [human] languages.
 
 You can get Dia (the graphical editor for these diagrams) from:
-  http://www.gnome.org/projects/dia/
+  https://wiki.gnome.org/Apps/Dia
 
 =head1 TRANSLATING WITH PO4A::DIA
 

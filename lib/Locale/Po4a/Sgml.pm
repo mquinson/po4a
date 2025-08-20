@@ -44,7 +44,7 @@ areas where they were not expected like documentation.
 Locale::Po4a::Sgml is a module to help the translation of documentation in
 the SGML format into other [human] languages.
 
-This module uses B<onsgmls>(1) to parse the SGML files. Make sure it is
+This module uses L<onsgmls(1)> to parse the SGML files. Make sure it is
 installed.
 Also make sure that the DTD of the SGML files are installed in the system.
 
@@ -91,9 +91,8 @@ Tags not needing to be closed.
 
 Tags ignored and considered as plain char data by po4a. That is to say that
 they can be part of an msgid. For example, E<lt>bE<gt> is a good candidate
-for this category since putting it in the B<translate> section would create a
-msgids with only its content, (and it's usually not a whole sentence), which
-is bad.
+for this category since putting it in the B<translate> section would create 
+msgids with only its content, which is bad since it's usually not a whole sentence.
 
 =item B<attributes>
 
@@ -101,7 +100,7 @@ A space-separated list of attributes that need to be translated. You can
 specify the attributes by their name (for example, C<lang>), but you can also
 prefix it with a tag hierarchy, to specify that this attribute will only be
 translated when it is into the specified tag. For example:
-C<< <bbb><aaa>lang >> specifies that the lang attribute will only be
+C<< <bbb><aaa>lang >> specifies that the C<lang> attribute will only be
 translated if it is in an C<< <aaa> >> tag, which is in a C<< <bbb> >> tag.
 The tag names are actually regular expressions so you can also write things
 like C<< <aaa|bbb>lang >> to only translate C<lang> attributes that are in
@@ -111,15 +110,15 @@ an C<< <aaa> >> or a C<< <bbb> >> tag.
 
 A space-separated list of attributes for which the translation must be
 qualified by the attribute name, i.e. the text extracted for the translation
-will include both the attributes name and it's value. e.g. for a tag like
+will include both the attributes name and it's value. E.g. for a tag like
 C<< <aaa lang_en="foo"> >> translators will be presented with the string
-C<lang_en="foo">. Note that this also automatically adds the given attribute
-into the B<attributes> list too.
+C<lang_en="foo">. Note that this automatically adds the given attribute
+into the B<attributes> list, too.
 
 
 =item B<force>
 
-Proceed even if the DTD is unknown or if B<onsgmls> finds errors in the input
+Proceed even if the DTD is unknown or if L<onsgmls(1)> finds errors in the input
 file.
 
 =item B<include-all>
@@ -132,7 +131,7 @@ C<< <title>&Aacute;</title> >>, even if I doubt such things to ever happen...
 =item B<ignore-inclusion>
 
 Space-separated list of entities that won't be inlined.
-Use this option with caution: it may cause B<onsgmls> (used internally) to add
+Use this option with caution: it may cause L<onsgmls(1)> (used internally) to add
 tags and render the output document invalid.
 
 =back
@@ -146,19 +145,19 @@ same as the originals. But there are still some problems:
 
 =item *
 
-The error output of B<onsgmls> is redirected to /dev/null by default, which is clearly
+The error output of L<onsgmls(1)> is redirected to /dev/null by default, which is clearly
 bad. I don't know how to avoid that.
 
 The problem is that I have to "protect" the conditional inclusions (i.e. the
-C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from B<onsgmls>. Otherwise
-B<onsgmls> eats them, and I don't know how to restore them in the final
+C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) from L<onsgmls(1)>. Otherwise
+L<onsgmls(1)> eats them, and I don't know how to restore them in the final
 document. To prevent that, I rewrite them to C<{PO4A-beg-foo}> and
 C<{PO4A-end}>.
 
 The problem with this is that the C<{PO4A-end}> and such I add are invalid in
 the document (not in a E<lt>pE<gt> tag or so).
 
-If you want to view the B<onsgmls> output, just add the following to your command line (or po4a configuration line):
+If you want to view the L<onsgmls(1)> output, just add the following to your command line (or po4a configuration line):
 
   -o debug=onsgmls
 
@@ -192,9 +191,9 @@ In case of file inclusion, string reference of messages in PO files
 
 This is because I preprocess the file to protect the conditional inclusion
 (i.e. the C<E<lt>! [ %foo [> and C<]]E<gt>> stuff) and some entities (like
-C<&version;>) from B<onsgmls> because I want them verbatim to the generated
+C<&version;>) from L<onsgmls(1)> because I want them verbatim to the generated
 document. For that, I make a temp copy of the input file and do all the
-changes I want to this before passing it to B<onsgmls> for parsing.
+changes I want to this before passing it to L<onsgmls(1)> for parsing.
 
 So that it works, I replace the entities asking for a file inclusion by the
 content of the given file (so that I can protect what needs to be in a subfile

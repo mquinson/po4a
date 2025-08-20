@@ -37,7 +37,7 @@ use Locale::Po4a::Common;
 
 =head1 NAME
 
-Locale::Po4a::Gemtext - convert Gemtext documents from/to PO files.
+Locale::Po4a::Gemtext - convert Gemtext documents from/to PO files
 
 =head1 DESCRIPTION
 

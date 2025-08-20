@@ -284,7 +284,7 @@ sub translate_indented {
     my $firstline = shift @{$content};
     for my $char_index ( 0 .. length($firstline) - 1 ) {
         my $char = substr( $firstline, $char_index, 1 ) or last;
-        $char =~ / \s /xms or last;
+        $char =~ / \s /xms                              or last;
         my $common = 1;
         for my $line ( @{$content} ) {
             substr( $line, $char_index, 1 ) eq $char and next;
@@ -326,7 +326,7 @@ __END__
 
 =head1 NAME
 
-Locale::Po4a::VimHelp - convert Vim help files from/to PO files.
+Locale::Po4a::VimHelp - convert Vim help files from/to PO files
 
 =head1 DESCRIPTION
 
@@ -356,7 +356,7 @@ suggest a patch (with additional test cases).
 
 =item C<1. foo> sounds like an ordered list
 
-Not necessarily.  Consider the following paragraph.
+Not necessarily.  Consider the following paragraph:
 
  There are 2 wandering tanukis, not
  1. He's using his cloning technique.
@@ -369,7 +369,7 @@ an unordered list (e.g. C<o baz>) cannot be detected.
 This topic is also difficult since it relates to language differences
 in localization.
 
-Consider the following example.
+Consider the following example
 
  Such a common and short concept in some languages *tags*
 

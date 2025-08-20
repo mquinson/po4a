@@ -38,7 +38,7 @@ You must provide both a master file (e.g., the source in English) and an
 existing translated file (e.g., a previous translation attempt without po4a). If
 you provide more than one master or translation files, they will be used in
 sequence, but it may be easier to gettextize each page or chapter separately and
-then use B<msgmerge> to merge all produced PO files. As you wish.
+then use L<msgmerge(1)> to merge all produced PO files. As you wish.
 
 If the master document has non-ASCII characters, the new generated PO file will
 be in UTF-8. If the master document is completely in ASCII, the generated
@@ -482,8 +482,8 @@ sub gettextize {
           unless ( defined( $pores->{po}{$orig} )
             and ( $pores->{po}{$orig}{'msgstr'} eq $trans ) )
 
-          # FIXME: maybe we should be smarter about what reference should be
-          #        sent to push_raw.
+        # FIXME: maybe we should be smarter about what reference should be
+        #        sent to push_raw.
     }
 
     # make sure we return a useful error message when entry count differ

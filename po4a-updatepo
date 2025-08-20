@@ -71,17 +71,17 @@ text parser would accept '-o tabs=split'.
 
 =item B<--no-previous>
 
-This option removes B<--previous> from the options passed to B<msgmerge>.
-This helps supporting old versions of B<gettext> (before v0.16).
+This option removes B<--previous> from the options passed to L<msgmerge(1)>.
+This helps supporting old versions of L<gettext(3)> (before v0.16).
 
 =item B<--previous>
 
-This option adds B<--previous> to the options passed to B<msgmerge>.
-It requires B<gettext> 0.16 or later, and is activated by default.
+This option adds B<--previous> to the options passed to L<msgmerge(1)>.
+It requires L<gettext(3)> 0.16 or later, and is activated by default.
 
 =item B<--msgmerge-opt> I<options>
 
-Extra options for B<msgmerge>(1).
+Extra options for L<msgmerge(1)>.
 
 =item B<-h>, B<--help>
 
@@ -112,8 +112,8 @@ increasing counter, and B<full> to include complete references (default: full).
 
 Argument can be followed by a comma and either B<wrap> or B<nowrap> keyword.
 References are written by default on a single line.  The B<wrap> option wraps
-references on several lines, to mimic B<gettext> tools (B<xgettext> and
-B<msgmerge>).  This option will become the default in a future release, because
+references on several lines, to mimic L<gettext(3)> tools (L<xgettext(1)> and
+L<msgmerge(1)>).  This option will become the default in a future release, because
 it is more sensible.  The B<nowrap> option is available so that users who want
 to keep the old behavior can do so.
 
@@ -254,8 +254,8 @@ $help_fmt && Locale::Po4a::Chooser::list(0);
 pod2usage() if scalar @masterfiles < 1 || scalar @pofiles < 1;
 
 $msgmerge_opt .= " --previous" unless $noprevious;
-$msgmerge_opt .= " --add-location=file" if ( $porefs =~ m/^file/ );
-$msgmerge_opt .= " " . Locale::Po4a::Po::gettext_wrap_opts($wrappo) if ( $wrappo );
+$msgmerge_opt .= " --add-location=file"                             if ( $porefs =~ m/^file/ );
+$msgmerge_opt .= " " . Locale::Po4a::Po::gettext_wrap_opts($wrappo) if ($wrappo);
 $msgmerge_opt =~ s/^\s+//;
 
 my %options = (
@@ -268,7 +268,7 @@ my %options = (
     "porefs"             => $porefs,
     "wrap-po"            => $wrappo
 
-      # There is no need to pass wrapcol, as updatepo will never produce a localized file
+    # There is no need to pass wrapcol, as updatepo will never produce a localized file
 );
 
 foreach (@options) {
