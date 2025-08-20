@@ -55,7 +55,7 @@ use warnings;
 use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
-use Carp qw(croak);
+use Carp                 qw(croak);
 use File::Basename;
 use File::Spec;
 
@@ -1400,86 +1400,86 @@ sub treat_attributes {
     $tag[0] = $2;
 
     while (@tag) {
-        my $complete = 1;
-
         $text .= $self->skip_spaces( \@tag );
-        if (@tag) {
+        return $text unless (@tag);
 
-            # Get the attribute's name
-            $complete = 0;
+        # Get the attribute's name
+        my $complete = 0;
+        my $ref      = $tag[1];
 
-            $tag[0] =~ /^([^\s=]+)(.*)/s;
-            my $name = $1;
-            my $ref  = $tag[1];
-            $tag[0] = $2;
-            $text .= $name;
+        unless ( $tag[0] =~ /^([^\s=]+)(.*)/s ) {
+            die wrap_mod( "po4a::xml::treat_attributes",
+                dgettext( "po4a", "%s: Bad attribute syntax. The attribute name seems to start with a '=' sign." ),
+                $ref );
+        }
+        my $name = $1;
+        $tag[0] = $2;
+        $text .= $name;
+        $text .= $self->skip_spaces( \@tag );
+        return $text unless (@tag);
+
+        # Get the '='
+        if ( $tag[0] =~ /^=(.*)/s ) {
+            $tag[0] = $1;
+            $text .= "=";
             $text .= $self->skip_spaces( \@tag );
             if (@tag) {
 
-                # Get the '='
-                if ( $tag[0] =~ /^=(.*)/s ) {
+                # Get the value
+                my $value = "";
+                $ref = $tag[1];
+                my $quot = substr( $tag[0], 0, 1 );
+                if ( $quot ne "\"" and $quot ne "'" ) {
+
+                    # Unquoted value
+                    $quot = "";
+                    $tag[0] =~ /^(\S+)(.*)/s;
+                    $value = $1;
+                    $tag[0] = $2;
+                } else {
+
+                    # Quoted value
+                    $text .= $quot;
+                    $tag[0] =~ /^\Q$quot\E(.*)/s;
                     $tag[0] = $1;
-                    $text .= "=";
-                    $text .= $self->skip_spaces( \@tag );
-                    if (@tag) {
-
-                        # Get the value
-                        my $value = "";
-                        $ref = $tag[1];
-                        my $quot = substr( $tag[0], 0, 1 );
-                        if ( $quot ne "\"" and $quot ne "'" ) {
-
-                            # Unquoted value
-                            $quot = "";
-                            $tag[0] =~ /^(\S+)(.*)/s;
-                            $value = $1;
-                            $tag[0] = $2;
-                        } else {
-
-                            # Quoted value
-                            $text .= $quot;
-                            $tag[0] =~ /^\Q$quot\E(.*)/s;
-                            $tag[0] = $1;
-                            while ( $tag[0] !~ /\Q$quot\E/ ) {
-                                $value .= $tag[0];
-                                shift @tag;
-                                shift @tag;
-                            }
-                            $tag[0] =~ /^(.*?)\Q$quot\E(.*)/s;
-                            $value .= $1;
-                            $tag[0] = $2;
-                        }
-                        $complete = 1;
-                        if ( $self->tag_in_list( $self->get_path . $name, $self->{attributes} ) ) {
-                            $text .= $self->found_string( $value, $ref, { type => "attribute", attribute => $name } );
-                        } else {
-                            print wrap_mod(
-                                "po4a::xml::treat_attributes",
-                                dgettext(
-                                    "po4a",
-                                    "%s: attribute '%s' is not defined in module option 'attributes' and\n"
-                                      . "....  is not translated for the attribute path '%s'"
-                                ),
-                                $ref, $value,
-                                $self->get_path . $name
-                            ) if $self->{options}{'debug'};
-                            $text .= $value;
-                        }
-                        $text .= $quot;
+                    while ( $tag[0] !~ /\Q$quot\E/ ) {
+                        $value .= $tag[0];
+                        shift @tag;
+                        shift @tag;
                     }
-                } else {    # This is an attribute with no '=' sign, nothing to translate
-                    $complete = 1;
+                    $tag[0] =~ /^(.*?)\Q$quot\E(.*)/s;
+                    $value .= $1;
+                    $tag[0] = $2;
                 }
+                $complete = 1;
+                if ( $self->tag_in_list( $self->get_path . $name, $self->{attributes} ) ) {
+                    $text .= $self->found_string( $value, $ref, { type => "attribute", attribute => $name } );
+                } else {
+                    print wrap_mod(
+                        "po4a::xml::treat_attributes",
+                        dgettext(
+                            "po4a",
+                            "%s: attribute '%s' is not defined in module option 'attributes' and\n"
+                              . "....  is not translated for the attribute path '%s'"
+                        ),
+                        $ref, $value,
+                        $self->get_path . $name
+                    ) if $self->{options}{'debug'};
+                    $text .= $value;
+                }
+                $text .= $quot;
             }
+        } else {    # This is an attribute with no '=' sign, nothing to translate
+            $complete = 1;
+        }
 
-            unless ($complete) {
-                my $ontagerror = $self->{options}{'ontagerror'};
-                if ( $ontagerror eq "warn" ) {
-                    warn wrap_mod( "po4a::xml::treat_attributes",
-                        dgettext( "po4a", "%s: Bad attribute syntax.  Continuing…" ), $ref );
-                } elsif ( $ontagerror ne "silent" ) {
-                    die wrap_mod( "po4a::xml::treat_attributes", dgettext( "po4a", "%s: Bad attribute syntax" ), $ref );
-                }
+        unless ($complete) {
+            my $ontagerror = $self->{options}{'ontagerror'};
+            if ( $ontagerror eq "warn" ) {
+                warn wrap_mod( "po4a::xml::treat_attributes",
+                    dgettext( "po4a", "%s: Bad attribute syntax.  Continuing…" ), $ref );
+            } elsif ( $ontagerror ne "silent" ) {
+                die wrap_mod( "po4a::xml::treat_attributes", dgettext( "po4a", "%s: Bad attribute syntax" ), $ref );
             }
         }
     }
