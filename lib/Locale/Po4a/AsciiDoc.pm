@@ -861,6 +861,10 @@ sub parse {
             } elsif ( ( $macroname eq "include" || $macroname eq "ifeval" )
                 and ( $macrotype eq '::' ) )
             {
+                # Process current paragraph before include to preserve line numbering
+                do_paragraph( $self, $paragraph, $wrapped_mode );
+                $paragraph    = "";
+                $wrapped_mode = 1;
                 $self->pushline( $line . "\n" );
             } else {
                 if ( $macrotype eq '::' ) {

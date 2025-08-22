@@ -68,6 +68,12 @@ push @tests,
     'options' => '-o "style=[synopsis%,3]"',
     'input'   => 'fmt/asciidoc/StyleMacro.adoc',
     'doc'     => 'style blocks'
+  },
+  {
+    'format'  => 'asciidoc',
+    'options' => '',
+    'input'   => 'fmt/asciidoc/IncludeInLists.adoc',
+    'doc'     => 'test include macro ordering in lists'
   };
 
 run_all_tests(@tests);
