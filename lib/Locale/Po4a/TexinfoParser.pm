@@ -154,9 +154,8 @@ foreach my $translated_line_cmdname (
     $additional_translated_line_commands{$translated_line_cmdname} = 1;
 }
 
-# TODO add possibility to specify include directories.
-# Other Parser options are much less interesting.  Maybe also file name
-# encoding related such as INPUT_FILE_NAME_ENCODING.  Maybe also, but
+# Other Parser options are not very interesting.  File name encoding
+# related such as INPUT_FILE_NAME_ENCODING may be relevant.  Maybe also, but
 # in very rare cases, clearing/adding expanded formats.
 sub initialize {
     my $self    = shift;
@@ -198,10 +197,9 @@ sub read ($$$$) {
 sub parse {
     my $self = shift;
 
-    # FIXME gets added to stderr for tests, which then fail
-    #print STDERR "The TexinfoParser module of po4a is not ready for production use.\n"
-    #  . "(use -o no-warn to remove this message)\n"
-    #  unless $self->{options}{'no-warn'};
+    print STDERR "The TexinfoParser module of po4a is not ready for production use.\n"
+      . "(use -o no-warn to remove this message)\n"
+      unless $self->{options}{'no-warn'};
     map { $self->parse_file($_) } @{ $self->{file_charsets}{infile} };
 }
 
@@ -664,9 +662,6 @@ sub _convert($$$$$;$$) {
                         ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, '@' . $cmdname, $result );
                         $translation_on_stack = 'C';
                     }
-
-                    # TODO translate @macro, @ignore, @set
-                    # and probably others
                 }
                 push @$translations_stack, $translation_on_stack;
             }
@@ -801,7 +796,7 @@ sub _convert($$$$$;$$) {
                 my $parent_cmdname;
                 if ( $type eq 'paragraph' ) {
 
-                    # FIXME never wrap to keep the structure in paragraph as
+                    # Never wrap to keep the structure in paragraph as
                     # end of line delimitate comments and index entries, and also
                     # index entries should remain at line beginning.
                     #$wrap = 1;
@@ -956,7 +951,6 @@ sub parse_file {
     }
 
     # check that the charset is the same as the Texinfo @documentencoding
-    # FIXME is it really useful?
     if ( defined($charset) ) {
         my $global_info = Texinfo::document_global_information($document);
 
