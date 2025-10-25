@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod gettext);
 
-my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX CommonMark VimHelp );
+my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX TexinfoParser CommonMark VimHelp );
 
 sub new {
     my ($module)  = shift;
@@ -28,7 +28,7 @@ sub new {
       unless defined $module;
 
     my $modname;
-    if ( exists($_mod_lookup{$module}) ) {
+    if ( exists( $_mod_lookup{$module} ) ) {
         $modname = $_mod_lookup{$module};
     } elsif ( $module eq 'Rd' ) {
         $modname = 'RubyDoc';

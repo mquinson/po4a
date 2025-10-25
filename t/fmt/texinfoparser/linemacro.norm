@@ -1,0 +1,90 @@
+
+@node Top
+@top test linemacro, based on Texinfo tta t/*linemacro.t tests
+
+@linemacro mycommand {a, b, c, d}
+first \a\
+second \b\
+third \c\
+@defline \a\ \d\
+@end linemacro
+ 
+@defblock
+@mycommand {Name} @verb{: in verb :} {A @verb{| in bracketed |} } other {j}
+@end defblock
+
+@linemacro myothercommand {a, b, c}
+\a\, \b\ \c\
+@end linemacro
+ 
+@* @myothercommand @anchor{aa} definite and @code{more}
+ 
+Some text @myothercommand {a
+  protected} in @var{the
+ call}
+and after.
+
+@linemacro defbuiltin {symbol, rest}
+@defline \symbol\ f r
+@defline expand Builtin and \rest\
+@end linemacro
+ 
+@defblock
+@defbuiltin {my foo} a last {} arg{ument}
+ 
+@defbuiltin {my foo} {} {}
+ 
+@defbuiltin {my foo} {second arg} remaining on {line}
+@end defblock
+
+@linemacro test {first, rest}
+@deffn Function \first\ \rest\
+something
+@end deffn
+@end linemacro
+ 
+@test foo (bar, baz)@
+ continuation line
+ 
+@test foo@ b (bar, baz) rest@ and more
+ 
+@test foo (bar, baz)@@
+ another with double at
+
+@linemacro mylinecommand {first, second, rest}
+@defblock
+@defline category \first\ A \second\ B \rest\
+@end defblock
+@end linemacro
+ 
+@mylinecommand{a b}{c d}{rest}
+
+@mylinecommand {  a } { d  } {   rest}
+
+@linemacro inside {a, b, rest}
+inside {\a\ operator \b\} \rest\
+@end linemacro
+ 
+@linemacro outside {one, two, three}
+@defline \one\ {\two\} \three\
+@cindex \two\
+@end linemacro
+ 
+@defblock
+@outside {type} {a function} @inside {X} {Y} ( remaining, type typed )
+@end defblock
+ 
+@linemacro lm {a, b, c}
+first |\a\|
+second |\b\|
+third |\c\|
+@end linemacro
+ 
+@lm {something protected} @c comment {in braces}
+  
+@lm@c comment early n l m
+ 
+@lm {aaa
+  } rest @comment on second {line comment}
+
+

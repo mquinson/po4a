@@ -1,0 +1,182 @@
+\input texinfo.tex
+
+@setfilename texifeatures.info
+
+@dircategory Test of something
+
+@direntry
+* Texinfo: (texinfo).           The GNU documentation format.
+* install-info: (texinfo)Invoking install-info
+
+Something else
+@end direntry
+
+@everyheading here @thischapter @| @thispage @| @today{}
+
+@hyphenation{a b-c d
+azeezaa}
+
+Para before top.
+
+@node Top
+@top Showcase Texinfo code that could challenge the parser @comment challenge?
+
+@heading in heading heading comment after DEL
+
+ lone comment after DEL
+
+abc  comment after DEL
+more in the para. With @@ space and newline @ @
+after.  Now inline image @image{inline, ,,
+alt inline image}. 
+
+@image{image, ,,alt image, .txt}
+
+Now a footnote@footnote{We are in footnote
+
+other para
+
+@example
+in footnote
+@end example
+
+after}
+
+@itemize some text
+@item what is translted@footnote{Why not in item} in item
+
+maybe some?
+@item
+@end itemize
+
+@float Figure, type
+in float
+@caption{in caption}
+@end float
+
+@quotation normal text
+in quotation
+
+second para
+@end quotation
+
+@quotation Caution
+Quotation special DocBook tag
+@end quotation
+
+@cartouche cartouche title@comment end cartouche title comment
+in cartouche
+@end cartouche
+
+@cindex my entry @sortas{E} @subentry sub1 @sortas{S}
+
+@displaymath
+disp--laymath
+f(x) = {1 \\over \\sigma \\sqrt{2\\pi}}e@sup{-{1 \\over 2}\\left({x-\\mu \\over \\sigma}\\right)^2}
+@end displaymath
+
+Some math @math{--a {\\frac{1}{2}} @minus{}}.
+
+@math{a + b}
+
+@float Figure,other figure @comment comment on float line
+in second float
+@end float
+
+@float , only a ref
+in float only a ref
+@end float
+
+@float Only a type
+in float Only a type
+@end float
+
+@multitable {some text for column one} {for column two}
+@item some text for column one
+@tab aaa
+@end multitable
+
+@multitable @columnfractions .33 .40 .33
+@item item first abc
+
+item second
+
+@tab tab first para
+
+tab second para
+@end multitable
+
+@defvr c--ategory d--efvr_name
+d--efvr
+@end defvr
+ 
+@deffn c--ategory n--ame a--rguments...
+d--effn
+@end deffn
+
+@deftypefn c--ategory t--ype d--eftypefn_name a--rguments...
+d--eftypefn
+@end deftypefn
+
+@defun d--efun_name a--rguments...
+d--efun
+@end defun
+
+@defun d--efun_name2 a--rguments2... @comment on defun
+@end defun
+
+@deffn category deffn_name arguments @
+   more {args @
+  with end of line within} with 3 @@ @@@
+ {one last arg}
+deffn
+@end deffn
+
+@deffn fset @var{i} a g
+@c comment
+@deffnx {truc} bidulr machin...
+@end deffn
+
+@deftypevr {Global Flag} int enable @
+        (arg in brace, [something @var{in v--ar}, @b{in, b} {, comma} a@var{pref} p]) last
+@end deftypevr
+
+@defblock
+@defline Funoid foo (bar)
+description1 description1 description1 description1 description1
+description1 description1 description1 description1 description1
+@defline Funnyoid foo2 (bar2, baz2)
+description2 description2 description2 description2 description2
+
+description2 description2 description2 description2 description2
+@end defblock
+
+@defblock
+misc text inside
+@end defblock
+
+
+@node chap, Top, ochap, Top
+@chapter Chapter
+
+@node ochap
+@chapter Other Chapter
+
+@anchor{my anchor}
+
+@namedanchor{ nanchor, name of NA}
+
+Para with @anchor{in para} and @namedanchor{nanchor in para, name of NA in
+para} and more.
+
+@errormsg{Wow Not Now!}
+
+in para @errormsg{errmsg in para}.
+
+@titlefont{Could ba a title, in titlefont }.
+
+A titlefont after text, not really in paragraph @titlefont{TFont in para}.
+
+@bye @comment bye comment
+
+After bye
