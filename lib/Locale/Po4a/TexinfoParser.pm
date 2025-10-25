@@ -27,7 +27,6 @@
 
 # TODO
 # * test and handle @verbatiminclude, but may need a discussion
-# * test @include, but probably depends on passing include directories options
 # * use translations to change file names, for example @image file
 #   name?
 # * for brace no_paragraph command, the whole command is translated
@@ -40,6 +39,7 @@
 
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po
+# for tests of includes: -o include_directories=../xhtml
 #
 # for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po ; done
 
@@ -76,6 +76,10 @@ These are this module's particular options:
 
 =over 4
 
+=item include_directories
+
+Colon-separated list of Texinfo include directories.
+
 =item no-warn
 
 Do not warn about the current state of this module.
@@ -111,6 +115,9 @@ use parent qw(Locale::Po4a::TransTractor);
 
 use Carp qw(confess);
 
+use File::Basename qw(fileparse);
+use File::Spec;
+
 use Locale::Po4a::Common qw(wrap_mod gettext);
 
 # This is temporary, to be able to find the Texinfo SWIG interface.  Once
@@ -132,6 +139,10 @@ use Texinfo;
 
 my $debug = 0;
 
+my @include_directories;
+
+my $curdir = File::Spec->curdir();
+
 #$debug = 1;
 
 my %additional_translated_line_commands;
@@ -148,12 +159,28 @@ foreach my $translated_line_cmdname (
 # encoding related such as INPUT_FILE_NAME_ENCODING.  Maybe also, but
 # in very rare cases, clearing/adding expanded formats.
 sub initialize {
-    my $self = shift;
+    my $self    = shift;
+    my %options = @_;
 
     Texinfo::setup( 0, $Texinfo::txi_interpreter_use_no_interpreter );
 
+    $self->{options}{'include_directories'} = '';
+
     # Set in TeX.pm for the original Texinfo parser
-    #$self->{options}{'no-warn'}         = 0;
+    $self->{options}{'no-warn'} = 0;
+
+    foreach my $opt ( keys %options ) {
+        if ( $options{$opt} ) {
+            die wrap_mod( "po4a::texinfo", dgettext( "po4a", "Unknown option: %s" ), $opt )
+              unless exists $self->{options}{$opt};
+            $self->{options}{$opt} = $options{$opt};
+        }
+    }
+    if ( defined( $options{'include_directories'} ) and $options{'include_directories'} ne '' ) {
+        foreach ( split( /:/, $options{'include_directories'} ) ) {
+            push @include_directories, $_;
+        }
+    }
 }
 
 =item B<read>
@@ -896,6 +923,30 @@ sub parse_file {
     foreach my $format ( 'info', 'plaintext', 'html', 'latex', 'docbook', 'xml' ) {
         Texinfo::parser_conf_add_expanded_format( $parser, $format );
     }
+
+    # prepare include directories
+    # Parse the input file
+    my ( $input_filename, $input_directory, $suffix ) = fileparse($filename);
+
+    my $canon_input_dir;
+    if ( !defined($input_directory) or $input_directory eq '' ) {
+        $input_directory = $curdir;
+        $canon_input_dir = $curdir;
+    } else {
+        $canon_input_dir = File::Spec->canonpath($input_directory);
+    }
+    my @prepended_include_directories = ($curdir);
+    push @prepended_include_directories, $input_directory
+      if ( $canon_input_dir ne $curdir );
+
+    my @include_dirs = @include_directories;
+    unshift @include_dirs, @prepended_include_directories;
+
+    Texinfo::parser_conf_clear_INCLUDE_DIRECTORIES($parser);
+    foreach my $dir (@include_dirs) {
+        Texinfo::parser_conf_add_include_directory( $parser, $dir );
+    }
+
     my ( $document, $status ) = Texinfo::parse_file( $parser, $filename );
 
     my ( $parser_error_msgs, $error_nr ) = Texinfo::get_parser_error_messages($document);
