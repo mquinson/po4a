@@ -183,12 +183,6 @@ sub initialize {
     }
 }
 
-=item B<read>
-
-Overloads Transtractor's read().
-
-=cut
-
 sub read ($$$$) {
     my ( $self, $filename, $refname, $charset ) = @_;
 
