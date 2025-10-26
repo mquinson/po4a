@@ -235,13 +235,13 @@ sub _current_smark($) {
 }
 
 sub _text($$$;$) {
-    my ( $text, $from, $type, $to ) = @_;
+    my ( $text, $from, $element_type, $to ) = @_;
 
     my $result = '';
 
     $from = 0 if ( !defined($from) );
 
-    if ( $type eq 'bracketed_linemacro_arg' ) {
+    if ( $element_type eq 'bracketed_linemacro_arg' ) {
 
         # recreate the text the source marks are relative too
         $text = '{' . $text . '}';
@@ -305,7 +305,7 @@ sub _translation_end($$$) {
 }
 
 sub _handle_source_marks($$$$$$$$) {
-    my ( $self, $result, $element, $document, $type, $inputs, $translation_info, $current_smark ) = @_;
+    my ( $self, $result, $element, $document, $element_type, $inputs, $translation_info, $current_smark ) = @_;
 
     my $last_position;
     my $smark_e_text;
@@ -339,7 +339,7 @@ sub _handle_source_marks($$$$$$$$) {
 
                     # source_mark_position > 0 only in text elements
                     my $text        = _decode( Texinfo::element_text($element) );
-                    my $text_result = _text( $text, $last_position, $type, $source_mark_position );
+                    my $text_result = _text( $text, $last_position, $element_type, $source_mark_position );
                     if ($debug) {
                         print STDERR "TEXT_SMARK($i) "
                           . ( defined($last_position) ? $last_position : '-' )
@@ -460,11 +460,6 @@ sub _handle_source_marks($$$$$$$$) {
     return $result, $last_position, $current_smark;
 }
 
-# $self->translate($string, $ref, $type)
-# type is line paragraph, @node, can also hold argument number
-# $ref should be $file:$line_nr
-# $self->pushline($text);
-
 sub _arg_parent_element($) {
     my $element = shift;
 
@@ -561,6 +556,13 @@ sub _print_translation_stack($) {
 
 sub _convert($$$$$;$$);
 
+# NOTE interfaces of Locale::Po4a::TransTractor used:
+# $self->translate($string, $ref, $type)
+# type is something like line, paragraph, @node, can also hold argument number.
+# In practice use @-command name, or element type and parent @-command name.
+# $ref should be $file:$line_nr
+# $self->pushline($text);
+
 sub _convert($$$$$;$$) {
     my ( $self, $result, $tree, $document, $inputs, $translation_info, $current_smark ) = @_;
 
@@ -583,8 +585,8 @@ sub _convert($$$$$;$$) {
         my $element  = $next_token->swig_element_get();
         my $category = $next_token->swig_category_get();
 
-        my $type = Texinfo::element_type($element);
-        $type = '' if ( !defined($type) );
+        my $element_type = Texinfo::element_type($element);
+        $element_type = '' if ( !defined($element_type) );
 
         if ($debug) {
             print STDERR "R !$result! ["
@@ -600,15 +602,15 @@ sub _convert($$$$$;$$) {
         {
             my ( $last_position, $smark_result );
             ( $result, $last_position, $current_smark ) =
-              _handle_source_marks( $self, $result, $element, $document, $type, $inputs, $translation_info,
+              _handle_source_marks( $self, $result, $element, $document, $element_type, $inputs, $translation_info,
                 $current_smark );
             if ( !defined($current_smark) ) {
-                if ( $type eq 'spaces' ) {
+                if ( $element_type eq 'spaces' ) {
                     my ( $inserted, $status ) = Texinfo::element_attribute_integer( $element, 'inserted' );
                     next if ($inserted);
                 }
                 my $text        = _decode( Texinfo::element_text($element) );
-                my $text_result = _text( $text, $last_position, $type );
+                my $text_result = _text( $text, $last_position, $element_type );
                 $$result .= $text_result;
 
                 # there may be multiple end of line in macro_call_arg_text
@@ -687,9 +689,9 @@ sub _convert($$$$$;$$) {
 
             if ( $category == $Texinfo::TXI_READ_ELEMENT_START ) {
                 if (   Texinfo::element_command_is_brace($element)
-                    or $type eq 'definfoenclose_command'
-                    or $type eq 'macro_call'
-                    or $type eq 'rmacro_call' )
+                    or $element_type eq 'definfoenclose_command'
+                    or $element_type eq 'macro_call'
+                    or $element_type eq 'rmacro_call' )
                 {
                     if ( !defined($current_smark) ) {
                         if ( Texinfo::element_type( Texinfo::element_get_child( $element, 0 ) ) ne 'following_arg' ) {
@@ -707,9 +709,9 @@ sub _convert($$$$$;$$) {
                 }
 
             } elsif ( $category == $Texinfo::TXI_READ_ELEMENT_END ) {
-                if (   Texinfo::element_command_is_brace($element) or $type eq 'definfoenclose_command',
-                    or $type eq 'macro_call'
-                    or $type eq 'rmacro_call' )
+                if (   Texinfo::element_command_is_brace($element) or $element_type eq 'definfoenclose_command',
+                    or $element_type eq 'macro_call'
+                    or $element_type eq 'rmacro_call' )
                 {
                     if ( !defined($current_smark) ) {
                         if ( $cmdname eq 'verb' ) {
@@ -735,14 +737,14 @@ sub _convert($$$$$;$$) {
                 or $category == $Texinfo::TXI_READ_EMPTY )
             {
                 if ( !defined($current_smark) ) {
-                    if ( $type eq 'bracketed_arg' ) {
+                    if ( $element_type eq 'bracketed_arg' ) {
                         $$result .= '{';
                     }
                 }
-                if (   $type eq 'brace_arg'
-                    or $type eq 'elided_brace_command_arg'
-                    or $type eq 'line_arg'
-                    or $type eq 'block_line_arg' )
+                if (   $element_type eq 'brace_arg'
+                    or $element_type eq 'elided_brace_command_arg'
+                    or $element_type eq 'line_arg'
+                    or $element_type eq 'block_line_arg' )
                 {
                     $args_stack->[-1]++;
                     if ( !defined($current_smark) ) {
@@ -794,31 +796,31 @@ sub _convert($$$$$;$$) {
             if ( !defined($translation_info) ) {
                 my $wrap;
                 my $parent_cmdname;
-                if ( $type eq 'paragraph' ) {
+                if ( $element_type eq 'paragraph' ) {
 
                     # Never wrap to keep the structure in paragraph as
                     # end of line delimitate comments and index entries, and also
                     # index entries should remain at line beginning.
                     #$wrap = 1;
                     $wrap = 0;
-                } elsif ( $type eq 'preformatted' or $type eq 'menu_entry' ) {
+                } elsif ( $element_type eq 'preformatted' or $element_type eq 'menu_entry' ) {
                     $wrap = 0;
-                } elsif ( $type eq 'block_line_arg'
+                } elsif ( $element_type eq 'block_line_arg'
                     and _translated_block_line_arg($element) )
                 {
                     $parent_cmdname = _translated_block_line_arg($element);
                     $wrap           = 0;
-                } elsif ( $type eq 'line_arg'
+                } elsif ( $element_type eq 'line_arg'
                     and _translated_line_arg($element) )
                 {
                     $parent_cmdname = _translated_line_arg($element);
                     $wrap           = 0;
-                } elsif ( ( $type eq 'block_line_arg' or $type eq 'line_arg' )
+                } elsif ( ( $element_type eq 'block_line_arg' or $element_type eq 'line_arg' )
                     and defined( _translated_def_arg($element) ) )
                 {
                     $parent_cmdname = _translated_def_arg($element);
                     $wrap           = 0;
-                } elsif ( $type eq 'brace_arg'
+                } elsif ( $element_type eq 'brace_arg'
                     and $args_stack->[-1] == 4
                     and _arg_parent_element($element)
                     and Texinfo::element_cmdname( _arg_parent_element($element) ) eq 'image' )
@@ -830,7 +832,7 @@ sub _convert($$$$$;$$) {
                     $wrap = 0;
                 }
                 if ( defined($wrap) ) {
-                    my $translation_type = $type;
+                    my $translation_type = $element_type;
 
                     if ( defined($parent_cmdname) ) {
                         $translation_type .= " $args_stack->[-1] in \@$parent_cmdname";
@@ -855,7 +857,7 @@ sub _convert($$$$$;$$) {
                     $inputs, $translation_info, $current_smark );
             }
 
-            if ( $type eq 'line_arg' or $type eq 'block_line_arg' ) {
+            if ( $element_type eq 'line_arg' or $element_type eq 'block_line_arg' ) {
                 my $comment_e = Texinfo::element_attribute_element( $element, 'comment_at_end' );
                 if ($comment_e) {
                     my $comment;
@@ -865,7 +867,7 @@ sub _convert($$$$$;$$) {
             }
 
             if ( !defined($current_smark) ) {
-                if ( $type eq 'bracketed_arg' ) {
+                if ( $element_type eq 'bracketed_arg' ) {
                     $$result .= '}';
                 }
             }
@@ -892,7 +894,7 @@ sub _convert($$$$$;$$) {
         {
             my ( $last_position, $smark_result );
             ( $result, $last_position, $current_smark ) =
-              _handle_source_marks( $self, $result, $element, $document, $type, $inputs, $translation_info,
+              _handle_source_marks( $self, $result, $element, $document, $element_type, $inputs, $translation_info,
                 $current_smark );
         }
     }
