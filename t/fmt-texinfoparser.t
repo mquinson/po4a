@@ -24,12 +24,14 @@ for my $test (
       };
 }
 
-push @tests,
-  {
-    'format'  => 'texinfoparser',
-    'input'   => "fmt/texinfoparser/tinclude.texi",
-    'options' => '-o no-warn -o include_directories=../xhtml',
-  };
+for my $test (qw(tinclude verbatiminclude)) {
+    push @tests,
+      {
+        'format'  => 'texinfoparser',
+        'input'   => "fmt/texinfoparser/$test.texi",
+        'options' => '-o no-warn -o include_directories=../xhtml',
+      };
+}
 
 run_all_tests(@tests);
 0;

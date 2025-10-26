@@ -26,7 +26,6 @@
 # handling of source marks.
 
 # TODO
-# * test and handle @verbatiminclude, but may need a discussion
 # * use translations to change file names, for example @image file
 #   name?
 # * for brace no_paragraph command, the whole command is translated
@@ -35,13 +34,15 @@
 #   Using $self->{TT}{po_in}->{lang}
 # * add @documentlanguage if there was none
 #   Using $self->{TT}{po_in}->{lang}
-# * do something relevant for @setfilename.  Maybe remove.
+# * do something relevant for @setfilename.  Maybe simply remove.
 
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po
 # for tests of includes: -o include_directories=../xhtml
 #
 # for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po ; done
+#
+# for file in tinclude verbatiminclude; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o include_directories=../xhtml ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po -o include_directories=../xhtml ; done
 
 =encoding UTF-8
 
@@ -219,6 +220,7 @@ sub _output_txi_error_messages {
             }
         }
     }
+    Texinfo::destroy_error_messages_list($error_messages_list);
 }
 
 # SWIG always uses sv_setpvn returning bytes and C encodes in UTF-8, so we
@@ -563,6 +565,13 @@ sub _convert($$$$$;$$);
 # $ref should be $file:$line_nr
 # $self->pushline($text);
 
+# input is a stack of input information.  An input information is
+# an array reference with 5 elements:
+#   file_name, line_number, result_text_accumulation_reference,
+#   include_file_source_mark_counter, current_source_mark
+# current_source_mark is an array reference with 2 elements, which
+# contains the information about the current source mark expansion, if any:
+#   source_mark_type, source_mark_counter
 sub _convert($$$$$;$$) {
     my ( $self, $result, $tree, $document, $inputs, $translation_info, $current_smark ) = @_;
 
@@ -625,7 +634,7 @@ sub _convert($$$$$;$$) {
 
         if ( defined($cmdname) ) {
 
-            # trnalsted commands
+            # translated commands
             if ( $category == $Texinfo::TXI_READ_ELEMENT_START ) {
                 if ( !defined($translation_info) ) {
                     if ( $cmdname eq 'documentlanguage' ) {
@@ -650,6 +659,7 @@ sub _convert($$$$$;$$) {
                         or $cmdname eq 'set'
                         or $cmdname eq 'ignore'
                         or $cmdname eq 'verbatim'
+                        or $cmdname eq 'verbatiminclude'
                         or $cmdname eq 'displaymath'
 
                         # brace @-commands that happen outside of paragraphs.
@@ -884,7 +894,54 @@ sub _convert($$$$$;$$) {
         if ( $category == $Texinfo::TXI_READ_ELEMENT_END ) {
             my $translation_on_stack = pop @$translations_stack;
             if ( defined($translation_on_stack) ) {
-                $result           = _translation_end( $self, $translation_info, $result );
+                if ( defined($cmdname) and $cmdname eq 'verbatiminclude' ) {
+                    my $element_formatted_errors = Texinfo::expand_verbatiminclude(
+                        $element,
+                        $self->{'input_file_include_dirs'},
+                        $self->{'input_file_charset'}
+                    );
+                    my $verbatim_element = $element_formatted_errors->swig_element_get();
+                    my $error_messages   = $element_formatted_errors->swig_errors_get();
+                    _output_txi_error_messages($error_messages);
+                    if ( defined($verbatim_element) ) {
+                        my $file_name = Texinfo::element_attribute_string( $element, 'text_arg' );
+
+                        # replace the translation informations with the
+                        # verbatiminclude file information and content and
+                        # add a @verbatim and @end verbatim.
+
+                        # ref
+                        $translation_info->[1] = "$file_name:1";
+
+                        # translation_type
+                        $translation_info->[3] = "\@$cmdname $file_name";
+                        my $elements_nr     = Texinfo::element_children_number($verbatim_element);
+                        my $previous_result = $translation_info->[4];
+                        $$previous_result .= "\@verbatim\n";
+
+                        $$result = '';
+                        for ( my $i = 0 ; $i < $elements_nr ; $i++ ) {
+                            my $result_text   = '';
+                            my $child_element = Texinfo::element_get_child( $verbatim_element, $i );
+                            ( $result, $current_smark ) =
+                              _convert( $self, $result, $child_element, $document, $inputs, $translation_info,
+                                $current_smark );
+                        }
+                        $result = _translation_end( $self, $translation_info, $result );
+                        $$result .= "\@end verbatim\n";
+                    } else {
+
+                        # do not really do a translation, simply output the
+                        # @verbatiminclude command text that could have
+                        # been translated.
+                        my $previous_result = $translation_info->[4];
+                        $$previous_result .= $$result;
+                        $result = $previous_result;
+                    }
+                    Texinfo::destroy_element_formatted_errors($element_formatted_errors);
+                } else {
+                    $result = _translation_end( $self, $translation_info, $result );
+                }
                 $translation_info = undef;
             }
         }
@@ -984,6 +1041,10 @@ sub parse_file {
     }
 
     my $tree = Texinfo::document_tree($document);
+
+    # Not parallel safe
+    $self->{'input_file_charset'}      = $charset;
+    $self->{'input_file_include_dirs'} = Texinfo::parser_conf_get_INCLUDE_DIRECTORIES($parser);
 
     my $current_smark;
     my $inputs      = [ [ $filename, 1, undef, -1, undef ] ];
