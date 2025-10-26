@@ -13,7 +13,7 @@ my @tests;
 for my $test (
     qw(longmenu partialmenus comments tindex commandsinpara
     conditionals texifeatures macrovalue linemacro verbatimignore
-    topinifnottex topinifnotdocbook invalidlineecount)
+    topinifnottex topinifnotdocbook invalidlineecount tsetfilename)
   )
 {
     push @tests,
