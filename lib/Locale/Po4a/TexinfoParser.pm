@@ -34,13 +34,12 @@
 #   Using $self->{TT}{po_in}->{lang}
 # * add @documentlanguage if there was none
 #   Using $self->{TT}{po_in}->{lang}
-# * do something relevant for @setfilename.  Maybe simply remove.
 
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot
 # PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po
 # for tests of includes: -o include_directories=../xhtml
 #
-# for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po ; done
+# for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount tsetfilename; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po ; done
 #
 # for file in tinclude verbatiminclude; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o include_directories=../xhtml ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po -o include_directories=../xhtml ; done
 
@@ -280,6 +279,11 @@ sub _translation_end($$$) {
     }
     if ($debug) {
         print STDERR "TT: $ref, $translation_type, $wrap!!$$to_translate_reference!!\n";
+    }
+    if ( $translation_type eq '' ) {
+
+        # translated element replaced by an empty string in translation
+        return $previous_result;
     }
     my $trailing_eol;
     if ( $$to_translate_reference =~ /\S/ ) {
@@ -666,7 +670,16 @@ sub _convert($$$$$;$$) {
                       )
                     {
                         ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, '@' . $cmdname, $result );
+
+                        # C for whole command translation
                         $translation_on_stack = 'C';
+                    } elsif ( $cmdname eq 'setfilename' ) {
+
+                        # ignored @-commands when at the first level
+                        ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, '', $result );
+
+                        # I for ignored
+                        $translation_on_stack = 'I';
                     }
                 }
                 push @$translations_stack, $translation_on_stack;
@@ -844,6 +857,8 @@ sub _convert($$$$$;$$) {
 
                     ( $translation_info, $result ) =
                       _translation_begin_info( $inputs, $wrap, $translation_type, $result );
+
+                    # A for argument translation
                     $translation_on_stack = 'A';
                     if ($debug) {
                         print STDERR "PUSH T $result: " . '(' . join( ',', @$translation_info ) . ')' . "\n";
@@ -917,6 +932,9 @@ sub _convert($$$$$;$$) {
                         for ( my $i = 0 ; $i < $elements_nr ; $i++ ) {
                             my $result_text   = '';
                             my $child_element = Texinfo::element_get_child( $verbatim_element, $i );
+
+                            # NOTE it could be simpler, as there are only raw types text and
+                            # no source marks nor translations.
                             ( $result, $current_smark ) =
                               _convert( $self, $result, $child_element, $document, $inputs, $translation_info,
                                 $current_smark );
