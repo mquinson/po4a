@@ -30,18 +30,19 @@
 #   name?
 # * for brace no_paragraph command, the whole command is translated
 #   it could be each of the arguments.
-# * replace language argument of @documentlanguage
-#   Using $self->{TT}{po_in}->{lang}
-# * add @documentlanguage if there was none
-#   Using $self->{TT}{po_in}->{lang}
 
-# PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot
-# PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po
+# PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o no-warn
+# PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po -o no-warn
+# PERL5LIB=../../../lib/ perl ../../../po4a-translate -f texinfoparser -m ${file}.texi -p ${file}.po -l ${file}.trans -o no-warn
 # for tests of includes: -o include_directories=../xhtml
 #
-# for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount tsetfilename; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po ; done
+# To regenerate the test results from t/fmt/texinfoparser.  Changes the POT-Creation-Date in po and pot files.
 #
-# for file in tinclude verbatiminclude; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o include_directories=../xhtml ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ${file}.trans -p ${file}.po -o include_directories=../xhtml ; done
+# for file in comments longmenu partialmenus tindex commandsinpara conditionals texifeatures macrovalue linemacro verbatimignore topinifnottex topinifnotdocbook invalidlineecount tsetfilename; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o no-warn ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ../../tmp/fmt/${file}.trans -p ${file}.po -o no-warn ; PERL5LIB=../../../lib/ perl ../../../po4a-translate -f texinfoparser -m ${file}.texi -p ${file}.po -l ${file}.trans -o no-warn 2>${file}.trans.stderr ; done
+#
+# for file in tinclude verbatiminclude; do PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o include_directories=../xhtml ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ../../tmp/fmt/${file}.trans -p ${file}.po -o no-warn -o include_directories=../xhtml ; PERL5LIB=../../../lib/ perl ../../../po4a-translate -f texinfoparser -m ${file}.texi -p ${file}.po -l ${file}.trans -o no-warn -o include_directories=../xhtml 2>${file}.trans.stderr ; done
+#
+# file=tdocumentlanguage; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -f texinfoparser ${file}.texi  -l ${file}.norm -p ${file}.pot -o no-warn ; PERL5LIB=../../../lib/ perl ../../../po4a-normalize -C -f texinfoparser ${file}.texi -l ../../tmp/fmt/${file}.trans -p fr.po -o no-warn ; PERL5LIB=../../../lib/ perl ../../../po4a-translate -f texinfoparser -m ${file}.texi -p fr.po -l ${file}.trans -o no-warn
 
 =encoding UTF-8
 
@@ -156,7 +157,8 @@ foreach my $translated_line_cmdname (
 
 # Other Parser options are not very interesting.  File name encoding
 # related such as INPUT_FILE_NAME_ENCODING may be relevant.  Maybe also, but
-# in very rare cases, clearing/adding expanded formats.
+# in very rare cases since both ignored and expanded parts are translated,
+# clearing/adding expanded formats.
 sub initialize {
     my $self    = shift;
     my %options = @_;
@@ -170,7 +172,7 @@ sub initialize {
 
     foreach my $opt ( keys %options ) {
         if ( $options{$opt} ) {
-            die wrap_mod( "po4a::texinfo", dgettext( "po4a", "Unknown option: %s" ), $opt )
+            die wrap_mod( "po4a::texinfo", gettext("Unknown option: %s"), $opt )
               unless exists $self->{options}{$opt};
             $self->{options}{$opt} = $options{$opt};
         }
@@ -635,21 +637,6 @@ sub _convert($$$$$;$$) {
             # translated commands
             if ( $category == $Texinfo::TXI_READ_ELEMENT_START ) {
                 if ( !defined($translation_info) ) {
-                    if ( $cmdname eq 'documentlanguage' ) {
-
-                        # In tests, this is never set.
-                        my $translation_language;
-                        if ( defined( $self->{TT}{po_in}->{lang} ) ) {
-                            $translation_language = $self->{TT}{po_in}->{lang};
-                        } else {
-                            $translation_language = '-';
-                        }
-
-                        # TODO normalize and modify argument
-                        if ($debug) {
-                            print STDERR "LANGUAGE: $translation_language\n";
-                        }
-                    }
                     if (
                            $cmdname eq 'macro'
                         or $cmdname eq 'rmacro'
@@ -673,6 +660,18 @@ sub _convert($$$$$;$$) {
 
                         # C for whole command translation
                         $translation_on_stack = 'C';
+                    } elsif ( $cmdname eq 'documentlanguage' ) {
+                        my $translation_language;
+                        if ( defined( $self->{TT}{po_in}->{lang} ) ) {
+                            ( $translation_info, $result ) =
+                              _translation_begin_info( $inputs, 0, '@' . $cmdname, $result );
+
+                            # L for language
+                            $translation_on_stack = 'L';
+                            if ($debug) {
+                                print STDERR "LANGUAGE: $self->{TT}{po_in}->{lang}\n";
+                            }
+                        }
                     } elsif ( $cmdname eq 'setfilename' ) {
 
                         # ignored @-commands when at the first level
@@ -768,6 +767,22 @@ sub _convert($$$$$;$$) {
                         if ( $args_stack->[-1] > 1 ) {
                             $$result .= ',';
                         }
+                    }
+                } elsif ( $element_type eq 'preamble_before_content'
+                    and defined( $self->{TT}{po_in}->{lang} ) )
+                {
+                    # If there is no @documentlanguage but a language name,
+                    # insert @documentlanguage at the beginning of the preamble
+
+                    my $documentlanguage_nr = 0;
+                    my $documentlanguage_elements_list =
+                      Texinfo::document_global_command_list( $document, 'documentlanguage' );
+                    if ( defined($documentlanguage_elements_list) ) {
+                        $documentlanguage_nr = Texinfo::element_list_elements_number($documentlanguage_elements_list);
+                    }
+                    if ( $documentlanguage_nr == 0 ) {
+                        $$result .=
+                          "\@c documentlanguage added by po4a\n" . "\@documentlanguage $self->{TT}{po_in}->{lang}\n\n";
                     }
                 }
             }
@@ -951,6 +966,11 @@ sub _convert($$$$$;$$) {
                         $result = $previous_result;
                     }
                     Texinfo::destroy_element_formatted_errors($element_formatted_errors);
+                } elsif ( defined($cmdname) and $cmdname eq 'documentlanguage' ) {
+                    # substitute initial @documentlanguage argument by the output language
+                    my $previous_result = $translation_info->[4];
+                    $$previous_result .= "\@documentlanguage $self->{TT}{po_in}->{lang}\n";
+                    $result = $previous_result;
                 } else {
                     $result = _translation_end( $self, $translation_info, $result );
                 }
@@ -985,7 +1005,10 @@ sub parse_file {
 
     Texinfo::parser_conf_clear_expanded_formats($parser);
 
-    # Only tex is not there
+    # Only tex is not there.  Ignored formats are also expanded mainly by using the
+    # corresponding source marks, so this is not so important.  There are differences
+    # in what is exactly translated and how it is split, but all the text should be
+    # translated in both cases.
     foreach my $format ( 'info', 'plaintext', 'html', 'latex', 'docbook', 'xml' ) {
         Texinfo::parser_conf_add_expanded_format( $parser, $format );
     }
@@ -1019,6 +1042,18 @@ sub parse_file {
     _output_txi_error_messages($parser_error_msgs);
     if ($status) {
         exit 1;
+    }
+
+    if ( defined( $self->{TT}{po_in}->{lang} ) ) {
+        my $translation_language = $self->{TT}{po_in}->{lang};
+        if ( !Texinfo::valid_documentlanguage($translation_language) ) {
+            warn(
+                wrap_mod(
+                    "po4a::texinfo", gettext("Invalid language for \@documentlanguage: %s"),
+                    $translation_language
+                )
+            );
+        }
     }
 
     # check that the charset is the same as the Texinfo @documentencoding
@@ -1055,7 +1090,10 @@ sub parse_file {
     my $tree = Texinfo::document_tree($document);
 
     # Not parallel safe
-    $self->{'input_file_charset'}      = $charset;
+    $self->{'input_file_charset'} = $charset;
+
+    # We use this function result instead of @include_dirs because we need
+    # to pass this specific type of data in the code that uses this information.
     $self->{'input_file_include_dirs'} = Texinfo::parser_conf_get_INCLUDE_DIRECTORIES($parser);
 
     my $current_smark;

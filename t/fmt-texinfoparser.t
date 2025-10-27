@@ -33,5 +33,13 @@ for my $test (qw(tinclude verbatiminclude)) {
       };
 }
 
+push @tests,
+  {
+    'format'  => 'texinfoparser',
+    'input'   => "fmt/texinfoparser/tdocumentlanguage.texi",
+    'pofile'  => 'fmt/texinfoparser/fr.po',
+    'options' => '-o no-warn',
+  };
+
 run_all_tests(@tests);
 0;
