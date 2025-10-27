@@ -37,6 +37,7 @@ my $build = Po4aBuilder->new(
                                                                # translating the
                                                                # po4a's messages.
         'YAML::Tiny'      => 0,                                # Used by the Yaml module
+        'Texinfo'         => 0,                                # Used by the TexinfoParser module
     },
     test_requires => {
         'SGMLS'             => 0,                              # Needed for the Sgml module.
