@@ -74,7 +74,8 @@ ensure that bugs won't resurface in the future.
 
 *Test dependencies:*
 
-- On Debian: check the .travis.yml file in the root directory for a full list.
+- On Debian (Ubuntu): check the `Containerfile` file in the root directory
+  for a full list.
 - On Fedora 24 (if you installed from the rpm po4a package):
   `perl-SGMLSpm perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
   perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
