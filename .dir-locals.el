@@ -1,12 +1,14 @@
-;;; Emacs per-directory local variables.
-;;; Copyright © 2025 gemmaro <gemmaro.dev@gmail.com>
+;;; Emacs per-directory local variables. -*- no-byte-compile: t -*-
+;;; Copyright © 2025, 2026 gemmaro <gemmaro.dev@gmail.com>
 ;;;
 ;;; This program is free software; you can redistribute it and/or modify it
 ;;; under the terms of GPL v2.0 or later (see COPYING).
 
 ;; Per-directory local variables for GNU Emacs 23 and later.
 ((nil
-  . (;; For use with 'bug-reference-prog-mode'.
+  . ((compile-command . "${BUILD_FILE_PATH:-./Build} test")
+
+     ;; For use with 'bug-reference-prog-mode'.
 
      ;; 1. bug reference region
      ;; 2. issue number
