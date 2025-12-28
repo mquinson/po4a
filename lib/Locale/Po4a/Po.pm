@@ -1231,11 +1231,6 @@ sub push_raw {
     );
     my $keep_conflict = $entry{'conflict'};
 
-    #    print STDERR "Push_raw\n";
-    #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
-    #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
-    #    Carp::cluck " flags=$flags\n" if $flags;
-
     return unless defined( $entry{'msgid'} );
 
     # no msgid => header definition
@@ -1371,9 +1366,6 @@ sub push_raw {
             }
         }
     }
-
-    #    print STDERR "stored ((($msgid)))=>(((".$self->{po}{$msgid}{'msgstr'}.")))\n\n";
-
 }
 
 =back
