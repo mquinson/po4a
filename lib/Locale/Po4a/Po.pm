@@ -351,35 +351,39 @@ sub read {
     }
 
     my $is_charset_detected;
+
     # Detect the charset
-    if ( $pofile =~ /^msgid ""\s*$/m &&
-         $pofile =~ /^msgstr ""\s*$/m &&
-         $pofile =~ /charset=(.*?)[\s\\]/
-    ) {
+    if (   $pofile =~ /^msgid ""\s*$/m
+        && $pofile =~ /^msgstr ""\s*$/m
+        && $pofile =~ /charset=(.*?)[\s\\]/ )
+    {
         my $detected_charset = $1;
-        if (   $detected_charset ne $charset &&
-            uc($detected_charset) ne $charset &&
-            uc($detected_charset) ne 'CHARSET'
-        ) {
+        if (   $detected_charset ne $charset
+            && uc($detected_charset) ne $charset
+            && uc($detected_charset) ne 'CHARSET' )
+        {
             warn "Detected '$detected_charset' in the PO file. Using it instead of '$charset'"
-                if $debug{'encoding'};
-            $charset = $detected_charset;
+              if $debug{'encoding'};
+            $charset             = $detected_charset;
             $is_charset_detected = 1;
         }
     }
 
-    if (not length $charset) {
-        warn "Failed to autodetect encoding of '$filename' and none was provided. Assuming 'UTF-8'." if $debug{'encoding'};
+    if ( not length $charset ) {
+        warn "Failed to autodetect encoding of '$filename' and none was provided. Assuming 'UTF-8'."
+          if $debug{'encoding'};
         $charset = 'UTF-8';
     }
     if ( $pofile =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
         croak "BOM detected";
         croak wrap_msg(
-            $is_charset_detected ? dgettext( "po4a",
-                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but '%s' was detected."
-                ) : dgettext( "po4a",
-                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified '%s' instead."
-                ),
+            $is_charset_detected
+            ? dgettext( "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but '%s' was detected." )
+            : dgettext(
+                "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified '%s' instead."
+            ),
             $filename,
             $charset
         ) if ( uc($charset) ne 'UTF-8' );
@@ -387,10 +391,10 @@ sub read {
     }
 
     # Decode already read part of the PO file with the charset
-    $pofile = decode($charset, $pofile);
+    $pofile = decode( $charset, $pofile );
 
     warn "Imbuing PO file '$filename' with '$charset'" if $debug{'encoding'};
-    binmode( $fh, ":encoding($charset)");
+    binmode( $fh, ":encoding($charset)" );
 
     # Reading the rest of the file
     while ( defined( my $textline = <$fh> ) ) {
@@ -1437,19 +1441,18 @@ B<wrap-po> value.
 
 sub gettext_wrap_opts($) {
     my $wrap_po = shift;
-    if ( ! defined $wrap_po or ! length $wrap_po ) {
+    if ( !defined $wrap_po or !length $wrap_po ) {
         return "";
     } elsif ( $wrap_po eq 'no' or $wrap_po eq 'newlines' ) {
+
         # Note: gettext will always wrap on newlines, so there is no difference between the two
         return "--no-wrap";
-    } elsif( $wrap_po =~ /^[+-]?\d+$/ ) {
+    } elsif ( $wrap_po =~ /^[+-]?\d+$/ ) {
         return "--width=$wrap_po";
     } else {
         warn wrap_mod( "po4a::po",
-            dgettext( "po4a",
-                "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)"),
-            $wrap_po
-        );
+            dgettext( "po4a", "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)" ),
+            $wrap_po );
         return "";
     }
 }
