@@ -481,7 +481,7 @@ sub parse {
             $self->pushline( $line . "\n" );
         } elsif ( ( defined $self->{type} )
             and ( $self->{type} eq "Table" )
-            and ( $line !~ m/^\|===/ )
+            and ( $line !~ m/^\|={3,}$/ )
             and ( $self->{options}{"tablecells"} )
             and ( not defined $self->{disabletablecells} ) )
         {
@@ -1021,7 +1021,7 @@ sub parse {
             $line = "";
             undef $self->{bullet};
             undef $self->{indent};
-        } elsif ( $line =~ /^\|===/ ) {
+        } elsif ( (not defined($self->{verbatim})) and ($line =~ /^\|={3,}$/) ) {
 
             # This is a table, treat it as a non-wrapped paragraph
             print STDERR "Found Table delimiter\n" if ( $debug{parse} );
