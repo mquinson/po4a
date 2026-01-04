@@ -1,6 +1,6 @@
 #! /usr/bin/env perl
 eval 'exec perl -S $0 ${1+"$@"}'
-    if $running_under_some_shell;
+  if $running_under_some_shell;
 
 # msg untypo pot -- Update the PO files when you remove a typo in POT file not needing any translation update
 #
@@ -9,7 +9,7 @@ eval 'exec perl -S $0 ${1+"$@"}'
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of GPL v2.0 or later (see COPYING).
 
-my $VERSION=$Locale::Po4a::TransTractor::VERSION;
+my $VERSION = $Locale::Po4a::TransTractor::VERSION;
 
 =head1 NAME
 
@@ -129,109 +129,113 @@ sub show_version {
     exit 0;
 }
 
-my ($help,$debug,@verbose,$quiet,$noprevious);
+my ( $help, $debug, @verbose, $quiet, $noprevious );
 @verbose = ();
-$debug = 0;
+$debug   = 0;
 
-my ($newfile,$oldfile)=("","");
+my ( $newfile, $oldfile ) = ( "", "" );
 
-Getopt::Long::config('bundling', 'no_getopt_compat', 'no_auto_abbrev');
+Getopt::Long::config( 'bundling', 'no_getopt_compat', 'no_auto_abbrev' );
 GetOptions(
-    'help|h'        => \$help,
+    'help|h' => \$help,
 
-    'new|n=s'       => \$newfile,
-    'old|o=s'       => \$oldfile,
+    'new|n=s' => \$newfile,
+    'old|o=s' => \$oldfile,
 
-    'verbose|v'     => \@verbose,
-    'debug|d'       => \$debug,
-    'quiet|q'       => \$quiet,
-    'no-previous'   => \$noprevious,
-    'version|V'     => \&show_version
+    'verbose|v'   => \@verbose,
+    'debug|d'     => \$debug,
+    'quiet|q'     => \$quiet,
+    'no-previous' => \$noprevious,
+    'version|V'   => \&show_version
 ) or pod2usage();
 
 # Argument check
-$help && pod2usage (-verbose => 1, -exitval => 0);
+$help && pod2usage( -verbose => 1, -exitval => 0 );
 
-my ($verbose) = (scalar @verbose);
-$verbose = 1 if $debug;
+my ($verbose) = ( scalar @verbose );
+$verbose =  1 if $debug;
 $verbose = -1 if $quiet;
 my %options = (
     "verbose" => $verbose,
-    "debug" => $debug);
+    "debug"   => $debug
+);
 
 # Argument checking
-defined($oldfile) && length($oldfile) || die wrap_msg(gettext("Mandatory argument '%s' missing."), "-o");
--e $oldfile || die wrap_msg(gettext("File %s does not exist."), $oldfile);
-defined($newfile) && length($newfile) || die wrap_msg(gettext("Mandatory argument '%s' missing."), "-n");
--e $newfile || die wrap_msg(gettext("File %s does not exist."), $newfile);
+defined($oldfile) && length($oldfile) || die wrap_msg( gettext("Mandatory argument '%s' missing."), "-o" );
+-e $oldfile                           || die wrap_msg( gettext("File %s does not exist."),          $oldfile );
+defined($newfile) && length($newfile) || die wrap_msg( gettext("Mandatory argument '%s' missing."), "-n" );
+-e $newfile                           || die wrap_msg( gettext("File %s does not exist."),          $newfile );
 
 # Parse files
-my $newpot=Locale::Po4a::Po->new();
-my $oldpot=Locale::Po4a::Po->new();
+my $newpot = Locale::Po4a::Po->new();
+my $oldpot = Locale::Po4a::Po->new();
 $newpot->read($newfile);
 $oldpot->read($oldfile);
 
-die wrap_msg(gettext("The new and old POT files have different amount of strings (%d != %d).".
-                     " Something's seriously wrong here."),
-    $newpot->count_entries(), $oldpot->count_entries())
-  if ($newpot->count_entries() != $oldpot->count_entries());
+die wrap_msg(
+    gettext(
+        "The new and old POT files have different amount of strings (%d != %d)." . " Something's seriously wrong here."
+    ),
+    $newpot->count_entries(),
+    $oldpot->count_entries()
+) if ( $newpot->count_entries() != $oldpot->count_entries() );
 
 # Compare them and find differences between them
-my (%diff)=();
+my (%diff) = ();
 
-for (my ($o,$n)=(0,0) ;
-    $o<$oldpot->count_entries() && $n<$newpot->count_entries();
-    $o++,$n++) {
+for ( my ( $o, $n ) = ( 0, 0 ) ; $o < $oldpot->count_entries() && $n < $newpot->count_entries() ; $o++, $n++ ) {
 
-    my ($oldstr,$newstr)=($oldpot->msgid($o),$newpot->msgid($n));
+    my ( $oldstr, $newstr ) = ( $oldpot->msgid($o), $newpot->msgid($n) );
 
     $diff{$oldstr} = $newstr
-      if ($oldstr ne $newstr);
+      if ( $oldstr ne $newstr );
 
-    }
-print wrap_msg(gettext("Found %d modified entries."),scalar keys %diff) if $verbose;
+}
+print wrap_msg( gettext("Found %d modified entries."), scalar keys %diff ) if $verbose;
 
-my $msgmergeOpts = ($noprevious ? "" : "--previous");
+my $msgmergeOpts = ( $noprevious ? "" : "--previous" );
 
 # Get all po files and report differences in them
 my ($pofile);
-(undef,$pofile)=File::Temp::tempfile("po4aXXXX",
+( undef, $pofile ) = File::Temp::tempfile(
+    "po4aXXXX",
     DIR    => File::Spec->tmpdir(),
     SUFFIX => ".po",
     OPEN   => 0,
-    UNLINK => 0)
-  or die wrap_msg(gettext("Cannot create a temporary PO file: %s"), $!);
+    UNLINK => 0
+) or die wrap_msg( gettext("Cannot create a temporary PO file: %s"), $! );
 
 my $pocount = 0;
-while (my $poarg = shift) {
-    $pocount ++;
-    print wrap_msg(gettext("Handling %s"),$poarg) if $verbose;
+while ( my $poarg = shift ) {
+    $pocount++;
+    print wrap_msg( gettext("Handling %s"), $poarg ) if $verbose;
     my $cmd = "msgmerge $msgmergeOpts -o $pofile --silent $poarg $oldfile";
-    if (system($cmd)) {
+    if ( system($cmd) ) {
         my $msg = $!;
-        unlink ($pofile);
-        die wrap_msg(gettext("Could not run msgmerge: %s\nThe command was: %s"), $msg, $cmd);
+        unlink($pofile);
+        die wrap_msg( gettext("Could not run msgmerge: %s\nThe command was: %s"), $msg, $cmd );
     }
-    my $po=Locale::Po4a::Po->new();
+    my $po = Locale::Po4a::Po->new();
     $po->read($pofile);
 
-    for (my $n=0 ; $n<$po->count_entries(); $n++) {
-        my $str=$po->msgid($n);
-      	next unless defined $str;
+    for ( my $n = 0 ; $n < $po->count_entries() ; $n++ ) {
+        my $str = $po->msgid($n);
+        next unless defined $str;
         my $newstr = $diff{$str};
 
-        if (defined $newstr) {
-            $po->{po}{ $newstr } = { %{ $po->{po}{ $str } } };
-            $po->{po}{ $str } = ();
-            delete $po->{po}{ $str };
-            print wrap_msg(gettext("msguntypot changed msgid \"%s\" to \"%s\" in %s\n"),$str,$newstr,$poarg) if ($verbose);
+        if ( defined $newstr ) {
+            $po->{po}{$newstr} = { %{ $po->{po}{$str} } };
+            $po->{po}{$str}    = ();
+            delete $po->{po}{$str};
+            print wrap_msg( gettext("msguntypot changed msgid \"%s\" to \"%s\" in %s\n"), $str, $newstr, $poarg )
+              if ($verbose);
         }
     }
     $po->write($poarg);
 }
 unlink($pofile);
 
-print wrap_msg(gettext("Modified %d entries in %d files."),scalar keys %diff,$pocount);
+print wrap_msg( gettext("Modified %d entries in %d files."), scalar keys %diff, $pocount );
 
 exit 0;
 __END__;
