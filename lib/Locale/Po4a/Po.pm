@@ -1473,6 +1473,20 @@ sub each_message {
     }
 }
 
+=item replant
+
+This method takes two parameters: the current C<msgid> and the new
+C<msgid>.  It removes the entry with the current C<msgid> from the PO
+instance and reinserts it under the new C<msgid> value.
+
+=cut
+
+sub replant {
+    my ( $self, $msgid, $new_msgid ) = @_;
+    $self->{po}{$new_msgid} = { %{ $self->{po}{$msgid} } };
+    delete $self->{po}{$msgid};
+}
+
 #----[ helper functions ]---------------------------------------------------
 
 # transforme the string from its PO file representation to the form which
