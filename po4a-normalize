@@ -211,17 +211,20 @@ my %pot_options = ( 'wrap-po' => $wrappo );
 $parser->setpoout( Locale::Po4a::Po->new( \%pot_options ) );
 $parser->parse();
 if ( $blank or $capitalize ) {
-    foreach my $msgid ( keys %{ $parser->{TT}{po_out}{po} } ) {
-        if ($blank) {
-            if ( $msgid =~ m/\n$/s ) {
-                $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = "\n";
-            } else {
-                $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = " ";
+    $parser->{TT}{po_out}->each_message(
+        sub {
+            my ( $msgid, $message ) = @_;
+            if ($blank) {
+                if ( $msgid =~ m/\n$/s ) {
+                    $message->{msgstr} = "\n";
+                } else {
+                    $message->{msgstr} = " ";
+                }
+            } else {    # $capitalize
+                ( $message->{msgstr} = $msgid ) =~ s/(?<!\\)(.)/\U$1/g;
             }
-        } else {    # $capitalize
-            ( $parser->{TT}{po_out}{po}{$msgid}{'msgstr'} = $msgid ) =~ s/(?<!\\)(.)/\U$1/g;
         }
-    }
+    );
     my $modified_po = $parser->{TT}{po_out};
     $parser = Locale::Po4a::Chooser::new( $type, %options );
     $parser->{TT}{po_in} = $modified_po;
