@@ -1457,6 +1457,22 @@ sub gettext_wrap_opts($) {
     }
 }
 
+=item each_message
+
+This method iterates over each message in the PO file and processes
+it.  It takes a subroutine reference and executes it with two
+arguments: 1) the C<msgid> and 2) a hash reference containing the
+message content, which includes fields such as C<msgstr>.
+
+=cut
+
+sub each_message {
+    my ( $self, $code ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        $code->( $msgid, $self->{po}{$msgid} );
+    }
+}
+
 #----[ helper functions ]---------------------------------------------------
 
 # transforme the string from its PO file representation to the form which
