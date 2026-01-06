@@ -84,6 +84,19 @@ ensure that bugs won't resurface in the future.
   `perl-SGML-Parser-OpenSP perl-TermReadKey perl-Text-WrapI18N perl-Module-Build
   perl-Test-Simple perl-Unicode-LineBreak perl-HTML-TokeParser-Simple
   docbook-dtds`
+- On GNU Guix: `guix shell tidyall perl perl-tidy --development po4a`.
+  If you use [Direnv](https://direnv.net/), `.envrc` can be used to
+  load and unload environment variables automatically when navigating
+  directories, for example:
+  
+  ```sh
+  use guix tidyall perl perl-tidy --development po4a
+  path_add PERL5LIB lib
+  path_add PERL5LIB t
+
+  BUILD_FILE_PATH=$(find_up Build)
+  export BUILD_FILE_PATH
+  ```
 
 When writing or improving a test, you probably want to select the test
 to run, and make it verbose. The tests are executed from the "_t_"
