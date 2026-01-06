@@ -224,9 +224,7 @@ while ( my $poarg = shift ) {
         my $newstr = $diff{$str};
 
         if ( defined $newstr ) {
-            $po->{po}{$newstr} = { %{ $po->{po}{$str} } };
-            $po->{po}{$str}    = ();
-            delete $po->{po}{$str};
+            $po->replant( $str, $newstr );
             print wrap_msg( gettext("msguntypot changed msgid \"%s\" to \"%s\" in %s\n"), $str, $newstr, $poarg )
               if ($verbose);
         }
