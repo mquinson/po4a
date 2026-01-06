@@ -142,9 +142,12 @@ sub parse {
         my $org_filename = $self->{DOCWML}{$filename};
 
         # Fix the references
-        foreach my $msgid ( keys %{ $self->{TT}{po_out}{po} } ) {
-            $self->{TT}{po_out}{po}{$msgid}{'reference'} =~ s|$filename(:\d+)|$org_filename$1|o;
-        }
+        $self->{TT}{po_out}->each_message(
+            sub {
+                my ( $_msgid, $message ) = @_;
+                $message->{reference} =~ s|$filename(:\d+)|$org_filename$1|o;
+            }
+        );
 
         # Get the document back (undoing our WML masking)
         # FIXME: need to join the file first, and then split?
