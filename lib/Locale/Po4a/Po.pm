@@ -1487,6 +1487,24 @@ sub replant {
     delete $self->{po}{$msgid};
 }
 
+=item message_by_document_position
+
+This method takes a document position and returns the matching message
+as a list containing three elements: the C<msgid>, the C<msgctxt>, and
+the message content (which includes fields such as C<msgstr>).
+
+=cut
+
+sub message_by_document_position {
+    my ( $self, $position ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        foreach my $current_position ( @{ $self->{po}{$msgid}{pos_doc} } ) {
+            $current_position == $position and return $msgid, $self->{po}{$msgid};
+        }
+    }
+    return;
+}
+
 #----[ helper functions ]---------------------------------------------------
 
 # transforme the string from its PO file representation to the form which
