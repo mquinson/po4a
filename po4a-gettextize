@@ -415,11 +415,9 @@ sub gettextize {
         #
         # Extract some informations
 
-        my ( $orig, $trans ) = ( $poorig->msgid_doc($o), $potrans->msgid_doc($t) );
-
-        #       print STDERR "Matches [[$orig]]<<$trans>>\n";
-
-        my ( $reforig, $reftrans ) = ( $poorig->{po}{$orig}{'reference'}, $potrans->{po}{$trans}{'reference'} );
+        my ( $original_msgid, $original_message )     = $poorig->message_by_document_position($o);
+        my ( $translated_msgid, $translated_message ) = $potrans->message_by_document_position($t);
+        my ( $reforig, $reftrans )   = ( $original_message->{reference}, $translated_message->{reference} );
         my ( $typeorig, $typetrans ) = ( $poorig->type_doc($o), $potrans->type_doc($t) );
 
         #
@@ -437,11 +435,11 @@ sub gettextize {
         if ( $typeorig ne $typetrans ) {
             $pores->write("gettextization.failed.po");
             eval {
-                # Recode $trans into current charset, if possible
+                # Recode into current charset, if possible
                 require I18N::Langinfo;
                 I18N::Langinfo->import(qw(langinfo CODESET));
                 my $codeset = langinfo( CODESET() );
-                Encode::from_to( $trans, $potrans->get_charset, $codeset );
+                Encode::from_to( $original_msgid, $potrans->get_charset, $codeset );
             };
             die wrap_msg(
                 dgettext( "po4a",
@@ -457,7 +455,9 @@ sub gettextize {
                 $typeorig,
                 $reftrans,
                 $typetrans,
-                $orig, $trans, $toobad
+                $original_msgid,
+                $translated_msgid,
+                $toobad
             );
         }
 
@@ -465,22 +465,23 @@ sub gettextize {
         # Push the entry
         #
         my $flags;
-        if ( defined $poorig->{po}{$orig}{'flags'} ) {
-            $flags = $poorig->{po}{$orig}{'flags'} . " fuzzy";
+        if ( defined $original_message->{flags} ) {
+            $flags = $original_message->{flags} . " fuzzy";
         } else {
             $flags = "fuzzy";
         }
+        my $message = $pores->message_by_msgid($original_msgid);
         $pores->push_raw(
-            'msgid'     => $orig,
-            'msgstr'    => $trans,
+            'msgid'     => $original_msgid,
+            'msgstr'    => $translated_msgid,
             'flags'     => $flags,
             'type'      => $typeorig,
             'reference' => $reforig,
             'conflict'  => 1,
-            'transref'  => $potrans->{po}{$trans}{'reference'}
+            'transref'  => $translated_message->{reference},
           )
-          unless ( defined( $pores->{po}{$orig} )
-            and ( $pores->{po}{$orig}{'msgstr'} eq $trans ) )
+          unless ( defined($message)
+            and ( $message->{msgstr} eq $translated_msgid ) )
 
         # FIXME: maybe we should be smarter about what reference should be
         #        sent to push_raw.
