@@ -591,7 +591,7 @@ sub run_all_tests {
                 $cmd =~
                   s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
                 is( $exit_status, 0, "Test of " . $test->{'doc'} . " -- Command: $cmd" );
-                next TEST unless ( $exit_status == 0 );
+                next TEST if ( !$test->{keep_going} && $exit_status != 0 );
             }
 
         } else {
