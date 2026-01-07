@@ -412,7 +412,8 @@ sub run_one_format {
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
-    unless (exists $test->{'skip'}{'normalize'}) {
+    unless ( exists $test->{'skip'}{'normalize'} ) {
+
         # Normalize the document
         my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
         my $cmd =
@@ -454,7 +455,8 @@ sub run_one_format {
         push @tests, "diff -u $output   $tmpbase.norm" unless $error;
     }
 
-    unless ($error or exists $test->{'skip'}{'traslate'}) {
+    unless ( $error or exists $test->{'skip'}{'traslate'} ) {
+
         # Translate the document
         my $cmd =
             "${execpath}/po4a-translate --no-deprecation -f $format $options --master $basename.$ext"
@@ -473,7 +475,8 @@ sub run_one_format {
         push @tests, "diff -uN $transfile $tmpbase.trans";
     }
 
-    unless ($error or exists $test->{'skip'}{'updatepo'}) {
+    unless ( $error or exists $test->{'skip'}{'updatepo'} ) {
+
         # Update PO
         copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
         my $updatepo_options = $options =~ s/--width= [-]? [0-9]+//rxms;
