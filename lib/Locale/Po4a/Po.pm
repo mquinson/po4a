@@ -1505,6 +1505,21 @@ sub message_by_document_position {
     return;
 }
 
+=item message_by_msgid
+
+This method takes a C<msgid> and an optional C<msgctxt>, and returns
+the first matching message content, which includes fields such as
+C<msgstr>.  If no C<msgctxt> is provided, an empty string value is
+used.  If no message entry is found with the given context, the method
+falls back to searching for a message without context.
+
+=cut
+
+sub message_by_msgid {
+    my ( $self, $msgid ) = @_;
+    return $self->{po}{$msgid};
+}
+
 #----[ helper functions ]---------------------------------------------------
 
 # transforme the string from its PO file representation to the form which
