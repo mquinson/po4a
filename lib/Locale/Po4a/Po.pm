@@ -1416,7 +1416,9 @@ sub msgid($$) {
     my $num  = shift;
 
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        return $msgid if ( $self->{po}{$msgid}{''}{'pos'} eq $num );
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            return $msgid if ( $self->{po}{$msgid}{$msgctxt}{'pos'} eq $num );
+        }
     }
     return undef;
 }
