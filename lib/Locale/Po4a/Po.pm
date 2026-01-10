@@ -988,6 +988,16 @@ a translation, and wraps the result.
 
 the column at which we should wrap (default: 76).
 
+=item B<msgctxt>
+
+the context string value to be used as the L<msgctxt
+field|https://www.gnu.org/software/gettext/manual/html_node/Contexts.html>
+in gettext PO files.  It is empty by default, meaning no context is
+assigned to the message.  When a context is provided, it first
+searches for messages matching that context; if none are found, it
+falls back to searching for messages with an empty context.  This
+fallback behavior ensures backward compatibility.
+
 =back
 
 =cut
@@ -999,7 +1009,7 @@ sub gettext {
     my $res;
 
     return "" unless length($text);    # Avoid returning the header.
-    my $validoption = "reference wrap wrapcol";
+    my $validoption = "reference wrap wrapcol msgctxt";
     my %validoption;
 
     map { $validoption{$_} = 1 } ( split( / /, $validoption ) );
@@ -1015,19 +1025,22 @@ sub gettext {
 
     $self->{gettextqueries}++;
 
+    my $msgctxt = $opt{msgctxt} // '';
+    $self->{po}{$esc_text}{$msgctxt} or $msgctxt = '';    # For backward compatibility.
+
     if (
-            defined $self->{po}{$esc_text}{''}
-        and defined $self->{po}{$esc_text}{''}{'msgstr'}
-        and length $self->{po}{$esc_text}{''}{'msgstr'}
-        and ( not defined $self->{po}{$esc_text}{''}{'flags'}
-            or $self->{po}{$esc_text}{''}{'flags'} !~ /fuzzy/ )
+            defined $self->{po}{$esc_text}{$msgctxt}
+        and defined $self->{po}{$esc_text}{$msgctxt}{'msgstr'}
+        and length $self->{po}{$esc_text}{$msgctxt}{'msgstr'}
+        and ( not defined $self->{po}{$esc_text}{$msgctxt}{'flags'}
+            or $self->{po}{$esc_text}{$msgctxt}{'flags'} !~ /fuzzy/ )
       )
     {
 
         $self->{gettexthits}++;
-        $res = unescape_text( $self->{po}{$esc_text}{''}{'msgstr'} );
-        if ( defined $self->{po}{$esc_text}{''}{'plural'} ) {
-            if ( $self->{po}{$esc_text}{''}{'plural'} eq "0" ) {
+        $res = unescape_text( $self->{po}{$esc_text}{$msgctxt}{'msgstr'} );
+        if ( defined $self->{po}{$esc_text}{$msgctxt}{'plural'} ) {
+            if ( $self->{po}{$esc_text}{$msgctxt}{'plural'} eq "0" ) {
                 warn wrap_mod(
                     "po4a gettextize",
                     dgettext(
