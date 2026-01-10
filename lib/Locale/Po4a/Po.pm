@@ -603,8 +603,15 @@ sub write {
 
     my $buf_msgstr_plural;    # Used to keep the first msgstr of plural forms
     my $first = 1;
-    foreach
-      my $msgid ( sort { ( $self->{po}{"$a"}{''}{'pos'} ) <=> ( $self->{po}{"$b"}{''}{'pos'} ) } keys %{ $self->{po} } )
+    for my $message (
+        sort { $a->{message}{pos} <=> $b->{message}{pos} } map {
+            my $msgid = $_;
+            map {
+                my $msgctxt = $_;
+                { msgid => $msgid, msgctxt => $msgctxt, message => $self->{po}{$msgid}{$msgctxt} }
+            } keys %{ $self->{po}{$msgid} }
+        } keys %{ $self->{po} }
+      )
     {
         my $output = "";
 
@@ -614,44 +621,48 @@ sub write {
             $output .= "\n";
         }
 
-        $output .= format_comment( $self->{po}{$msgid}{''}{'comment'}, "" )
-          if length( $self->{po}{$msgid}{''}{'comment'} );
-        if ( length( $self->{po}{$msgid}{''}{'automatic'} ) ) {
-            foreach my $comment ( split( /\\n/, $self->{po}{$msgid}{''}{'automatic'} ) ) {
+        my $msgctxt = $message->{msgctxt};
+        my $msgid   = $message->{msgid};
+        my $message = $message->{message};
+        $output .= format_comment( $message->{comment}, "" )
+          if length( $message->{comment} );
+        if ( length( $message->{automatic} ) ) {
+            foreach my $comment ( split( /\\n/, $message->{automatic} ) ) {
                 $output .= format_comment( $comment, ". " );
             }
         }
-        $output .= format_comment( $self->{po}{$msgid}{''}{'type'}, ". type: " )
-          if length( $self->{po}{$msgid}{''}{'type'} );
+        $output .= format_comment( $message->{type}, ". type: " )
+          if length( $message->{type} );
 
-        if ( length( $self->{po}{$msgid}{''}{'reference'} ) ) {
-            my $output_ref = wrap( $self->{po}{$msgid}{''}{'reference'} );
+        if ( length( $message->{reference} ) ) {
+            my $output_ref = wrap( $message->{reference} );
             $output_ref =~ s/\s+$//mg;
             $output .= format_comment( $output_ref, ": " );
         }
-        $output .= "#, " . join( ", ", sort split( /\s+/, $self->{po}{$msgid}{''}{'flags'} ) ) . "\n"
-          if length( $self->{po}{$msgid}{''}{'flags'} );
-        $output .= format_comment( $self->{po}{$msgid}{''}{'previous'}, "| " )
-          if length( $self->{po}{$msgid}{''}{'previous'} );
+        $output .= "#, " . join( ", ", sort split( /\s+/, $message->{flags} ) ) . "\n"
+          if length( $message->{flags} );
+        $output .= format_comment( $message->{previous}, "| " )
+          if length( $message->{previous} );
 
-        if ( exists $self->{po}{$msgid}{''}{'plural'} ) {
-            if ( $self->{po}{$msgid}{''}{'plural'} == 0 ) {
+        $msgctxt and $output .= "msgctxt " . quote_text( $msgctxt, $self->{options}{'wrap-po'} ) . "\n";
+        if ( exists $message->{plural} ) {
+            if ( $message->{plural} == 0 ) {
                 $output .= "msgid " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
                 $buf_msgstr_plural =
-                  "msgstr[0] " . quote_text( $self->{po}{$msgid}{''}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
-            } elsif ( $self->{po}{$msgid}{''}{'plural'} == 1 ) {
+                  "msgstr[0] " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
+            } elsif ( $message->{plural} == 1 ) {
 
                 # TODO: there may be only one plural form
                 $output = "msgid_plural " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
                 $output .= $buf_msgstr_plural;
-                $output .=
-                  "msgstr[1] " . quote_text( $self->{po}{$msgid}{''}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
+                $output .= "msgstr[1] " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
             } else {
                 die wrap_msg( dgettext( "po4a", "Cannot write PO files with more than two plural forms." ) );
             }
         } else {
             $output .= "msgid " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
-            $output .= "msgstr " . quote_text( $self->{po}{$msgid}{''}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
+            $output .=
+              "msgstr " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
         }
 
         print $fh $output;
