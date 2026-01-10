@@ -413,7 +413,7 @@ sub read {
     my $linenum = 0;
 
     foreach my $msg ( split( /\n\n/, $pofile ) ) {
-        my ( $msgid, $msgstr, $comment, $previous, $automatic, $reference, $flags, $buffer );
+        my ( $msgctxt, $msgid, $msgstr, $comment, $previous, $automatic, $reference, $flags, $buffer );
         my ( $msgid_plural, $msgstr_plural );
         if ( $msg =~ m/^#~/m ) {
             push( @{ $self->{footer} }, $msg );
@@ -436,8 +436,15 @@ sub read {
             } elsif ( $line =~ /^#(.*)$/ ) {        # Translator comments
                 $comment .= ( defined($comment) ? "\n" : "" ) . ( $1 || "" );
 
-            } elsif ( $line =~ /^msgid (".*")$/ ) {    # begin of msgid
+            } elsif ( $line =~ /^msgctxt (".*")$/ ) {    # begin of msgctxt
                 $buffer = $1;
+
+            } elsif ( $line =~ /^msgid (".*")$/ ) {
+
+                # begin of msgid, end of msgctxt
+
+                $msgctxt = $buffer;
+                $buffer  = $1;
 
             } elsif ( $line =~ /^msgid_plural (".*")$/ ) {
 
@@ -488,10 +495,12 @@ sub read {
         if ( defined $msgid_plural ) {
             $msgstr_plural = $buffer;
 
-            $msgid  = unquote_text($msgid)  if ( defined($msgid) );
-            $msgstr = unquote_text($msgstr) if ( defined($msgstr) );
+            $msgctxt = unquote_text($msgctxt) if ( defined($msgctxt) );
+            $msgid   = unquote_text($msgid)   if ( defined($msgid) );
+            $msgstr  = unquote_text($msgstr)  if ( defined($msgstr) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid,
                 'msgstr'    => $msgstr,
                 'reference' => $reference,
@@ -508,6 +517,7 @@ sub read {
               if ( defined($msgstr_plural) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid_plural,
                 'msgstr'    => $msgstr_plural,
                 'reference' => $reference,
@@ -520,10 +530,12 @@ sub read {
         } else {
             $msgstr = $buffer;
 
-            $msgid  = unquote_text($msgid)  if ( defined($msgid) );
-            $msgstr = unquote_text($msgstr) if ( defined($msgstr) );
+            $msgctxt = unquote_text($msgctxt) if ( defined($msgctxt) );
+            $msgid   = unquote_text($msgid)   if ( defined($msgid) );
+            $msgstr  = unquote_text($msgstr)  if ( defined($msgstr) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid,
                 'msgstr'    => $msgstr,
                 'reference' => $reference,
