@@ -1578,8 +1578,9 @@ falls back to searching for a message without context.
 =cut
 
 sub message_by_msgid {
-    my ( $self, $msgid ) = @_;
-    return $self->{po}{$msgid}{''};
+    my ( $self, $msgid, $msgctxt ) = @_;
+    $msgctxt or return $self->{po}{$msgid}{''};
+    return $self->{po}{$msgid}{$msgctxt} || $self->{po}{$msgid}{''};
 }
 
 #----[ helper functions ]---------------------------------------------------
