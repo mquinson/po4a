@@ -930,20 +930,20 @@ sub filter {
 
     for ( my $cpt = (0) ; $cpt < $self->count_entries() ; $cpt++ ) {
 
-        my ( $msgid, $ref, $msgstr, $flags, $type, $comment, $previous, $automatic );
+        my $message = $self->_message_by_position($cpt);
+        my $msgid   = $message->{msgid};
+        my $msgctxt = $message->{msgctxt};
+        $message = $message->{message};
+        my $ref       = $message->{reference};
+        my $msgstr    = $message->{msgstr};
+        my $flags     = $message->{flags};
+        my $type      = $message->{type};
+        my $comment   = $message->{comment};
+        my $previous  = $message->{previous};
+        my $automatic = $message->{automatic};
 
-        $msgid = $self->msgid($cpt);
-        $ref   = $self->{po}{$msgid}{''}{'reference'};
-
-        $msgstr    = $self->{po}{$msgid}{''}{'msgstr'};
-        $flags     = $self->{po}{$msgid}{''}{'flags'};
-        $type      = $self->{po}{$msgid}{''}{'type'};
-        $comment   = $self->{po}{$msgid}{''}{'comment'};
-        $previous  = $self->{po}{$msgid}{''}{'previous'};
-        $automatic = $self->{po}{$msgid}{''}{'automatic'};
-
-        # DO NOT CHANGE THE ORDER
         $res->push_raw(
+            'msgctxt'   => $msgctxt,
             'msgid'     => $msgid,
             'msgstr'    => $msgstr,
             'flags'     => $flags,
