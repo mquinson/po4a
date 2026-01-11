@@ -376,6 +376,7 @@ sub new {
     $self->{options}{'package-version'}    = '';
     $self->{options}{'wrap-po'}            = '';
     $self->{options}{'wrapcol'}            = '';
+    my $context_module = delete $options{context_module};
 
     # let the plugin parse the options and such
     $self->initialize(%options);
@@ -413,6 +414,19 @@ sub new {
         }
     } else {
         $self->{TT}{wrapcol} = 76;
+    }
+
+    if ($context_module) {
+        use Module::Load qw(load);
+        load $context_module;
+
+        # The "get_msgctxt" value is a code reference pointing to the
+        # subroutine responsible for retrieving the msgctxt from a
+        # message.  It is subsequently called by the "translate"
+        # subroutine.
+        $self->{TT}{get_msgctxt} = $context_module->can('get_msgctxt')
+          or
+          die wrap_mod( "po4a::transtractor::new", dgettext( "po4a", "context module has no get_msgctxt subroutine" ) );
     }
 
     return $self;
@@ -1045,6 +1059,7 @@ sub translate {
 
     # the comments provided by the modules are automatic comments from the PO point of view
     $self->{TT}{po_out}->push(
+        'msgctxt'   => $msgctxt,
         'msgid'     => $string,
         'reference' => $ref,
         'type'      => $type,
