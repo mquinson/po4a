@@ -192,7 +192,7 @@ sub run_one_po4aconf {
 
     my %valid_options;
     map { $valid_options{$_} = 1 }
-      qw(po4a.conf todo doc closed_path options setup tests teardown expected_retcode expected_files diff_outfile expected_outfile );
+      qw(po4a.conf todo doc closed_path options setup tests teardown expected_retcode expected_files diff_outfile expected_outfile perl_lib);
     map { die "Invalid test " . $t->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} } ( keys %{$t} );
 
     my $po4aconf         = $t->{'po4a.conf'} || fail("Broken test: po4a.conf must be provided");
@@ -248,6 +248,7 @@ sub run_one_po4aconf {
         return;
     }
 
+    $t->{perl_lib} and local $ENV{PERL5LIB} = "$t->{perl_lib}:$ENV{PERL5LIB}";
     my $cmd = "$execpath/po4a -f $cwd/$po4aconf $options > $cwd/$tmppath/output 2>&1";
 
     chdir $run_from || fail "Cannot change directory to $run_from: $!";
