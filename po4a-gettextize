@@ -470,8 +470,9 @@ sub gettextize {
         } else {
             $flags = "fuzzy";
         }
-        my $message = $pores->message_by_msgid($original_msgid);
+        my $message = $pores->message_by_msgid( $original_msgid, $original_msgctxt );
         $pores->push_raw(
+            'msgctxt'   => $original_msgctxt,
             'msgid'     => $original_msgid,
             'msgstr'    => $translated_msgid,
             'flags'     => $flags,
