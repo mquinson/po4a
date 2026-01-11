@@ -37,6 +37,8 @@ my $build = Po4aBuilder->new(
                                      # translating the
                                      # po4a's messages.
         'YAML::Tiny'      => 0,      # Used by the Yaml module
+
+        'Module::Load' => 0,         # Only used for context support.
     },
     test_requires => {
         'SGMLS'             => 0,    # Needed for the Sgml module.
