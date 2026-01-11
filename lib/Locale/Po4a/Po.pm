@@ -1534,6 +1534,17 @@ sub replant {
     delete $self->{po}{$msgid};
 }
 
+sub _message_by_position {
+    my ( $self, $position ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            $self->{po}{$msgid}{$msgctxt}{pos} == $position
+              and return { msgid => $msgid, msgctxt => $msgctxt, message => $self->{po}{$msgid}{$msgctxt} };
+        }
+    }
+    return;
+}
+
 =item message_by_document_position
 
 This method takes a document position and returns the matching message
