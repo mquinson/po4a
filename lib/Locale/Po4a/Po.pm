@@ -1192,7 +1192,7 @@ sub push {
     my $self  = shift;
     my %entry = @_;
 
-    my $validoption = "wrap wrapcol type msgid msgstr automatic previous flags reference";
+    my $validoption = "wrap wrapcol type msgid msgstr automatic previous flags reference msgctxt";
     my %validoption;
 
     map { $validoption{$_} = 1 } ( split( / /, $validoption ) );
