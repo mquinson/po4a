@@ -19,28 +19,28 @@ my $build = Po4aBuilder->new(
         'Pod::Man'   => 0,
     },
     recommends => {
-        'Pod::Parser' => 0,                                    # Used by KernelHelp and Pod modules.
-        'Pod::Simple' => 0,                                    # Used by SimplePod module.
+        'Pod::Parser' => 0,    # Used by KernelHelp and Pod modules.
+        'Pod::Simple' => 0,    # Used by SimplePod module.
 
-        'Text::WrapI18N' => 0,                                 # Only used for wrapping long
-                                                               # error/wraning lines.
+        'Text::WrapI18N' => 0, # Only used for wrapping long
+                               # error/wraning lines.
 
-        'Term::ReadKey' => 0,                                  # Needed to detect terminal
-                                                               # width. Not needed if you
-                                                               # don't have Text::WrapI18N.
+        'Term::ReadKey' => 0,  # Needed to detect terminal
+                               # width. Not needed if you
+                               # don't have Text::WrapI18N.
 
-        'SGMLS' => 0,                                          # Needed for the Sgml module.
+        'SGMLS' => 0,          # Needed for the Sgml module.
 
-        'Unicode::GCString' => 0,                              # Used by the AsciiDoc and VimHelp modules
+        'Unicode::GCString' => 0,    # Used by the AsciiDoc and VimHelp modules
 
-        'Locale::gettext' => '1.01',                           # Only used for
-                                                               # translating the
-                                                               # po4a's messages.
-        'YAML::Tiny'      => 0,                                # Used by the Yaml module
+        'Locale::gettext' => '1.01', # Only used for
+                                     # translating the
+                                     # po4a's messages.
+        'YAML::Tiny'      => 0,      # Used by the Yaml module
     },
     test_requires => {
-        'SGMLS'             => 0,                              # Needed for the Sgml module.
-        'Unicode::GCString' => 0,                              # Used by the Text module (asciidoc)
+        'SGMLS'             => 0,    # Needed for the Sgml module.
+        'Unicode::GCString' => 0,    # Used by the Text module (asciidoc)
     },
     script_files => [
         'po4a-gettextize',          'po4a-updatepo',
