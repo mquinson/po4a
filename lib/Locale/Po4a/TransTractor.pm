@@ -1051,10 +1051,31 @@ sub translate {
     } elsif ( $options{'wrapcol'} < 0 ) {
         $options{'wrapcol'} = $self->{TT}{wrapcol} + $options{'wrapcol'};
     }
+    my $msgctxt;
+
+    # When "get_msgctxt" is a code reference, it indicates that a
+    # context‑generation module has been provided. The current message
+    # is passed to this module, which is sufficient for generating the
+    # context string. To incorporate the previous message, the value
+    # is saved in "_last_message_for_context" and passed on the
+    # following iteration.
+    if ( $self->{TT}{get_msgctxt} ) {
+        my $message = {
+            msgid     => $string,
+            reference => $ref,
+            type      => $type,
+            previous  => $self->{TT}{_last_message_for_context},
+            others    => $options{context_arguments},
+        };
+        $msgctxt = $self->{TT}{get_msgctxt}->($message);
+        $self->{TT}{_last_message_for_context} = $message;
+    }
+
     my $transstring = $self->{TT}{po_in}->gettext(
         $string,
         'wrap'    => $options{'wrap'} || 0,
-        'wrapcol' => $options{'wrapcol'}
+        'wrapcol' => $options{'wrapcol'},
+        'msgctxt' => $msgctxt,
     );
 
     # the comments provided by the modules are automatic comments from the PO point of view
