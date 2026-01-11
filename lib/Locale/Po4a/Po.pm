@@ -1516,7 +1516,9 @@ message content, which includes fields such as C<msgstr>.
 sub each_message {
     my ( $self, $code ) = @_;
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        $code->( $msgid, $self->{po}{$msgid}{''} );
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            $code->( $msgid, $self->{po}{$msgid}{$msgctxt} );
+        }
     }
 }
 
