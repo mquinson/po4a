@@ -487,8 +487,8 @@ sub parse {
         {
             # inside a table, and we should split per cell
             my $new_line = "";
-            my @texts    = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/, $line;
-            my @seps     = ($line) =~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/g;
+            my @texts    = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?(?<!\\)\|/, $line;
+            my @seps     = ($line) =~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?(?<!\\)\|/g;
             if ( ( scalar(@texts) and length( $texts[0] ) ) || ( !length($line) ) ) {
                 if ( !length($line) ) { $texts[0] = ""; }
                 if ( length($paragraph) ) {
