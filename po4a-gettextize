@@ -415,8 +415,8 @@ sub gettextize {
         #
         # Extract some informations
 
-        my ( $original_msgid, $original_message )     = $poorig->message_by_document_position($o);
-        my ( $translated_msgid, $translated_message ) = $potrans->message_by_document_position($t);
+        my ( $original_msgid, $original_msgctxt, $original_message )       = $poorig->message_by_document_position($o);
+        my ( $translated_msgid, $translated_msgctxt, $translated_message ) = $potrans->message_by_document_position($t);
         my ( $reforig, $reftrans )   = ( $original_message->{reference}, $translated_message->{reference} );
         my ( $typeorig, $typetrans ) = ( $poorig->type_doc($o), $potrans->type_doc($t) );
 
