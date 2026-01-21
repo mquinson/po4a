@@ -833,7 +833,8 @@ sub get_options {
         'msgmerge-opt=s'       => \$msgmerge_opt,
         'srcdir=s'             => \$opts{"srcdir"},
         'destdir=s'            => \$opts{"destdir"},
-        'target-lang=s'        => \@{ $opts{"target-lang"} }
+        'target-lang=s'        => \@{ $opts{"target-lang"} },
+        'context-module=s'     => \$opts{"context_module"},
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -846,9 +847,10 @@ sub get_options {
 
     # options to transmit to the modules
     $opts{"options"} = {
-        "verbose" => $opts{"verbose"},
-        "debug"   => $opts{"debug"},
-        "wrapcol" => $opts{"width"}
+        "verbose"        => $opts{"verbose"},
+        "debug"          => $opts{"debug"},
+        "wrapcol"        => $opts{"width"},
+        "context_module" => $opts{"context_module"},
     };
     foreach (@options) {
         if (m/^([^=]*)=(.*)$/) {
