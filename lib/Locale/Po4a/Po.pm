@@ -1558,8 +1558,10 @@ the message content (which includes fields such as C<msgstr>).
 sub message_by_document_position {
     my ( $self, $position ) = @_;
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        foreach my $current_position ( @{ $self->{po}{$msgid}{''}{pos_doc} } ) {
-            $current_position == $position and return $msgid, $self->{po}{$msgid}{''};
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            foreach my $current_position ( @{ $self->{po}{$msgid}{$msgctxt}{pos_doc} } ) {
+                $current_position == $position and return $msgid, $msgctxt, $self->{po}{$msgid}{$msgctxt};
+            }
         }
     }
     return;
