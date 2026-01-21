@@ -1434,8 +1434,10 @@ sub msgid_doc($$) {
     my $num  = shift;
 
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        foreach my $pos ( @{ $self->{po}{$msgid}{''}{'pos_doc'} } ) {
-            return $msgid if ( $pos eq $num );
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            foreach my $pos ( @{ $self->{po}{$msgid}{$msgctxt}{'pos_doc'} } ) {
+                return $msgid if ( $pos eq $num );
+            }
         }
     }
     return undef;
