@@ -250,12 +250,14 @@ sub initialize {
         $self->{counter} = {};
     }
 
+    # Its structure is like $self->{po}{msgid}{msgctxt}{some_fields}
+    # where some_fields is, for example, msgstr.
     $self->{po}               = ();
-    $self->{count}            = 0;                   # number of msgids in the PO
-                                                     # count_doc: number of strings in the document
-                                                     # (duplicate strings counted multiple times)
+    $self->{count}            = 0;     # number of msgids in the PO
+                                       # count_doc: number of strings in the document
+                                       # (duplicate strings counted multiple times)
     $self->{count_doc}        = 0;
-    $self->{gettextize_types} = ();                  # Type of each msgid found in the doc, in order
+    $self->{gettextize_types} = ();    # Type of each msgid found in the doc, in order
         # We cannot use {$msgid}{'type'} as a type because for duplicate entries, the type is overwritten.
         # So we have to copy the same info to this separate array, which is accessed through type_doc()
     $self->{header_comment} =
@@ -351,35 +353,39 @@ sub read {
     }
 
     my $is_charset_detected;
+
     # Detect the charset
-    if ( $pofile =~ /^msgid ""\s*$/m &&
-         $pofile =~ /^msgstr ""\s*$/m &&
-         $pofile =~ /charset=(.*?)[\s\\]/
-    ) {
+    if (   $pofile =~ /^msgid ""\s*$/m
+        && $pofile =~ /^msgstr ""\s*$/m
+        && $pofile =~ /charset=(.*?)[\s\\]/ )
+    {
         my $detected_charset = $1;
-        if (   $detected_charset ne $charset &&
-            uc($detected_charset) ne $charset &&
-            uc($detected_charset) ne 'CHARSET'
-        ) {
+        if (   $detected_charset ne $charset
+            && uc($detected_charset) ne $charset
+            && uc($detected_charset) ne 'CHARSET' )
+        {
             warn "Detected '$detected_charset' in the PO file. Using it instead of '$charset'"
-                if $debug{'encoding'};
-            $charset = $detected_charset;
+              if $debug{'encoding'};
+            $charset             = $detected_charset;
             $is_charset_detected = 1;
         }
     }
 
-    if (not length $charset) {
-        warn "Failed to autodetect encoding of '$filename' and none was provided. Assuming 'UTF-8'." if $debug{'encoding'};
+    if ( not length $charset ) {
+        warn "Failed to autodetect encoding of '$filename' and none was provided. Assuming 'UTF-8'."
+          if $debug{'encoding'};
         $charset = 'UTF-8';
     }
     if ( $pofile =~ m/^\N{BOM}/ ) {    # UTF-8 BOM detected
         croak "BOM detected";
         croak wrap_msg(
-            $is_charset_detected ? dgettext( "po4a",
-                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but '%s' was detected."
-                ) : dgettext( "po4a",
-                    "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified '%s' instead."
-                ),
+            $is_charset_detected
+            ? dgettext( "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but '%s' was detected." )
+            : dgettext(
+                "po4a",
+                "The file %s starts with a BOM char indicating that its encoding is UTF-8, but you specified '%s' instead."
+            ),
             $filename,
             $charset
         ) if ( uc($charset) ne 'UTF-8' );
@@ -387,10 +393,10 @@ sub read {
     }
 
     # Decode already read part of the PO file with the charset
-    $pofile = decode($charset, $pofile);
+    $pofile = decode( $charset, $pofile );
 
     warn "Imbuing PO file '$filename' with '$charset'" if $debug{'encoding'};
-    binmode( $fh, ":encoding($charset)");
+    binmode( $fh, ":encoding($charset)" );
 
     # Reading the rest of the file
     while ( defined( my $textline = <$fh> ) ) {
@@ -407,7 +413,7 @@ sub read {
     my $linenum = 0;
 
     foreach my $msg ( split( /\n\n/, $pofile ) ) {
-        my ( $msgid, $msgstr, $comment, $previous, $automatic, $reference, $flags, $buffer );
+        my ( $msgctxt, $msgid, $msgstr, $comment, $previous, $automatic, $reference, $flags, $buffer );
         my ( $msgid_plural, $msgstr_plural );
         if ( $msg =~ m/^#~/m ) {
             push( @{ $self->{footer} }, $msg );
@@ -430,8 +436,15 @@ sub read {
             } elsif ( $line =~ /^#(.*)$/ ) {        # Translator comments
                 $comment .= ( defined($comment) ? "\n" : "" ) . ( $1 || "" );
 
-            } elsif ( $line =~ /^msgid (".*")$/ ) {    # begin of msgid
+            } elsif ( $line =~ /^msgctxt (".*")$/ ) {    # begin of msgctxt
                 $buffer = $1;
+
+            } elsif ( $line =~ /^msgid (".*")$/ ) {
+
+                # begin of msgid, end of msgctxt
+
+                $msgctxt = $buffer;
+                $buffer  = $1;
 
             } elsif ( $line =~ /^msgid_plural (".*")$/ ) {
 
@@ -482,10 +495,12 @@ sub read {
         if ( defined $msgid_plural ) {
             $msgstr_plural = $buffer;
 
-            $msgid  = unquote_text($msgid)  if ( defined($msgid) );
-            $msgstr = unquote_text($msgstr) if ( defined($msgstr) );
+            $msgctxt = unquote_text($msgctxt) if ( defined($msgctxt) );
+            $msgid   = unquote_text($msgid)   if ( defined($msgid) );
+            $msgstr  = unquote_text($msgstr)  if ( defined($msgstr) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid,
                 'msgstr'    => $msgstr,
                 'reference' => $reference,
@@ -502,6 +517,7 @@ sub read {
               if ( defined($msgstr_plural) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid_plural,
                 'msgstr'    => $msgstr_plural,
                 'reference' => $reference,
@@ -514,10 +530,12 @@ sub read {
         } else {
             $msgstr = $buffer;
 
-            $msgid  = unquote_text($msgid)  if ( defined($msgid) );
-            $msgstr = unquote_text($msgstr) if ( defined($msgstr) );
+            $msgctxt = unquote_text($msgctxt) if ( defined($msgctxt) );
+            $msgid   = unquote_text($msgid)   if ( defined($msgid) );
+            $msgstr  = unquote_text($msgstr)  if ( defined($msgstr) );
 
             $self->push_raw(
+                'msgctxt'   => $msgctxt,
                 'msgid'     => $msgid,
                 'msgstr'    => $msgstr,
                 'reference' => $reference,
@@ -585,7 +603,16 @@ sub write {
 
     my $buf_msgstr_plural;    # Used to keep the first msgstr of plural forms
     my $first = 1;
-    foreach my $msgid ( sort { ( $self->{po}{"$a"}{'pos'} ) <=> ( $self->{po}{"$b"}{'pos'} ) } keys %{ $self->{po} } ) {
+    for my $message (
+        sort { $a->{message}{pos} <=> $b->{message}{pos} } map {
+            my $msgid = $_;
+            map {
+                my $msgctxt = $_;
+                { msgid => $msgid, msgctxt => $msgctxt, message => $self->{po}{$msgid}{$msgctxt} }
+            } keys %{ $self->{po}{$msgid} }
+        } keys %{ $self->{po} }
+      )
+    {
         my $output = "";
 
         if ($first) {
@@ -594,44 +621,48 @@ sub write {
             $output .= "\n";
         }
 
-        $output .= format_comment( $self->{po}{$msgid}{'comment'}, "" )
-          if length( $self->{po}{$msgid}{'comment'} );
-        if ( length( $self->{po}{$msgid}{'automatic'} ) ) {
-            foreach my $comment ( split( /\\n/, $self->{po}{$msgid}{'automatic'} ) ) {
+        my $msgctxt = $message->{msgctxt};
+        my $msgid   = $message->{msgid};
+        my $message = $message->{message};
+        $output .= format_comment( $message->{comment}, "" )
+          if length( $message->{comment} );
+        if ( length( $message->{automatic} ) ) {
+            foreach my $comment ( split( /\\n/, $message->{automatic} ) ) {
                 $output .= format_comment( $comment, ". " );
             }
         }
-        $output .= format_comment( $self->{po}{$msgid}{'type'}, ". type: " )
-          if length( $self->{po}{$msgid}{'type'} );
+        $output .= format_comment( $message->{type}, ". type: " )
+          if length( $message->{type} );
 
-        if ( length( $self->{po}{$msgid}{'reference'} ) ) {
-            my $output_ref = wrap( $self->{po}{$msgid}{'reference'} );
+        if ( length( $message->{reference} ) ) {
+            my $output_ref = wrap( $message->{reference} );
             $output_ref =~ s/\s+$//mg;
             $output .= format_comment( $output_ref, ": " );
         }
-        $output .= "#, " . join( ", ", sort split( /\s+/, $self->{po}{$msgid}{'flags'} ) ) . "\n"
-          if length( $self->{po}{$msgid}{'flags'} );
-        $output .= format_comment( $self->{po}{$msgid}{'previous'}, "| " )
-          if length( $self->{po}{$msgid}{'previous'} );
+        $output .= "#, " . join( ", ", sort split( /\s+/, $message->{flags} ) ) . "\n"
+          if length( $message->{flags} );
+        $output .= format_comment( $message->{previous}, "| " )
+          if length( $message->{previous} );
 
-        if ( exists $self->{po}{$msgid}{'plural'} ) {
-            if ( $self->{po}{$msgid}{'plural'} == 0 ) {
+        $msgctxt and $output .= "msgctxt " . quote_text( $msgctxt, $self->{options}{'wrap-po'} ) . "\n";
+        if ( exists $message->{plural} ) {
+            if ( $message->{plural} == 0 ) {
                 $output .= "msgid " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
                 $buf_msgstr_plural =
-                  "msgstr[0] " . quote_text( $self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
-            } elsif ( $self->{po}{$msgid}{'plural'} == 1 ) {
+                  "msgstr[0] " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
+            } elsif ( $message->{plural} == 1 ) {
 
                 # TODO: there may be only one plural form
                 $output = "msgid_plural " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
                 $output .= $buf_msgstr_plural;
-                $output .=
-                  "msgstr[1] " . quote_text( $self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
+                $output .= "msgstr[1] " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
             } else {
                 die wrap_msg( dgettext( "po4a", "Cannot write PO files with more than two plural forms." ) );
             }
         } else {
             $output .= "msgid " . quote_text( $msgid, $self->{options}{'wrap-po'} ) . "\n";
-            $output .= "msgstr " . quote_text( $self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'} ) . "\n";
+            $output .=
+              "msgstr " . quote_text( $message->{msgstr}, $self->{options}{'wrap-po'} ) . "\n";
         }
 
         print $fh $output;
@@ -899,20 +930,20 @@ sub filter {
 
     for ( my $cpt = (0) ; $cpt < $self->count_entries() ; $cpt++ ) {
 
-        my ( $msgid, $ref, $msgstr, $flags, $type, $comment, $previous, $automatic );
+        my $message = $self->_message_by_position($cpt);
+        my $msgid   = $message->{msgid};
+        my $msgctxt = $message->{msgctxt};
+        $message = $message->{message};
+        my $ref       = $message->{reference};
+        my $msgstr    = $message->{msgstr};
+        my $flags     = $message->{flags};
+        my $type      = $message->{type};
+        my $comment   = $message->{comment};
+        my $previous  = $message->{previous};
+        my $automatic = $message->{automatic};
 
-        $msgid = $self->msgid($cpt);
-        $ref   = $self->{po}{$msgid}{'reference'};
-
-        $msgstr    = $self->{po}{$msgid}{'msgstr'};
-        $flags     = $self->{po}{$msgid}{'flags'};
-        $type      = $self->{po}{$msgid}{'type'};
-        $comment   = $self->{po}{$msgid}{'comment'};
-        $previous  = $self->{po}{$msgid}{'previous'};
-        $automatic = $self->{po}{$msgid}{'automatic'};
-
-        # DO NOT CHANGE THE ORDER
         $res->push_raw(
+            'msgctxt'   => $msgctxt,
             'msgid'     => $msgid,
             'msgstr'    => $msgstr,
             'flags'     => $flags,
@@ -957,6 +988,16 @@ a translation, and wraps the result.
 
 the column at which we should wrap (default: 76).
 
+=item B<msgctxt>
+
+the context string value to be used as the L<msgctxt
+field|https://www.gnu.org/software/gettext/manual/html_node/Contexts.html>
+in gettext PO files.  It is empty by default, meaning no context is
+assigned to the message.  When a context is provided, it first
+searches for messages matching that context; if none are found, it
+falls back to searching for messages with an empty context.  This
+fallback behavior ensures backward compatibility.
+
 =back
 
 =cut
@@ -968,7 +1009,7 @@ sub gettext {
     my $res;
 
     return "" unless length($text);    # Avoid returning the header.
-    my $validoption = "reference wrap wrapcol";
+    my $validoption = "reference wrap wrapcol msgctxt";
     my %validoption;
 
     map { $validoption{$_} = 1 } ( split( / /, $validoption ) );
@@ -984,19 +1025,22 @@ sub gettext {
 
     $self->{gettextqueries}++;
 
+    my $msgctxt = $opt{msgctxt} // '';
+    $self->{po}{$esc_text}{$msgctxt} or $msgctxt = '';    # For backward compatibility.
+
     if (
-            defined $self->{po}{$esc_text}
-        and defined $self->{po}{$esc_text}{'msgstr'}
-        and length $self->{po}{$esc_text}{'msgstr'}
-        and ( not defined $self->{po}{$esc_text}{'flags'}
-            or $self->{po}{$esc_text}{'flags'} !~ /fuzzy/ )
+            defined $self->{po}{$esc_text}{$msgctxt}
+        and defined $self->{po}{$esc_text}{$msgctxt}{'msgstr'}
+        and length $self->{po}{$esc_text}{$msgctxt}{'msgstr'}
+        and ( not defined $self->{po}{$esc_text}{$msgctxt}{'flags'}
+            or $self->{po}{$esc_text}{$msgctxt}{'flags'} !~ /fuzzy/ )
       )
     {
 
         $self->{gettexthits}++;
-        $res = unescape_text( $self->{po}{$esc_text}{'msgstr'} );
-        if ( defined $self->{po}{$esc_text}{'plural'} ) {
-            if ( $self->{po}{$esc_text}{'plural'} eq "0" ) {
+        $res = unescape_text( $self->{po}{$esc_text}{$msgctxt}{'msgstr'} );
+        if ( defined $self->{po}{$esc_text}{$msgctxt}{'plural'} ) {
+            if ( $self->{po}{$esc_text}{$msgctxt}{'plural'} eq "0" ) {
                 warn wrap_mod(
                     "po4a gettextize",
                     dgettext(
@@ -1148,7 +1192,7 @@ sub push {
     my $self  = shift;
     my %entry = @_;
 
-    my $validoption = "wrap wrapcol type msgid msgstr automatic previous flags reference";
+    my $validoption = "wrap wrapcol type msgid msgstr automatic previous flags reference msgctxt";
     my %validoption;
 
     map { $validoption{$_} = 1 } ( split( / /, $validoption ) );
@@ -1178,18 +1222,14 @@ sub push {
 
 # The same as push(), but assuming that msgid and msgstr are already escaped
 sub push_raw {
-    my $self  = shift;
-    my %entry = @_;
+    my $self    = shift;
+    my %entry   = @_;
+    my $msgctxt = $entry{msgctxt} // '';
     my ( $msgid, $msgstr, $reference, $comment, $automatic, $previous, $flags, $type, $transref ) = (
         $entry{'msgid'},    $entry{'msgstr'}, $entry{'reference'}, $entry{'comment'}, $entry{'automatic'},
         $entry{'previous'}, $entry{'flags'},  $entry{'type'},      $entry{'transref'}
     );
     my $keep_conflict = $entry{'conflict'};
-
-    #    print STDERR "Push_raw\n";
-    #    print STDERR " msgid=>>>$msgid<<<\n" if $msgid;
-    #    print STDERR " msgstr=[[[$msgstr]]]\n" if $msgstr;
-    #    Carp::cluck " flags=$flags\n" if $flags;
 
     return unless defined( $entry{'msgid'} );
 
@@ -1224,40 +1264,42 @@ sub push_raw {
         $reference =~ s/:\d+//g;
     }
 
-    if ( defined( $self->{po}{$msgid} ) ) {
-        warn wrap_mod( "po4a::po", dgettext( "po4a", "msgid defined twice: %s" ), $msgid )
+    if ( defined( $self->{po}{$msgid}{$msgctxt} ) ) {
+        warn wrap_mod( "po4a::po", dgettext( "po4a", "msgid defined twice: %s (msgctxt: %s)" ), $msgid, $msgctxt )
           if (0);    # FIXME: put a verbose stuff
         if (    defined $msgstr
-            and defined $self->{po}{$msgid}{'msgstr'}
-            and $self->{po}{$msgid}{'msgstr'} ne $msgstr )
+            and defined $self->{po}{$msgid}{$msgctxt}{'msgstr'}
+            and $self->{po}{$msgid}{$msgctxt}{'msgstr'} ne $msgstr )
         {
             my $txt = quote_text( $msgid, $self->{options}{'wrap-po'} );
             my ( $first, $second ) = (
-                    format_comment( ". ", $self->{po}{$msgid}{'reference'} )
-                  . quote_text( $self->{po}{$msgid}{'msgstr'}, $self->{options}{'wrap-po'} ),
+                    format_comment( ". ", $self->{po}{$msgid}{$msgctxt}{'reference'} )
+                  . quote_text( $self->{po}{$msgid}{$msgctxt}{'msgstr'}, $self->{options}{'wrap-po'} ),
 
                 format_comment( ". ", $reference ) . quote_text($msgstr), $self->{options}{'wrap-po'}
             );
 
             if ($keep_conflict) {
-                if ( $self->{po}{$msgid}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s ) {
+                if ( $self->{po}{$msgid}{$msgctxt}{'msgstr'} =~ m/^#-#-#-#-#  .*  #-#-#-#-#\\n/s ) {
                     $msgstr =
-                      $self->{po}{$msgid}{'msgstr'} . "\\n#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n" . $msgstr;
+                        $self->{po}{$msgid}{$msgctxt}{'msgstr'}
+                      . "\\n#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n"
+                      . $msgstr;
                 } else {
                     $msgstr =
                         "#-#-#-#-#  "
-                      . $self->{po}{$msgid}{'transref'}
+                      . $self->{po}{$msgid}{$msgctxt}{'transref'}
                       . " (type "
-                      . $self->{po}{$msgid}{'type'}
+                      . $self->{po}{$msgid}{$msgctxt}{'type'}
                       . ")  #-#-#-#-#\\n"
-                      . $self->{po}{$msgid}{'msgstr'} . "\\n"
+                      . $self->{po}{$msgid}{$msgctxt}{'msgstr'} . "\\n"
                       . "#-#-#-#-#  $transref (type: $type)  #-#-#-#-#\\n"
                       . $msgstr;
                 }
 
                 # Every msgid will have the same list of references.
                 # Only keep the last list.
-                $self->{po}{$msgid}{'reference'} = "";
+                $self->{po}{$msgid}{$msgctxt}{'reference'} = "";
             } else {
                 warn wrap_msg(
                     dgettext(
@@ -1273,37 +1315,37 @@ sub push_raw {
         }
     }
     if ( defined $transref ) {
-        $self->{po}{$msgid}{'transref'} = $transref;
+        $self->{po}{$msgid}{$msgctxt}{'transref'} = $transref;
     }
     if ( length($reference) ) {
-        if ( defined $self->{po}{$msgid}{'reference'} ) {
+        if ( defined $self->{po}{$msgid}{$msgctxt}{'reference'} ) {
 
             # Only add the new reference if it's not already included in the existing string
-            # It'd be much easier if $self->{po}{$msgid}{'reference'} were an array instead of a joined string...
-            my $oldref = $self->{po}{$msgid}{'reference'};
-            $self->{po}{$msgid}{'reference'} .= " " . $reference
+            # It'd be much easier if $self->{po}{$msgid}{$msgctxt}{'reference'} were an array instead of a joined string...
+            my $oldref = $self->{po}{$msgid}{$msgctxt}{'reference'};
+            $self->{po}{$msgid}{$msgctxt}{'reference'} .= " " . $reference
               unless ( ( $oldref =~ m/ $reference / )
                 || ( $oldref =~ m/ $reference$/ )
                 || ( $oldref =~ m/^$reference$/ )
                 || ( $oldref =~ m/^$reference / ) );
         } else {
-            $self->{po}{$msgid}{'reference'} = $reference;
+            $self->{po}{$msgid}{$msgctxt}{'reference'} = $reference;
         }
     }
-    $self->{po}{$msgid}{'msgstr'}    = $msgstr;
-    $self->{po}{$msgid}{'comment'}   = $comment;
-    $self->{po}{$msgid}{'automatic'} = $automatic;
-    $self->{po}{$msgid}{'previous'}  = $previous;
+    $self->{po}{$msgid}{$msgctxt}{'msgstr'}    = $msgstr;
+    $self->{po}{$msgid}{$msgctxt}{'comment'}   = $comment;
+    $self->{po}{$msgid}{$msgctxt}{'automatic'} = $automatic;
+    $self->{po}{$msgid}{$msgctxt}{'previous'}  = $previous;
 
-    $self->{po}{$msgid}{pos_doc} = () unless ( defined( $self->{po}{$msgid}{pos_doc} ) );
-    CORE::push( @{ $self->{po}{$msgid}{pos_doc} }, $self->{count_doc}++ );
-    CORE::push( @{ $self->{gettextize_types} },    $type );
+    $self->{po}{$msgid}{$msgctxt}{pos_doc} = () unless ( defined( $self->{po}{$msgid}{$msgctxt}{pos_doc} ) );
+    CORE::push( @{ $self->{po}{$msgid}{$msgctxt}{pos_doc} }, $self->{count_doc}++ );
+    CORE::push( @{ $self->{gettextize_types} },              $type );
 
-    unless ( defined( $self->{po}{$msgid}{'pos'} ) ) {
-        $self->{po}{$msgid}{'pos'} = $self->{count}++;
+    unless ( defined( $self->{po}{$msgid}{$msgctxt}{'pos'} ) ) {
+        $self->{po}{$msgid}{$msgctxt}{'pos'} = $self->{count}++;
     }
-    $self->{po}{$msgid}{'type'}   = $type;
-    $self->{po}{$msgid}{'plural'} = $entry{'plural'}
+    $self->{po}{$msgid}{$msgctxt}{'type'}   = $type;
+    $self->{po}{$msgid}{$msgctxt}{'plural'} = $entry{'plural'}
       if defined $entry{'plural'};
 
     if ( defined($flags) ) {
@@ -1311,22 +1353,19 @@ sub push_raw {
         $flags =~ s/,/ /g;
         foreach my $flag (@known_flags) {
             if ( index( $flags, " $flag " ) != -1 ) {    # if flag to be set
-                unless ( defined( $self->{po}{$msgid}{'flags'} )
-                    && $self->{po}{$msgid}{'flags'} =~ /\b$flag\b/ )
+                unless ( defined( $self->{po}{$msgid}{$msgctxt}{'flags'} )
+                    && $self->{po}{$msgid}{$msgctxt}{'flags'} =~ /\b$flag\b/ )
                 {
                     # flag not already set
-                    if ( defined $self->{po}{$msgid}{'flags'} ) {
-                        $self->{po}{$msgid}{'flags'} .= " " . $flag;
+                    if ( defined $self->{po}{$msgid}{$msgctxt}{'flags'} ) {
+                        $self->{po}{$msgid}{$msgctxt}{'flags'} .= " " . $flag;
                     } else {
-                        $self->{po}{$msgid}{'flags'} = $flag;
+                        $self->{po}{$msgid}{$msgctxt}{'flags'} = $flag;
                     }
                 }
             }
         }
     }
-
-    #    print STDERR "stored ((($msgid)))=>(((".$self->{po}{$msgid}{'msgstr'}.")))\n\n";
-
 }
 
 =back
@@ -1369,7 +1408,9 @@ sub msgid($$) {
     my $num  = shift;
 
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        return $msgid if ( $self->{po}{$msgid}{'pos'} eq $num );
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            return $msgid if ( $self->{po}{$msgid}{$msgctxt}{'pos'} eq $num );
+        }
     }
     return undef;
 }
@@ -1385,8 +1426,10 @@ sub msgid_doc($$) {
     my $num  = shift;
 
     foreach my $msgid ( keys %{ $self->{po} } ) {
-        foreach my $pos ( @{ $self->{po}{$msgid}{'pos_doc'} } ) {
-            return $msgid if ( $pos eq $num );
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            foreach my $pos ( @{ $self->{po}{$msgid}{$msgctxt}{'pos_doc'} } ) {
+                return $msgid if ( $pos eq $num );
+            }
         }
     }
     return undef;
@@ -1437,21 +1480,99 @@ B<wrap-po> value.
 
 sub gettext_wrap_opts($) {
     my $wrap_po = shift;
-    if ( ! defined $wrap_po or ! length $wrap_po ) {
+    if ( !defined $wrap_po or !length $wrap_po ) {
         return "";
     } elsif ( $wrap_po eq 'no' or $wrap_po eq 'newlines' ) {
+
         # Note: gettext will always wrap on newlines, so there is no difference between the two
         return "--no-wrap";
-    } elsif( $wrap_po =~ /^[+-]?\d+$/ ) {
+    } elsif ( $wrap_po =~ /^[+-]?\d+$/ ) {
         return "--width=$wrap_po";
     } else {
         warn wrap_mod( "po4a::po",
-            dgettext( "po4a",
-                "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)"),
-            $wrap_po
-        );
+            dgettext( "po4a", "Invalid value for option 'wrap-po' ('%s' is not 'no' nor 'newlines' nor a number)" ),
+            $wrap_po );
         return "";
     }
+}
+
+=item each_message
+
+This method iterates over each message in the PO file and processes
+it.  It takes a subroutine reference and executes it with two
+arguments: 1) the C<msgid> and 2) a hash reference containing the
+message content, which includes fields such as C<msgstr>.
+
+=cut
+
+sub each_message {
+    my ( $self, $code ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            $code->( $msgid, $self->{po}{$msgid}{$msgctxt} );
+        }
+    }
+}
+
+=item replant
+
+This method takes two parameters: the current C<msgid> and the new
+C<msgid>.  It removes the entry with the current C<msgid> from the PO
+instance and reinserts it under the new C<msgid> value.
+
+=cut
+
+sub replant {
+    my ( $self, $msgid, $new_msgid ) = @_;
+    $self->{po}{$new_msgid} = { %{ $self->{po}{$msgid} } };
+    delete $self->{po}{$msgid};
+}
+
+sub _message_by_position {
+    my ( $self, $position ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            $self->{po}{$msgid}{$msgctxt}{pos} == $position
+              and return { msgid => $msgid, msgctxt => $msgctxt, message => $self->{po}{$msgid}{$msgctxt} };
+        }
+    }
+    return;
+}
+
+=item message_by_document_position
+
+This method takes a document position and returns the matching message
+as a list containing three elements: the C<msgid>, the C<msgctxt>, and
+the message content (which includes fields such as C<msgstr>).
+
+=cut
+
+sub message_by_document_position {
+    my ( $self, $position ) = @_;
+    foreach my $msgid ( keys %{ $self->{po} } ) {
+        foreach my $msgctxt ( keys %{ $self->{po}{$msgid} } ) {
+            foreach my $current_position ( @{ $self->{po}{$msgid}{$msgctxt}{pos_doc} } ) {
+                $current_position == $position and return $msgid, $msgctxt, $self->{po}{$msgid}{$msgctxt};
+            }
+        }
+    }
+    return;
+}
+
+=item message_by_msgid
+
+This method takes a C<msgid> and an optional C<msgctxt>, and returns
+the first matching message content, which includes fields such as
+C<msgstr>.  If no C<msgctxt> is provided, an empty string value is
+used.  If no message entry is found with the given context, the method
+falls back to searching for a message without context.
+
+=cut
+
+sub message_by_msgid {
+    my ( $self, $msgid, $msgctxt ) = @_;
+    $msgctxt or return $self->{po}{$msgid}{''};
+    return $self->{po}{$msgid}{$msgctxt} || $self->{po}{$msgid}{''};
 }
 
 #----[ helper functions ]---------------------------------------------------

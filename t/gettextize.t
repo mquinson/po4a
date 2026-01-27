@@ -26,13 +26,15 @@ push @tests,
       "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_ok.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
     'tests' => [ "diff $PODIFF -u gettextize/test_ok.po tmp/generated.po", "diff -u gettextize/test_ok.err tmp/err" ],
     'doc'   => "Gettextize a simple file.",
+    'keep_going' => 1,
   },
   {
     'run' =>
       "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_dups.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
     'tests' =>
       [ "diff $PODIFF -u gettextize/test_dups.po tmp/generated.po", "diff -u gettextize/test_dups.err tmp/err" ],
-    'doc' => "Gettextize a file with dupplicate entries.",
+    'doc'        => "Gettextize a file with dupplicate entries.",
+    'keep_going' => 1,
   };
 
 run_all_tests(@tests);

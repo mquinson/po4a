@@ -192,7 +192,7 @@ sub run_one_po4aconf {
 
     my %valid_options;
     map { $valid_options{$_} = 1 }
-      qw(po4a.conf todo doc closed_path options setup tests teardown expected_retcode expected_files diff_outfile expected_outfile );
+      qw(po4a.conf todo doc closed_path options setup tests teardown expected_retcode expected_files diff_outfile expected_outfile perl_lib);
     map { die "Invalid test " . $t->{'doc'} . ": invalid key '$_'\n" unless exists $valid_options{$_} } ( keys %{$t} );
 
     my $po4aconf         = $t->{'po4a.conf'} || fail("Broken test: po4a.conf must be provided");
@@ -248,6 +248,7 @@ sub run_one_po4aconf {
         return;
     }
 
+    $t->{perl_lib} and local $ENV{PERL5LIB} = "$t->{perl_lib}:$ENV{PERL5LIB}";
     my $cmd = "$execpath/po4a -f $cwd/$po4aconf $options > $cwd/$tmppath/output 2>&1";
 
     chdir $run_from || fail "Cannot change directory to $run_from: $!";
@@ -412,7 +413,8 @@ sub run_one_format {
     my $cwd     = cwd();
     $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl $cwd/..";
 
-    unless (exists $test->{'skip'}{'normalize'}) {
+    unless ( exists $test->{'skip'}{'normalize'} ) {
+
         # Normalize the document
         my $real_stderr = "$cwd/tmp/$path/$basename.norm.stderr";
         my $cmd =
@@ -454,7 +456,8 @@ sub run_one_format {
         push @tests, "diff -u $output   $tmpbase.norm" unless $error;
     }
 
-    unless ($error or exists $test->{'skip'}{'traslate'}) {
+    unless ( $error or exists $test->{'skip'}{'traslate'} ) {
+
         # Translate the document
         my $cmd =
             "${execpath}/po4a-translate --no-deprecation -f $format $options --master $basename.$ext"
@@ -473,7 +476,8 @@ sub run_one_format {
         push @tests, "diff -uN $transfile $tmpbase.trans";
     }
 
-    unless ($error or exists $test->{'skip'}{'updatepo'}) {
+    unless ( $error or exists $test->{'skip'}{'updatepo'} ) {
+
         # Update PO
         copy( "$cwd/$pofile", "$cwd/${tmpbase}.po_updated" ) || fail "Cannot copy $pofile before updating it";
         my $updatepo_options = $options =~ s/--width= [-]? [0-9]+//rxms;
@@ -588,7 +592,7 @@ sub run_all_tests {
                 $cmd =~
                   s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
                 is( $exit_status, 0, "Test of " . $test->{'doc'} . " -- Command: $cmd" );
-                next TEST unless ( $exit_status == 0 );
+                next TEST if ( !$test->{keep_going} && $exit_status != 0 );
             }
 
         } else {

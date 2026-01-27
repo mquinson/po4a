@@ -314,6 +314,30 @@ specified, or to the current directory.
 Set the base directory for all the output documents specified in the
 B<po4a> configuration file (see B<--srcdir> above).
 
+=item B<--context-module> I<MODULE_NAME>
+
+Specifies the Perl module name used for context generation (such as
+gettext msgctxt). This option can be set individually for each master
+document.
+
+The module name must be discoverable by the po4a Perl program (you may
+need to adjust the C<PERL5LIB> environment variable, for example) and
+must contain a subroutine named exactly C<get_msgctxt>. This
+subroutine takes a single hash reference as an argument and should
+return either C<undef> (indicating no context) or a context string
+value.
+
+The hash reference argument contains several fields: C<msgid>,
+C<reference>, C<type>, C<previous>, and C<others>. The C<msgid>,
+C<reference>, and C<type> fields contain string values for the
+message. The C<previous> field is a hash reference to the previous
+message. The C<others> field may be provided by individual format
+modules. To supply these additional fields, the format module
+implementation must override the C<translate> subroutine in the
+C<TransTractor> module and pass the C<context_arguments> option.
+
+For details, refer to its usage section below.
+
 =back
 
 =head2 Options modifying the POT header
@@ -620,6 +644,85 @@ Here is an example showing how to quote the spaces and quotes:
  [type:man] t-05-config/test02_man.1 $lang:tmp/test02_man.$lang.1 \
             opt:"-k 75" opt_it:"-L UTF-8" opt_fr:--verbose
 
+=head2 Context
+
+po4a supports context features such as C<msgctxt> in the GNU gettext
+PO file format. See L<GNU gettext utilities -
+Contexts|https://www.gnu.org/software/gettext/manual/html_node/Contexts.html>
+for the motivation behind this feature. In short, it allows multiple
+messages with the same C<msgid> (master language message) to coexist
+in a single PO file. Here's a simple example. Consider this Markdown
+document, F<context.md>:
+
+  # Foo
+
+  Foo
+
+In this case, both the title and paragraph share the same C<msgid>
+"Foo". If we want to translate the title "Foo" as "BAR" and the
+paragraph "Foo" as "Bar", we encounter a problem: the PO file only
+supports one message for this msgid, forcing us to choose a single
+translation. This is where the context feature becomes useful. By
+tagging each message with a distinct context—for example, "title" or
+"paragraph"—we can treat them as separate messages, allowing each to
+have its own translation in the generated output.
+
+This may sound appealing, but it can be complicated to use due to its
+maximum flexibility. The C<context-module> option takes a Perl module
+name, which must contain a C<get_msgctxt> subroutine. A minimal
+example looks like this:
+
+  package ContextExample;
+
+  use strict;
+  use warnings;
+
+  sub get_msgctxt {
+      my $args = shift;
+      $args->{msgid} eq 'Foo' or return;
+      if ( $args->{type} eq 'Title #' ) {
+          return 'title';
+      } else {
+          return 'paragraph';
+      }
+  }
+
+  1;
+
+Save this Perl module to C</path/to/lib/ContextExample.pm>. The
+configuration file C</path/to/po4a.conf> should contain the following:
+
+  [po4a_paths] master.pot trans:translation.po
+  [type:Text] context.md trans:translation.md \
+              opt:"--option markdown \
+                   --context-module=ContextExample"
+
+Then run C<PERL5LIB=/path/to/lib:$PERL5LIB po4a
+/path/to/po4a.conf>. Note that you must set the Perl library path
+environment variable so that po4a can locate the provided module.
+
+There are some important caveats when using this feature:
+
+=over
+
+=item Choose context string values wisely
+
+Embedding the C<reference> value as-is is strongly discouraged because
+file paths tend to change, which would cause all messages with that
+context to change as well. Use concise, clear, and consistent context
+values that reflect your intention.
+
+=item Unicode strings are normalized before being passed to your module
+
+You may need to investigate the exact Perl string literal using debug
+print statements in your context module. For example, if the C<msgid>
+contains C<’> (a right single quotation mark), the value passed to
+the C<get_msgctxt> subroutine will contain C<\x{2019}> instead. In
+this case, you would write a conditional such as C<$args->{msgid} eq
+"\x{2019}scuse me?".>
+
+=back
+
 =head2 Addendum: Adding extra content in the translation
 
 If you want to add an extra section to the translation, for example to give
@@ -833,7 +936,8 @@ sub get_options {
         'msgmerge-opt=s'       => \$msgmerge_opt,
         'srcdir=s'             => \$opts{"srcdir"},
         'destdir=s'            => \$opts{"destdir"},
-        'target-lang=s'        => \@{ $opts{"target-lang"} }
+        'target-lang=s'        => \@{ $opts{"target-lang"} },
+        'context-module=s'     => \$opts{"context_module"},
     ) or pod2usage();
 
     $opts{"verbose"} = scalar @verbose;
@@ -846,9 +950,10 @@ sub get_options {
 
     # options to transmit to the modules
     $opts{"options"} = {
-        "verbose" => $opts{"verbose"},
-        "debug"   => $opts{"debug"},
-        "wrapcol" => $opts{"width"}
+        "verbose"        => $opts{"verbose"},
+        "debug"          => $opts{"debug"},
+        "wrapcol"        => $opts{"width"},
+        "context_module" => $opts{"context_module"},
     };
     foreach (@options) {
         if (m/^([^=]*)=(.*)$/) {

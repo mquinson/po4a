@@ -481,14 +481,14 @@ sub parse {
             $self->pushline( $line . "\n" );
         } elsif ( ( defined $self->{type} )
             and ( $self->{type} eq "Table" )
-            and ( $line !~ m/^\|===/ )
+            and ( $line !~ m/^\|={3,}$/ )
             and ( $self->{options}{"tablecells"} )
             and ( not defined $self->{disabletablecells} ) )
         {
             # inside a table, and we should split per cell
             my $new_line = "";
-            my @texts    = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/, $line;
-            my @seps     = ($line) =~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?\|/g;
+            my @texts    = split /(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?(?<!\\)\|/, $line;
+            my @seps     = ($line) =~ m/(?:(?:\d+|\d*(?:\.\d+)?)(?:\+|\*))?[<^>]?(?:\.[<^>])?[demshalv]?(?<!\\)\|/g;
             if ( ( scalar(@texts) and length( $texts[0] ) ) || ( !length($line) ) ) {
                 if ( !length($line) ) { $texts[0] = ""; }
                 if ( length($paragraph) ) {
@@ -1021,7 +1021,7 @@ sub parse {
             $line = "";
             undef $self->{bullet};
             undef $self->{indent};
-        } elsif ( $line =~ /^\|===/ ) {
+        } elsif ( (not defined($self->{verbatim})) and ($line =~ /^\|={3,}$/) ) {
 
             # This is a table, treat it as a non-wrapped paragraph
             print STDERR "Found Table delimiter\n" if ( $debug{parse} );
