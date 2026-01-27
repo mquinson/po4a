@@ -1,0 +1,15 @@
+
+@ignore
+Test invalid Texinfo code that leads to a difference in line
+number in the code obtained from the tree representation, with a fixed
+source, compared to the original Texinfo code.
+@end ignore
+
+@set a
+ 
+@ifset a
+@ifclear ok @c - ok, ignored
+@end junky   - ok, ignored
+@c WRONG - missing @end ifset.
+
+@chapter chap
