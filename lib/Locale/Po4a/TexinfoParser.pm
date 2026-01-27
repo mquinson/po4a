@@ -121,19 +121,15 @@ use File::Spec;
 
 use Locale::Po4a::Common qw(wrap_mod gettext);
 
-# This is temporary, to be able to find the Texinfo SWIG interface.  Once
-# the release with this interface is common enough, it should not be useful
-# anymore.
 BEGIN {
-    my $home = $ENV{'HOME'};
-    die if ( !defined($home) );
-    my $t2a_builddir = join( '/', ( $home, 'src', 'texinfo', 'tta' ) );
-
-    # for Texinfo.pm
-    unshift @INC, join( '/', ( $t2a_builddir, 'swig', 'perl' ) );
-
-    # for XS
-    unshift @INC, join( '/', ( $t2a_builddir, 'swig', 'perl', '.libs' ) );
+    # could be removed when the module is common enough
+    #my $home = $ENV{'HOME'};
+    #die if ( !defined($home) );
+    #my $t2a_builddir = join( '/', ( $home, 'src', 'texinfo', 'tta' ) );
+    ## for Texinfo.pm
+    #unshift @INC, join( '/', ( $t2a_builddir, 'swig', 'perl' ) );
+    ## for XS
+    #unshift @INC, join( '/', ( $t2a_builddir, 'swig', 'perl', '.libs' ) );
 }
 
 use Texinfo;
