@@ -7,8 +7,14 @@ use warnings;
 
 use lib q(t);
 use Testhelper;
+use Test::More;
 
 my @tests;
+
+SKIP:
+{
+  eval {require Texinfo};
+  skip "cannot load Texinfo module" if $@;
 
 for my $test (
     qw(longmenu partialmenus comments tindex commandsinpara
@@ -21,7 +27,6 @@ for my $test (
         'format'  => 'texinfoparser',
         'input'   => "fmt/texinfoparser/$test.texi",
         'options' => '-o no-warn',
-        'todo'    => 'No release of Texinfo module yet',
       };
 }
 
@@ -31,7 +36,6 @@ for my $test (qw(tinclude verbatiminclude)) {
         'format'  => 'texinfoparser',
         'input'   => "fmt/texinfoparser/$test.texi",
         'options' => '-o no-warn -o include_directories=../xhtml',
-        'todo'    => 'No release of Texinfo module yet',
       };
 }
 
@@ -41,8 +45,10 @@ push @tests,
     'input'   => "fmt/texinfoparser/tdocumentlanguage.texi",
     'pofile'  => 'fmt/texinfoparser/fr.po',
     'options' => '-o no-warn',
-    'todo'    => 'No release of Texinfo module yet',
   };
 
 run_all_tests(@tests);
+
+}
+
 0;
