@@ -240,9 +240,10 @@ sub ACTION_man {
             $command = "msggrep -K -E -e \"Po4a Tools\" po/pod/$lang.po |";
             $command .= "msgconv -t UTF-8 | ";
             $command .= "msgexec /bin/sh -c '[ -n \"\$MSGEXEC_MSGID\" ] ";
-            $command .= "&& cat || cat > /dev/null'";
+            my $devnull = File::Spec->devnull;
+            $command .= "&& cat || cat > $devnull'";
 
-            my $title = `$command 2> /dev/null`;
+            my $title = `$command 2> $devnull`;
             $title             = "Po4a Tools" unless length $title;
             $title             = Encode::decode_utf8($title);
             $parser->{release} = $parser->{center} = $title;
@@ -313,8 +314,9 @@ sub postats {
     my ( @t100, @t95, @t90, @t80, @t70, @t50, @t33, @t20, @starting );
 
     foreach my $file ( sort @files ) {
-        my $lang = fileparse( $file, qw{.po} );
-        my $stat = `msgfmt -o /dev/null -c --statistics $file 2>&1`;
+        my $lang    = fileparse( $file, qw{.po} );
+        my $devnull = File::Spec->devnull;
+        my $stat    = `msgfmt -o $devnull -c --statistics $file 2>&1`;
         my ( $trans, $fuzz, $untr ) = ( 0, 0, 0 );
         if ( $stat =~ /(\d+)\D+?(\d+)\D+?(\d+)/ ) {
             ( $trans, $fuzz, $untr ) = ( $1, $2, $3 );

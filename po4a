@@ -845,8 +845,7 @@ sub show_version {
 # keep the command line arguments
 my @ORIGINAL_ARGV = @ARGV;
 
-# Use /NUL instead of /dev/null on Windows
-my $devnull = ( $^O =~ /Win/ ) ? '/NUL' : '/dev/null';
+my $devnull = File::Spec->devnull;
 
 # Parse the options provided on the command line, or in argument
 sub get_options {

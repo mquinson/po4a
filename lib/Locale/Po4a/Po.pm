@@ -115,7 +115,8 @@ use Carp qw(croak);
 use File::Basename;
 use File::Path;    # mkdir before write
 use File::Copy;    # move
-use POSIX qw(strftime floor);
+use File::Spec qw();
+use POSIX      qw(strftime floor);
 use Time::Local;
 
 use Encode;
@@ -322,7 +323,8 @@ sub read {
     $self->{lang} = $lang;
 
     if ($checkvalidity) {   # We sometimes need to read a file even if it may be invalid (eg to test whether it's empty)
-        my $cmd = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o /dev/null \"" . $filename . '"';
+        my $devnull = File::Spec->devnull;
+        my $cmd     = "msgfmt" . $Config{_exe} . " --check-format --check-domain -o $devnull \"" . $filename . '"';
 
         my $locale = $ENV{'LC_ALL'};
         $ENV{'LC_ALL'} = "C";
