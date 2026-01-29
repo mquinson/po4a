@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the po4a package.
-# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2024, 2025.
+# Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: po4a 0.73\n"
 "Report-Msgid-Bugs-To: devel@lists.po4a.org\n"
 "POT-Creation-Date: 2026-01-26 13:20+0100\n"
-"PO-Revision-Date: 2025-08-22 08:01+0000\n"
+"PO-Revision-Date: 2026-01-27 21:53+0000\n"
 "Last-Translator: Remus-Gabriel Chelu <remusgabriel.chelu@disroot.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/po4a/po4a-doc/"
 "ro/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #. type: Attribute 'xml:lang' of: <refentry>
 #: share/doc/po4a-display-man.xml:1 share/doc/po4a-display-pod.xml:1
@@ -1100,7 +1100,7 @@ msgstr ""
 #. type: =item
 #: po4a:84
 msgid "B<--context-module> I<MODULE_NAME>"
-msgstr ""
+msgstr "B<--context-module> I<NUME_MODUL>"
 
 #. type: textblock
 #: po4a:85
@@ -1108,6 +1108,9 @@ msgid ""
 "Specifies the Perl module name used for context generation (such as gettext "
 "msgctxt). This option can be set individually for each master document."
 msgstr ""
+"Specifică numele modulului Perl utilizat pentru generarea contextului (cum "
+"ar fi gettext msgctxt). Această opțiune poate fi definită individual pentru "
+"fiecare document principal."
 
 #. type: textblock
 #: po4a:86
@@ -1118,6 +1121,12 @@ msgid ""
 "single hash reference as an argument and should return either C<undef> "
 "(indicating no context) or a context string value."
 msgstr ""
+"Numele modulului trebuie să poată fi detectat de programul Perl po4a (este "
+"posibil să fie necesar să ajustați variabila de mediu C<PERL5LIB>, de "
+"exemplu) și trebuie să conțină o subrutină numită exact C<get_msgctxt>. "
+"Această subrutină acceptă o singură referință hash ca argument și trebuie să "
+"returneze fie C<undef> (indicând lipsa contextului), fie o valoare de șir de "
+"context."
 
 #. type: textblock
 #: po4a:87
@@ -1130,11 +1139,19 @@ msgid ""
 "module implementation must override the C<translate> subroutine in the "
 "C<TransTractor> module and pass the C<context_arguments> option."
 msgstr ""
+"Argumentul referinței hash conține mai multe câmpuri: C<msgid>, C<reference>"
+", C<type>, C<previous> și C<others>. Câmpurile C<msgid>, C<reference> și "
+"C<type> conțin valori de tip șir pentru mesaj. Câmpul C<previous> este o "
+"referință hash la mesajul anterior. Câmpul C<others> poate fi furnizat de "
+"module de format individuale. Pentru a furniza aceste câmpuri suplimentare, "
+"implementarea modulului de format trebuie să suprascrie subrutina "
+"C<translate> din modulul C<TransTractor> și să paseze opțiunea "
+"C<context_arguments>."
 
 #. type: textblock
 #: po4a:88
 msgid "For details, refer to its usage section below."
-msgstr ""
+msgstr "Pentru detalii, consultați secțiunea de utilizare de mai jos."
 
 #. type: =head2
 #: po4a:89
@@ -1931,7 +1948,7 @@ msgstr ""
 #. type: =head2
 #: po4a:172
 msgid "Context"
-msgstr ""
+msgstr "Context"
 
 #. type: textblock
 #: po4a:173
@@ -1943,6 +1960,13 @@ msgid ""
 "(master language message) to coexist in a single PO file. Here's a simple "
 "example. Consider this Markdown document, F<context.md>:"
 msgstr ""
+"po4a acceptă caracteristici de context precum C<msgctxt> în formatul de "
+"fișier PO GNU gettext. Consultați L<GNU gettext utilities - Contexts|https://"
+"www.gnu.org/software/gettext/manual/html_node/Contexts.html> pentru "
+"motivația din spatele acestei caracteristici. Pe scurt, aceasta permite "
+"coexistența mai multor mesaje cu același C<msgid> (mesaj în limba "
+"principală) într-un singur fișier PO. Iată un exemplu simplu. Luați în "
+"considerare acest document Markdown, F<context.md>:"
 
 #. type: verbatim
 #: po4a:174
@@ -1952,6 +1976,9 @@ msgid ""
 "\n"
 "  Foo"
 msgstr ""
+"  # Foo\n"
+"\n"
+"  Foo"
 
 #. type: textblock
 #: po4a:175
@@ -1965,6 +1992,13 @@ msgid ""
 "as separate messages, allowing each to have its own translation in the "
 "generated output."
 msgstr ""
+"În acest caz, atât titlul, cât și paragraful au același C<msgid> „Foo”. Dacă "
+"vrem să traducem titlul „Foo” ca „BAR” și paragraful „Foo” ca „Bar”, ne "
+"confruntăm cu o problemă: fișierul PO acceptă doar un singur mesaj pentru "
+"acest msgid, obligându-ne să alegem o singură traducere. Aici devine utilă "
+"funcția de context. Prin etichetarea fiecărui mesaj cu un context distinct — "
+"de exemplu, \"title\" sau \"paragraph\" — le putem trata ca mesaje separate, "
+"permițând fiecăruia să aibă propria traducere în rezultatul generat."
 
 #. type: textblock
 #: po4a:176
@@ -1974,6 +2008,10 @@ msgid ""
 "which must contain a C<get_msgctxt> subroutine. A minimal example looks like "
 "this:"
 msgstr ""
+"Acest lucru poate părea atractiv, dar poate fi complicat de utilizat "
+"datorită flexibilității sale maxime. Opțiunea C<context-module> acceptă un "
+"nume de modul Perl, care trebuie să conțină o subrutină C<get_msgctxt>. Un "
+"exemplu minimal arată astfel:"
 
 #. type: verbatim
 #: po4a:177
@@ -1996,6 +2034,22 @@ msgid ""
 "\n"
 "  1;"
 msgstr ""
+"  package ContextExample;\n"
+"\n"
+"  use strict;\n"
+"  use warnings;\n"
+"\n"
+"  sub get_msgctxt {\n"
+"      my $args = shift;\n"
+"      $args->{msgid} eq 'Foo' or return;\n"
+"      if ( $args->{type} eq 'Title #' ) {\n"
+"          return 'title';\n"
+"      } else {\n"
+"          return 'paragraph';\n"
+"      }\n"
+"  }\n"
+"\n"
+"  1;"
 
 #. type: textblock
 #: po4a:178
@@ -2003,6 +2057,8 @@ msgid ""
 "Save this Perl module to C</path/to/lib/ContextExample.pm>. The "
 "configuration file C</path/to/po4a.conf> should contain the following:"
 msgstr ""
+"Salvați acest modul Perl în C</ruta/la/biblioteca/ContextExample.pm>. "
+"Fișierul de configurare C</ruta/la/po4a.conf> trebuie să conțină următoarele:"
 
 #. type: verbatim
 #: po4a:179
@@ -2013,6 +2069,10 @@ msgid ""
 "              opt:\"--option markdown \\\n"
 "                   --context-module=ContextExample\""
 msgstr ""
+"  [po4a_paths] master.pot trans:translation.po\n"
+"  [type:Text] context.md trans:translation.md \\\n"
+"              opt:\"--option markdown \\\n"
+"                   --context-module=ContextExample\""
 
 #. type: textblock
 #: po4a:180
@@ -2021,16 +2081,20 @@ msgid ""
 "that you must set the Perl library path environment variable so that po4a "
 "can locate the provided module."
 msgstr ""
+"Apoi rulați C<PERL5LIB=/ruta/la/biblioteca:$PERL5LIB po4a /ruta/la/po4a.conf>"
+". Rețineți că trebuie să definiți variabila de mediu pentru ruta bibliotecii "
+"Perl, astfel încât po4a să poată localiza modulul furnizat."
 
 #. type: textblock
 #: po4a:181
 msgid "There are some important caveats when using this feature:"
 msgstr ""
+"Există câteva precauții importante atunci când utilizați această funcție:"
 
 #. type: =item
 #: po4a:182
 msgid "Choose context string values wisely"
-msgstr ""
+msgstr "Alegeți cu atenție valorile șirurilor de caractere contextuale"
 
 #. type: textblock
 #: po4a:183
@@ -2040,11 +2104,16 @@ msgid ""
 "change as well. Use concise, clear, and consistent context values that "
 "reflect your intention."
 msgstr ""
+"Incorporarea valorii C<reference> așa-cum-este, este puternic descurajată, "
+"deoarece rutele fișierelor tind să se schimbe, ceea ce ar determina "
+"modificarea tuturor mesajelor cu acel context. Utilizați valori de context "
+"concise, clare și consecvente, care să reflecte intenția dvs."
 
 #. type: =item
 #: po4a:184
 msgid "Unicode strings are normalized before being passed to your module"
 msgstr ""
+"Șirurile Unicode sunt normalizate înainte de a fi transmise modulului dvs."
 
 #. type: textblock
 #: po4a:185
@@ -2055,6 +2124,12 @@ msgid ""
 "subroutine will contain C<\\x{2019}> instead. In this case, you would write "
 "a conditional such as C<$args->{msgid} eq \"\\x{2019}scuse me?\".>"
 msgstr ""
+"Este posibil să fie necesar să investigați literalul exact al șirului Perl "
+"utilizând instrucțiuni de imprimare de depanare în modulul dvs. de context. "
+"De exemplu, dacă C<msgid> conține C<’> (o ghilimea simplă dreaptă), valoarea "
+"transmisă subrutinei C<get_msgctxt> va conține în schimb C<\\x{2019}>. În "
+"acest caz, ați scrie o condiție precum C<$args->{msgid} eq \"\\x{2019}scuse "
+"me?\".>"
 
 #. type: =head2
 #: po4a:186
@@ -5313,6 +5388,9 @@ msgid ""
 "on a server and allows you to install and maintain - with very little "
 "technical knowledge - digital services (apps) that you control."
 msgstr ""
+"L<YunoHost|https://yunohost.org/> (markdown): un sistem care se instalează "
+"pe un server și vă permite să instalați și să întrețineți - cu foarte puține "
+"cunoștințe tehnice - servicii digitale (aplicații) pe care le controlați."
 
 #. type: =item
 #: doc/po4a.7.pod:164
@@ -8226,10 +8304,8 @@ msgstr "coloana la care ar trebui să se facă încadrarea (implicit: 76)."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:45
-#, fuzzy
-#| msgid "B<msgstr>"
 msgid "B<msgctxt>"
-msgstr "B<msgstr>"
+msgstr "B<msgctxt>"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:46
@@ -8242,6 +8318,14 @@ msgid ""
 "messages with an empty context.  This fallback behavior ensures backward "
 "compatibility."
 msgstr ""
+"valoarea șirului de context care va fi utilizată pentru câmpul msgctxt - "
+"L<msgctxt field|https://www.gnu.org/software/gettext/manual/html_node/"
+"Contexts.html> în fișierele PO gettext. În mod implicit, este gol, ceea ce "
+"înseamnă că mesajului nu i se atribuie niciun context. Când se furnizează un "
+"context, se caută mai întâi mesajele care corespund acelui context; dacă nu "
+"se găsește niciunul, se revine la căutarea mesajelor cu un context gol. "
+"Acest comportament de rezervă asigură compatibilitatea cu versiunile "
+"anterioare."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:47
@@ -8561,7 +8645,7 @@ msgstr ""
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:92
 msgid "each_message"
-msgstr ""
+msgstr "each_message"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:93
@@ -8571,11 +8655,15 @@ msgid ""
 "C<msgid> and 2) a hash reference containing the message content, which "
 "includes fields such as C<msgstr>."
 msgstr ""
+"Această metodă parcurge fiecare mesaj din fișierul PO și îl procesează. Ea "
+"preia o referință de subrutină și o execută cu două argumente: 1) C<msgid> "
+"și 2) o referință hash care conține conținutul mesajului, care include "
+"câmpuri precum C<msgstr>."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:94
 msgid "replant"
-msgstr ""
+msgstr "replant"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:95
@@ -8584,11 +8672,14 @@ msgid ""
 "C<msgid>.  It removes the entry with the current C<msgid> from the PO "
 "instance and reinserts it under the new C<msgid> value."
 msgstr ""
+"Această metodă are doi parametri: C<msgid> actual și C<msgid> nou.  Ea "
+"elimină intrarea cu C<msgid> actual din instanța PO și o reinserează sub "
+"valoarea C<msgid> nouă."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:96
 msgid "message_by_document_position"
-msgstr ""
+msgstr "message_by_document_position"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:97
@@ -8597,11 +8688,14 @@ msgid ""
 "list containing three elements: the C<msgid>, the C<msgctxt>, and the "
 "message content (which includes fields such as C<msgstr>)."
 msgstr ""
+"Această metodă preia poziția unui document și returnează mesajul "
+"corespunzător sub forma unei liste care conține trei elemente: C<msgid>, "
+"C<msgctxt> și conținutul mesajului (care include câmpuri precum C<msgstr>)."
 
 #. type: =item
 #: lib/Locale/Po4a/Po.pm:98
 msgid "message_by_msgid"
-msgstr ""
+msgstr "message_by_msgid"
 
 #. type: textblock
 #: lib/Locale/Po4a/Po.pm:99
@@ -8612,6 +8706,11 @@ msgid ""
 "entry is found with the given context, the method falls back to searching "
 "for a message without context."
 msgstr ""
+"Această metodă acceptă un C<msgid> și un C<msgctxt> opțional și returnează "
+"primul conținut de mesaj care se potrivește, ce include câmpuri precum "
+"C<msgstr>. Dacă nu este furnizat niciun C<msgctxt>, se utilizează o valoare "
+"de șir goală. Dacă nu se găsește nicio intrare de mesaj cu contextul dat, "
+"metoda revine la căutarea unui mesaj fără context."
 
 #. type: textblock
 #: lib/Locale/Po4a/Pod.pm:2
