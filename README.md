@@ -123,6 +123,13 @@ the git tree), use the PERLLIB environment variable as such:
 
   This module is used to parse and serialize the YAML file.
 
+## TexinfoParser module specific dependencies
+
+* Texinfo
+
+  This module, shipped with GNU Texinfo, is used to parse, serialize and
+  provide helper methods to provide with a robust handling of Texinfo documents.
+
 # Project hosting
 
  - Webpage: https://po4a.org
