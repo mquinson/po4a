@@ -1,0 +1,93 @@
+
+@c documentlanguage added by po4a
+@documentlanguage linemacro
+
+@node TOP
+@top TEST LINEMACRO, BASED ON TEXINFO TTA T/*LINEMACRO.T TESTS
+
+@LINEMACRO MYCOMMAND {A, B, C, D}
+FIRST \a\
+SECOND \b\
+THIRD \c\
+@DEFLINE \a\ \d\
+@END LINEMACRO
+ 
+@defblock
+@MYCOMMAND {NAME} @VERB{: IN VERB :} {A @VERB{| IN BRACKETED |} } OTHER {J}
+@end defblock
+
+@LINEMACRO MYOTHERCOMMAND {A, B, C}
+\a\, \b\ \c\
+@END LINEMACRO
+ 
+@* @myothercommand @anchor{aa} definite and @code{more}
+ 
+SOME TEXT @MYOTHERCOMMAND {A
+  PROTECTED} IN @VAR{THE
+ CALL}
+AND AFTER.
+
+@LINEMACRO DEFBUILTIN {SYMBOL, REST}
+@DEFLINE \sYMBOL\ F R
+@DEFLINE EXPAND BUILTIN AND \rEST\
+@END LINEMACRO
+ 
+@defblock
+@defbuiltin {my foo} a last {} arg{ument}
+ 
+@defbuiltin {my foo} {} {}
+ 
+@defbuiltin {my foo} {second arg} remaining on {line}
+@end defblock
+
+@LINEMACRO TEST {FIRST, REST}
+@DEFFN FUNCTION \fIRST\ \rEST\
+SOMETHING
+@END DEFFN
+@END LINEMACRO
+ 
+@test foo (bar, baz)@
+ continuation line
+ 
+@test foo@ b (bar, baz) rest@ and more
+ 
+@test foo (bar, baz)@@
+ ANOTHER WITH DOUBLE AT
+
+@LINEMACRO MYLINECOMMAND {FIRST, SECOND, REST}
+@DEFBLOCK
+@DEFLINE CATEGORY \fIRST\ A \sECOND\ B \rEST\
+@END DEFBLOCK
+@END LINEMACRO
+ 
+@mylinecommand{a b}{c d}{rest}
+
+@mylinecommand {  a } { d  } {   rest}
+
+@LINEMACRO INSIDE {A, B, REST}
+INSIDE {\a\ OPERATOR \b\} \rEST\
+@END LINEMACRO
+ 
+@LINEMACRO OUTSIDE {ONE, TWO, THREE}
+@DEFLINE \oNE\ {\tWO\} \tHREE\
+@CINDEX \tWO\
+@END LINEMACRO
+ 
+@defblock
+@outside {type} {a function} @inside {X} {Y} ( remaining, type typed )
+@end defblock
+ 
+@LINEMACRO LM {A, B, C}
+FIRST |\a\|
+SECOND |\b\|
+THIRD |\c\|
+@END LINEMACRO
+ 
+@LM {SOMETHING PROTECTED} @C COMMENT {IN BRACES}
+  
+@LM@C COMMENT EARLY N L M
+ 
+@LM {AAA
+  } REST @COMMENT ON SECOND {LINE COMMENT}
+
+
