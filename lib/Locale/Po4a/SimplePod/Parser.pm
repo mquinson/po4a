@@ -7,7 +7,7 @@ use warnings;
 use parent qw(Pod::Simple);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
-use Carp qw(confess);
+use Carp                 qw(confess);
 
 use constant MODULE_NAME => "po4a::simplepod";
 
@@ -208,7 +208,7 @@ sub _handle_element_end {
 
 sub translate_block {
     my ( $self, $line, $type, $wrap ) = @_;
-    my $ref = "$self->{current_ref}:$line";
+    my $ref  = "$self->{current_ref}:$line";
     my $text = $self->{tractor}->translate( $self->{text}, $ref, $type, wrap => $wrap );
     undef $self->{text};
     return $text;
