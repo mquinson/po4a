@@ -41,6 +41,11 @@ push @tests,
     input  => 'fmt/simplepod/issues.pod',
   },
   {
+    doc    => 'List specific test cases',
+    format => 'SimplePod',
+    input  => 'fmt/simplepod/list.pod',
+  },
+  {
     doc    => 'Complete set of syntaxes from podlators',
     format => 'SimplePod',
 

@@ -44,11 +44,25 @@ sub _handle_element_start {
         $self->{text} and die $self->unexpected_error;    # [1]
         push @{ $self->{elements} }, { name => $name, line => $attrs->{start_line} };
 
-        # Even if ~type is bullet, ~orig_content may be empty.  Therefore, it
-        # cannot be predetermined as "*".
-        my $bullet = $attrs->{'~orig_content'} ? " $attrs->{'~orig_content'}" : "";
-
-        $self->{tractor}->pushline("\n=item$bullet\n\n");
+        # This hack follows the Pod::Simple::JustPod implementation[2]
+        # in order to preserve the original writing style as much as
+        # possible.  Note that even if type is bullet, ~orig_content
+        # may be empty.  Therefore, it cannot be predetermined as "*".
+        # [2] https://metacpan.org/release/KHW/Pod-Simple-3.47/source/lib/Pod/Simple/JustPod.pm#L87
+        my $bullet;
+        if ( $attrs->{'~orig_content'} ) {
+            if ( $attrs->{'~_freaky_para_hack'} ) {
+                my $item_text = $attrs->{'~orig_content'};
+                my $trailing  = quotemeta $attrs->{'~_freaky_para_hack'};
+                $item_text =~ s/$trailing\Z//;
+                $bullet = " $item_text";
+            } else {
+                $bullet = " *\n\n";
+            }
+        } else {
+            $bullet = "\n\n";
+        }
+        $self->{tractor}->pushline("\n=item$bullet");
 
     } elsif ( $name eq "item-number" ) {
         $self->{text} and die $self->unexpected_error;    # [1]
