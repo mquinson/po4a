@@ -184,7 +184,7 @@ sub parse {
 
             $bit =~ s/\s*$//;
 
-            $extended .= ( $verb        ? "\n" : ' ' ) if length $extended && $extended !~ /[\n ]$/;
+            $extended .= ( $verb ? "\n" : ' ' ) if length $extended && $extended !~ /[\n ]$/;
             $extended .= $bit . ( $verb ? "\n" : "" );
 
             # this may be an empty line closing the stanza, a comment or even a parse error (if file not DebConf-clean).

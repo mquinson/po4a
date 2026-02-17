@@ -27,11 +27,11 @@ my $debug = 0;
 sub parse {
     my $self = shift;
     my ( $line, $ref );
-    my $paragraph = "";                     # Buffer where we put the paragraph while building
-    my ($status)  = 0;                      # Syntax of KH is:
-                                            #   description<nl>variable<nl>help text<nl><nl>
-                                            # Status will be:
-                                            #   0             1            2        3   0
+    my $paragraph = "";    # Buffer where we put the paragraph while building
+    my ($status)  = 0;     # Syntax of KH is:
+                           #   description<nl>variable<nl>help text<nl><nl>
+                           # Status will be:
+                           #   0             1            2        3   0
 
     my ( $desc, $variable );
 

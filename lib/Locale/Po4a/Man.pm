@@ -405,8 +405,8 @@ use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
 use File::Spec;
 use Getopt::Std;
 
-my %macro;                                             # hash of known macro, with parsing sub. See end of this file
-my %default_macro;                                     # The default known macros, when no options are used.
+my %macro;            # hash of known macro, with parsing sub. See end of this file
+my %default_macro;    # The default known macros, when no options are used.
 
 # A font start by \f and is followed either by
 # [.*] - a font name within brackets (e.g. [P], [A_USER_FONT])
@@ -968,9 +968,9 @@ sub pushmacro {
                         length($_)
                         ? ( m/([^\\] |^ )/ ? "\"$_\"" : "$_" )
 
-                          # Quote arguments that contain a space.
-                          # (not needed for non breaknig spaces, i.e.
-                          # spaces preceded by '\')
+                        # Quote arguments that contain a space.
+                        # (not needed for non breaknig spaces, i.e.
+                        # spaces preceded by '\')
                         : '""'    # empty argument
                       )
                       : ''        # no argument
@@ -1691,7 +1691,7 @@ sub splitargs {
         } else {
             die wrap_ref_mod( $ref, "po4a::man", dgettext( "po4a", "Cannot parse command arguments: %s" ), $arguments );
         }
-        $a =~ s/\\&"/\\(dq/g if (defined $a);
+        $a =~ s/\\&"/\\(dq/g if ( defined $a );
         push @args, $a;
     }
     if ( $debug{'splitargs'} ) {

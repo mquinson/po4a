@@ -1021,7 +1021,7 @@ sub parse {
             $line = "";
             undef $self->{bullet};
             undef $self->{indent};
-        } elsif ( (not defined($self->{verbatim})) and ($line =~ /^\|={3,}$/) ) {
+        } elsif ( ( not defined( $self->{verbatim} ) ) and ( $line =~ /^\|={3,}$/ ) ) {
 
             # This is a table, treat it as a non-wrapped paragraph
             print STDERR "Found Table delimiter\n" if ( $debug{parse} );
