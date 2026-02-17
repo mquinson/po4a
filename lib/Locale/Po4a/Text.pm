@@ -784,10 +784,7 @@ sub parse_markdown {
             $paragraph .= "$nextline";
             ( $nextline, $nextref ) = $self->shiftline();
         }
-        my $t = $self->translate(
-            $paragraph, $self->{ref}, $type,
-            "wrap"  => 0
-        );
+        my $t = $self->translate( $paragraph, $self->{ref}, $type, "wrap" => 0 );
         $self->pushline($t);
         $self->pushline($nextline);
         $paragraph        = "";

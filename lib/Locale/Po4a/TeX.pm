@@ -65,8 +65,8 @@ use warnings;
 use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod wrap_ref_mod dgettext);
-use File::Basename qw(dirname);
-use Carp           qw(croak);
+use File::Basename       qw(dirname);
+use Carp                 qw(croak);
 
 use Encode;
 use Encode::Guess;
