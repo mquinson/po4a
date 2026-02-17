@@ -255,8 +255,7 @@ sub initialize {
 
     $self->{options}{'force'} = '';
 
-    $self->{options}{'verbose'} = '';
-    $self->{options}{'debug'}   = '';
+    $self->{options}{'debug'} = '';
 
     foreach my $opt ( keys %options ) {
         if ( $options{$opt} ) {

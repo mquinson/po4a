@@ -1633,7 +1633,6 @@ sub initialize {
     $self->{options}{'no_wrap'}         = '';
     $self->{options}{'verbatim'}        = '';
     $self->{options}{'debug'}           = '';
-    $self->{options}{'verbose'}         = '';
     $self->{options}{'no-warn'}         = 0;    # TexInfo option to not warn about the state of the module
 
     %debug = ();

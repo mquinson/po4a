@@ -376,6 +376,7 @@ sub new {
     $self->{options}{'package-version'}    = '';
     $self->{options}{'wrap-po'}            = '';
     $self->{options}{'wrapcol'}            = '';
+    $self->{options}{'verbose'}            = delete $options{verbose};
     my $context_module = delete $options{context_module};
 
     # let the plugin parse the options and such
@@ -400,8 +401,8 @@ sub new {
     #  [0] is the line content, [1] is the reference $filename:$linenum
     $self->{TT}{doc_in}  = ();
     $self->{TT}{doc_out} = ();
-    if ( defined $options{'verbose'} ) {
-        $self->{TT}{verbose} = $options{'verbose'};
+    if ( defined $self->{options}{verbose} ) {
+        $self->{TT}{verbose} = $self->{options}{verbose};
     }
     if ( defined $options{'debug'} ) {
         $self->{TT}{debug} = $options{'debug'};

@@ -594,8 +594,7 @@ sub initialize {
     $self->{options}{'ontagerror'}             = "fail";
     $self->{options}{'cpp'}                    = 0;
 
-    $self->{options}{'verbose'} = '';
-    $self->{options}{'debug'}   = '';
+    $self->{options}{'debug'} = '';
 
     foreach my $opt ( keys %options ) {
         if ( $options{$opt} ) {
