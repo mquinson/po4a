@@ -231,7 +231,6 @@ sub initialize {
     $self->{options}{'nobullets'}       = 0;
     $self->{options}{'keyvalue'}        = 1;
     $self->{options}{'tabs'}            = 1;
-    $self->{options}{'verbose'}         = 1;
     $self->{options}{'neverwrap'}       = 1;
 
     foreach my $opt ( keys %options ) {

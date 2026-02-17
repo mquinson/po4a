@@ -38,7 +38,6 @@ sub initialize {
     $self->{options}{skip_properties} = [];
     $self->{options}{skip_heading}    = 0;
     $self->{options}{debug}           = 0;
-    $self->{options}{verbose}         = 0;
 
     foreach my $opt ( keys %options ) {
         exists $self->{options}{$opt}
@@ -47,7 +46,6 @@ sub initialize {
 
     $self->{options}{skip_heading} = $options{skip_heading};
     $self->{options}{debug}        = $options{debug};
-    $self->{options}{verbose}      = $options{verbose};
 
     foreach my $option_name ( 'skip_keywords', 'skip_properties' ) {
         my $option = $options{$option_name} or next;

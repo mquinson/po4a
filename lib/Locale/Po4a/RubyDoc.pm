@@ -65,7 +65,6 @@ sub initialize {
     my %options = @_;
 
     $self->{options}{'debug'}   = 1;
-    $self->{options}{'verbose'} = 1;
     $self->{options}{'puredoc'} = 0;
 
     foreach my $opt ( keys %options ) {

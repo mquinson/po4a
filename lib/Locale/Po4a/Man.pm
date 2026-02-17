@@ -471,7 +471,6 @@ sub initialize {
     my %options = @_;
 
     $self->{options}{'debug'}            = '';
-    $self->{options}{'verbose'}          = '';
     $self->{options}{'groff_code'}       = '';
     $self->{options}{'untranslated'}     = '';
     $self->{options}{'noarg'}            = '';

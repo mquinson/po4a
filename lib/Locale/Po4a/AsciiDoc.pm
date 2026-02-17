@@ -215,7 +215,6 @@ sub initialize {
     $self->{options}{'nobullets'}      = 1;
     $self->{options}{'forcewrap'}      = 0;
     $self->{options}{'debug'}          = '';
-    $self->{options}{'verbose'}        = 1;
     $self->{options}{'entry'}          = '';
     $self->{options}{'macro'}          = '';
     $self->{options}{'style'}          = '';
