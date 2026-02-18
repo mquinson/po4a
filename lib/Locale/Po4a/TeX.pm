@@ -1632,7 +1632,6 @@ sub initialize {
     $self->{options}{'exclude_include'} = '';
     $self->{options}{'no_wrap'}         = '';
     $self->{options}{'verbatim'}        = '';
-    $self->{options}{'debug'}           = '';
     $self->{options}{'no-warn'}         = 0;    # TexInfo option to not warn about the state of the module
 
     %debug = ();
@@ -1648,8 +1647,8 @@ sub initialize {
         }
     }
 
-    if ( $options{'debug'} ) {
-        foreach ( $options{'debug'} ) {
+    if ( $self->{options}{'debug'} ) {
+        foreach ( $self->{options}{'debug'} ) {
             $debug{$_} = 1;
         }
     }

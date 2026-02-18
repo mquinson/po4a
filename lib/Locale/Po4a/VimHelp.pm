@@ -29,12 +29,6 @@ use warnings;
 
 use parent qw(Locale::Po4a::TransTractor);
 
-sub initialize {
-    my ( $self, %options ) = @_;
-    $self->{debug} = $options{debug};
-    return;
-}
-
 sub parse {
     my $self = shift;
 

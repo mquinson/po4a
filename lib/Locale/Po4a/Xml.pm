@@ -594,8 +594,6 @@ sub initialize {
     $self->{options}{'ontagerror'}             = "fail";
     $self->{options}{'cpp'}                    = 0;
 
-    $self->{options}{'debug'} = '';
-
     foreach my $opt ( keys %options ) {
         if ( $options{$opt} ) {
             die wrap_mod( "po4a::xml::initialize", dgettext( "po4a", "Unknown option: %s" ), $opt )
