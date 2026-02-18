@@ -637,7 +637,7 @@ sub initialize {
     # by this module or sub-module (unless specified in an option)
     $self->{nodefault} = ();
 
-    print "Call treat_options\n" if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 
     #  Clear cache
@@ -1338,7 +1338,7 @@ sub treat_tag {
     my $line = &{ $tag_types[$type]->{f_translate} }( $self, @lines );
     print wrap_mod( "po4a::xml::treat_tag", "%s: type=%s <%s%s%s%s%s>",
         $lines[1], $type, $match1, $space1, $line, $space2, $match2 )
-      if $self->{options}{'debug'};
+      if $self->debug;
     $self->pushline( "<" . $match1 . $space1 . $line . $space2 . $match2 . ">" );
     return $eof;
 }
@@ -1463,7 +1463,7 @@ sub treat_attributes {
                         ),
                         $ref, $value,
                         $self->get_path . $name
-                    ) if $self->{options}{'debug'};
+                    ) if $self->debug;
                     $text .= $value;
                 }
                 $text .= $quot;
@@ -1603,7 +1603,7 @@ sub get_translate_options {
                     "%s: translation option='%s'.\n *** the original translation option is overridden here since parent path='%s' is untranslated,"
                 ),
                 $path, $options, $ppath
-            ) if $self->{options}{'debug'};
+            ) if $self->debug;
         }
     }
 
@@ -1616,14 +1616,14 @@ sub get_translate_options {
             "po4a::xml::get_translate_options",
             dgettext( "po4a", "%s: foldattributes setting ignored since '%s' is not inline tag" ),
             $path, $tag
-        ) if $self->{options}{'debug'};
+        ) if $self->debug;
     }
 
     $translate_options_cache{$path} = $options;
 
     #    print "option($path)=".$translate_options_cache{$path}." (new)\n";
 
-    #print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: options: '%s'"), $path, $options) if $self->{options}{'debug'};
+    #print wrap_mod("po4a::xml::get_translate_options", dgettext ("po4a", "%s: options: '%s'"), $path, $options) if $self->debug;
     return $options;
 }
 
@@ -1694,7 +1694,7 @@ sub treat_content {
             # input stream and save its content to @comments for use by
             # translate_paragraph.
             print wrap_mod( "po4a::xml::treat_content", "%s: type='%s'", $paragraph[1], $type )
-              if $self->{options}{'debug'};
+              if $self->debug;
             ( $eof, @text ) = $self->extract_tag( $type, 1 );
 
             # Add "\0" to mark end of each separate comment
@@ -2029,7 +2029,7 @@ sub translate_paragraph {
                 "po4a::xml::translate_paragraph",
                 "%s: path='%s', translation option='%s'",
                 $paragraph[1], $self->get_path, $translate
-            ) if $self->{options}{'debug'};
+            ) if $self->debug;
             $self->pushline(
                 $self->found_string(
                     $para,
@@ -2048,7 +2048,7 @@ sub translate_paragraph {
                 "po4a::xml::translate_paragraph",
                 "%s: path='%s', translation option='%s' (no translation)",
                 $paragraph[1], $self->get_path, $translate
-            ) if $self->{options}{'debug'};
+            ) if $self->debug;
             $self->pushline($para);
         }
     }
@@ -2315,7 +2315,7 @@ sub treat_options {
     # -- XML tags in these may specify options: wWip
     # Extraction of XML content can be one of "inline", "break", "placeholder", or "customtag".
     # -- XML tags in these must not specify options
-    if ( $self->{options}{'debug'} ) {
+    if ( $self->debug ) {
         foreach my $tagtype (qw(translated untranslated)) {
             foreach my $tag ( sort keys %{ $self->{$tagtype} } ) {
                 print

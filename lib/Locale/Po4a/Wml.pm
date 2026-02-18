@@ -73,7 +73,7 @@ sub initialize {
 
     $self->SUPER::initialize(%options);
 
-    print "Call treat_options\n" if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 }
 
@@ -108,8 +108,7 @@ sub read {
     # Mask mp4h cruft
     while ( $file =~ s|^#(.*)$|<!--PO4ASHARPBEGIN$1PO4ASHARPEND-->|m ) {
         my $line = $1;
-        print STDERR "PROTECT HEADER: $line\n"
-          if $self->{options}{'debug'};
+        print STDERR "PROTECT HEADER: $line\n" if $self->debug;
 
         # If the wml tag has a title attribute, use a fake
         # <title> xml tag to enable the extraction

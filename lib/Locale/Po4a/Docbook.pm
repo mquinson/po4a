@@ -2052,8 +2052,7 @@ sub initialize {
         lang
         xml:lang';
 
-    print "Call treat_options\n"
-      if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 }
 

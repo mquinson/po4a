@@ -118,9 +118,9 @@ sub parse {
             }
 
             $eval .= ")\n";
-            print STDERR $eval if $self->{options}{'debug'};
+            print STDERR $eval if $self->debug;
             eval $eval;
-            print STDERR "XXXXXXXXXXXXXXXXX\n" if $self->{options}{'debug'};
+            print STDERR "XXXXXXXXXXXXXXXXX\n" if $self->debug;
 
             # two leading _: split on coma and multi-translate each part. No extended value.
         } elsif ( $undercount == 2 ) {
@@ -140,7 +140,7 @@ sub parse {
             }
             $eval .= ")\n";
 
-            print $eval if $self->{options}{'debug'};
+            print $eval if $self->debug;
             eval $eval;
 
             # no leading _: don't touch it

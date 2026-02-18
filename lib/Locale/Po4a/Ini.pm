@@ -20,8 +20,6 @@ use Locale::Po4a::Common;
 
 use vars qw($AUTOLOAD);
 
-my $debug = 0;
-
 sub parse {
     my $self = shift;
     my ( $line, $ref );
@@ -32,25 +30,25 @@ sub parse {
 
     while ( defined($line) ) {
         chomp($line);
-        print STDERR "begin\n" if $debug;
+        print STDERR "begin\n" if $self->debug;
 
         if ( $line =~ /\"/ ) {
-            print STDERR "Start of line containing \".\n" if $debug;
+            print STDERR "Start of line containing \".\n" if $self->debug;
 
             # Text before the first quote
             $line =~ m/(^[^"\r\n]*)"/;
             my $pre_text = $1;
-            print STDERR "  PreText=" . $pre_text . "\n" if $debug;
+            print STDERR "  PreText=" . $pre_text . "\n" if $self->debug;
 
             # The text for translation
             $line =~ m/"([^\r\n]*)"/;
             my $quoted_text = $1;
-            print STDERR "  QuotedText=" . $quoted_text . "\n" if $debug;
+            print STDERR "  QuotedText=" . $quoted_text . "\n" if $self->debug;
 
             # Text after last quote
             $line =~ m/"([^"\n]*$)/;
             my $post_text = $1;
-            print STDERR "  PostText=" . $post_text . "\n" if $debug;
+            print STDERR "  PostText=" . $post_text . "\n" if $self->debug;
 
             # Translate the string it
             $par = $self->translate( $quoted_text, $ref, $pre_text );
@@ -60,9 +58,9 @@ sub parse {
 
             # Now push the result
             $self->pushline( $pre_text . '"' . $par . '"' . $post_text . "\n" );
-            print STDERR "End of line containing \".\n" if $debug;
+            print STDERR "End of line containing \".\n" if $self->debug;
         } else {
-            print STDERR "Other stuff\n" if $debug;
+            print STDERR "Other stuff\n" if $self->debug;
             $self->pushline("$line\n");
         }
 

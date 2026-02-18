@@ -146,7 +146,7 @@ sub initialize {
         <sup>
         <uri>
         <var>';
-    print "Call treat_options\n" if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 }
 
