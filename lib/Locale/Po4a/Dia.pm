@@ -94,7 +94,7 @@ sub initialize {
     $self->SUPER::initialize(%options);
     $self->{options}{'nostrip'} = 1;
     $self->{options}{'_default_translated'} .= ' <dia:string>';
-    print "Call treat_options\n" if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 }
 

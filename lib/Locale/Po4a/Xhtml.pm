@@ -223,7 +223,7 @@ sub initialize {
 
     $self->{options}{'optionalclosingtag'} = 1;
 
-    print "Call treat_options\n" if $self->{options}{'debug'};
+    print "Call treat_options\n" if $self->debug;
     $self->treat_options;
 
     if ( defined $self->{options}{'includessi'}
