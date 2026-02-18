@@ -377,6 +377,7 @@ sub new {
     $self->{options}{'wrap-po'}            = '';
     $self->{options}{'wrapcol'}            = '';
     $self->{options}{'verbose'}            = delete $options{verbose};
+    $self->{options}{'debug'}              = delete $options{debug};
     my $context_module = delete $options{context_module};
 
     # let the plugin parse the options and such
@@ -404,8 +405,8 @@ sub new {
     if ( defined $self->{options}{verbose} ) {
         $self->{TT}{verbose} = $self->{options}{verbose};
     }
-    if ( defined $options{'debug'} ) {
-        $self->{TT}{debug} = $options{'debug'};
+    if ( defined $self->{options}{'debug'} ) {
+        $self->{TT}{debug} = $self->{options}{'debug'};
     }
     if ( defined $options{'wrapcol'} ) {
         if ( $options{'wrapcol'} < 0 ) {

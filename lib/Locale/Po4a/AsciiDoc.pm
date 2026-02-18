@@ -214,7 +214,6 @@ sub initialize {
 
     $self->{options}{'nobullets'}      = 1;
     $self->{options}{'forcewrap'}      = 0;
-    $self->{options}{'debug'}          = '';
     $self->{options}{'entry'}          = '';
     $self->{options}{'macro'}          = '';
     $self->{options}{'style'}          = '';
@@ -240,8 +239,8 @@ sub initialize {
         $compat, 'asciidoc', 'asciidoctor' )
       if ( defined $compat && $compat ne "asciidoc" && $compat ne "asciidoctor" );
 
-    if ( $options{'debug'} ) {
-        foreach ( $options{'debug'} ) {
+    if ( $self->{options}{debug} ) {
+        foreach ( $self->{options}{debug} ) {
             $debug{$_} = 1;
         }
     }

@@ -255,8 +255,6 @@ sub initialize {
 
     $self->{options}{'force'} = '';
 
-    $self->{options}{'debug'} = '';
-
     foreach my $opt ( keys %options ) {
         if ( $options{$opt} ) {
             die wrap_mod( "po4a::sgml", dgettext( "po4a", "Unknown option: %s" ), $opt )
@@ -264,8 +262,8 @@ sub initialize {
             $self->{options}{$opt} = $options{$opt};
         }
     }
-    if ( $options{'debug'} ) {
-        foreach ( split /\s+/, $options{'debug'} ) {
+    if ( $self->{options}{'debug'} ) {
+        foreach ( split /\s+/, $self->{options}{'debug'} ) {
             die wrap_mod( "po4a::sgml", dgettext( "po4a", "Unknown debug category: %s. Known categories:\n%s" ),
                 $_, join( " ", keys %debug ) )
               unless exists $debug{$_};

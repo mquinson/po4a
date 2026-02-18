@@ -470,7 +470,6 @@ sub initialize {
     my $self    = shift;
     my %options = @_;
 
-    $self->{options}{'debug'}            = '';
     $self->{options}{'groff_code'}       = '';
     $self->{options}{'untranslated'}     = '';
     $self->{options}{'noarg'}            = '';
@@ -491,8 +490,8 @@ sub initialize {
     }
 
     %debug = ();
-    if ( defined $options{'debug'} ) {
-        foreach ( $options{'debug'} ) {
+    if ( $self->{options}{'debug'} ) {
+        foreach ( $self->{options}{'debug'} ) {
             $debug{$_} = 1;
         }
     }

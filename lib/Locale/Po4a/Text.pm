@@ -221,7 +221,6 @@ sub initialize {
     $self->{options}{'control'}         = "";
     $self->{options}{'breaks'}          = 1;
     $self->{options}{'debianchangelog'} = 1;
-    $self->{options}{'debug'}           = 1;
     $self->{options}{'fortunes'}        = 1;
     $self->{options}{'markdown'}        = 1;
     $self->{options}{'yfm_keys'}        = '';
