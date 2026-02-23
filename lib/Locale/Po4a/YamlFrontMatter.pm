@@ -82,8 +82,12 @@ sub parse_yaml_front_matter {
     my @saved_ctn;
     my ( $nextline, $nextref ) = $self->shiftline();
     push @saved_ctn, ( $nextline, $nextref );
+    my $last_line;
     while ( defined($nextline) ) {
-        last if ( $nextline =~ /^(---|\.\.\.)$/ );
+        if ( $nextline =~ /^(---|\.\.\.)$/ ) {
+            $last_line = $nextline;
+            last;
+        }
         $yfm .= $nextline;
         ( $nextline, $nextref ) = $self->shiftline();
         if ( $nextline =~ /: [\[\{]/ ) {
@@ -147,7 +151,7 @@ sub parse_yaml_front_matter {
         $self->{options}{yfm_skip_array},
         $self->{options}{yfm_paths}
     );
-    $self->pushline("---\n");
+    $self->pushline($last_line);
     return 1;    # Valid YAML
 }
 
