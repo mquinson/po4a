@@ -50,10 +50,9 @@ use 5.16.0;
 use strict;
 use warnings;
 
-use parent qw(Locale::Po4a::TransTractor);
+use parent qw(Locale::Po4a::TransTractor Locale::Po4a::YamlFrontMatter);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
-use YAML::Tiny;
 use Syntax::Keyword::Try;
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
@@ -151,10 +150,6 @@ match. If B<yfm_paths> and B<yfm_keys> are used together, values are included if
 they are matched by at least one of the options. Array values are always translated,
 unless the B<yfm_skip_array> option is provided.
 
-=cut
-
-my %yfm_keys = ();
-
 =item B<yfm_lenient> (markdown only)
 
 Allow the YAML Front Matter parser to fail on malformated headers. This is
@@ -162,13 +157,7 @@ particularly helpful when your file starts with a horizontal ruler instead
 of a YAML Front Matter, but you insist on using three dashes only for your
 ruler.
 
-=cut
-
-my $yfm_lenient = 0;
-
 =item B<yfm_paths> (markdown only)
-
-=item B<yfm_paths>
 
 Comma-separated list of hash paths to process for extraction in the YAML
 Front Matter section, all other paths are skipped. Paths are matched with a
@@ -177,17 +166,9 @@ values are included if they are matched by at least one of the options.
 Arrays values are always returned unless the B<yfm_skip_array> option is
 provided.
 
-=cut
-
-my %yfm_paths = ();
-
 =item B<yfm_skip_array> (markdown-only)
 
 Do not translate array values in the YAML Front Matter section.
-
-=cut
-
-my $yfm_skip_array = 0;
 
 =item B<control>[B<=>I<field_list>]
 
@@ -250,18 +231,20 @@ sub initialize {
     if ( defined $options{'markdown'} ) {
         $parse_func = \&parse_markdown;
         $markdown   = 1;
+
+        my %yfm_keys;
         map {
             $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
             $yfm_keys{$_} = 1
         } ( split( ',', $self->{options}{'yfm_keys'} ) );
+        $self->{options}{yfm_keys} = \%yfm_keys;
+
+        my %yfm_paths;
         map {
             $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
             $yfm_paths{$_} = 1
         } ( split( ',', $self->{options}{'yfm_paths'} ) );
-
-        #        map { print STDERR "key $_\n"; } (keys %yfm_keys);
-        $yfm_skip_array = $self->{options}{'yfm_skip_array'};
-        $yfm_lenient    = $self->{options}{'yfm_lenient'};
+        $self->{options}{yfm_paths} = \%yfm_paths;
     } else {
         foreach my $opt (qw(yfm_keys yfm_lenient yfm_skip_array)) {
             die wrap_mod( "po4a::text", dgettext( "po4a", "Option %s is only valid when parsing markdown files." ),
@@ -596,83 +579,6 @@ sub parse_markdown_bibliographic_information {
     }
 }
 
-# Support YAML Front Matter in Markdown documents
-#
-# If the text starts with a YAML ---\n separator, the full text until
-# the next YAML ---\n separator is considered YAML metadata. The ...\n
-# "end of document" separator can be used at the end of the YAML
-# block.
-#
-sub parse_markdown_yaml_front_matter {
-    my ( $self, $line, $blockref ) = @_;
-    my $yfm;
-    my @saved_ctn;
-    my ( $nextline, $nextref ) = $self->shiftline();
-    push @saved_ctn, ( $nextline, $nextref );
-    while ( defined($nextline) ) {
-        last if ( $nextline =~ /^(---|\.\.\.)$/ );
-        $yfm .= $nextline;
-        ( $nextline, $nextref ) = $self->shiftline();
-        if ( $nextline =~ /: [\[\{]/ ) {
-            die wrap_mod(
-                "po4a::text",
-                dgettext(
-                    "po4a",
-                    "Inline lists and dictionaries on a single line are not correctly handled the parser we use (YAML::Tiny): they are interpreted as regular strings. "
-                      . "Please use multi-lines definitions instead. Offending line:\n %s"
-                ),
-                $nextline
-            );
-
-        }
-        push @saved_ctn, ( $nextline, $nextref );
-    }
-
-    my $yamlarray;    # the parsed YFM content
-    my $yamlres;      # containing the parse error, if any
-    try {
-        $yamlarray = YAML::Tiny->read_string($yfm);
-    } catch {
-        $yamlres = $@;
-    }
-
-    if ( defined($yamlres) ) {
-        if ($yfm_lenient) {
-            $yamlres =~ s/ at .*$//;    # Remove the error localisation in YAML::Tiny die message, if any (for our test)
-            warn wrap_mod(
-                "po4a::text",
-                dgettext(
-                    "po4a",
-                    "Proceeding even if the YAML Front Matter could not be parsed. Remove the 'yfm_lenient' option for a stricter behavior.\nIgnored error: %s"
-                ),
-                $yamlres
-            );
-            my $len = ( scalar @saved_ctn ) - 1;
-            while ( $len >= 0 ) {
-                $self->unshiftline( $saved_ctn[ $len - 1 ], $saved_ctn[$len] );
-
-                # print STDERR "Unshift ".$saved_ctn[ $len - 1] ." | ". $saved_ctn[$len] ."\n";
-                $len -= 2;
-            }
-            return 0;    # Not a valid YAML
-        } else {
-            die wrap_mod(
-                "po4a::text",
-                dgettext(
-                    "po4a",
-                    "Could not get the YAML Front Matter from the file. If you did not intend to add a YAML front matter "
-                      . "but an horizontal ruler, please use '----' instead, or pass the 'yfm_lenient' option.\nError: %s\nContent of the YFM: %s"
-                ),
-                $yamlres, $yfm
-            );
-        }
-    }
-
-    $self->handle_yaml( 1, $blockref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
-    $self->pushline("---\n");
-    return 1;    # Valid YAML
-}
-
 sub parse_markdown {
     my ( $self, $line, $ref, $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph ) = @_;
     if ($expect_header) {
@@ -685,7 +591,18 @@ sub parse_markdown {
             parse_markdown_bibliographic_information( $self, $line, $ref );
             return ( $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
         } elsif ( $line =~ /^---$/ ) {
-            if ( parse_markdown_yaml_front_matter( $self, $line, $ref ) ) {    # successfully parsed
+            if (
+                $self->parse_yaml_front_matter(
+                    $ref,
+                    {
+                        keys       => $self->{options}{yfm_keys},
+                        skip_array => $self->{options}{yfm_skip_array},
+                        paths      => $self->{options}{yfm_paths},
+                        lenient    => $self->{options}{yfm_lenient},
+                    }
+                )
+              )
+            {    # successfully parsed
                 return ( $paragraph, $wrapped_mode, $expect_header, $end_of_paragraph );
             }
 
