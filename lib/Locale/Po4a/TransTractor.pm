@@ -1168,6 +1168,10 @@ sub get_out_charset {
     return 'UTF-8';
 }
 
+# See also "2.2 Structures" section[1].
+# [1] https://yaml.org/spec/1.2.2/#22-structures
+use constant YAML_SEPARATOR => "---";
+
 # Push the translation of a Yaml document or Yaml Front-Matter header, parsed by YAML::Tiny in any case
 # $is_yfm is a boolean indicating whether we are dealing with a Front Matter (true value) or whole document (false value)
 sub handle_yaml {
@@ -1180,13 +1184,13 @@ sub handle_yaml {
 
         # An empty document
         if ( !defined $cursor ) {
-            $self->pushline("---\n");
+            $self->pushline( YAML_SEPARATOR . "\n" );
 
             # Do nothing
 
             # A scalar document
         } elsif ( !ref $cursor ) {
-            $self->pushline("---\n");
+            $self->pushline( YAML_SEPARATOR . "\n" );
             $self->pushline(
                 format_scalar(
                     $self->translate(
@@ -1200,19 +1204,19 @@ sub handle_yaml {
             # A list at the root
         } elsif ( ref $cursor eq 'ARRAY' ) {
             if (@$cursor) {
-                $self->pushline("---\n");
+                $self->pushline( YAML_SEPARATOR . "\n" );
                 do_array( $self, $is_yfm, $blockref, $cursor, $indent, $ctx, $yfm_keys, $yfm_skip_array, $yfm_paths );
             } else {
-                $self->pushline("---[]\n");
+                $self->pushline( YAML_SEPARATOR . "[]\n" );
             }
 
             # A hash at the root
         } elsif ( ref $cursor eq 'HASH' ) {
             if (%$cursor) {
-                $self->pushline("---\n");
+                $self->pushline( YAML_SEPARATOR . "\n" );
                 do_hash( $self, $is_yfm, $blockref, $cursor, $indent, $ctx, $yfm_keys, $yfm_skip_array, $yfm_paths );
             } else {
-                $self->pushline("--- {}\n");
+                $self->pushline( YAML_SEPARATOR . " {}\n" );
             }
 
         } else {
