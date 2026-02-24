@@ -1,7 +1,7 @@
 use warnings;
 use strict;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Symbol           qw(gensym);
 use IPC::Open3       qw(open3);
 use Locale::Po4a::Po qw();
@@ -224,6 +224,27 @@ subtest 'msgid_doc subroutine' => sub {
     my $po = Locale::Po4a::Po->new;
     $po->push_raw( msgid => "id1", msgstr => "str1" );
     is( $po->msgid_doc(0), "id1" );
+};
+
+subtest 'header subroutine' => sub {
+    plan tests => 3;
+    # Test with push_raw
+    my $po = Locale::Po4a::Po->new;
+    $po->push_raw(
+        msgid => "",
+        msgstr => "msgstr2",
+        comment => "comment2",
+    );
+    my $header_result = $po->header();
+    is($header_result, "comment2\nmsgstr2", 'header returns comment + newline + msgstr');
+
+    # Test with read from file
+    my $po2 = Locale::Po4a::Po->new;
+    $po2->read("t/t-po/context.po");
+    my $expected = $po2->{header_comment} . "\n" . $po2->{header};
+    is($po2->header(), $expected, 'header matches internal state after read');
+    like($po2->header(), qr/Project-Id-Version/, 'header contains PO metadata   ');
+
 };
 
 0;
