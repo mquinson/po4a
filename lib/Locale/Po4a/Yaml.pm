@@ -111,10 +111,7 @@ sub initialize {
 
     # map { print STDERR "key: '$_'\n"; } (keys %yfm_keys);
 
-    map {
-        $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
-        $yfm_paths{$_} = 1
-    } ( split( /,/, $self->{options}{paths} ) );
+    %yfm_paths = ( %yfm_paths, %{ $self->parse_comma_separated_option( $self->{options}{paths} ) } );
 }
 
 sub parse {

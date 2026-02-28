@@ -559,11 +559,7 @@ sub initialize {
     } else {
         %default_inline = %inline;
     }
-    if ( defined $options{'inline'} ) {
-        foreach ( split( /,/, $options{'inline'} ) ) {
-            $inline{$_} = 1;
-        }
-    }
+    %inline = ( %inline, %{ $self->parse_comma_separated_option( $options{inline} ) } );
 
     $allow_generated = 0;
     if ( defined $options{'generated'} ) {
@@ -575,9 +571,7 @@ sub initialize {
         if ( $options{'mdoc'} eq 1 ) {
             $mdoc{"NAME"} = 1;
         } else {
-            foreach ( split( /,/, $options{'mdoc'} ) ) {
-                $mdoc{$_} = 1;
-            }
+            %mdoc = ( %mdoc, %{ $self->parse_comma_separated_option( $options{'mdoc'} ) } );
         }
     }
 

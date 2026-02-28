@@ -229,22 +229,10 @@ sub initialize {
     $parse_func = \&parse_fortunes        if ( defined $options{'fortunes'} );
 
     if ( defined $options{'markdown'} ) {
-        $parse_func = \&parse_markdown;
-        $markdown   = 1;
-
-        my %yfm_keys;
-        map {
-            $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
-            $yfm_keys{$_} = 1
-        } ( split( ',', $self->{options}{'yfm_keys'} ) );
-        $self->{options}{yfm_keys} = \%yfm_keys;
-
-        my %yfm_paths;
-        map {
-            $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
-            $yfm_paths{$_} = 1
-        } ( split( ',', $self->{options}{'yfm_paths'} ) );
-        $self->{options}{yfm_paths} = \%yfm_paths;
+        $parse_func                 = \&parse_markdown;
+        $markdown                   = 1;
+        $self->{options}{yfm_keys}  = $self->parse_comma_separated_option( $self->{options}{yfm_keys} );
+        $self->{options}{yfm_paths} = $self->parse_comma_separated_option( $self->{options}{yfm_paths} );
     } else {
         foreach my $opt (qw(yfm_keys yfm_lenient yfm_skip_array)) {
             die wrap_mod( "po4a::text", dgettext( "po4a", "Option %s is only valid when parsing markdown files." ),
@@ -258,9 +246,7 @@ sub initialize {
         if ( $options{'control'} eq "1" ) {
             $control{''} = 1;
         } else {
-            foreach my $tag ( split( ',', $options{'control'} ) ) {
-                $control{$tag} = 1;
-            }
+            %control = ( %control, %{ $self->parse_comma_separated_option( $options{control} ) } );
         }
     }
 }
