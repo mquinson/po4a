@@ -145,12 +145,7 @@ sub parse_yaml_front_matter {
         }
     }
 
-    $self->handle_yaml(
-        1, $blockref, $yamlarray,
-        $self->{options}{yfm_keys},
-        $self->{options}{yfm_skip_array},
-        $self->{options}{yfm_paths}
-    );
+    $self->handle_yaml( 1, $blockref, $yamlarray, $keys, $skip_array, $paths );
     $self->pushline($last_line);
     return 1;    # Valid YAML
 }
