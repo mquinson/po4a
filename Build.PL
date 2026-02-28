@@ -39,6 +39,8 @@ my $build = Po4aBuilder->new(
         'YAML::Tiny'      => 0,      # Used by the Yaml module
 
         'Module::Load' => 0,         # Only used for context support.
+
+        'CommonMark' => 0,           # Only used for the CommonMark module.
     },
     test_requires => {
         'SGMLS'             => 0,    # Needed for the Sgml module.
