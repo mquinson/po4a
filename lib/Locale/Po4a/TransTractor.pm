@@ -1373,6 +1373,25 @@ sub handle_yaml {
     }
 }
 
+=item C<parse_comma_separated_option>
+
+Parses a comma separated option string, and returns a set-like hash
+reference, whose values are 1.
+
+=cut
+
+sub parse_comma_separated_option {
+    my ( $self, $option ) = @_;
+    my $result = {};
+    if ($option) {
+        for ( split( ',', $option ) ) {
+            $_ =~ s/^\s+|\s+$//g;    # Trim before using them
+            $result->{$_} = 1;
+        }
+    }
+    return $result;
+}
+
 =back
 
 =head1 FUTURE DIRECTIONS

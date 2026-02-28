@@ -120,10 +120,6 @@ match. If B<yfm_paths> and B<yfm_keys> are used together, values are included if
 they are matched by at least one of the options. Array values are always translated,
 unless the B<yfm_skip_array> option is provided.
 
-=cut
-
-my %yfm_keys = ();
-
 =item B<yfm_skip_array>
 
 Do not translate array values in the YAML Front Matter section.
@@ -140,10 +136,6 @@ case-sensitive match. If B<yfm_paths> and B<yfm_keys> are used together,
 values are included if they are matched by at least one of the options.
 Arrays values are always returned unless the B<yfm_skip_array> option is
 provided.
-
-=cut
-
-my %yfm_paths = ();
 
 =back
 
@@ -244,16 +236,9 @@ sub initialize {
             $debug{$_} = 1;
         }
     }
-    map {
-        $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
-        $yfm_keys{$_} = 1
-    } ( split( ',', $self->{options}{'yfm_keys'} ) );
-    map {
-        $_ =~ s/^\s+|\s+$//g;    # Trim the keys before using them
-        $yfm_paths{$_} = 1
-    } ( split( ',', $self->{options}{'yfm_paths'} ) );
-
-    $yfm_skip_array = $self->{options}{'yfm_skip_array'};
+    $self->{options}{yfm_keys}  = $self->parse_comma_separated_option( $self->{options}{yfm_keys} );
+    $self->{options}{yfm_paths} = $self->parse_comma_separated_option( $self->{options}{yfm_paths} );
+    $yfm_skip_array             = $self->{options}{'yfm_skip_array'};
 
     $self->{translate} = {
         macro => {},
@@ -430,7 +415,8 @@ sub parse {
         my $yamlarray = YAML::Tiny->read_string($yfm)
           || die "Couldn't read YAML Front Matter ($!)\n$yfm\n";
 
-        $self->handle_yaml( 1, $ref, $yamlarray, \%yfm_keys, $yfm_skip_array, \%yfm_paths );
+        $self->handle_yaml( 1, $ref, $yamlarray, $self->{options}{yfm_keys},
+            $yfm_skip_array, $self->{options}{yfm_paths} );
         $self->pushline("---\n");
 
         ( $line, $ref ) = $self->shiftline();    # Pass the final '---'
