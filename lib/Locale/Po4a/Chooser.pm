@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod gettext);
 
-my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX VimHelp );
+my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX CommonMark VimHelp );
 
 sub new {
     my ($module)  = shift;
@@ -87,6 +87,8 @@ sub list {
           . gettext("tex: generic TeX documents (see also latex).")
           . "\n  - "
           . gettext("text: simple text document.")
+          . "\n  - "
+          . gettext("commonmark: CommonMark document.")
           . "\n  - "
           . gettext("vimhelp: Vim help documents.")
           . "\n  - "
@@ -158,6 +160,7 @@ L<Locale::Po4a::SimplePod(3pm)>,
 L<Locale::Po4a::TeX(3pm)>,
 L<Locale::Po4a::Texinfo(3pm)>,
 L<Locale::Po4a::Text(3pm)>,
+L<Locale::Po4a::CommonMark(3pm)>,
 L<Locale::Po4a::VimHelp(3pm)>,
 L<Locale::Po4a::Wml(3pm)>,
 L<Locale::Po4a::Xhtml(3pm)>,
