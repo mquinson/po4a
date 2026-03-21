@@ -1996,6 +1996,10 @@ if ( not $po4a_opts{"no-update"} ) {
                 }
 
                 my $read_pot_filename = find_input_file($pot_filename);
+                # Remove the output file if it exists (e.g. as an empty file),
+                # because gettext >= 1.0's msginit merges into existing files
+                # instead of overwriting, producing broken PO headers.
+                unlink $outfile if ( -e $outfile && -z $outfile );
                 my $cmd =
                     "msginit$Config{_exe} -i \"$read_pot_filename\" --locale $lang" . " "
                   . gettext_wrap_opts( $po4a_opts{"wrap-po"} )
