@@ -253,15 +253,16 @@ sub _text($$$;$) {
     return $result;
 }
 
-sub _translation_begin_info($$$$) {
+sub _translation_begin_info($$$$$) {
     my $inputs           = shift;
     my $wrap             = shift;
+    my $trim_leading     = shift;
     my $translation_type = shift;
     my $result           = shift;
 
     my $to_translate = '';
     my $translation_info =
-      [ \$to_translate, "$inputs->[-1]->[0]:$inputs->[-1]->[1]", $wrap, $translation_type, $result ];
+      [ \$to_translate, "$inputs->[-1]->[0]:$inputs->[-1]->[1]", $wrap, $trim_leading, $translation_type, $result ];
     return ( $translation_info, $translation_info->[0] );
 }
 
@@ -270,7 +271,8 @@ sub _translation_end($$$) {
     my $translation_info = shift;
     my $result           = shift;
 
-    my ( $to_translate_reference, $ref, $wrap, $translation_type, $previous_result ) = @$translation_info;
+    my ( $to_translate_reference, $ref, $wrap, $trim_leading, $translation_type, $previous_result ) =
+      @$translation_info;
     my $translated;
     if ( $to_translate_reference ne $result ) {
         warn "BUG: $translation_type $ref text $to_translate_reference != result $result\n";
@@ -284,17 +286,24 @@ sub _translation_end($$$) {
         return $previous_result;
     }
     my $trailing_eol;
+    my $leading_text;
     if ( $$to_translate_reference =~ /\S/ ) {
 
         # always remove trailing end of line from translated strings
         if ( $$to_translate_reference =~ s/(\n)$// ) {
             $trailing_eol = $1;
         }
+        if ( $trim_leading and $$to_translate_reference =~ s/^(\s+)// ) {
+            $leading_text = $1;
+        }
         $translated = $self->translate( $$to_translate_reference, $ref, $translation_type, 'wrap' => $wrap );
     } else {
         $translated = $$to_translate_reference;
     }
     $result = $previous_result;
+    if ( defined($leading_text) ) {
+        $$result .= $leading_text;
+    }
     $$result .= $translated;
     if ( defined($trailing_eol) ) {
         $$result .= $trailing_eol;
@@ -372,7 +381,8 @@ sub _handle_source_marks($$$$$$$$) {
                 {
                     # translate @if* ignored block
                     $translation_type = '@' . Texinfo::element_cmdname($source_mark_element);
-                    ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, $translation_type, $result );
+                    ( $translation_info, $result ) =
+                      _translation_begin_info( $inputs, 0, 0, $translation_type, $result );
                 }
                 ( $result, $current_smark ) =
                   _convert( $self, $result, $source_mark_element, $document, $inputs, $translation_info,
@@ -396,7 +406,7 @@ sub _handle_source_marks($$$$$$$$) {
                         # translate DEL comment
                         $translation_type = 'DEL comment';
                         ( $translation_info, $result ) =
-                          _translation_begin_info( $inputs, 0, $translation_type, $result );
+                          _translation_begin_info( $inputs, 0, 0, $translation_type, $result );
                     }
                     $$result .= $source_mark_line;
                     $inputs->[-1]->[1] += 1 if ( $source_mark_line =~ /\n/ );
@@ -506,12 +516,19 @@ sub _translated_block_line_arg($) {
     } elsif ( $cmdname eq 'multitable' ) {
         my $elements_nr = Texinfo::element_children_number($element);
         if ( $elements_nr > 0 ) {
-            my $first_element     = Texinfo::element_get_child( $element, 0 );
-            my $first_elt_cmdname = Texinfo::element_cmdname($first_element);
-            if ( defined($first_elt_cmdname)
-                and $first_elt_cmdname eq 'columnfractions' )
-            {
-                return undef;
+            for ( my $i = 0 ; $i < $elements_nr ; $i++ ) {
+                my $content     = Texinfo::element_get_child( $element, $i );
+                my $elt_cmdname = Texinfo::element_cmdname($content);
+                if ( defined($elt_cmdname)
+                    and $elt_cmdname eq 'columnfractions' )
+                {
+                    return undef;
+                } else {
+                    my $type = Texinfo::element_type($content);
+                    if ( !defined($type) or $type ne 'spaces_before_argument' ) {
+                        last;
+                    }
+                }
             }
         }
         return $cmdname;
@@ -610,7 +627,7 @@ sub _convert($$$$$;$$) {
               _handle_source_marks( $self, $result, $element, $document, $element_type, $inputs, $translation_info,
                 $current_smark );
             if ( !defined($current_smark) ) {
-                if ( $element_type eq 'spaces' ) {
+                if ( $element_type eq 'spaces' or $element_type eq 'spaces_before_argument' ) {
                     my ( $inserted, $status ) = Texinfo::element_attribute_integer( $element, 'inserted' );
                     next if ($inserted);
                 }
@@ -652,7 +669,8 @@ sub _convert($$$$$;$$) {
                             and $cmdname ne 'image' )
                       )
                     {
-                        ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, '@' . $cmdname, $result );
+                        ( $translation_info, $result ) =
+                          _translation_begin_info( $inputs, 0, 0, '@' . $cmdname, $result );
 
                         # C for whole command translation
                         $translation_on_stack = 'C';
@@ -660,7 +678,7 @@ sub _convert($$$$$;$$) {
                         my $translation_language;
                         if ( defined( $self->{TT}{po_in}->{lang} ) ) {
                             ( $translation_info, $result ) =
-                              _translation_begin_info( $inputs, 0, '@' . $cmdname, $result );
+                              _translation_begin_info( $inputs, 0, 1, '@' . $cmdname, $result );
 
                             # L for language
                             $translation_on_stack = 'L';
@@ -671,7 +689,7 @@ sub _convert($$$$$;$$) {
                     } elsif ( $cmdname eq 'setfilename' ) {
 
                         # ignored @-commands when at the first level
-                        ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, '', $result );
+                        ( $translation_info, $result ) = _translation_begin_info( $inputs, 0, 0, '', $result );
 
                         # I for ignored
                         $translation_on_stack = 'I';
@@ -823,6 +841,7 @@ sub _convert($$$$$;$$) {
             # tree element translation.
             if ( !defined($translation_info) ) {
                 my $wrap;
+                my $trim_leading;
                 my $parent_cmdname;
                 if ( $element_type eq 'paragraph' ) {
 
@@ -838,16 +857,19 @@ sub _convert($$$$$;$$) {
                 {
                     $parent_cmdname = _translated_block_line_arg($element);
                     $wrap           = 0;
+                    $trim_leading   = 1;
                 } elsif ( $element_type eq 'line_arg'
                     and _translated_line_arg($element) )
                 {
                     $parent_cmdname = _translated_line_arg($element);
                     $wrap           = 0;
+                    $trim_leading   = 1;
                 } elsif ( ( $element_type eq 'block_line_arg' or $element_type eq 'line_arg' )
                     and defined( _translated_def_arg($element) ) )
                 {
                     $parent_cmdname = _translated_def_arg($element);
                     $wrap           = 0;
+                    $trim_leading   = 1;
                 } elsif ( $element_type eq 'brace_arg'
                     and $args_stack->[-1] == 4
                     and _arg_parent_element($element)
@@ -855,8 +877,8 @@ sub _convert($$$$$;$$) {
                 {
                     $parent_cmdname = 'image';
 
-                    # not sure.  comment could be possible even though it is
-                    # not valid Texinfo
+                    # Comment could be possible even though it is not regular Texinfo
+                    # (as comment in brace may be parsed differently by Texinfo TeX)
                     $wrap = 0;
                 }
                 if ( defined($wrap) ) {
@@ -867,7 +889,7 @@ sub _convert($$$$$;$$) {
                     }
 
                     ( $translation_info, $result ) =
-                      _translation_begin_info( $inputs, $wrap, $translation_type, $result );
+                      _translation_begin_info( $inputs, $wrap, $trim_leading, $translation_type, $result );
 
                     # A for argument translation
                     $translation_on_stack = 'A';
@@ -934,9 +956,9 @@ sub _convert($$$$$;$$) {
                         $translation_info->[1] = "$file_name:1";
 
                         # translation_type
-                        $translation_info->[3] = "\@$cmdname $file_name";
+                        $translation_info->[4] = "\@$cmdname $file_name";
                         my $elements_nr     = Texinfo::element_children_number($verbatim_element);
-                        my $previous_result = $translation_info->[4];
+                        my $previous_result = $translation_info->[5];
                         $$previous_result .= "\@verbatim\n";
 
                         $$result = '';
@@ -957,14 +979,15 @@ sub _convert($$$$$;$$) {
                         # do not really do a translation, simply output the
                         # @verbatiminclude command text that could have
                         # been translated.
-                        my $previous_result = $translation_info->[4];
+                        my $previous_result = $translation_info->[5];
                         $$previous_result .= $$result;
                         $result = $previous_result;
                     }
                     Texinfo::destroy_element_formatted_errors($element_formatted_errors);
                 } elsif ( defined($cmdname) and $cmdname eq 'documentlanguage' ) {
+
                     # substitute initial @documentlanguage argument by the output language
-                    my $previous_result = $translation_info->[4];
+                    my $previous_result = $translation_info->[5];
                     $$previous_result .= "\@documentlanguage $self->{TT}{po_in}->{lang}\n";
                     $result = $previous_result;
                 } else {
