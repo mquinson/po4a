@@ -250,17 +250,20 @@ Request on [mquinson/po4a](https://salsa.debian.org/mquinson/po4a)
 salsa instance of GitLab. If you go for the salsa server, please do
 not fill your MR against the debian/po4a repository that is dedicated
 to the packaging of the software (unless, of course, your change is
-against the packaging).  In general, to submit a PR you should fork the
-main repository, and then create a branch for each PR:
+against the packaging).  In general, to submit a PR you should [fork the
+main repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo),
+and then create a branch for each PR:
 
 ```
 git checkout -b my_pr_branch
 ```
 
-After working on the branch, you can create a new PR based on your branch and
-the main repository ``master`` branch.  If you add commits later on your
-branch, for example based on the reviewing of the PR, they will automatically
-appear on the PR.
+After working on the branch, you should have one or more commits
+that you can push on your repository and then you can
+[create a new PR](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
+based on your branch and the main repository ``master`` branch difference.  If
+you add commits later on your branch, for example following PR reviews, they
+will automatically appear in the PR.
 
 Your request should be based on the latest code in the master branch.
 Please rebase your work as needed. To follow the main repository,
@@ -270,19 +273,20 @@ repository (you need to do that only once):
 git remote add upstream https://github.com/mquinson/po4a.git
 ```
 
-Then, rebasing on main repository master can be done with:
+Rebasing on the main repository master branch can be done from the local PR
+branch with:
 ```
 git fetch upstream
 git rebase upstream/master
 ```
 
 After rebasing on master, you may need to force push on your public
-PR branch repository, with
+PR branch with:
 ```
 git push --force-with-lease
 ```
-from the PR repository branch.  This workflow requires that there
-is [only one person](https://git-scm.com/book/en/v2/Git-Branching-Rebasing),
+This workflow requires that there is
+[only one person](https://git-scm.com/book/en/v2/Git-Branching-Rebasing),
 the PR submitter, who adds commits on the PR branch.
 
 Finally, all PRs should include an update the the NEWS file. Please follow
