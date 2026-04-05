@@ -250,8 +250,40 @@ Request on [mquinson/po4a](https://salsa.debian.org/mquinson/po4a)
 salsa instance of GitLab. If you go for the salsa server, please do
 not fill your MR against the debian/po4a repository that is dedicated
 to the packaging of the software (unless, of course, your change is
-against the packaging). Your request should be based on the latest
-code in the master branch. Please rebase your work as needed.
+against the packaging).  In general, to submit a PR you should fork the
+main repository, and then create a branch for each PR:
+
+```
+git checkout -b my_pr_branch
+```
+
+After working on the branch, you can create a new PR based on your branch and
+the main repository ``master`` branch.  If you add commits later on your
+branch, for example based on the reviewing of the PR, they will automatically
+appear on the PR.
+
+Your request should be based on the latest code in the master branch.
+Please rebase your work as needed. To follow the main repository,
+you can add the main repository as the upstream of your forked
+repository (you need to do that only once):
+```
+git remote add upstream https://github.com/mquinson/po4a.git
+```
+
+Then, rebasing on main repository master can be done with:
+```
+git fetch upstream
+git rebase upstream/master
+```
+
+After rebasing on master, you may need to force push on your public
+PR branch repository, with
+```
+git push --force-with-lease
+```
+from the PR repository branch.  Doing development this way requires that there
+is [only one person](https://git-scm.com/book/en/v2/Git-Branching-Rebasing),
+the PR submitter, who adds commits on the PR branch.
 
 Finally, all PRs should include an update the the NEWS file. Please follow
 the format and briefly describe the change and provide a reference to
