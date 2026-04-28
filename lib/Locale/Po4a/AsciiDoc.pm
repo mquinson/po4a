@@ -260,6 +260,7 @@ sub initialize {
         style => {},
         entry => {}
     };
+    $self->{custom_style} = {};
 
     $self->register_attributelist('[verse%,2,3,attribution,citetitle]');
     $self->register_attributelist('[quote,2,3,attribution,citetitle]');
@@ -282,7 +283,7 @@ sub initialize {
     }
     $self->{options}{style} =~ s/^\s*//;
     foreach my $attr ( split( /\s+/, $self->{options}{style} ) ) {
-        $self->register_attributelist($attr);
+        $self->register_attributelist( $attr, 'style', 1 );
     }
 
 }
@@ -291,6 +292,7 @@ sub register_attributelist {
     my $self = shift;
     my $list = shift;
     my $type = shift || 'style';
+    my $user_defined = shift || 0;
     $list =~ s/^\[//;
     $list =~ s/\]$//;
     $list =~ s/\s+//;
@@ -298,6 +300,9 @@ sub register_attributelist {
     $list =~ m/^,([-+]?)([^,%]*)/;
     my $command = $2;
     $self->{translate}->{$type}->{$command} = $list;
+    if ( $type eq 'style' and $user_defined ) {
+        $self->{custom_style}->{$command} = 1;
+    }
     print STDERR "Definition: $type $command: $list\n" if $debug{definitions};
 }
 
@@ -341,7 +346,7 @@ sub process_definition {
     if ( $command =~ m/^po4a: macro\s+(.*\[.*\])\s*$/ ) {
         $self->register_macro($1);
     } elsif ( $command =~ m/^po4a: style\s*(\[.*\])\s*$/ ) {
-        $self->register_attributelist($1);
+        $self->register_attributelist( $1, 'style', 1 );
     } elsif ( $command =~ m/^po4a: entry\s+(.+?)\s*$/ ) {
         $self->{translate}->{entry}->{$1} = 1;
     }
@@ -610,13 +615,17 @@ sub parse {
             my $l    = length $line;
             my $type = "delimited block $t";
             $type = "$type $l" if ( $self->{options}{'compat'} eq 'asciidoctor' );
-            if ( defined $self->{verbatim} and ( $self->{type} ne $type ) ) {
+            if ( defined $self->{verbatim}
+                and ( defined( $self->{block_type} ) )
+                and ( $self->{block_type} ne $type ) )
+            {
                 $paragraph .= "$line\n";
             } else {
                 do_paragraph( $self, $paragraph, $wrapped_mode );
-                if (    ( defined $self->{type} )
-                    and ( $self->{type} eq $type ) )
+                if (    ( defined( $self->{block_type} ) )
+                    and ( $self->{block_type} eq $type ) )
                 {
+                    undef $self->{block_type};
                     undef $self->{type};
                     undef $self->{verbatim};
                     undef $self->{bullet};
@@ -671,7 +680,19 @@ sub parse {
                         $wrapped_mode = 0;
                         $self->{verbatim} = 3;
                     }
-                    $self->{type} = $type;
+                    $self->{block_type} = $type;
+                    if (
+                        ( defined( $self->{type} ) )
+                        and ( exists $self->{custom_style}->{ $self->{type} } )
+                        and ( exists $self->{translate}->{style}->{ $self->{type} } )
+                        and ( $self->{translate}->{style}->{ $self->{type} } =~ m/^,[^,%]+%,/ )
+                      )
+                    {
+                        # Keep the style type on blocks declared with a verbatim-like style
+                        # so extracted entries stay informative (e.g. "synopsis").
+                    } else {
+                        $self->{type} = $type;
+                    }
                 }
                 $paragraph = "";
                 $self->pushline( $line . "\n" );
