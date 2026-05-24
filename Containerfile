@@ -8,20 +8,13 @@ WORKDIR /srv/po4a
 
 # Install Debian dependencies.
 # The libxml2-utils package provides the xmlcatalog program.
-# Somehow Devel::CheckLib cannot be installed with cpanm.
-RUN apt update
-RUN apt install -y liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl libpod-parser-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl
-RUN apt install -y cpanminus gettext docbook-xml docbook-xsl docbook xsltproc libxml2-utils
-RUN apt install -y texlive-binaries texlive-latex-base opensp libsgmls-perl
-RUN apt install -y gcc libcmark-dev libdevel-checklib-perl
-
-# Install CPAN dependencies
-RUN cpanm Locale::gettext
-RUN cpanm http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
-RUN cpanm Text::WrapI18N
-RUN cpanm Unicode::GCString
-RUN cpanm CommonMark
-RUN cpanm -v --installdeps --notest .
+RUN apt update && apt install -y \
+    liblocale-gettext-perl libtext-wrapi18n-perl libunicode-linebreak-perl \
+    libpod-parser-perl libtest-pod-perl libyaml-tiny-perl libsyntax-keyword-try-perl \
+    libsgmls-perl libdevel-checklib-perl libcommonmark-perl libmodule-build-perl \
+    gettext docbook-xml docbook-xsl docbook xsltproc libxml2-utils \
+    texlive-binaries texlive-latex-base opensp \
+    gcc libcmark-dev
 
 # Build
 RUN perl Build.PL
