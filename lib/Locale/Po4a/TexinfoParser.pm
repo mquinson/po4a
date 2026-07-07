@@ -159,7 +159,7 @@ sub initialize {
     my $self    = shift;
     my %options = @_;
 
-    Texinfo::setup( 0, $Texinfo::txi_interpreter_use_no_interpreter );
+    Texinfo::setup();
 
     $self->{options}{'include_directories'} = '';
 
