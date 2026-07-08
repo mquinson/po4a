@@ -6,8 +6,9 @@
 use strict;
 use warnings;
 
-use lib q(t);
+use lib qw(t lib);
 use Testhelper;
+use Locale::Po4a::Common qw(DIFF_COMMAND);
 
 my @tests;
 
@@ -20,11 +21,12 @@ my $PODIFF =
 
 $PODIFF .= " -I ^#:";
 
+my $diff = DIFF_COMMAND;
 push @tests,
   {
     'run' =>
       "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_ok.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
-    'tests' => [ "diff $PODIFF -u gettextize/test_ok.po tmp/generated.po", "diff -u gettextize/test_ok.err tmp/err" ],
+    'tests' => [ "$diff $PODIFF -u gettextize/test_ok.po tmp/generated.po", "$diff -u gettextize/test_ok.err tmp/err" ],
     'doc'   => "Gettextize a simple file.",
     'keep_going' => 1,
   },
@@ -32,7 +34,7 @@ push @tests,
     'run' =>
       "cd tmp ; perl ../../po4a-gettextize -f text -o markdown -m ../gettextize/test_dups.md -l ../gettextize/test_ok.trans -p ./generated.po 2> ./err",
     'tests' =>
-      [ "diff $PODIFF -u gettextize/test_dups.po tmp/generated.po", "diff -u gettextize/test_dups.err tmp/err" ],
+      [ "$diff $PODIFF -u gettextize/test_dups.po tmp/generated.po", "$diff -u gettextize/test_dups.err tmp/err" ],
     'doc'        => "Gettextize a file with dupplicate entries.",
     'keep_going' => 1,
   };
