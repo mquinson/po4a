@@ -107,7 +107,7 @@ our @EXPORT_OK = qw(move_po_if_needed gettext_wrap_opts);
 
 use IO::File;
 
-use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext);
+use Locale::Po4a::Common qw(wrap_msg wrap_mod wrap_ref_mod dgettext DIFF_COMMAND);
 
 use subs qw(makespace);
 
@@ -691,7 +691,8 @@ sub move_po_if_needed {
     my $diff;
 
     if ( -e $old_po ) {
-        $diff = qx(diff -q -I'^#:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' $old_po $new_po);
+        my $diff = DIFF_COMMAND;
+        $diff = qx($diff -q -I'^#:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' $old_po $new_po);
         if ( $diff eq "" ) {
             unlink $new_po
               or die wrap_msg( dgettext( "po4a", "Cannot unlink %s: %s." ), $new_po, $! );
