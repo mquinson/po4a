@@ -39,7 +39,7 @@ use strict;
 use warnings;
 
 use parent qw(Exporter);
-our @EXPORT_OK = qw(wrap_msg wrap_mod wrap_ref_mod gettext dgettext);
+our @EXPORT_OK = qw(wrap_msg wrap_mod wrap_ref_mod gettext dgettext DIFF_COMMAND);
 
 sub import {
     my $class = shift;
@@ -178,6 +178,18 @@ sub wrap_ref_mod($$$@) {
         return wrapi18n( "", $spaces, sprintf( $msg, @args ) ) . "\n";
     }
 }
+
+=head2 CONSTANTS
+
+C<DIFF_COMMAND> constant is a constant string for the I<diff> command.
+It is C<diff> by default, and can be changed by setting
+C<PO4A_DIFF_COMMAND> environment variable.  This can be particulally
+useful on BSD systems, where GNU diff command is tipically named as
+C<gdiff>.
+
+=cut
+
+use constant DIFF_COMMAND => ( $ENV{PO4A_DIFF_COMMAND} || 'diff' );
 
 =head2 Wrappers for other modules
 
