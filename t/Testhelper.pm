@@ -91,6 +91,9 @@ use Cwd qw(cwd);
 use Exporter qw(import);
 our @EXPORT = qw(run_all_tests);
 
+use lib                  qw(lib);
+use Locale::Po4a::Common qw(DIFF_COMMAND);
+
 # Set the right environment variables to normalize the outputs
 $ENV{'LC_ALL'}  = "C";
 $ENV{'COLUMNS'} = "80";
@@ -102,6 +105,8 @@ my $execpath = defined $ENV{AUTOPKGTEST_TMP} ? "/usr/bin" : "perl ..";
 my $PODIFF =
     "--ignore-trailing-space -I'^\"Project-Id-Version:' -I'^\"POT-Creation-Date:' -I'^\"PO-Revision-Date:' "
   . "-I'^# [^[:blank:]]* translations for ' -I'^# Language [^[:blank:]]* translations for ' -I'Copyright (C) 20.. Free Software Foundation, Inc.' -I'^# This file is distributed under the same license as the' -I'^# Automatically generated, 20...' ";
+
+my $diff = DIFF_COMMAND;
 
 sub show_files {
     my $basename = shift;
@@ -126,7 +131,7 @@ sub system_failed {
     my ( $cmd, $doc, $expected_exit_status ) = @_;
     $expected_exit_status //= 0;
     my $exit_status = system($cmd);
-    $cmd =~ s/diff -u $PODIFF /PODIFF/g;
+    $cmd =~ s/\Q$diff\E -u $PODIFF /PODIFF/g;
     $cmd =~ s{$root_dir/}{BUILDPATH/}g;
     $cmd =~ s{t/../po4a}{po4a};
 
@@ -282,7 +287,7 @@ sub run_one_po4aconf {
         }
     }
     my $diff_outfile = $t->{'diff_outfile'}
-      // " sed -e 's|$cwd/||' -e 's|$tmppath/||' -e 's|$path/||' $tmppath/output | " . "diff -u $expected_outfile -";
+      // " sed -e 's|$cwd/||' -e 's|$tmppath/||' -e 's|$path/||' $tmppath/output | " . "$diff -u $expected_outfile -";
     if ( system_failed( "$diff_outfile 2>&1 > $tmppath/diff_output", "Comparing output of po4a" ) ) {
         note("Output difference:");
         open FH, "$tmppath/diff_output" || die "Cannot open output file that I just created, I'm puzzled";
@@ -321,11 +326,11 @@ sub run_one_po4aconf {
                 note("Using the provided test to compare the content of $file");
             } elsif ( -e "$path/_$file" ) {
                 push @tests,
-                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u --strip-trailing-cr" )
+                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "$diff -u --strip-trailing-cr" )
                   . " \"$path/_$file\" \"$tmppath/$file\"";
             } elsif ( -e "$path/$file" ) {
                 push @tests,
-                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "diff -u --strip-trailing-cr" )
+                  ( $file =~ 'pot?$' ? "PODIFF -I#: " : "$diff -u --strip-trailing-cr" )
                   . " \"$path/$file\" \"$tmppath/$file\"";
             } else {
                 teardown( \@teardown );
@@ -341,7 +346,7 @@ sub run_one_po4aconf {
 
         #        print STDERR "cmd: $tcmd\n";
         $tcmd =~ s/PATH/${execpath}/g;
-        $tcmd =~ s/PODIFF/diff -u --strip-trailing-cr $PODIFF /g;
+        $tcmd =~ s/PODIFF/$diff -u --strip-trailing-cr $PODIFF /g;
         $tcmd =~ s/\$tmppath/$tmppath/g;
         $tcmd =~ s/\$path/$path/g;
         if ( system_failed( "$tcmd 2>&1 > $tmppath/_cmd_output", "" ) ) {
@@ -451,9 +456,9 @@ sub run_one_format {
             note("(end of command output)\n");
         }
 
-        push @tests, "diff -uNwB $norm_stderr $real_stderr";
-        push @tests, "PODIFF  $potfile  $tmpbase.pot"  unless $error;
-        push @tests, "diff -u $output   $tmpbase.norm" unless $error;
+        push @tests, "$diff -uNwB $norm_stderr $real_stderr";
+        push @tests, "PODIFF  $potfile  $tmpbase.pot"   unless $error;
+        push @tests, "$diff -u $output   $tmpbase.norm" unless $error;
     }
 
     unless ( $error or exists $test->{'skip'}{'traslate'} ) {
@@ -472,8 +477,8 @@ sub run_one_format {
             }
             note("(end of command output)\n");
         }
-        push @tests, "diff -uNwB $trans_stderr $tmpbase.trans.stderr";
-        push @tests, "diff -uN $transfile $tmpbase.trans";
+        push @tests, "$diff -uNwB $trans_stderr $tmpbase.trans.stderr";
+        push @tests, "$diff -uN $transfile $tmpbase.trans";
     }
 
     unless ( $error or exists $test->{'skip'}{'updatepo'} ) {
@@ -503,7 +508,7 @@ sub run_one_format {
     # Run all accumulated tests
     for my $tcmd (@tests) {
         $tcmd =~ s/PATH/${execpath}/g;
-        $tcmd =~ s/PODIFF/diff -u $PODIFF /g;
+        $tcmd =~ s/PODIFF/$diff -u $PODIFF /g;
         if ( system_failed( "$tcmd  > $tmpbase.cmd_output 2>&1", "" ) ) {
             note("Command output:");
             open FH, "$tmpbase.cmd_output" || die "Cannot open output file that I just created, I'm puzzled";
@@ -587,10 +592,10 @@ sub run_all_tests {
             for my $cmd ( @{ $test->{tests} } ) {
 
                 #                print STDERR "cmd: $cmd\n";
-                $cmd =~ s/PODIFF/diff -u $PODIFF/g;
+                $cmd =~ s/PODIFF/$diff -u $PODIFF/g;
                 $exit_status = system( $cmd. ' 1>&2' );
                 $cmd =~
-                  s/diff -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
+                  s/\Q$diff\E -u -I'Copyright .C. 20.. Free Software Foundation, Inc.' -I'.. Automatically generated, 20...' -I'."POT-Creation-Date:' -I'."PO-Revision-Date:'/PODIFF/g;
                 is( $exit_status, 0, "Test of " . $test->{'doc'} . " -- Command: $cmd" );
                 next TEST if ( !$test->{keep_going} && $exit_status != 0 );
             }
