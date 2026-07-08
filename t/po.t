@@ -2,9 +2,10 @@ use warnings;
 use strict;
 
 use Test::More tests => 12;
-use Symbol           qw(gensym);
-use IPC::Open3       qw(open3);
-use Locale::Po4a::Po qw();
+use Symbol               qw(gensym);
+use IPC::Open3           qw(open3);
+use Locale::Po4a::Po     qw();
+use Locale::Po4a::Common qw(DIFF_COMMAND);
 
 subtest 'no context' => sub {
     plan tests => 3;
@@ -181,7 +182,7 @@ subtest 'write subroutine' => sub {
     $po->read($expected);
     my $written = "t/tmp/t-po/context.written.po";
     $po->write($written);
-    my $pid = open3( undef, my $stdout, my $stderr = gensym, "diff", $expected, $written );
+    my $pid = open3( undef, my $stdout, my $stderr = gensym, DIFF_COMMAND, $expected, $written );
     waitpid $pid, 0;
     my $success = !$?;
 
