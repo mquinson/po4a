@@ -1996,6 +1996,7 @@ if ( not $po4a_opts{"no-update"} ) {
                 }
 
                 my $read_pot_filename = find_input_file($pot_filename);
+
                 # Remove the output file if it exists (e.g. as an empty file),
                 # because gettext >= 1.0's msginit merges into existing files
                 # instead of overwriting, producing broken PO headers.
@@ -2236,17 +2237,14 @@ if ( not $po4a_opts{"no-translations"} ) {
                     next DOC;
                 }
             }
-            if ( $file_opts{"verbose"} ) {
-                if ( $percent == 100 ) {
-                    print wrap_msg( gettext("%s is 100%% translated (%s strings)."),
-                        $document{$master}{$lang}, $queries );
-                } else {
-                    print wrap_msg(
-                        gettext("%s is %s%% translated (%s of %s strings)."),
-                        $document{$master}{$lang},
-                        $percent, $hit, $queries
-                    );
-                }
+            if ( $percent == 100 ) {
+                print wrap_msg( gettext("%s is 100%% translated (%s strings)."), $document{$master}{$lang}, $queries );
+            } else {
+                print wrap_msg(
+                    gettext("%s is %s%% translated (%s of %s strings)."),
+                    $document{$master}{$lang},
+                    $percent, $hit, $queries
+                );
             }
 
             my $target_file = find_output_file( $document{$master}{$lang} );
