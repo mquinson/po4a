@@ -41,6 +41,8 @@ my $build = Po4aBuilder->new(
         'Module::Load' => 0,         # Only used for context support.
 
         'CommonMark' => 0,           # Only used for the CommonMark module.
+
+        'Texinfo'         => 0,      # Used by the TexinfoParser module
     },
     test_requires => {
         'SGMLS'             => 0,    # Needed for the Sgml module.
