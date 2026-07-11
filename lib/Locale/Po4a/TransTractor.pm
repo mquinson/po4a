@@ -1373,6 +1373,17 @@ sub handle_yaml {
     }
 }
 
+=item header_po()
+
+Returns the header of the PO file.
+
+=cut
+
+sub header_po {
+    my $self = shift;
+    return $self->{TT}{po_in}->header();
+}
+
 =back
 
 =head1 FUTURE DIRECTIONS
