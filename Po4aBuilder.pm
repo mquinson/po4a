@@ -18,6 +18,11 @@ use File::stat     qw(lstat stat);
 
 use IPC::Open3 qw(open3);
 
+use lib q(lib);
+use Locale::Po4a::Common qw(DIFF_COMMAND);
+
+my $diff_command = DIFF_COMMAND;
+
 sub ACTION_build {
     my $self = shift;
     $self->depends_on('code');
@@ -68,7 +73,7 @@ sub ACTION_binpo {
 
         if ( -e "po/bin/po4a.pot" ) {
             my $diff =
-              qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
+              qx($diff_command -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' po/bin/po4a.pot po/bin/po4a.pot.new);
             if ( $diff eq "" ) {
                 unlink "po/bin/po4a.pot.new" or die;
 
@@ -97,7 +102,7 @@ sub ACTION_binpo {
                 # Typically all that changes was a date. I'd
                 # prefer not to commit such changes, so detect
                 # and ignore them.
-                my $diff = qx(diff -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
+                my $diff = qx($diff_command -q -I'#:' -I'POT-Creation-Date:' -I'PO-Revision-Date:' $_ $_.new);
                 if ( $diff eq "" ) {
                     unlink "$_.new" or die;
 
