@@ -12,7 +12,7 @@ use Testhelper;
 my @tests;
 
 foreach my $t (
-    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks Lists Footnotes Callouts Comments Tables TablesImageText Attributes MacroIncludesHugo IndexEntries)
+    qw(Titles BlockTitles BlockId Paragraphs DelimitedBlocks NestedBlocks Lists Footnotes Callouts Comments Tables TablesImageText Attributes MacroIncludesHugo IndexEntries)
   )
 {
     push @tests, { 'format' => 'asciidoc', 'input' => "fmt/asciidoc/$t.adoc" };
