@@ -443,7 +443,31 @@ sub parse {
 
     my $paragraph    = "";
     my $wrapped_mode = 1;
-    my $file         = $ref;
+    my @block_contexts;
+    my $styled_paragraph;
+    my $restore_block_context = sub {
+        if (@block_contexts) {
+            my $context = $block_contexts[-1];
+            $self->{block_type} = $context->{block_type};
+            $self->{type}       = $context->{type};
+            $self->{verbatim}   = $context->{verbatim};
+            $self->{bullet}     = $context->{bullet};
+            $self->{indent}     = $context->{indent};
+            $wrapped_mode       = $context->{wrapped_mode};
+        } else {
+            undef $self->{block_type};
+            undef $self->{type};
+            undef $self->{verbatim};
+            undef $self->{bullet};
+            undef $self->{indent};
+            $wrapped_mode = 1;
+        }
+    };
+    my $close_block = sub {
+        pop @block_contexts;
+        $restore_block_context->();
+    };
+    my $file = $ref;
     $file =~ s/:[0-9]+$// if defined($line);
 
     while ( defined($line) ) {
@@ -464,17 +488,13 @@ sub parse {
             # Untranslated blocks
             $self->pushline( $line . "\n" );
             if ( $line =~ m/^~{4,}$/ ) {
-                undef $self->{verbatim};
-                undef $self->{type};
-                $wrapped_mode = 1;
+                $close_block->();
             }
         } elsif ( ( defined $self->{verbatim} ) and ( $self->{verbatim} == 2 ) ) {
 
             # CommentBlock
             if ( $line =~ m/^\/{4,}$/ ) {
-                undef $self->{verbatim};
-                undef $self->{type};
-                $wrapped_mode = 1;
+                $close_block->();
             } else {
                 push @comments, $line;
             }
@@ -625,12 +645,7 @@ sub parse {
                 if (    ( defined( $self->{block_type} ) )
                     and ( $self->{block_type} eq $type ) )
                 {
-                    undef $self->{block_type};
-                    undef $self->{type};
-                    undef $self->{verbatim};
-                    undef $self->{bullet};
-                    undef $self->{indent};
-                    $wrapped_mode = 1;
+                    $close_block->();
                     print STDERR "Closing $t block\n" if $debug{parse};
                 } else {
                     print STDERR "Begining $t block\n" if $debug{parse};
@@ -693,6 +708,16 @@ sub parse {
                     } else {
                         $self->{type} = $type;
                     }
+                    push @block_contexts,
+                      {
+                        block_type   => $self->{block_type},
+                        type         => $self->{type},
+                        verbatim     => $self->{verbatim},
+                        bullet       => $self->{bullet},
+                        indent       => $self->{indent},
+                        wrapped_mode => $wrapped_mode
+                      };
+                    undef $styled_paragraph;
                 }
                 $paragraph = "";
                 $self->pushline( $line . "\n" );
@@ -753,6 +778,7 @@ sub parse {
             $paragraph = "";
             my ( $type, $t ) = $self->parse_style($line);
             $self->{type} = $type;
+            $styled_paragraph = 1 if @block_contexts;
             $self->pushline("$t\n");
             @comments = ();
             if ( exists $self->{translate}->{style}->{$type}
@@ -951,10 +977,15 @@ sub parse {
             # When not in table, empty lines or lines containing only spaces do break paragraphs
             print STDERR "Empty new line. Wrap: " . ( defined( $self->{verbatim} ) ? "yes. " : "no. " ) . "\n"
               if $debug{parse};
+            my $paragraph_was_empty = ( $paragraph eq "" );
             do_paragraph( $self, $paragraph, $wrapped_mode );
             $paragraph    = "";
             $wrapped_mode = 1 unless defined( $self->{verbatim} );
             $self->pushline( $line . "\n" );
+            if ( defined($styled_paragraph) and $paragraph_was_empty ) {
+                $restore_block_context->();
+                undef $styled_paragraph;
+            }
 
         } elsif ( ( $line =~ /^\s*$/ ) ) {
 
