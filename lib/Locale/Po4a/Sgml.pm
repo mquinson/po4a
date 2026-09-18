@@ -279,6 +279,13 @@ sub read {
     $self->Locale::Po4a::TransTractor::read( $filename, $refname, $charset );
 }
 
+sub readpo {
+    my($self, $filename) = @_;
+
+    $self->{SGML}{has_po_input} = 1;
+    return $self->SUPER::readpo($filename);
+}
+
 sub parse {
     my $self = shift;
     map { $self->parse_file($_) } @{ $self->{DOCPOD}{infile} };
@@ -914,6 +921,11 @@ sub parse_file {
 
     # push the XML prolog if existing
     $self->pushline( $xmlprolog . "\n" ) if ( defined($xmlprolog) && length($xmlprolog) );
+
+    # Add the PO header as an SGML comment
+    if($self->{SGML}{has_po_input}) {
+        $self->pushline ("<!--\n" . $self->header_po() . "\n-->\n");
+    }
 
     # Put the prolog into the file, allowing for entity definition translation
     #  <!ENTITY myentity "definition_of_my_entity">
