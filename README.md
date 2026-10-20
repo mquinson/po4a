@@ -36,6 +36,7 @@ module for the following formats:
   - xhtml: XHTML documents.
   - xml: generic XML documents (see also docbook).
   - yaml: YAML documents.
+  - yodl: YODL documents.
 
 # Installation
 
