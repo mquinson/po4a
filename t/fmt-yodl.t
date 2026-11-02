@@ -21,6 +21,11 @@ push @tests,
     format => 'yodl',
     input  => 'fmt/yodl/options.yo',
   };
+push @tests,
+  {
+    format => 'yodl',
+    input  => 'fmt/yodl/markers.yo',
+  };
 
 run_all_tests(@tests);
 0;

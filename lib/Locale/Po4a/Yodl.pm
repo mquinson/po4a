@@ -16,43 +16,71 @@ Locale::Po4a::Yodl is a module to help the translation of YODL ("Your Own
 Document Language", see L<https://fbb-git.gitlab.io/yodl/> and
 L<https://www.w3.org/Tools/YODL.html>) documents into other [human] languages.
 
-A YODL document is plain text where formatting is expressed with C-style macro
-calls, such as C<tt(yodl)> or C<center(...)>.  This module extracts translatable
-strings at the block level: the text between two block macro calls is grouped
-into paragraphs (blank lines separate paragraphs), and inline macro calls are
-kept verbatim inside the paragraph they belong to.  Translators therefore get
-complete sentences including their markup, for example the whole following
-string is a single message:
+A YODL document is plain text where formatting is expressed with macro calls:
+an identifier made of letters, followed by one or more parenthesized argument
+groups, as in C<chapter(Using the program)> or C<article(Title)(Author)(2026)>.
+Commas do not separate arguments, they are ordinary text within an argument.
+
+This module extracts translatable strings at the block level: the text between
+two block level macro calls is grouped into paragraphs (blank lines separate
+paragraphs), and inline macro calls are kept verbatim inside the paragraph they
+belong to.  Translators therefore get complete sentences including their
+markup, for example the whole following string is a single message:
 
  The tt(yodl) program reads one or more input files.
 
-Arguments of block macros are extracted as standalone strings, so that the
-title of C<chapter(Using the program)> can be translated separately from the
-body of the chapter.  The enclosing block macros are reported as the type of
-each message (C<chapter>, C<center>, C<itemization/it>, ...), which helps
-L<po4a-gettextize(1)> detect structure mismatches.
+Each argument group of a block level macro is extracted as a standalone string,
+so that the title of C<manpagename(yodl)(A document language)> can be
+translated separately from the body of the manual page.  The enclosing macros
+are reported as the type of each message (C<chapter>, C<center>,
+C<itemization/it>, C<description/dit>, ...), which helps L<po4a-gettextize(1)>
+detect structure mismatches.
 
 =head1 OPTIONS ACCEPTED BY THIS MODULE
+
+Every macro belongs to one of the five categories below, each of them being
+configured with a space or comma separated list of macro names.  Macro names
+are matched case-sensitively.  A macro which is listed in none of the options is
+handled as an inline macro, which is the safest choice for the user defined
+macros that populate YODL documents.
 
 =over
 
 =item B<block=I<macro1 macro2 ...>>
 
-Space or comma separated list of macros which start a block.  Their arguments
-are extracted as standalone translation units.  A call without argument (such
-as the C<it()> item marker) only splits the surrounding text and becomes the
-context of the text that follows it.
+Macros which structure the document.  Such a call splits the surrounding text
+and each of its argument groups is extracted as a standalone string.  The text
+which follows the call keeps the context of the enclosing block macros.
+
+=item B<open=I<macro1 macro2 ...>>
+
+Macros which start a section which is not enclosed in an argument, such as the
+C<it()> item marker or the C<manpagesynopsis()> section marker of a manual page.
+Like a block macro, such a call splits the surrounding text and extracts its
+arguments, and in addition the plain text which follows it is reported with the
+name of the macro in its type.  Another B<open> macro of the same level replaces
+it, so that consecutive items of a list all get the type C<itemization/it>.
+
+=item B<close=I<macro1 macro2 ...>>
+
+Macros which end the sections started by the B<open> macros of the same block,
+such as C<ttend()> which closes the section started by C<ttbegin()>.  The text
+which follows such a call is reported without the names of the macros it closes.
+B<open> and B<close> macros must be properly nested.
 
 =item B<inline=I<macro1 macro2 ...>>
 
-Space or comma separated list of macros which must be kept inside the
-surrounding string, instead of being extracted as documented above.  Use this
-option to demote a macro which is a block macro by default.
+Macros which must be kept inside the surrounding string, instead of being
+extracted as documented above.  Use this option to demote a macro which is a
+block macro by default.  The arguments of an inline macro are not parsed, so
+they are never offered as separate messages: this is what keeps the label of
+C<link(description)(labelname)> or the file name of
+C<figure(file)(caption)(label)> intact while the text around them is translated.
 
 =item B<untranslated=I<macro1 macro2 ...>>
 
-Space or comma separated list of macros whose arguments must not be translated.
-Such a call is copied verbatim, and splits the surrounding text.
+Macros whose arguments must not be translated.  Such a call is copied verbatim,
+and splits the surrounding text.
 
 =item B<wrap> (default: B<yes>)
 
@@ -62,27 +90,52 @@ of the original document inside the PO files.
 
 =back
 
-Macro names are matched case-sensitively.  When a macro is not listed in any of
-the options above, it is handled as inline, which is the safest choice for the
-user defined macros that populate YODL documents.
+=head1 CLASSIFICATION OF THE PREDEFINED MACROS
 
-By default, the following YODL builtin macros are handled as block macros:
+All the macros documented in L<the YODL
+reference|https://fbb-git.gitlab.io/yodl/yodl-doc/yodl04.html#l105> are
+classified by this module.  The following ones are block macros, i.e. macros
+whose arguments are text to be translated:
 
- abstract appendix article book center chapter description enumeration
- figure it itdesc itemization letter paragraph part quote report sect
- startdoc subsect subsubsect subsubsubsect table
+ abstract affiliation article book cell cells center chapter description
+ enumerate enumeration itdesc itemization lchapter letter letteraddenda
+ letteradmin letterfootitem letterreplyto letterto lsect lsubsect lsubsubsect
+ lsubsubsubsect manpage manpagename nchapter nparagraph npart nsect nsubsect
+ nsubsubsect nsubsubsubsect paragraph part plainhtml quote report row sect
+ subsect subsubsect subsubsubsect table tableatt tac tbl tc tcell tnac tnc tr
+ xmlmenu
 
-and the following ones are never translated, since their arguments are either
-raw output for a specific format or metadata such as index keys:
+These ones are open and close macros, i.e. markers which delimit a section
+without enclosing its text:
 
- evalsymbol gagmacrowarning htmlcommand htmltag includeverbatim latexcommand
- latexoptions latexpackage makeindex mancommand metaC metaCOMMENT metacomment
- mscommand roffcmd sgmlcommand sgmltag telycommand texinfocommand txtcommand
- verb verbinclude verbinsert xmlcommand xmltag
+ open:  appendix dit eit it manpageauthor manpagebugs manpagedescription
+        manpagediagnostics manpagefiles manpageoptions manpagesection
+        manpageseealso manpagesynopsis ttbegin xit
+ close: ttend
+
+The formatting commands which appear inside a sentence are inline macros:
+
+ bf bind cite code dashes em ellipsis email euro fig figure file footnote LaTeX
+ langle link lref lurl mbox nbsp nemail nl nop rangle ref sc strong subs sups
+ TeX tt url
+
+The remaining predefined macros are untranslated, because their arguments are
+file names, index keys, macro definitions or text meant for one specific output
+format rather than prose: the C<verb*>, C<when*>, C<html*>, C<latex*>, C<xml*>,
+C<sgml*> and C<texinfocommand>, C<telycommand>, C<txtcommand>, C<mscommand>,
+C<roffcmd>, C<mancommand> families, the C<def>, C<redef>, C<redefinemacro>,
+C<evalsymbol>, C<addntosymbol> and C<ifnewparagraph> programming macros, the
+C<metaC> and C<metaCOMMENT> comments, the C<makeindex>, C<printindex> and
+C<*index> index macros, the C<includefile> and C<includeverbatim> inclusion
+macros, the C<get...string>, C<set...string>, C<language*> and C<setlanguage>
+header macros, and the switches of the document preamble such as C<clearpage>,
+C<notableofcontents> or C<standardlayout>.  C<label> belongs to this group as
+well, since translating the name of an anchor would break the C<ref> and
+C<link> commands which refer to it.
 
 =head1 STATUS OF THIS MODULE
 
-This module is in an early stage.  Two limitations are worth knowing about:
+This module is in an early stage.  Its limitations are worth knowing about:
 
 =over
 
@@ -94,8 +147,21 @@ supported perfectly: select the category matching its most frequent use.
 
 =item *
 
-Since the arguments of inline macros are not parsed, a block macro nested
-inside an inline macro call is copied verbatim and is not translated.
+The number of arguments a macro takes is not known, so a parenthesized group
+which follows a macro call, blanks apart, is handled as one of its arguments.
+This also means that the parentheses of an extracted call must be balanced, as
+they must be for yodl itself: a literal parenthesis has to be written C<CHAR(40)>
+or C<CHAR(41)>.
+
+=item *
+
+The arguments of an inline macro are not parsed, so a block macro written inside
+an inline macro call is translated as a part of the surrounding message, instead
+of being extracted as a message of its own.  This is the wanted behavior for the
+commands which protect their argument, such as C<tt> or C<code>, and for the
+markup which must not be split, such as C<link>.  A block macro written inside
+an untranslated macro is not translated at all, which is what C<verb> and
+friends are for.
 
 =back
 
@@ -127,49 +193,101 @@ use parent qw(Locale::Po4a::TransTractor);
 
 use Locale::Po4a::Common qw(wrap_mod dgettext);
 
-# YODL's builtin macros which format a whole block of text.
-my @default_block = qw(
-  abstract appendix article book center chapter description enumeration
-  figure it itdesc itemization letter paragraph part quote report sect
-  startdoc subsect subsubsect subsubsubsect table
+# YODL's predefined macros, see
+# <https://fbb-git.gitlab.io/yodl/yodl-doc/yodl04.html#l105>, classified as
+# documented in the POD above.  A macro which is absent from this table is
+# handled as an inline macro.
+my %default_category = (
+    block => [
+        qw(
+          abstract affiliation article book cell cells center chapter
+          description enumerate enumeration itdesc itemization lchapter letter
+          letteraddenda letteradmin letterfootitem letterreplyto letterto lsect
+          lsubsect
+          lsubsubsect lsubsubsubsect manpage manpagename nchapter nparagraph npart
+          nsect nsubsect nsubsubsect nsubsubsubsect paragraph part plainhtml quote
+          report row sect subsect subsubsect subsubsubsect table tableatt tac tbl
+          tc tcell tnac tnc tr xmlmenu
+        )
+    ],
+
+    # Markers which start a section: it(), dit(), the sections of a manual page,
+    # and the ttbegin()/ttend() pair.
+    open => [
+        qw(
+          appendix dit eit it manpageauthor manpagebugs manpagedescription
+          manpagediagnostics manpagefiles manpageoptions manpagesection
+          manpageseealso manpagesynopsis ttbegin xit
+        )
+    ],
+    close => [qw( ttend )],
+
+    # Commands which appear inside a sentence, including the ones whose arguments
+    # are anchors, labels or file names which must not be translated alone.
+    inline => [
+        qw(
+          bf bind cite code dashes em ellipsis email euro fig figure file
+          footnote LaTeX langle link lref lurl mbox nbsp nemail nl nop rangle ref
+          sc strong subs sups TeX tt url
+        )
+    ],
+
+    # Raw output for one output format, file names, index keys, macro definitions
+    # and settings of the document preamble.
+    untranslated => [
+        qw(
+          addntosymbol AfourEnlarged attrib attribclear attribinsert cindex
+          cellsline clearpage columnline def evalsymbol findex gagmacrowarning
+          getaffilstring getauthorstring getchapterstring getdatestring
+          getfigurestring getpartstring gettitlestring gettocstring htmlbodyopt
+          htmlcommand htmlheadfile htmlheadopt htmlmetacharset htmlnewfile
+          htmlstyle htmlstylesheet htmltag ifnewparagraph includefile
+          includeverbatim kindex label languagedutch languageenglish
+          languageportugese latexaddlayout latexcommand latexdocumentclass
+          latexlayoutcmds latexoptions latexpackage mailto makeindex mancommand
+          manttquoted metaC metaCOMMENT mscommand nodeprefix nodetext nohtmlfive
+          nohtmlimgstyle nosloppyhfuzz notableofcontents notitleclearpage
+          notocclearpage notransinclude noxlatin PageEnlarged pindex printindex
+          redef redefinemacro roffcmd rowline setaffilstring setauthorstring
+          setchapterstring setdatestring setfigureext setfigurestring
+          sethtmlfigureext setincludepath setlanguage setlatexalign
+          setlatexfigureext setlatexverbchar setmanalign setpartstring setrofftab
+          setrofftableoptions settitlestring settocstring sgmlcommand sgmltag
+          sloppyhfuzz standardlayout tao telycommand texinfocommand tindex
+          titleclearpage tline tocclearpage twrap txtcommand verb verbinclude
+          verbinsert verborg verbpipe vindex whenhtml whenlatex whenman whenms
+          whensgml whentely whentexinfo whentxt whenxml xmlcommand xmlnewfile
+          xmlsetdocumentbase xmltag
+        )
+    ],
 );
 
-# YODL's builtin macros whose argument is raw output, or metadata: they must
-# never be translated.
-my @default_untranslated = qw(
-  evalsymbol gagmacrowarning htmlcommand htmltag includeverbatim latexcommand
-  latexoptions latexpackage makeindex mancommand metaC metaCOMMENT metacomment
-  mscommand roffcmd sgmlcommand sgmltag telycommand texinfocommand txtcommand
-  verb verbinclude verbinsert xmlcommand xmltag
-);
+my @CATEGORIES = sort keys %default_category;
 
 sub initialize {
     my ( $self, %options ) = @_;
-    $self->{options}{block}        = '';
-    $self->{options}{inline}       = '';
-    $self->{options}{untranslated} = '';
-    $self->{options}{wrap}         = 1;
+    $self->{options}{$_} = '' for @CATEGORIES;
+    $self->{options}{wrap} = 1;
     foreach my $opt ( keys %options ) {
         die wrap_mod( "po4a::yodl", dgettext( "po4a", "Unknown option: %s" ), $opt )
           unless exists $self->{options}{$opt};
         $self->{options}{$opt} = $options{$opt};
     }
 
-    $self->{_yodl_block}        = { map { $_ => 1 } @default_block };
-    $self->{_yodl_untranslated} = { map { $_ => 1 } @default_untranslated };
+    $self->{_yodl_category} = {};
+    while ( my ( $category, $names ) = each %default_category ) {
+        $self->{_yodl_category}{$_} = $category for @{$names};
+    }
 
-    my %category;
-    foreach my $opt (qw(block inline untranslated)) {
+    my %configured;
+    foreach my $opt (@CATEGORIES) {
         foreach my $name ( _split_names( $self->{options}{$opt} ) ) {
             die wrap_mod( "po4a::yodl",
                 dgettext( "po4a", "Macro '%s' is assigned to conflicting categories: '%s' and '%s'." ),
-                $name, $category{$name}, $opt )
-              if exists $category{$name} && $category{$name} ne $opt;
-            $category{$name} = $opt;
-            delete $self->{_yodl_block}{$name}        if $opt ne 'block';
-            delete $self->{_yodl_untranslated}{$name} if $opt ne 'untranslated';
-            $self->{_yodl_block}{$name}        = 1 if $opt eq 'block';
-            $self->{_yodl_untranslated}{$name} = 1 if $opt eq 'untranslated';
+                $name, $configured{$name}, $opt )
+              if exists $configured{$name} && $configured{$name} ne $opt;
+            $configured{$name} = $opt;
+            $self->{_yodl_category}{$name} = $opt;
         }
     }
 
@@ -184,9 +302,7 @@ sub _split_names {
 
 sub _macro_category {
     my ( $self, $name ) = @_;
-    return 'untranslated' if $self->{_yodl_untranslated}{$name};
-    return 'block'        if $self->{_yodl_block}{$name};
-    return 'inline';
+    return $self->{_yodl_category}{$name} // 'inline';
 }
 
 sub parse {
@@ -210,59 +326,56 @@ sub parse {
     return;
 }
 
-# Walk a range of the document, translating the plain text it contains and
-# recursing into the arguments of the block macros.  $ctx is the chain of the
-# enclosing block macros, used as the type of the extracted strings.
+# Walk a range of the document: translate the plain text it contains, recurse
+# into the arguments of the macros which are not inlined, and maintain the chain
+# of the enclosing macros, which is reported as the type of the extracted
+# strings.
 sub _parse_range {
     my ( $self, $text, $start, $end, $ctx ) = @_;
     my $out           = '';
     my $segment_start = $start;
     my @context       = @{$ctx};
-    my $scope_depth   = @context;
-    my $i             = $start;
+
+    # An open macro pushes its name on top of the context this range started
+    # with, and a close macro pops the names pushed by this range only: this is
+    # what keeps a section marker from leaking in or out of the arguments of the
+    # enclosing macro call, and what makes two consecutive items of a list share
+    # the same type instead of nesting.
+    my $scope_depth = @context;
+    my $i           = $start;
 
     while ( $i < $end ) {
-        my $ch = substr( $text, $i, 1 );
-        if ( $ch eq '\\' ) {
-            $i += 2;
-            next;
-        }
-
         my ( $name, $open ) = $self->_read_macro_start( $text, $i, $end );
         unless ( defined $name ) {
             $i++;
             next;
         }
-        my $close = $self->_find_matching_paren( $text, $open, $end );
-        die wrap_mod( "po4a::yodl", dgettext( "po4a", "Unbalanced parenthesis in YODL macro '%s' near %s." ),
-            $name, $self->_ref_for_offset($open) )
-          unless defined $close;
-
+        my $groups   = $self->_read_groups( $text, $open, $end, $name );
+        my $call_end = $groups->[-1][1];
         my $category = $self->_macro_category($name);
+
         if ( $category eq 'inline' ) {
 
             # Leave the whole call alone: it is part of the surrounding string.
-            $i = $close + 1;
+            $i = $call_end + 1;
             next;
         }
 
         $out .= $self->_emit_text( $text, $segment_start, $i, \@context );
 
         if ( $category eq 'untranslated' ) {
-            $out .= substr( $text, $i, $close - $i + 1 );
+            $out .= substr( $text, $i, $call_end - $i + 1 );
         } else {
-            my $marker      = $open + 1 == $close;
-            my @arg_context = $marker ? ( @context[ 0 .. $scope_depth - 1 ], $name ) : ( @context, $name );
-            $out .= $name . "(";
-            $out .= $self->_parse_arguments( $text, $open + 1, $close, \@arg_context );
-            $out .= ")";
-
-            # A block macro call without argument only breaks the text flow:
-            # keep it as the context of the text which follows.
-            @context = @arg_context if $marker;
+            if ( $category eq 'open' ) {
+                @context = ( @context[ 0 .. $scope_depth - 1 ], $name );
+            } elsif ( $category eq 'close' ) {
+                @context = @context[ 0 .. $scope_depth - 1 ];
+            }
+            my @arg_context = $category eq 'block' ? ( @context, $name ) : @context;
+            $out .= $self->_emit_call( $text, $groups, $name, \@arg_context );
         }
 
-        $i             = $close + 1;
+        $i             = $call_end + 1;
         $segment_start = $i;
     }
 
@@ -270,26 +383,54 @@ sub _parse_range {
     return $out;
 }
 
+# A YODL macro name consists of letters only, and a macro is called when a
+# parenthesized group directly follows its name: this is how the yodl program
+# itself splits its input (see DEFINEMACRO in the YODL manual, and
+# l_isIdentChar() in its lexer).  Return the name of the macro called at $pos,
+# together with the position of its opening parenthesis.
 sub _read_macro_start {
     my ( $self, $text, $pos, $end ) = @_;
     return unless $pos < $end;
 
     my $first = substr( $text, $pos, 1 );
-    return unless $first =~ /[[:alpha:]_]/;
+    return unless $first =~ /[[:alpha:]]/;
     if ( $pos > 0 ) {
-        my $prev = substr( $text, $pos - 1, 1 );
-        return if $prev =~ /[[:alnum:]_-]/;
-        return if $prev eq '\\';
+
+        # The name must start a sequence of letters: yodl reads tt(foo_bar(x))
+        # as the word tt, an underscore, and the macro call bar(x), but never
+        # as a call to a macro named foo_bar.
+        return if substr( $text, $pos - 1, 1 ) =~ /[[:alpha:]]/;
     }
 
     my $j = $pos + 1;
-    while ( $j < $end ) {
-        my $cur = substr( $text, $j, 1 );
-        last unless $cur =~ /[[:alnum:]_.-]/;
-        $j++;
-    }
+    $j++ while $j < $end    && substr( $text, $j, 1 ) =~ /[[:alpha:]]/;
     return unless $j < $end && substr( $text, $j, 1 ) eq '(';
     return ( substr( $text, $pos, $j - $pos ), $j );
+}
+
+# Collect the argument groups of a macro call: article(title)(author)(date) is
+# one call with three groups.  Blanks between two groups are part of the call,
+# because that is the preferred way of writing a call with several arguments.
+sub _read_groups {
+    my ( $self, $text, $open, $end, $name ) = @_;
+    my @groups;
+    my $pos = $open;
+
+    while ( $pos < $end ) {
+        my $close = $self->_find_matching_paren( $text, $pos, $end );
+        die wrap_mod( "po4a::yodl", dgettext( "po4a", "Unbalanced parenthesis in YODL macro '%s' near %s." ),
+            $name, $self->_ref_for_offset($pos) )
+          unless defined $close;
+        push @groups, [ $pos, $close ];
+
+        $pos = $close + 1;
+        my $next = $pos;
+        $next++ while $next < $end && substr( $text, $next, 1 ) =~ /[ \t\r\n]/;
+        last unless $next < $end   && substr( $text, $next, 1 ) eq '(';
+        $pos = $next;
+    }
+
+    return \@groups;
 }
 
 sub _find_matching_paren {
@@ -298,10 +439,6 @@ sub _find_matching_paren {
     my $i     = $open + 1;
     while ( $i < $end ) {
         my $ch = substr( $text, $i, 1 );
-        if ( $ch eq '\\' ) {
-            $i += 2;
-            next;
-        }
         if ( $ch eq '(' ) {
             $depth++;
         } elsif ( $ch eq ')' ) {
@@ -313,36 +450,24 @@ sub _find_matching_paren {
     return;
 }
 
-sub _parse_arguments {
-    my ( $self, $text, $start, $end, $ctx ) = @_;
-    my $arg_start = $start;
-    my $out       = '';
-    my $depth     = 0;
-    my $i         = $start;
+# Rebuild a macro call, translating each argument group and copying everything
+# else, the names and the blanks between the groups included, verbatim.
+sub _emit_call {
+    my ( $self, $text, $groups, $name, $ctx ) = @_;
+    my $out = $name;
+    my $prev;
+    foreach my $group ( @{$groups} ) {
+        my ( $open, $close ) = @{$group};
 
-    while ( $i < $end ) {
-        my $ch = substr( $text, $i, 1 );
-        if ( $ch eq '\\' ) {
-            $i += 2;
-            next;
-        }
-        if ( $ch eq '(' ) {
-            $depth++;
-        } elsif ( $ch eq ')' ) {
-            $depth-- if $depth > 0;
-        } elsif ( $ch eq ',' && $depth == 0 ) {
-            $out .= $self->_parse_range( $text, $arg_start, $i, $ctx );
-            $out .= ",";
-            $arg_start = $i + 1;
-        }
-        $i++;
+        # The blanks between two argument groups are not text.
+        $out .= substr( $text, $prev, $open - $prev ) if defined $prev;
+        $out .= '(' . $self->_parse_range( $text, $open + 1, $close, $ctx ) . ')';
+        $prev = $close + 1;
     }
-
-    $out .= $self->_parse_range( $text, $arg_start, $end, $ctx );
     return $out;
 }
 
-# Emit the plain text between two block macro calls.  Blank lines separate the
+# Emit the plain text between two macro calls.  Blank lines separate the
 # paragraphs, i.e. the gettext messages; the blanks surrounding a paragraph are
 # copied verbatim so that the document can be rebuilt identically.
 sub _emit_text {

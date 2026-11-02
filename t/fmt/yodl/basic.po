@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2026-10-22 11:10+0800\n"
+"POT-Creation-Date: 2026-10-23 11:59+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,42 +25,75 @@ msgstr "THIS IS A SAMPLE YODL DOCUMENT USED TO TEST THE PO4A YODL PARSER."
 #: basic.yo:3
 msgid ""
 "The tt(yodl) program reads one or more input files and writes one output "
-"file.  Inline macros such as em(italic) stay inside the whole paragraph."
+"file.  Inline macros such as em(italic) stay inside the whole paragraph, and "
+"so does a link(fall back to)(plainhtml) command with several arguments."
 msgstr ""
 "THE TT(YODL) PROGRAM READS ONE OR MORE INPUT FILES AND WRITES ONE OUTPUT "
-"FILE.  INLINE MACROS SUCH AS EM(ITALIC) STAY INSIDE THE WHOLE PARAGRAPH."
+"FILE.  INLINE MACROS SUCH AS EM(ITALIC) STAY INSIDE THE WHOLE PARAGRAPH, AND "
+"SO DOES A LINK(FALL BACK TO)(PLAINHTML) COMMAND WITH SEVERAL ARGUMENTS."
 
 #. type: center
-#: basic.yo:7
-msgid "tt(yodl) em(flags) em(inputfile) em(\\[inputfile...\\])"
-msgstr "TT(YODL) EM(FLAGS) EM(INPUTFILE) EM(\\[INPUTFILE...\\])"
+#: basic.yo:8
+msgid "tt(yodl) em(flags) em(inputfile) em([inputfile...])"
+msgstr "TT(YODL) EM(FLAGS) EM(INPUTFILE) EM([INPUTFILE...])"
 
 #. type: itemization/it
-#: basic.yo:11
+#: basic.yo:12
 msgid "tt(-D) em(name): Defines em(name) as a symbol."
 msgstr "TT(-D) EM(NAME): DEFINES EM(NAME) AS A SYMBOL."
 
 #. type: itemization/it
-#: basic.yo:12
+#: basic.yo:13
 msgid "tt(-I) em(directory): Searches include files in a directory."
 msgstr "TT(-I) EM(DIRECTORY): SEARCHES INCLUDE FILES IN A DIRECTORY."
 
+#. type: description/dit
+#: basic.yo:17
+msgid "tt(-N) em(number)"
+msgstr "TT(-N) EM(NUMBER)"
+
+#. type: description/dit
+#: basic.yo:18
+msgid "Sets the counter em(number) to the given value."
+msgstr "SETS THE COUNTER EM(NUMBER) TO THE GIVEN VALUE."
+
 #. type: chapter
-#: basic.yo:15
+#: basic.yo:21
 msgid "Using the yodl program"
 msgstr "USING THE YODL PROGRAM"
 
 #. type: paragraph
-#: basic.yo:17
+#: basic.yo:23
 msgid "Some text containing the"
 msgstr "SOME TEXT CONTAINING THE"
 
 #. type: paragraph
-#: basic.yo:17
+#: basic.yo:23
 msgid "macro, which is never translated."
 msgstr "MACRO, WHICH IS NEVER TRANSLATED."
 
+#. type: ttbegin
+#: basic.yo:27
+msgid "Text between the ttbegin and ttend markers is reported as its own section."
+msgstr "TEXT BETWEEN THE TTBEGIN AND TTEND MARKERS IS REPORTED AS ITS OWN SECTION."
+
 #. type: paragraph
-#: basic.yo:20
-msgid "nested(foo(bar baz), qux) ends this document with an escaped paren \\(x\\)."
-msgstr "NESTED(FOO(BAR BAZ), QUX) ENDS THIS DOCUMENT WITH AN ESCAPED PAREN \\(X\\)."
+#: basic.yo:30
+msgid "Text following the closing marker is a plain paragraph again."
+msgstr "TEXT FOLLOWING THE CLOSING MARKER IS A PLAIN PARAGRAPH AGAIN."
+
+#. type: paragraph
+#: basic.yo:32
+msgid ""
+"A comma does not separate the arguments of a macro call, and a macro name "
+"consists of letters only: book2(x) is therefore plain text here, not a call "
+"to the book macro."
+msgstr ""
+"A COMMA DOES NOT SEPARATE THE ARGUMENTS OF A MACRO CALL, AND A MACRO NAME "
+"CONSISTS OF LETTERS ONLY: BOOK2(X) IS THEREFORE PLAIN TEXT HERE, NOT A CALL "
+"TO THE BOOK MACRO."
+
+#. type: quote
+#: basic.yo:36
+msgid "One argument, with a comma inside it."
+msgstr "ONE ARGUMENT, WITH A COMMA INSIDE IT."

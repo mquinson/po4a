@@ -1,10 +1,11 @@
 This is a sample YODL document used to test the po4a YODL parser.
 
 The tt(yodl) program reads one or more input files and writes one output
-file.  Inline macros such as em(italic) stay inside the whole paragraph.
+file.  Inline macros such as em(italic) stay inside the whole paragraph, and
+so does a link(fall back to)(plainhtml) command with several arguments.
 
 center(
-    tt(yodl) em(flags) em(inputfile) em(\[inputfile...\])
+    tt(yodl) em(flags) em(inputfile) em([inputfile...])
 )
 
 itemization(
@@ -12,9 +13,24 @@ itemization(
     it() tt(-I) em(directory): Searches include files in a directory.
 )
 
+description(
+    dit(tt(-N) em(number))
+    Sets the counter em(number) to the given value.
+)
+
 chapter(Using the yodl program)
 
 Some text containing the verb(latex --output) macro, which is never
 translated.
 
-nested(foo(bar baz), qux) ends this document with an escaped paren \(x\).
+ttbegin()
+Text between the ttbegin and ttend markers is reported as its own section.
+ttend()
+
+Text following the closing marker is a plain paragraph again.
+
+A comma does not separate the arguments of a macro call, and a macro name
+consists of letters only: book2(x) is therefore plain text here, not a call to
+the book macro.
+
+quote(One argument, with a comma inside it.)
