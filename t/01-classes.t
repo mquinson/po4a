@@ -5,7 +5,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 24;
+use Test::More tests => 25;
 
 note "Core modules";
 
@@ -36,3 +36,4 @@ use_ok "Locale::Po4a::Wml";
 use_ok "Locale::Po4a::Xhtml";
 use_ok "Locale::Po4a::Xml";
 use_ok "Locale::Po4a::Yaml";
+use_ok "Locale::Po4a::Yodl";

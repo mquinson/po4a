@@ -18,7 +18,7 @@ use strict;
 use warnings;
 use Locale::Po4a::Common qw(wrap_msg wrap_mod gettext);
 
-my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX CommonMark VimHelp );
+my %_mod_lookup = map { lc($_) => $_ } qw( AsciiDoc BibTex KernelHelp LaTeX NewsDebian RubyDoc SimplePod TeX CommonMark VimHelp Yodl );
 
 sub new {
     my ($module)  = shift;
@@ -99,6 +99,8 @@ sub list {
           . gettext("xml: generic XML documents (see also docbook).")
           . "\n  - "
           . gettext("yaml: YAML documents.")
+          . "\n  - "
+          . gettext("yodl: YODL documents.")
     );
     exit shift;
 }
@@ -165,7 +167,8 @@ L<Locale::Po4a::VimHelp(3pm)>,
 L<Locale::Po4a::Wml(3pm)>,
 L<Locale::Po4a::Xhtml(3pm)>,
 L<Locale::Po4a::Xml(3pm)>,
-L<Locale::Po4a::Yaml(3pm)>.
+L<Locale::Po4a::Yaml(3pm)>,
+L<Locale::Po4a::Yodl(3pm)>.
 
 =back
 
